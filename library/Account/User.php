@@ -114,6 +114,18 @@ class User {
 	private $exists;
 
 	/**
+	 * @access private
+	 * @var int $followers
+	 */
+	private $followers;
+
+	/**
+	 * @access private
+	 * @var int $following
+	 */
+	private $following;
+
+	/**
 	 * Constructor
 	 * 
 	 * @access private
@@ -146,6 +158,16 @@ class User {
 				$this->time = $row["time"];
 
 				$this->exists = true;
+
+				if(!is_null($this->following)){
+					$this->following = null;
+					$this->getFollowing();
+				}
+
+				if(!is_null($this->followers)){
+					$this->followers = null;
+					$this->getFollowers();
+				}
 			}
 
 			$this->saveToCache();
@@ -201,6 +223,60 @@ class User {
 	 */
 	public function getTime(){
 		return $this->time;
+	}
+
+	/**
+	 * Gets the user's followers count
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public function getFollowers(){
+		if(is_null($this->followers)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `following` = ?");
+			$stmt->bind_param("i",$this->id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$this->followers = $row["count"];
+
+					$this->saveToCache();
+				}
+			}
+			$stmt->close();
+		}
+
+		return $this->followers;
+	}
+
+	/**
+	 * Gets the user's following count
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public function getFollowing(){
+		if(is_null($this->following)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `follower` = ?");
+			$stmt->bind_param("i",$this->id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$this->following = $row["count"];
+
+					$this->saveToCache();
+				}
+			}
+			$stmt->close();
+		}
+
+		return $this->following;
 	}
 
 	/**
