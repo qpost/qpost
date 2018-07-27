@@ -85,6 +85,12 @@ class User {
 
 	/**
 	 * @access private
+	 * @var string $displayName
+	 */
+	private $displayName;
+
+	/**
+	 * @access private
 	 * @var string $username
 	 */
 	private $username;
@@ -164,6 +170,7 @@ class User {
 				$row = $result->fetch_assoc();
 
 				$this->id = $row["id"];
+				$this->displayName = $row["displayName"];
 				$this->username = $row["username"];
 				$this->email = $row["email"];
 				$this->avatar = $row["avatar"];
@@ -195,6 +202,16 @@ class User {
 	 */
 	public function getId(){
 		return $this->id;
+	}
+
+	/**
+	 * Returns the user's display name
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getDisplayName(){
+		return $this->displayName;
 	}
 
 	/**

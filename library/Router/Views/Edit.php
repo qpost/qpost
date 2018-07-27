@@ -13,7 +13,7 @@ $user = Util::getCurrentUser();
 				<label for="displayName" class="control-label col-sm-2 col-form-label">Display name</label>
 
 				<div class="col-sm-10 input-group mb-3">
-					<input class="form-control" type="text" name="displayName" id="displayName" value="<?= $user->getUsername(); ?>"/>
+					<input class="form-control" type="text" name="displayName" id="displayName" value="<?= $user->getDisplayName(); ?>"/>
 				</div>
 			</div>
 
