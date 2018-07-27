@@ -159,15 +159,11 @@ class User {
 
 				$this->exists = true;
 
-				if(!is_null($this->following)){
-					$this->following = null;
-					$this->getFollowing();
-				}
+				if(!is_null($this->following))
+					$this->reloadFollowingCount();
 
-				if(!is_null($this->followers)){
-					$this->followers = null;
-					$this->getFollowers();
-				}
+				if(!is_null($this->followers))
+					$this->reloadFollowerCount();
 			}
 
 			$this->saveToCache();
@@ -277,6 +273,26 @@ class User {
 		}
 
 		return $this->following;
+	}
+
+	/**
+	 * Reloads the following count
+	 * 
+	 * @access public
+	 */
+	public function reloadFollowingCount(){
+		$this->following = null;
+		$this->getFollowing();
+	}
+
+	/**
+	 * Reloads the follower count
+	 * 
+	 * @access public
+	 */
+	public function reloadFollowerCount(){
+		$this->followers = null;
+		$this->getFollowers();
 	}
 
 	/**
