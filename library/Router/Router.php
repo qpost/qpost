@@ -25,6 +25,7 @@ require $app->path("routes:Home.php");
 require $app->path("routes:Login.php");
 require $app->path("routes:Logout.php");
 require $app->path("routes:Profile.php");
+require $app->path("routes:Edit.php");
 
 $app->on("after",function() {
 	if($this->response->status == "404"){

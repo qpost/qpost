@@ -34,9 +34,6 @@ if(DEVELOPER_MODE == true){
 	error_reporting(E_ERROR);
 }
 
-ini_set("session.cookie_lifetime",(60*60*24)*365);
-ini_set("session.gc_maxlifetime",(60*60*24)*365);
-
 /**
  * Utility functions
  * 
