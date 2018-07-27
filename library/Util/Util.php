@@ -757,4 +757,22 @@ class Util {
 	public static function desanatizeString($string){
 		return html_entity_decode($string);
 	}
+
+	/**
+	 * Converts \n characters to <br/>
+	 * 
+	 * @access public
+	 * @param string $string
+	 * @return string
+	 */
+	public static function convertLineBreaksToHTML($string){
+		$s = trim(str_replace("\n","<br/>",$string));
+
+		// TODO: Fix line breaking spamming
+		while(self::contains($s,"<br/><br/>")){
+			$s = str_replace("<br/><br/>","<br/>",$s);
+		}
+
+		return $s;
+	}
 }

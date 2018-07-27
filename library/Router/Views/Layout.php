@@ -203,7 +203,7 @@ if(isset($title) && !empty($title)){
 							<h4 class="mb-0"><?= $user->getDisplayName(); ?></h4>
 							<p class="text-muted my-0" style="font-size: 16px">@<?= $user->getUsername(); ?></p>
 
-							<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2">' . $user->getBio() . '</p>' : ""; ?>
+							<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($user->getBio()) . '</p>' : ""; ?>
 
 							<?php
 
