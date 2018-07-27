@@ -746,5 +746,15 @@ class Util {
 	public static function sanatizeString($string){
 		return trim(htmlentities($string));
 	}
-	
+
+	/**
+	 * Opposite of sanatizeString()
+	 * 
+	 * @access public
+	 * @param string $string
+	 * @return string
+	 */
+	public static function desanatizeString($string){
+		return html_entity_decode($string);
+	}
 }
