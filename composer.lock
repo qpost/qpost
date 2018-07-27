@@ -1,0 +1,1274 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "03afb082012eb504dddde883af657992",
+    "packages": [
+        {
+            "name": "doctrine/inflector",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/inflector.git",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Inflector\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Common String Manipulations with regard to casing and singular/plural rules.",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "inflection",
+                "pluralize",
+                "singularize",
+                "string"
+            ],
+            "time": "2015-11-06T14:35:42+00:00"
+        },
+        {
+            "name": "donatj/phpuseragentparser",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/donatj/PhpUserAgent.git",
+                "reference": "ea79de6a18e52285e62cd75cf1cebe276ecaf503"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/donatj/PhpUserAgent/zipball/ea79de6a18e52285e62cd75cf1cebe276ecaf503",
+                "reference": "ea79de6a18e52285e62cd75cf1cebe276ecaf503",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "camspiers/json-pretty": "0.1.*",
+                "donatj/drop": "*",
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Source/UserAgentParser.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jesse G. Donat",
+                    "email": "donatj@gmail.com",
+                    "homepage": "http://donatstudios.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Simple, streamlined PHP user-agent parser",
+            "homepage": "http://donatstudios.com/PHP-Parser-HTTP_USER_AGENT",
+            "keywords": [
+                "browser",
+                "browser detection",
+                "parser",
+                "user agent",
+                "useragent"
+            ],
+            "time": "2017-10-23T16:52:52+00:00"
+        },
+        {
+            "name": "gumlet/php-image-resize",
+            "version": "1.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gumlet/php-image-resize.git",
+                "reference": "2a38f3a49e2ee907f16064d8def6828c7902c0b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gumlet/php-image-resize/zipball/2a38f3a49e2ee907f16064d8def6828c7902c0b6",
+                "reference": "2a38f3a49e2ee907f16064d8def6828c7902c0b6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "ext-gd": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "apigen/apigen": "^4.1",
+                "ext-exif": "*",
+                "ext-gd": "*",
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^4.8"
+            },
+            "suggest": {
+                "ext-exif": "Auto-rotate jpeg files"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gumlet\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aditya Patadia",
+                    "homepage": "http://aditya.patadia.org/"
+                }
+            ],
+            "description": "PHP class to re-size and scale images",
+            "homepage": "https://github.com/gumlet/php-image-resize",
+            "keywords": [
+                "image",
+                "php",
+                "resize",
+                "scale"
+            ],
+            "time": "2018-06-25T06:41:48+00:00"
+        },
+        {
+            "name": "guzzlehttp/guzzle",
+            "version": "6.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/407b0cb880ace85c9b63c5f9551db498cb2d50ba",
+                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.4",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
+                "psr/log": "^1.0"
+            },
+            "suggest": {
+                "psr/log": "Required for using the Log middleware"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.3-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions_include.php"
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2018-04-22T15:46:56+00:00"
+        },
+        {
+            "name": "guzzlehttp/promises",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/promises.git",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle promises library",
+            "keywords": [
+                "promise"
+            ],
+            "time": "2016-12-20T10:07:11+00:00"
+        },
+        {
+            "name": "guzzlehttp/psr7",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/psr7.git",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "homepage": "https://github.com/Tobion"
+                }
+            ],
+            "description": "PSR-7 message implementation that also provides common utility methods",
+            "keywords": [
+                "http",
+                "message",
+                "request",
+                "response",
+                "stream",
+                "uri",
+                "url"
+            ],
+            "time": "2017-03-20T17:10:46+00:00"
+        },
+        {
+            "name": "illuminate/contracts",
+            "version": "v5.4.36",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/contracts.git",
+                "reference": "67f642e018f3e95fb0b2ebffc206c3200391b1ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/67f642e018f3e95fb0b2ebffc206c3200391b1ab",
+                "reference": "67f642e018f3e95fb0b2ebffc206c3200391b1ab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Contracts\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The Illuminate Contracts package.",
+            "homepage": "https://laravel.com",
+            "time": "2017-08-26T23:56:53+00:00"
+        },
+        {
+            "name": "illuminate/support",
+            "version": "v5.4.36",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/support.git",
+                "reference": "feab1d1495fd6d38970bd6c83586ba2ace8f299a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/feab1d1495fd6d38970bd6c83586ba2ace8f299a",
+                "reference": "feab1d1495fd6d38970bd6c83586ba2ace8f299a",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/inflector": "~1.1",
+                "ext-mbstring": "*",
+                "illuminate/contracts": "5.4.*",
+                "paragonie/random_compat": "~1.4|~2.0",
+                "php": ">=5.6.4"
+            },
+            "replace": {
+                "tightenco/collect": "self.version"
+            },
+            "suggest": {
+                "illuminate/filesystem": "Required to use the composer class (5.2.*).",
+                "symfony/process": "Required to use the composer class (~3.2).",
+                "symfony/var-dumper": "Required to use the dd function (~3.2)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Support\\": ""
+                },
+                "files": [
+                    "helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The Illuminate Support package.",
+            "homepage": "https://laravel.com",
+            "time": "2017-08-15T13:25:41+00:00"
+        },
+        {
+            "name": "ircmaxell/random-lib",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ircmaxell/RandomLib.git",
+                "reference": "e9e0204f40e49fa4419946c677eccd3fa25b8cf4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ircmaxell/RandomLib/zipball/e9e0204f40e49fa4419946c677eccd3fa25b8cf4",
+                "reference": "e9e0204f40e49fa4419946c677eccd3fa25b8cf4",
+                "shasum": ""
+            },
+            "require": {
+                "ircmaxell/security-lib": "^1.1",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^1.11",
+                "mikey179/vfsstream": "^1.6",
+                "phpunit/phpunit": "^4.8|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "RandomLib": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anthony Ferrara",
+                    "email": "ircmaxell@ircmaxell.com",
+                    "homepage": "http://blog.ircmaxell.com"
+                }
+            ],
+            "description": "A Library For Generating Secure Random Numbers",
+            "homepage": "https://github.com/ircmaxell/RandomLib",
+            "keywords": [
+                "cryptography",
+                "random",
+                "random-numbers",
+                "random-strings"
+            ],
+            "time": "2016-09-07T15:52:06+00:00"
+        },
+        {
+            "name": "ircmaxell/security-lib",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ircmaxell/SecurityLib.git",
+                "reference": "f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ircmaxell/SecurityLib/zipball/f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5",
+                "reference": "f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "1.1.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "SecurityLib": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anthony Ferrara",
+                    "email": "ircmaxell@ircmaxell.com",
+                    "homepage": "http://blog.ircmaxell.com"
+                }
+            ],
+            "description": "A Base Security Library",
+            "homepage": "https://github.com/ircmaxell/SecurityLib",
+            "time": "2015-03-20T14:31:23+00:00"
+        },
+        {
+            "name": "jasongrimes/paginator",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jasongrimes/php-paginator.git",
+                "reference": "8b18245b8a9dbdf69918ebd1e1f4a229a06030cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jasongrimes/php-paginator/zipball/8b18245b8a9dbdf69918ebd1e1f4a229a06030cd",
+                "reference": "8b18245b8a9dbdf69918ebd1e1f4a229a06030cd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JasonGrimes": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jason Grimes",
+                    "email": "jason@grimesit.com"
+                }
+            ],
+            "description": "A lightweight PHP paginator, for generating pagination controls in the style of Stack Overflow and Flickr. The 'first' and 'last' page links are shown inline as page numbers, and excess page numbers are replaced by ellipses.",
+            "homepage": "http://github.com/jasongrimes/php-paginator",
+            "keywords": [
+                "pager",
+                "pagination",
+                "paginator"
+            ],
+            "time": "2015-10-15T09:42:44+00:00"
+        },
+        {
+            "name": "league/oauth2-client",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/oauth2-client.git",
+                "reference": "01f955b85040b41cf48885b078f7fd39a8be5411"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-client/zipball/01f955b85040b41cf48885b078f7fd39a8be5411",
+                "reference": "01f955b85040b41cf48885b078f7fd39a8be5411",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "guzzlehttp/guzzle": "~6.0",
+                "ircmaxell/random-lib": "~1.1",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "0.8.*",
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0",
+                "satooshi/php-coveralls": "0.6.*",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\OAuth2\\Client\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Bilbie",
+                    "email": "hello@alexbilbie.com",
+                    "homepage": "http://www.alexbilbie.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "OAuth 2.0 Client Library",
+            "keywords": [
+                "Authentication",
+                "SSO",
+                "authorization",
+                "identity",
+                "idp",
+                "oauth",
+                "oauth2",
+                "single sign on"
+            ],
+            "time": "2016-07-28T13:20:43+00:00"
+        },
+        {
+            "name": "nicklaw5/twitch-api-php",
+            "version": "v1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicklaw5/twitch-api-php.git",
+                "reference": "29b566cb5c795bab579db3ca19a2d1b7f946d2d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicklaw5/twitch-api-php/zipball/29b566cb5c795bab579db3ca19a2d1b7f946d2d2",
+                "reference": "29b566cb5c795bab579db3ca19a2d1b7f946d2d2",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~6.0",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TwitchApi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicholas Law",
+                    "homepage": "https://github.com/nicklaw5"
+                }
+            ],
+            "description": "A Twitch API client for PHP.",
+            "homepage": "http://github.com/nicklaw5/twitch-api-php",
+            "keywords": [
+                "api",
+                "twitch",
+                "twitch-api",
+                "twitch-tv",
+                "twitch.tv"
+            ],
+            "time": "2018-04-18T02:06:35+00:00"
+        },
+        {
+            "name": "paragonie/random_compat",
+            "version": "v2.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/random.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2018-04-04T21:24:14+00:00"
+        },
+        {
+            "name": "phpfastcache/phpfastcache",
+            "version": "5.0.21",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPSocialNetwork/phpfastcache.git",
+                "reference": "e546671f4374e2a421c074b5c24c732c6ec58aae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPSocialNetwork/phpfastcache/zipball/e546671f4374e2a421c074b5c24c732c6ec58aae",
+                "reference": "e546671f4374e2a421c074b5c24c732c6ec58aae",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.5.0",
+                "phpfastcache/phpssdb": "~1.0.0",
+                "predis/predis": "~1.1.0",
+                "psr/cache": "~1.0.0"
+            },
+            "suggest": {
+                "ext-apc": "*",
+                "ext-intl": "*",
+                "ext-mbstring": "*",
+                "ext-memcache": "*",
+                "ext-memcached": "*",
+                "ext-predis": "*",
+                "ext-redis": "*",
+                "ext-sqlite": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "phpFastCache\\": "src/phpFastCache/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Khoa Bui",
+                    "email": "khoaofgod@gmail.com",
+                    "homepage": "http://www.phpfastcache.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Georges.L",
+                    "email": "contact@geolim4.com",
+                    "homepage": "https://github.com/Geolim4",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Cache Class - Reduce your database call using cache system. PhpFastCache handles a lot of drivers such as Apc(u), CouchBase, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache, Zend Data Cache.",
+            "homepage": "http://www.phpfastcache.com",
+            "keywords": [
+                "LevelDb",
+                "apc",
+                "apcu",
+                "cache",
+                "cache class",
+                "caching",
+                "cookie",
+                "couchbase",
+                "files cache",
+                "memcache",
+                "memcached",
+                "mongodb",
+                "mysql cache",
+                "pdo cache",
+                "php cache",
+                "predis",
+                "redis",
+                "ssdb",
+                "wincache",
+                "xcache",
+                "zend",
+                "zend data cache",
+                "zend disk cache",
+                "zend memory cache",
+                "zend server"
+            ],
+            "time": "2018-03-01T22:13:40+00:00"
+        },
+        {
+            "name": "phpfastcache/phpssdb",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPSocialNetwork/phpssdb.git",
+                "reference": "60cc285bf622664d9899da699503754259e8c970"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPSocialNetwork/phpssdb/zipball/60cc285bf622664d9899da699503754259e8c970",
+                "reference": "60cc285bf622664d9899da699503754259e8c970",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "phpssdb\\": "src/phpssdb/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Khoa Bui",
+                    "email": "khoaofgod@gmail.com",
+                    "homepage": "http://www.phpfastcache.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Georges.L",
+                    "email": "contact@geolim4.com",
+                    "homepage": "https://github.com/Geolim4",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP SSDB Driver for phpFastCache",
+            "homepage": "http://www.phpfastcache.com",
+            "keywords": [
+                "cache",
+                "driver",
+                "ssdb"
+            ],
+            "time": "2017-04-21T22:22:57+00:00"
+        },
+        {
+            "name": "phpmailer/phpmailer",
+            "version": "v5.2.26",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "70362997bda4376378be7d92d81e2200550923f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/70362997bda4376378be7d92d81e2200550923f7",
+                "reference": "70362997bda4376378be7d92d81e2200550923f7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "1.2.*",
+                "jms/serializer": "0.16.*",
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phpunit/phpunit": "4.8.*",
+                "symfony/debug": "2.8.*",
+                "symfony/filesystem": "2.8.*",
+                "symfony/translation": "2.8.*",
+                "symfony/yaml": "2.8.*",
+                "zendframework/zend-cache": "2.5.1",
+                "zendframework/zend-config": "2.5.1",
+                "zendframework/zend-eventmanager": "2.5.1",
+                "zendframework/zend-filter": "2.5.1",
+                "zendframework/zend-i18n": "2.5.1",
+                "zendframework/zend-json": "2.5.1",
+                "zendframework/zend-math": "2.5.1",
+                "zendframework/zend-serializer": "2.5.*",
+                "zendframework/zend-servicemanager": "2.5.*",
+                "zendframework/zend-stdlib": "2.5.1"
+            },
+            "suggest": {
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class.phpmailer.php",
+                    "class.phpmaileroauth.php",
+                    "class.phpmaileroauthgoogle.php",
+                    "class.smtp.php",
+                    "class.pop3.php",
+                    "extras/EasyPeasyICS.php",
+                    "extras/ntlm_sasl_client.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "time": "2017-11-04T09:26:05+00:00"
+        },
+        {
+            "name": "predis/predis",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
+                }
+            ],
+            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
+            "homepage": "http://github.com/nrk/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "time": "2016-06-16T16:22:20+00:00"
+        },
+        {
+            "name": "psr/cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "time": "2016-08-06T20:24:11+00:00"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2016-08-06T14:39:51+00:00"
+        },
+        {
+            "name": "riimu/kit-csrf",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Riimu/Kit-CSRF.git",
+                "reference": "afd75baf14acd462a93206a15066728572608d58"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Riimu/Kit-CSRF/zipball/afd75baf14acd462a93206a15066728572608d58",
+                "reference": "afd75baf14acd462a93206a15066728572608d58",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "riimu/kit-securerandom": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Riimu\\Kit\\CSRF\\": [
+                        "src/",
+                        "tests/tests/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Riikka Kalliomäki",
+                    "email": "riikka.kalliomaki@gmail.com",
+                    "homepage": "http://riimu.net"
+                }
+            ],
+            "description": "Secure and simple CSRF library protected against timing and BREACH attacks",
+            "homepage": "http://kit.riimu.net",
+            "keywords": [
+                "csrf",
+                "security"
+            ],
+            "time": "2015-08-22T06:11:41+00:00"
+        },
+        {
+            "name": "riimu/kit-securerandom",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Riimu/Kit-SecureRandom.git",
+                "reference": "707917beea9538b7a9b1853e5c5d8bb53b781995"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Riimu/Kit-SecureRandom/zipball/707917beea9538b7a9b1853e5c5d8bb53b781995",
+                "reference": "707917beea9538b7a9b1853e5c5d8bb53b781995",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.3 || ^5.7"
+            },
+            "suggest": {
+                "ext-mcrypt": "To use the Mcrypt secure random byte generator",
+                "ext-openssl": "To use the OpenSSL secure random byte generator"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Riimu\\Kit\\SecureRandom\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Riikka Kalliomäki",
+                    "email": "riikka.kalliomaki@gmail.com",
+                    "homepage": "http://riimu.net"
+                }
+            ],
+            "description": "Library for leveraging available secure random generators",
+            "homepage": "http://kit.riimu.net",
+            "keywords": [
+                "generator",
+                "random",
+                "secure"
+            ],
+            "time": "2017-09-09T15:23:06+00:00"
+        },
+        {
+            "name": "team-reflex/oauth2-discord",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/teamreflex/oauth2-discord.git",
+                "reference": "01f79da934603089e34dada4cab4cb6d019f3cfd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/teamreflex/oauth2-discord/zipball/01f79da934603089e34dada4cab4cb6d019f3cfd",
+                "reference": "01f79da934603089e34dada4cab4cb6d019f3cfd",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.2",
+                "league/oauth2-client": "^1.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "~4.0",
+                "satooshi/php-coveralls": "^1.0",
+                "symfony/var-dumper": "^3.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Discord\\OAuth\\": "src/Discord"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Cole",
+                    "email": "david@team-reflex.com"
+                }
+            ],
+            "description": "OAuth2 client for authenticating with the Discord API servers",
+            "time": "2016-06-20T22:20:04+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
