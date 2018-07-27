@@ -15,7 +15,9 @@ $app->bind("/:query",function($params){
 				"title" => $user->getUsername(),
 				"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
 				"user" => $user,
-				"socialImage" => $user->getAvatarURL()
+				"socialImage" => $user->getAvatarURL(),
+				"showProfile" => true,
+				"profileTab"
 			);
 		
 			return $this->render("views:Profile.php with views:Layout.php",$data);

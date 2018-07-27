@@ -22,6 +22,10 @@ define("ALERT_TYPE_SECONDARY","secondary");
 define("ALERT_TYPE_LIGHT","light");
 define("ALERT_TYPE_PRIMARY","primary");
 
+define("PROFILE_TAB_POSTS","PROFILE_TAB_POSTS");
+define("PROFILE_TAB_FOLLOWING","PROFILE_TAB_FOLLOWING");
+define("PROFILE_TAB_FOLLOWERS","PROFILE_TAB_FOLLOWERS");
+
 if(DEVELOPER_MODE == true){
 	error_reporting(E_ALL);
 	ini_set("display_errors",1);
