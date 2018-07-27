@@ -10,9 +10,10 @@
 						<input type="password" name="password" placeholder="Password" class="form-control mb-2"/>
 						<input type="submit" class="btn btn-primary btn-block mb-1" value="Sign In"/>
 						
-						<a href="<?= $app->routeUrl("/register"); ?>" class="btn btn-light btn-block my-0">Create an account</a>
-
 						<a href="<?= $app->routeUrl("/gigadriveLogin"); ?>" class="btn btn-success btn-block mt-1" data-no-instant>Login with Gigadrive</a>
+
+						<a href="<?= $app->routeUrl("/register"); ?>">Create an account</a>
+						<a href="<?= $app->routeUrl("/forgotpw"); ?>" class="float-right">Forgot your password?</a>
 					</form>
 				</div>
 			</div>
