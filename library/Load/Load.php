@@ -26,8 +26,8 @@ require_once __DIR__ . "/../Session/session.php";
  * @param arrray $variables
  * @return string
  */
-function tr($phrase,$variables = null){
+/*function tr($phrase,$variables = null){
 	return i18n::getTranslatedMessage($phrase,$variables);
-}
+}*/
 
 Util::cleanupTempFolder();

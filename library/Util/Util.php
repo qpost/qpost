@@ -3,6 +3,11 @@
 define("DEVELOPER_MODE",(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["HTTP_HOST"])[0] == "localhost" || explode(":",$_SERVER["HTTP_HOST"])[0] == "127.0.0.1")));
 define("DEFAULT_TWITTER_IMAGE","https://gigadrivegroup.com/android-chrome-192x192.png");
 
+define("NAV_HOME","NAV_HOME");
+define("NAV_NOTIFICATIONS","NAV_NOTIFICATIONS");
+define("NAV_MESSAGES","NAV_MESSAGES");
+define("NAV_ACCOUNT","NAV_ACCOUNT");
+
 define("AD_TYPE_LEADERBOARD","adLeaderboard");
 define("AD_TYPE_HORIZONTAL","adLeaderboard");
 define("AD_TYPE_BLOCK","adBlock");
