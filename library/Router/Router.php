@@ -21,7 +21,7 @@ try {
 
 define("CSRF_TOKEN",$csrf->getToken());
 
-// TODO: Require route files
+require $app->path("routes:Home.php");
 
 $app->on("after",function() {
 	if($this->response->status == "404"){
