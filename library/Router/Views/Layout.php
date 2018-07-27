@@ -121,9 +121,7 @@ if(isset($title) && !empty($title)){
 					</div>
 				</nav>
 
-				<div class="card-body">
-					<?= $content_for_layout ?>
-				</div>
+				<?= $content_for_layout ?>
 			</div>
 
 			<footer class="small text-muted">
