@@ -45,6 +45,35 @@ if(isset($title) && !empty($title)){
 
 						if(Util::isLoggedIn()){
 							?>
+							<li class="nav-item<?= (isset($nav) && $nav == NAV_HOME) ? " active" : ""; ?>">
+								<a href="/" class="nav-link">
+									home
+								</a>
+							</li>
+
+							<li class="nav-item<?= (isset($nav) && $nav == NAV_NOTIFICATIONS) ? " active" : ""; ?>">
+								<a href="/notifications" class="nav-link">
+									notifications
+								</a>
+							</li>
+
+							<li class="nav-item<?= (isset($nav) && $nav == NAV_MESSAGES) ? " active" : ""; ?>">
+								<a href="/messages" class="nav-link">
+									messages
+								</a>
+							</li>
+
+							<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
+								<a href="/account" class="nav-link">
+									account
+								</a>
+							</li>
+
+							<li class="nav-item">
+								<a href="/logout" class="nav-link">
+									log out
+								</a>
+							</li>
 							<?php
 						}
 
