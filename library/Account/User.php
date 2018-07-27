@@ -103,6 +103,12 @@ class User {
 
 	/**
 	 * @access private
+	 * @var string $bio
+	 */
+	private $bio;
+
+	/**
+	 * @access private
 	 * @var string $time
 	 */
 	private $time;
@@ -155,6 +161,7 @@ class User {
 				$this->username = $row["username"];
 				$this->email = $row["email"];
 				$this->avatar = $row["avatar"];
+				$this->bio = $row["bio"];
 				$this->time = $row["time"];
 
 				$this->exists = true;
@@ -209,6 +216,16 @@ class User {
 	 */
 	public function getAvatarURL(){
 		return $this->avatar;
+	}
+
+	/**
+	 * Returns the user's bio
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getBio(){
+		return $this->bio;
 	}
 
 	/**
