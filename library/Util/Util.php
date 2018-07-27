@@ -76,6 +76,16 @@ class Util {
 			return true;
 		}
 	}
+
+	/**
+	 * Returns the user object for the currently logged in user
+	 * 
+	 * @access public
+	 * @return User
+	 */
+	public static function getCurrentUser(){
+		return self::isLoggedIn() ? User::getUserById($_SESSION["id"]) : null;
+	}
 	
 	/**
      * Returns HTML Code that is converted to "x minutes ago" format via timeago.js
