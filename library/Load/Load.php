@@ -18,7 +18,6 @@ require_once __DIR__ . "/../Shutdown/Shutdown.php";
 require_once __DIR__ . "/../Database/Database.php";
 require_once __DIR__ . "/../Util/Util.php";
 require_once __DIR__ . "/../Lime/App.php";
-require_once __DIR__ . "/../Session/session.php";
 
 /**
  * Alias for i18n::getTranslatedMessage()
