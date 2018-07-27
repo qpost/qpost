@@ -64,9 +64,11 @@ class Database {
 			} else {
 				$this->db->set_charset("utf8mb4");
 
-				$s = $this->db->prepare("SET @@session.time_zone='UTC'");
-				$s->execute();
-				$s->close();
+				if(UPDATE_TIMEZONE == true){
+					$s = $this->db->prepare("SET @@session.time_zone='UTC'");
+					$s->execute();
+					$s->close();
+				}
 
 				$connected = true;
 			}

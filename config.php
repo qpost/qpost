@@ -24,3 +24,5 @@ define("GIGADRIVE_CDN_UPLOAD_SCRIPT_SECRET","");
 define("CRONJOB_SECRET","");
 
 define("LOCALE_COMPONENT","");
+
+define("UPDATE_TIMEZONE",true);
