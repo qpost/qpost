@@ -121,6 +121,12 @@ class User {
 
 	/**
 	 * @access private
+	 * @var int $posts
+	 */
+	private $posts;
+
+	/**
+	 * @access private
 	 * @var int $followers
 	 */
 	private $followers;
@@ -165,6 +171,9 @@ class User {
 				$this->time = $row["time"];
 
 				$this->exists = true;
+
+				if(!is_null($this->posts))
+					$this->reloadPostsCount();
 
 				if(!is_null($this->following))
 					$this->reloadFollowingCount();
@@ -239,6 +248,33 @@ class User {
 	}
 
 	/**
+	 * Gets the user's posts count
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public function getPosts(){
+		if(is_null($this->posts)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `posts` WHERE `user` = ?");
+			$stmt->bind_param("i",$this->id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$this->posts = $row["count"];
+
+					$this->saveToCache();
+				}
+			}
+			$stmt->close();
+		}
+
+		return $this->posts;
+	}
+
+	/**
 	 * Gets the user's followers count
 	 * 
 	 * @access public
@@ -290,6 +326,16 @@ class User {
 		}
 
 		return $this->following;
+	}
+
+	/**
+	 * Reloads the posts count
+	 * 
+	 * @access public
+	 */
+	public function reloadPostsCount(){
+		$this->posts = null;
+		$this->getPosts();
 	}
 
 	/**
