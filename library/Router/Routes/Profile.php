@@ -17,10 +17,10 @@ $app->bind("/:query",function($params){
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
-				"profileTab"
+				"profileTab" => PROFILE_TAB_POSTS
 			);
 		
-			return $this->render("views:Profile.php with views:Layout.php",$data);
+			return $this->render("views:Profile/Posts.php with views:Layout.php",$data);
 		}
 	}
 });
