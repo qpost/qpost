@@ -25,4 +25,4 @@ define("CRONJOB_SECRET","");
 
 define("LOCALE_COMPONENT","");
 
-define("UPDATE_TIMEZONE",true);
+define("TIMEZONE","");
