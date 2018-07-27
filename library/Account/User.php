@@ -263,6 +263,7 @@ class User {
 				$result = $stmt->get_result();
 
 				if($result->num_rows){
+					$row = $result->fetch_assoc();
 					$this->posts = $row["count"];
 
 					$this->saveToCache();
@@ -290,6 +291,7 @@ class User {
 				$result = $stmt->get_result();
 
 				if($result->num_rows){
+					$row = $result->fetch_assoc();
 					$this->followers = $row["count"];
 
 					$this->saveToCache();
@@ -317,6 +319,7 @@ class User {
 				$result = $stmt->get_result();
 
 				if($result->num_rows){
+					$row = $result->fetch_assoc();
 					$this->following = $row["count"];
 
 					$this->saveToCache();
