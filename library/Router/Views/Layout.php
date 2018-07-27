@@ -106,6 +106,7 @@ if(isset($title) && !empty($title)){
 									?>
 									<?php
 								} else {
+									if($app->route != "/"){
 									?>
 								<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
 									<a href="/login" class="nav-link">
@@ -113,6 +114,7 @@ if(isset($title) && !empty($title)){
 									</a>
 								</li>
 									<?php
+									}
 								}
 
 								?>

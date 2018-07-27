@@ -22,7 +22,6 @@ try {
 define("CSRF_TOKEN",$csrf->getToken());
 
 require $app->path("routes:Home.php");
-require $app->path("routes:Login.php");
 
 $app->on("after",function() {
 	if($this->response->status == "404"){
