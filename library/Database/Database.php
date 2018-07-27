@@ -81,7 +81,7 @@ class Database {
 	 * 
 	 * @access protected
 	 */
-	protected function __destruct(){
+	public function __destruct(){
 		$this->shutdown();
 	}
 

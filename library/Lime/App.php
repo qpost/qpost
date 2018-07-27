@@ -613,7 +613,7 @@ class App implements \ArrayAccess {
         }
 
         if (strpos($____template, ':') !== false && $____file = $this->path($____template)) {
-            $____template = $____file;
+			$____template = $____file;
         }
 
         $extend = function($from) use(&$____layout) {
@@ -622,7 +622,7 @@ class App implements \ArrayAccess {
 
         extract((array)$_____slots);
 
-        ob_start();
+		ob_start();
         include $____template;
         $output = ob_get_clean();
 
