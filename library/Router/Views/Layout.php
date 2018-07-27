@@ -108,7 +108,7 @@ if(isset($title) && !empty($title)){
 								} else {
 									?>
 								<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
-									<a href="/login" class="nav-link" data-no-instant>
+									<a href="/login" class="nav-link">
 										<i class="fas fa-sign-in-alt"></i> Sign In
 									</a>
 								</li>
