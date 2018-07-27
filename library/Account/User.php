@@ -1,0 +1,215 @@
+<?php
+
+/**
+ * Represents a user
+ * 
+ * @package Account
+ * @author Gigadrive (support@gigadrivegroup.com)
+ * @copyright 2016-2018 Gigadrive
+ * @link https://gigadrivegroup.com/dev/technologies
+ */
+class User {
+	/**
+	 * Gets a user object by the user's ID
+	 * 
+	 * @access public
+	 * @param int $id
+	 * @return User
+	 */
+	public static function getUserById($id){
+		$n = "user_id_" . $id;
+
+		if(CacheHandler::existsInCache($n)){
+			return CacheHandler::getFromCache($n);
+		} else {
+			$user = new User($id);
+			$user->reload();
+
+			if($user->exists == true){
+				return $user;
+			} else {
+				return null;
+			}
+		}
+	}
+
+	/**
+	 * Gets a user object by the user's username
+	 * 
+	 * @access public
+	 * @param string $username
+	 * @return User
+	 */
+	public static function getUserByUsername($username){
+		$n = "user_name_" . $id;
+
+		if(CacheHandler::existsInCache($n)){
+			return CacheHandler::getFromCache($n);
+		} else {
+			$id = null;
+
+			$mysqli = Database::Instance()->get();
+			$stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE `username` = ?");
+			$stmt->bind_param("s",$username);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					$id = $row["id"];
+				}
+			}
+			$stmt->close();
+
+			if(!is_null($id)){
+				$user = new User($id);
+				$user->reload();
+	
+				if($user->exists == true){
+					return $user;
+				} else {
+					return null;
+				}
+			} else {
+				return null;
+			}
+		}
+	}
+
+	/**
+	 * @access private
+	 * @var int $id
+	 */
+	private $id;
+
+	/**
+	 * @access private
+	 * @var string $username
+	 */
+	private $username;
+
+	/**
+	 * @access private
+	 * @var string $email
+	 */
+	private $email;
+
+	/**
+	 * @access private
+	 * @var string $avatar
+	 */
+	private $avatar;
+
+	/**
+	 * @access private
+	 * @var string $time
+	 */
+	private $time;
+
+	/**
+	 * @access private
+	 * @var bool $exists
+	 */
+	private $exists;
+
+	/**
+	 * Constructor
+	 * 
+	 * @access private
+	 * @param int $id
+	 */
+	protected function __construct($id){
+		$this->id = $id;
+	}
+
+	/**
+	 * Reloads the user's data
+	 * 
+	 * @access public
+	 */
+	public function reload(){
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id` = ?");
+		$stmt->bind_param("i",$this->id);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
+				$this->id = $row["id"];
+				$this->username = $row["username"];
+				$this->email = $row["email"];
+				$this->avatar = $row["avatar"];
+				$this->time = $row["time"];
+
+				$this->exists = true;
+			}
+
+			$this->saveToCache();
+		}
+		$stmt->close();
+	}
+
+	/**
+	 * Returns the user's account ID
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public function getId(){
+		return $this->id;
+	}
+
+	/**
+	 * Returns the user's username
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getUsername(){
+		return $this->username;
+	}
+
+	/**
+	 * Returns the user's email address
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getEmail(){
+		return $this->email;
+	}
+
+	/**
+	 * Returns the user's avatar URL
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getAvatarURL(){
+		return $this->avatar;
+	}
+
+	/**
+	 * Returns the registration time for the user
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getTime(){
+		return $this->time;
+	}
+
+	/**
+	 * Saves the user object to the cache
+	 * 
+	 * @access public
+	 */
+	public function saveToCache(){
+		CacheHandler::setToCache("user_id_" . $this->id,$this,20*60);
+		CacheHandler::setToCache("user_name_" . $this->username,$this,20*60);
+	}
+}
