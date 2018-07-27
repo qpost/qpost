@@ -12,7 +12,7 @@
 						
 						<a href="<?= $app->routeUrl("/register"); ?>" class="btn btn-light btn-block my-0">Create an account</a>
 
-						<a href="<?= $app->routeUrl("/gigadriveLogin"); ?>" class="btn btn-success btn-block mt-1">Login with Gigadrive</a>
+						<a href="<?= $app->routeUrl("/gigadriveLogin"); ?>" class="btn btn-success btn-block mt-1" data-no-instant>Login with Gigadrive</a>
 					</form>
 				</div>
 			</div>
