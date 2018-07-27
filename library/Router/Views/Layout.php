@@ -199,19 +199,35 @@ if(isset($title) && !empty($title)){
 					?>
 				<div class="card-body">
 					<div class="row">
-						<div class="col-lg-3">
+						<div class="col-lg-3 mb-3">
 							<h4 class="mb-0"><?= $user->getUsername(); ?></h4>
 							<p class="text-muted my-0" style="font-size: 16px">@<?= $user->getUsername(); ?></p>
 
 							<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2">' . $user->getBio() . '</p>' : ""; ?>
+
+							<?php
+
+							if(Util::isLoggedIn()){
+								if($user->getId() == Util::getCurrentUser()->getId()){
+									?>
+							<a href="/edit" class="btn btn-light btn-block mt-2">Edit profile</a>
+									<?php
+								} else {
+									?>
+							<button type="button" class="followButton btn btn-primary btn-block mt-2" data-user-id="<?= $user->getId(); ?>">Follow</button>
+									<?php
+								}
+							}
+
+							?>
 						</div>
 
 						<div class="col-lg-9">
 							<nav class="nav nav-pills nav-justified">
-							<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_POSTS) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername()); ?>">Posts (<?= $user->getPosts(); ?>)</a>
-							<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWING) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/following"); ?>">Following (<?= $user->getFollowing(); ?>)</a>
-							<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWERS) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/followers"); ?>">Followers (<?= $user->getFollowers(); ?>)</a>
-						</nav>
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_POSTS) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername()); ?>">Posts (<?= $user->getPosts(); ?>)</a>
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWING) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/following"); ?>">Following (<?= $user->getFollowing(); ?>)</a>
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWERS) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/followers"); ?>">Followers (<?= $user->getFollowers(); ?>)</a>
+							</nav>
 							<?= $content_for_layout ?>
 						</div>
 					</div>
