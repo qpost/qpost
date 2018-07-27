@@ -41,7 +41,7 @@ class User {
 	 * @return User
 	 */
 	public static function getUserByUsername($username){
-		$n = "user_name_" . $id;
+		$n = "user_name_" . strtolower($username);
 
 		if(CacheHandler::existsInCache($n)){
 			return CacheHandler::getFromCache($n);
@@ -302,6 +302,6 @@ class User {
 	 */
 	public function saveToCache(){
 		CacheHandler::setToCache("user_id_" . $this->id,$this,20*60);
-		CacheHandler::setToCache("user_name_" . $this->username,$this,20*60);
+		CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,20*60);
 	}
 }
