@@ -13,7 +13,7 @@ $app->bind("/:query",function($params){
 
 			$data = array(
 				"title" => $user->getUsername(),
-				"nav" => $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
+				"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL()
 			);
