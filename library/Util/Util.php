@@ -4,6 +4,7 @@ define("DEVELOPER_MODE",(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["
 define("DEFAULT_TWITTER_IMAGE","https://gigadrivegroup.com/android-chrome-192x192.png");
 
 define("NAV_HOME","NAV_HOME");
+define("NAV_PROFILE","NAV_PROFILE");
 define("NAV_NOTIFICATIONS","NAV_NOTIFICATIONS");
 define("NAV_MESSAGES","NAV_MESSAGES");
 define("NAV_ACCOUNT","NAV_ACCOUNT");

@@ -51,6 +51,12 @@ if(isset($title) && !empty($title)){
 								</a>
 							</li>
 
+							<li class="nav-item<?= (isset($nav) && $nav == NAV_PROFILE) ? " active" : ""; ?>">
+								<a href="/<?= Util::getCurrentUser()->getUsername(); ?>" class="nav-link">
+									my profile
+								</a>
+							</li>
+
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_NOTIFICATIONS) ? " active" : ""; ?>">
 								<a href="/notifications" class="nav-link">
 									notifications
@@ -136,6 +142,12 @@ if(isset($title) && !empty($title)){
 								<li class="nav-item<?= (isset($nav) && $nav == NAV_HOME) ? " active" : ""; ?>">
 									<a href="/" class="nav-link">
 										home
+									</a>
+								</li>
+
+								<li class="nav-item<?= (isset($nav) && $nav == NAV_PROFILE) ? " active" : ""; ?>">
+									<a href="/<?= Util::getCurrentUser()->getUsername(); ?>" class="nav-link">
+										my profile
 									</a>
 								</li>
 
