@@ -200,7 +200,7 @@ if(isset($title) && !empty($title)){
 				<div class="card-body">
 					<div class="row">
 						<div class="col-lg-3 mb-3">
-							<h4 class="mb-0"><?= $user->getUsername(); ?></h4>
+							<h4 class="mb-0"><?= $user->getDisplayName(); ?></h4>
 							<p class="text-muted my-0" style="font-size: 16px">@<?= $user->getUsername(); ?></p>
 
 							<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2">' . $user->getBio() . '</p>' : ""; ?>
