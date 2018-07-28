@@ -132,12 +132,14 @@
 					<div class="card-body">
 						<div class="row">
 							<div class="col-1">
-								<img class="rounded mx-1 my-1" src="<?= $u->getAvatarURL(); ?>" width="40" height="40"/>
+								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+									<img class="rounded mx-1 my-1" src="<?= $u->getAvatarURL(); ?>" width="40" height="40"/>
+								</a>
 							</div>
 
 							<div class="col-11">
 								<p class="mb-0">
-									<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
+									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline"><span class="font-weight-bold"><?= $u->getDisplayName(); ?></span></a>
 									<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
 
 									&bull;
