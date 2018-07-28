@@ -530,6 +530,7 @@ class User {
 				$u = self::getUserById($user);
 				if(!is_null($u)){
 					$u->cacheFollower($this->id);
+					$u->reloadFollowerCount();
 				}
 			}
 			$stmt->close();
@@ -555,6 +556,7 @@ class User {
 				$u = self::getUserById($user);
 				if(!is_null($u)){
 					$u->uncacheFollower($this->id);
+					$u->reloadFollowerCount();
 				}
 			}
 			$stmt->close();
