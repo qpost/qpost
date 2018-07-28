@@ -22,13 +22,13 @@ if(!isset($socialImage) || empty($socialImage))
 		<meta http-equiv="x-ua-compatible" content="ie=edge"/>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 
-		<meta name="og:site_name" content="<?= $app["config.site"]["name"] ?>" />
-		<meta name="og:title" content='<?= $title; ?>' />
-		<meta name="og:description" content="<?= $description; ?>" />
+		<meta name="og:site_name" content="<?= Util::sanatizeHTMLAttribute($app["config.site"]["name"]) ?>" />
+		<meta name="og:title" content="<?= Util::sanatizeHTMLAttribute($title) ?>" />
+		<meta name="og:description" content="<?= Util::sanatizeHTMLAttribute($description) ?>" />
 
-		<meta name="twitter:title" content="<?= $title; ?>" />
-		<meta name="twitter:description" content="<?= $description; ?>" />
-		<meta name="twitter:image" content="<?= $socialImage; ?>" />
+		<meta name="twitter:title" content="<?= Util::sanatizeHTMLAttribute($title) ?>" />
+		<meta name="twitter:description" content="<?= Util::sanatizeHTMLAttribute($description) ?>" />
+		<meta name="twitter:image" content="<?= Util::sanatizeHTMLAttribute($socialImage) ?>" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:site" content="@mcskinhistory" />
 
@@ -40,7 +40,7 @@ if(!isset($socialImage) || empty($socialImage))
 		<meta name="msapplication-TileColor" content="#007BFF">
 		<meta name="theme-color" content="#007BFF">
 
-		<meta name="description" content="<?= $description; ?>" />
+		<meta name="description" content="<?= Util::sanatizeHTMLAttribute($description) ?>" />
 		<meta name="keywords" content="social,network,posts,profiles,pictures,bio,gigadrive" />
 
 		<noscript><meta http-equiv="refresh" content="0; URL=https://gigadrivegroup.com/badbrowser"></noscript>
@@ -60,7 +60,7 @@ if(!isset($socialImage) || empty($socialImage))
 			"assets:js/app.js",
 			"https://www.google.com/recaptcha/api.js"]); ?>
 
-		<script>loadCookieConsent();var CSRF_TOKEN = "<?= htmlspecialchars(CSRF_TOKEN, ENT_QUOTES | ENT_HTML5, "UTF-8") ?>";</script>
+		<script>loadCookieConsent();var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";</script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	</head>
 	<body>
