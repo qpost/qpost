@@ -173,6 +173,12 @@ class User {
 	private $following;
 
 	/**
+	 * @access private
+	 * @var array $cachedFollowers
+	 */
+	protected $cachedFollowers = [];
+
+	/**
 	 * Constructor
 	 * 
 	 * @access private
@@ -405,6 +411,78 @@ class User {
 	public function reloadFollowerCount(){
 		$this->followers = null;
 		$this->getFollowers();
+	}
+
+	/**
+	 * Returns whether or not the user followers $user
+	 * 
+	 * @access public
+	 * @param int|User $user The user object or ID
+	 * @return bool
+	 */
+	public function isFollowing($user){
+		if(is_object($user))
+			$user = $user->getId();
+
+		if(in_array($user,$this->cachedFollowers)){
+			return true;
+		} else {
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `follower` = ? AND `following` = ?");
+			$stmt->bind_param("ii",$this->id,$user);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					if($row["count"] > 0){
+						array_push($this->cachedFollowers,$user);
+						$this->saveToCache();
+					}
+				}
+			}
+			$stmt->close();
+
+			return in_array($user,$this->cachedFollowers);
+		}
+	}
+
+	/**
+	 * Returns whether or not the user is followed by $user
+	 * 
+	 * @access public
+	 * @param int|User $user The user object or ID
+	 * @return bool
+	 */
+	public function isFollower($user){
+		if(!is_object($user))
+			$user = self::getUserById($user);
+
+		if(in_array($this->id,$user->cachedFollowers)){
+			return true;
+		} else {
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `follower` = ? AND `following` = ?");
+			$stmt->bind_param("ii",$user->getId(),$this->id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					if($row["count"] > 0){
+						array_push($user->cachedFollowers,$this->getId());
+						$user->saveToCache();
+					}
+				}
+			}
+			$stmt->close();
+
+			return in_array($this->id,$user->cachedFollowers);
+		}
 	}
 
 	/**
