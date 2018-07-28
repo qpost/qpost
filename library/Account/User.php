@@ -424,7 +424,7 @@ class User {
 		if(is_object($user))
 			$user = $user->getId();
 
-		if(in_array($user,$this->cachedFollowers)){
+		if(in_array($this->id,User::getUserById($user)->cachedFollowers)){
 			return true;
 		} else {
 			$mysqli = Database::Instance()->get();
@@ -438,14 +438,14 @@ class User {
 					$row = $result->fetch_assoc();
 
 					if($row["count"] > 0){
-						array_push($this->cachedFollowers,$user);
+						User::getUserById($user)->cacheFollower($this->id);
 						$this->saveToCache();
 					}
 				}
 			}
 			$stmt->close();
 
-			return in_array($user,$this->cachedFollowers);
+			return in_array($this->id,User::getUserById($user)->cachedFollowers);
 		}
 	}
 
@@ -457,7 +457,8 @@ class User {
 	 * @return bool
 	 */
 	public function isFollower($user){
-		if(!is_object($user))
+		return is_object($user) ? $user->isFollowing($this) : self::getUserById($user)->isFollowing($this);
+		/*if(!is_object($user))
 			$user = self::getUserById($user);
 
 		if(in_array($this->id,$user->cachedFollowers)){
@@ -465,8 +466,10 @@ class User {
 		} else {
 			$mysqli = Database::Instance()->get();
 
+			$uID = $user->getId();
+
 			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `follower` = ? AND `following` = ?");
-			$stmt->bind_param("ii",$user->getId(),$this->id);
+			$stmt->bind_param("ii",$uID,$this->id);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
 
@@ -482,7 +485,7 @@ class User {
 			$stmt->close();
 
 			return in_array($this->id,$user->cachedFollowers);
-		}
+		}*/
 	}
 
 	/**
