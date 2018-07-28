@@ -6,8 +6,24 @@ $app->bind("/account",function(){
 	$data = array(
 		"title" => "Account",
 		"nav" => NAV_ACCOUNT,
-		"subtitle" => "Account"
+		"subtitle" => "My account",
+		"showAccountNav" => true,
+		"accountNav" => ACCOUNT_NAV_HOME
 	);
 
-	return $this->render("views:Account.php with views:Layout.php",$data);
+	return $this->render("views:Account/Home.php with views:Layout.php",$data);
+});
+
+$app->bind("/account/privacy",function(){
+	if(!Util::isLoggedIn()) return $this->reroute("/login");
+
+	$data = array(
+		"title" => "Privacy",
+		"nav" => NAV_ACCOUNT,
+		"subtitle" => "Privacy settings",
+		"showAccountNav" => true,
+		"accountNav" => ACCOUNT_NAV_PRIVACY
+	);
+
+	return $this->render("views:Account/Privacy.php with views:Layout.php",$data);
 });

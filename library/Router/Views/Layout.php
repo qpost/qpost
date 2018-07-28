@@ -269,6 +269,24 @@ if(!isset($socialImage) || empty($socialImage))
 					</div>
 				</div>
 					<?php
+				} else if(isset($showAccountNav) && $showAccountNav == true){
+					?>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-lg-4 mb-3">
+							<ul class="nav nav-pills flex-column">
+								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_HOME) echo ' active'; ?>" href="/account">Account</a></li>
+								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_PRIVACY) echo ' active'; ?>" href="/account/privacy">Privacy</a></li>
+								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_LOGOUT) echo ' active'; ?>" href="/logout" data-no-instant>Logout</a></li>
+							</ul>
+						</div>
+
+						<div class="col-lg-8">
+							<?= $content_for_layout ?>
+						</div>
+					</div>
+				</div>
+					<?php
 				} else {
 					echo $content_for_layout;
 				}
