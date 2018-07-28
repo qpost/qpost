@@ -200,6 +200,7 @@ if(isset($title) && !empty($title)){
 				<div class="card-body">
 					<div class="row">
 						<div class="col-lg-3 mb-3">
+							<center><img class="rounded border-primary mb-2" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
 							<h4 class="mb-0"><?= $user->getDisplayName(); ?></h4>
 							<p class="text-muted my-0" style="font-size: 16px">@<?= $user->getUsername(); ?></p>
 
