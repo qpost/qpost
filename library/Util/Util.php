@@ -775,4 +775,20 @@ class Util {
 
 		return $s;
 	}
+
+	/**
+	 * Returns code for a paginator
+	 * 
+	 * @access public
+	 * @param int $page
+	 * @param int $itemsPerPage
+	 * @param int $total
+	 * @param string $urlPattern
+	 * @return JasonGrimes\Paginator
+	 */
+	public static function paginate($page,$itemsPerPage,$total,$urlPattern){
+		$paginator = new JasonGrimes\Paginator($total,$itemsPerPage,$page,$urlPattern);
+	
+		return $paginator;
+	}
 }
