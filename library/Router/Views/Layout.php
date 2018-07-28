@@ -25,7 +25,6 @@ if(!isset($socialImage) || empty($socialImage))
 		<meta name="og:site_name" content="<?= $app["config.site"]["name"] ?>" />
 		<meta name="og:title" content='<?= $title; ?>' />
 		<meta name="og:description" content="<?= $description; ?>" />
-		<meta name="og:locale" content="<?= LANGUAGE; ?>" />
 
 		<meta name="twitter:title" content="<?= $title; ?>" />
 		<meta name="twitter:description" content="<?= $description; ?>" />
