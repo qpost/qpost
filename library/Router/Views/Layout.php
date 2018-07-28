@@ -273,7 +273,7 @@ if(!isset($socialImage) || empty($socialImage))
 					?>
 				<div class="card-body">
 					<div class="row">
-						<div class="col-lg-4 mb-3">
+						<div class="col-lg-3 mb-3">
 							<ul class="nav nav-pills flex-column">
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_HOME) echo ' active'; ?>" href="/account">Account</a></li>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_PRIVACY) echo ' active'; ?>" href="/account/privacy">Privacy</a></li>
@@ -281,7 +281,7 @@ if(!isset($socialImage) || empty($socialImage))
 							</ul>
 						</div>
 
-						<div class="col-lg-8">
+						<div class="col-lg-9">
 							<?= $content_for_layout ?>
 						</div>
 					</div>
