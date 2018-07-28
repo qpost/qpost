@@ -849,9 +849,9 @@ class Util {
 				return '<a href="/edit" class="btn btn-light' . $classString . '">Edit profile</a>';
 			} else if($currentUser->getId() != $user){
 				if($currentUser->isFollowing($user)){
-					return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '">Unfollow</button>';
+					return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Unfollow</button>';
 				} else {
-					return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '">Follow</button>';
+					return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Follow</button>';
 				}
 			}
 		}
