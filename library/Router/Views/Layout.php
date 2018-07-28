@@ -73,7 +73,7 @@ if(!isset($socialImage) || empty($socialImage))
 					</button>
 
 					<a class="navbar-brand" href="/">
-						twitterClone
+						<?= $app["config.site"]["name"] ?>
 					</a>
 				</div>
 
@@ -156,7 +156,7 @@ if(!isset($socialImage) || empty($socialImage))
 							</button>
 
 							<a class="navbar-brand" href="/">
-								twitterClone
+								<?= $app["config.site"]["name"] ?>
 							</a>
 						</div>
 

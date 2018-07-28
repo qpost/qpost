@@ -3,7 +3,7 @@
 $app = new Lime\App();
 $app["config.begin_point"] = microtime();
 $app["config.site"] = array(
-    "name" => "twitterClone"
+    "name" => "twitter clone"
 );
 
 $app->path("assets",__DIR__ . "/../../assets");
