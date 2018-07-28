@@ -25,6 +25,9 @@ require $app->path("routes:Home.php");
 require $app->path("routes:Login.php");
 require $app->path("routes:Logout.php");
 require $app->path("routes:Profile.php");
+require $app->path("routes:Account.php");
+require $app->path("routes:Messages.php");
+require $app->path("routes:Notifications.php");
 require $app->path("routes:Edit.php");
 require $app->path("routes:ScriptsRoute.php");
 
