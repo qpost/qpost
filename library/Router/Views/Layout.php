@@ -170,7 +170,7 @@ if(isset($title) && !empty($title)){
 								</li>
 
 								<li class="nav-item">
-									<a href="/logout" class="nav-link">
+									<a href="/logout" class="nav-link" data-no-instant>
 										log out
 									</a>
 								</li>
