@@ -1,5 +1,7 @@
 <?php
 
+define("SITE_NAME","");
+
 define("MYSQL_HOST","");
 define("MYSQL_PORT","");
 define("MYSQL_USER","");
