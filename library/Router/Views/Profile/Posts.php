@@ -27,9 +27,11 @@ if($num > 0){
 	if(count($posts) > 0){
 		echo '<div class="card postContainer mt-2"><div class="card-body">';
 
-		foreach($posts as $post){
+		for($i = 0; $i < count($posts); $i++){
+			$post = $posts[$i];
+			$last = $i == count($posts)-1;
 		?>
-		<div class="card post" data-post-id="<?= $post["id"]; ?>">
+		<div class="card post<?= !$last ? " mb-2" : "" ?>" data-post-id="<?= $post["id"]; ?>">
 			<div class="card-body">
 				<div class="row">
 					<div class="col-1">
