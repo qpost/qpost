@@ -13,7 +13,7 @@
 		</div>
 	</div>
 
-<?php if(!empty($query)){ ?>
+<?php if(!empty(trim($query))){ ?>
 
 	<nav class="nav nav-pills nav-justified my-3">
 		<a class="nav-item nav-link<?php if(isset($type) && $type == "posts") echo " active"; ?>" href="<?= $app->routeUrl("/search?query=" . urlencode($query) . "&type=posts"); ?>">Posts</a>
