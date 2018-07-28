@@ -173,7 +173,7 @@ class User {
 	private $following;
 
 	/**
-	 * @access private
+	 * @access protected
 	 * @var array $cachedFollowers
 	 */
 	protected $cachedFollowers = [];
@@ -483,6 +483,19 @@ class User {
 
 			return in_array($this->id,$user->cachedFollowers);
 		}
+	}
+
+	/**
+	 * Adds a user ID to the follower cache
+	 * 
+	 * @access public
+	 * @param int $user
+	 */
+	public function cacheFollower($user){
+		if(!in_array($user,$this->cachedFollowers))
+			array_push($this->cachedFollowers,$user);
+		
+		$this->saveToCache();
 	}
 
 	/**

@@ -32,6 +32,8 @@ if($num > 0){
 		for($i = 0; $i < count($users); $i++){
 			$u = $users[$i];
 			$last = $i == count($users)-1;
+
+			$u->cacheFollower($uID);
 		?>
 		<div class="card userCard col-md-4" data-user-id="<?= $u->getId(); ?>">
 			<div class="card-body">
