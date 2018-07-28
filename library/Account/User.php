@@ -241,7 +241,7 @@ class User {
 	 * @return string
 	 */
 	public function getAvatarURL(){
-		return $this->avatar;
+		return is_null($this->avatar) ? sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,"defaultAvatar.png") : $this->avatar;
 	}
 
 	/**
