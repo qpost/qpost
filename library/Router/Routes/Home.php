@@ -11,7 +11,8 @@ $app->bind("/",function(){
 	} else {
 		$data = array(
 			"title" => "Home",
-			"nav" => NAV_HOME
+			"nav" => NAV_HOME,
+			"subtitle" => "Hello, " . Util::getCurrentUser()->getDisplayName() . "!"
 		);
 	
 		return $this->render("views:HomeFeed.php with views:Layout.php",$data);

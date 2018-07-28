@@ -41,8 +41,6 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"])){
 }
 
 ?><div class="card-body">
-	<h4>Edit your profile</h4>
-
 	<?php
 
 	if(!is_null($errorMsg))
