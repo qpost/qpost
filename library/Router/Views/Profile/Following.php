@@ -30,12 +30,21 @@ if($num > 0){
 		echo '<div class="row">';
 
 		for($i = 0; $i < count($users); $i++){
-			$user = $users[$i];
+			$u = $users[$i];
 			$last = $i == count($users)-1;
 		?>
-		<div class="card userCard col-md-4" data-user-id="<?= $user->getId(); ?>">
+		<div class="card userCard col-md-4" data-user-id="<?= $u->getId(); ?>">
 			<div class="card-body">
-				<?php var_dump($user); ?>
+				<center>
+					<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/></a>
+
+					<h5 class="mb-0"><?= $u->getDisplayName(); ?></h5>
+					<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
+
+					<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+
+					<button type="button" class="followButton btn btn-primary btn-block mt-2" data-user-id="<?= $u->getId(); ?>">Follow</button>
+				</center>
 			</div>
 		</div>
 		<?php

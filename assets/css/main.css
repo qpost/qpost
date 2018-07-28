@@ -4,3 +4,7 @@
 	font-weight: bold;
 	color: #FFF;
 }
+
+.clearUnderline {
+	text-decoration: none !important;
+}
