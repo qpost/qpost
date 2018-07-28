@@ -19,7 +19,8 @@ $app->bind("/:query",function($params){
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
 				"profileTab" => PROFILE_TAB_POSTS,
-				"currentPage" => $page
+				"currentPage" => $page,
+				"subtitle" => $user->getUsername() . "'s profile"
 			);
 		
 			return $this->render("views:Profile/Posts.php with views:Layout.php",$data);
@@ -46,7 +47,8 @@ $app->bind("/:query/:page",function($params){
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
 				"profileTab" => PROFILE_TAB_POSTS,
-				"currentPage" => $page
+				"currentPage" => $page,
+				"subtitle" => $user->getUsername() . "'s profile"
 			);
 		
 			return $this->render("views:Profile/Posts.php with views:Layout.php",$data);

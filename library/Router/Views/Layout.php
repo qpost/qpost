@@ -13,7 +13,8 @@ if(isset($title) && !empty($title)){
 
 		<?= $app->style([
 			"assets:css/bootstrap.min.css",
-			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"
+			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
+			"assets:css/main.css"
 			]); ?>
 
 		<?= $app->script([
@@ -194,6 +195,14 @@ if(isset($title) && !empty($title)){
 				</nav>
 
 				<?php
+
+				if(isset($subtitle)){
+					?>
+				<div class="pageSubtitle">
+					<?= $subtitle; ?>
+				</div>
+					<?php
+				}
 
 				if(isset($showProfile) && $showProfile == true && isset($user)){
 					?>
