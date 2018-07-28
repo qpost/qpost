@@ -13,7 +13,7 @@ $app->bind("/:query/following",function($params){
 				$this->reroute("/" . $user->getUsername());
 
 			$data = array(
-				"title" => $user->getUsername(),
+				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
@@ -41,7 +41,7 @@ $app->bind("/:query/following/:page",function($params){
 				$this->reroute("/" . $user->getUsername());
 
 			$data = array(
-				"title" => $user->getUsername(),
+				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
@@ -69,7 +69,7 @@ $app->bind("/:query/followers",function($params){
 				$this->reroute("/" . $user->getUsername());
 
 			$data = array(
-				"title" => $user->getUsername(),
+				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
@@ -97,7 +97,7 @@ $app->bind("/:query/followers/:page",function($params){
 				$this->reroute("/" . $user->getUsername());
 
 			$data = array(
-				"title" => $user->getUsername(),
+				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
@@ -125,7 +125,7 @@ $app->bind("/:query",function($params){
 				$this->reroute("/" . $user->getUsername());
 
 			$data = array(
-				"title" => $user->getUsername(),
+				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
@@ -153,7 +153,7 @@ $app->bind("/:query/:page",function($params){
 				$this->reroute("/" . $user->getUsername());
 
 			$data = array(
-				"title" => $user->getUsername(),
+				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
