@@ -30,7 +30,8 @@ require $app->path("routes:Edit.php");
 $app->on("after",function() {
 	if($this->response->status == "404"){
 		$data = array(
-			"title" => "Not found"
+			"title" => "Error 404: Page not found",
+			"subtitle" => "Error 404: Page not found"
 		);
 
 		$this->response->body = $this->render("views:ErrorPages/404.php with views:Layout.php",$data);
