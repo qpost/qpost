@@ -64,7 +64,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"])){
 			</div>
 
 			<div class="form-group row">
-				<label for="username" class="control-label col-sm-2 col-form-label">Username</label>
+				<label for="username" class="control-label col-sm-2 col-form-label">Username *</label>
 
 				<div class="col-sm-10 input-group mb-3">
 					<div class="input-group-prepend">
@@ -83,6 +83,14 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"])){
 			</div>
 
 			<div class="form-group row">
+				<label for="bio" class="control-label col-sm-2 col-form-label">Profile Picture *</label>
+
+				<div class="col-sm-10 input-group mb-3">
+					<img src="<?= $user->getAvatarURL(); ?>" width="300" height="300"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
 				<div class="col-sm-10 input-group mb-3 offset-sm-2">
 					<button type="submit" class="btn btn-primary">Save changes</button>
 				</div>
@@ -90,5 +98,5 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"])){
 		</fieldset>
 	</form>
 
-	<p class="mb-0 small">Some of your account data can only be changed on <a href="https://gigadrivegroup.com/account" target="_blank">gigadrivegroup.com</a>.</p>
+	<p class="mb-0 small">Fields marked with a <b>*</b> can only be changed on <a href="https://gigadrivegroup.com/account" target="_blank">gigadrivegroup.com</a>.</p>
 </div>
