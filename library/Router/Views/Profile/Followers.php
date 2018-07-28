@@ -36,9 +36,9 @@ if($num > 0){
 		<div class="card userCard col-md-4" data-user-id="<?= $u->getId(); ?>">
 			<div class="card-body">
 				<center>
-					<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/></a>
+					<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/>
 
-					<h5 class="mb-0"><a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><?= $u->getDisplayName(); ?></a></h5>
+					<h5 class="mb-0"><?= $u->getDisplayName(); ?></a></h5>
 					<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
 
 					<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
