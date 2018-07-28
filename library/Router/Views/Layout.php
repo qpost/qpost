@@ -134,7 +134,7 @@ if(!isset($socialImage) || empty($socialImage))
 							?>
 						<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
 							<a href="/login" class="nav-link" data-no-instant>
-								<i class="fas fa-sign-in-alt"></i> Sign In
+								log in
 							</a>
 						</li>
 							<?php
@@ -218,7 +218,7 @@ if(!isset($socialImage) || empty($socialImage))
 									?>
 								<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
 									<a href="/login" class="nav-link">
-										<i class="fas fa-sign-in-alt"></i> Sign In
+										log in
 									</a>
 								</li>
 									<?php
