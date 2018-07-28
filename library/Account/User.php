@@ -499,6 +499,69 @@ class User {
 	}
 
 	/**
+	 * Removes a user ID to the follower cache
+	 * 
+	 * @access public
+	 * @param int $user
+	 */
+	public function uncacheFollower($user){
+		if(in_array($user,$this->cachedFollowers))
+			$this->cachedFollowers = Util::removeFromArray($this->cachedFollowers,$user);
+		
+		$this->saveToCache();
+	}
+
+	/**
+	 * Follows a user
+	 * 
+	 * @access public
+	 * @param int|User $user
+	 */
+	public function follow($user){
+		if(is_object($user))
+			$user = $user->getId();
+
+		if(!$this->isFollowing($user)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("INSERT INTO `follows` (`follower`,`following`) VALUES(?,?);");
+			$stmt->bind_param("ii",$this->id,$user);
+			if($stmt->execute()){
+				$u = self::getUserById($user);
+				if(!is_null($u)){
+					$u->cacheFollower($this->id);
+				}
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
+	 * Unfollows a user
+	 * 
+	 * @access public
+	 * @param int|User $user
+	 */
+	public function unfollow($user){
+		if(is_object($user))
+			$user = $user->getId();
+
+		if($this->isFollowing($user)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("DELETE FROM `follows` WHERE `follower` = ? AND `following` = ?");
+			$stmt->bind_param("ii",$this->id,$user);
+			if($stmt->execute()){
+				$u = self::getUserById($user);
+				if(!is_null($u)){
+					$u->uncacheFollower($this->id);
+				}
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
 	 * Saves the user object to the cache
 	 * 
 	 * @access public

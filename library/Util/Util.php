@@ -791,4 +791,40 @@ class Util {
 	
 		return $paginator;
 	}
+
+	/**
+	 * Returns the index of a variable in an array
+	 * 
+	 * @access public
+	 * @param array $array
+	 * @param mixed $var
+	 * @return int Returns -1 if the variable could not be found in the array
+	 */
+	public static function indexOf($array,$var){
+		if(count($array) > 0 && in_array($var,$array)){
+			for($i = 0; $i < count($array); $i++) { 
+				if($array[$i] == $var){
+					return $i;
+				}
+			}
+		}
+
+		return -1;
+	}
+
+	/**
+	 * Removes an entry from an array and returns the new array
+	 * 
+	 * @access public
+	 * @param array $array
+	 * @param mixed $var
+	 * @return array
+	 */
+	public static function removeFromArray($array,$var){
+		while(($i = self::indexOf($array,$var)) && ($i != -1)){
+			unset($array[$i]);
+		}
+
+		return $array;
+	}
 }
