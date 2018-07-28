@@ -77,6 +77,30 @@ class User {
 		}
 	}
 
+	public static function registerUser($id,$username,$avatar,$email,$token){
+		$mysqli = Database::Instance()->get();
+		$user = self::getUserById($id);
+
+		if($account == null){
+			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`id`,`username`,`email`,`avatar`,`token`) VALUES(?,?,?,?);");
+			$stmt->bind_param("issss",$id,$username,$email,$avatar,$token);
+			$stmt->execute();
+			$stmt->close();
+
+			self::getUserById($id); // cache data after registering
+		} else {
+			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ? WHERE `id` = ?");
+			$stmt->bind_param("ssssi",$username,$email,$avatar,$token,$id);
+			$stmt->execute();
+			$stmt->close();
+
+			$user->username = $username;
+			$user->email = $email;
+			$user->avatar = $avatar;
+			$user->saveToCache();
+		}
+	}
+
 	/**
 	 * Gets a user object by data
 	 * 
@@ -90,7 +114,7 @@ class User {
 	 * @param string $time
 	 * @return User
 	 */
-	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$time){
+	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$time){
 		$user = new User($id);
 
 		$user->id = $id;
@@ -99,6 +123,7 @@ class User {
 		$user->email = $email;
 		$user->avatar = $avatar;
 		$user->bio = $bio;
+		$user->token = $token;
 		$user->time = $time;
 
 		$user->saveToCache();
@@ -141,6 +166,12 @@ class User {
 	 * @var string $bio
 	 */
 	private $bio;
+
+	/**
+	 * @access private
+	 * @var string $token
+	 */
+	private $token;
 
 	/**
 	 * @access private
@@ -210,6 +241,7 @@ class User {
 				$this->email = $row["email"];
 				$this->avatar = $row["avatar"];
 				$this->bio = $row["bio"];
+				$this->token = $row["token"];
 				$this->time = $row["time"];
 
 				$this->exists = true;
@@ -287,6 +319,16 @@ class User {
 	 */
 	public function getBio(){
 		return $this->bio;
+	}
+
+	/**
+	 * Returns the Gigadrive API token
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getToken(){
+		return $this->token;
 	}
 
 	/**

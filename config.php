@@ -19,6 +19,9 @@ define("MAIL_PORT","");
 define("RECAPTCHA_PUBLIC","");
 define("RECAPTCHA_PRIVATE","");
 
+define("GIGADRIVE_API_SECRET","");
+define("GIGADRIVE_APP_ID","");
+
 define("GIGADRIVE_CDN_UPLOAD_FINAL_URL","");
 define("GIGADRIVE_CDN_UPLOAD_SCRIPT","");
 define("GIGADRIVE_CDN_UPLOAD_SCRIPT_SECRET","");

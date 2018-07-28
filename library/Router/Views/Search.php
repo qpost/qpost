@@ -92,7 +92,7 @@
 								"text" => $row["postText"],
 								"time" => $row["postTime"]
 							],
-							"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["time"])
+							"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["time"])
 						]);
 					}
 
@@ -108,7 +108,7 @@
 
 				if($result->num_rows){
 					while($row = $result->fetch_assoc()){
-						array_push($results,User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["time"]));
+						array_push($results,User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["time"]));
 					}
 				}
 			}
