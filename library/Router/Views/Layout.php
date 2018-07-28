@@ -252,6 +252,10 @@ if(!isset($socialImage) || empty($socialImage))
 
 							<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($user->getBio()) . '</p>' : ""; ?>
 
+							<p class="my-2 text-muted">
+								Joined <?= date("F Y",strtotime($user->getTime())); ?>
+							</p>
+
 							<?= Util::followButton($user->getId(),true,["btn-block","mt-2"]) ?>
 						</div>
 
