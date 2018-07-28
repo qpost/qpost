@@ -18,7 +18,7 @@ $app->bind("/:query/following",function($params){
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
-				"profileTab" => PROFILE_TAB_POSTS,
+				"profileTab" => PROFILE_TAB_FOLLOWING,
 				"currentPage" => $page,
 				"subtitle" => "People followed by " . $user->getUsername()
 			);
@@ -46,7 +46,7 @@ $app->bind("/:query/following/:page",function($params){
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
-				"profileTab" => PROFILE_TAB_POSTS,
+				"profileTab" => PROFILE_TAB_FOLLOWING,
 				"currentPage" => $page,
 				"subtitle" => "People followed by " . $user->getUsername()
 			);
@@ -74,7 +74,7 @@ $app->bind("/:query/followers",function($params){
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
-				"profileTab" => PROFILE_TAB_POSTS,
+				"profileTab" => PROFILE_TAB_FOLLOWERS,
 				"currentPage" => $page,
 				"subtitle" => "People following " . $user->getUsername()
 			);
@@ -102,7 +102,7 @@ $app->bind("/:query/followers/:page",function($params){
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
-				"profileTab" => PROFILE_TAB_POSTS,
+				"profileTab" => PROFILE_TAB_FOLLOWERS,
 				"currentPage" => $page,
 				"subtitle" => "People following " . $user->getUsername()
 			);

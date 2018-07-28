@@ -78,6 +78,35 @@ class User {
 	}
 
 	/**
+	 * Gets a user object by data
+	 * 
+	 * @access public
+	 * @param int $id
+	 * @param string $displayName
+	 * @param string $username
+	 * @param string $email
+	 * @param string $avatar
+	 * @param string $bio
+	 * @param string $time
+	 * @return User
+	 */
+	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$time){
+		$user = new User($id);
+
+		$user->id = $id;
+		$user->displayName = $displayName;
+		$user->username = $username;
+		$user->email = $email;
+		$user->avatar = $avatar;
+		$user->bio = $bio;
+		$user->time = $time;
+
+		$user->saveToCache();
+
+		return $user;
+	}
+
+	/**
 	 * @access private
 	 * @var int $id
 	 */
