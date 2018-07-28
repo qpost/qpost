@@ -27,7 +27,7 @@ if($num > 0){
 	echo Util::paginate($currentPage,$itemsPerPage,$num,"/" . $user->getUsername() . "/following/(:num)");
 
 	if(count($users) > 0){
-		echo '<div class="row">';
+		echo '<div class="row mt-2">';
 
 		for($i = 0; $i < count($users); $i++){
 			$u = $users[$i];
