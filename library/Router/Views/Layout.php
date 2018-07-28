@@ -215,21 +215,7 @@ if(isset($title) && !empty($title)){
 
 							<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($user->getBio()) . '</p>' : ""; ?>
 
-							<?php
-
-							if(Util::isLoggedIn()){
-								if($user->getId() == Util::getCurrentUser()->getId()){
-									?>
-							<a href="/edit" class="btn btn-light btn-block mt-2">Edit profile</a>
-									<?php
-								} else {
-									?>
-							<button type="button" class="followButton btn btn-primary btn-block mt-2" data-user-id="<?= $user->getId(); ?>">Follow</button>
-									<?php
-								}
-							}
-
-							?>
+							<?= Util::followButton($user->getId(),true,["btn-block","mt-2"]) ?>
 						</div>
 
 						<div class="col-lg-9">

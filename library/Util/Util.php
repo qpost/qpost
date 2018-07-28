@@ -827,4 +827,33 @@ class Util {
 
 		return $array;
 	}
+
+	/**
+	 * Returns HTML code for a follow button
+	 * 
+	 * @access public
+	 * @param int|User $user The user to follow
+	 * @param bool $defaultToEdit If true, an "Edit Profile" button will be returned if $user is the currently logged in user
+	 * @param array $classes The CSS classes to be added to the button
+	 */
+	public static function followButton($user,$defaultToEdit = false,$classes = null){
+		if(is_object($user))
+			$user = $user->getId();
+
+		$classString = !is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "";
+
+		if(self::isLoggedIn()){
+			$currentUser = Util::getCurrentUser();
+
+			if($defaultToEdit && $currentUser->getId() == $user){
+				return '<a href="/edit" class="btn btn-light' . $classString . '">Edit profile</a>';
+			} else if($currentUser->getId() != $user){
+				if($currentUser->isFollowing($user)){
+					return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '">Unfollow</button>';
+				} else {
+					return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '">Follow</button>';
+				}
+			}
+		}
+	}
 }
