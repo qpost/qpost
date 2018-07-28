@@ -6,6 +6,8 @@ $itemsPerPage = 40;
 $num = $user->getPosts();
 $uID = $user->getId();
 
+$showNoPostsInfo = false;
+
 if($num > 0){
 	$posts = [];
 
@@ -59,7 +61,15 @@ if($num > 0){
 		}
 
 		echo '</div></div>';
+	} else {
+		$showNoPostsInfo = true;
 	}
 
 	echo Util::paginate($currentPage,$itemsPerPage,$num,"/" . $user->getUsername() . "/(:num)");
+} else {
+	$showNoPostsInfo = true;
+}
+
+if($showNoPostsInfo){
+	echo '<div class="mt-2">' . Util::createAlert("noPosts","<b>There's nothing here yet!</b><br/>@" . $user->getUsername() . " has not posted anything yet!",ALERT_TYPE_INFO) . '</div>';
 }
