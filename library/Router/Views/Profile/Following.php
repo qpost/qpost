@@ -45,7 +45,7 @@ if($num > 0){
 
 					<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
 
-					<button type="button" class="followButton btn btn-primary btn-block mt-2" data-user-id="<?= $u->getId(); ?>">Follow</button>
+					<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
 				</center>
 			</div>
 		</div>
