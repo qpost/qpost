@@ -9,13 +9,17 @@ $app->post("/scripts/toggleFollow",function(){
 			$toFollow = User::getUserById($_POST["user"]);
 
 			if(!is_null($user) && !is_null($toFollow)){
-				if($user->isFollowing($toFollow)){
-					$user->unfollow($toFollow);
+				if($user->getId() != $toFollow->getId()){
+					if($user->isFollowing($toFollow)){
+						$user->unfollow($toFollow);
+					} else {
+						$user->follow($toFollow);
+					}
+	
+					return json_decode(["following" => $user->isFollowing($user)]);
 				} else {
-					$user->follow($toFollow);
+					return json_encode(["error" => "Can't follow self"]);
 				}
-
-				return json_decode(["following" => $user->isFollowing($user)]);
 			} else {
 				return json_encode(["error" => "Invalid user"]);
 			}
