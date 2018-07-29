@@ -99,6 +99,12 @@
 					}
 
 					echo '</div>';
+
+					?>
+			<div class="card homeFeedLoadMore px-3 py-3 text-center my-2" style="cursor: pointer; background: #9FCCFC">
+				Click to load more
+			</div>
+					<?php
 				} else {
 					echo Util::createAlert("emptyFeed","Your feed is empty! Follow somebody or post something to fill it!",ALERT_TYPE_INFO);
 				}
