@@ -187,9 +187,9 @@ class User {
 
 	/**
 	 * @access private
-	 * @var int $posts
+	 * @var int $feedEntries
 	 */
-	private $posts;
+	private $feedEntries;
 
 	/**
 	 * @access private
@@ -252,8 +252,8 @@ class User {
 
 				$this->exists = true;
 
-				if(!is_null($this->posts))
-					$this->reloadPostsCount();
+				if(!is_null($this->feedEntries))
+					$this->reloadFeedEntriesCount();
 
 				if(!is_null($this->following))
 					$this->reloadFollowingCount();
@@ -348,23 +348,23 @@ class User {
 	}
 
 	/**
-	 * Gets the user's posts count
+	 * Gets the user's feed entries count
 	 * 
 	 * @access public
 	 * @return int
 	 */
-	public function getPosts(){
-		if(is_null($this->posts)){
+	public function getFeedEntries(){
+		if(is_null($this->feedEntries)){
 			$mysqli = Database::Instance()->get();
 
-			$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `posts` WHERE `user` = ?");
+			$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `feed` WHERE `user` = ?");
 			$stmt->bind_param("i",$this->id);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
 
 				if($result->num_rows){
 					$row = $result->fetch_assoc();
-					$this->posts = $row["count"];
+					$this->feedEntries = $row["count"];
 
 					$this->saveToCache();
 				}
@@ -372,7 +372,7 @@ class User {
 			$stmt->close();
 		}
 
-		return $this->posts;
+		return $this->feedEntries;
 	}
 
 	/**
@@ -432,13 +432,13 @@ class User {
 	}
 
 	/**
-	 * Reloads the posts count
+	 * Reloads the feed entries count
 	 * 
 	 * @access public
 	 */
-	public function reloadPostsCount(){
-		$this->posts = null;
-		$this->getPosts();
+	public function reloadFeedEntriesCount(){
+		$this->feedEntries = null;
+		$this->getFeedEntries();
 	}
 
 	/**

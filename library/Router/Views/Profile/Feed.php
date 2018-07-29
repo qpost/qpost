@@ -3,22 +3,22 @@
 $mysqli = Database::Instance()->get();
 $itemsPerPage = 40;
 
-$num = $user->getPosts();
+$num = $user->getFeedEntries();
 $uID = $user->getId();
 
-$showNoPostsInfo = false;
+$showNoEntriesInfo = false;
 
 if($num > 0){
-	$posts = [];
+	$feedEntries = [];
 
-	$stmt = $mysqli->prepare("SELECT * FROM `posts` WHERE `user` = ? ORDER BY `time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
+	$stmt = $mysqli->prepare("SELECT * FROM `feed` WHERE `user` = ? ORDER BY `time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
 	$stmt->bind_param("i",$uID);
 	if($stmt->execute()){
 		$result = $stmt->get_result();
 
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				array_push($posts,$row);
+				array_push($feedEntries,$row);
 			}
 		}
 	}
@@ -26,14 +26,14 @@ if($num > 0){
 
 	echo Util::paginate($currentPage,$itemsPerPage,$num,"/" . $user->getUsername() . "/(:num)");
 
-	if(count($posts) > 0){
-		echo '<div class="card postContainer mt-2"><div class="card-body">';
+	if(count($feedEntries) > 0){
+		echo '<div class="card feedContainer mt-2"><div class="card-body">';
 
-		for($i = 0; $i < count($posts); $i++){
-			$post = $posts[$i];
-			$last = $i == count($posts)-1;
+		for($i = 0; $i < count($feedEntries); $i++){
+			$entry = $feedEntries[$i];
+			$last = $i == count($feedEntries)-1;
 		?>
-		<div class="card post<?= !$last ? " mb-2" : "" ?>" data-post-id="<?= $post["id"]; ?>">
+		<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $entry["id"]; ?>">
 			<div class="card-body">
 				<div class="row">
 					<div class="col-1">
@@ -47,11 +47,11 @@ if($num > 0){
 
 							&bull;
 
-							<?= Util::timeago($post["time"]); ?>
+							<?= Util::timeago($entry["time"]); ?>
 						</p>
 
 						<p class="mb-0">
-							<?= $post["text"]; ?>
+							<?= $entry["text"]; ?>
 						</p>
 					</div>
 				</div>
@@ -62,14 +62,14 @@ if($num > 0){
 
 		echo '</div></div>';
 	} else {
-		$showNoPostsInfo = true;
+		$showNoEntriesInfo = true;
 	}
 
 	echo Util::paginate($currentPage,$itemsPerPage,$num,"/" . $user->getUsername() . "/(:num)");
 } else {
-	$showNoPostsInfo = true;
+	$showNoEntriesInfo = true;
 }
 
-if($showNoPostsInfo){
-	echo '<div class="mt-2">' . Util::createAlert("noPosts","<b>There's nothing here yet!</b><br/>@" . $user->getUsername() . " has not posted anything yet!",ALERT_TYPE_INFO) . '</div>';
+if($showNoEntriesInfo){
+	echo '<div class="mt-2">' . Util::createAlert("noEntries","<b>There's nothing here yet!</b><br/>@" . $user->getUsername() . " has not posted anything yet!",ALERT_TYPE_INFO) . '</div>';
 }

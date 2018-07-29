@@ -63,5 +63,5 @@ if($num > 0){
 }
 
 if($showNoUsersInfo){
-	echo '<div class="mt-2">' . Util::createAlert("noPosts","<b>There's nothing here yet!</b><br/>@" . $user->getUsername() . " has not followed anybody yet!",ALERT_TYPE_INFO) . '</div>';
+	echo '<div class="mt-2">' . Util::createAlert("noUsers","<b>There's nothing here yet!</b><br/>@" . $user->getUsername() . " has not followed anybody yet!",ALERT_TYPE_INFO) . '</div>';
 }
