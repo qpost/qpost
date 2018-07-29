@@ -130,12 +130,12 @@ $app->bind("/:query",function($params){
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
-				"profileTab" => PROFILE_TAB_POSTS,
+				"profileTab" => PROFILE_TAB_FEED,
 				"currentPage" => $page,
 				"subtitle" => $user->getUsername() . "'s profile" . (Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? ' (This is you!)<a class="float-right text-white" href="/edit">Edit profile</a>' : "")
 			);
 		
-			return $this->render("views:Profile/Posts.php with views:Layout.php",$data);
+			return $this->render("views:Profile/Feed.php with views:Layout.php",$data);
 		}
 	}
 });
@@ -158,12 +158,12 @@ $app->bind("/:query/:page",function($params){
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
-				"profileTab" => PROFILE_TAB_POSTS,
+				"profileTab" => PROFILE_TAB_FEED,
 				"currentPage" => $page,
 				"subtitle" => $user->getUsername() . "'s profile" . (Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? ' (This is you!)<a class="float-right text-white" href="/edit">Edit profile</a>' : "")
 			);
 		
-			return $this->render("views:Profile/Posts.php with views:Layout.php",$data);
+			return $this->render("views:Profile/Feed.php with views:Layout.php",$data);
 		}
 	}
 });
