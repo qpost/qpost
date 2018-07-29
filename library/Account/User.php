@@ -228,6 +228,12 @@ class User {
 	private $unreadNotifications;
 
 	/**
+	 * @access private
+	 * @var array $followingArray
+	 */
+	private $followingArray;
+
+	/**
 	 * Constructor
 	 * 
 	 * @access private
@@ -645,6 +651,9 @@ class User {
 				$stmt->execute();
 				$stmt->close();
 			}
+
+			$this->followingArray = null;
+			$this->saveToCache();
 		}
 	}
 
@@ -672,6 +681,37 @@ class User {
 			}
 			$stmt->close();
 		}
+	}
+
+	/**
+	 * Returns an array with the IDs of all users that are followed by this one
+	 * 
+	 * @access public
+	 * @return array
+	 */
+	public function getFollowingAsArray(){
+		if(is_null($this->followingArray)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT `following` FROM `follows` WHERE `follower` = ?");
+			$stmt->bind_param("i",$this->id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$this->followingArray = [];
+
+					while($row = $result->fetch_assoc()){
+						array_push($this->followingArray,$row["following"]);
+					}
+				}
+			}
+			$stmt->close();
+
+			$this->saveToCache();
+		}
+
+		return $this->followingArray;
 	}
 
 	/**
