@@ -33,7 +33,7 @@
 		if(CacheHandler::existsInCache($n)){
 			$num = CacheHandler::getFromCache($n);
 		} else {
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` AS p INNER JOIN `users` AS u ON p.user = u.id WHERE (p.`text` LIKE ? OR u.`displayName` LIKE ? OR u.`username` LIKE ?) AND p.`type` = 'POST'");
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` AS p INNER JOIN `users` AS u ON p.user = u.id WHERE (p.`text` LIKE ? OR u.`displayName` LIKE ? OR u.`username` LIKE ?) AND p.`type` = 'POST' AND u.`privacy.level` = 'PUBLIC'");
 			$stmt->bind_param("sss",$q,$q,$q);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
@@ -54,7 +54,7 @@
 		if(CacheHandler::existsInCache($n)){
 			$num = CacheHandler::getFromCache($n);
 		} else {
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `users` AS u WHERE u.`displayName` LIKE ? OR u.`username` LIKE ? OR u.`bio` LIKE ?");
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `users` AS u WHERE (u.`displayName` LIKE ? OR u.`username` LIKE ? OR u.`bio` LIKE ?) AND u.`privacy.level` != 'CLOSED'");
 			$stmt->bind_param("sss",$q,$q,$q);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
@@ -79,7 +79,7 @@
 		$mysqli = Database::Instance()->get();
 
 		if($type == "posts"){
-			$stmt = $mysqli->prepare("SELECT p.`id` AS `postID`,p.`text` AS `postText`,p.`time` AS `postTime`,u.* FROM `feed` AS p INNER JOIN `users` AS u ON p.user = u.id WHERE (p.`text` LIKE ? OR u.`displayName` LIKE ? OR u.`username` LIKE ?) AND p.`type` = 'POST' ORDER BY p.`time` DESC LIMIT " . (($page-1)*$itemsPerPage) . " , " . $itemsPerPage);
+			$stmt = $mysqli->prepare("SELECT p.`id` AS `postID`,p.`text` AS `postText`,p.`time` AS `postTime`,u.* FROM `feed` AS p INNER JOIN `users` AS u ON p.user = u.id WHERE (p.`text` LIKE ? OR u.`displayName` LIKE ? OR u.`username` LIKE ?) AND p.`type` = 'POST' AND u.`privacy.level` = 'PUBLIC' ORDER BY p.`time` DESC LIMIT " . (($page-1)*$itemsPerPage) . " , " . $itemsPerPage);
 			$stmt->bind_param("sss",$q,$q,$q);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
@@ -101,7 +101,7 @@
 			}
 			$stmt->close();
 		} else if($type == "users"){
-			$stmt = $mysqli->prepare("SELECT u.* FROM `users` AS u WHERE u.`displayName` LIKE ? OR u.`username` LIKE ? OR u.`bio` LIKE ? LIMIT " . (($page-1)*$itemsPerPage) . " , " . $itemsPerPage);
+			$stmt = $mysqli->prepare("SELECT u.* FROM `users` AS u WHERE (u.`displayName` LIKE ? OR u.`username` LIKE ? OR u.`bio` LIKE ?) AND u.`privacy.level` != 'CLOSED' LIMIT " . (($page-1)*$itemsPerPage) . " , " . $itemsPerPage);
 			$stmt->bind_param("sss",$q,$q,$q);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
@@ -171,7 +171,7 @@
 							<h5 class="mb-0"><?= $u->getDisplayName(); ?></a></h5>
 							<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
 
-							<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+							<?= (($u->getPrivacyLevel() == PRIVACY_LEVEL_PUBLIC || (Util::isLoggedIn() && $u->isFollower($_SESSION["id"]))) && (!is_null($u->getBio()))) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
 
 							<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
 						</center>
