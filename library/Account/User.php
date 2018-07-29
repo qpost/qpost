@@ -709,6 +709,8 @@ class User {
 	 */
 	public function getFollowingAsArray(){
 		if(is_null($this->followingArray)){
+			$this->followingArray = [];
+
 			$mysqli = Database::Instance()->get();
 
 			$stmt = $mysqli->prepare("SELECT `following` FROM `follows` WHERE `follower` = ?");
@@ -717,8 +719,6 @@ class User {
 				$result = $stmt->get_result();
 
 				if($result->num_rows){
-					$this->followingArray = [];
-
 					while($row = $result->fetch_assoc()){
 						array_push($this->followingArray,$row["following"]);
 					}
