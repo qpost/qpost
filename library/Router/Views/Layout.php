@@ -81,6 +81,8 @@ if(!isset($socialImage) || empty($socialImage))
 						<?php
 
 						if(Util::isLoggedIn()){
+							$unreadMessages = Util::getCurrentUser()->getUnreadMessages();
+
 							?>
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_HOME) ? " active" : ""; ?>">
 								<a href="/" class="nav-link">
@@ -102,7 +104,7 @@ if(!isset($socialImage) || empty($socialImage))
 
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_MESSAGES) ? " active" : ""; ?>">
 								<a href="/messages" class="nav-link">
-									messages
+									messages<?= !is_null($unreadMessages) && $unreadMessages > 0 ? " <b>(" . $unreadMessages . ")</b>" : "</b>"; ?>
 								</a>
 							</li>
 
@@ -196,7 +198,7 @@ if(!isset($socialImage) || empty($socialImage))
 
 								<li class="nav-item<?= (isset($nav) && $nav == NAV_MESSAGES) ? " active" : ""; ?>">
 									<a href="/messages" class="nav-link">
-										messages
+										messages<?= !is_null($unreadMessages) && $unreadMessages > 0 ? " <b>(" . $unreadMessages . ")</b>" : "</b>"; ?>
 									</a>
 								</li>
 

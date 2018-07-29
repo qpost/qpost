@@ -210,6 +210,12 @@ class User {
 	protected $cachedFollowers = [];
 
 	/**
+	 * @access private
+	 * @var int $unreadMessages
+	 */
+	private $unreadMessages;
+
+	/**
 	 * Constructor
 	 * 
 	 * @access private
@@ -606,6 +612,44 @@ class User {
 			}
 			$stmt->close();
 		}
+	}
+
+	/**
+	 * Returns the number of unread messages the user has
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public function getUnreadMessages(){
+		if(is_null($this->unreadMessages)){
+			$this->reloadUnreadMessages();
+		}
+
+		return $this->unreadMessages;
+	}
+
+	/**
+	 * Updates the number of unread messages the user has
+	 * 
+	 * @access public
+	 */
+	public function reloadUnreadMessages(){
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `messages` WHERE `receiver` = ? AND `is_read` = 0");
+		$stmt->bind_param("i",$this->id);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
+				$this->unreadMessages = $row["count"];
+
+				$this->saveToCache();
+			}
+		}
+		$stmt->close();
 	}
 
 	/**
