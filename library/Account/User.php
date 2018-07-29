@@ -659,15 +659,19 @@ class User {
 			if($b){
 				$sID = session_id();
 
-				$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`following`,`type`,`sessionId`) VALUES(?,?,'NEW_FOLLOWING',?);");
-				$stmt->bind_param("iis",$this->id,$user,$sID);
-				$stmt->execute();
-				$stmt->close();
+				if($this->canPostFeedEntry(FEED_ENTRY_TYPE_NEW_FOLLOWING,$user)){
+					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`following`,`type`,`sessionId`) VALUES(?,?,'NEW_FOLLOWING',?);");
+					$stmt->bind_param("iis",$this->id,$user,$sID);
+					$stmt->execute();
+					$stmt->close();
+				}
 
-				$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`) VALUES(?,'NEW_FOLLOWER',?);");
-				$stmt->bind_param("ii",$user,$this->id);
-				$stmt->execute();
-				$stmt->close();
+				if($this->canPostNotification(NOTIFICATION_TYPE_NEW_FOLLOWER,$user,null)){
+					$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`) VALUES(?,'NEW_FOLLOWER',?);");
+					$stmt->bind_param("ii",$user,$this->id);
+					$stmt->execute();
+					$stmt->close();
+				}
 			}
 
 			$this->followingArray = null;
@@ -730,6 +734,101 @@ class User {
 		}
 
 		return $this->followingArray;
+	}
+
+	/**
+	 * Returns true if a feed entry may be posted with the given parameters
+	 * 
+	 * @access public
+	 * @param string $type
+	 * @param int $following
+	 * @return bool
+	 */
+	public function canPostFeedEntry($type,$following){
+		$b = true;
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `feed` WHERE `user` = ? AND `type` = ? AND `following` = ? AND `time` > (NOW() - INTERVAL 4 DAY)");
+		$stmt->bind_param("isi",$this->id,$type,$following);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
+				if($row["count"] > 0){
+					$b = false;
+				} else {
+					$s = $mysqli->prepare("SELECT `type`,`following` FROM `feed` WHERE `user` = ? ORDER BY `time` DESC LIMIT 10");
+					$s->bind_param("i",$this->id);
+					if($s->execute()){
+						$result = $s->get_result();
+
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								if($row["type"] == $type && $row["following"] == $following){
+									$b = false;
+									break;
+								}
+							}
+						}
+					}
+					$s->close();
+				}
+			}
+		}
+		$stmt->close();
+
+		return $b;
+	}
+
+	/**
+	 * Returns true if a notification may be posted with the given parameters
+	 * 
+	 * @access public
+	 * @param string $type
+	 * @param int $follower
+	 * @param int $post
+	 * @return bool
+	 */
+	public function canPostNotification($type,$follower,$post){
+		$b = true;
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `notifications` WHERE `user` = ? AND `type` = ? AND `follower` = ? AND `post` = ? AND `time` > (NOW() - INTERVAL 4 DAY)");
+		$stmt->bind_param("isii",$this->id,$type,$follower,$post);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
+				if($row["count"] > 0){
+					$b = false;
+				} else {
+					$s = $mysqli->prepare("SELECT `type`,`follower`,`post` FROM `notifications` WHERE `user` = ? ORDER BY `time` DESC LIMIT 10");
+					$s->bind_param("i",$this->id);
+					if($s->execute()){
+						$result = $s->get_result();
+
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								if($row["type"] == $type && $row["follower"] == $follower && $row["post"] == $post){
+									$b = false;
+									break;
+								}
+							}
+						}
+					}
+					$s->close();
+				}
+			}
+		}
+		$stmt->close();
+
+		return $b;
 	}
 
 	/**
