@@ -569,6 +569,8 @@ class User {
 	 * @param int|User $user
 	 */
 	public function follow($user){
+		if($this->getFollowers() >= FOLLOW_LIMIT) return;
+
 		if(is_object($user))
 			$user = $user->getId();
 

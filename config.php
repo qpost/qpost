@@ -31,3 +31,5 @@ define("CRONJOB_SECRET","");
 define("LOCALE_COMPONENT","");
 
 define("TIMEZONE","");
+
+define("FOLLOW_LIMIT","");
