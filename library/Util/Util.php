@@ -809,8 +809,30 @@ class Util {
 	 */
 	public static function paginate($page,$itemsPerPage,$total,$urlPattern){
 		$paginator = new JasonGrimes\Paginator($total,$itemsPerPage,$page,$urlPattern);
+
+		$p = "";
+
+		if ($paginator->getNumPages() > 1){
+			
+			$p .= '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center mt-3">';
+
+			if ($paginator->getPrevUrl())
+				$p .= '<li class="page-item"><a class="page-link" href="' . $paginator->getPrevUrl() . '">&laquo; Previous</a></li>';
+
+			foreach ($paginator->getPages() as $page){
+				if($page["url"]){
+					$p .= '<li class="page-item' . ($page["isCurrent"] ? " active" : "") . '"><a class="page-link" href="' . $page["url"] . '">' . $page["num"] . '</a></li>';
+				} else {
+					$p .= '<li class="page-item disabled"><a class="page-link" href="#">' . $page["num"] . '</a></li>';
+				}
+			}
+
+			if ($paginator->getNextUrl())
+				$p .= '<li class="page-item"><a class="page-link" href="' . $paginator->getNextUrl() . '">Next &raquo;</a></li>';
+
+		}
 	
-		return $paginator;
+		return $p;
 	}
 
 	/**
