@@ -114,7 +114,7 @@ class User {
 	 * @param string $time
 	 * @return User
 	 */
-	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$time){
+	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$time){
 		$user = new User($id);
 
 		$user->id = $id;
@@ -124,6 +124,7 @@ class User {
 		$user->avatar = $avatar;
 		$user->bio = $bio;
 		$user->token = $token;
+		$user->privacyLevel = $privacyLevel;
 		$user->time = $time;
 
 		$user->saveToCache();
@@ -172,6 +173,12 @@ class User {
 	 * @var string $token
 	 */
 	private $token;
+
+	/**
+	 * @access private
+	 * @var string $privacyLevel
+	 */
+	private $privacyLevel;
 
 	/**
 	 * @access private
@@ -266,6 +273,7 @@ class User {
 				$this->avatar = $row["avatar"];
 				$this->bio = $row["bio"];
 				$this->token = $row["token"];
+				$this->privacyLevel = $row["privacy.level"];
 				$this->time = $row["time"];
 
 				$this->exists = true;
@@ -353,6 +361,16 @@ class User {
 	 */
 	public function getToken(){
 		return $this->token;
+	}
+
+	/**
+	 * Returns the user's privacy level
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getPrivacyLevel(){
+		return $this->privacyLevel;
 	}
 
 	/**

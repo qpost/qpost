@@ -41,7 +41,7 @@
 									"text" => $row["postText"],
 									"time" => $row["postTime"]
 								],
-								"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["time"])
+								"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["time"])
 							]);
 						}
 					}
@@ -127,7 +127,7 @@
 							while($row = $result->fetch_assoc()){
 								array_push($trendingUsers,[
 									"increase" => $row["increase"],
-									"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["time"])
+									"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["time"])
 								]);
 							}
 
