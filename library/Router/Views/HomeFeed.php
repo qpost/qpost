@@ -2,6 +2,18 @@
 	<div class="row">
 		<div class="col-lg-8">
 			<h4>Feed</h4>
+
+			<div class="card mt-2 border-primary" style="background: #9FCCFC">
+				<div class="card-body">
+					<textarea class="form-control" id="homePostField" placeholder="Post something for your followers!"></textarea>
+
+					<p class="mb-0 mt-2 float-left small">
+						<?= POST_CHARACTER_LIMIT ?> characters left
+					</p>
+
+					<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2">Post</button>
+				</div>
+			</div>
 		</div>
 
 		<div class="col-lg-4">

@@ -12,7 +12,7 @@ if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId()){
 ?>
 <div class="card mt-2 border-primary" style="background: #9FCCFC">
 	<div class="card-body">
-		<textarea class="form-control" id="profilePostField" style="resize: none !important" placeholder="Post something for your followers!"></textarea>
+		<textarea class="form-control" id="profilePostField" placeholder="Post something for your followers!"></textarea>
 
 		<p class="mb-0 mt-2 float-left small">
 			<?= POST_CHARACTER_LIMIT ?> characters left
