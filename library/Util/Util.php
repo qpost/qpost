@@ -899,4 +899,19 @@ class Util {
 			}
 		}
 	}
+
+	/**
+	 * Returns a link that shows a warning for $link, returns $link if the host of the link is equal to HTTP_HOST
+	 * 
+	 * @access public
+	 * @param string $link
+	 * @return string
+	 */
+	public static function linkWarning($link){
+		if(isset($_SERVER["HTTP_HOST"]) && $_SERVER["HTTP_HOST"] != parse_url($link,PHP_URL_HOST)){
+			return "/out?link=" . urlencode($link);
+		} else {
+			return $link;
+		}
+	}
 }
