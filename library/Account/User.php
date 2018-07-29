@@ -605,6 +605,11 @@ class User {
 				$stmt->bind_param("iis",$this->id,$user,$sID);
 				$stmt->execute();
 				$stmt->close();
+
+				$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`) VALUES(?,'NEW_FOLLOWER',?);");
+				$stmt->bind_param("ii",$user,$this->id);
+				$stmt->execute();
+				$stmt->close();
 			}
 		}
 	}
