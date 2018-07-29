@@ -730,6 +730,8 @@ class User {
 		$stmt->bind_param("i",$this->id);
 		$stmt->execute();
 		$stmt->close();
+
+		$this->saveToCache();
 	}
 
 	/**
