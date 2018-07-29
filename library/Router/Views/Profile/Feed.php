@@ -29,6 +29,8 @@ if($num > 0){
 	if(count($feedEntries) > 0){
 		echo '<div class="feedContainer mt-2">';
 
+		$l = false;
+
 		for($i = 0; $i < count($feedEntries); $i++){
 			$entry = $feedEntries[$i];
 			$last = $i == count($feedEntries)-1;
@@ -60,13 +62,15 @@ if($num > 0){
 			</div>
 		</div>
 		<?php
+				$l = false;
 			} else if($entry["type"] == "NEW_FOLLOWING") {
 				$u2 = User::getUserById($entry["following"]);
 				?>
-		<p class="my-1 px-2 py-2 border-top border-bottom" style="border-color: #CCC">
+		<p class="my-1 px-2 py-2 border-top<?= $l ? " border-bottom" : ""; ?>" style="border-color: #CCC">
 			<b><a href="/<?= $user->getUsername(); ?>" class="clearUnderline"><?= $user->getDisplayName(); ?></a></b> is now following <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><?= $u2->getDisplayName(); ?></a> &bull; <span class="text-muted"><?= Util::timeago($entry["time"]); ?></span>
 		</p>
 				<?php
+				$l = true;
 			}
 		}
 
