@@ -59,6 +59,12 @@
 						$first = $i == 0;
 						$last = $i == count($results)-1;
 
+						if($first)
+							echo '<script>var HOME_FEED_FIRST_POST = ' . $post["id"] . ';</script>';
+
+						if($last)
+							echo '<script>var HOME_FEED_LAST_POST = ' . $post["id"] . ';</script>';
+
 						?>
 			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $post["id"]; ?>">
 				<div class="card-body">
