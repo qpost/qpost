@@ -101,7 +101,7 @@
 					echo '</div>';
 
 					?>
-			<div class="card homeFeedLoadMore px-3 py-3 text-center my-2" style="cursor: pointer; background: #9FCCFC">
+			<div class="card homeFeedLoadMore px-3 py-3 text-center my-2 border-primary" style="cursor: pointer; background: #9FCCFC">
 				Click to load more
 			</div>
 					<?php
