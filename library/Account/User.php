@@ -575,6 +575,8 @@ class User {
 		if(!$this->isFollowing($user)){
 			$mysqli = Database::Instance()->get();
 
+			$b = false;
+
 			$stmt = $mysqli->prepare("INSERT INTO `follows` (`follower`,`following`) VALUES(?,?);");
 			$stmt->bind_param("ii",$this->id,$user);
 			if($stmt->execute()){
@@ -582,9 +584,20 @@ class User {
 				if(!is_null($u)){
 					$u->cacheFollower($this->id);
 					$u->reloadFollowerCount();
+					
+					$b = true;
 				}
 			}
 			$stmt->close();
+
+			if($b){
+				$sID = session_id();
+
+				$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`following`,`type`,`sessionId`) VALUES(?,?,'NEW_FOLLOWING',?);");
+				$stmt->bind_param("iis",$this->id,$user,$sID);
+				$stmt->execute();
+				$stmt->close();
+			}
 		}
 	}
 
