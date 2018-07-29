@@ -118,7 +118,7 @@
 				if(CacheHandler::existsInCache($n)){
 					$trendingUsers = CacheHandler::getFromCache($n);
 				} else {
-					$stmt = $mysqli->prepare("SELECT COUNT(f.following) as `increase`,u.* FROM `users` AS u LEFT JOIN `follows` AS f ON f.`following` = u.`id` WHERE f.`time` > (NOW() - INTERVAL 24 HOUR) GROUP BY u.`id` ORDER BY `increase` DESC LIMIT 10");
+					$stmt = $mysqli->prepare("SELECT COUNT(f.following) as `increase`,u.* FROM `users` AS u LEFT JOIN `follows` AS f ON f.`following` = u.`id` WHERE f.`time` > (NOW() - INTERVAL 24 HOUR) GROUP BY u.`id` ORDER BY `increase` DESC LIMIT 5");
 					if($stmt->execute()){
 						$result = $stmt->get_result();
 						
