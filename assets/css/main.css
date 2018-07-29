@@ -8,3 +8,7 @@
 .clearUnderline {
 	text-decoration: none !important;
 }
+
+#profilePostField:focus {
+	height: 100px;
+}

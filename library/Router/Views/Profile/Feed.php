@@ -8,6 +8,22 @@ $uID = $user->getId();
 
 $showNoEntriesInfo = false;
 
+if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId()){
+?>
+<div class="card mt-2 border-primary" style="background: #9FCCFC">
+	<div class="card-body">
+		<textarea class="form-control" id="profilePostField" style="resize: none !important"></textarea>
+
+		<p class="mb-0 mt-2 float-left small">
+			200 characters left
+		</p>
+
+		<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2">Post</button>
+	</div>
+</div>
+<?php
+}
+
 if($num > 0){
 	$feedEntries = [];
 
@@ -23,8 +39,6 @@ if($num > 0){
 		}
 	}
 	$stmt->close();
-
-	echo Util::paginate($currentPage,$itemsPerPage,$num,"/" . $user->getUsername() . "/(:num)");
 
 	if(count($feedEntries) > 0){
 		echo '<div class="feedContainer mt-2">';
