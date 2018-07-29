@@ -72,7 +72,7 @@ if(!isset($socialImage) || empty($socialImage))
 					</button>
 
 					<a class="navbar-brand" href="/">
-						<?= $app["config.site"]["name"] ?>
+						<!-- BRAND -->
 					</a>
 				</div>
 
@@ -157,7 +157,7 @@ if(!isset($socialImage) || empty($socialImage))
 							</button>
 
 							<a class="navbar-brand" href="/">
-								<?= $app["config.site"]["name"] ?>
+								<!-- BRAND -->
 							</a>
 						</div>
 
