@@ -109,6 +109,60 @@
 					</div>
 				</div>
 			</form>
+
+			<?php
+
+				$trendingUsers = [];
+				$n = "trendingUsers";
+
+				if(CacheHandler::existsInCache($n)){
+					$trendingUsers = CacheHandler::getFromCache($n);
+				} else {
+					$stmt = $mysqli->prepare("SELECT COUNT(f.following) as `increase`,u.* FROM `users` AS u LEFT JOIN `follows` AS f ON f.`following` = u.`id` WHERE f.`time` > (NOW() - INTERVAL 24 HOUR) GROUP BY u.`id` ORDER BY `increase` DESC LIMIT 10");
+					if($stmt->execute()){
+						$result = $stmt->get_result();
+						
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								array_push($trendingUsers,[
+									"increase" => $row["increase"],
+									"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["time"])
+								]);
+							}
+
+							CacheHandler::setToCache($n,$trendingUsers,3*60);
+						}
+					}
+					$stmt->close();
+				}
+
+				if(count($trendingUsers) > 0){
+					?>
+			<h5 class="mb-0 mt-2">Trending Users</h5>
+					<?php
+
+					foreach($trendingUsers as $trendingUser){
+						$increase = $trendingUser["increase"];
+						$u = $trendingUser["user"];
+
+						?>
+			<div class="card userCard my-3" data-user-id="<?= $u->getId(); ?>">
+				<div class="card-body">
+					<center>
+						<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/>
+
+						<h6 class="mb-0"><?= $u->getDisplayName(); ?></h6></a>
+						<p class="text-muted my-0" style="font-size: 12px">@<?= $u->getUsername(); ?></p>
+
+						<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
+					</center>
+				</div>
+			</div>
+						<?php
+					}
+				}
+
+			?>
 		</div>
 	</div>
 </div>
