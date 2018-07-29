@@ -33,3 +33,6 @@ define("LOCALE_COMPONENT","");
 define("TIMEZONE","");
 
 define("FOLLOW_LIMIT","");
+
+define("POST_CHARACTER_LIMIT","");
+

@@ -15,7 +15,7 @@ if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId()){
 		<textarea class="form-control" id="profilePostField" style="resize: none !important"></textarea>
 
 		<p class="mb-0 mt-2 float-left small">
-			200 characters left
+			<?= POST_CHARACTER_LIMIT ?> characters left
 		</p>
 
 		<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2">Post</button>
