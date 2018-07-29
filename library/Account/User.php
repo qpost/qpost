@@ -216,6 +216,12 @@ class User {
 	private $unreadMessages;
 
 	/**
+	 * @access private
+	 * @var int $unreadNotifications
+	 */
+	private $unreadNotifications;
+
+	/**
 	 * Constructor
 	 * 
 	 * @access private
@@ -664,6 +670,60 @@ class User {
 				$this->saveToCache();
 			}
 		}
+		$stmt->close();
+	}
+
+	/**
+	 * Returns the number of unread notifications the user has
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public function getUnreadNotifications(){
+		if(is_null($this->unreadNotifications)){
+			$this->reloadUnreadNotifications();
+		}
+
+		return $this->unreadNotifications;
+	}
+
+	/**
+	 * Updates the number of unread messages the user has
+	 * 
+	 * @access public
+	 */
+	public function reloadUnreadNotifications(){
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `notifications` WHERE `user` = ? AND `seen` = 0");
+		$stmt->bind_param("i",$this->id);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
+				$this->unreadNotifications = $row["count"];
+
+				$this->saveToCache();
+			}
+		}
+		$stmt->close();
+	}
+
+	/**
+	 * Marks all unread notifications as read
+	 * 
+	 * @access public
+	 */
+	public function markNotificationsAsRead(){
+		$this->unreadNotifications = 0;
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("UPDATE `notifications` SET `seen` = 1 WHERE `user` = ? AND `seen` = 0");
+		$stmt->bind_param("i",$this->id);
+		$stmt->execute();
 		$stmt->close();
 	}
 

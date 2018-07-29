@@ -82,6 +82,7 @@ if(!isset($socialImage) || empty($socialImage))
 
 						if(Util::isLoggedIn()){
 							$unreadMessages = Util::getCurrentUser()->getUnreadMessages();
+							$unreadNotifications = Util::getCurrentUser()->getUnreadNotifications();
 
 							?>
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_HOME) ? " active" : ""; ?>">
@@ -98,7 +99,7 @@ if(!isset($socialImage) || empty($socialImage))
 
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_NOTIFICATIONS) ? " active" : ""; ?>">
 								<a href="/notifications" class="nav-link">
-									notifications
+									notifications<?= !is_null($unreadNotifications) && $unreadNotifications > 0 ? " <b>(" . $unreadNotifications . ")</b>" : "</b>"; ?>
 								</a>
 							</li>
 
@@ -192,7 +193,7 @@ if(!isset($socialImage) || empty($socialImage))
 
 								<li class="nav-item<?= (isset($nav) && $nav == NAV_NOTIFICATIONS) ? " active" : ""; ?>">
 									<a href="/notifications" class="nav-link">
-										notifications
+										notifications<?= !is_null($unreadNotifications) && $unreadNotifications > 0 ? " <b>(" . $unreadNotifications . ")</b>" : "</b>"; ?>
 									</a>
 								</li>
 
