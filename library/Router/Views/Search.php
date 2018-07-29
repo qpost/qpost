@@ -148,7 +148,7 @@
 								</p>
 
 								<p class="mb-0">
-									<?= $post["text"]; ?>
+									<?= Util::convertLineBreaksToHTML($post["text"]); ?>
 								</p>
 							</div>
 						</div>

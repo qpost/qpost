@@ -69,7 +69,7 @@ if($num > 0){
 						</p>
 
 						<p class="mb-0">
-							<?= $entry["text"]; ?>
+							<?= Util::convertLineBreaksToHTML($entry["text"]); ?>
 						</p>
 					</div>
 				</div>
