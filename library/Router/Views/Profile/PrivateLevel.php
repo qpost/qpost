@@ -8,4 +8,6 @@
 		This user has their privacy level set to <b>Private</b>, meaning to view their profile you have to be a follower.<br/>
 		Your follow request has to be confirmed by the user.
 	</p>
+
+	<?= Util::followButton($user,false,["mt-4","btn-lg"]); ?>
 </div>
