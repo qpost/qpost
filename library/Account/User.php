@@ -193,6 +193,12 @@ class User {
 
 	/**
 	 * @access private
+	 * @var int $posts
+	 */
+	private $posts;
+
+	/**
+	 * @access private
 	 * @var int $followers
 	 */
 	private $followers;
@@ -379,6 +385,34 @@ class User {
 		}
 
 		return $this->feedEntries;
+	}
+
+	/**
+	 * Gets the user's posts count
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public function getPosts(){
+		if(is_null($this->posts)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `feed` WHERE `user` = ? AND `type` = 'POST'");
+			$stmt->bind_param("i",$this->id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+					$this->posts = $row["count"];
+
+					$this->saveToCache();
+				}
+			}
+			$stmt->close();
+		}
+
+		return $this->posts;
 	}
 
 	/**
