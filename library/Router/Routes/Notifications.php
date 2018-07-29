@@ -1,9 +1,9 @@
 <?php
 
-$app->bind("/notifications",function(){
+$app->bind("/notifications/:page",function($params){
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
 
-	$page = 1;
+	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
 
 	$data = array(
 		"title" => "Notifications (" . Util::getCurrentUser()->getUnreadNotifications() . ")",
@@ -15,10 +15,10 @@ $app->bind("/notifications",function(){
 	return $this->render("views:Notifications.php with views:Layout.php",$data);
 });
 
-$app->bind("/notifications/:page",function(){
+$app->bind("/notifications",function(){
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
 
-	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
+	$page = 1;
 
 	$data = array(
 		"title" => "Notifications (" . Util::getCurrentUser()->getUnreadNotifications() . ")",
