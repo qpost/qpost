@@ -154,7 +154,7 @@
 						<h6 class="mb-0"><?= $u->getDisplayName(); ?></h6></a>
 						<p class="text-muted my-0" style="font-size: 12px">@<?= $u->getUsername(); ?></p>
 
-						<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
+						<?= Util::followButton($u->getId(),true,["btn-block","mt-2","btn-sm"]) ?>
 					</center>
 				</div>
 			</div>
