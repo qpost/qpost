@@ -27,11 +27,13 @@ if($num > 0){
 	echo Util::paginate($currentPage,$itemsPerPage,$num,"/" . $user->getUsername() . "/(:num)");
 
 	if(count($feedEntries) > 0){
-		echo '<div class="card feedContainer mt-2"><div class="card-body">';
+		echo '<div class="feedContainer mt-2">';
 
 		for($i = 0; $i < count($feedEntries); $i++){
 			$entry = $feedEntries[$i];
 			$last = $i == count($feedEntries)-1;
+
+			if($entry["type"] == "POST"){
 		?>
 		<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $entry["id"]; ?>">
 			<div class="card-body">
@@ -58,9 +60,17 @@ if($num > 0){
 			</div>
 		</div>
 		<?php
+			} else if($entry["type"] == "NEW_FOLLOWING") {
+				$u2 = User::getUserById($entry["following"]);
+				?>
+		<p class="my-1 px-2 py-2 border-top border-bottom" style="border-color: #CCC">
+			<b><a href="/<?= $user->getUsername(); ?>" class="clearUnderline"><?= $user->getDisplayName(); ?></a></b> is now following <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><?= $u2->getDisplayName(); ?></a> &bull; <span class="text-muted"><?= Util::timeago($entry["time"]); ?></span>
+		</p>
+				<?php
+			}
 		}
 
-		echo '</div></div>';
+		echo '</div>';
 	} else {
 		$showNoEntriesInfo = true;
 	}
