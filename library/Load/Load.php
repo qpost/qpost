@@ -2,11 +2,12 @@
 
 # Loads all library files
 
-session_start();
 date_default_timezone_set("UTC");
 
 ini_set("session.cookie_lifetime",(60*60*24)*3);
 ini_set("session.gc_maxlifetime",(60*60*24)*3);
+
+session_start();
 
 if(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["HTTP_HOST"])[0] == "localhost" || explode(":",$_SERVER["HTTP_HOST"])[0] == "127.0.0.1")){
 	require_once __DIR__ . "/../../../twitter-config.php";

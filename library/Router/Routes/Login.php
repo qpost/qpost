@@ -29,7 +29,7 @@ $app->bind("/loginCallback",function(){
 					if(isset($userData["id"]) && isset($userData["username"]) && isset($userData["avatar"]) && isset($userData["email"])){
 						$id = $userData["id"];
 						$username = $userData["username"];
-						$avatar = $userData["avatar"];
+						$avatar = isset($userData["avatar"]["url"]) ? $userData["avatar"]["url"] : null;
 						$email = $userData["email"];
 
 						User::registerUser($id,$username,$avatar,$email,$token);

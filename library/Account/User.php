@@ -81,13 +81,13 @@ class User {
 		$mysqli = Database::Instance()->get();
 		$user = self::getUserById($id);
 
-		if($account == null){
-			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`id`,`username`,`email`,`avatar`,`token`) VALUES(?,?,?,?);");
-			$stmt->bind_param("issss",$id,$username,$email,$avatar,$token);
+		if($user == null){
+			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`id`,`displayName`,`username`,`email`,`avatar`,`token`) VALUES(?,?,?,?,?,?);");
+			$stmt->bind_param("isssss",$id,$username,$username,$email,$avatar,$token);
 			$stmt->execute();
 			$stmt->close();
 
-			self::getUserById($id); // cache data after registering
+			self::getUserById($id);
 		} else {
 			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ? WHERE `id` = ?");
 			$stmt->bind_param("ssssi",$username,$email,$avatar,$token,$id);
@@ -931,7 +931,17 @@ class User {
 	 * @access public
 	 */
 	public function saveToCache(){
-		CacheHandler::setToCache("user_id_" . $this->id,$this,20*60);
-		CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,20*60);
+		\CacheHandler::setToCache("user_id_" . $this->id,$this,20*60);
+		\CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,20*60);
+	}
+
+	/**
+	 * Removes the user object from the cache
+	 * 
+	 * @access public
+	 */
+	public function removeFromCache(){
+		\CacheHandler::deleteFromCache("user_id_" . $this->id);
+		\CacheHandler::deleteFromCache("user_name_" . strtolower($this->username));
 	}
 }
