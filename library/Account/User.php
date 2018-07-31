@@ -87,6 +87,7 @@ class User {
 			$stmt->execute();
 			$stmt->close();
 
+			self::getUserById($id)->removeFromCache();
 			self::getUserById($id);
 		} else {
 			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ? WHERE `id` = ?");

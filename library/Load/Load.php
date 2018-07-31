@@ -24,6 +24,8 @@ require_once __DIR__ . "/../Database/Database.php";
 require_once __DIR__ . "/../Util/Util.php";
 require_once __DIR__ . "/../Lime/App.php";
 
+//\CacheHandler::Manager()->clear();
+
 /**
  * Alias for i18n::getTranslatedMessage()
  * 
