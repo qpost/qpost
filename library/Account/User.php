@@ -553,6 +553,8 @@ class User {
 		if(is_object($user))
 			$user = $user->getId();
 
+		if($user == $this->id) return false;
+
 		if(in_array($this->id,User::getUserById($user)->cachedFollowers)){
 			return true;
 		} else {
@@ -588,6 +590,8 @@ class User {
 	public function hasBlocked($user){
 		if(is_object($user))
 			$user = $user->getId();
+
+		if($user == $this->id) return false;
 
 		if(in_array($user,$this->cachedBlocks)){
 			return true;
@@ -782,6 +786,8 @@ class User {
 		if(is_object($user))
 			$user = $user->getId();
 
+		if($user == $this->id) return;
+
 		if(!$this->hasBlocked($user)){
 			$mysqli = Database::Instance()->get();
 
@@ -810,6 +816,8 @@ class User {
 	public function unblock($user){
 		if(is_object($user))
 			$user = $user->getId();
+
+		if($user == $this->id) return;
 
 		if($this->hasBlocked($user)){
 			$mysqli = Database::Instance()->get();
