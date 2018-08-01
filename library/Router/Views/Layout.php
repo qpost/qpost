@@ -222,7 +222,7 @@ if(!isset($socialImage) || empty($socialImage))
 									if($app->route != "/"){
 									?>
 								<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
-									<a href="/login" class="nav-link">
+									<a href="/login" class="nav-link" data-no-instant>
 										log in
 									</a>
 								</li>
