@@ -86,6 +86,7 @@ $app->post("/scripts/createPost",function(){
 					$stmt->close();
 
 					$user->reloadFeedEntriesCount();
+					$user->reloadPostsCount();
 
 					return json_encode(["post" => $post]);
 				} else {

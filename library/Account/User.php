@@ -507,6 +507,16 @@ class User {
 	}
 
 	/**
+	 * Reloads the posts count
+	 * 
+	 * @access public
+	 */
+	public function reloadPostsCount(){
+		$this->posts = null;
+		$this->getPosts();
+	}
+
+	/**
 	 * Reloads the following count
 	 * 
 	 * @access public
