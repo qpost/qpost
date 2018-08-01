@@ -89,7 +89,7 @@
 							</p>
 
 							<p class="mb-0">
-								<?= Util::convertLineBreaksToHTML($post["text"]); ?>
+								<?= Util::convertPost($post["text"]); ?>
 							</p>
 						</div>
 					</div>
