@@ -102,6 +102,7 @@ function load(){
 
 								$("#homePostBox").html(oldHtml);
 								$("#homePostField").val("");
+								$("#homeCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
 								load();
 							} else {
 								console.log(result);
@@ -269,6 +270,7 @@ function load(){
 
 								$("#profilePostBox").html(oldHtml);
 								$("#profilePostField").val("");
+								$("#profileCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
 								load();
 							} else {
 								console.log(result);
