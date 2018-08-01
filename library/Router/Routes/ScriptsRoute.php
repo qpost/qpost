@@ -85,6 +85,8 @@ $app->post("/scripts/createPost",function(){
 					}
 					$stmt->close();
 
+					$user->reloadFeedEntriesCount();
+
 					return json_encode(["post" => $post]);
 				} else {
 					return json_encode(["error" => "Empty post id"]);
