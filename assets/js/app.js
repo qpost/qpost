@@ -87,7 +87,7 @@ function load(){
 												'</p>' +
 					
 												'<p class="mb-0 convertEmoji">' +
-													postText +
+													twemoji.parse(postText) +
 												'</p>' +
 											'</div>' +
 										'</div>' +
@@ -122,12 +122,6 @@ function load(){
 			}
 		}
 	});
-
-	if($(".convertEmoji").length){
-		$(".convertEmoji").html(function(){
-			return twemoji.parse($(this).html());
-		});
-	}
 
 	if($("#profilePostField").length && $("#profileCharacterCounter").length){
 		if(typeof POST_CHARACTER_LIMIT !== undefined){

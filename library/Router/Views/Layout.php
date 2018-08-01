@@ -50,8 +50,8 @@ if(!isset($socialImage) || empty($socialImage))
 		<?= $app->style([
 			"assets:css/bootstrap.min.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
-			"assets:css/main.css"
-			]); ?>
+			"assets:css/main.css",
+			"assets:css/twemoji-picker.css"]); ?>
 
 		<?= $app->script([
 			"https://code.jquery.com/jquery-latest.min.js",
@@ -60,7 +60,8 @@ if(!isset($socialImage) || empty($socialImage))
 			"assets:js/app.js",
 			"https://www.google.com/recaptcha/api.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
-			"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0"]); ?>
+			"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
+			"assets:js/twemoji-picker.js"]); ?>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?></script>
@@ -328,6 +329,6 @@ if(!isset($socialImage) || empty($socialImage))
 		</div>
 
 		<script src="<?= $app->baseUrl("/assets/js/instantclick.min.js"); ?>" data-no-instant></script>
-		<script data-no-instant>load();InstantClick.init();InstantClick.on("change",function(){load();});</script>
+		<script data-no-instant>load();if($(".convertEmoji").length){$(".convertEmoji").html(function(){return twemoji.parse($(this).html());});}InstantClick.init();InstantClick.on("change",function(){load();});</script>
 	</body>
 </html>
