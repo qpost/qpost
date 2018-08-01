@@ -1,3 +1,96 @@
+function loadHomeFeed(){
+	if($("#homePostField").length && $("#homeCharacterCounter").length){
+		$.ajax({
+			url: "/scripts/extendHomeFeed",
+			data: {
+				csrf_token: CSRF_TOKEN,
+				mode: "loadNew",
+				lastPost: HOME_FEED_LAST_POST
+			},
+			method: "POST",
+
+			success: function(result){
+				let json = result;
+
+				if(json.hasOwnProperty("result")){
+					let newHtml = "";
+
+					let a = true;
+
+					json.result.forEach(post => {
+						let postId = post.id;
+
+						if(a == true){
+							HOME_FEED_LAST_POST = postId;
+							a = false;
+						}
+
+						let postTime = post.time;
+						let postText = post.text;
+							
+						let userName = post.userName;
+						let userDisplayName = post.userDisplayName;
+						let userAvatar = post.userAvatar;
+
+						newHtml = newHtml.concat(
+						'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+							'<div class="card-body">' +
+								'<div class="row">' +
+									'<div class="col-1">' +
+										'<a href="/' + userName + '" class="clearUnderline">' +
+											'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
+										'</a>' +
+									'</div>' +
+					
+									'<div class="col-11">' +
+										'<p class="mb-0">' +
+											'<a href="/' + userName + '" class="clearUnderline">' +
+												'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+											'</a>' +
+					
+											' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
+					
+											' &bull; ' +
+					
+											postTime +
+										'</p>' +
+					
+										'<p class="mb-0 convertEmoji">' +
+											twemoji.parse(postText) +
+										'</p>' +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+						'</div>');
+					});
+
+					if($(".feedEntry").length){
+						$(".feedContainer").prepend(newHtml);
+					} else {
+						$(".feedContainer").html(newHtml);
+					}
+
+					load();
+					console.log(json.result);
+
+					setTimeout(loadHomeFeed,5000);
+				} else {
+					console.log(result);
+				}
+			},
+
+			error: function(xhr,status,error){
+				console.log(xhr);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	} else {
+		setTimeout(loadHomeFeed,5000);
+	}
+}
+loadHomeFeed();
+
 function load(){
 	$('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover'

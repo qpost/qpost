@@ -56,10 +56,10 @@
 						$first = $i == 0;
 						$last = $i == count($results)-1;
 
-						if($first)
+						if($last)
 							echo '<script>var HOME_FEED_FIRST_POST = ' . $post->getId() . ';</script>';
 
-						if($last)
+						if($first)
 							echo '<script>var HOME_FEED_LAST_POST = ' . $post->getId() . ';</script>';
 
 						?>

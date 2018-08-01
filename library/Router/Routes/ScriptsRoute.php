@@ -39,8 +39,70 @@ $app->post("/scripts/toggleFollow",function(){
 	}
 });
 
+$app->post("/scripts/extendHomeFeed",function(){
+	$this->response->mime = "json";
+
+	if(Util::isLoggedIn()){
+		$currentUser = Util::getCurrentUser();
+		$mysqli = Database::Instance()->get();
+
+		$a = $currentUser->getFollowingAsArray();
+		array_push($a,$currentUser->getId());
+
+		$i = $mysqli->real_escape_string(implode(",",$a));
+
+		if(isset($_POST["mode"])){
+			if($_POST["mode"] == "loadOld"){
+				if(isset($_POST["firstPost"])){
+
+				} else {
+					return json_encode(["error" => "Bad request"]);
+				}
+			} else if($_POST["mode"] == "loadNew"){
+				if(isset($_POST["lastPost"])){
+					$posts = [];
+					$lastPost = (int)$_POST["lastPost"];
+
+					mysqli_report(MYSQLI_REPORT_ALL);
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt->bind_param("i",$lastPost);
+					if($stmt->execute()){
+						$result = $stmt->get_result();
+
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sessionId"],"POST",$row["postTime"]);
+
+								array_push($posts,[
+									"id" => $entry->getId(),
+									"text" => Util::convertPost($entry->getText()),
+									"time" => Util::timeago($entry->getTime()),
+									"userName" => $entry->getUser()->getUsername(),
+									"userDisplayName" => $entry->getUser()->getDisplayName(),
+									"userAvatar" => $entry->getUser()->getAvatarURL()
+								]);
+							}
+						}
+					}
+					$stmt->close();
+
+					return json_encode(["result" => $posts]);
+				} else {
+					return json_encode(["error" => "Bad request"]);
+				}
+			} else {
+				return json_encode(["error" => "Bad request"]);
+			}
+		} else {
+			return json_encode(["error" => "Bad request"]);
+		}
+	} else {
+		return json_encode(["error" => "Not logged in"]);
+	}
+});
+
 $app->post("/scripts/createPost",function(){
-	$this->response->mime ="json";
+	$this->response->mime = "json";
 	
 	if(isset($_POST["text"])){
 		if(Util::isLoggedIn()){
