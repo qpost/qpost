@@ -1,13 +1,19 @@
-function loadCookieConsent(){
+function load(){
+	$('[data-toggle="tooltip"]').tooltip({
+        trigger: 'hover'
+    });
+
+    $("time.timeago").timeago();
+
 	window.addEventListener("load", function () {
 		window.cookieconsent.initialise({
 			"palette": {
 				"popup": {
-					"background": "#3c404d",
-					"text": "#d6d6d6"
+				  "background": "#237afc"
 				},
 				"button": {
-					"background": "#8bed4f"
+				  "background": "#fff",
+				  "text": "#237afc"
 				}
 			},
 			"content": {

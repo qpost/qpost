@@ -58,10 +58,11 @@ if(!isset($socialImage) || empty($socialImage))
 			"assets:js/bootstrap.min.js",
 			"assets:js/jquery.timeago.js",
 			"assets:js/app.js",
-			"https://www.google.com/recaptcha/api.js"]); ?>
+			"https://www.google.com/recaptcha/api.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"]); ?>
 
-		<script>loadCookieConsent();var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?></script>
 	</head>
 	<body>
 		<nav id="mainNavSmall" class="d-xs-block d-lg-none navbar navbar-expand-lg navbar-<?= Util::isUsingNightMode() ? "dark bg-dark" : "dark bg-primary" ?>">
@@ -326,6 +327,6 @@ if(!isset($socialImage) || empty($socialImage))
 		</div>
 
 		<script src="<?= $app->baseUrl("/assets/js/instantclick.min.js"); ?>" data-no-instant></script>
-		<script data-no-instant>InstantClick.init();InstantClick.on("change",function(){load();});</script>
+		<script data-no-instant>load();InstantClick.init();InstantClick.on("change",function(){load();});</script>
 	</body>
 </html>
