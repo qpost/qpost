@@ -63,7 +63,7 @@ if(CacheHandler::existsInCache($n)){
 				<div class="row">
 					<div class="col-lg-1">
 						<a href="/<?= $u2->getUsername(); ?>" class="clearUnderline">
-							<img class="rounded mx-1 my-1" src="<?= $user->getAvatarURL(); ?>" width="40" height="40"/>
+							<img class="rounded mx-1 my-1" src="<?= $u2->getAvatarURL(); ?>" width="40" height="40"/>
 						</a>
 					</div>
 
