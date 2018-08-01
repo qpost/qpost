@@ -4,7 +4,7 @@
 			<?= Util::createAlert("feedInfo","The home feed shows the posts and activities of you and the people you follow on the network. Follow people you are interested in to see what they're doing!",ALERT_TYPE_INFO,true,true); ?>
 			<h4>Feed</h4>
 
-			<div class="card my-2 border-primary" style="background: #9FCCFC">
+			<div class="card my-2 border-primary" style="background: #9FCCFC" id="homePostBox">
 				<div class="card-body">
 					<textarea class="form-control" id="homePostField" placeholder="Post something for your followers!"></textarea>
 
@@ -12,7 +12,7 @@
 						<?= POST_CHARACTER_LIMIT ?> characters left
 					</p>
 
-					<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2">Post</button>
+					<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2" id="homePostButton">Post</button>
 				</div>
 			</div>
 
@@ -28,7 +28,7 @@
 
 				$results = [];
 
-				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) ORDER BY `time` DESC LIMIT 60");
+				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 60");
 				//$stmt->bind_param("s",$i);
 				if($stmt->execute()){
 					$result = $stmt->get_result();

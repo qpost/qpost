@@ -21,6 +21,107 @@ function load(){
 			}
 		})
 	});
+
+	$("#homePostButton").on("click",function(e){
+		e.preventDefault();
+
+		let text = $("#homePostField").val();
+
+		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
+			let token = CSRF_TOKEN;
+			let limit = POST_CHARACTER_LIMIT;
+
+			let oldHtml = $("#homePostBox").html();
+
+			if(text.length > 0 && text.length <= limit){
+				console.log("Sending post!");
+
+				$("#homePostBox").html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
+
+				$.ajax({
+					url: "/scripts/createPost",
+					data: {
+						csrf_token: token,
+						text: text
+					},
+					method: "POST",
+
+					success: function(result){
+						let json = result;
+
+						if(json.hasOwnProperty("post")){
+							let post = json.post;
+
+							if(post.hasOwnProperty("id") && post.hasOwnProperty("time") && post.hasOwnProperty("text") && post.hasOwnProperty("userName") && post.hasOwnProperty("userDisplayName") && post.hasOwnProperty("userAvatar")){
+								let postId = post.id;
+								let postTime = post.time;
+								let postText = post.text;
+								
+								let userName = post.userName;
+								let userDisplayName = post.userDisplayName;
+								let userAvatar = post.userAvatar;
+
+								HOME_FEED_FIRST_POST = postId;
+
+								let newHtml =
+								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+									'<div class="card-body">' +
+										'<div class="row">' +
+											'<div class="col-1">' +
+												'<a href="/' + userName + '" class="clearUnderline">' +
+													'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
+												'</a>' +
+											'</div>' +
+					
+											'<div class="col-11">' +
+												'<p class="mb-0">' +
+													'<a href="/' + userName + '" class="clearUnderline"> ' +
+														'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+													'</a>' +
+					
+													'<span class="text-muted font-weight-normal">@' + userName + '</span>' +
+					
+													' &bull; ' +
+					
+													postTime +
+												'</p>' +
+					
+												'<p class="mb-0">' +
+													postText +
+												'</p>' +
+											'</div>' +
+										'</div>' +
+									'</div>' +
+								'</div>';
+
+								if($(".feedEntry").length){
+									$(".feedContainer").prepend(newHtml);
+								} else {
+									$(".feedContainer").html(newHtml);
+								}
+
+								$("#homePostBox").html(oldHtml);
+								$("#homePostField").val("");
+								$("time.timeago").timeago();
+							} else {
+								console.log(result);
+							}
+						} else {
+							console.log(result);
+						}
+					},
+
+					error: function(xhr,status,error){
+						console.log(xhr);
+						console.log(status);
+						console.log(error);
+					}
+				})
+			} else {
+				console.error("Post text too long or too short!");
+			}
+		}
+	});
 }
 
 function toggleFollow(e,userID){
@@ -42,7 +143,7 @@ function toggleFollow(e,userID){
 				method: "POST",
 
 				success: function(result){
-					var json = result;
+					let json = result;
 
 					if(json.hasOwnProperty("followStatus")){
 						if(json.followStatus == 1){
