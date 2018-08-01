@@ -29,7 +29,7 @@
 
 				$results = [];
 
-				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 60");
+				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 10");
 				//$stmt->bind_param("s",$i);
 				if($stmt->execute()){
 					$result = $stmt->get_result();
@@ -63,7 +63,7 @@
 							echo '<script>var HOME_FEED_LAST_POST = ' . $post->getId() . ';</script>';
 
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $post->getId() ?>">
+			<div class="card feedEntry mb-2" data-entry-id="<?= $post->getId() ?>">
 				<div class="card-body">
 					<div class="row">
 						<div class="col-1">
@@ -98,7 +98,7 @@
 					echo '</div>';
 
 					?>
-			<div class="card homeFeedLoadMore px-3 py-3 text-center my-2 border-primary" style="cursor: pointer; background: #9FCCFC">
+			<div class="card homeFeedLoadMore px-3 py-3 text-center my-2 border-primary" style="cursor: pointer; background: #9FCCFC" onclick="loadOldHomeFeed();">
 				Click to load more
 			</div>
 					<?php

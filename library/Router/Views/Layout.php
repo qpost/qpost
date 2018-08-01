@@ -329,7 +329,7 @@ if(!isset($socialImage) || empty($socialImage))
 		</div>
 
 		<script src="<?= $app->baseUrl("/assets/js/instantclick.min.js"); ?>" data-no-instant></script>
-		<script data-no-instant>load();InstantClick.init();InstantClick.on("change",function(){load();});</script>
+		<script data-no-instant>loadBasic();InstantClick.init();InstantClick.on("change",function(){loadBasic();load();});</script>
 		<script>if($(".convertEmoji").length){$(".convertEmoji").html(function(){return twemoji.parse($(this).html());});}</script>
 	</body>
 </html>

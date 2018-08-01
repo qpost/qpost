@@ -54,7 +54,32 @@ $app->post("/scripts/extendHomeFeed",function(){
 		if(isset($_POST["mode"])){
 			if($_POST["mode"] == "loadOld"){
 				if(isset($_POST["firstPost"])){
+					$posts = [];
+					$firstPost = (int)$_POST["firstPost"];
 
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt->bind_param("i",$firstPost);
+					if($stmt->execute()){
+						$result = $stmt->get_result();
+
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sessionId"],"POST",$row["postTime"]);
+
+								array_push($posts,[
+									"id" => $entry->getId(),
+									"text" => Util::convertPost($entry->getText()),
+									"time" => Util::timeago($entry->getTime()),
+									"userName" => $entry->getUser()->getUsername(),
+									"userDisplayName" => $entry->getUser()->getDisplayName(),
+									"userAvatar" => $entry->getUser()->getAvatarURL()
+								]);
+							}
+						}
+					}
+					$stmt->close();
+
+					return json_encode(["result" => $posts]);
 				} else {
 					return json_encode(["error" => "Bad request"]);
 				}
@@ -63,7 +88,6 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$lastPost = (int)$_POST["lastPost"];
 
-					mysqli_report(MYSQLI_REPORT_ALL);
 					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$lastPost);
 					if($stmt->execute()){
