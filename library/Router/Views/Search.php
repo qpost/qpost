@@ -123,6 +123,8 @@
 					$post = $result["post"];
 					$u = $result["user"];
 
+					if(Util::isLoggedIn() && ($u->hasBlocked(Util::getCurrentUser()) || $u->isBlocked(Util::getCurrentUser()))) continue;
+
 					?>
 				<div class="card post<?= !$last ? " mb-2" : "" ?>" data-post-id="<?= $post->getId(); ?>">
 					<div class="card-body">
