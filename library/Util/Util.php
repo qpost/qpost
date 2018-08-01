@@ -965,4 +965,27 @@ class Util {
 	public static function convertPost($string){
 		return trim(self::convertLinks(self::convertHashtags(self::convertMentions(self::convertLineBreaksToHTML($string)))));
 	}
+
+	/**
+	 * Returns an array of users mentioned in a post
+	 * 
+	 * @access public
+	 * @return User[]
+	 */
+	public static function getUsersMentioned($string){
+		$a = [];
+
+		foreach(explode(" ",$string) as $s){
+			if(self::startsWith($s,"@") && strlen($s) >= 2){
+				$name = substr($s,1,strlen($s));
+
+				$u = User::getUserByUsername($name);
+				if(!is_null($u)){
+					array_push($a,$u);
+				}
+			}
+		}
+
+		return $a;
+	}
 }
