@@ -47,50 +47,67 @@ $app->post("/scripts/createPost",function(){
 			$user = Util::getCurrentUser();
 			$text = $_POST["text"];
 
+			$mentioned = Util::getUsersMentioned($text);
+
 			if($text <= POST_CHARACTER_LIMIT){
-				$text = Util::sanatizeString($text);
+				if(count($mentioned) < 15){
+					$text = Util::sanatizeString($text);
 
-				$userId = $user->getId();
-				$sessionId = session_id();
-				$type = FEED_ENTRY_TYPE_POST;
+					$userId = $user->getId();
+					$sessionId = session_id();
+					$type = FEED_ENTRY_TYPE_POST;
 
-				$postId = null;
+					$postId = null;
 
-				$mysqli = Database::Instance()->get();
-				$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`) VALUES(?,?,NULL,?,?);");
-				$stmt->bind_param("isss", $userId,$text,$sessionId,$type);
-				if($stmt->execute()){
-					$postId = $stmt->insert_id;
-				}
-				$stmt->close();
-
-				if(!is_null($postId)){
-					$post = [];
-
-					$stmt = $mysqli->prepare("SELECT `text`,`time` FROM `feed` WHERE `id` = ? LIMIT 1");
-					$stmt->bind_param("i",$postId);
+					$mysqli = Database::Instance()->get();
+					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`) VALUES(?,?,NULL,?,?);");
+					$stmt->bind_param("isss", $userId,$text,$sessionId,$type);
 					if($stmt->execute()){
-						$result = $stmt->get_result();
-
-						if($result->num_rows){
-							$row = $result->fetch_assoc();
-
-							$post["id"] = $postId;
-							$post["text"] = Util::convertPost($row["text"]);
-							$post["time"] = Util::timeago($row["time"]);
-							$post["userName"] = $user->getUsername();
-							$post["userDisplayName"] = $user->getDisplayName();
-							$post["userAvatar"] = $user->getAvatarURL();
-						}
+						$postId = $stmt->insert_id;
 					}
 					$stmt->close();
 
-					$user->reloadFeedEntriesCount();
-					$user->reloadPostsCount();
+					if(!is_null($postId)){
+						$post = [];
 
-					return json_encode(["post" => $post]);
+						$stmt = $mysqli->prepare("SELECT `text`,`time` FROM `feed` WHERE `id` = ? LIMIT 1");
+						$stmt->bind_param("i",$postId);
+						if($stmt->execute()){
+							$result = $stmt->get_result();
+
+							if($result->num_rows){
+								$row = $result->fetch_assoc();
+
+								$post["id"] = $postId;
+								$post["text"] = Util::convertPost($row["text"]);
+								$post["time"] = Util::timeago($row["time"]);
+								$post["userName"] = $user->getUsername();
+								$post["userDisplayName"] = $user->getDisplayName();
+								$post["userAvatar"] = $user->getAvatarURL();
+							}
+						}
+						$stmt->close();
+
+						if(count($mentioned) > 0){
+							foreach($mentioned as $u){
+								if($u->canPostNotification(NOTIFICATION_TYPE_MENTION,null,$postId)){
+									$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'NEW_FOLLOWER',?);");
+									$stmt->bind_param("ii",$userId,$postId);
+									$stmt->execute();
+									$stmt->close();
+								}
+							}
+						}
+
+						$user->reloadFeedEntriesCount();
+						$user->reloadPostsCount();
+
+						return json_encode(["post" => $post]);
+					} else {
+						return json_encode(["error" => "Empty post id"]);
+					}
 				} else {
-					return json_encode(["error" => "Empty post id"]);
+					return json_encode(["error" => "Too many mentions"]);
 				}
 			} else {
 				return json_encode(["error" => "Exceeded character limit"]);
