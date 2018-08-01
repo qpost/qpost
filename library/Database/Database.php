@@ -65,6 +65,8 @@ class Database {
 				$this->db->set_charset("utf8mb4");
 
 				if(null !== TIMEZONE){
+					$t = TIMEZONE;
+
 					$s = $this->db->prepare("SET @@session.time_zone = ?");
 					$s->bind_param("s",$t);
 					$s->execute();
