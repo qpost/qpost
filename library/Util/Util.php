@@ -791,14 +791,15 @@ class Util {
 	 * @return string
 	 */
 	public static function convertLineBreaksToHTML($string){
-		$s = trim(str_replace("\n","<br/>",$string));
+		return preg_replace("/(<br {0,}\/{0,1}>(\\r|\\n){0,}){2,}/","<br class=\"reduced\" />",nl2br($string));
+		/*$s = trim(str_replace("\n","<br/>",$string));
 
 		// TODO: Fix line breaking spamming
 		while(self::contains($s,"<br/><br/>")){
 			$s = str_replace("<br/><br/>","<br/>",$s);
 		}
 
-		return $s;
+		return $s;*/
 	}
 
 	/**
