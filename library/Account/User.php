@@ -667,7 +667,7 @@ class User {
 					$stmt->close();
 				}
 
-				if($this->canPostNotification(NOTIFICATION_TYPE_NEW_FOLLOWER,$user,null)){
+				if(self::getUserById($user)->canPostNotification(NOTIFICATION_TYPE_NEW_FOLLOWER,$this->id,null)){
 					$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`) VALUES(?,'NEW_FOLLOWER',?);");
 					$stmt->bind_param("ii",$user,$this->id);
 					$stmt->execute();
@@ -798,8 +798,8 @@ class User {
 
 		$mysqli = Database::Instance()->get();
 
-		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `notifications` WHERE `user` = ? AND `type` = ? AND `follower` = ? AND `post` = ? AND `time` > (NOW() - INTERVAL 4 DAY)");
-		$stmt->bind_param("isii",$this->id,$type,$follower,$post);
+		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `notifications` WHERE `user` = ? AND `type` = ? AND `follower` = ? AND `post` " . (is_null($post) ? " IS NULL" : "= " . $post) . " AND `time` > (NOW() - INTERVAL 4 DAY)");
+		$stmt->bind_param("isi",$this->id,$type,$follower);
 		if($stmt->execute()){
 			$result = $stmt->get_result();
 
