@@ -14,7 +14,7 @@
 	resize: none !important;
 }
 
-#profilePostField:focus,
-#homePostField:focus {
+#profilePostField,
+#homePostField {
 	height: 100px;
 }
