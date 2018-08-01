@@ -792,6 +792,12 @@ class User {
 				$this->saveToCache();
 			}
 			$stmt->close();
+
+			if($this->isFollowing($user))
+				$this->unfollow($user);
+
+			if(self::getUserById($user)->isFollowing($this))
+				self::getUserById($user)->unfollow($this);
 		}
 	}
 
