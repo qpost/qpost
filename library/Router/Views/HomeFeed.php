@@ -2,6 +2,7 @@
 	<div class="row">
 		<div class="col-lg-8">
 			<?= Util::createAlert("feedInfo","The home feed shows the posts and activities of you and the people you follow on the network. Follow people you are interested in to see what they're doing!",ALERT_TYPE_INFO,true,true); ?>
+			<?= Util::createAlert("socialNetFeedInfo","Did you know about the <b>social net</b>? We created that page to suggest users that you might be interested in. <a href=\"/socialnet\">Click here to check it out!</a> (it's still experimental!)",ALERT_TYPE_INFO,true,true) ?>
 			<h4>Feed</h4>
 
 			<div class="card my-2 border-primary" style="background: #9FCCFC" id="homePostBox">
