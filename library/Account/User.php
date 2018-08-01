@@ -615,6 +615,20 @@ class User {
 	}
 
 	/**
+	 * Returns whether the user was blocked by $user
+	 * 
+	 * @access public
+	 * @param int|User The user object or ID
+	 * @return bool
+	 */
+	public function isBlocked($user){
+		if(!is_object($user))
+			$user = self::getUserById($user);
+
+		return !Is_null($user) ? $user->hasBlocked($this) : false;
+	}
+
+	/**
 	 * Returns whether or not the user is followed by $user
 	 * 
 	 * @access public
