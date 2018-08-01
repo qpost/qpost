@@ -68,7 +68,7 @@ if($num > 0){
 							<?= Util::timeago($entry["time"]); ?>
 						</p>
 
-						<p class="mb-0">
+						<p class="mb-0 convertEmoji">
 							<?= Util::convertPost($entry["text"]); ?>
 						</p>
 					</div>
