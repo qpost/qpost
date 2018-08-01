@@ -95,7 +95,7 @@ $app->post("/scripts/createPost",function(){
 
 								if(!$user->isBlocked($u)){
 									if($u->canPostNotification(NOTIFICATION_TYPE_MENTION,null,$postId)){
-										$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'NEW_FOLLOWER',?);");
+										$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'MENTION',?);");
 										$stmt->bind_param("ii",$uid,$postId);
 										$stmt->execute();
 										$stmt->close();
