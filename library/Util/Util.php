@@ -868,8 +868,12 @@ class Util {
 	 * @return array
 	 */
 	public static function removeFromArray($array,$var){
-		while(($i = self::indexOf($array,$var)) && ($i != -1)){
+		$i = self::indexOf($array,$var);
+
+		while($i != -1){
 			unset($array[$i]);
+
+			$i = self::indexOf($array,$var);
 		}
 
 		return $array;

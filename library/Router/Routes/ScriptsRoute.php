@@ -11,13 +11,17 @@ $app->post("/scripts/toggleFollow",function(){
 			if($user->getFollowers() < FOLLOW_LIMIT){
 				if(!is_null($user) && !is_null($toFollow)){
 					if($user->getId() != $toFollow->getId()){
+						$followStatus = -1;
+
 						if($user->isFollowing($toFollow)){
 							$user->unfollow($toFollow);
+							$followStatus = 0;
 						} else {
 							$user->follow($toFollow);
+							$followStatus = 1;
 						}
 		
-						return json_decode(["following" => $user->isFollowing($user)]);
+						return json_encode(["followStatus" => $followStatus]);
 					} else {
 						return json_encode(["error" => "Can't follow self"]);
 					}

@@ -19,6 +19,9 @@ function loadCookieConsent(){
 
 function toggleFollow(e,userID){
 	if(typeof CRSF_TOKEN !== undefined){
+		let token = CSRF_TOKEN;
+		console.log(token);
+
 		if(!~e.innerHTML.indexOf("fas fa-spinner")){
 			console.log("Follow button clicked");
 
@@ -27,14 +30,17 @@ function toggleFollow(e,userID){
 			$.ajax({
 				url: "/scripts/toggleFollow",
 				data: {
-					csrf_token: CRSF_TOKEN,
+					csrf_token: token,
 					user: userID
 				},
+				method: "POST",
+
 				success: function(result){
 					var json = result;
 
-					if(json.hasOwnProperty("following")){
-						if(json.following == "true"){
+					if(json.hasOwnProperty("followStatus")){
+						if(json.followStatus == 1){
+							console.log("following " + json.followStatus);
 							e.classList.add("unfollowButton");
 							e.classList.add("btn-danger");
 
@@ -42,7 +48,8 @@ function toggleFollow(e,userID){
 							e.classList.remove("btn-primary");
 
 							e.innerHTML = "Unfollow";
-						} else {
+						} else if(json.followStatus == 0) {
+							console.log("not following " + json.followStatus);
 							e.classList.remove("unfollowButton");
 							e.classList.remove("btn-danger");
 
@@ -54,6 +61,12 @@ function toggleFollow(e,userID){
 					} else {
 						console.log(result);
 					}
+				},
+
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
 				}
 			});
 		}

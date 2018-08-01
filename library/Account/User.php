@@ -221,7 +221,7 @@ class User {
 	 * @access protected
 	 * @var array $cachedFollowers
 	 */
-	protected $cachedFollowers = [];
+	public $cachedFollowers = [];
 
 	/**
 	 * @access private
