@@ -922,4 +922,47 @@ class Util {
 			return $link;
 		}
 	}
+
+	// https://gist.github.com/coreyweb/4589922
+
+	/**
+	 * Converts links in a string to HTML links
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public static function convertLinks($string){
+		return preg_replace("(^| |\n)(www([-]*[.]?[a-zA-Z0-9_/-?&%])*)","\\1<a class=\"filterLink\" href=\"http://\\2\">\\2</a>", // convert with www only
+		preg_replace("[a-zA-Z]+://([-]*[.]?[a-zA-Z0-9_/-?&%])*","<a class=\"filterLink\" href=\"\\0\">\\0</a>",$string)); // convert with protocol
+	}
+
+	/**
+	 * Converts hashtags in a string to HTML links
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public static function convertHashtags($string){
+		return str_replace("/#","/", preg_replace("(^| |\n)(\#([-]*[.]?[a-zA-Z0-9_/-?&%])*)", "\\1<a href=\"/search?query=\\2\">\\2</a>", $string));
+	}
+
+	/**
+	 * Converts mentions in a string to HTML links
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public static function convertMentions($string){
+		return str_replace(">@", ">", str_replace("/@", "/", preg_replace("(^| |\n)(\@([-]*[.]?[a-zA-Z0-9_/-?&%])*)", "\\1@<a href=\"/\\2\">\\2</a>", $tweet)));
+	}
+
+	/**
+	 * Converts URLs, hashtags and mentions in a post text to HTML links
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public static function convertPost($string){
+		return self::convertLinks(self::convertHashtags(self::convertMentions($string)));
+	}
 }
