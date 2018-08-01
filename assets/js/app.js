@@ -102,7 +102,7 @@ function load(){
 
 								$("#homePostBox").html(oldHtml);
 								$("#homePostField").val("");
-								$("time.timeago").timeago();
+								load();
 							} else {
 								console.log(result);
 							}
@@ -269,7 +269,7 @@ function load(){
 
 								$("#profilePostBox").html(oldHtml);
 								$("#profilePostField").val("");
-								$("time.timeago").timeago();
+								load();
 							} else {
 								console.log(result);
 							}
