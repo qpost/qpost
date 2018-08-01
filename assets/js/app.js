@@ -92,6 +92,10 @@ loadHomeFeed();
 
 function loadOldHomeFeed(){
 	if($("#homePostField").length && $("#homeCharacterCounter").length){
+		let oldHtml = $(".homeFeedLoadMore").html();
+
+		$(".homeFeedLoadMore").html('<i class="fas fa-spinner fa-pulse"></i>');
+
 		$.ajax({
 			url: "/scripts/extendHomeFeed",
 			data: {
@@ -162,6 +166,8 @@ function loadOldHomeFeed(){
 						} else {
 							$(".feedContainer").html(newHtml);
 						}
+
+						$(".homeFeedLoadMore").html(oldHtml);
 
 						loadBasic();
 					} else {
