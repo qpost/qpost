@@ -10,7 +10,7 @@ $showNoEntriesInfo = false;
 
 if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId()){
 ?>
-<div class="card mt-2 border-primary" style="background: #9FCCFC">
+<div class="card mt-2 border-primary" style="background: #9FCCFC" id="profilePostBox">
 	<div class="card-body">
 		<textarea class="form-control" id="profilePostField" placeholder="Post something for your followers!"></textarea>
 
@@ -18,7 +18,7 @@ if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId()){
 			<?= POST_CHARACTER_LIMIT ?> characters left
 		</p>
 
-		<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2">Post</button>
+		<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2" id="profilePostButton">Post</button>
 	</div>
 </div>
 <?php
