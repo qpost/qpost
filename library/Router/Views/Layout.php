@@ -72,7 +72,7 @@ if(!isset($socialImage) || empty($socialImage))
 					</button>
 
 					<a class="navbar-brand" href="/">
-						<!-- BRAND -->
+						<img src="/assets/img/navlogo.png" style="height: 30px"/>
 					</a>
 				</div>
 
@@ -150,7 +150,7 @@ if(!isset($socialImage) || empty($socialImage))
 
 		<div class="container">
 			<div class="card rounded my-3">
-				<nav id="mainNav" class="rounded-top d-none d-lg-block navbar navbar-expand-lg navbar-<?= Util::isUsingNightMode() ? "dark bg-dark" : "dark bg-primary" ?>">
+				<nav id="mainNav" class="rounded-top d-none d-lg-block navbar navbar-expand-lg navbar-dark bg-primary">
 					<div class="container-fluid container">
 						<div class="navbar-header">
 							<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation" aria-controls="main-navigation" aria-expanded="false" aria-label="Toggle navigation" style="">
@@ -158,7 +158,7 @@ if(!isset($socialImage) || empty($socialImage))
 							</button>
 
 							<a class="navbar-brand" href="/">
-								<!-- BRAND -->
+								<img src="/assets/img/navlogo.png" style="height: 30px"/>
 							</a>
 						</div>
 
