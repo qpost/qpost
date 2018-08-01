@@ -54,6 +54,43 @@ if(CacheHandler::existsInCache($n)){
 			foreach($notifications as $notification){
 				if($notification["type"] == NOTIFICATION_TYPE_MENTION){
 					$l = false;
+
+					$post = FeedEntry::getEntryById($notification["post"]);
+
+					if(!is_null($post)){
+						$u = $post->getUser();
+						?>
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $post->getId() ?>">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-1">
+							<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+								<img class="rounded mx-1 my-1" src="<?= $u->getAvatarURL(); ?>" width="40" height="40"/>
+							</a>
+						</div>
+
+						<div class="col-11">
+							<p class="mb-0">
+								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+									<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
+								</a>
+
+								<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
+
+								&bull;
+
+								<?= Util::timeago($post->getTime()); ?>
+							</p>
+
+							<p class="mb-0 convertEmoji">
+								<?= Util::convertPost($post->getText()); ?>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+						<?php
+					}
 				} else if($notification["type"] == NOTIFICATION_TYPE_NEW_FOLLOWER){
 					$u2 = User::getUserById($notification["follower"]);
 
