@@ -89,7 +89,7 @@
 								<?= Util::timeago($post["time"]); ?>
 							</p>
 
-							<p class="mb-0">
+							<p class="mb-0 convertEmoji">
 								<?= Util::convertPost($post["text"]); ?>
 							</p>
 						</div>
