@@ -218,10 +218,16 @@ class User {
 	private $following;
 
 	/**
-	 * @access protected
+	 * @access public
 	 * @var array $cachedFollowers
 	 */
 	public $cachedFollowers = [];
+
+	/**
+	 * @access public
+	 * @var array $cachedBlocks
+	 */
+	public $cachedBlocks = [];
 
 	/**
 	 * @access private
@@ -573,6 +579,42 @@ class User {
 	}
 
 	/**
+	 * Returns whether or not the user has blocked $user
+	 * 
+	 * @access public
+	 * @param int|User $user The user object or ID
+	 * @return bool
+	 */
+	public function hasBlocked($user){
+		if(is_object($user))
+			$user = $user->getId();
+
+		if(in_array($user,$this->cachedBlocks)){
+			return true;
+		} else {
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `blocks` WHERE `user` = ? AND `target` = ?");
+			$stmt->bind_param("ii",$this->id,$user);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					if($row["count"] > 0){
+						array_push($this->cachedBlocks,$user);
+						$this->saveToCache();
+					}
+				}
+			}
+			$stmt->close();
+
+			return in_array($user,$this->cachedBlocks);
+		}
+	}
+
+	/**
 	 * Returns whether or not the user is followed by $user
 	 * 
 	 * @access public
@@ -711,6 +753,52 @@ class User {
 					$u->uncacheFollower($this->id);
 					$u->reloadFollowerCount();
 				}
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
+	 * Blocks a user
+	 * 
+	 * @access public
+	 * @param int|User $user
+	 */
+	public function block($user){
+		if(is_object($user))
+			$user = $user->getId();
+
+		if(!$this->hasBlocked($user)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("INSERT INTO `blocks` (`user`,`target`) VALUES(?,?);");
+			$stmt->bind_param("ii",$this->id,$user);
+			if($stmt->execute()){
+				array_push($this->cachedBlocks,$user);
+				$this->saveToCache();
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
+	 * Unblocks a user
+	 * 
+	 * @access public
+	 * @param int|User $user
+	 */
+	public function unblock($user){
+		if(is_object($user))
+			$user = $user->getId();
+
+		if($this->hasBlocked($user)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("DELETE FROM `blocks` WHERE `user` = ? AND `target` = ?");
+			$stmt->bind_param("ii",$this->id,$user);
+			if($stmt->execute()){
+				$this->cachedBlocks = Util::removeFromArray($this->cachedBlocks,$user);
+				$this->saveToCache();
 			}
 			$stmt->close();
 		}
