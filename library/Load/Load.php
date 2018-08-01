@@ -21,6 +21,7 @@ require_once __DIR__ . "/../Account/User.php";
 require_once __DIR__ . "/../Cache/CacheHandler.php";
 require_once __DIR__ . "/../Shutdown/Shutdown.php";
 require_once __DIR__ . "/../Database/Database.php";
+require_once __DIR__ . "/../Feed/FeedEntry.php";
 require_once __DIR__ . "/../Util/Util.php";
 require_once __DIR__ . "/../Lime/App.php";
 

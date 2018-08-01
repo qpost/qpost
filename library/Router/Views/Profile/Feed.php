@@ -34,7 +34,7 @@ if($num > 0){
 
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				array_push($feedEntries,$row);
+				array_push($feedEntries,FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["sessionId"],$row["type"],$row["time"]));
 			}
 		}
 	}
@@ -49,9 +49,9 @@ if($num > 0){
 			$entry = $feedEntries[$i];
 			$last = $i == count($feedEntries)-1;
 
-			if($entry["type"] == "POST"){
+			if($entry->getType() == "POST"){
 		?>
-		<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $entry["id"]; ?>">
+		<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $entry->getId(); ?>">
 			<div class="card-body">
 				<div class="row">
 					<div class="col-1">
@@ -65,11 +65,11 @@ if($num > 0){
 
 							&bull;
 
-							<?= Util::timeago($entry["time"]); ?>
+							<?= Util::timeago($entry->getTime()); ?>
 						</p>
 
 						<p class="mb-0 convertEmoji">
-							<?= Util::convertPost($entry["text"]); ?>
+							<?= Util::convertPost($entry->getText()); ?>
 						</p>
 					</div>
 				</div>
@@ -77,11 +77,11 @@ if($num > 0){
 		</div>
 		<?php
 				$l = false;
-			} else if($entry["type"] == "NEW_FOLLOWING") {
-				$u2 = User::getUserById($entry["following"]);
+			} else if($entry->getType() == "NEW_FOLLOWING") {
+				$u2 = $entry->getFollowing();
 				?>
 		<p class="my-1 px-2 py-2 border-top<?= $l ? " border-bottom" : ""; ?>" style="border-color: #CCC">
-			<b><a href="/<?= $user->getUsername(); ?>" class="clearUnderline"><?= $user->getDisplayName(); ?></a></b> is now following <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><?= $u2->getDisplayName(); ?></a> &bull; <span class="text-muted"><?= Util::timeago($entry["time"]); ?></span>
+			<b><a href="/<?= $user->getUsername(); ?>" class="clearUnderline"><?= $user->getDisplayName(); ?></a></b> is now following <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><?= $u2->getDisplayName(); ?></a> &bull; <span class="text-muted"><?= Util::timeago($entry->getTime()); ?></span>
 		</p>
 				<?php
 				$l = true;

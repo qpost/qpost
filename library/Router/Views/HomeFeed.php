@@ -29,7 +29,7 @@
 
 				$results = [];
 
-				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 60");
+				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`type` = 'POST' AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 60");
 				//$stmt->bind_param("s",$i);
 				if($stmt->execute()){
 					$result = $stmt->get_result();
@@ -37,11 +37,7 @@
 					if($result->num_rows){
 						while($row = $result->fetch_assoc()){
 							array_push($results,[
-								"post" => [
-									"id" => $row["postID"],
-									"text" => $row["postText"],
-									"time" => $row["postTime"]
-								],
+								"post" => FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sessionId"],"POST",$row["postTime"]),
 								"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["time"])
 							]);
 						}
@@ -61,13 +57,13 @@
 						$last = $i == count($results)-1;
 
 						if($first)
-							echo '<script>var HOME_FEED_FIRST_POST = ' . $post["id"] . ';</script>';
+							echo '<script>var HOME_FEED_FIRST_POST = ' . $post->getId() . ';</script>';
 
 						if($last)
-							echo '<script>var HOME_FEED_LAST_POST = ' . $post["id"] . ';</script>';
+							echo '<script>var HOME_FEED_LAST_POST = ' . $post->getId() . ';</script>';
 
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $post["id"]; ?>">
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $post->getId() ?>">
 				<div class="card-body">
 					<div class="row">
 						<div class="col-1">
@@ -86,11 +82,11 @@
 
 								&bull;
 
-								<?= Util::timeago($post["time"]); ?>
+								<?= Util::timeago($post->getTime()); ?>
 							</p>
 
 							<p class="mb-0 convertEmoji">
-								<?= Util::convertPost($post["text"]); ?>
+								<?= Util::convertPost($post->getText()); ?>
 							</p>
 						</div>
 					</div>
