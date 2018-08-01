@@ -835,6 +835,8 @@ class Util {
 			if ($paginator->getNextUrl())
 				$p .= '<li class="page-item"><a class="page-link" href="' . $paginator->getNextUrl() . '">Next &raquo;</a></li>';
 
+			$p .= '</nav>';
+
 		}
 	
 		return $p;
