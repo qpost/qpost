@@ -75,11 +75,11 @@ function load(){
 					
 											'<div class="col-11">' +
 												'<p class="mb-0">' +
-													'<a href="/' + userName + '" class="clearUnderline"> ' +
+													'<a href="/' + userName + '" class="clearUnderline">' +
 														'<span class="font-weight-bold">' + userDisplayName + '</span>' +
 													'</a>' +
 					
-													'<span class="text-muted font-weight-normal">@' + userName + '</span>' +
+													' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
 					
 													' &bull; ' +
 					
