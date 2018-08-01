@@ -65,7 +65,7 @@ if(!isset($socialImage) || empty($socialImage))
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?></script>
 	</head>
 	<body>
-		<nav id="mainNavSmall" class="d-xs-block d-lg-none navbar navbar-expand-lg navbar-<?= Util::isUsingNightMode() ? "dark bg-dark" : "dark bg-primary" ?>">
+		<nav id="mainNavSmall" class="d-xs-block d-lg-none navbar navbar-expand-lg navbar-dark bg-primary">
 			<div class="container-fluid container">
 				<div class="navbar-header">
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation-small" aria-controls="main-navigation-small" aria-expanded="false" aria-label="Toggle navigation" style="">
