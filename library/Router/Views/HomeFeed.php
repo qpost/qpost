@@ -8,7 +8,7 @@
 				<div class="card-body">
 					<textarea class="form-control" id="homePostField" placeholder="Post something for your followers!"></textarea>
 
-					<p class="mb-0 mt-2 float-left small">
+					<p class="mb-0 mt-2 float-left small" id="homeCharacterCounter">
 						<?= POST_CHARACTER_LIMIT ?> characters left
 					</p>
 

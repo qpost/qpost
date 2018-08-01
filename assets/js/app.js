@@ -123,6 +123,78 @@ function load(){
 		}
 	});
 
+	if($("#profilePostField").length && $("#profileCharacterCounter").length){
+		if(typeof POST_CHARACTER_LIMIT !== undefined){
+			$("#profilePostField").on("change keyup keydown paste",function(){
+				let limit = POST_CHARACTER_LIMIT;
+				let used = $("#profilePostField").val().length;
+				let left = limit-used;
+
+				if(left > 0){
+					if(left > limit/2){
+						if(left == 1){
+							$("#profileCharacterCounter").html(left + " character left");
+						} else {
+							$("#profileCharacterCounter").html(left + " characters left");
+						}
+					} else {
+						if(left == 1){
+							$("#profileCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
+						} else {
+							$("#profileCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
+						}
+					}
+				} else if(left == 0){
+					$("#profileCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
+				} else {
+					left = left/(-1);
+
+					if(left == 1){
+						$("#profileCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
+					} else {
+						$("#profileCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
+					}
+				}
+			});
+		}
+	}
+
+	if($("#homePostField").length && $("#homeCharacterCounter").length){
+		if(typeof POST_CHARACTER_LIMIT !== undefined){
+			$("#homePostField").on("change keyup keydown paste",function(){
+				let limit = POST_CHARACTER_LIMIT;
+				let used = $("#homePostField").val().length;
+				let left = limit-used;
+
+				if(left > 0){
+					if(left > limit/2){
+						if(left == 1){
+							$("#homeCharacterCounter").html(left + " character left");
+						} else {
+							$("#homeCharacterCounter").html(left + " characters left");
+						}
+					} else {
+						if(left == 1){
+							$("#homeCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
+						} else {
+							$("#homeCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
+						}
+					}
+				} else if(left == 0){
+					$("#homeCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
+				} else {
+					left = left/(-1);
+
+					if(left == 1){
+						$("#homeCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
+					} else {
+						$("#homeCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
+					}
+				}
+			});
+		}
+	}
+
 	$("#profilePostButton").on("click",function(e){
 		e.preventDefault();
 
