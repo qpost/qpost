@@ -974,6 +974,7 @@ class Util {
 	 */
 	public static function getUsersMentioned($string){
 		$a = [];
+		$ids = [];
 
 		foreach(explode(" ",$string) as $s){
 			if(self::startsWith($s,"@") && strlen($s) >= 2){
@@ -981,7 +982,10 @@ class Util {
 
 				$u = User::getUserByUsername($name);
 				if(!is_null($u)){
-					array_push($a,$u);
+					if(!in_array($u->getId(),$ids)){
+						array_push($a,$u);
+						array_push($ids,$u->getId());
+					}
 				}
 			}
 		}
