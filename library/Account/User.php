@@ -582,6 +582,10 @@ class User {
 					if($stmt->execute()){
 						array_push($this->cachedFavorites,$postId);
 						$this->saveToCache();
+
+						$feedEntry = FeedEntry::getEntryById($postId);
+						if(!is_null($feedEntry))
+							$feedEntry->reloadFavorites();
 					}
 					$stmt->close();
 				}
@@ -604,6 +608,10 @@ class User {
 			if($stmt->execute()){
 				$this->cachedFavorites = Util::removeFromArray($this->cachedFavorites,$postId);
 				$this->saveToCache();
+
+				$feedEntry = FeedEntry::getEntryById($postId);
+				if(!is_null($feedEntry))
+					$feedEntry->reloadFavorites();
 			}
 			$stmt->close();
 		}
@@ -658,6 +666,10 @@ class User {
 			if($stmt->execute()){
 				array_push($this->cachedShares,$postId);
 				$this->saveToCache();
+
+				$feedEntry = FeedEntry::getEntryById($postId);
+				if(!is_null($feedEntry))
+					$feedEntry->reloadShares();
 			}
 			$stmt->close();
 		}
@@ -678,6 +690,10 @@ class User {
 			if($stmt->execute()){
 				$this->cachedShares = Util::removeFromArray($this->cachedShares,$postId);
 				$this->saveToCache();
+
+				$feedEntry = FeedEntry::getEntryById($postId);
+				if(!is_null($feedEntry))
+					$feedEntry->reloadShares();
 			}
 			$stmt->close();
 		}
