@@ -855,7 +855,7 @@ class Util {
 	public static function indexOf($array,$var){
 		if(count($array) > 0 && in_array($var,$array)){
 			for($i = 0; $i < count($array); $i++) { 
-				if($array[$i] == $var){
+				if(isset($array[$i]) && $array[$i] == $var){
 					return $i;
 				}
 			}

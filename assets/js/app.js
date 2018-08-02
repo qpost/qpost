@@ -345,9 +345,18 @@ function loadBasic(){
 					let json = result;
 	
 					if(json.hasOwnProperty("status")){
+						let countDisplay = pointer.parent().find(".favoriteCount");
+						let count = parseInt(countDisplay.html().trim());
+
 						if(json.status == "Favorite added"){
+							count++;
+							countDisplay.html(count);
+
 							pointer.html(favoritedHtml);
 						} else {
+							count--;
+							countDisplay.html(count);
+
 							pointer.html(unfavoritedHtml);
 						}
 					} else {
@@ -390,9 +399,18 @@ function loadBasic(){
 					let json = result;
 	
 					if(json.hasOwnProperty("status")){
+						let countDisplay = pointer.parent().find(".shareCount");
+						let count = parseInt(countDisplay.html().trim());
+
 						if(json.status == "Share added"){
+							count++;
+							countDisplay.html(count);
+
 							pointer.html(sharedHtml);
 						} else {
+							count--;
+							countDisplay.html(count);
+
 							pointer.html(unsharedHtml);
 						}
 					} else {
