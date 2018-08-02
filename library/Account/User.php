@@ -230,6 +230,12 @@ class User {
 	public $cachedBlocks = [];
 
 	/**
+	 * @access public
+	 * @var int[] $cachedShares
+	 */
+	public $cachedShares = [];
+
+	/**
 	 * @access private
 	 * @var int $unreadMessages
 	 */
@@ -633,6 +639,79 @@ class User {
 			$stmt->close();
 
 			return in_array($postId,$this->cachedFavorites);
+		}
+	}
+
+	/**
+	 * Shares a post with the own profile and news feed
+	 * 
+	 * @access public
+	 * @param int $postId
+	 */
+	public function share($postId){
+		if(!$this->hasShared($postId)){
+			$mysqli = Database::Instance()->get();
+			$sessionId = session_id();
+
+			$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`post`,`sessionId`) VALUES(?,?,?,'SHARE');");
+			$stmt->bind_param("iis",$this->id,$postId,$sessionId);
+			if($stmt->execute()){
+				array_push($this->cachedShares,$postId);
+				$this->saveToCache();
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
+	 * Removes a share made on a post
+	 * 
+	 * @access public
+	 * @param int $postId
+	 */
+	public function unshare($postId){
+		if($this->hasShared($postId)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `user` = ? AND `type` = 'SHARE' AND `post` = ?");
+			$stmt->bind_param("ii",$this->id,$postId);
+			if($stmt->execute()){
+				$this->cachedShares = Util::removeFromArray($this->cachedShares,$postId);
+				$this->saveToCache();
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
+	 * Returns whether the user has shared a post
+	 * 
+	 * @access public
+	 * @param int $postId
+	 */
+	public function hasShared($postId){
+		if(in_array($postId,$this->cachedShares)){
+			return true;
+		} else {
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE `user` = ? AND `type` = 'SHARE' AND `post` = ?");
+			$stmt->bind_param("ii",$this->id,$postId);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					if($row["count"] > 0){
+						array_push($this->cachedShares,$postId);
+						$this->saveToCache();
+					}
+				}
+			}
+			$stmt->close();
+
+			return in_array($postId,$this->cachedShares);
 		}
 	}
 
