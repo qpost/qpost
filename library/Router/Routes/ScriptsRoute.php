@@ -47,6 +47,9 @@ $app->post("/scripts/toggleFavorite",function(){
 			$user = Util::getCurrentUser();
 			$post = FeedEntry::getEntryById($_POST["post"]);
 
+			if(is_null($post))
+				return json_encode(["error" => "Unknown post"]);
+
 			if($user->hasFavorited($post->getId())){
 				$user->unfavorite($post->getId());
 			} else {
@@ -57,6 +60,39 @@ $app->post("/scripts/toggleFavorite",function(){
 				return json_encode(["status" => "Favorite added"]);
 			} else {
 				return json_encode(["status" => "Favorite removed"]);
+			}
+		} else {
+			return json_encode(["error" => "Not logged in"]);
+		}
+	} else {
+		return json_encode(["error" => "Bad request"]);
+	}
+});
+
+$app->post("/scripts/toggleShare",function(){
+	$this->response->mime ="json";
+	
+	if(isset($_POST["post"])){
+		if(Util::isLoggedIn()){
+			$user = Util::getCurrentUser();
+			$post = FeedEntry::getEntryById($_POST["post"]);
+
+			if(is_null($post))
+				return json_encode(["error" => "Unknown post"]);
+
+			if($post->getUserId() == $user->getId())
+				return json_encode(["error" => "Cant share own post"]);
+
+			if($user->hasShared($post->getId())){
+				$user->unshare($post->getId());
+			} else {
+				$user->share($post->getId());
+			}
+
+			if($user->hasShared($post->getId())){
+				return json_encode(["status" => "Share added"]);
+			} else {
+				return json_encode(["status" => "Share removed"]);
 			}
 		} else {
 			return json_encode(["error" => "Not logged in"]);
