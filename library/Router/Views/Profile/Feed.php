@@ -34,7 +34,7 @@ if($num > 0){
 
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				array_push($feedEntries,FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["sessionId"],$row["type"],$row["time"]));
+				array_push($feedEntries,FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["time"]));
 			}
 		}
 	}
@@ -99,6 +99,59 @@ if($num > 0){
 		</p>
 				<?php
 				$l = true;
+			} else if($entry->getType() == "SHARE"){
+				$sharedPost = $entry->getPost();
+				$u = $sharedPost->getUser();
+
+				?>
+		<div class="card feedEntry<?= !$last ? " mb-2" : "" ?>" data-entry-id="<?= $sharedPost->getId(); ?>">
+			<div class="card-body">
+				<div class="small text-muted">
+					<i class="fas fa-share-alt text-primary"></i> Shared by <?= $user->getDisplayName(); ?> &bull; <?= Util::timeago($entry->getTime()); ?>
+				</div>
+				<div class="row">
+					<div class="col-1">
+						<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+							<img class="rounded mx-1 my-1" src="<?= $u->getAvatarURL(); ?>" width="40" height="40"/>
+						</a>
+					</div>
+
+					<div class="col-11">
+						<p class="mb-0">
+							<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+								<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
+							</a>
+							
+							<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
+
+							&bull;
+
+							<?= Util::timeago($sharedPost->getTime()); ?>
+						</p>
+
+						<p class="mb-0 convertEmoji">
+							<?= Util::convertPost($sharedPost->getText()); ?>
+						</p>
+
+						<?php if(Util::isLoggedIn()){ ?>
+						<div class="mt-1 postActionButtons">
+							<?php if(Util::getCurrentUser()->getId() != $u->getId()){ ?>
+							<span class="shareButton" data-post-id="<?= $sharedPost->getId() ?>" title="Share" data-toggle="tooltip">
+								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
+							</span>
+							<?php } ?>
+
+							<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">
+								<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
+							</span>
+						</div>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
+		</div>
+				<?php
+				$l = false;
 			}
 		}
 

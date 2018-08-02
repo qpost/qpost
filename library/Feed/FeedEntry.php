@@ -39,13 +39,14 @@ class FeedEntry {
      * @access public
      * @return FeedEntry
      */
-    public static function getEntryFromData($id,$user,$text,$following,$sessionId,$type,$time){
+    public static function getEntryFromData($id,$user,$text,$following,$post,$sessionId,$type,$time){
         $entry = new self($id);
 
         $entry->id = $id;
         $entry->user = $user;
         $entry->text = $text;
         $entry->following = $following;
+        $entry->post = $post;
         $entry->sessionId = $sessionId;
         $entry->type = $type;
         $entry->time = $time;
@@ -78,6 +79,12 @@ class FeedEntry {
      * @var int $following
      */
     private $following;
+
+    /**
+     * @access private
+     * @var int $post
+     */
+    private $post;
 
     /**
      * @access private
@@ -133,6 +140,7 @@ class FeedEntry {
                 $this->user = $row["user"];
                 $this->text = $row["text"];
                 $this->following = $row["following"];
+                $this->post = $row["post"];
                 $this->sessionId = $row["sessionId"];
                 $this->type = $row["type"];
                 $this->time = $row["time"];
@@ -201,6 +209,26 @@ class FeedEntry {
      */
     public function getFollowing(){
         return !is_null($this->following) ? User::getUserById($this->following) : null;
+    }
+
+    /**
+     * Returns the ID of the post that was shared (context of the feed entry), returns null if not available
+     * 
+     * @access public
+     * @return int
+     */
+    public function getPostId(){
+        return $this->post;
+    }
+
+    /**
+     * Returns the feed entry object of the post that was shared (context of the feed entry), returns null if not available
+     * 
+     * @access public
+     * @return FeedEntry
+     */
+    public function getPost(){
+        return !is_null($this->post) ? self::getEntryById($this->post) : null;
     }
 
     /**

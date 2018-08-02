@@ -87,7 +87,7 @@
 				if($result->num_rows){
 					while($row = $result->fetch_assoc()){
 						array_push($results,[
-							"post" => FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sessionId"],"POST",$row["postTime"]),
+							"post" => FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,null,$row["sessionId"],"POST",$row["postTime"]),
 							"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["time"])
 						]);
 					}
