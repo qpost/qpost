@@ -251,7 +251,7 @@ class User {
 	 * @access private
 	 * @var int[] $cachedFavorites
 	 */
-	private $cachedFavorites;
+	private $cachedFavorites = [];
 
 	/**
 	 * @access private

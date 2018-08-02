@@ -214,7 +214,56 @@ function loadBasic(){
 	});
 }
 
+$(document).ready(function(){
+	load();
+});
+
 function load(){
+	$(".favoriteButton").on("click",function(e){
+		e.preventDefault();
+
+		let postId = $(this).attr("data-post-id");
+
+		let favoritedHtml = '<i class="fas fa-star" style="color: gold"></i>';
+		let unfavoritedHtml = '<i class="fas fa-star" style="color: gray"></i>';
+		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
+
+		let pointer = $(this);
+
+		if(typeof postId !== "undefined"){
+			pointer.html(loadingHtml);
+
+			$.ajax({
+				url: "/scripts/toggleFavorite",
+				data: {
+					csrf_token: CSRF_TOKEN,
+					post: postId
+				},
+				method: "POST",
+	
+				success: function(result){
+					let json = result;
+	
+					if(json.hasOwnProperty("status")){
+						if(json.status == "Favorite added"){
+							pointer.html(favoritedHtml);
+						} else {
+							pointer.html(unfavoritedHtml);
+						}
+					} else {
+						console.log(result);
+					}
+				},
+	
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		}
+	});
+
 	$("#homePostButton").on("click",function(e){
 		e.preventDefault();
 	

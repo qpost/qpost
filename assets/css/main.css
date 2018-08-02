@@ -25,3 +25,7 @@ img.emoji {
 	margin: 0 .05em 0 .1em;
 	vertical-align: -0.1em;
  }
+
+ .favoriteButton {
+	 cursor: pointer;
+ }
