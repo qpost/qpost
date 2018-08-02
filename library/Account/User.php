@@ -653,7 +653,7 @@ class User {
 			$mysqli = Database::Instance()->get();
 			$sessionId = session_id();
 
-			$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`post`,`sessionId`) VALUES(?,?,?,'SHARE');");
+			$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`post`,`sessionId`,`type`) VALUES(?,?,?,'SHARE');");
 			$stmt->bind_param("iis",$this->id,$postId,$sessionId);
 			if($stmt->execute()){
 				array_push($this->cachedShares,$postId);

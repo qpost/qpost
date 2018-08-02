@@ -264,6 +264,51 @@ function load(){
 		}
 	});
 
+	$(".shareButton").on("click",function(e){
+		e.preventDefault();
+
+		let postId = $(this).attr("data-post-id");
+
+		let sharedHtml = '<i class="fas fa-share-alt text-primary"></i>';
+		let unsharedHtml = '<i class="fas fa-share-alt" style="color: gray"></i>';
+		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
+
+		let pointer = $(this);
+
+		if(typeof postId !== "undefined"){
+			pointer.html(loadingHtml);
+
+			$.ajax({
+				url: "/scripts/toggleShare",
+				data: {
+					csrf_token: CSRF_TOKEN,
+					post: postId
+				},
+				method: "POST",
+	
+				success: function(result){
+					let json = result;
+	
+					if(json.hasOwnProperty("status")){
+						if(json.status == "Share added"){
+							pointer.html(sharedHtml);
+						} else {
+							pointer.html(unsharedHtml);
+						}
+					} else {
+						console.log(result);
+					}
+				},
+	
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		}
+	});
+
 	$("#homePostButton").on("click",function(e){
 		e.preventDefault();
 	
