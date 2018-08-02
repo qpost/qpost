@@ -93,14 +93,20 @@
 
 							<?php if(Util::isLoggedIn()){ ?>
 							<div class="mt-1 postActionButtons">
-								<?php if(Util::getCurrentUser()->getId() != $u->getId()){ ?>
-								<span class="shareButton" data-post-id="<?= $post->getId() ?>" title="Share" data-toggle="tooltip">
+								<span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $post->getId() ?>">
 									<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($post->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($post->getId()) ? "" : ' style="color: gray"' ?>></i>
 								</span>
-								<?php } ?>
+
+								<span class="shareCount small text-primary">
+									<?= $post->getShares(); ?>
+								</span>
 
 								<span class="favoriteButton" data-post-id="<?= $post->getId() ?>" title="Add to favorites" data-toggle="tooltip">
 									<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
+								</span>
+
+								<span class="favoriteCount small" style="color: #ff960c">
+									<?= $post->getFavorites(); ?>
 								</span>
 							</div>
 							<?php } ?>
@@ -149,14 +155,20 @@
 
 							<?php if(Util::isLoggedIn()){ ?>
 							<div class="mt-1 postActionButtons">
-								<?php if(Util::getCurrentUser()->getId() != $sharedUser->getId()){ ?>
-								<span class="shareButton" data-post-id="<?= $sharedPost->getId() ?>" title="Share" data-toggle="tooltip">
+								<span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
 									<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
 								</span>
-								<?php } ?>
+
+								<span class="shareCount small text-primary">
+									<?= $sharedPost->getShares(); ?>
+								</span>
 
 								<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>" title="Add to favorites" data-toggle="tooltip">
 									<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
+								</span>
+
+								<span class="favoriteCount small" style="color: #ff960c">
+									<?= $sharedPost->getFavorites(); ?>
 								</span>
 							</div>
 							<?php } ?>

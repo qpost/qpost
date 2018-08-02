@@ -74,14 +74,20 @@ if($num > 0){
 
 						<?php if(Util::isLoggedIn()){ ?>
 						<div class="mt-1 postActionButtons">
-							<?php if(Util::getCurrentUser()->getId() != $user->getId()){ ?>
-							<span class="shareButton" data-post-id="<?= $entry->getId() ?>" title="Share" data-toggle="tooltip">
+							<span<?= Util::getCurrentUser()->getId() != $user->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $entry->getId() ?>">
 								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($entry->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($entry->getId()) ? "" : ' style="color: gray"' ?>></i>
 							</span>
-							<?php } ?>
+
+							<span class="shareCount small text-primary">
+								<?= $entry->getShares(); ?>
+							</span>
 
 							<span class="favoriteButton" data-post-id="<?= $entry->getId() ?>">
 								<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($entry->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
+							</span>
+
+							<span class="favoriteCount small" style="color: #ff960c">
+								<?= $entry->getFavorites(); ?>
 							</span>
 						</div>
 						<?php } ?>
@@ -121,7 +127,7 @@ if($num > 0){
 							<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
 								<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
 							</a>
-							
+
 							<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
 
 							&bull;
@@ -141,8 +147,16 @@ if($num > 0){
 							</span>
 							<?php } ?>
 
+							<span class="shareCount small text-primary">
+									<?= $sharedPost->getShares(); ?>
+								</span>
+
 							<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">
 								<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
+							</span>
+
+							<span class="favoriteCount small" style="color: #ff960c">
+								<?= $sharedPost->getFavorites(); ?>
 							</span>
 						</div>
 						<?php } ?>
