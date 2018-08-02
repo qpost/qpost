@@ -454,7 +454,7 @@ function loadPostButtons(){
 								let userDisplayName = post.userDisplayName;
 								let userAvatar = post.userAvatar;
 	
-								HOME_FEED_FIRST_POST = postId;
+								HOME_FEED_LAST_POST = postId;
 
 								let postActionButtons = '<div class="mt-1 postActionButtons">' +
 								'<span data-toggle="tooltip" title="You can not share this post" data-post-id="' + postId + '">' +
