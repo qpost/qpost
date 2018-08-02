@@ -143,7 +143,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 											$postActionButtons .= $entry->getShares();
 										$postActionButtons .= '</span>';
 		
-										$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>" title="Add to favorites" data-toggle="tooltip">';
+										$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">';
 											$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
 		
@@ -233,7 +233,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 											$postActionButtons .= $sharedPost->getShares();
 										$postActionButtons .= '</span>';
 		
-										$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>" title="Add to favorites" data-toggle="tooltip">';
+										$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">';
 											$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
 		
