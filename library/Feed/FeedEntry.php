@@ -111,6 +111,18 @@ class FeedEntry {
     private $exists;
 
     /**
+     * @access private
+     * @var int $shares
+     */
+    private $shares;
+
+    /**
+     * @access private
+     * @var int $favorites
+     */
+    private $favorites;
+
+    /**
      * Constructor
      * 
      * @access protected
@@ -259,6 +271,84 @@ class FeedEntry {
      */
     public function getTime(){
         return $this->time;
+    }
+
+    /**
+     * Returns how often the feed entry was shared
+     * 
+     * @access public
+     * @return int
+     */
+    public function getShares(){
+        if(is_null($this->shares)){
+            $mysqli = Database::Instance()->get();
+
+            $stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE `post` = ? AND `type` = 'SHARE'");
+            $stmt->bind_param("i",$this->id);
+            if($stmt->execute()){
+                $result = $stmt->get_result();
+
+                if($result->num_rows){
+                    $row = $result->fetch_assoc();
+
+                    $this->shares = $row["count"];
+
+                    $this->saveToCache();
+                }
+            }
+            $stmt->close();
+        }
+
+        return $this->shares;
+    }
+
+    /**
+     * Reloads the share count
+     * 
+     * @access public
+     */
+    public function reloadShares(){
+        $this->shares = null;
+        $this->getShares();
+    }
+
+    /**
+     * Returns how often the feed entry was favorized
+     * 
+     * @access public
+     * @return int
+     */
+    public function getFavorites(){
+        if(is_null($this->favorites)){
+            $mysqli = Database::Instance()->get();
+
+            $stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `favorites` WHERE `post` = ?");
+            $stmt->bind_param("i",$this->id);
+            if($stmt->execute()){
+                $result = $stmt->get_result();
+
+                if($result->num_rows){
+                    $row = $result->fetch_assoc();
+
+                    $this->favorites = $row["count"];
+
+                    $this->saveToCache();
+                }
+            }
+            $stmt->close();
+        }
+
+        return $this->favorites;
+    }
+
+    /**
+     * Reloads the favorite count
+     * 
+     * @access public
+     */
+    public function reloadFavorites(){
+        $this->favorites = null;
+        $this->getFavorites();
     }
 
     public function saveToCache(){
