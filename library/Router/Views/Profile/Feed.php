@@ -141,11 +141,9 @@ if($num > 0){
 
 						<?php if(Util::isLoggedIn()){ ?>
 						<div class="mt-1 postActionButtons">
-							<?php if(Util::getCurrentUser()->getId() != $u->getId()){ ?>
-							<span class="shareButton" data-post-id="<?= $sharedPost->getId() ?>" title="Share" data-toggle="tooltip">
+							<span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
 								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
 							</span>
-							<?php } ?>
 
 							<span class="shareCount small text-primary">
 									<?= $sharedPost->getShares(); ?>
