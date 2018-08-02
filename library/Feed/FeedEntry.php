@@ -34,13 +34,24 @@ class FeedEntry {
     }
 
     /**
+     * Returns whether a feed entry is cached by ID
+     * 
+     * @access public
+     * @param int $id
+     * @return bool
+     */
+    public static function isCached($id){
+        return \CacheHandler::existsInCache("feedEntry_" . $id);
+    }
+
+    /**
      * Returns a feed entry object created from the specified data
      * 
      * @access public
      * @return FeedEntry
      */
     public static function getEntryFromData($id,$user,$text,$following,$post,$sessionId,$type,$time){
-        $entry = new self($id);
+        $entry = self::isCached($id) ? self::getEntryById($id) : new self($id);
 
         $entry->id = $id;
         $entry->user = $user;

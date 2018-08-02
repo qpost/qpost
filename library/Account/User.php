@@ -77,6 +77,17 @@ class User {
 		}
 	}
 
+	/**
+	 * Returns whether a user object is cached by ID
+	 * 
+	 * @access public
+	 * @param int $id
+	 * @return bool
+	 */
+	public static function isCached($id){
+		return \CacheHandler::existsInCache("user_id_" . $id);
+	}
+
 	public static function registerUser($id,$username,$avatar,$email,$token){
 		$mysqli = Database::Instance()->get();
 		$user = self::getUserById($id);
@@ -116,7 +127,7 @@ class User {
 	 * @return User
 	 */
 	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$time){
-		$user = new User($id);
+		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
 
 		$user->id = $id;
 		$user->displayName = $displayName;
