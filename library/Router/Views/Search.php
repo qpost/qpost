@@ -148,6 +148,14 @@
 								<p class="mb-0 convertEmoji">
 									<?= Util::convertPost($post->getText()); ?>
 								</p>
+
+								<?php if(Util::isLoggedIn()){ ?>
+								<div class="mt-1 postActionButtons">
+									<span class="favoriteButton" data-post-id="<?= $post->getId() ?>">
+										<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
+									</span>
+								</div>
+								<?php } ?>
 							</div>
 						</div>
 					</div>

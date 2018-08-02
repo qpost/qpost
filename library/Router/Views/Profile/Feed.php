@@ -71,6 +71,14 @@ if($num > 0){
 						<p class="mb-0 convertEmoji">
 							<?= Util::convertPost($entry->getText()); ?>
 						</p>
+
+						<?php if(Util::isLoggedIn()){ ?>
+						<div class="mt-1 postActionButtons">
+							<span class="favoriteButton" data-post-id="<?= $entry->getId() ?>">
+								<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($entry->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
+							</span>
+						</div>
+						<?php } ?>
 					</div>
 				</div>
 			</div>
