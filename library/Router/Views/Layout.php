@@ -55,6 +55,7 @@ if(!isset($socialImage) || empty($socialImage))
 
 		<?= $app->script([
 			"https://code.jquery.com/jquery-latest.min.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js",
 			"assets:js/bootstrap.min.js",
 			"assets:js/jquery.timeago.js",
 			"assets:js/app.js",
@@ -63,7 +64,6 @@ if(!isset($socialImage) || empty($socialImage))
 			"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
 			"assets:js/twemoji-picker.js"]); ?>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?></script>
 	</head>
 	<body>
