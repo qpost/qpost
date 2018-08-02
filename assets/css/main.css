@@ -26,6 +26,6 @@ img.emoji {
 	vertical-align: -0.1em;
  }
 
- .favoriteButton {
+ .favoriteButton,.shareButton {
 	 cursor: pointer;
  }

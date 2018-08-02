@@ -74,6 +74,12 @@ if($num > 0){
 
 						<?php if(Util::isLoggedIn()){ ?>
 						<div class="mt-1 postActionButtons">
+							<?php if(Util::getCurrentUser()->getId() != $user->getId()){ ?>
+							<span class="shareButton" data-post-id="<?= $entry->getId() ?>" title="Share" data-toggle="tooltip">
+								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($entry->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($entry->getId()) ? "" : ' style="color: gray"' ?>></i>
+							</span>
+							<?php } ?>
+
 							<span class="favoriteButton" data-post-id="<?= $entry->getId() ?>">
 								<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($entry->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
 							</span>
