@@ -592,6 +592,7 @@ class User {
 					$stmt = $mysqli->prepare("INSERT INTO `favorites` (`user`,`post`) VALUES(?,?);");
 					$stmt->bind_param("ii",$this->id,$postId);
 					if($stmt->execute()){
+						$this->cachedNotFavorites = Util::removeFromArray($this->cachedNotFavorites,$postId);
 						array_push($this->cachedFavorites,$postId);
 						$this->saveToCache();
 
@@ -619,6 +620,7 @@ class User {
 			$stmt->bind_param("ii",$this->id,$postId);
 			if($stmt->execute()){
 				$this->cachedFavorites = Util::removeFromArray($this->cachedFavorites,$postId);
+				array_push($this->cachedNotFavorites,$postId);
 				$this->saveToCache();
 
 				$feedEntry = FeedEntry::getEntryById($postId);
@@ -639,6 +641,8 @@ class User {
 	public function hasFavorited($postId){
 		if(in_array($postId,$this->cachedFavorites)){
 			return true;
+		} else if(in_array($postId,$this->cachedNotFavorites)){
+			return false;	
 		} else {
 			$mysqli = Database::Instance()->get();
 
@@ -652,6 +656,9 @@ class User {
 
 					if($row["count"] > 0){
 						array_push($this->cachedFavorites,$postId);
+						$this->saveToCache();
+					} else {
+						array_push($this->cachedNotFavorites,$postId);
 						$this->saveToCache();
 					}
 				}
