@@ -29,7 +29,7 @@
 
 				$results = [];
 
-				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 60");
+				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`type` AS `postType`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 60");
 				//$stmt->bind_param("s",$i);
 				if($stmt->execute()){
 					$result = $stmt->get_result();
@@ -37,7 +37,7 @@
 					if($result->num_rows){
 						while($row = $result->fetch_assoc()){
 							array_push($results,[
-								"post" => FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["postTime"]),
+								"post" => FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],$row["postType"],$row["postTime"]),
 								"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["time"])
 							]);
 						}
@@ -61,6 +61,8 @@
 
 						if($first)
 							echo '<script>var HOME_FEED_LAST_POST = ' . $post->getId() . ';</script>';
+
+						if($post->getType() == "POST"){
 
 						?>
 			<div class="card feedEntry mb-2" data-entry-id="<?= $post->getId() ?>">
@@ -107,6 +109,63 @@
 				</div>
 			</div>
 						<?php
+
+						} else if($post->getType() == "SHARE"){
+							$sharedPost = $post->getPost();
+							$sharedUser = $sharedPost->getUser();
+
+							if(is_null($sharedPost) || is_null($sharedUser))
+								continue;
+
+							?>
+			<div class="card feedEntry mb-2" data-entry-id="<?= $post->getId() ?>">
+				<div class="card-body">
+					<div class="small text-muted">
+						<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/<?= $u->getUsername(); ?>" class="clearUnderline"><?= $u->getDisplayName(); ?></a> &bull; <?= Util::timeago($post->getTime()); ?>
+					</div>
+					<div class="row">
+						<div class="col-1">
+							<a href="/<?= $sharedUser->getUsername(); ?>" class="clearUnderline">
+								<img class="rounded mx-1 my-1" src="<?= $sharedUser->getAvatarURL(); ?>" width="40" height="40"/>
+							</a>
+						</div>
+
+						<div class="col-11">
+							<p class="mb-0">
+								<a href="/<?= $sharedUser->getUsername(); ?>" class="clearUnderline">
+									<span class="font-weight-bold"><?= $sharedUser->getDisplayName(); ?></span>
+								</a>
+
+								<span class="text-muted font-weight-normal">@<?= $sharedUser->getUsername(); ?></span>
+
+								&bull;
+
+								<?= Util::timeago($sharedPost->getTime()); ?>
+							</p>
+
+							<p class="mb-0 convertEmoji">
+								<?= Util::convertPost($sharedPost->getText()); ?>
+							</p>
+
+							<?php if(Util::isLoggedIn()){ ?>
+							<div class="mt-1 postActionButtons">
+								<?php if(Util::getCurrentUser()->getId() != $sharedUser->getId()){ ?>
+								<span class="shareButton" data-post-id="<?= $sharedPost->getId() ?>" title="Share" data-toggle="tooltip">
+									<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
+								</span>
+								<?php } ?>
+
+								<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>" title="Add to favorites" data-toggle="tooltip">
+									<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
+								</span>
+							</div>
+							<?php } ?>
+						</div>
+					</div>
+				</div>
+			</div>
+							<?php
+						}
 					}
 
 					echo '</div>';
