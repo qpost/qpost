@@ -39,6 +39,33 @@ $app->post("/scripts/toggleFollow",function(){
 	}
 });
 
+$app->post("/scripts/toggleFavorite",function(){
+	$this->response->mime ="json";
+	
+	if(isset($_POST["post"])){
+		if(Util::isLoggedIn()){
+			$user = Util::getCurrentUser();
+			$post = FeedEntry::getEntryById($_POST["post"]);
+
+			if($user->hasFavorited($post->getId())){
+				$user->unfavorite($post->getId());
+			} else {
+				$user->favorite($post->getId());
+			}
+
+			if($user->hasFavorited($post->getId())){
+				return json_encode(["status" => "Favorite added"]);
+			} else {
+				return json_encode(["status" => "Favorite removed"]);
+			}
+		} else {
+			return json_encode(["error" => "Not logged in"]);
+		}
+	} else {
+		return json_encode(["error" => "Bad request"]);
+	}
+});
+
 $app->post("/scripts/extendHomeFeed",function(){
 	$this->response->mime = "json";
 

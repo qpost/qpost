@@ -563,7 +563,7 @@ class User {
 		if(!$this->hasFavorited($postId)){
 			$post = FeedEntry::getEntryById($postId);
 
-			if(!is_null($post)){
+			if(!is_null($post) && $post->getType() == FEED_ENTRY_TYPE_POST){
 				if(!$this->isBlocked($post->getUserId())){
 					if(($this->id != $post->getUserId()) && (($post->getUser()->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && !$this->isFollowing($post->getUserId())) || ($post->getUser()->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED))){
 						return;
