@@ -236,6 +236,12 @@ class User {
 	public $cachedShares = [];
 
 	/**
+	 * @access public
+	 * @var int[] $cachedNotShares
+	 */
+	public $cachedNotShares = [];
+
+	/**
 	 * @access private
 	 * @var int $unreadMessages
 	 */
@@ -254,10 +260,16 @@ class User {
 	private $favorites;
 
 	/**
-	 * @access private
+	 * @access public
 	 * @var int[] $cachedFavorites
 	 */
-	private $cachedFavorites = [];
+	public $cachedFavorites = [];
+
+	/**
+	 * @access public
+	 * @var int[] $cachedNotFavorites
+	 */
+	public $cachedNotFavorites = [];
 
 	/**
 	 * @access private
@@ -664,6 +676,7 @@ class User {
 			$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`post`,`sessionId`,`type`) VALUES(?,?,?,'SHARE');");
 			$stmt->bind_param("iis",$this->id,$postId,$sessionId);
 			if($stmt->execute()){
+				$this->cachedNotShares = Util::removeFromArray($this->cachedNotShares,$postId);
 				array_push($this->cachedShares,$postId);
 				$this->saveToCache();
 
@@ -689,6 +702,7 @@ class User {
 			$stmt->bind_param("ii",$this->id,$postId);
 			if($stmt->execute()){
 				$this->cachedShares = Util::removeFromArray($this->cachedShares,$postId);
+				array_push($this->cachedNotShares,$postId);
 				$this->saveToCache();
 
 				$feedEntry = FeedEntry::getEntryById($postId);
@@ -708,6 +722,8 @@ class User {
 	public function hasShared($postId){
 		if(in_array($postId,$this->cachedShares)){
 			return true;
+		} else if(in_array($postId,$this->cachedNotShares)){
+			return false;
 		} else {
 			$mysqli = Database::Instance()->get();
 
@@ -721,6 +737,9 @@ class User {
 
 					if($row["count"] > 0){
 						array_push($this->cachedShares,$postId);
+						$this->saveToCache();
+					} else {
+						array_push($this->cachedNotShares,$postId);
 						$this->saveToCache();
 					}
 				}
