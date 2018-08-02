@@ -129,14 +129,45 @@ $app->post("/scripts/extendHomeFeed",function(){
 							while($row = $result->fetch_assoc()){
 								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["postTime"]);
 
-								array_push($posts,[
-									"id" => $entry->getId(),
-									"text" => Util::convertPost($entry->getText()),
-									"time" => Util::timeago($entry->getTime()),
-									"userName" => $entry->getUser()->getUsername(),
-									"userDisplayName" => $entry->getUser()->getDisplayName(),
-									"userAvatar" => $entry->getUser()->getAvatarURL()
-								]);
+								if(!is_null($row["sharedPost"])){
+									$sharedPost = FeedEntry::getEntryById($row["sharedPost"]);
+
+									if(!is_null($sharedPost)){
+										$sharedUser = $sharedPost->getUser();
+
+										if(!is_null($sharedUser)){
+											array_push($posts,[
+												"id" => $entry->getId(),
+												"time" => Util::timeago($entry->getTime()),
+												"userName" => Util::timeago($entry->getUser()->getUsername()),
+												"userDisplayName" => $entry->getUser()->getDisplayName(),
+												"userAvatar" => $entry->getUser()->getAvatarURL(),
+												
+												"shared" => [
+													"id" => $sharedPost->getId(),
+													"text" => Util::convertPost($sharedPost->getText()),
+													"time" => Util::timeago($sharedPost->getTime()),
+													"userName" => $sharedPost->getUser()->getUsername(),
+													"userDisplayName" => $sharedPost->getUser()->getDisplayName(),
+													"userAvatar" => $sharedPost->getUser()->getAvatarURL()
+												]
+											]);
+										} else {
+											continue;
+										}
+									} else {
+										continue;
+									}
+								} else {
+									array_push($posts,[
+										"id" => $entry->getId(),
+										"text" => Util::convertPost($entry->getText()),
+										"time" => Util::timeago($entry->getTime()),
+										"userName" => $entry->getUser()->getUsername(),
+										"userDisplayName" => $entry->getUser()->getDisplayName(),
+										"userAvatar" => $entry->getUser()->getAvatarURL()
+									]);
+								}
 							}
 						}
 					}
@@ -160,14 +191,45 @@ $app->post("/scripts/extendHomeFeed",function(){
 							while($row = $result->fetch_assoc()){
 								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["postTime"]);
 
-								array_push($posts,[
-									"id" => $entry->getId(),
-									"text" => Util::convertPost($entry->getText()),
-									"time" => Util::timeago($entry->getTime()),
-									"userName" => $entry->getUser()->getUsername(),
-									"userDisplayName" => $entry->getUser()->getDisplayName(),
-									"userAvatar" => $entry->getUser()->getAvatarURL()
-								]);
+								if(!is_null($row["sharedPost"])){
+									$sharedPost = FeedEntry::getEntryById($row["sharedPost"]);
+
+									if(!is_null($sharedPost)){
+										$sharedUser = $sharedPost->getUser();
+
+										if(!is_null($sharedUser)){
+											array_push($posts,[
+												"id" => $entry->getId(),
+												"time" => Util::timeago($entry->getTime()),
+												"userName" => Util::timeago($entry->getUser()->getUsername()),
+												"userDisplayName" => $entry->getUser()->getDisplayName(),
+												"userAvatar" => $entry->getUser()->getAvatarURL(),
+												
+												"shared" => [
+													"id" => $sharedPost->getId(),
+													"text" => Util::convertPost($sharedPost->getText()),
+													"time" => Util::timeago($sharedPost->getTime()),
+													"userName" => $sharedPost->getUser()->getUsername(),
+													"userDisplayName" => $sharedPost->getUser()->getDisplayName(),
+													"userAvatar" => $sharedPost->getUser()->getAvatarURL()
+												]
+											]);
+										} else {
+											continue;
+										}
+									} else {
+										continue;
+									}
+								} else {
+									array_push($posts,[
+										"id" => $entry->getId(),
+										"text" => Util::convertPost($entry->getText()),
+										"time" => Util::timeago($entry->getTime()),
+										"userName" => $entry->getUser()->getUsername(),
+										"userDisplayName" => $entry->getUser()->getDisplayName(),
+										"userAvatar" => $entry->getUser()->getAvatarURL()
+									]);
+								}
 							}
 						}
 					}
