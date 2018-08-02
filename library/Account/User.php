@@ -561,15 +561,25 @@ class User {
 	 */
 	public function favorite($postId){
 		if(!$this->hasFavorited($postId)){
-			$mysqli = Database::Instance()->get();
+			$post = FeedEntry::getEntryById($postId);
 
-			$stmt = $mysqli->prepare("INSERT INTO `favorites` (`user`,`post`) VALUES(?,?);");
-			$stmt->bind_param("ii",$this->id,$postId);
-			if($stmt->execute()){
-				array_push($this->cachedFavorites,$postId);
-				$this->saveToCache();
+			if(!is_null($post)){
+				if(!$this->isBlocked($post->getUserId())){
+					if(($this->id != $post->getUserId()) && (($post->getUser()->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && !$this->isFollowing($post->getUserId())) || ($post->getUser()->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED))){
+						return;
+					}
+
+					$mysqli = Database::Instance()->get();
+
+					$stmt = $mysqli->prepare("INSERT INTO `favorites` (`user`,`post`) VALUES(?,?);");
+					$stmt->bind_param("ii",$this->id,$postId);
+					if($stmt->execute()){
+						array_push($this->cachedFavorites,$postId);
+						$this->saveToCache();
+					}
+					$stmt->close();
+				}
 			}
-			$stmt->close();
 		}
 	}
 
