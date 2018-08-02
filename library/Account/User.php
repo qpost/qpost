@@ -249,6 +249,12 @@ class User {
 
 	/**
 	 * @access private
+	 * @var int[] $cachedFavorites
+	 */
+	private $cachedFavorites;
+
+	/**
+	 * @access private
 	 * @var array $followingArray
 	 */
 	private $followingArray;
@@ -545,6 +551,79 @@ class User {
 	public function reloadFavoritesCount(){
 		$this->favorites = null;
 		$this->getFavorites();
+	}
+
+	/**
+	 * Adds a specific post to the user's favorites
+	 * 
+	 * @access public
+	 * @param int $postId
+	 */
+	public function favorite($postId){
+		if(!$this->hasFavorited($postId)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("INSERT INTO `favorites` (`user`,`post`) VALUES(?,?);");
+			$stmt->bind_param("ii",$this->id,$postId);
+			if($stmt->execute()){
+				array_push($this->cachedFavorites,$postId);
+				$this->saveToCache();
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
+	 * Removes a specific post from the user's favorites
+	 * 
+	 * @access public
+	 * @param int $postId
+	 */
+	public function unfavorite($postId){
+		if($this->hasFavorited($postId)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("DELETE FROM `favorites` WHERE `user` = ? AND `post` = ?");
+			$stmt->bind_param("ii",$this->id,$postId);
+			if($stmt->execute()){
+				$this->cachedFavorites = Util::removeFromArray($this->cachedFavorites,$postId);
+				$this->saveToCache();
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
+	 * Returns whether the user has marked a specific post as their favorite
+	 * 
+	 * @access public
+	 * @param int $postId
+	 * @return bool
+	 */
+	public function hasFavorited($postId){
+		if(in_array($postId,$this->cachedFavorites)){
+			return true;
+		} else {
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `favorites` WHERE `user` = ? AND `post` = ?");
+			$stmt->bind_param("ii",$this->id,$postId);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					if($row["count"] > 0){
+						array_push($this->cachedFavorites,$postId);
+						$this->saveToCache();
+					}
+				}
+			}
+			$stmt->close();
+
+			return in_array($postId,$this->cachedFavorites);
+		}
 	}
 
 	/**
