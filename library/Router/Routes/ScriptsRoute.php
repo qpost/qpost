@@ -129,6 +129,8 @@ $app->post("/scripts/extendHomeFeed",function(){
 							while($row = $result->fetch_assoc()){
 								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["postTime"]);
 
+								$sharedPost = is_null($row["sharedPost"]) ? $entry : FeedEntry::getEntryById($row["sharedPost"]);
+
 								$postActionButtons = "";
 
 								if(Util::isLoggedIn()){
@@ -137,7 +139,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
 		
-										$postActionButtons .= '<span class="shareCount small text-primary">';
+										$postActionButtons .= '<span class="shareCount small text-primary ml-1 mr-1">';
 											$postActionButtons .= $entry->getShares();
 										$postActionButtons .= '</span>';
 		
@@ -145,7 +147,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 											$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
 		
-										$postActionButtons .= '<span class="favoriteCount small" style="color: #ff960c">';
+										$postActionButtons .= '<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">';
 											$postActionButtons .= $entry->getFavorites();
 										$postActionButtons .= '</span>';
 									$postActionButtons .= '</div>';
@@ -161,7 +163,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 											array_push($posts,[
 												"id" => $entry->getId(),
 												"time" => Util::timeago($entry->getTime()),
-												"userName" => Util::timeago($entry->getUser()->getUsername()),
+												"userName" => $entry->getUser()->getUsername(),
 												"userDisplayName" => $entry->getUser()->getDisplayName(),
 												"userAvatar" => $entry->getUser()->getAvatarURL(),
 												
@@ -217,24 +219,26 @@ $app->post("/scripts/extendHomeFeed",function(){
 							while($row = $result->fetch_assoc()){
 								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["postTime"]);
 
+								$sharedPost = is_null($row["sharedPost"]) ? $entry : FeedEntry::getEntryById($row["sharedPost"]);
+
 								$postActionButtons = "";
 
 								if(Util::isLoggedIn()){
 									$postActionButtons .= '<div class="mt-1 postActionButtons">';
-										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $entry->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $entry->getId() . '">';
+										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $sharedPost->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $sharedPost->getId() . '">';
 											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
 		
-										$postActionButtons .= '<span class="shareCount small text-primary">';
-											$postActionButtons .= $entry->getShares();
+										$postActionButtons .= '<span class="shareCount small text-primary ml-1 mr-1">';
+											$postActionButtons .= $sharedPost->getShares();
 										$postActionButtons .= '</span>';
 		
 										$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>" title="Add to favorites" data-toggle="tooltip">';
 											$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
 		
-										$postActionButtons .= '<span class="favoriteCount small" style="color: #ff960c">';
-											$postActionButtons .= $entry->getFavorites();
+										$postActionButtons .= '<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">';
+											$postActionButtons .= $sharedPost->getFavorites();
 										$postActionButtons .= '</span>';
 									$postActionButtons .= '</div>';
 								}
@@ -249,7 +253,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 											array_push($posts,[
 												"id" => $entry->getId(),
 												"time" => Util::timeago($entry->getTime()),
-												"userName" => Util::timeago($entry->getUser()->getUsername()),
+												"userName" => $entry->getUser()->getUsername(),
 												"userDisplayName" => $entry->getUser()->getDisplayName(),
 												"userAvatar" => $entry->getUser()->getAvatarURL(),
 												

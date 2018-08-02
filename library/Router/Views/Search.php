@@ -153,17 +153,11 @@
 								<div class="mt-1 postActionButtons">
 									<span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $post->getId() ?>">
 										<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($post->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($post->getId()) ? "" : ' style="color: gray"' ?>></i>
-									</span>
-
-									<span class="shareCount small text-primary">
+									</span><span class="shareCount small text-primary ml-1 mr-1">
 										<?= $post->getShares(); ?>
-									</span>
-
-									<span class="favoriteButton" data-post-id="<?= $post->getId() ?>">
+									</span><span class="favoriteButton" data-post-id="<?= $post->getId() ?>">
 										<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
-									</span>
-
-									<span class="favoriteCount small" style="color: #ff960c">
+									</span><span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">
 										<?= $post->getFavorites(); ?>
 									</span>
 								</div>
