@@ -249,6 +249,13 @@ if(!isset($socialImage) || empty($socialImage))
 				if(isset($showProfile) && $showProfile == true && isset($user)){
 					?>
 				<div class="card-body">
+					<?php
+
+						if(Util::isLoggedIn() && Util::getCurrentUser()->hasBlocked($user)){
+							echo Util::createAlert("blocking","<b>You blocked @" . $user->getUsername() . "</b><br/>@" . $user->getUsername() . " won't be able to view your profile or posts.",ALERT_TYPE_DANGER);
+						}
+
+					?>
 					<div class="row">
 						<div class="col-lg-3 mb-3">
 							<center><img class="rounded border-primary mb-2" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
