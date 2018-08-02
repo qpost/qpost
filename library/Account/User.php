@@ -243,6 +243,12 @@ class User {
 
 	/**
 	 * @access private
+	 * @var int $favorites
+	 */
+	private $favorites;
+
+	/**
+	 * @access private
 	 * @var array $followingArray
 	 */
 	private $followingArray;
@@ -500,6 +506,45 @@ class User {
 		}
 
 		return $this->following;
+	}
+
+	/**
+	 * Gets the user's favorites count
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public function getFavorites(){
+		if(is_null($this->favorites)){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `favorites` WHERE `user` = ?");
+			$stmt->bind_param("i",$this->id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					$this->favorites = $row["count"];
+
+					$this->saveToCache();
+				}
+			}
+			$stmt->close();
+		}
+
+		return $this->favorites;
+	}
+
+	/**
+	 * Reloads the favorites count
+	 * 
+	 * @access public
+	 */
+	public function reloadFavoritesCount(){
+		$this->favorites = null;
+		$this->getFavorites();
 	}
 
 	/**
