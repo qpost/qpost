@@ -29,3 +29,18 @@ img.emoji {
  .favoriteButton,.shareButton {
 	 cursor: pointer;
  }
+
+ .favoriteButton>i:hover {
+	color: gold !important;
+ }
+
+ .shareButton>i:hover {
+	color: #007bff !important;
+ }
+
+ .favoriteButton>i:hover,.shareButton>i:hover,
+ .favoriteButton>i,.shareButton>i {
+	-webkit-transition: color 200ms linear;
+    -ms-transition: color 200ms linear;
+    transition: color 200ms linear;
+ }
