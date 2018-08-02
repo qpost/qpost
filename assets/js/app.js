@@ -318,13 +318,7 @@ function loadBasic(){
 			}
 		})
 	});
-}
 
-$(document).ready(function(){
-	load();
-});
-
-function load(){
 	$(".favoriteButton").on("click",function(e){
 		e.preventDefault();
 
@@ -414,7 +408,13 @@ function load(){
 			});
 		}
 	});
+}
 
+$(document).ready(function(){
+	load();
+});
+
+function loadPostButtons(){
 	$("#homePostButton").on("click",function(e){
 		e.preventDefault();
 	
@@ -455,6 +455,19 @@ function load(){
 								let userAvatar = post.userAvatar;
 	
 								HOME_FEED_FIRST_POST = postId;
+
+								let postActionButtons = '<div class="mt-1 postActionButtons">' +
+								'<span data-toggle="tooltip" title="You can not share this post" data-post-id="' + postId + '">' +
+								'<i class="fas fa-share-alt" style="color: gray"></i>' +
+								'</span>' +
+
+								'<span class="shareCount small text-primary ml-1 mr-1">0</span>' +
+
+								'<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>" title="Add to favorites" data-toggle="tooltip">' +
+								'<i class="fas fa-star" style="color: gray"></i>' +
+								'</span>' +
+
+								'<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">0</span></div>';
 	
 								let newHtml =
 								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
@@ -482,6 +495,8 @@ function load(){
 												'<p class="mb-0 convertEmoji">' +
 													twemoji.parse(postText) +
 												'</p>' +
+
+												postActionButtons +
 											'</div>' +
 										'</div>' +
 									'</div>' +
@@ -497,6 +512,7 @@ function load(){
 								$("#homePostField").val("");
 								$("#homeCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
 								loadBasic();
+								loadPostButtons();
 							} else {
 								console.log(result);
 							}
@@ -593,6 +609,7 @@ function load(){
 								$("#profilePostField").val("");
 								$("#profileCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
 								loadBasic();
+								loadPostButtons();
 							} else {
 								console.log(result);
 							}
@@ -612,6 +629,10 @@ function load(){
 			}
 		}
 	});
+}
+
+function load(){
+	loadPostButtons();
 
 	if($("#profilePostField").length && $("#profileCharacterCounter").length){
 		if(typeof POST_CHARACTER_LIMIT !== undefined){

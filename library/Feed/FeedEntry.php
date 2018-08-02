@@ -167,6 +167,7 @@ class FeedEntry {
                 $this->sessionId = $row["sessionId"];
                 $this->type = $row["type"];
                 $this->time = $row["time"];
+                $this->exists = true;
 
                 $this->saveToCache();
             }
@@ -282,6 +283,10 @@ class FeedEntry {
      */
     public function getTime(){
         return $this->time;
+    }
+
+    public function exists(){
+        return $this->exists;
     }
 
     /**
