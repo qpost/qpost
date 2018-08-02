@@ -251,6 +251,15 @@ if(!isset($socialImage) || empty($socialImage))
 				<div class="card-body">
 					<?php
 
+						if(Util::isLoggedIn()){
+							if(isset($_POST["action"]) && $_POST["action"] == "block"){
+								Util::getCurrentUser()->block($user);
+							} else if(isset($_POST["action"]) && $_POST["action"] == "unblock"){
+								Util::getCurrentUser()->unblock($user);
+							}
+						}
+
+
 						if(Util::isLoggedIn() && Util::getCurrentUser()->hasBlocked($user)){
 							echo Util::createAlert("blocking","<b>You blocked @" . $user->getUsername() . "</b><br/>@" . $user->getUsername() . " won't be able to view your profile or posts.",ALERT_TYPE_DANGER);
 						}
@@ -268,7 +277,60 @@ if(!isset($socialImage) || empty($socialImage))
 								<i class="fas fa-globe"></i> Joined <?= date("F Y",strtotime($user->getTime())); ?>
 							</p>
 
-							<?= Util::followButton($user->getId(),true,["btn-block","mt-2"]) ?>
+							<?= Util::followButton($user->getId(),true,["btn-block","mt-2"],false) ?>
+
+							<?php
+
+								if(Util::isLoggedIn() && Util::getCurrentUser()->getId() != $user->getId()){
+									if(Util::getCurrentUser()->hasBlocked($user)){
+										?>
+							<form action="/<?= $user->getUsername(); ?>" method="post">
+								<?= Util::insertCSRFToken(); ?>
+								<input type="hidden" name="action" value="unblock"/>
+
+								<button type="submit" class="btn btn-light btn-block mt-2">
+									Unblock
+								</button>
+							</form>
+										<?php
+									} else {
+										?>
+							<button type="button" class="btn btn-light btn-block mt-2" data-toggle="modal" data-target="#blockModal">
+								Block
+							</button>
+
+							<div class="modal fade" id="blockModal" tabindex="-1" role="dialog" aria-labelledby="blockModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="blockModalLabel">Block @<?= $user->getUsername(); ?></h5>
+
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+
+										<div class="modal-body">
+											@<?= $user->getUsername(); ?> will no longer be able to follow or message you, and you will not see notifications from @<?= $user->getUsername(); ?>.
+										</div>
+
+										<div class="modal-footer">
+											<form action="/<?= $user->getUsername(); ?>" method="post">
+												<?= Util::insertCSRFToken(); ?>
+												<input type="hidden" name="action" value="block"/>
+												<button type="submit" class="btn btn-danger">Block</button>
+											</form>
+
+											<button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+										</div>
+									</div>
+								</div>
+							</div>
+										<?php
+									}
+								}
+
+							?>
 						</div>
 
 						<div class="col-lg-9">

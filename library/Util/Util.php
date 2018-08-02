@@ -889,8 +889,9 @@ class Util {
 	 * @param int|User $user The user to follow
 	 * @param bool $defaultToEdit If true, an "Edit Profile" button will be returned if $user is the currently logged in user
 	 * @param array $classes The CSS classes to be added to the button
+	 * @param bool $showBlocked If true, a "Blocked" button will be returned if the $user is blocked by the currently logged in user
 	 */
-	public static function followButton($user,$defaultToEdit = false,$classes = null){
+	public static function followButton($user,$defaultToEdit = false,$classes = null,$showBlocked = true){
 		if(is_object($user))
 			$user = $user->getId();
 
@@ -899,13 +900,19 @@ class Util {
 		if(self::isLoggedIn()){
 			$currentUser = Util::getCurrentUser();
 
-			if($defaultToEdit && $currentUser->getId() == $user){
-				return '<a href="/edit" class="btn btn-light' . $classString . '">Edit profile</a>';
-			} else if($currentUser->getId() != $user){
-				if($currentUser->isFollowing($user)){
-					return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Unfollow</button>';
-				} else {
-					return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Follow</button>';
+			if($currentUser->hasBlocked($user)){
+				if($showBlocked){
+					return '<button type="button" class="btn btn-danger' . $classString . '">Blocked</button>';
+				}
+			} else {
+				if($defaultToEdit && $currentUser->getId() == $user){
+					return '<a href="/edit" class="btn btn-light' . $classString . '">Edit profile</a>';
+				} else if($currentUser->getId() != $user){
+					if($currentUser->isFollowing($user)){
+						return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Unfollow</button>';
+					} else {
+						return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Follow</button>';
+					}
 				}
 			}
 		}
