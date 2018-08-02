@@ -64,7 +64,7 @@ if(!isset($socialImage) || empty($socialImage))
 			"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
 			"assets:js/twemoji-picker.js"]); ?>
 
-		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?></script>
+		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?></script>
 	</head>
 	<body>
 		<nav id="mainNavSmall" class="d-xs-block d-lg-none navbar navbar-expand-lg navbar-dark bg-primary">

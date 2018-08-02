@@ -32,36 +32,89 @@ function loadHomeFeed(){
 						let userDisplayName = post.userDisplayName;
 						let userAvatar = post.userAvatar;
 
-						newHtml = newHtml.concat(
-						'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
-							'<div class="card-body">' +
-								'<div class="row">' +
-									'<div class="col-1">' +
-										'<a href="/' + userName + '" class="clearUnderline">' +
-											'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
-										'</a>' +
+						let postActionButtons = post.postActionButtons;
+
+						if(post.hasOwnProperty("shared")){
+							let shared = post.shared;
+
+							let sharedId = shared.id;
+							let sharedText = shared.text;
+							let sharedTime = shared.time;
+							let sharedUserId = shared.userId;
+							let sharedUserName = shared.userName;
+							let sharedUserDisplayName = shared.userDisplayName;
+							let sharedAvatar = shared.userAvatar;
+
+							newHtml = newHtml.concat(
+								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+									'<div class="card-body">' +
+										'<div class="small text-muted">' +
+											'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline">' + userDisplayName + '</a> &bull; ' + postTime +
+										'</div>' +
+										'<div class="row">' +
+											'<div class="col-1">' +
+												'<a href="/' + sharedUserName + '" class="clearUnderline">' +
+													'<img class="rounded mx-1 my-1" src="' + sharedAvatar + '" width="40" height="40"/>' +
+												'</a>' +
+											'</div>' +
+
+											'<div class="col-11">' +
+												'<p class="mb-0">' +
+													'<a href="/' + sharedUserName + '" class="clearUnderline">' +
+														'<span class="font-weight-bold">' + sharedUserDisplayName + '</span>' +
+													'</a>' +
+
+													' <span class="text-muted font-weight-normal">@' + sharedUserName + '</span> ' +
+
+													'&bull; ' +
+
+													sharedTime +
+												'</p>' +
+
+												'<p class="mb-0 convertEmoji">' +
+													twemoji.parse(sharedText) +
+												'</p>' +
+
+												postActionButtons +
+											'</div>' +
+										'</div>' +
 									'</div>' +
-					
-									'<div class="col-11">' +
-										'<p class="mb-0">' +
-											'<a href="/' + userName + '" class="clearUnderline">' +
-												'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-											'</a>' +
-					
-											' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
-					
-											' &bull; ' +
-					
-											postTime +
-										'</p>' +
-					
-										'<p class="mb-0 convertEmoji">' +
-											twemoji.parse(postText) +
-										'</p>' +
+								'</div>'
+							);
+						} else {
+							newHtml = newHtml.concat(
+								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+									'<div class="card-body">' +
+										'<div class="row">' +
+											'<div class="col-1">' +
+												'<a href="/' + userName + '" class="clearUnderline">' +
+													'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
+												'</a>' +
+											'</div>' +
+							
+											'<div class="col-11">' +
+												'<p class="mb-0">' +
+													'<a href="/' + userName + '" class="clearUnderline">' +
+														'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+													'</a>' +
+							
+													' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
+							
+													' &bull; ' +
+							
+													postTime +
+												'</p>' +
+							
+												'<p class="mb-0 convertEmoji">' +
+													twemoji.parse(postText) +
+												'</p>' +
+
+												postActionButtons +
+											'</div>' +
+										'</div>' +
 									'</div>' +
-								'</div>' +
-							'</div>' +
-						'</div>');
+								'</div>');
+						}
 					});
 
 					if($(".feedEntry").length){
@@ -129,36 +182,89 @@ function loadOldHomeFeed(){
 							let userDisplayName = post.userDisplayName;
 							let userAvatar = post.userAvatar;
 
-							newHtml = newHtml.concat(
-							'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
-								'<div class="card-body">' +
-									'<div class="row">' +
-										'<div class="col-1">' +
-											'<a href="/' + userName + '" class="clearUnderline">' +
-												'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
-											'</a>' +
+							let postActionButtons = post.postActionButtons;
+
+							if(post.hasOwnProperty("shared")){
+								let shared = post.shared;
+
+								let sharedId = shared.id;
+								let sharedText = shared.text;
+								let sharedTime = shared.time;
+								let sharedUserId = shared.userId;
+								let sharedUserName = shared.userName;
+								let sharedUserDisplayName = shared.userDisplayName;
+								let sharedAvatar = shared.userAvatar;
+
+								newHtml = newHtml.concat(
+									'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+										'<div class="card-body">' +
+											'<div class="small text-muted">' +
+												'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline">' + userDisplayName + '</a> &bull; ' + postTime +
+											'</div>' +
+											'<div class="row">' +
+												'<div class="col-1">' +
+													'<a href="/' + sharedUserName + '" class="clearUnderline">' +
+														'<img class="rounded mx-1 my-1" src="' + sharedAvatar + '" width="40" height="40"/>' +
+													'</a>' +
+												'</div>' +
+
+												'<div class="col-11">' +
+													'<p class="mb-0">' +
+														'<a href="/' + sharedUserName + '" class="clearUnderline">' +
+															'<span class="font-weight-bold">' + sharedUserDisplayName + '</span>' +
+														'</a>' +
+
+														' <span class="text-muted font-weight-normal">@' + sharedUserName + '</span> ' +
+
+														'&bull; ' +
+
+														sharedTime +
+													'</p>' +
+
+													'<p class="mb-0 convertEmoji">' +
+														twemoji.parse(sharedText) +
+													'</p>' +
+
+													postActionButtons +
+												'</div>' +
+											'</div>' +
 										'</div>' +
-						
-										'<div class="col-11">' +
-											'<p class="mb-0">' +
-												'<a href="/' + userName + '" class="clearUnderline">' +
-													'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-												'</a>' +
-						
-												' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
-						
-												' &bull; ' +
-						
-												postTime +
-											'</p>' +
-						
-											'<p class="mb-0 convertEmoji">' +
-												twemoji.parse(postText) +
-											'</p>' +
+									'</div>'
+								);
+							} else {
+								newHtml = newHtml.concat(
+									'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+										'<div class="card-body">' +
+											'<div class="row">' +
+												'<div class="col-1">' +
+													'<a href="/' + userName + '" class="clearUnderline">' +
+														'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
+													'</a>' +
+												'</div>' +
+								
+												'<div class="col-11">' +
+													'<p class="mb-0">' +
+														'<a href="/' + userName + '" class="clearUnderline">' +
+															'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+														'</a>' +
+								
+														' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
+								
+														' &bull; ' +
+								
+														postTime +
+													'</p>' +
+								
+													'<p class="mb-0 convertEmoji">' +
+														twemoji.parse(postText) +
+													'</p>' +
+
+													postActionButtons +
+												'</div>' +
+											'</div>' +
 										'</div>' +
-									'</div>' +
-								'</div>' +
-							'</div>');
+									'</div>');
+							}
 						}
 
 						if($(".feedEntry").length){
