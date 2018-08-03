@@ -8,6 +8,11 @@ $uID = $user->getId();
 
 $showNoEntriesInfo = false;
 
+if(isset($_SESSION["profileLoadPost"])){
+	echo '<script>showStatusModal(' . $_SESSION["profileLoadPost"] . ');</script>';
+	unset($_SESSION["profileLoadPost"]);
+}
+
 if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId()){
 ?>
 <div class="card mt-2 border-primary" style="background: #9FCCFC" id="profilePostBox">
