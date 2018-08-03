@@ -610,7 +610,7 @@ class User {
 						if(!is_null($post))
 							$post->reloadFavorites();
 
-						if($feedEntry->getUser()->getId() != $this->id && $post->getUser()->canPostNotification(NOTIFICATION_TYPE_FAVORITE,$this->id,$postId)){
+						if($post->getUser()->getId() != $this->id && $post->getUser()->canPostNotification(NOTIFICATION_TYPE_FAVORITE,$this->id,$postId)){
 							$puid = $post->getUser()->getId();
 							$pid = $post->getId();
 
