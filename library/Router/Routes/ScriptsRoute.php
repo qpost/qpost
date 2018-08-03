@@ -355,6 +355,7 @@ $app->post("/scripts/postInfo",function(){
 							"avatar" => $user->getAvatarURL()
 						],
 						"text" => Util::convertPost($post->getText()),
+						"textUnfiltered" => Util::sanatizeString($post->getText()),
 						"time" => Util::timeago($post->getTime()),
 						"shares" => $post->getShares(),
 						"favorites" => $post->getFavorites(),

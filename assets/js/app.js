@@ -17,6 +17,11 @@ function showStatusModal(postId){
 
 	let statusModal = $("#statusModal");
 
+	restoreUrl = window.location.pathname;
+	restoreTitle = $(document).find("title").text();
+
+	console.log(restoreTitle);
+
 	$.ajax({
 		url: "/scripts/postInfo",
 		data: {
@@ -87,6 +92,11 @@ function showStatusModal(postId){
 
 				loadBasic();
 
+				let title = user.displayName + " on qpost: \"" + limitString(json.textUnfiltered,34,true) + "\"";
+
+				history.pushState({postId: postId},title,"/status/" + postId);
+				document.title = title;
+
 				statusModal.modal();
 			} else if(json.hasOwnProperty("error")){
 				statusModal.html(
@@ -121,6 +131,19 @@ function showStatusModal(postId){
 			console.log(error);
 		}
 	});
+}
+
+function limitString(string,length,addDots = true){
+	if(addDots){
+		length = length-3;
+		if(length < 1) length = 1;
+	}
+
+	if(string.length > length){
+		return string.substr(0,length) + (addDots == true ? "..." : "");
+	} else {
+		return string;
+	}
 }
 
 function loadHomeFeed(){
@@ -453,6 +476,15 @@ function loadOnce(){
 			let postId = $(this).attr("data-status-render");
 
 			showStatusModal(postId);
+		}
+	});
+
+	$("#statusModal").on("hide.bs.modal",function(e){
+		console.log(restoreUrl);
+		console.log(restoreTitle);
+
+		if(typeof restoreUrl !== "undefined" && typeof restoreTitle !== "undefined"){
+			history.pushState("",restoreTitle,restoreUrl);
 		}
 	});
 
