@@ -607,9 +607,8 @@ class User {
 						array_push($this->cachedFavorites,$postId);
 						$this->saveToCache();
 
-						$feedEntry = FeedEntry::getEntryById($postId);
-						if(!is_null($feedEntry))
-							$feedEntry->reloadFavorites();
+						if(!is_null($post))
+							$post->reloadFavorites();
 
 						if($post->getUser()->canPostNotification(NOTIFICATION_TYPE_FAVORITE,$this->id,$postId)){
 							$puid = $post->getUser()->getId();
@@ -713,6 +712,18 @@ class User {
 				$feedEntry = FeedEntry::getEntryById($postId);
 				if(!is_null($feedEntry))
 					$feedEntry->reloadShares();
+
+				if($feedEntry->getUser()->canPostNotification(NOTIFICATION_TYPE_SHARE,$this->id,$postId)){
+					$puid = $feedEntry->getUser()->getId();
+					$pid = $feedEntry->getId();
+
+					$s = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`,`post`) VALUES(?,'SHARE',?,?);");
+					$s->bind_param("iii",$puid,$this->id,$pid);
+					$s->execute();
+					$s->close();
+
+					$feedEntry->getUser()->reloadUnreadNotifications();
+				}
 			}
 			$stmt->close();
 		}
