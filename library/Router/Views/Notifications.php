@@ -139,7 +139,7 @@ if(CacheHandler::existsInCache($n)){
 						$u = $post->getUser();
 						$u2 = User::getUserById($notification["follower"]);
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>">
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
 						<i class="fas fa-star" style="color:gold"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName(); ?></a> favorited your post &bull; <?= Util::timeago($notification["time"]); ?>
@@ -199,7 +199,7 @@ if(CacheHandler::existsInCache($n)){
 						$u = $post->getUser();
 						$u2 = User::getUserById($notification["follower"]);
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>">
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
 						<i class="fas fa-share-alt text-primary"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName(); ?></a> shared your post &bull; <?= Util::timeago($notification["time"]); ?>
