@@ -125,7 +125,7 @@
 			<div class="card feedEntry mb-2 statusTrigger" data-status-render="<?= $sharedPost->getId() ?>" data-entry-id="<?= $post->getId() ?>">
 				<div class="card-body">
 					<div class="small text-muted">
-						<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/<?= $u->getUsername(); ?>" class="clearUnderline"><?= $u->getDisplayName(); ?></a> &bull; <?= Util::timeago($post->getTime()); ?>
+						<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick"><?= $u->getDisplayName(); ?></a> &bull; <?= Util::timeago($post->getTime()); ?>
 					</div>
 					<div class="row">
 						<div class="col-1">
