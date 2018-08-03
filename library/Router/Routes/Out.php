@@ -7,17 +7,21 @@ $app->bind("/out",function(){
 
 			$host = !is_null(parse_url($link,PHP_URL_HOST)) && !empty(parse_url($link,PHP_URL_HOST)) ? parse_url($link,PHP_URL_HOST) : $link;
 			
-			$host = Util::sanatizeString($host);
-			$link = Util::sanatizeString($link);
+			if($host != $_SERVER["HTTP_HOST"]){
+				$host = Util::sanatizeString($host);
+				$link = Util::sanatizeString($link);
 
-			$data = array(
-				"title" => "You are now headed to a different website",
-				"subtitle" => "You are now headed to a different website",
-				"link" => $link,
-				"host" => $host
-			);
-		
-			return $this->render("views:Out.php with views:Layout.php",$data);
+				$data = array(
+					"title" => "You are now headed to a different website",
+					"subtitle" => "You are now headed to a different website",
+					"link" => $link,
+					"host" => $host
+				);
+			
+				return $this->render("views:Out.php with views:Layout.php",$data);
+			} else {
+				return $this->reroute($link);
+			}
 		} else {
 			return $this->reroute("/");
 		}

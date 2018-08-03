@@ -469,10 +469,20 @@ function loadBasic(){
 }
 
 function loadOnce(){
+	$(document).on("click","a.filterLink",function(e){
+		e.preventDefault();
+		
+		if(typeof $(this).attr("href") !== "undefined"){
+			let link = $(this).attr("href");
+
+			window.location.href = "/out?link=" + encodeURI(link);
+		}
+	});
+
 	$(document).on("click",".statusTrigger",function(e){
 		e.preventDefault();
 
-		if(typeof $(this).attr("data-status-render") !== undefined){
+		if(typeof $(this).attr("data-status-render") !== "undefined"){
 			let postId = $(this).attr("data-status-render");
 
 			showStatusModal(postId);

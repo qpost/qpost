@@ -942,7 +942,7 @@ class Util {
 	 * @return string
 	 */
 	public static function convertLinks($string){
-		return preg_replace("!(\s|^)((https?://|www\.)+[a-z0-9_./?=&-]+)!i", " <a href=\"$2\" class=\"filterLink\">$2</a> ",$string);
+		return preg_replace("!(\s|^)((https?://|www\.)+[a-z0-9_./?=&-]+)!i", " <a href=\"$2\" class=\"filterLink ignoreParentClick\">$2</a> ",$string);
 	}
 
 	/**
