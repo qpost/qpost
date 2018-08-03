@@ -610,6 +610,18 @@ class User {
 						$feedEntry = FeedEntry::getEntryById($postId);
 						if(!is_null($feedEntry))
 							$feedEntry->reloadFavorites();
+
+						if($post->getUser()->canPostNotification(NOTIFICATION_TYPE_FAVORITE,$this->id,$postId)){
+							$puid = $post->getUser()->getId();
+							$pid = $post->getId();
+
+							$s = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`,`post`) VALUES(?,'FAVORITE',?,?);");
+							$s->bind_param("iii",$puid,$this->id,$pid);
+							$s->execute();
+							$s->close();
+
+							$post->getUser()->reloadUnreadNotifications();
+						}
 					}
 					$stmt->close();
 				}
