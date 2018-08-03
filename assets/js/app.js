@@ -481,7 +481,7 @@ function loadPostButtons(){
 
 								'<span class="shareCount small text-primary ml-1 mr-1">0</span>' +
 
-								'<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">' +
+								'<span class="favoriteButton" data-post-id="' + postId + '">' +
 								'<i class="fas fa-star" style="color: gray"></i>' +
 								'</span>' +
 
