@@ -69,7 +69,7 @@ function showStatusModal(postId){
 				content = content.concat(
 					'<div class="mt-2">' +
 					'<p style="font-size: 27px;">' +
-					json.text +
+					twemoji.parse(json.text) +
 					'</p>' +
 					'<p class="small text-muted">Posted ' +
 					json.time +
