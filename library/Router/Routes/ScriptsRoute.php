@@ -334,31 +334,42 @@ $app->post("/scripts/postInfo",function(){
 					if(is_null($followButton))
 						$followButton = "";
 
-					$postActionButtons = "";
+					$postActionButtons = Util::getPostActionButtons($post);
 
-					if(Util::isLoggedIn()){
-						$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
-							$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
-								$postActionButtons .= '<i class="fas fa-share"></i>';
-							$postActionButtons .= '</span><span class="replyCount small text-primary mx-2">';
-								$postActionButtons .= $post->getReplies();
-							$postActionButtons .= '</span>';
-							$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $post->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $post->getId() . '">';
-								$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($post->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($post->getId()) ? "" : ' style="color: gray"') . '></i>';
-							$postActionButtons .= '</span>';
+					$replies = [];
+					if($post->getReplies() > 0){
+						$mysqli = Database::Instance()->get();
+						
+						$postId = $post->getId();
+						$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
 
-							$postActionButtons .= '<span class="shareCount small text-primary ml-2 mr-2">';
-								$postActionButtons .= $post->getShares();
-							$postActionButtons .= '</span>';
+						$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`privacy.level`,u.`time` AS `userTime` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? ORDER BY u.`id` = ?,f.`time` DESC");
+						$stmt->bind_param("ii",$postId,$uid);
+						if($stmt->execute()){
+							$result = $stmt->get_result();
 
-							$postActionButtons .= '<span class="favoriteButton" data-post-id="' . $post->getId() . '">';
-								$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
-							$postActionButtons .= '</span>';
+							if($result->num_rows){
+								while($row = $result->fetch_assoc()){
+									$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["time"]);
+									$u = User::getUserByData($row["userId"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["userTime"]);
 
-							$postActionButtons .= '<span class="favoriteCount small ml-2 mr-2" style="color: #ff960c">';
-								$postActionButtons .= $post->getFavorites();
-							$postActionButtons .= '</span>';
-						$postActionButtons .= '</div>';
+									array_push($replies,[
+										"id" => $f->getId(),
+										"user" => [
+											"id" => $u->getId(),
+											"displayName" => $u->getDisplayName(),
+											"username" => $u->getUsername(),
+											"avatar" => $u->getAvatarURL()
+										],
+										"text" => Util::convertPost($f->getText()),
+										"textUnfiltered" => Util::sanatizeString($f->getText()),
+										"time" => Util::timeago($f->getTime()),
+										"postActionButtons" => Util::getPostActionButtons($f)
+									]);
+								}
+							}
+						}
+						$stmt->close();
 					}
 					
 					return json_encode([
@@ -375,7 +386,8 @@ $app->post("/scripts/postInfo",function(){
 						"shares" => $post->getShares(),
 						"favorites" => $post->getFavorites(),
 						"followButton" => $followButton,
-						"postActionButtons" => $postActionButtons
+						"postActionButtons" => $postActionButtons,
+						"replies" => $replies
 					]);
 				} else {
 					return json_encode(["error" => "User not found"]);
