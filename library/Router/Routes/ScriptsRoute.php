@@ -407,23 +407,13 @@ $app->post("/scripts/createPost",function(){
 					if(!is_null($postId)){
 						$post = [];
 
-						$stmt = $mysqli->prepare("SELECT `text`,`time` FROM `feed` WHERE `id` = ? LIMIT 1");
-						$stmt->bind_param("i",$postId);
-						if($stmt->execute()){
-							$result = $stmt->get_result();
-
-							if($result->num_rows){
-								$row = $result->fetch_assoc();
-
-								$post["id"] = $postId;
-								$post["text"] = Util::convertPost($row["text"]);
-								$post["time"] = Util::timeago($row["time"]);
-								$post["userName"] = $user->getUsername();
-								$post["userDisplayName"] = $user->getDisplayName();
-								$post["userAvatar"] = $user->getAvatarURL();
-							}
-						}
-						$stmt->close();
+						$postData = FeedEntry::getEntryById($postId);
+						$post["id"] = $postData->getId();
+						$post["text"] = Util::convertPost($postData->getText());
+						$post["time"] = Util::timeago($postData->getTime());
+						$post["userName"] = $user->getUsername();
+						$post["userDisplayName"] = $user->getDisplayName();
+						$post["userAvatar"] = $user->getAvatarURL();
 
 						if(count($mentioned) > 0){
 							foreach($mentioned as $u){
@@ -441,10 +431,32 @@ $app->post("/scripts/createPost",function(){
 							}
 						}
 
+						$postActionButtons = "";
+
+						if(Util::isLoggedIn()){
+							$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
+								$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $postData->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $postData->getId() . '">';
+									$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($postData->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($postData->getId()) ? "" : ' style="color: gray"') . '></i>';
+								$postActionButtons .= '</span>';
+	
+								$postActionButtons .= '<span class="shareCount small text-primary ml-2 mr-2">';
+									$postActionButtons .= $postData->getShares();
+								$postActionButtons .= '</span>';
+	
+								$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">';
+									$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($postData->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
+								$postActionButtons .= '</span>';
+	
+								$postActionButtons .= '<span class="favoriteCount small ml-2 mr-2" style="color: #ff960c">';
+									$postActionButtons .= $postData->getFavorites();
+								$postActionButtons .= '</span>';
+							$postActionButtons .= '</div>';
+						}
+
 						$user->reloadFeedEntriesCount();
 						$user->reloadPostsCount();
 
-						return json_encode(["post" => $post]);
+						return json_encode(["post" => $post,"postActionButtons" => $postActionButtons]);
 					} else {
 						return json_encode(["error" => "Empty post id"]);
 					}

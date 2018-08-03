@@ -344,7 +344,7 @@ function loadOldHomeFeed(){
 								let sharedAvatar = shared.userAvatar;
 
 								newHtml = newHtml.concat(
-									'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+									'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
 										'<div class="card-body">' +
 											'<div class="small text-muted">' +
 												'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline ignoreParentClick">' + userDisplayName + '</a> &bull; ' + postTime +
@@ -381,7 +381,7 @@ function loadOldHomeFeed(){
 								);
 							} else {
 								newHtml = newHtml.concat(
-									'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+									'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
 										'<div class="card-body">' +
 											'<div class="row">' +
 												'<div class="col-1">' +
@@ -469,7 +469,7 @@ function loadBasic(){
 }
 
 function loadOnce(){
-	$(".statusTrigger").on("click",function(e){
+	$(document).on("click",".statusTrigger",function(e){
 		e.preventDefault();
 
 		if(typeof $(this).attr("data-status-render") !== undefined){
@@ -479,7 +479,7 @@ function loadOnce(){
 		}
 	});
 
-	$("#statusModal").on("hidden.bs.modal",function(e){
+	$(document).on("hidden.bs.modal","#statusModal",function(e){
 		console.log(restoreUrl);
 		console.log(restoreTitle);
 
@@ -489,7 +489,7 @@ function loadOnce(){
 		}
 	});
 
-	$(".favoriteButton").on("click",function(e){
+	$(document).on("click",".favoriteButton",function(e){
 		e.preventDefault();
 
 		let postId = $(this).attr("data-post-id");
@@ -543,7 +543,7 @@ function loadOnce(){
 		}
 	});
 
-	$(".shareButton").on("click",function(e){
+	$(document).on("click",".shareButton",function(e){
 		e.preventDefault();
 
 		let postId = $(this).attr("data-post-id");
@@ -597,7 +597,7 @@ function loadOnce(){
 		}
 	});
 
-	$(".ignoreParentClick").on("click",function(e){
+	$(document).on("click",".ignoreParentClick",function(e){
 		e.stopPropagation();
 	});
 }
@@ -609,7 +609,7 @@ $(document).ready(function(){
 });
 
 function loadPostButtons(){
-	$("#homePostButton").on("click",function(e){
+	$(document).on("click","#homePostButton",function(e){
 		e.preventDefault();
 	
 		let text = $("#homePostField").val();
@@ -650,21 +650,10 @@ function loadPostButtons(){
 	
 								HOME_FEED_LAST_POST = postId;
 
-								let postActionButtons = '<div class="mt-1 postActionButtons ignoreParentClick">' +
-								'<span data-toggle="tooltip" title="You can not share this post" data-post-id="' + postId + '">' +
-								'<i class="fas fa-share-alt" style="color: gray"></i>' +
-								'</span>' +
-
-								'<span class="shareCount small text-primary ml-1 mr-1">0</span>' +
-
-								'<span class="favoriteButton" data-post-id="' + postId + '">' +
-								'<i class="fas fa-star" style="color: gray"></i>' +
-								'</span>' +
-
-								'<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">0</span></div>';
+								let postActionButtons = json.postActionButtons;
 	
 								let newHtml =
-								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+								'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
 									'<div class="card-body">' +
 										'<div class="row">' +
 											'<div class="col-1">' +
@@ -727,7 +716,7 @@ function loadPostButtons(){
 		}
 	});
 	
-	$("#profilePostButton").on("click",function(e){
+	$(document).on("click","#profilePostButton",function(e){
 		e.preventDefault();
 	
 		let text = $("#profilePostField").val();
@@ -766,21 +755,10 @@ function loadPostButtons(){
 								let userDisplayName = post.userDisplayName;
 								let userAvatar = post.userAvatar;
 
-								let postActionButtons = '<div class="mt-1 postActionButtons ignoreParentClick">' +
-								'<span data-toggle="tooltip" title="You can not share this post" data-post-id="' + postId + '">' +
-								'<i class="fas fa-share-alt" style="color: gray"></i>' +
-								'</span>' +
-
-								'<span class="shareCount small text-primary ml-1 mr-1">0</span>' +
-
-								'<span class="favoriteButton" data-post-id="' + postId + '">' +
-								'<i class="fas fa-star" style="color: gray"></i>' +
-								'</span>' +
-
-								'<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">0</span></div>';
+								let postActionButtons = json.postActionButtons;
 	
 								let newHtml =
-								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+								'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
 									'<div class="card-body">' +
 										'<div class="row">' +
 											'<div class="col-1">' +
@@ -845,7 +823,7 @@ function load(){
 
 	if($("#profilePostField").length && $("#profileCharacterCounter").length){
 		if(typeof POST_CHARACTER_LIMIT !== undefined){
-			$("#profilePostField").on("change keyup keydown paste",function(){
+			$(document).on("change keyup keydown paste","#profilePostField",function(){
 				let limit = POST_CHARACTER_LIMIT;
 				let used = $("#profilePostField").val().length;
 				let left = limit-used;
@@ -881,7 +859,7 @@ function load(){
 
 	if($("#homePostField").length && $("#homeCharacterCounter").length){
 		if(typeof POST_CHARACTER_LIMIT !== undefined){
-			$("#homePostField").on("change keyup keydown paste",function(){
+			$(document).on("change keyup keydown paste","#homePostField",function(){
 				let limit = POST_CHARACTER_LIMIT;
 				let used = $("#homePostField").val().length;
 				let left = limit-used;
