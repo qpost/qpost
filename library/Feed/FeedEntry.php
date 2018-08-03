@@ -248,7 +248,7 @@ class FeedEntry {
     }
 
     /**
-     * Returns the ID of the post that was shared (context of the feed entry), returns null if not available
+     * Returns the ID of the post that was shared/replied to (context of the feed entry), returns null if not available
      * 
      * @access public
      * @return int
@@ -258,7 +258,7 @@ class FeedEntry {
     }
 
     /**
-     * Returns the feed entry object of the post that was shared (context of the feed entry), returns null if not available
+     * Returns the feed entry object of the post that was shared/replied to (context of the feed entry), returns null if not available
      * 
      * @access public
      * @return FeedEntry
