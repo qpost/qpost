@@ -77,23 +77,7 @@ if($num > 0){
 							<?= Util::convertPost($entry->getText()); ?>
 						</p>
 
-						<?php if(Util::isLoggedIn()){ ?>
-						<div class="mt-1 postActionButtons ignoreParentClick float-left">
-							<span class="replyButton" data-toggle="tooltip" title="Reply">
-								<i class="fas fa-share"></i>
-							</span><span class="replyCount small text-primary mr-1">
-								<?= $entry->getReplies(); ?>
-							</span><span<?= Util::getCurrentUser()->getId() != $user->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $entry->getId() ?>">
-								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($entry->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($entry->getId()) ? "" : ' style="color: gray"' ?>></i>
-							</span><span class="shareCount small text-primary ml-1 mr-1">
-								<?= $entry->getShares(); ?>
-							</span><span class="favoriteButton" data-post-id="<?= $entry->getId() ?>">
-								<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($entry->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
-							</span><span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">
-								<?= $entry->getFavorites(); ?>
-							</span>
-						</div>
-						<?php } ?>
+						<?= Util::getPostActionButtons($entry); ?>
 					</div>
 				</div>
 			</div>
@@ -142,23 +126,7 @@ if($num > 0){
 							<?= Util::convertPost($sharedPost->getText()); ?>
 						</p>
 
-						<?php if(Util::isLoggedIn()){ ?>
-						<div class="mt-1 postActionButtons ignoreParentClick float-left">
-							<span class="replyButton" data-toggle="tooltip" title="Reply">
-								<i class="fas fa-share"></i>
-							</span><span class="replyCount small text-primary mr-1">
-								<?= $sharedPost->getReplies(); ?>
-							</span><span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
-								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
-							</span><span class="shareCount small text-primary ml-1 mr-1">
-									<?= $sharedPost->getShares(); ?>
-								</span><span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">
-								<i class="fas fa-star"<?= Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"' ?>></i>
-							</span><span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">
-								<?= $sharedPost->getFavorites(); ?>
-							</span>
-						</div>
-						<?php } ?>
+						<?= Util::getPostActionButtons($sharedPost); ?>
 					</div>
 				</div>
 			</div>

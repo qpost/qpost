@@ -131,32 +131,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 
 								$sharedPost = is_null($row["sharedPost"]) ? $entry : FeedEntry::getEntryById($row["sharedPost"]);
 
-								$postActionButtons = "";
-
-								if(Util::isLoggedIn()){
-									$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
-										$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
-											$postActionButtons .= '<i class="fas fa-share"></i>';
-										$postActionButtons .= '</span><span class="replyCount small text-primary mr-1">';
-											$postActionButtons .= $sharedPost->getReplies();
-										$postActionButtons .= '</span>';
-										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $entry->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $entry->getId() . '">';
-											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
-										$postActionButtons .= '</span>';
-		
-										$postActionButtons .= '<span class="shareCount small text-primary ml-1 mr-1">';
-											$postActionButtons .= $entry->getShares();
-										$postActionButtons .= '</span>';
-		
-										$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">';
-											$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
-										$postActionButtons .= '</span>';
-		
-										$postActionButtons .= '<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">';
-											$postActionButtons .= $entry->getFavorites();
-										$postActionButtons .= '</span>';
-									$postActionButtons .= '</div>';
-								}
+								$postActionButtons = Util::getPostActionButtons($sharedPost);
 
 								if(!is_null($row["sharedPost"])){
 									$sharedPost = FeedEntry::getEntryById($row["sharedPost"]);
@@ -226,32 +201,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 
 								$sharedPost = is_null($row["sharedPost"]) ? $entry : FeedEntry::getEntryById($row["sharedPost"]);
 
-								$postActionButtons = "";
-
-								if(Util::isLoggedIn()){
-									$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
-										$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
-											$postActionButtons .= '<i class="fas fa-share"></i>';
-										$postActionButtons .= '</span><span class="replyCount small text-primary mr-1">';
-											$postActionButtons .= $sharedPost->getReplies();
-										$postActionButtons .= '</span>';
-										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $sharedPost->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $sharedPost->getId() . '">';
-											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
-										$postActionButtons .= '</span>';
-		
-										$postActionButtons .= '<span class="shareCount small text-primary ml-1 mr-1">';
-											$postActionButtons .= $sharedPost->getShares();
-										$postActionButtons .= '</span>';
-		
-										$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">';
-											$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($sharedPost->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
-										$postActionButtons .= '</span>';
-		
-										$postActionButtons .= '<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">';
-											$postActionButtons .= $sharedPost->getFavorites();
-										$postActionButtons .= '</span>';
-									$postActionButtons .= '</div>';
-								}
+								$postActionButtons = Util::getPostActionButtons($sharedPost);
 
 								if(!is_null($row["sharedPost"])){
 									$sharedPost = FeedEntry::getEntryById($row["sharedPost"]);
@@ -460,32 +410,7 @@ $app->post("/scripts/createPost",function(){
 							}
 						}
 
-						$postActionButtons = "";
-
-						if(Util::isLoggedIn()){
-								$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
-									$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
-									$postActionButtons .= '<i class="fas fa-share"></i>';
-								$postActionButtons .= '</span><span class="replyCount small text-primary mx-1">';
-									$postActionButtons .= $postData->getReplies();
-								$postActionButtons .= '</span>';
-								$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $postData->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $postData->getId() . '">';
-									$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($postData->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($postData->getId()) ? "" : ' style="color: gray"') . '></i>';
-								$postActionButtons .= '</span>';
-	
-								$postActionButtons .= '<span class="shareCount small text-primary ml-2 mr-2">';
-									$postActionButtons .= $postData->getShares();
-								$postActionButtons .= '</span>';
-	
-								$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">';
-									$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($postData->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
-								$postActionButtons .= '</span>';
-	
-								$postActionButtons .= '<span class="favoriteCount small ml-2 mr-2" style="color: #ff960c">';
-									$postActionButtons .= $postData->getFavorites();
-								$postActionButtons .= '</span>';
-							$postActionButtons .= '</div>';
-						}
+						$postActionButtons = Util::getPostActionButtons($postData);
 
 						$user->reloadFeedEntriesCount();
 						$user->reloadPostsCount();
