@@ -479,7 +479,7 @@ function loadOnce(){
 		}
 	});
 
-	$("#statusModal").on("hide.bs.modal",function(e){
+	$("#statusModal").on("hidden.bs.modal",function(e){
 		console.log(restoreUrl);
 		console.log(restoreTitle);
 
