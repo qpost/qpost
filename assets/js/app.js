@@ -438,8 +438,6 @@ function loadOldHomeFeed(){
 				console.log(error);
 			}
 		});
-	} else {
-		setTimeout(loadHomeFeed,5000);
 	}
 }
 
@@ -468,157 +466,12 @@ function loadBasic(){
 	});
 }
 
-function loadOnce(){
-	$(document).on("click","a.filterLink",function(e){
-		e.preventDefault();
-		
-		if(typeof $(this).attr("href") !== "undefined"){
-			let link = $(this).attr("href");
-
-			window.location.href = "/out?link=" + encodeURI(link);
-		}
-	});
-
-	$(document).on("click",".statusTrigger",function(e){
-		e.preventDefault();
-
-		if(typeof $(this).attr("data-status-render") !== "undefined"){
-			let postId = $(this).attr("data-status-render");
-
-			showStatusModal(postId);
-		}
-	});
-
-	$(document).on("hidden.bs.modal","#statusModal",function(e){
-		console.log(restoreUrl);
-		console.log(restoreTitle);
-
-		if(typeof restoreUrl !== "undefined" && typeof restoreTitle !== "undefined"){
-			history.pushState("",restoreTitle,restoreUrl);
-			document.title = restoreTitle;
-		}
-	});
-
-	$(document).on("click",".favoriteButton",function(e){
-		e.preventDefault();
-
-		let postId = $(this).attr("data-post-id");
-
-		let favoritedHtml = '<i class="fas fa-star" style="color: gold"></i>';
-		let unfavoritedHtml = '<i class="fas fa-star" style="color: gray"></i>';
-		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
-
-		let pointer = $(this);
-
-		if(typeof postId !== "undefined"){
-			pointer.html(loadingHtml);
-
-			$.ajax({
-				url: "/scripts/toggleFavorite",
-				data: {
-					csrf_token: CSRF_TOKEN,
-					post: postId
-				},
-				method: "POST",
-	
-				success: function(result){
-					let json = result;
-	
-					if(json.hasOwnProperty("status")){
-						let countDisplay = pointer.parent().find(".favoriteCount");
-						let count = parseInt(countDisplay.html().trim());
-
-						if(json.status == "Favorite added"){
-							count++;
-							countDisplay.html(count);
-
-							pointer.html(favoritedHtml);
-						} else {
-							count--;
-							countDisplay.html(count);
-
-							pointer.html(unfavoritedHtml);
-						}
-					} else {
-						console.log(result);
-					}
-				},
-	
-				error: function(xhr,status,error){
-					console.log(xhr);
-					console.log(status);
-					console.log(error);
-				}
-			});
-		}
-	});
-
-	$(document).on("click",".shareButton",function(e){
-		e.preventDefault();
-
-		let postId = $(this).attr("data-post-id");
-
-		let sharedHtml = '<i class="fas fa-share-alt text-primary"></i>';
-		let unsharedHtml = '<i class="fas fa-share-alt" style="color: gray"></i>';
-		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
-
-		let pointer = $(this);
-
-		if(typeof postId !== "undefined"){
-			pointer.html(loadingHtml);
-
-			$.ajax({
-				url: "/scripts/toggleShare",
-				data: {
-					csrf_token: CSRF_TOKEN,
-					post: postId
-				},
-				method: "POST",
-	
-				success: function(result){
-					let json = result;
-	
-					if(json.hasOwnProperty("status")){
-						let countDisplay = pointer.parent().find(".shareCount");
-						let count = parseInt(countDisplay.html().trim());
-
-						if(json.status == "Share added"){
-							count++;
-							countDisplay.html(count);
-
-							pointer.html(sharedHtml);
-						} else {
-							count--;
-							countDisplay.html(count);
-
-							pointer.html(unsharedHtml);
-						}
-					} else {
-						console.log(result);
-					}
-				},
-	
-				error: function(xhr,status,error){
-					console.log(xhr);
-					console.log(status);
-					console.log(error);
-				}
-			});
-		}
-	});
-
-	$(document).on("click",".ignoreParentClick",function(e){
-		e.stopPropagation();
-	});
-}
-
 $(document).ready(function(){
 	load();
-	loadOnce();
 	resetStatusModal();
 });
 
-function loadPostButtons(){
+function load(){
 	$(document).on("click","#homePostButton",function(e){
 		e.preventDefault();
 	
@@ -826,10 +679,148 @@ function loadPostButtons(){
 			}
 		}
 	});
-}
 
-function load(){
-	loadPostButtons();
+	$(document).on("click","a.filterLink",function(e){
+		e.preventDefault();
+		
+		if(typeof $(this).attr("href") !== "undefined"){
+			let link = $(this).attr("href");
+
+			window.location.href = "/out?link=" + encodeURI(link);
+		}
+	});
+
+	$(document).on("click",".statusTrigger",function(e){
+		e.preventDefault();
+
+		if(typeof $(this).attr("data-status-render") !== "undefined"){
+			let postId = $(this).attr("data-status-render");
+
+			showStatusModal(postId);
+		}
+	});
+
+	$(document).on("hidden.bs.modal","#statusModal",function(e){
+		console.log(restoreUrl);
+		console.log(restoreTitle);
+
+		if(typeof restoreUrl !== "undefined" && typeof restoreTitle !== "undefined"){
+			history.pushState("",restoreTitle,restoreUrl);
+			document.title = restoreTitle;
+		}
+	});
+
+	$(document).on("click",".favoriteButton",function(e){
+		e.preventDefault();
+
+		let postId = $(this).attr("data-post-id");
+
+		let favoritedHtml = '<i class="fas fa-star" style="color: gold"></i>';
+		let unfavoritedHtml = '<i class="fas fa-star" style="color: gray"></i>';
+		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
+
+		let pointer = $(this);
+
+		if(typeof postId !== "undefined"){
+			pointer.html(loadingHtml);
+
+			$.ajax({
+				url: "/scripts/toggleFavorite",
+				data: {
+					csrf_token: CSRF_TOKEN,
+					post: postId
+				},
+				method: "POST",
+	
+				success: function(result){
+					let json = result;
+	
+					if(json.hasOwnProperty("status")){
+						let countDisplay = pointer.parent().find(".favoriteCount");
+						let count = parseInt(countDisplay.html().trim());
+
+						if(json.status == "Favorite added"){
+							count++;
+							countDisplay.html(count);
+
+							pointer.html(favoritedHtml);
+						} else {
+							count--;
+							countDisplay.html(count);
+
+							pointer.html(unfavoritedHtml);
+						}
+					} else {
+						console.log(result);
+					}
+				},
+	
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		}
+	});
+
+	$(document).on("click",".shareButton",function(e){
+		e.preventDefault();
+
+		let postId = $(this).attr("data-post-id");
+
+		let sharedHtml = '<i class="fas fa-share-alt text-primary"></i>';
+		let unsharedHtml = '<i class="fas fa-share-alt" style="color: gray"></i>';
+		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
+
+		let pointer = $(this);
+
+		if(typeof postId !== "undefined"){
+			pointer.html(loadingHtml);
+
+			$.ajax({
+				url: "/scripts/toggleShare",
+				data: {
+					csrf_token: CSRF_TOKEN,
+					post: postId
+				},
+				method: "POST",
+	
+				success: function(result){
+					let json = result;
+	
+					if(json.hasOwnProperty("status")){
+						let countDisplay = pointer.parent().find(".shareCount");
+						let count = parseInt(countDisplay.html().trim());
+
+						if(json.status == "Share added"){
+							count++;
+							countDisplay.html(count);
+
+							pointer.html(sharedHtml);
+						} else {
+							count--;
+							countDisplay.html(count);
+
+							pointer.html(unsharedHtml);
+						}
+					} else {
+						console.log(result);
+					}
+				},
+	
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		}
+	});
+
+	$(document).on("click",".ignoreParentClick",function(e){
+		e.stopPropagation();
+	});
 
 	if($("#profilePostField").length && $("#profileCharacterCounter").length){
 		if(typeof POST_CHARACTER_LIMIT !== undefined){
