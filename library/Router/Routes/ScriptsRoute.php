@@ -336,7 +336,7 @@ $app->post("/scripts/postInfo",function(){
 								$postActionButtons .= $post->getShares();
 							$postActionButtons .= '</span>';
 
-							$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">';
+							$postActionButtons .= '<span class="favoriteButton" data-post-id="' . $post->getId() . '">';
 								$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
 							$postActionButtons .= '</span>';
 
