@@ -485,6 +485,7 @@ function loadOnce(){
 
 		if(typeof restoreUrl !== "undefined" && typeof restoreTitle !== "undefined"){
 			history.pushState("",restoreTitle,restoreUrl);
+			document.title = restoreTitle;
 		}
 	});
 
