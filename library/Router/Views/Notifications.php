@@ -62,6 +62,10 @@ if(CacheHandler::existsInCache($n)){
 						?>
 			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
 				<div class="card-body">
+					<div class="small text-muted">
+						<i class="fas fa-at text-primary"></i> <a href="/<?= $u->getUsername(); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="16" height="16"/> <?= $u->getDisplayName(); ?></a> mentioned you &bull; <?= Util::timeago($notification["time"]); ?>
+					</div>
+					<hr/>
 					<div class="row">
 						<div class="col-1">
 							<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
@@ -171,6 +175,49 @@ if(CacheHandler::existsInCache($n)){
 				<div class="card-body">
 					<div class="small text-muted">
 						<i class="fas fa-share-alt text-primary"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName(); ?></a> shared your post &bull; <?= Util::timeago($notification["time"]); ?>
+					</div>
+					<hr/>
+					<div class="row">
+						<div class="col-1">
+							<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+								<img class="rounded mx-1 my-1" src="<?= $u->getAvatarURL(); ?>" width="40" height="40"/>
+							</a>
+						</div>
+
+						<div class="col-11">
+							<p class="mb-0">
+								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+									<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
+								</a>
+
+								<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
+
+								&bull;
+
+								<?= Util::timeago($post->getTime()); ?>
+							</p>
+
+							<p class="mb-0 convertEmoji">
+								<?= Util::convertPost($post->getText()); ?>
+							</p>
+
+							<?= Util::getPostActionButtons($post); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+						<?php
+					}
+				} else if($notification["type"] == NOTIFICATION_TYPE_REPLY){
+					$post = FeedEntry::getEntryById($notification["post"]);
+
+					if(!is_null($post)){
+						$u = $post->getUser();
+						?>
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
+				<div class="card-body">
+					<div class="small text-muted">
+						<i class="fas fa-share text-primary"></i> <a href="/<?= $u->getUsername(); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="16" height="16"/> <?= $u->getDisplayName(); ?></a> replied to your post &bull; <?= Util::timeago($notification["time"]); ?>
 					</div>
 					<hr/>
 					<div class="row">
