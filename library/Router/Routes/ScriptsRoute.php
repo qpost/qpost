@@ -138,7 +138,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 										$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
 											$postActionButtons .= '<i class="fas fa-share"></i>';
 										$postActionButtons .= '</span><span class="replyCount small text-primary mr-1">';
-											$postActionButtons .= $post->getReplies();
+											$postActionButtons .= $sharedPost->getReplies();
 										$postActionButtons .= '</span>';
 										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $entry->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $entry->getId() . '">';
 											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
