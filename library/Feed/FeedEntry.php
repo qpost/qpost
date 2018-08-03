@@ -405,7 +405,7 @@ class FeedEntry {
             if($result->num_rows){
                 $row = $result->fetch_assoc();
 
-                $this->shares = $row["count"];
+                $this->favorites = $row["count"];
 
                 $this->saveToCache();
             }
