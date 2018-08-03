@@ -29,7 +29,7 @@
 
 				$results = [];
 
-				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`type` AS `postType`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 60");
+				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`type` AS `postType`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) ORDER BY f.`time` DESC LIMIT 60");
 				//$stmt->bind_param("s",$i);
 				if($stmt->execute()){
 					$result = $stmt->get_result();
@@ -37,7 +37,7 @@
 					if($result->num_rows){
 						while($row = $result->fetch_assoc()){
 							array_push($results,[
-								"post" => FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],$row["postType"],$row["postTime"]),
+								"post" => FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],$row["postType"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["postTime"]),
 								"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["time"])
 							]);
 						}
@@ -93,7 +93,11 @@
 
 							<?php if(Util::isLoggedIn()){ ?>
 							<div class="mt-1 postActionButtons ignoreParentClick float-left">
-								<span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $post->getId() ?>">
+								<span class="replyButton" data-toggle="tooltip" title="Reply">
+									<i class="fas fa-share"></i>
+								</span><span class="replyCount small text-primary mr-1">
+									<?= $post->getReplies(); ?>
+								</span><span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $post->getId() ?>">
 									<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($post->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($post->getId()) ? "" : ' style="color: gray"' ?>></i>
 								</span><span class="shareCount small text-primary ml-1 mr-1">
 									<?= $post->getShares(); ?>
@@ -149,7 +153,11 @@
 
 							<?php if(Util::isLoggedIn()){ ?>
 							<div class="mt-1 postActionButtons ignoreParentClick float-left">
-								<span<?= Util::getCurrentUser()->getId() != $sharedUser->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
+								<span class="replyButton" data-toggle="tooltip" title="Reply">
+									<i class="fas fa-share"></i>
+								</span><span class="replyCount small text-primary mr-1">
+									<?= $sharedPost->getReplies(); ?>
+								</span><span<?= Util::getCurrentUser()->getId() != $sharedUser->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
 									<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
 								</span><span class="shareCount small text-primary ml-1 mr-1">
 									<?= $sharedPost->getShares(); ?>

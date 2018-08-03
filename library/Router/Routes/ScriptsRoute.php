@@ -120,14 +120,14 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$firstPost = (int)$_POST["firstPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$firstPost);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
 
 						if($result->num_rows){
 							while($row = $result->fetch_assoc()){
-								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["postTime"]);
+								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["postTime"]);
 
 								$sharedPost = is_null($row["sharedPost"]) ? $entry : FeedEntry::getEntryById($row["sharedPost"]);
 
@@ -135,6 +135,11 @@ $app->post("/scripts/extendHomeFeed",function(){
 
 								if(Util::isLoggedIn()){
 									$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
+										$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
+											$postActionButtons .= '<i class="fas fa-share"></i>';
+										$postActionButtons .= '</span><span class="replyCount small text-primary mr-1">';
+											$postActionButtons .= $post->getReplies();
+										$postActionButtons .= '</span>';
 										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $entry->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $entry->getId() . '">';
 											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
@@ -210,14 +215,14 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$lastPost = (int)$_POST["lastPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$lastPost);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
 
 						if($result->num_rows){
 							while($row = $result->fetch_assoc()){
-								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["postTime"]);
+								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["postTime"]);
 
 								$sharedPost = is_null($row["sharedPost"]) ? $entry : FeedEntry::getEntryById($row["sharedPost"]);
 
@@ -225,6 +230,11 @@ $app->post("/scripts/extendHomeFeed",function(){
 
 								if(Util::isLoggedIn()){
 									$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
+										$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
+											$postActionButtons .= '<i class="fas fa-share"></i>';
+										$postActionButtons .= '</span><span class="replyCount small text-primary mr-1">';
+											$postActionButtons .= $sharedPost->getReplies();
+										$postActionButtons .= '</span>';
 										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $sharedPost->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $sharedPost->getId() . '">';
 											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
@@ -328,6 +338,11 @@ $app->post("/scripts/postInfo",function(){
 
 					if(Util::isLoggedIn()){
 						$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
+							$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
+								$postActionButtons .= '<i class="fas fa-share"></i>';
+							$postActionButtons .= '</span><span class="replyCount small text-primary mr-1">';
+								$postActionButtons .= $post->getReplies();
+							$postActionButtons .= '</span>';
 							$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $post->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $post->getId() . '">';
 								$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($post->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($post->getId()) ? "" : ' style="color: gray"') . '></i>';
 							$postActionButtons .= '</span>';
@@ -434,7 +449,12 @@ $app->post("/scripts/createPost",function(){
 						$postActionButtons = "";
 
 						if(Util::isLoggedIn()){
-							$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
+								$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
+									$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
+									$postActionButtons .= '<i class="fas fa-share"></i>';
+								$postActionButtons .= '</span><span class="replyCount small text-primary mr-1">';
+									$postActionButtons .= $postData->getReplies();
+								$postActionButtons .= '</span>';
 								$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $postData->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $postData->getId() . '">';
 									$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($postData->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($postData->getId()) ? "" : ' style="color: gray"') . '></i>';
 								$postActionButtons .= '</span>';

@@ -39,7 +39,7 @@ if($num > 0){
 
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				array_push($feedEntries,FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["time"]));
+				array_push($feedEntries,FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["time"]));
 			}
 		}
 	}
@@ -79,7 +79,11 @@ if($num > 0){
 
 						<?php if(Util::isLoggedIn()){ ?>
 						<div class="mt-1 postActionButtons ignoreParentClick float-left">
-							<span<?= Util::getCurrentUser()->getId() != $user->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $entry->getId() ?>">
+							<span class="replyButton" data-toggle="tooltip" title="Reply">
+								<i class="fas fa-share"></i>
+							</span><span class="replyCount small text-primary mr-1">
+								<?= $entry->getReplies(); ?>
+							</span><span<?= Util::getCurrentUser()->getId() != $user->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $entry->getId() ?>">
 								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($entry->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($entry->getId()) ? "" : ' style="color: gray"' ?>></i>
 							</span><span class="shareCount small text-primary ml-1 mr-1">
 								<?= $entry->getShares(); ?>
@@ -140,7 +144,11 @@ if($num > 0){
 
 						<?php if(Util::isLoggedIn()){ ?>
 						<div class="mt-1 postActionButtons ignoreParentClick float-left">
-							<span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
+							<span class="replyButton" data-toggle="tooltip" title="Reply">
+								<i class="fas fa-share"></i>
+							</span><span class="replyCount small text-primary mr-1">
+								<?= $sharedPost->getReplies(); ?>
+							</span><span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
 								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
 							</span><span class="shareCount small text-primary ml-1 mr-1">
 									<?= $sharedPost->getShares(); ?>

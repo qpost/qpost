@@ -26,20 +26,25 @@ img.emoji {
 	vertical-align: -0.1em;
  }
 
- .favoriteButton,.shareButton {
+ .favoriteButton,.shareButton,.replyButton {
 	 cursor: pointer;
+ }
+
+ .replyButton>i {
+	 color: gray;
  }
 
  .favoriteButton>i:hover {
 	color: gold !important;
  }
 
- .shareButton>i:hover {
+ .shareButton>i:hover,
+ .replyButton>i:hover {
 	color: #007bff !important;
  }
 
- .favoriteButton>i:hover,.shareButton>i:hover,
- .favoriteButton>i,.shareButton>i {
+ .favoriteButton>i:hover,.shareButton>i:hover,.replyButton>i:hover,
+ .favoriteButton>i,.shareButton>i,.replyButton>i {
 	-webkit-transition: color 200ms linear;
     -ms-transition: color 200ms linear;
     transition: color 200ms linear;
