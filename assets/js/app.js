@@ -773,10 +773,18 @@ function load(){
 	$(document).on("click",".replyButton",function(e){
 		e.preventDefault();
 
-		let postId = $(this).parent().parent().parent().parent().parent().attr("data-status-render");
+		let postId = $(this).attr("data-reply-id");
 
 		if(typeof postId !== "undefined" && postId !== false){
-			showStatusModal(postId);
+			console.log(window.location.pathname);
+			console.log(postId);
+			if(window.location.pathname.endsWith(postId)){
+				console.log("a");
+				$("#statusModalPostField").focus();
+			} else {
+				console.log("b");
+				showStatusModal(postId);
+			}
 		}
 	})
 

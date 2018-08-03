@@ -1018,7 +1018,7 @@ class Util {
 
 		if(Util::isLoggedIn()){
 			$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
-			$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
+			$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
 			$postActionButtons .= '<i class="fas fa-share"></i>';
 			$postActionButtons .= '</span><span class="replyCount small text-primary mx-2">';
 			$postActionButtons .= $post->getReplies();
