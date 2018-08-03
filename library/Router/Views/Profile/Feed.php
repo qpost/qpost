@@ -78,7 +78,7 @@ if($num > 0){
 						</p>
 
 						<?php if(Util::isLoggedIn()){ ?>
-						<div class="mt-1 postActionButtons ignoreParentClick">
+						<div class="mt-1 postActionButtons ignoreParentClick float-left">
 							<span<?= Util::getCurrentUser()->getId() != $user->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $entry->getId() ?>">
 								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($entry->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($entry->getId()) ? "" : ' style="color: gray"' ?>></i>
 							</span><span class="shareCount small text-primary ml-1 mr-1">
@@ -139,7 +139,7 @@ if($num > 0){
 						</p>
 
 						<?php if(Util::isLoggedIn()){ ?>
-						<div class="mt-1 postActionButtons ignoreParentClick">
+						<div class="mt-1 postActionButtons ignoreParentClick float-left">
 							<span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
 								<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
 							</span><span class="shareCount small text-primary ml-1 mr-1">
