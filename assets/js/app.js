@@ -95,7 +95,7 @@ function showStatusModal(postId){
 				let title = user.displayName + " on qpost: \"" + limitString(json.textUnfiltered,34,true) + "\"";
 
 				history.pushState({postId: postId},title,"/status/" + postId);
-				document.title = title;
+				document.title = title; 
 
 				statusModal.modal();
 			} else if(json.hasOwnProperty("error")){
