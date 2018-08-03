@@ -129,19 +129,21 @@ function showStatusModal(postId){
 
 				content = content.concat(json.postActionButtons);
 
-				content = content.concat(
-					'<div class="card border-primary" style="background: #9FCCFC; margin-top: 60px" id="statusModalPostBox">' +
-						'<div class="card-body">' +
-							'<textarea class="form-control" id="statusModalPostField" placeholder="Post your reply" data-reply-to="' + json.id + '"></textarea>' +
+				if(typeof CURRENT_USER !== "undefined"){
+					content = content.concat(
+						'<div class="card border-primary" style="background: #9FCCFC; margin-top: 60px" id="statusModalPostBox">' +
+							'<div class="card-body">' +
+								'<textarea class="form-control" id="statusModalPostField" placeholder="Post your reply" data-reply-to="' + json.id + '"></textarea>' +
 
-							'<p class="mb-0 mt-2 float-left small" id="statusModalCharacterCounter">' +
-								POST_CHARACTER_LIMIT + ' characters left' +
-							'</p>' +
+								'<p class="mb-0 mt-2 float-left small" id="statusModalCharacterCounter">' +
+									POST_CHARACTER_LIMIT + ' characters left' +
+								'</p>' +
 
-							'<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2" id="statusModalPostButton">Post</button>' +
-						'</div>' +
-					'</div>'
-				);
+								'<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2" id="statusModalPostButton">Post</button>' +
+							'</div>' +
+						'</div>'
+					);
+				}
 
 				content = content.concat('<div class="replies">');
 
