@@ -953,7 +953,7 @@ class Util {
 	 * @return string
 	 */
 	public static function convertHashtags($string){
-		return str_replace("/#","/", preg_replace("/(?:^|\s)#(\w+)/", " <a href=\"/search?query=" . urlencode("#") . "$1\">#$1</a>", $string));
+		return str_replace("/#","/", preg_replace("/(?:^|\s)#(\w+)/", " <a href=\"/search?query=" . urlencode("#") . "$1\" class\"ignoreParentClick\">#$1</a>", $string));
 	}
 
 	/**
@@ -963,7 +963,7 @@ class Util {
 	 * @return string
 	 */
 	public static function convertMentions($string){
-		return preg_replace("/@(\w+)/i", "<a href=\"/$1\">$0</a>", $string);
+		return preg_replace("/@(\w+)/i", "<a href=\"/$1\" class=\"ignoreParentClick\">$0</a>", $string);
 	}
 
 	/**
