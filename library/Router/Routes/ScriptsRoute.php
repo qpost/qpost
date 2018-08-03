@@ -395,9 +395,12 @@ $app->post("/scripts/createPost",function(){
 
 					$postId = null;
 
+					$parent = isset($_POST["replyTo"]) ? $_POST["replyTo"] : null;
+					// TODO: Check if parent is valid (is user blocked, is parent owner in incorrect privacy level and all that shit)
+
 					$mysqli = Database::Instance()->get();
-					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`) VALUES(?,?,NULL,?,?);");
-					$stmt->bind_param("isss", $userId,$text,$sessionId,$type);
+					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`) VALUES(?,?,NULL,?,?,?);");
+					$stmt->bind_param("isssi", $userId,$text,$sessionId,$type,$parent);
 					if($stmt->execute()){
 						$postId = $stmt->insert_id;
 					}
@@ -413,6 +416,9 @@ $app->post("/scripts/createPost",function(){
 						$post["userName"] = $user->getUsername();
 						$post["userDisplayName"] = $user->getDisplayName();
 						$post["userAvatar"] = $user->getAvatarURL();
+
+						if(!is_null($parent))
+							FeedEntry::getEntryById($parent)->reloadReplies();
 
 						if(count($mentioned) > 0){
 							foreach($mentioned as $u){

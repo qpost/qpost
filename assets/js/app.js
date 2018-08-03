@@ -132,7 +132,7 @@ function showStatusModal(postId){
 				content = content.concat(
 					'<div class="card border-primary" style="background: #9FCCFC; margin-top: 60px" id="statusModalPostBox">' +
 						'<div class="card-body">' +
-							'<textarea class="form-control" id="statusModalPostField" placeholder="Post your reply"></textarea>' +
+							'<textarea class="form-control" id="statusModalPostField" placeholder="Post your reply" data-reply-to="' + json.id + '"></textarea>' +
 
 							'<p class="mb-0 mt-2 float-left small" id="statusModalCharacterCounter">' +
 								POST_CHARACTER_LIMIT + ' characters left' +
@@ -142,6 +142,8 @@ function showStatusModal(postId){
 						'</div>' +
 					'</div>'
 				);
+
+				content = content.concat('<div class="replies">');
 
 				if(replies.length > 0){
 					replies.forEach(reply => {
@@ -180,6 +182,8 @@ function showStatusModal(postId){
 						);
 					});
 				}
+
+				content = content.concat('</div>');
 
 				statusModal.html(
 					'<div class="modal-dialog" role="document">' +
@@ -662,7 +666,6 @@ function load(){
 								$("#homePostField").val("");
 								$("#homeCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
 								loadBasic();
-								loadPostButtons();
 							} else {
 								console.log(result);
 							}
@@ -763,7 +766,113 @@ function load(){
 								$("#profilePostField").val("");
 								$("#profileCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
 								loadBasic();
-								loadPostButtons();
+							} else {
+								console.log(result);
+							}
+						} else {
+							console.log(result);
+						}
+					},
+	
+					error: function(xhr,status,error){
+						console.log(xhr);
+						console.log(status);
+						console.log(error);
+					}
+				})
+			} else {
+				console.error("Post text too long or too short!");
+			}
+		}
+	});
+
+	$(document).on("click","#statusModalPostButton",function(e){
+		e.preventDefault();
+	
+		let text = $("#statusModalPostField").val();
+	
+		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
+			let token = CSRF_TOKEN;
+			let limit = POST_CHARACTER_LIMIT;
+	
+			let oldHtml = $("#statusModalPostBox").html();
+	
+			if(text.length > 0 && text.length <= limit){
+				console.log("Sending post!");
+
+				let replyTo = $("#statusModalPostField").attr("data-reply-to");
+	
+				$("#statusModalPostBox").html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
+	
+				$.ajax({
+					url: "/scripts/createPost",
+					data: {
+						csrf_token: token,
+						text: text,
+						replyTo: replyTo
+					},
+					method: "POST",
+	
+					success: function(result){
+						let json = result;
+	
+						if(json.hasOwnProperty("post")){
+							let post = json.post;
+	
+							if(post.hasOwnProperty("id") && post.hasOwnProperty("time") && post.hasOwnProperty("text") && post.hasOwnProperty("userName") && post.hasOwnProperty("userDisplayName") && post.hasOwnProperty("userAvatar")){
+								let postId = post.id;
+								let postTime = post.time;
+								let postText = post.text;
+								
+								let userName = post.userName;
+								let userDisplayName = post.userDisplayName;
+								let userAvatar = post.userAvatar;
+
+								let postActionButtons = json.postActionButtons;
+	
+								let newHtml =
+								'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
+									'<div class="card-body">' +
+										'<div class="row">' +
+											'<div class="col-2">' +
+												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+													'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="64" height="64"/>' +
+												'</a>' +
+											'</div>' +
+
+											'<div class="col-10">' +
+												'<p class="mb-0">' +
+													'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+														'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+													'</a>' +
+
+													' <span class="text-muted font-weight-normal">@' + userName + '</span> ' +
+
+													'&bull; ' +
+
+													postTime +
+												'</p>' +
+
+												'<p class="mb-0 convertEmoji">' +
+													twemoji.parse(postText) +
+												'</p>' +
+
+												postActionButtons +
+											'</div>' +
+										'</div>' +
+									'</div>' +
+								'</div>';
+	
+								if($("#statusModal .replies>.card").length){
+									$("#statusModal .replies").prepend(newHtml);
+								} else {
+									$("#statusModal .replies").html(newHtml);
+								}
+	
+								$("#statusModalPostBox").html(oldHtml);
+								$("#statusModalPostField").val("");
+								$("#statusModalCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
+								loadBasic();
 							} else {
 								console.log(result);
 							}
@@ -977,40 +1086,38 @@ function load(){
 		}
 	}
 
-	if($("#statusModalPostField").length && $("#statusModalCharacterCounter").length){
-		if(typeof POST_CHARACTER_LIMIT !== undefined){
-			$(document).on("change keyup keydown paste","#statusModalPostField",function(){
-				let limit = POST_CHARACTER_LIMIT;
-				let used = $("#statusModalPostField").val().length;
-				let left = limit-used;
+	if(typeof POST_CHARACTER_LIMIT !== undefined){
+		$(document).on("change keyup keydown paste","#statusModalPostField",function(){
+			let limit = POST_CHARACTER_LIMIT;
+			let used = $("#statusModalPostField").val().length;
+			let left = limit-used;
 
-				if(left > 0){
-					if(left > limit/2){
-						if(left == 1){
-							$("#statusModalCharacterCounter").html(left + " character left");
-						} else {
-							$("#statusModalCharacterCounter").html(left + " characters left");
-						}
-					} else {
-						if(left == 1){
-							$("#statusModalCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
-						} else {
-							$("#statusModalCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
-						}
-					}
-				} else if(left == 0){
-					$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
-				} else {
-					left = left/(-1);
-
+			if(left > 0){
+				if(left > limit/2){
 					if(left == 1){
-						$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
+						$("#statusModalCharacterCounter").html(left + " character left");
 					} else {
-						$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
+						$("#statusModalCharacterCounter").html(left + " characters left");
+					}
+				} else {
+					if(left == 1){
+						$("#statusModalCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
+					} else {
+						$("#statusModalCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
 					}
 				}
-			});
-		}
+			} else if(left == 0){
+				$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
+			} else {
+				left = left/(-1);
+
+				if(left == 1){
+					$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
+				} else {
+					$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
+				}
+			}
+		});
 	}
 
 	if($("#homePostField").length && $("#homeCharacterCounter").length){
