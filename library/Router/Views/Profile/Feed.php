@@ -32,7 +32,7 @@ if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId()){
 if($num > 0){
 	$feedEntries = [];
 
-	$stmt = $mysqli->prepare("SELECT * FROM `feed` WHERE `user` = ? ORDER BY `time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
+	$stmt = $mysqli->prepare("SELECT * FROM `feed` WHERE `post` IS NULL `user` = ? ORDER BY `time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
 	$stmt->bind_param("i",$uID);
 	if($stmt->execute()){
 		$result = $stmt->get_result();
