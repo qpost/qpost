@@ -610,7 +610,7 @@ class User {
 						if(!is_null($post))
 							$post->reloadFavorites();
 
-						if($post->getUser()->canPostNotification(NOTIFICATION_TYPE_FAVORITE,$this->id,$postId)){
+						if($feedEntry->getUser()->getId() != $this->id && $post->getUser()->canPostNotification(NOTIFICATION_TYPE_FAVORITE,$this->id,$postId)){
 							$puid = $post->getUser()->getId();
 							$pid = $post->getId();
 
@@ -713,7 +713,7 @@ class User {
 				if(!is_null($feedEntry))
 					$feedEntry->reloadShares();
 
-				if($feedEntry->getUser()->canPostNotification(NOTIFICATION_TYPE_SHARE,$this->id,$postId)){
+				if($feedEntry->getUser()->getId() != $this->id && $feedEntry->getUser()->canPostNotification(NOTIFICATION_TYPE_SHARE,$this->id,$postId)){
 					$puid = $feedEntry->getUser()->getId();
 					$pid = $feedEntry->getId();
 
