@@ -65,18 +65,18 @@
 						if($post->getType() == "POST"){
 
 						?>
-			<div class="card feedEntry mb-2" data-entry-id="<?= $post->getId() ?>">
+			<div class="card feedEntry mb-2 statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>">
 				<div class="card-body">
 					<div class="row">
 						<div class="col-1">
-							<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+							<a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick">
 								<img class="rounded mx-1 my-1" src="<?= $u->getAvatarURL(); ?>" width="40" height="40"/>
 							</a>
 						</div>
 
 						<div class="col-11">
 							<p class="mb-0">
-								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick">
 									<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
 								</a>
 
@@ -92,7 +92,7 @@
 							</p>
 
 							<?php if(Util::isLoggedIn()){ ?>
-							<div class="mt-1 postActionButtons">
+							<div class="mt-1 postActionButtons ignoreParentClick float-left">
 								<span<?= Util::getCurrentUser()->getId() != $u->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $post->getId() ?>">
 									<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($post->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($post->getId()) ? "" : ' style="color: gray"' ?>></i>
 								</span><span class="shareCount small text-primary ml-1 mr-1">
@@ -118,21 +118,21 @@
 								continue;
 
 							?>
-			<div class="card feedEntry mb-2" data-entry-id="<?= $post->getId() ?>">
+			<div class="card feedEntry mb-2 statusTrigger" data-status-render="<?= $sharedPost->getId() ?>" data-entry-id="<?= $post->getId() ?>">
 				<div class="card-body">
 					<div class="small text-muted">
 						<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/<?= $u->getUsername(); ?>" class="clearUnderline"><?= $u->getDisplayName(); ?></a> &bull; <?= Util::timeago($post->getTime()); ?>
 					</div>
 					<div class="row">
 						<div class="col-1">
-							<a href="/<?= $sharedUser->getUsername(); ?>" class="clearUnderline">
+							<a href="/<?= $sharedUser->getUsername(); ?>" class="clearUnderline ignoreParentClick">
 								<img class="rounded mx-1 my-1" src="<?= $sharedUser->getAvatarURL(); ?>" width="40" height="40"/>
 							</a>
 						</div>
 
 						<div class="col-11">
 							<p class="mb-0">
-								<a href="/<?= $sharedUser->getUsername(); ?>" class="clearUnderline">
+								<a href="/<?= $sharedUser->getUsername(); ?>" class="clearUnderline ignoreParentClick">
 									<span class="font-weight-bold"><?= $sharedUser->getDisplayName(); ?></span>
 								</a>
 
@@ -148,7 +148,7 @@
 							</p>
 
 							<?php if(Util::isLoggedIn()){ ?>
-							<div class="mt-1 postActionButtons">
+							<div class="mt-1 postActionButtons ignoreParentClick float-left">
 								<span<?= Util::getCurrentUser()->getId() != $sharedUser->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"'; ?> data-post-id="<?= $sharedPost->getId() ?>">
 									<i class="fas fa-share-alt<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "" ?>"<?= Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"' ?>></i>
 								</span><span class="shareCount small text-primary ml-1 mr-1">

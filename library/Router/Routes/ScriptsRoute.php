@@ -134,7 +134,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 								$postActionButtons = "";
 
 								if(Util::isLoggedIn()){
-									$postActionButtons .= '<div class="mt-1 postActionButtons">';
+									$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick">';
 										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $entry->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $entry->getId() . '">';
 											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
@@ -224,7 +224,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 								$postActionButtons = "";
 
 								if(Util::isLoggedIn()){
-									$postActionButtons .= '<div class="mt-1 postActionButtons">';
+									$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick">';
 										$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $sharedPost->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $sharedPost->getId() . '">';
 											$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($sharedPost->getId()) ? "" : ' style="color: gray"') . '></i>';
 										$postActionButtons .= '</span>';
@@ -304,6 +304,74 @@ $app->post("/scripts/extendHomeFeed",function(){
 		}
 	} else {
 		return json_encode(["error" => "Not logged in"]);
+	}
+});
+
+$app->post("/scripts/postInfo",function(){
+	$this->response->mime = "json";
+
+	if(isset($_POST["postId"])){
+		$postId = $_POST["postId"];
+		$post = FeedEntry::getEntryById($postId);
+
+		if(!is_null($post)){
+			if($post->getType() == "POST"){
+				$user = $post->getUser();
+
+				if(!is_null($user)){
+					$followButton = Util::followButton($user,false,["float-right"]);
+
+					if(is_null($followButton))
+						$followButton = "";
+
+					$postActionButtons = "";
+
+					if(Util::isLoggedIn()){
+						$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick">';
+							$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $post->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $post->getId() . '">';
+								$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($post->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($post->getId()) ? "" : ' style="color: gray"') . '></i>';
+							$postActionButtons .= '</span>';
+
+							$postActionButtons .= '<span class="shareCount small text-primary ml-1 mr-1">';
+								$postActionButtons .= $post->getShares();
+							$postActionButtons .= '</span>';
+
+							$postActionButtons .= '<span class="favoriteButton" data-post-id="<?= $sharedPost->getId() ?>">';
+								$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
+							$postActionButtons .= '</span>';
+
+							$postActionButtons .= '<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">';
+								$postActionButtons .= $post->getFavorites();
+							$postActionButtons .= '</span>';
+						$postActionButtons .= '</div>';
+					}
+					
+					return json_encode([
+						"id" => $post->getId(),
+						"user" => [
+							"id" => $user->getId(),
+							"displayName" => $user->getDisplayName(),
+							"username" => $user->getUsername(),
+							"avatar" => $user->getAvatarURL()
+						],
+						"text" => Util::convertPost($post->getText()),
+						"time" => Util::timeago($post->getTime()),
+						"shares" => $post->getShares(),
+						"favorites" => $post->getFavorites(),
+						"followButton" => $followButton,
+						"postActionButtons" => $postActionButtons
+					]);
+				} else {
+					return json_encode(["error" => "User not found"]);
+				}
+			} else {
+				return json_encode(["error" => "Not a post"]);
+			}
+		} else {
+			return json_encode(["error" => "Invalid ID"]);
+		}
+	} else {
+		return json_encode(["error" => "Bad request"]);
 	}
 });
 

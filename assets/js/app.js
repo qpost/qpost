@@ -1,3 +1,128 @@
+function resetStatusModal(){
+	$("#statusModal").html(
+		'<div class="modal-dialog" role="document">' +
+			'<div class="modal-content">' +
+				'<div class="modal-body">' +
+					'<div class="text-center">' +
+						'<i class="fas fa-spinner fa-pulse"></i>' +
+					'</div>' +
+				'</div>' +
+			'</div>' +
+		'</div>'
+	);
+}
+
+function showStatusModal(postId){
+	resetStatusModal();
+
+	let statusModal = $("#statusModal");
+
+	$.ajax({
+		url: "/scripts/postInfo",
+		data: {
+			csrf_token: CSRF_TOKEN,
+			postId: postId
+		},
+		method: "POST",
+
+		success: function(json){
+			if(json.hasOwnProperty("id")){
+				let user = json.user;
+				let content = "";
+
+				content = content.concat('<div class="mb-4">');
+
+				content = content.concat(json.followButton);
+
+				content = content.concat(
+					'<div class="float-left mr-2">' +
+					'<a href="/' + user.username + '" class="clearUnderline">' +
+					'<img width="48" height="48" src="' + user.avatar + '" class="rounded"/>' +
+					'</a>' +
+					'</div>'
+				);
+
+				content = content.concat('<div class="ml-2">');
+
+				content = content.concat(
+					'<div><a href="/' + user.username + '" class="clearUnderline font-weight-bold mb-0 mt-2" style="font-size:20px">' +
+					user.displayName +
+					'</a></div>'
+				);
+
+				content = content.concat(
+					'<div class="mt-0 text-muted">' +
+					'@' + user.username +
+					'</div>'
+				);
+
+				content = content.concat('</div>');
+
+				content = content.concat('</div>');
+
+				content = content.concat(
+					'<div class="mt-2">' +
+					'<p style="font-size: 27px;">' +
+					json.text +
+					'</p>' +
+					'<p class="small text-muted">Posted ' +
+					json.time +
+					'</p>' +
+					'</div>'
+				);
+
+				content = content.concat('<hr/>');
+
+				content = content.concat(json.postActionButtons);
+
+				statusModal.html(
+					'<div class="modal-dialog" role="document">' +
+						'<div class="modal-content">' +
+							'<div class="modal-body">' +
+								content +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+
+				loadBasic();
+
+				statusModal.modal();
+			} else if(json.hasOwnProperty("error")){
+				statusModal.html(
+					'<div class="modal-dialog" role="document">' +
+						'<div class="modal-content">' +
+							'<div class="modal-body">' +
+								json.error +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+
+				statusModal.modal();
+			} else {
+				statusModal.html(
+					'<div class="modal-dialog" role="document">' +
+						'<div class="modal-content">' +
+							'<div class="modal-body">' +
+								json +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+
+				statusModal.modal();
+			}
+		},
+
+		error: function(xhr,status,error){
+			console.log(xhr);
+			console.log(status);
+			console.log(error);
+		}
+	});
+}
+
 function loadHomeFeed(){
 	if($("#homePostField").length && $("#homeCharacterCounter").length){
 		$.ajax({
@@ -49,18 +174,18 @@ function loadHomeFeed(){
 								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
 									'<div class="card-body">' +
 										'<div class="small text-muted">' +
-											'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline">' + userDisplayName + '</a> &bull; ' + postTime +
+											'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline ignoreParentClick">' + userDisplayName + '</a> &bull; ' + postTime +
 										'</div>' +
 										'<div class="row">' +
 											'<div class="col-1">' +
-												'<a href="/' + sharedUserName + '" class="clearUnderline">' +
+												'<a href="/' + sharedUserName + '" class="clearUnderline ignoreParentClick">' +
 													'<img class="rounded mx-1 my-1" src="' + sharedAvatar + '" width="40" height="40"/>' +
 												'</a>' +
 											'</div>' +
 
 											'<div class="col-11">' +
 												'<p class="mb-0">' +
-													'<a href="/' + sharedUserName + '" class="clearUnderline">' +
+													'<a href="/' + sharedUserName + '" class="clearUnderline ignoreParentClick">' +
 														'<span class="font-weight-bold">' + sharedUserDisplayName + '</span>' +
 													'</a>' +
 
@@ -87,14 +212,14 @@ function loadHomeFeed(){
 									'<div class="card-body">' +
 										'<div class="row">' +
 											'<div class="col-1">' +
-												'<a href="/' + userName + '" class="clearUnderline">' +
+												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
 													'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
 												'</a>' +
 											'</div>' +
 							
 											'<div class="col-11">' +
 												'<p class="mb-0">' +
-													'<a href="/' + userName + '" class="clearUnderline">' +
+													'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
 														'<span class="font-weight-bold">' + userDisplayName + '</span>' +
 													'</a>' +
 							
@@ -199,18 +324,18 @@ function loadOldHomeFeed(){
 									'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
 										'<div class="card-body">' +
 											'<div class="small text-muted">' +
-												'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline">' + userDisplayName + '</a> &bull; ' + postTime +
+												'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline ignoreParentClick">' + userDisplayName + '</a> &bull; ' + postTime +
 											'</div>' +
 											'<div class="row">' +
 												'<div class="col-1">' +
-													'<a href="/' + sharedUserName + '" class="clearUnderline">' +
+													'<a href="/' + sharedUserName + '" class="clearUnderline ignoreParentClick">' +
 														'<img class="rounded mx-1 my-1" src="' + sharedAvatar + '" width="40" height="40"/>' +
 													'</a>' +
 												'</div>' +
 
 												'<div class="col-11">' +
 													'<p class="mb-0">' +
-														'<a href="/' + sharedUserName + '" class="clearUnderline">' +
+														'<a href="/' + sharedUserName + '" class="clearUnderline ignoreParentClick">' +
 															'<span class="font-weight-bold">' + sharedUserDisplayName + '</span>' +
 														'</a>' +
 
@@ -237,14 +362,14 @@ function loadOldHomeFeed(){
 										'<div class="card-body">' +
 											'<div class="row">' +
 												'<div class="col-1">' +
-													'<a href="/' + userName + '" class="clearUnderline">' +
+													'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
 														'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
 													'</a>' +
 												'</div>' +
 								
 												'<div class="col-11">' +
 													'<p class="mb-0">' +
-														'<a href="/' + userName + '" class="clearUnderline">' +
+														'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
 															'<span class="font-weight-bold">' + userDisplayName + '</span>' +
 														'</a>' +
 								
@@ -317,6 +442,18 @@ function loadBasic(){
 				"href": "https://gigadrivegroup.com/legal/privacy-policy"
 			}
 		})
+	});
+}
+
+function loadOnce(){
+	$(".statusTrigger").on("click",function(e){
+		e.preventDefault();
+
+		if(typeof $(this).attr("data-status-render") !== undefined){
+			let postId = $(this).attr("data-status-render");
+
+			showStatusModal(postId);
+		}
 	});
 
 	$(".favoriteButton").on("click",function(e){
@@ -426,10 +563,16 @@ function loadBasic(){
 			});
 		}
 	});
+
+	$(".ignoreParentClick").on("click",function(e){
+		e.stopPropagation();
+	});
 }
 
 $(document).ready(function(){
 	load();
+	loadOnce();
+	resetStatusModal();
 });
 
 function loadPostButtons(){
@@ -474,7 +617,7 @@ function loadPostButtons(){
 	
 								HOME_FEED_LAST_POST = postId;
 
-								let postActionButtons = '<div class="mt-1 postActionButtons">' +
+								let postActionButtons = '<div class="mt-1 postActionButtons ignoreParentClick">' +
 								'<span data-toggle="tooltip" title="You can not share this post" data-post-id="' + postId + '">' +
 								'<i class="fas fa-share-alt" style="color: gray"></i>' +
 								'</span>' +
@@ -492,14 +635,14 @@ function loadPostButtons(){
 									'<div class="card-body">' +
 										'<div class="row">' +
 											'<div class="col-1">' +
-												'<a href="/' + userName + '" class="clearUnderline">' +
+												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
 													'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
 												'</a>' +
 											'</div>' +
 					
 											'<div class="col-11">' +
 												'<p class="mb-0">' +
-													'<a href="/' + userName + '" class="clearUnderline">' +
+													'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
 														'<span class="font-weight-bold">' + userDisplayName + '</span>' +
 													'</a>' +
 					
@@ -589,6 +732,19 @@ function loadPostButtons(){
 								let userName = post.userName;
 								let userDisplayName = post.userDisplayName;
 								let userAvatar = post.userAvatar;
+
+								let postActionButtons = '<div class="mt-1 postActionButtons ignoreParentClick">' +
+								'<span data-toggle="tooltip" title="You can not share this post" data-post-id="' + postId + '">' +
+								'<i class="fas fa-share-alt" style="color: gray"></i>' +
+								'</span>' +
+
+								'<span class="shareCount small text-primary ml-1 mr-1">0</span>' +
+
+								'<span class="favoriteButton" data-post-id="' + postId + '">' +
+								'<i class="fas fa-star" style="color: gray"></i>' +
+								'</span>' +
+
+								'<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">0</span></div>';
 	
 								let newHtml =
 								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
@@ -612,6 +768,8 @@ function loadPostButtons(){
 												'<p class="mb-0">' +
 													postText +
 												'</p>' +
+
+												postActionButtons +
 											'</div>' +
 										'</div>' +
 									'</div>' +

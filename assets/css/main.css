@@ -44,3 +44,17 @@ img.emoji {
     -ms-transition: color 200ms linear;
     transition: color 200ms linear;
  }
+
+ .statusTrigger {
+	cursor: pointer;
+	-webkit-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+ }
+
+ .statusTrigger:hover {
+	background-color: rgb(228, 228, 228);
+	-webkit-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+ }

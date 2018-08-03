@@ -236,17 +236,7 @@ if(!isset($socialImage) || empty($socialImage))
 					</div>
 				</nav>
 
-				<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-							<div class="modal-body">
-								<div class="text-center">
-									<i class="fas fa-spinner fa-pulse"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 				<?php
 
@@ -410,7 +400,7 @@ if(!isset($socialImage) || empty($socialImage))
 		</div>
 
 		<script src="<?= $app->baseUrl("/assets/js/instantclick.min.js"); ?>" data-no-instant></script>
-		<script data-no-instant>loadBasic();InstantClick.init();InstantClick.on("change",function(){loadBasic();load();});</script>
+		<script data-no-instant>loadBasic();InstantClick.init();InstantClick.on("change",function(){loadBasic();load();loadOnce();});</script>
 		<script>if($(".convertEmoji").length){$(".convertEmoji").html(function(){return twemoji.parse($(this).html());});}</script>
 	</body>
 </html>
