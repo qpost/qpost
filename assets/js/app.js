@@ -81,6 +81,20 @@ function showStatusModal(postId){
 
 				content = content.concat(json.postActionButtons);
 
+				content = content.concat(
+					'<div class="card border-primary" style="background: #9FCCFC; margin-top: 60px" id="statusModalPostBox">' +
+						'<div class="card-body">' +
+							'<textarea class="form-control" id="statusModalPostField" placeholder="Post your reply"></textarea>' +
+
+							'<p class="mb-0 mt-2 float-left small" id="statusModalCharacterCounter">' +
+								POST_CHARACTER_LIMIT + ' characters left' +
+							'</p>' +
+
+							'<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2" id="statusModalPostButton">Post</button>' +
+						'</div>' +
+					'</div>'
+				);
+
 				statusModal.html(
 					'<div class="modal-dialog" role="document">' +
 						'<div class="modal-content">' +
@@ -860,6 +874,42 @@ function load(){
 						$("#profileCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
 					} else {
 						$("#profileCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
+					}
+				}
+			});
+		}
+	}
+
+	if($("#statusModalPostField").length && $("#statusModalCharacterCounter").length){
+		if(typeof POST_CHARACTER_LIMIT !== undefined){
+			$(document).on("change keyup keydown paste","#statusModalPostField",function(){
+				let limit = POST_CHARACTER_LIMIT;
+				let used = $("#statusModalPostField").val().length;
+				let left = limit-used;
+
+				if(left > 0){
+					if(left > limit/2){
+						if(left == 1){
+							$("#statusModalCharacterCounter").html(left + " character left");
+						} else {
+							$("#statusModalCharacterCounter").html(left + " characters left");
+						}
+					} else {
+						if(left == 1){
+							$("#statusModalCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
+						} else {
+							$("#statusModalCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
+						}
+					}
+				} else if(left == 0){
+					$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
+				} else {
+					left = left/(-1);
+
+					if(left == 1){
+						$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
+					} else {
+						$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
 					}
 				}
 			});

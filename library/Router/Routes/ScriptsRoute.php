@@ -120,7 +120,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$firstPost = (int)$_POST["firstPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$firstPost);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
@@ -215,7 +215,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$lastPost = (int)$_POST["lastPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$lastPost);
 					if($stmt->execute()){
 						$result = $stmt->get_result();

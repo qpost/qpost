@@ -11,12 +11,13 @@
 
 #profilePostField,
 #homePostField {
+	height: 100px;
 	resize: none !important;
 }
 
-#profilePostField,
-#homePostField {
-	height: 100px;
+#statusModalPostField {
+	height: 70px;
+	resize: none !important;
 }
 
 img.emoji {
