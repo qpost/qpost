@@ -17,6 +17,9 @@ function showStatusModal(postId){
 
 	let statusModal = $("#statusModal");
 
+	if(statusModal.hasClass('show'))
+		return;
+
 	restoreUrl = window.location.pathname;
 	restoreTitle = $(document).find("title").text();
 
@@ -704,6 +707,16 @@ function load(){
 			document.title = restoreTitle;
 		}
 	});
+
+	$(document).on("click",".replyButton",function(e){
+		e.preventDefault();
+
+		let postId = $(this).parent().parent().parent().parent().parent().attr("data-status-render");
+
+		if(typeof postId !== "undefined" && postId !== false){
+			showStatusModal(postId);
+		}
+	})
 
 	$(document).on("click",".favoriteButton",function(e){
 		e.preventDefault();

@@ -340,7 +340,7 @@ $app->post("/scripts/postInfo",function(){
 						$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
 							$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply">';
 								$postActionButtons .= '<i class="fas fa-share"></i>';
-							$postActionButtons .= '</span><span class="replyCount small text-primary mr-1">';
+							$postActionButtons .= '</span><span class="replyCount small text-primary mx-2">';
 								$postActionButtons .= $post->getReplies();
 							$postActionButtons .= '</span>';
 							$postActionButtons .= '<span' . (Util::getCurrentUser()->getId() != $post->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $post->getId() . '">';
