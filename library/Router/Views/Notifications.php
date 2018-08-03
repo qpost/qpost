@@ -60,7 +60,7 @@ if(CacheHandler::existsInCache($n)){
 					if(!is_null($post)){
 						$u = $post->getUser();
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>">
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
 				<div class="card-body">
 					<div class="row">
 						<div class="col-1">
