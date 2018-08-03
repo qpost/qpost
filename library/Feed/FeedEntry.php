@@ -50,7 +50,7 @@ class FeedEntry {
      * @access public
      * @return FeedEntry
      */
-    public static function getEntryFromData($id,$user,$text,$following,$post,$sessionId,$type,$time){
+    public static function getEntryFromData($id,$user,$text,$following,$post,$sessionId,$type,$replies,$shares,$favorites,$time){
         $entry = self::isCached($id) ? self::getEntryById($id) : new self($id);
 
         $entry->id = $id;
@@ -60,6 +60,9 @@ class FeedEntry {
         $entry->post = $post;
         $entry->sessionId = $sessionId;
         $entry->type = $type;
+        $entry->replies = $replies;
+        $entry->shares = $shares;
+        $entry->favorites = $favorites;
         $entry->time = $time;
         $entry->exists = true;
         $entry->saveToCache();
@@ -123,6 +126,12 @@ class FeedEntry {
 
     /**
      * @access private
+     * @var int $replies
+     */
+    private $replies;
+
+    /**
+     * @access private
      * @var int $shares
      */
     private $shares;
@@ -166,6 +175,9 @@ class FeedEntry {
                 $this->post = $row["post"];
                 $this->sessionId = $row["sessionId"];
                 $this->type = $row["type"];
+                $this->replies = $row["count.replies"];
+                $this->shares = $row["count.shares"];
+                $this->favorites = $row["count.favorites"];
                 $this->time = $row["time"];
                 $this->exists = true;
 
@@ -290,31 +302,51 @@ class FeedEntry {
     }
 
     /**
+     * Returns how often the feed entry was replied to
+     * 
+     * @access public
+     * @return int
+     */
+    public function getReplies(){
+        return $this->replies;
+    }
+
+    /**
+     * Reloads the reply count
+     * 
+     * @access public
+     */
+    public function reloadReplies(){
+        $mysqli = Database::Instance()->get();
+
+        $stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE `post` = ? AND `type` = 'POST'");
+        $stmt->bind_param("i",$this->id);
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+
+            if($result->num_rows){
+                $row = $result->fetch_assoc();
+
+                $this->replies = $row["count"];
+
+                $this->saveToCache();
+            }
+        }
+        $stmt->close();
+
+        $stmt = $mysqli->prepare("UPDATE `feed` SET `count.replies` = ? WHERE `id` = ?");
+        $stmt->bind_param("ii",$this->replies,$this->id);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    /**
      * Returns how often the feed entry was shared
      * 
      * @access public
      * @return int
      */
     public function getShares(){
-        if(is_null($this->shares)){
-            $mysqli = Database::Instance()->get();
-
-            $stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE `post` = ? AND `type` = 'SHARE'");
-            $stmt->bind_param("i",$this->id);
-            if($stmt->execute()){
-                $result = $stmt->get_result();
-
-                if($result->num_rows){
-                    $row = $result->fetch_assoc();
-
-                    $this->shares = $row["count"];
-
-                    $this->saveToCache();
-                }
-            }
-            $stmt->close();
-        }
-
         return $this->shares;
     }
 
@@ -324,8 +356,27 @@ class FeedEntry {
      * @access public
      */
     public function reloadShares(){
-        $this->shares = null;
-        $this->getShares();
+        $mysqli = Database::Instance()->get();
+
+        $stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE `post` = ? AND `type` = 'SHARE'");
+        $stmt->bind_param("i",$this->id);
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+
+            if($result->num_rows){
+                $row = $result->fetch_assoc();
+
+                $this->shares = $row["count"];
+
+                $this->saveToCache();
+            }
+        }
+        $stmt->close();
+
+        $stmt = $mysqli->prepare("UPDATE `feed` SET `count.shares` = ? WHERE `id` = ?");
+        $stmt->bind_param("ii",$this->shares,$this->id);
+        $stmt->execute();
+        $stmt->close();
     }
 
     /**
@@ -335,25 +386,6 @@ class FeedEntry {
      * @return int
      */
     public function getFavorites(){
-        if(is_null($this->favorites)){
-            $mysqli = Database::Instance()->get();
-
-            $stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `favorites` WHERE `post` = ?");
-            $stmt->bind_param("i",$this->id);
-            if($stmt->execute()){
-                $result = $stmt->get_result();
-
-                if($result->num_rows){
-                    $row = $result->fetch_assoc();
-
-                    $this->favorites = $row["count"];
-
-                    $this->saveToCache();
-                }
-            }
-            $stmt->close();
-        }
-
         return $this->favorites;
     }
 
@@ -363,8 +395,27 @@ class FeedEntry {
      * @access public
      */
     public function reloadFavorites(){
-        $this->favorites = null;
-        $this->getFavorites();
+        $mysqli = Database::Instance()->get();
+
+        $stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `favorites` WHERE `post` = ?");
+        $stmt->bind_param("i",$this->id);
+        if($stmt->execute()){
+            $result = $stmt->get_result();
+
+            if($result->num_rows){
+                $row = $result->fetch_assoc();
+
+                $this->shares = $row["count"];
+
+                $this->saveToCache();
+            }
+        }
+        $stmt->close();
+
+        $stmt = $mysqli->prepare("UPDATE `feed` SET `count.favorites` = ? WHERE `id` = ?");
+        $stmt->bind_param("ii",$this->favorites,$this->id);
+        $stmt->execute();
+        $stmt->close();
     }
 
     public function saveToCache(){
