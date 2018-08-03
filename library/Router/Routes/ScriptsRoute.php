@@ -321,6 +321,27 @@ $app->post("/scripts/postInfo",function(){
 						}
 						$stmt->close();
 					}
+
+					$parent = null;
+					if(!is_null($post->getPost())){
+						$pp = $post->getPost(); // pp stands for parent post not what you're thinking
+
+						$parent = [
+							"id" => $pp->getId(),
+							"user" => [
+								"id" => $pp->getUser()->getId(),
+								"displayName" => $pp->getUser()->getDisplayName(),
+								"username" => $pp->getUser()->getUsername(),
+								"avatar" => $pp->getUser()->getAvatarURL()
+							],
+							"text" => Util::convertPost($pp->getText()),
+							"textUnfiltered" => Util::sanatizeString($pp->getText()),
+							"time" => Util::timeago($pp->getTime()),
+							"shares" => $pp->getShares(),
+							"favorites" => $pp->getFavorites(),
+							"postActionButtons" => Util::getPostActionButtons($pp)
+						];
+					}
 					
 					return json_encode([
 						"id" => $post->getId(),
@@ -337,7 +358,8 @@ $app->post("/scripts/postInfo",function(){
 						"favorites" => $post->getFavorites(),
 						"followButton" => $followButton,
 						"postActionButtons" => $postActionButtons,
-						"replies" => $replies
+						"replies" => $replies,
+						"parent" => $parent
 					]);
 				} else {
 					return json_encode(["error" => "User not found"]);

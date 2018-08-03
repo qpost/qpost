@@ -43,6 +43,44 @@ function showStatusModal(postId){
 
 				let replies = json.replies;
 
+				if(json.hasOwnProperty("parent")){
+					let parent = json.parent;
+
+					content = content.concat(
+						'<div class="card feedEntry mb-3 statusTrigger" data-status-render="' + parent.id + '" data-entry-id="' + parent.id + '">' +
+							'<div class="card-body">' +
+								'<div class="row">' +
+									'<div class="col-2">' +
+										'<a href="/' + parent.user.username + '" class="clearUnderline ignoreParentClick">' +
+											'<img class="rounded mx-1 my-1" src="' + parent.user.avatar + '" width="64" height="64"/>' +
+										'</a>' +
+									'</div>' +
+
+									'<div class="col-10">' +
+										'<p class="mb-0">' +
+											'<a href="/' + parent.user.username + '" class="clearUnderline ignoreParentClick">' +
+												'<span class="font-weight-bold">' + parent.user.displayName + '</span>' +
+											'</a>' +
+
+											' <span class="text-muted font-weight-normal">@' + parent.user.username + '</span> ' +
+
+											'&bull; ' +
+
+											parent.time +
+										'</p>' +
+
+										'<p class="mb-0 convertEmoji">' +
+											twemoji.parse(parent.text) +
+										'</p>' +
+
+										parent.postActionButtons +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+						'</div><hr/>'
+					);
+				}
+
 				content = content.concat('<div class="mb-4">');
 
 				content = content.concat(json.followButton);
@@ -73,8 +111,11 @@ function showStatusModal(postId){
 
 				content = content.concat('</div>');
 
+				let c = json.hasOwnProperty("parent") ? '<div class="small text-muted">Replying to <a href="/' + json.parent.user.username + '" class="clearUnderline">@' + json.parent.user.username + '</a></div>' : "";
+
 				content = content.concat(
 					'<div class="mt-2">' +
+					c + 
 					'<p style="font-size: 27px;">' +
 					twemoji.parse(json.text) +
 					'</p>' +
