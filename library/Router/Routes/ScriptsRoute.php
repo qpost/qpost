@@ -396,7 +396,12 @@ $app->post("/scripts/createPost",function(){
 					$postId = null;
 
 					$parent = isset($_POST["replyTo"]) ? $_POST["replyTo"] : null;
-					// TODO: Check if parent is valid (is user blocked, is parent owner in incorrect privacy level and all that shit)
+					if(is_null(FeedEntry::getEntryById($parent))) return;
+
+					$parentCreator = FeedEntry::getEntryById($parent)->getUser();
+					if($parentCreator->getPrivacyLevel() == "CLOSED" && $parentCreator->getId() != $userId) return;
+					if($parentCreator->getPrivacyLevel() == "PRIVATE" && !$parentCreator->isFollower($userId)) return;
+					if($parentCreator->hasBlocked($userId)) return;
 
 					$mysqli = Database::Instance()->get();
 					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`) VALUES(?,?,NULL,?,?,?);");
