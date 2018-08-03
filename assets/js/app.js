@@ -50,13 +50,13 @@ function showStatusModal(postId){
 				content = content.concat('<div class="ml-2">');
 
 				content = content.concat(
-					'<div><a href="/' + user.username + '" class="clearUnderline font-weight-bold mb-0 mt-2" style="font-size:20px">' +
+					'<div><a href="/' + user.username + '" class="clearUnderline font-weight-bold mb-0" style="font-size:20px">' +
 					user.displayName +
 					'</a></div>'
 				);
 
 				content = content.concat(
-					'<div class="mt-0 text-muted">' +
+					'<div class="text-muted" style="margin-top: -6px">' +
 					'@' + user.username +
 					'</div>'
 				);
