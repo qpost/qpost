@@ -20,8 +20,6 @@ function showStatusModal(postId){
 	restoreUrl = window.location.pathname;
 	restoreTitle = $(document).find("title").text();
 
-	console.log(restoreTitle);
-
 	$.ajax({
 		url: "/scripts/postInfo",
 		data: {
@@ -701,9 +699,6 @@ function load(){
 	});
 
 	$(document).on("hidden.bs.modal","#statusModal",function(e){
-		console.log(restoreUrl);
-		console.log(restoreTitle);
-
 		if(typeof restoreUrl !== "undefined" && typeof restoreTitle !== "undefined"){
 			history.pushState("",restoreTitle,restoreUrl);
 			document.title = restoreTitle;
