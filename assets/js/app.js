@@ -12,13 +12,18 @@ function resetStatusModal(){
 	);
 }
 
+function isStatusModalOpen(){
+	return $("#statusModal").hasClass('show');
+}
+
+function closeStatusModal(){
+	$("#statusModal").modal('hide');
+}
+
 function showStatusModal(postId){
 	resetStatusModal();
 
 	let statusModal = $("#statusModal");
-
-	if(statusModal.hasClass('show'))
-		return;
 
 	restoreUrl = window.location.pathname;
 	restoreTitle = $(document).find("title").text();
@@ -35,6 +40,8 @@ function showStatusModal(postId){
 			if(json.hasOwnProperty("id")){
 				let user = json.user;
 				let content = "";
+
+				let replies = json.replies;
 
 				content = content.concat('<div class="mb-4">');
 
@@ -95,6 +102,44 @@ function showStatusModal(postId){
 					'</div>'
 				);
 
+				if(replies.length > 0){
+					replies.forEach(reply => {
+						content = content.concat(
+							'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + reply.id + '" data-entry-id="' + reply.id + '">' +
+								'<div class="card-body">' +
+									'<div class="row">' +
+										'<div class="col-2">' +
+											'<a href="/' + reply.user.username + '" class="clearUnderline ignoreParentClick">' +
+												'<img class="rounded mx-1 my-1" src="' + reply.user.avatar + '" width="64" height="64"/>' +
+											'</a>' +
+										'</div>' +
+
+										'<div class="col-10">' +
+											'<p class="mb-0">' +
+												'<a href="/' + reply.user.username + '" class="clearUnderline ignoreParentClick">' +
+													'<span class="font-weight-bold">' + reply.user.displayName + '</span>' +
+												'</a>' +
+
+												' <span class="text-muted font-weight-normal">@' + reply.user.username + '</span> ' +
+
+												'&bull; ' +
+
+												reply.time +
+											'</p>' +
+
+											'<p class="mb-0 convertEmoji">' +
+												twemoji.parse(reply.text) +
+											'</p>' +
+
+											reply.postActionButtons +
+										'</div>' +
+									'</div>' +
+								'</div>' +
+							'</div>'
+						);
+					});
+				}
+
 				statusModal.html(
 					'<div class="modal-dialog" role="document">' +
 						'<div class="modal-content">' +
@@ -112,7 +157,8 @@ function showStatusModal(postId){
 				history.pushState({postId: postId},title,"/status/" + postId);
 				document.title = title; 
 
-				statusModal.modal();
+				if(!isStatusModalOpen())
+					statusModal.modal();
 			} else if(json.hasOwnProperty("error")){
 				statusModal.html(
 					'<div class="modal-dialog" role="document">' +
@@ -124,7 +170,8 @@ function showStatusModal(postId){
 					'</div>'
 				);
 
-				statusModal.modal();
+				if(!isStatusModalOpen())
+					statusModal.modal();
 			} else {
 				statusModal.html(
 					'<div class="modal-dialog" role="document">' +
@@ -136,7 +183,8 @@ function showStatusModal(postId){
 					'</div>'
 				);
 
-				statusModal.modal();
+				if(!isStatusModalOpen())
+					statusModal.modal();
 			}
 		},
 
@@ -209,7 +257,7 @@ function loadHomeFeed(){
 							let sharedAvatar = shared.userAvatar;
 
 							newHtml = newHtml.concat(
-								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+								'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
 									'<div class="card-body">' +
 										'<div class="small text-muted">' +
 											'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline ignoreParentClick">' + userDisplayName + '</a> &bull; ' + postTime +
