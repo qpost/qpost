@@ -164,7 +164,8 @@ $app->bind("/:query",function($params){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
 				$data = array(
 					"user" => $user,
-					"socialImage" => $user->getAvatarURL()
+					"socialImage" => $user->getAvatarURL(),
+					"preventStatusModal" => true
 				);
 			
 				return $this->render("views:Profile/Blocked.php with views:Layout.php",$data);
@@ -172,14 +173,16 @@ $app->bind("/:query",function($params){
 				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && $user->getId() != $_SESSION["id"]){
 					$data = array(
 						"user" => $user,
-						"socialImage" => $user->getAvatarURL()
+						"socialImage" => $user->getAvatarURL(),
+						"preventStatusModal" => true
 					);
 				
 					return $this->render("views:Profile/ClosedLevel.php with views:Layout.php",$data);
 				} else if($user->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
 					$data = array(
 						"user" => $user,
-						"socialImage" => $user->getAvatarURL()
+						"socialImage" => $user->getAvatarURL(),
+						"preventStatusModal" => true
 					);
 				
 					return $this->render("views:Profile/PrivateLevel.php with views:Layout.php",$data);

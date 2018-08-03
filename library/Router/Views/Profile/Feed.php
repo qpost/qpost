@@ -9,7 +9,10 @@ $uID = $user->getId();
 $showNoEntriesInfo = false;
 
 if(isset($_SESSION["profileLoadPost"])){
-	echo '<script>showStatusModal(' . $_SESSION["profileLoadPost"] . ');</script>';
+	if(!isset($preventStatusModal) || $preventStatusModal != false){
+		echo '<script>showStatusModal(' . $_SESSION["profileLoadPost"] . ');</script>';
+	}
+
 	unset($_SESSION["profileLoadPost"]);
 }
 
