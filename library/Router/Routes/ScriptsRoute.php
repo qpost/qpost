@@ -332,7 +332,7 @@ $app->post("/scripts/postInfo",function(){
 								$postActionButtons .= '<i class="fas fa-share-alt' . (Util::getCurrentUser()->hasShared($post->getId()) ? ' text-primary' : "")  . '"' . (Util::getCurrentUser()->hasShared($post->getId()) ? "" : ' style="color: gray"') . '></i>';
 							$postActionButtons .= '</span>';
 
-							$postActionButtons .= '<span class="shareCount small text-primary ml-1 mr-1">';
+							$postActionButtons .= '<span class="shareCount small text-primary ml-2 mr-2">';
 								$postActionButtons .= $post->getShares();
 							$postActionButtons .= '</span>';
 
@@ -340,7 +340,7 @@ $app->post("/scripts/postInfo",function(){
 								$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
 							$postActionButtons .= '</span>';
 
-							$postActionButtons .= '<span class="favoriteCount small ml-1 mr-1" style="color: #ff960c">';
+							$postActionButtons .= '<span class="favoriteCount small ml-2 mr-2" style="color: #ff960c">';
 								$postActionButtons .= $post->getFavorites();
 							$postActionButtons .= '</span>';
 						$postActionButtons .= '</div>';
