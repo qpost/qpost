@@ -43,7 +43,7 @@ function showStatusModal(postId){
 
 				let replies = json.replies;
 
-				if(json.hasOwnProperty("parent")){
+				if(json.hasOwnProperty("parent") && json.parent != null){
 					let parent = json.parent;
 
 					content = content.concat(
@@ -111,7 +111,7 @@ function showStatusModal(postId){
 
 				content = content.concat('</div>');
 
-				let c = json.hasOwnProperty("parent") ? '<div class="small text-muted">Replying to <a href="/' + json.parent.user.username + '" class="clearUnderline">@' + json.parent.user.username + '</a></div>' : "";
+				let c = json.hasOwnProperty("parent") && json.parent != null ? '<div class="small text-muted">Replying to <a href="/' + json.parent.user.username + '" class="clearUnderline">@' + json.parent.user.username + '</a></div>' : "";
 
 				content = content.concat(
 					'<div class="mt-2">' +
