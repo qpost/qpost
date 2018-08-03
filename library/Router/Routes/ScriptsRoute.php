@@ -417,8 +417,26 @@ $app->post("/scripts/createPost",function(){
 						$post["userDisplayName"] = $user->getDisplayName();
 						$post["userAvatar"] = $user->getAvatarURL();
 
-						if(!is_null($parent))
-							FeedEntry::getEntryById($parent)->reloadReplies();
+						if(!is_null($parent)){
+							$parentData = FeedEntry::getEntryById($parent);
+
+							if(!is_null($parentData)){
+								$parentData->reloadReplies();
+
+								if($parentData->getUserId() != $userId){
+									if($parentData->getUser()->canPostNotification(NOTIFICATION_TYPE_REPLY,null,$postId)){
+										$uid = $parentData->getUserId();
+
+										$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'REPLY',?);");
+										$stmt->bind_param("ii",$uid,$postId);
+										$stmt->execute();
+										$stmt->close();
+
+										$parentData->getUser()->reloadUnreadNotifications();
+									}
+								}
+							}
+						}
 
 						if(count($mentioned) > 0){
 							foreach($mentioned as $u){
