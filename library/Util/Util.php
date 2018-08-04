@@ -1051,9 +1051,16 @@ class Util {
 			$postActionButtons .= '<i class="fas fa-star"' . (Util::getCurrentUser()->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="favoriteCount small ml-2 mr-2" style="color: #ff960c">';
+			$postActionButtons .= '<span class="favoriteCount small ml-2 mr-4" style="color: #ff960c">';
 			$postActionButtons .= $post->getFavorites();
 			$postActionButtons .= '</span>';
+
+			if(Util::getCurrentUser()->getId() == $post->getUserId()){
+				$postActionButtons .= '<span class="deleteButton ml-2" data-post-id="' . $post->getId() . '" data-toggle="tooltip" title="Delete">';
+				$postActionButtons .= '<i class="fas fa-trash-alt"></i>';
+				$postActionButtons .= '</span>';
+			}
+
 			$postActionButtons .= '</div>';
 		}
 

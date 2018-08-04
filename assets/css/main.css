@@ -27,11 +27,12 @@ img.emoji {
 	vertical-align: -0.1em;
  }
 
- .favoriteButton,.shareButton,.replyButton {
+ .favoriteButton,.shareButton,.replyButton,.deleteButton {
 	 cursor: pointer;
  }
 
- .replyButton>i {
+ .replyButton>i,
+ .deleteButton>i {
 	 color: gray;
  }
 
@@ -44,8 +45,12 @@ img.emoji {
 	color: #007bff !important;
  }
 
- .favoriteButton>i:hover,.shareButton>i:hover,.replyButton>i:hover,
- .favoriteButton>i,.shareButton>i,.replyButton>i {
+ .deleteButton>i:hover {
+	 color: red !important;
+ }
+
+ .favoriteButton>i:hover,.shareButton>i:hover,.replyButton>i:hover,.deleteButton>i:hover,
+ .favoriteButton>i,.shareButton>i,.replyButton>i,.deleteButton>i {
 	-webkit-transition: color 200ms linear;
     -ms-transition: color 200ms linear;
     transition: color 200ms linear;

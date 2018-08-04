@@ -1,3 +1,147 @@
+function resetDeleteModal(){
+	$("#deleteModal").html(
+		'<div class="modal-dialog" role="document">' +
+			'<div class="modal-content">' +
+				'<div class="modal-body">' +
+					'<div class="text-center">' +
+						'<i class="fas fa-spinner fa-pulse"></i>' +
+					'</div>' +
+				'</div>' +
+			'</div>' +
+		'</div>'
+	);
+}
+
+function isDeleteModalOpen(){
+	return $("#deleteModal").hasClass('show');
+}
+
+function closeDeleteModal(){
+	$("#deleteModal").modal('hide');
+}
+
+function showDeleteModal(postId){
+	resetDeleteModal();
+
+	let deleteModal = $("#deleteModal");
+
+	$.ajax({
+		url: "/scripts/postInfo",
+		data: {
+			csrf_token: CSRF_TOKEN,
+			postId: postId
+		},
+		method: "POST",
+
+		success: function(json){
+			if(json.hasOwnProperty("id")){
+				let user = json.user;
+				let content = "";
+
+				content = content.concat('<div class="mb-4">');
+
+				content = content.concat(json.followButton);
+
+				content = content.concat(
+					'<div class="float-left mr-2">' +
+					'<a href="/' + user.username + '" class="clearUnderline">' +
+					'<img width="48" height="48" src="' + user.avatar + '" class="rounded"/>' +
+					'</a>' +
+					'</div>'
+				);
+
+				content = content.concat('<div class="ml-2">');
+
+				content = content.concat(
+					'<div><a href="/' + user.username + '" class="clearUnderline font-weight-bold mb-0" style="font-size:20px">' +
+					user.displayName +
+					'</a></div>'
+				);
+
+				content = content.concat(
+					'<div class="text-muted" style="margin-top: -6px">' +
+					'@' + user.username +
+					'</div>'
+				);
+
+				content = content.concat('</div>');
+
+				content = content.concat('</div>');
+
+				let c = json.hasOwnProperty("parent") && json.parent != null ? '<div class="small text-muted">Replying to <a href="/' + json.parent.user.username + '" class="clearUnderline">@' + json.parent.user.username + '</a></div>' : "";
+
+				content = content.concat(
+					'<div class="mt-2">' +
+					c + 
+					'<p style="font-size: 27px;">' +
+					twemoji.parse(json.text) +
+					'</p>' +
+					'<p class="small text-muted">Posted ' +
+					json.time +
+					'</p>' +
+					'</div>'
+				);
+
+				deleteModal.html(
+					'<div class="modal-dialog" role="document">' +
+						'<div class="modal-content">' +
+							'<div class="modal-header">' +
+								'<h5 class="modal-title">Are you sure you want to delete this post?</h5>' +
+							'</div>' +
+
+							'<div class="modal-body">' +
+								content +
+							'</div>' +
+
+							'<div class="modal-footer">' +
+								'<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>' +
+								'<button type="button" class="finDel btn btn-danger" data-post-id="' + postId + '">Delete</button>' +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+
+				loadBasic();
+
+				if(!isDeleteModalOpen())
+					deleteModal.modal();
+			} else if(json.hasOwnProperty("error")){
+				deleteModal.html(
+					'<div class="modal-dialog" role="document">' +
+						'<div class="modal-content">' +
+							'<div class="modal-body">' +
+								json.error +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+
+				if(!isDeleteModalOpen())
+					deleteModal.modal();
+			} else {
+				deleteModal.html(
+					'<div class="modal-dialog" role="document">' +
+						'<div class="modal-content">' +
+							'<div class="modal-body">' +
+								json +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+
+				if(!isDeleteModalOpen())
+					deleteModal.modal();
+			}
+		},
+
+		error: function(xhr,status,error){
+			console.log(xhr);
+			console.log(status);
+			console.log(error);
+		}
+	});
+}
+
 function resetStatusModal(){
 	$("#statusModal").html(
 		'<div class="modal-dialog" role="document">' +
@@ -928,17 +1072,70 @@ function load(){
 		let postId = $(this).attr("data-reply-id");
 
 		if(typeof postId !== "undefined" && postId !== false){
-			console.log(window.location.pathname);
-			console.log(postId);
 			if(window.location.pathname.endsWith(postId)){
-				console.log("a");
 				$("#statusModalPostField").focus();
 			} else {
-				console.log("b");
 				showStatusModal(postId);
 			}
 		}
-	})
+	});
+
+	$(document).on("click",".deleteButton",function(e){
+		e.preventDefault();
+
+		let postId = $(this).attr("data-post-id");
+
+		if(typeof postId !== "undefined" && postId !== false){
+			if(isStatusModalOpen())
+				closeStatusModal();
+
+			showDeleteModal(postId);
+		} else {
+			console.error("No post id found");
+		}
+	});
+
+	$(document).on("click",".finDel",function(e){
+		e.preventDefault();
+
+		let postId = $(this).attr("data-post-id");
+
+		if(typeof postId !== "undefined" && postId !== false){
+			if(isDeleteModalOpen())
+				closeDeleteModal();
+
+			$.ajax({
+				url: "/scripts/deletePost",
+				data: {
+					csrf_token: CSRF_TOKEN,
+					post: postId
+				},
+				method: "POST",
+		
+				success: function(json){
+					if(json.hasOwnProperty("status")){
+						if(json.status == "done"){
+							$('[data-status-render="' + postId + '"]').remove();
+							$('[data-entry-id="' + postId + '"]').remove();
+							$('[data-post-id="' + postId + '"]').remove();
+						} else {
+							console.error("Invalid status: " + json.status);
+						}
+					} else {
+						console.log(result);
+					}
+				},
+		
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		} else {
+			console.error("No post id found");
+		}
+	});
 
 	$(document).on("click",".favoriteButton",function(e){
 		e.preventDefault();
