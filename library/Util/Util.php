@@ -979,7 +979,15 @@ class Util {
 	 * @return string
 	 */
 	public static function convertMentions($string){
-		return preg_replace("/@(\w+)/i", "<a href=\"/$1\" class=\"ignoreParentClick\">$0</a>", $string);
+		//return preg_replace("/@(\w+)/i", "<a href=\"/$1\" class=\"ignoreParentClick\">$0</a>", $string);
+
+		$mentions = self::getUsersMentioned($string);
+
+		foreach($mentions as $u){
+			$string = str_ireplace("@" . $u->getUsername(),'<a href="/' . $u->getUsername() . '" class="ignoreParentClick" data-no-instant>@' . $u->getUsername() . '</a>',$string);
+		}
+
+		return $string;
 	}
 
 	/**
@@ -1019,7 +1027,7 @@ class Util {
 		return $a;
 	}
 
-	/**
+	/**<div class="col-md-4 px-1 py-1">
 	 * Returns HTML for a post's postActionButtons
 	 * 
 	 * @access public
