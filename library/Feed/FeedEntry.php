@@ -418,6 +418,27 @@ class FeedEntry {
         $stmt->close();
     }
 
+    public function delete(){
+        $mysqli = Database::Instance()->get();
+
+        $this->removeFromCache();
+
+        $stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `id` = ? OR (`post` = ? AND `type` = 'SHARE')");
+        $stmt->bind_param("ii",$this->id,$this->id);
+        $stmt->execute();
+        $stmt->close();
+
+        $stmt = $mysqli->prepare("DELETE FROM `notifications` WHERE `post` = ?");
+        $stmt->bind_param("i",$this->id);
+        $stmt->execute();
+        $stmt->close();
+
+        $stmt = $mysqli->prepare("DELETE FROM `favorites` WHERE `post` = ?");
+        $stmt->bind_param("i",$this->id);
+        $stmt->execute();
+        $stmt->close();
+    }
+
     public function saveToCache(){
         \CacheHandler::setToCache("feedEntry_" . $this->id,$this,20*60);
     }
