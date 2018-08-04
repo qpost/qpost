@@ -31,6 +31,7 @@ require $app->path("routes:Logout.php");
 require $app->path("routes:Profile.php");
 require $app->path("routes:Account.php");
 require $app->path("routes:Messages.php");
+require $app->path("routes:Requests.php");
 require $app->path("routes:Edit.php");
 require $app->path("routes:Search.php");
 require $app->path("routes:ScriptsRoute.php");

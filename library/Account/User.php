@@ -1213,6 +1213,7 @@ class User {
 				if(!is_null($u)){
 					$u->uncacheFollower($this->id);
 					$u->reloadFollowerCount();
+					$this->reloadFollowingCount();
 				}
 			}
 			$stmt->close();

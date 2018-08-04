@@ -27,7 +27,7 @@ $app->post("/scripts/toggleFollow",function(){
 							$u2 = $toFollow->getId();
 
 							if($user->isFollowing($toFollow)){
-								$User->unfollow($toFollow);
+								$user->unfollow($toFollow);
 								$followStatus = 0;
 							} else {
 								if(!$user->hasSentFollowRequest($toFollow)){
