@@ -364,7 +364,7 @@ if(!isset($socialImage) || empty($socialImage))
 									}
 								}
 
-								echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-3"]);
+								echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["my-3"]);
 
 							?>
 						</div>
@@ -391,7 +391,7 @@ if(!isset($socialImage) || empty($socialImage))
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_LOGOUT) echo ' active'; ?>" href="/logout" data-no-instant>Logout</a></li>
 							</ul>
 
-							<?= Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-3"]) ?>
+							<?= Util::renderAd(Util::AD_TYPE_VERTICAL,true,["my-3"]) ?>
 						</div>
 
 						<div class="col-lg-9">
