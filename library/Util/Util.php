@@ -13,11 +13,6 @@ define("ACCOUNT_NAV_HOME","ACCOUNT_NAV_HOME");
 define("ACCOUNT_NAV_PRIVACY","ACCOUNT_NAV_PRIVACY");
 define("ACCOUNT_NAV_LOGOUT","ACCOUNT_NAV_LOGOUT");
 
-define("AD_TYPE_LEADERBOARD","adLeaderboard");
-define("AD_TYPE_HORIZONTAL","adLeaderboard");
-define("AD_TYPE_BLOCK","adBlock");
-define("AD_TYPE_VERTICAL","adVertical");
-
 define("ALERT_TYPE_INFO","info");
 define("ALERT_TYPE_WARNING","warning");
 define("ALERT_TYPE_DANGER","danger");
@@ -61,6 +56,11 @@ if(DEVELOPER_MODE == true){
  * @link https://gigadrivegroup.com/dev/technologies
  */
 class Util {
+	public const AD_TYPE_LEADERBOARD = "AD_TYPE_LEADERBOARD";
+	public const AD_TYPE_HORIZONTAL = "AD_TYPE_LEADERBOARD";
+	public const AD_TYPE_BLOCK = "AD_TYPE_BLOCK";
+	public const AD_TYPE_VERTICAL = "AD_TYPE_VERTICAL";
+
 	/**
      * Send an email via SMTP.
 	 * 
@@ -163,11 +163,12 @@ class Util {
 	 * @access public
      * @param string $type Use AD_TYPE_* constants
 	 * @param bool $center If true, the returned HTML code will be wrapped in a <center> element
+	 * @param string[] $classes An array of css classes to be added
      * @return string
      */
-	public static function renderAd($type,$center = false){
-		if($type == AD_TYPE_LEADERBOARD){
-			return ($center == true ? "<center>" : "") . '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	public static function renderAd($type,$center = false,$classes = null){
+		if($type == Util::AD_TYPE_LEADERBOARD){
+			return ($center == true ? "<center>" : "") . '<div class="' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? implode(" ",$classes) : "") . '"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 			<ins class="adsbygoogle"
 				style="display:block"
 				data-ad-client="ca-pub-6156128043207415"
@@ -175,25 +176,25 @@ class Util {
 				data-ad-format="auto"></ins>
 			<script>
 			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script>' . ($center == true ? "</center>" : "");
-		} else if($type == AD_TYPE_VERTICAL){
-			return ($center == true ? "<center>" : "") . '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			</script></div>' . ($center == true ? "</center>" : "");
+		} else if($type == Util::AD_TYPE_VERTICAL){
+			return ($center == true ? "<center>" : "") . '<div class="' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? implode(" ",$classes) : "") . '"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 			<ins class="adsbygoogle"
 				 style="display:inline-block;width:120px;height:600px"
 				 data-ad-client="ca-pub-6156128043207415"
 				 data-ad-slot="1788401303"></ins>
 			<script>
 			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script>' . ($center == true ? "</center>" : "");
-		} else if($type == AD_TYPE_BLOCK){
-			return ($center == true ? "<center>" : "") . '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			</script></div>' . ($center == true ? "</center>" : "");
+		} else if($type == Util::AD_TYPE_BLOCK){
+			return ($center == true ? "<center>" : "") . '<div class="' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? implode(" ",$classes) : "") . '"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 			<ins class="adsbygoogle"
 				style="display:inline-block;width:336px;height:280px"
 				data-ad-client="ca-pub-6156128043207415"
 				data-ad-slot="7069637483"></ins>
 			<script>
 			(adsbygoogle = window.adsbygoogle || []).push({});
-		</script>' . ($center == true ? "</center>" : "");
+			</script></div>' . ($center == true ? "</center>" : "");
 		}
 	}
 
