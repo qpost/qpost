@@ -962,6 +962,8 @@ class User {
 				}
 			}
 			$stmt->close();
+
+			return $this->followRequests;
 		} else {
 			return 0;
 		}

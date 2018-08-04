@@ -174,7 +174,7 @@
 				$openRequests = Util::getCurrentUser()->getOpenFollowRequests();
 				if($openRequests > 0){
 					?>
-			<a href="/requests" class="btn btn-secondary"><?= $openRequests ?> open follow request<?= $openRequests > 1 ? "s" : "" ?></a>
+			<a href="/requests" class="btn btn-info btn-block mt-3 mb-2"><?= $openRequests ?> open follow request<?= $openRequests > 1 ? "s" : "" ?></a>
 					<?php
 				}
 

@@ -1,7 +1,14 @@
 <?php
 
 $app->bind("/login",function(){
-	return $this->reroute("https://gigadrivegroup.com/authorize?app=" . GIGADRIVE_APP_ID . "&scopes=user:info,user:email");
+	if(DEVELOPER_MODE !== null && DEVELOPER_MODE == true && isset($_GET["id"])){
+		// DEBUG ROUTE FOR FORCING LOGIN
+
+		$_SESSION["id"] = (int)$_GET["id"];
+		return $this->reroute("/");
+	} else {
+		return $this->reroute("https://gigadrivegroup.com/authorize?app=" . GIGADRIVE_APP_ID . "&scopes=user:info,user:email");
+	}
 });
 
 $app->bind("/loginCallback",function(){
