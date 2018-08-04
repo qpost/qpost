@@ -913,10 +913,24 @@ class Util {
 				if($defaultToEdit && $currentUser->getId() == $user){
 					return '<a href="/edit" class="btn btn-light' . $classString . '">Edit profile</a>';
 				} else if($currentUser->getId() != $user){
-					if($currentUser->isFollowing($user)){
-						return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Unfollow</button>';
-					} else {
-						return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Follow</button>';
+					if(User::getUserById($user)->getPrivacyLevel() == "PUBLIC"){
+						if($currentUser->isFollowing($user)){
+							return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Unfollow</button>';
+						} else {
+							return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Follow</button>';
+						}
+					} else if(User::getUserById($user)->getPrivacyLevel() == "PRIVATE"){
+						if($currentUser->isFollowing($user)){
+							return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Unfollow</button>';
+						} else {
+							if($currentUser->hasSentFollowRequest($user)){
+								return '<button type="button" class="pendingButton btn btn-warning' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Pending</button>';
+							} else {
+								return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Follow</button>';
+							}
+						}
+					} else if(User::getUserById($user)->getPrivacyLevel() == "CLOSED"){
+						return "";
 					}
 				}
 			}

@@ -1182,23 +1182,38 @@ function toggleFollow(e,userID){
 
 					if(json.hasOwnProperty("followStatus")){
 						if(json.followStatus == 1){
-							console.log("following " + json.followStatus);
 							e.classList.add("unfollowButton");
 							e.classList.add("btn-danger");
+
+							e.classList.remove("pendingButton");
+							e.classList.remove("btn-warning");
 
 							e.classList.remove("followButton");
 							e.classList.remove("btn-primary");
 
 							e.innerHTML = "Unfollow";
 						} else if(json.followStatus == 0) {
-							console.log("not following " + json.followStatus);
 							e.classList.remove("unfollowButton");
 							e.classList.remove("btn-danger");
+
+							e.classList.remove("pendingButton");
+							e.classList.remove("btn-warning");
 
 							e.classList.add("followButton");
 							e.classList.add("btn-primary");
 
 							e.innerHTML = "Follow";
+						} else if(json.followStatus == 2){
+							e.classList.remove("unfollowButton");
+							e.classList.remove("btn-danger");
+
+							e.classList.add("pendingButton");
+							e.classList.add("btn-warning");
+
+							e.classList.remove("followButton");
+							e.classList.remove("btn-primary");
+
+							e.innerHTML = "Pending";
 						}
 					} else {
 						console.log(result);

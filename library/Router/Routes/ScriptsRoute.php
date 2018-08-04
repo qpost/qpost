@@ -13,12 +13,38 @@ $app->post("/scripts/toggleFollow",function(){
 					if($user->getId() != $toFollow->getId()){
 						$followStatus = -1;
 
-						if($user->isFollowing($toFollow)){
-							$user->unfollow($toFollow);
-							$followStatus = 0;
-						} else {
-							$user->follow($toFollow);
-							$followStatus = 1;
+						if($toFollow->getPrivacyLevel() == "PUBLIC"){
+							if($user->isFollowing($toFollow)){
+								$user->unfollow($toFollow);
+								$followStatus = 0;
+							} else {
+								$user->follow($toFollow);
+								$followStatus = 1;
+							}
+						} else if($toFollow->getPrivacyLevel() == "PRIVATE"){
+							$u1 = $user->getId();
+							$u2 = $toFollow->getId();
+
+							if($user->isFollowing($toFollow)){
+								$User->unfollow($toFollow);
+								$followStatus = 0;
+							} else {
+								if(!$user->hasSentFollowRequest($toFollow)){
+									$stmt = $mysqli->prepare("INSERT INTO `follow_requests` (`follower`,`following`) VALUES(?,?);");
+									$stmt->bind_param("ii",$u1,$u2);
+									$stmt->execute();
+									$stmt->close();
+	
+									$followStatus = 2;
+								} else {
+									$stmt = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `follower` = ? AND `following` = ?");
+									$stmt->bind_param("ii",$u1,$u2);
+									$stmt->execute();
+									$stmt->close();
+	
+									$followStatus = 0;
+								}
+							}
 						}
 		
 						return json_encode(["followStatus" => $followStatus]);

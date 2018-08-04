@@ -906,6 +906,52 @@ class User {
 	}
 
 	/**
+	 * Returns whether or not the user has sent a follow request to $user
+	 * 
+	 * @access public
+	 * @param int|User $user
+	 * @return bool
+	 */
+	public function hasSentFollowRequest($user){
+		$userId = is_object($user) ? $user->getId() : $user;
+
+		$b = false;
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT COUNT(*) FROM `follower_requests` WHERE `follower` = ? AND `following` = ?");
+		$stmt->bind_param("ii",$this->id,$userId);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
+				if($row["count"] > 0)
+					$b = true;
+			}
+		}
+		$stmt->close();
+
+		return $b;
+	}
+
+	/**
+	 * Returns whether or not the user has received a follow request from $user
+	 * 
+	 * @access public
+	 * @param int|User $user
+	 * @return bool
+	 */
+	public function hasReceivedFollowRequest($user){
+		if(is_object($user)){
+			return $user->hasSentFollowRequest($this);
+		} else {
+			return self::getUserById($user)->hasSentFollowRequest($this);
+		}
+	}
+
+	/**
 	 * Returns whether or not the user has blocked $user
 	 * 
 	 * @access public
@@ -1037,12 +1083,32 @@ class User {
 		if(!$this->isFollowing($user)){
 			$mysqli = Database::Instance()->get();
 
+			$u = self::getUserById($user);
+			if(!is_null($u)){
+				if($u->getPrivacyLevel() == "CLOSED"){
+					return;
+				} else if($u->getPrivacyLevel() == "PRIVATE"){
+					if(!$this->hasSentFollowRequest($user)){
+						$stmt = $mysqli->prepare("INSERT INTO `follow_requests` (`follower`,`following`) VALUES(?,?);");
+						$stmt->bind_param("ii",$this->id,$user);
+						$stmt->execute();
+						$stmt->close();
+
+						return;
+					} else {
+						$stmt = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `follower` = ? AND `following` = ?");
+						$stmt->bind_param("ii",$this->id,$user);
+						$stmt->execute();
+						$stmt->close();
+					}
+				}
+			}
+
 			$b = false;
 
 			$stmt = $mysqli->prepare("INSERT INTO `follows` (`follower`,`following`) VALUES(?,?);");
 			$stmt->bind_param("ii",$this->id,$user);
 			if($stmt->execute()){
-				$u = self::getUserById($user);
 				if(!is_null($u)){
 					$u->cacheFollower($this->id);
 					$u->reloadFollowerCount();
