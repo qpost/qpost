@@ -12,7 +12,7 @@ $app->bind("/:query/following",function($params){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
 				return $this->reroute("/" . $user->getUsername());
 			} else {
-				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && $user->getId() != $_SESSION["id"]){
+				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					return $this->reroute("/" . $user->getUsername());
 				} else if($user->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
 					return $this->reroute("/" . $user->getUsername());
@@ -50,7 +50,7 @@ $app->bind("/:query/following/:page",function($params){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
 				return $this->reroute("/" . $user->getUsername());
 			} else {
-				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && $user->getId() != $_SESSION["id"]){
+				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					return $this->reroute("/" . $user->getUsername());
 				} else if($user->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
 					return $this->reroute("/" . $user->getUsername());
@@ -88,7 +88,7 @@ $app->bind("/:query/followers",function($params){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
 				return $this->reroute("/" . $user->getUsername());
 			} else {
-				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && $user->getId() != $_SESSION["id"]){
+				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					return $this->reroute("/" . $user->getUsername());
 				} else if($user->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
 					return $this->reroute("/" . $user->getUsername());
@@ -126,7 +126,7 @@ $app->bind("/:query/followers/:page",function($params){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
 				return $this->reroute("/" . $user->getUsername());
 			} else {
-				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && $user->getId() != $_SESSION["id"]){
+				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					return $this->reroute("/" . $user->getUsername());
 				} else if($user->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
 					return $this->reroute("/" . $user->getUsername());
@@ -170,7 +170,7 @@ $app->bind("/:query",function($params){
 			
 				return $this->render("views:Profile/Blocked.php with views:Layout.php",$data);
 			} else {
-				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && $user->getId() != $_SESSION["id"]){
+				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					$data = array(
 						"user" => $user,
 						"socialImage" => $user->getAvatarURL(),
@@ -220,7 +220,7 @@ $app->bind("/:query/:page",function($params){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
 				return $this->reroute("/" . $user->getUsername());
 			} else {
-				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && $user->getId() != $_SESSION["id"]){
+				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					return $this->reroute("/" . $user->getUsername());
 				} else if($user->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
 					return $this->reroute("/" . $user->getUsername());
