@@ -350,8 +350,10 @@ if(!isset($socialImage) || empty($socialImage))
 									<div class="card-body">
 										<img src="<?= $featuredUser->getAvatarURL() ?>" width="48" height="48" class="float-left rounded mr-2"/>
 
-										<b><?= $featuredUser->getDisplayName() ?></b>
-										<div class="small text-muted">@<?= $featuredUser->getUsername() ?></div>
+										<div class="mt-1">
+											<b><?= $featuredUser->getDisplayName() ?></b>
+											<div class="small text-muted">@<?= $featuredUser->getUsername() ?></div>
+										</div>
 									</div>
 								</div>
 							</a>
