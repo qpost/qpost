@@ -126,7 +126,7 @@ class User {
 	 * @param string $time
 	 * @return User
 	 */
-	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$time){
+	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$time){
 		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
 
 		$user->id = $id;
@@ -137,6 +137,8 @@ class User {
 		$user->bio = $bio;
 		$user->token = $token;
 		$user->privacyLevel = $privacyLevel;
+		$user->featuredBoxTitle = $featuredBoxTitle;
+		$user->featuredBoxContent = is_null($featuredBoxContent) ? [] : (is_string($featuredBoxContent) ? json_decode($featuredBoxContent,true) : $featuredBoxContent);
 		$user->time = $time;
 
 		$user->saveToCache();
@@ -191,6 +193,18 @@ class User {
 	 * @var string $privacyLevel
 	 */
 	private $privacyLevel;
+
+	/**
+	 * @access private
+	 * @var string $featuredBoxTitle
+	 */
+	private $featuredBoxTitle;
+
+	/**
+	 * @access private
+	 * @var int[] $featuredBoxContent
+	 */
+	private $featuredBoxContent;
 
 	/**
 	 * @access private
@@ -322,6 +336,8 @@ class User {
 				$this->bio = $row["bio"];
 				$this->token = $row["token"];
 				$this->privacyLevel = $row["privacy.level"];
+				$this->featuredBoxTitle = $row["featuredBox.title"];
+				$this->featuredBoxContent = is_null($row["featuredBox.content"]) ? [] : json_decode($row["featuredBox.content"],true);
 				$this->time = $row["time"];
 
 				$this->exists = true;
@@ -541,6 +557,26 @@ class User {
 		}
 
 		return $this->following;
+	}
+
+	/**
+	 * Returns the title of the user's Featured box
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getFeaturedBoxTitle(){
+		return $this->featuredBoxTitle;
+	}
+
+	/**
+	 * Returns an array of user IDs that are featured in the user's Featured box
+	 * 
+	 * @access public
+	 * @return int[]
+	 */
+	public function getFeaturedBoxContent(){
+		return $this->featuredBoxContent;
 	}
 
 	/**

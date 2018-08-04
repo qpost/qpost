@@ -31,7 +31,7 @@
 
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				$u = User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["time"]);
+				$u = User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["time"]);
 				$mutuals = $row["mutuals"];
 
 				?>

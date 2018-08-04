@@ -293,7 +293,7 @@ $app->post("/scripts/postInfo",function(){
 						$postId = $post->getId();
 						$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
 
-						$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`privacy.level`,u.`time` AS `userTime` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? ORDER BY u.`id` = ?,f.`time` DESC");
+						$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`privacy.level`,u.`featuredBox.title`,u.`featuredBox.content`,u.`time` AS `userTime` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? ORDER BY u.`id` = ?,f.`time` DESC");
 						$stmt->bind_param("ii",$postId,$uid);
 						if($stmt->execute()){
 							$result = $stmt->get_result();
@@ -301,7 +301,7 @@ $app->post("/scripts/postInfo",function(){
 							if($result->num_rows){
 								while($row = $result->fetch_assoc()){
 									$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["time"]);
-									$u = User::getUserByData($row["userId"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["userTime"]);
+									$u = User::getUserByData($row["userId"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["userTime"]);
 
 									array_push($replies,[
 										"id" => $f->getId(),
