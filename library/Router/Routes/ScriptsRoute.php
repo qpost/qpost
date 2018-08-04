@@ -293,7 +293,7 @@ $app->post("/scripts/postInfo",function(){
 						$postId = $post->getId();
 						$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
 
-						$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`privacy.level`,u.`featuredBox.title`,u.`featuredBox.content`,u.`time` AS `userTime` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? ORDER BY u.`id` = ?,f.`time` DESC");
+						$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`privacy.level`,u.`featuredBox.title`,u.`featuredBox.content`,u.`time` AS `userTime` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
 						$stmt->bind_param("ii",$postId,$uid);
 						if($stmt->execute()){
 							$result = $stmt->get_result();
