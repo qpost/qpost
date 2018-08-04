@@ -442,6 +442,8 @@ class FeedEntry {
         $stmt->bind_param("i",$this->id);
         $stmt->execute();
         $stmt->close();
+
+        if($this->type == "POST") $this->getUser()->reloadPostsCount();
     }
 
     public function saveToCache(){
