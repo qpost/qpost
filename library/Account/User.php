@@ -1112,6 +1112,7 @@ class User {
 				if(!is_null($u)){
 					$u->cacheFollower($this->id);
 					$u->reloadFollowerCount();
+					$this->reloadFollowingCount();
 					
 					$b = true;
 				}
