@@ -35,18 +35,20 @@ if($num > 0){
 
 			$u->cacheFollower($uID);
 		?>
-		<div class="card userCard col-md-4" data-user-id="<?= $u->getId(); ?>">
-			<div class="card-body">
-				<center>
-					<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/>
+		<div class="col-md-4 px-1 py-1">
+			<div class="card userCard" data-user-id="<?= $u->getId(); ?>">
+				<div class="card-body">
+					<center>
+						<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/>
 
-					<h5 class="mb-0"><?= $u->getDisplayName(); ?></h5></a>
-					<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
+						<h5 class="mb-0"><?= $u->getDisplayName(); ?></h5></a>
+						<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
 
-					<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+						<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
 
-					<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
-				</center>
+						<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
+					</center>
+				</div>
 			</div>
 		</div>
 		<?php
