@@ -221,6 +221,8 @@
 					}
 				}
 
+				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-3"]);
+
 			?>
 		</div>
 	</div>
