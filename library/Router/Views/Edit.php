@@ -40,6 +40,9 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						if(count($boxUsers) == 0)
 							$boxUsers = null;
 
+						if(empty($featuredBoxTitle))
+							$featuredBoxTitle = null;
+
 						$displayName = Util::sanatizeString($displayName);
 						$bio = Util::sanatizeString($bio);
 						$userId = $user->getId();

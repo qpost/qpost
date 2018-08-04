@@ -332,6 +332,33 @@ if(!isset($socialImage) || empty($socialImage))
 									}
 								}
 
+								if(!is_null($user->getFeaturedBoxContent()) && count($user->getFeaturedBoxContent()) > 0){
+									$boxTitle = is_null($user->getFeaturedBoxTitle()) ? "Featured" : $user->getFeaturedBoxTitle();
+
+									?>
+							<h5 class="mt-4 mb-0"><?= Util::sanatizeString($boxTitle) ?></h5>
+									<?php
+
+									foreach($user->getFeaturedBoxContent() as $uid){
+										$featuredUser = User::getUserById($uid);
+
+										if(is_null($featuredUser)) continue;
+
+										?>
+							<a href="/<?= $featuredUser->getUsername() ?>" class="clearUnderline my-2">
+								<div class="card">
+									<div class="card-body">
+										<img src="<?= $featuredUser->getAvatarURL() ?>" width="48" height="48" class="float-left rounded mr-2"/>
+
+										<b><?= $featuredUser->getDisplayName() ?></b>
+										<div class="small text-muted">@<?= $featuredUser->getUsername() ?></div>
+									</div>
+								</div>
+							</a>
+										<?php
+									}
+								}
+
 								echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-3"]);
 
 							?>
