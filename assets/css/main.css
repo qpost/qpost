@@ -64,3 +64,10 @@ img.emoji {
     -ms-transition: background-color 200ms linear;
     transition: background-color 200ms linear;
  }
+
+ .custom-select {
+	height: auto !important;
+	padding: .6rem .8rem !important;
+	border: 2px solid #ced4da !important;
+	transition: none !important;
+ }

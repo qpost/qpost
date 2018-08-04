@@ -39,7 +39,7 @@ if(!is_null($successMsg))
 			<label for="privacyLevel" class="control-label col-sm-2 col-form-label">Privacy level</label>
 
 			<div class="col-sm-10 input-group">
-				<select class="form-control" name="privacyLevel" id="privacyLevel">
+				<select class="form-control custom-select" name="privacyLevel" id="privacyLevel">
 					<option value="<?= PRIVACY_LEVEL_PUBLIC ?>"<?= $user->getPrivacyLevel() == PRIVACY_LEVEL_PUBLIC ? " selected" : "" ?>>Public - everyone can see your profile</option>
 					<option value="<?= PRIVACY_LEVEL_PRIVATE ?>"<?= $user->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE ? " selected" : "" ?>>Private - only your followers can see your profile, followers must be confirmed</option>
 					<option value="<?= PRIVACY_LEVEL_CLOSED ?>"<?= $user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED ? " selected" : "" ?>>Closed - only you can see your profile</option>
