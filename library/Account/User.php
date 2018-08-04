@@ -303,6 +303,12 @@ class User {
 	private $followingArray;
 
 	/**
+	 * @access private
+	 * @var int $followRequests
+	 */
+	private $followRequests;
+
+	/**
 	 * Constructor
 	 * 
 	 * @access private
@@ -937,6 +943,43 @@ class User {
 	}
 
 	/**
+	 * Returns the amount of open follow requests the user has
+	 */
+	public function getOpenFollowRequests(){
+		if($this->getPrivacyLevel() == "PRIVATE"){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follow_requests` WHERE `following` = ?");
+			$stmt->bind_param("i",$this->id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					$this->followRequests = $row["count"];
+					$this->saveToCache();
+				}
+			}
+			$stmt->close();
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Reloads the amount of open follow requests the user has
+	 * 
+	 * @access public
+	 */
+	public function reloadOpenFollowRequests(){
+		if($this->getPrivacyLevel() == "PRIVATE"){
+			$this->followRequests = null;
+			$this->getOpenFollowRequests();
+		}
+	}
+
+	/**
 	 * Returns whether or not the user has received a follow request from $user
 	 * 
 	 * @access public
@@ -1094,12 +1137,16 @@ class User {
 						$stmt->execute();
 						$stmt->close();
 
+						self::getUserById($user)->reloadOpenFollowRequests();
+
 						return;
 					} else {
 						$stmt = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `follower` = ? AND `following` = ?");
 						$stmt->bind_param("ii",$this->id,$user);
 						$stmt->execute();
 						$stmt->close();
+
+						self::getUserById($user)->reloadOpenFollowRequests();
 					}
 				}
 			}

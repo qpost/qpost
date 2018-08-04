@@ -35,6 +35,8 @@ $app->post("/scripts/toggleFollow",function(){
 									$stmt->bind_param("ii",$u1,$u2);
 									$stmt->execute();
 									$stmt->close();
+
+									$toFollow->reloadOpenFollowRequests();
 	
 									$followStatus = 2;
 								} else {
@@ -42,6 +44,8 @@ $app->post("/scripts/toggleFollow",function(){
 									$stmt->bind_param("ii",$u1,$u2);
 									$stmt->execute();
 									$stmt->close();
+
+									$toFollow->reloadOpenFollowRequests();
 	
 									$followStatus = 0;
 								}
