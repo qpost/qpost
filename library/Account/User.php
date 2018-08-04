@@ -919,7 +919,7 @@ class User {
 
 		$mysqli = Database::Instance()->get();
 
-		$stmt = $mysqli->prepare("SELECT COUNT(*) FROM `follower_requests` WHERE `follower` = ? AND `following` = ?");
+		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follow_requests` WHERE `follower` = ? AND `following` = ?");
 		$stmt->bind_param("ii",$this->id,$userId);
 		if($stmt->execute()){
 			$result = $stmt->get_result();

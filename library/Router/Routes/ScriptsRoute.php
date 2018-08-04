@@ -7,6 +7,7 @@ $app->post("/scripts/toggleFollow",function(){
 		if(Util::isLoggedIn()){
 			$user = Util::getCurrentUser();
 			$toFollow = User::getUserById($_POST["user"]);
+			$mysqli = Database::Instance()->get();
 
 			if($user->getFollowers() < FOLLOW_LIMIT){
 				if(!is_null($user) && !is_null($toFollow)){
