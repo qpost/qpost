@@ -418,6 +418,11 @@ class FeedEntry {
         $stmt->close();
     }
 
+    /**
+     * Deletes the feed entry and all its references from the database
+     * 
+     * @access public
+     */
     public function delete(){
         $mysqli = Database::Instance()->get();
 

@@ -70,8 +70,35 @@ $app->post("/scripts/toggleFollow",function(){
 	}
 });
 
+$app->post("/scripts/deletePost",function(){
+	$this->response->mime = "json";
+
+	if(isset($_POST["post"])){
+		if(Util::isLoggedIn()){
+			$user = Util::getCurrentUser();
+
+			$post = FeedEntry::getEntryById($_POST["post"]);
+
+			if(is_null($post))
+				return json_encode(["error" => "Unknown post"]);
+
+			if($post->getUserId() == $user->getId() && $post->getType() == "POST"){
+				$post->delete();
+
+				return json_encode(["status" => "done"]);
+			} else {
+				return json_encode(["error" => "Unknown post"]);
+			}
+		} else {
+			return json_encode(["error" => "Not logged in"]);
+		}
+	} else {
+		return json_encode(["error" => "Bad request"]);
+	}
+});
+
 $app->post("/scripts/toggleFavorite",function(){
-	$this->response->mime ="json";
+	$this->response->mime = "json";
 	
 	if(isset($_POST["post"])){
 		if(Util::isLoggedIn()){
