@@ -15,6 +15,15 @@ if(isset($_POST["privacyLevel"])){
 		$stmt->bind_param("si",$privacyLevel,$uID);
 
 		if($stmt->execute()){
+			if($user->getOpenFollowRequests() > 0 && $privacyLevel != "PRIVATE"){
+				$s = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `following` = ?");
+				$s->bind_param("i",$uID);
+				$s->execute();
+				$s->close();
+
+				$user->reloadOpenFollowRequests();
+			}
+
 			$successMsg = "Your changes have been saved.";
 			$user->reload();
 		} else {
