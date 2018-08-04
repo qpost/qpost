@@ -171,6 +171,14 @@
 
 			<?php
 
+				$openRequests = Util::getCurrentUser()->getOpenFollowRequests();
+				if($openRequests > 0){
+					?>
+			<a href="/requests" class="btn btn-secondary"><?= $openRequests ?> open follow request<?= $openRequests > 1 ? "s" : "" ?></a>
+					<?php
+				}
+
+
 				$trendingUsers = [];
 				$n = "trendingUsers";
 
