@@ -411,7 +411,7 @@ $app->post("/scripts/createPost",function(){
 
 			$mentioned = Util::getUsersMentioned($text);
 
-			if($text <= POST_CHARACTER_LIMIT){
+			if(strlen($text) <= POST_CHARACTER_LIMIT){
 				if(count($mentioned) < 15){
 					$text = Util::sanatizeString($text);
 
