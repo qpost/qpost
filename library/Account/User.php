@@ -1134,6 +1134,8 @@ class User {
 					$stmt->bind_param("ii",$user,$this->id);
 					$stmt->execute();
 					$stmt->close();
+
+					self::getUserById($user)->reloadUnreadNotifications();
 				}
 			}
 
