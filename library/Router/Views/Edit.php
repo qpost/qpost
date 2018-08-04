@@ -5,30 +5,64 @@ $user = Util::getCurrentUser();
 $errorMsg = null;
 $successMsg = null;
 
-if(isset($_POST["displayName"]) && isset($_POST["bio"])){
+$featuredBoxLimit = 5;
+
+if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"])){
 	$displayName = $_POST["displayName"];
 	$bio = $_POST["bio"];
+	$featuredBoxTitle = trim($_POST["featuredBoxTitle"]);
 
 	if(!empty(trim($displayName))){
 		if(strlen($displayName) >= 1 && strlen($displayName) <= 25){
 			if(strlen($bio) <= 400){
-				$displayName = Util::sanatizeString($displayName);
-				$bio = Util::sanatizeString($bio);
-				$userId = $user->getId();
+				if(empty($featuredBoxTitle) || strlen($featuredBoxTitle) <= 25){
+					$boxUsers = [];
 
-				if(empty($bio))
-					$bio = null;
+					for($i = 1; $i <= $featuredBoxLimit; $i++){
+						if(isset($_POST["featuredBoxUser" . $i])){
+							$c = $_POST["featuredBoxUser" . $i];
 
-				$mysqli = Database::Instance()->get();
-				$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `bio` = ? WHERE `id` = ?");
-				$stmt->bind_param("ssi",$displayName,$bio,$userId);
-				if($stmt->execute()){
-					$successMsg = "Your changes have been saved.";
-					$user->reload();
+							if(!empty($c)){
+								$linkedUser = User::getUserByUsername($c);
+
+								if(is_null($linkedUser)){
+									$errorMsg = "The user @" . Util::sanatizeString($c) . " does not exist.";
+								} else if($linkedUser->getId() == Util::getCurrentUser()->getId()) {
+									$errorMsg = "You can't link yourself in your Featured box.";
+								} else {
+									array_push($boxUsers,$linkedUser->getId());
+								}
+							}
+						}
+					}
+
+					if(is_null($errorMsg)){
+						if(count($boxUsers) == 0)
+							$boxUsers = null;
+
+						$displayName = Util::sanatizeString($displayName);
+						$bio = Util::sanatizeString($bio);
+						$userId = $user->getId();
+
+						if(empty($bio))
+							$bio = null;
+
+						$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
+
+						$mysqli = Database::Instance()->get();
+						$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ? WHERE `id` = ?");
+						$stmt->bind_param("ssssi",$displayName,$bio,$featuredBoxTitle,$boxUsersSerialized,$userId);
+						if($stmt->execute()){
+							$successMsg = "Your changes have been saved.";
+							$user->reload();
+						} else {
+							$errorMsg = "An error occurred. (" . $stmt->error . ")";
+						}
+						$stmt->close();
+					}
 				} else {
-					$errorMsg = "An error occurred. (" . $stmt->error . ")";
+					$errorMsg = "The Featured box title must be less than 25 characters long.";
 				}
-				$stmt->close();
 			} else {
 				$errorMsg = "The bio must be less than 400 characters long.";
 			}
@@ -87,6 +121,35 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"])){
 
 				<div class="col-sm-10 input-group mb-3">
 					<img src="<?= $user->getAvatarURL(); ?>" width="300" height="300"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="bio" class="control-label col-sm-2 col-form-label">Featured Box Title</label>
+
+				<div class="col-sm-10 input-group mb-3">
+					<input class="form-control" type="text" name="featuredBoxTitle" id="featuredBoxTitle" max="25" value="<?= isset($_POST["featuredBoxTitle"]) ? Util::sanatizeString($_POST["featuredBoxTitle"]) : $user->getFeaturedBoxTitle(); ?>" placeholder="Featured"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="bio" class="control-label col-sm-2 col-form-label">Featured Box Users</label>
+
+				<div class="col-sm-10 mb-3">
+					<?php
+
+						for($i = 1; $i <= $featuredBoxLimit; $i++){
+							?>
+					<div class="input-group mb-2">
+						<div class="input-group-prepend">
+							<span class="input-group-text">@</span>
+						</div>
+						<input class="form-control" type="text" name="featuredBoxUser<?= $i ?>" id="featuredBoxUser<?= $i ?>" value="<?= isset($_POST["featuredBoxUser" . $i]) ? Util::sanatizeString($_POST["featuredBoxUser" . $i]) : (count($user->getFeaturedBoxContent()) >= $i ? User::getUserById($user->getFeaturedBoxContent()[$i-1])->getUsername() : ""); ?>"/>
+					</div>
+							<?php
+						}
+
+					?>
 				</div>
 			</div>
 
