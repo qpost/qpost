@@ -345,18 +345,20 @@ if(!isset($socialImage) || empty($socialImage))
 										if(is_null($featuredUser)) continue;
 
 										?>
-							<a href="/<?= $featuredUser->getUsername() ?>" class="clearUnderline my-2">
-								<div class="card">
-									<div class="card-body">
-										<img src="<?= $featuredUser->getAvatarURL() ?>" width="48" height="48" class="float-left rounded mr-2"/>
+							<div class="my-2">
+								<a href="/<?= $featuredUser->getUsername() ?>" class="clearUnderline">
+									<div class="card">
+										<div class="card-body">
+											<img src="<?= $featuredUser->getAvatarURL() ?>" width="48" height="48" class="float-left rounded mr-2"/>
 
-										<div class="mt-1">
-											<b><?= $featuredUser->getDisplayName() ?></b>
-											<div class="small text-muted">@<?= $featuredUser->getUsername() ?></div>
+											<div class="mt-1">
+												<b><?= $featuredUser->getDisplayName() ?></b>
+												<div class="small text-muted">@<?= $featuredUser->getUsername() ?></div>
+											</div>
 										</div>
 									</div>
-								</div>
-							</a>
+								</a>
+							</div>
 										<?php
 									}
 								}
