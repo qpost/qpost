@@ -396,12 +396,13 @@ $app->post("/scripts/createPost",function(){
 					$postId = null;
 
 					$parent = isset($_POST["replyTo"]) ? $_POST["replyTo"] : null;
-					if(is_null(FeedEntry::getEntryById($parent))) return;
 
-					$parentCreator = FeedEntry::getEntryById($parent)->getUser();
-					if($parentCreator->getPrivacyLevel() == "CLOSED" && $parentCreator->getId() != $userId) return;
-					if($parentCreator->getPrivacyLevel() == "PRIVATE" && !$parentCreator->isFollower($userId)) return;
-					if($parentCreator->hasBlocked($userId)) return;
+					if(!is_null($parent) && !is_null(FeedEntry::getEntryById($parent))){
+						$parentCreator = FeedEntry::getEntryById($parent)->getUser();
+						if($parentCreator->getPrivacyLevel() == "CLOSED" && $parentCreator->getId() != $userId) return json_encode(["error" => "Parent owner is closed"]);
+						if($parentCreator->getPrivacyLevel() == "PRIVATE" && !$parentCreator->isFollower($userId)) return json_encode(["error" => "Parent owner is private and not followed"]);
+						if($parentCreator->hasBlocked($userId)) return json_encode(["error" => "Parent has blocked"]);
+					}
 
 					$mysqli = Database::Instance()->get();
 					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`) VALUES(?,?,NULL,?,?,?);");
