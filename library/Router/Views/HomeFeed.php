@@ -216,14 +216,18 @@
 
 						?>
 				<div class="px-2 py-1 my-1">
+					
 					<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
 						<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded float-left"/>
-
-						<div class="float-left ml-2">
-							<b style="font-size: 18px"><?= $u->getDisplayName() ?></b> <span class="text-muted small">@<?= $u->getUsername(); ?></span><br/>
-							<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
-						</div>
 					</a>
+
+					<div class="float-left ml-2">
+						<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+							<b style="font-size: 18px"><?= $u->getDisplayName() ?></b> <span class="text-muted small">@<?= $u->getUsername(); ?></span><br/>
+						</a>
+
+						<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+					</div>
 				</div>
 						<?php
 					}
