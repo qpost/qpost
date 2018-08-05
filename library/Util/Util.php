@@ -569,7 +569,16 @@ class Util {
      * @return bool
      */
 	public static function isLoggedIn(){
-		return isset($_SESSION["id"]) && !is_null($_SESSION["id"]) && !empty($_SESSION["id"]);
+		if(isset($_SESSION["id"]) && !is_null($_SESSION["id"]) && !empty($_SESSION["id"])){
+			if(!is_null(User::getUserById($_SESSION["id"]))){
+				return true;
+			} else {
+				unset($_SESSION["id"]);
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -961,25 +970,41 @@ class Util {
 	 * @return array
 	 */
 	public static function postJsonData($postId,$parentDepth = 0){
-		$post = FeedEntry::getEntryById($postId);
+		$post = !is_null($postId) ? FeedEntry::getEntryById($postId) : null;
 		if(!is_null($post)){
 			return [
 				"id" => $post->getId(),
-				"user" => [
-					"id" => $user->getId(),
-					"displayName" => $user->getDisplayName(),
-					"username" => $user->getUsername(),
-					"avatar" => $user->getAvatarURL()
-				],
+				"user" => self::userJsonData($post->getUser()),
 				"text" => Util::convertPost($post->getText()),
 				"textUnfiltered" => Util::sanatizeString($post->getText()),
 				"time" => Util::timeago($post->getTime()),
 				"shares" => $post->getShares(),
 				"favorites" => $post->getFavorites(),
-				"followButton" => $followButton,
-				"postActionButtons" => $postActionButtons,
+				"postActionButtons" => self::getPostActionButtons($post),
 				"replies" => $replies,
 				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1) : null)
+			];
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns an array of data used in a JSON API for a user
+	 * 
+	 * @access public
+	 * @param int $userId
+	 * @return array
+	 */
+	public static function userJsonData($userId){
+		$user = !is_null($userId) ? User::getUserById($userId) : null;
+		if(!is_null($user)){
+			return [
+				"id" => $user->getId(),
+				"displayName" => $user->getDisplayName(),
+				"username" => $user->getUsername(),
+				"avatar" => $user->getAvatarURL(),
+				"bio" => $user->getBio()
 			];
 		} else {
 			return null;

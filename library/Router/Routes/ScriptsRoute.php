@@ -152,6 +152,46 @@ $app->post("/scripts/toggleShare",function(){
 	}
 });
 
+/*$app->get("/scripts/desktopNotifications",function(){
+	$this->response->mime = "json";
+
+	if(Util::isLoggedIn()){
+		$currentUser = Util::getCurrentUser();
+		$mysqli = Database::Instance()->get();
+		$uid = $currentUser->getId();
+
+		$notifications = [];
+
+		$stmt = $mysqli->prepare("SELECT * FROM `notifications` WHERE `user` = ? AND `notified` = 0");
+		$stmt->bind_param("i",$uid);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+			if($result->num_rows){
+				while($row = $result->fetch_assoc()){
+					array_push($notifications,[
+						"id" => $row["notifications"],
+						"user" => Util::userJsonData($row["user"]),
+						"type" => $row["type"],
+						"follower" => Util::userJsonData($row["follower"]),
+						"post" => Util::postJsonData($row["post"]),
+						"time" => $row["time"]
+					]);
+				}
+			}
+		}
+		$stmt->close();
+
+		$stmt = $mysqli->prepare("UPDATE `notifications` SET `notified` = 1 WHERE `user` = ? AND `notified` = 0");
+		$stmt->bind_param("i",$uid);
+		$stmt->execute();
+		$stmt->close();
+
+		return json_encode($notifications);
+	} else {
+		return json_encode(["error" => "Not logged in"]);
+	}
+});*/
+
 $app->post("/scripts/extendHomeFeed",function(){
 	$this->response->mime = "json";
 
@@ -371,6 +411,7 @@ $app->post("/scripts/postInfo",function(){
 					$stmt->close();
 				}
 
+				$jsonData["followButton"] = $followButton;
 				$jsonData["replies"] = $replies;
 
 				return json_encode($jsonData);

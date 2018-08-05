@@ -724,6 +724,13 @@ $(document).ready(function(){
 	load();
 	loadNotificationAlert();
 	resetStatusModal();
+
+	if("serviceWorker" in navigator){
+		navigator.serviceWorker.register("/serviceWorker.js").then((reg) => {})
+		.catch((err) => {
+			console.error("Failed to register the service worker",err);
+		});
+	}
 });
 
 function loadNotificationAlert(){
