@@ -333,7 +333,7 @@ $app->post("/scripts/postInfo",function(){
 				if(is_null($followButton))
 					$followButton = "";
 
-				$postActionButtons = Util::getPostActionButtons($post);
+				$jsonData = Util::postJsonData($postId);
 
 				$replies = [];
 				if($post->getReplies() > 0){
@@ -371,45 +371,9 @@ $app->post("/scripts/postInfo",function(){
 					$stmt->close();
 				}
 
-				$parent = null;
-				if(!is_null($post->getPost())){
-					$pp = $post->getPost(); // pp stands for parent post not what you're thinking
+				$jsonData["replies"] = $replies;
 
-					$parent = [
-						"id" => $pp->getId(),
-						"user" => [
-							"id" => $pp->getUser()->getId(),
-							"displayName" => $pp->getUser()->getDisplayName(),
-							"username" => $pp->getUser()->getUsername(),
-							"avatar" => $pp->getUser()->getAvatarURL()
-						],
-						"text" => Util::convertPost($pp->getText()),
-						"textUnfiltered" => Util::sanatizeString($pp->getText()),
-						"time" => Util::timeago($pp->getTime()),
-						"shares" => $pp->getShares(),
-						"favorites" => $pp->getFavorites(),
-						"postActionButtons" => Util::getPostActionButtons($pp)
-					];
-				}
-					
-				return json_encode([
-					"id" => $post->getId(),
-					"user" => [
-						"id" => $user->getId(),
-						"displayName" => $user->getDisplayName(),
-						"username" => $user->getUsername(),
-						"avatar" => $user->getAvatarURL()
-					],
-					"text" => Util::convertPost($post->getText()),
-					"textUnfiltered" => Util::sanatizeString($post->getText()),
-					"time" => Util::timeago($post->getTime()),
-					"shares" => $post->getShares(),
-					"favorites" => $post->getFavorites(),
-					"followButton" => $followButton,
-					"postActionButtons" => $postActionButtons,
-					"replies" => $replies,
-					"parent" => $parent
-				]);
+				return json_encode($jsonData);
 			} else {
 				return json_encode(["error" => "User not found"]);
 			}
