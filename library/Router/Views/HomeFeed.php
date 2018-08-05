@@ -205,28 +205,32 @@
 
 				if(count($trendingUsers) > 0){
 					?>
-			<h5 class="mb-0 mt-2">Trending Users</h5>
-					<?php
+			<div class="card my-3">
+				<h6 class="card-header">Trending Users</h6>
+
+				<?php
 
 					foreach($trendingUsers as $trendingUser){
 						$increase = $trendingUser["increase"];
 						$u = $trendingUser["user"];
 
 						?>
-			<div class="card userCard my-3" data-user-id="<?= $u->getId(); ?>">
-				<div class="card-body">
-					<center>
-						<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/>
+				<div class="px-2 py-1 my-1">
+					<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+						<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded float-left"/>
 
-						<h6 class="mb-0"><?= $u->getDisplayName(); ?></h6></a>
-						<p class="text-muted my-0" style="font-size: 12px">@<?= $u->getUsername(); ?></p>
-
-						<?= Util::followButton($u->getId(),true,["btn-block","mt-2","btn-sm"]) ?>
-					</center>
+						<div class="float-left ml-2">
+							<b style="font-size: 18px"><?= $u->getDisplayName() ?></b> <span class="text-muted small">@<?= $u->getUsername(); ?></span><br/>
+							<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+						</div>
+					</a>
 				</div>
-			</div>
 						<?php
 					}
+
+				?>
+			</div>
+					<?php
 				}
 
 				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-3"]);
