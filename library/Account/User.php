@@ -255,18 +255,6 @@ class User {
 	public $cachedBlocks = [];
 
 	/**
-	 * @access public
-	 * @var int[] $cachedShares
-	 */
-	public $cachedShares = [];
-
-	/**
-	 * @access public
-	 * @var int[] $cachedNotShares
-	 */
-	public $cachedNotShares = [];
-
-	/**
 	 * @access private
 	 * @var int $unreadMessages
 	 */
@@ -283,18 +271,6 @@ class User {
 	 * @var int $favorites
 	 */
 	private $favorites;
-
-	/**
-	 * @access public
-	 * @var int[] $cachedFavorites
-	 */
-	public $cachedFavorites = [];
-
-	/**
-	 * @access public
-	 * @var int[] $cachedNotFavorites
-	 */
-	public $cachedNotFavorites = [];
 
 	/**
 	 * @access private
@@ -645,9 +621,7 @@ class User {
 					$stmt = $mysqli->prepare("INSERT INTO `favorites` (`user`,`post`) VALUES(?,?);");
 					$stmt->bind_param("ii",$this->id,$postId);
 					if($stmt->execute()){
-						$this->cachedNotFavorites = Util::removeFromArray($this->cachedNotFavorites,$postId);
-						array_push($this->cachedFavorites,$postId);
-						$this->saveToCache();
+						\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,true,5*60);
 
 						if(!is_null($post))
 							$post->reloadFavorites();
@@ -683,9 +657,7 @@ class User {
 			$stmt = $mysqli->prepare("DELETE FROM `favorites` WHERE `user` = ? AND `post` = ?");
 			$stmt->bind_param("ii",$this->id,$postId);
 			if($stmt->execute()){
-				$this->cachedFavorites = Util::removeFromArray($this->cachedFavorites,$postId);
-				array_push($this->cachedNotFavorites,$postId);
-				$this->saveToCache();
+				\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,false,5*60);
 
 				$feedEntry = FeedEntry::getEntryById($postId);
 				if(!is_null($feedEntry))
@@ -703,10 +675,8 @@ class User {
 	 * @return bool
 	 */
 	public function hasFavorited($postId){
-		if(in_array($postId,$this->cachedFavorites)){
-			return true;
-		} else if(in_array($postId,$this->cachedNotFavorites)){
-			return false;	
+		if(\CacheHandler::existsInCache("favoriteStatus_" . $this->id . "_" . $postId)){
+			return \CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
 		} else {
 			$mysqli = Database::Instance()->get();
 
@@ -719,17 +689,15 @@ class User {
 					$row = $result->fetch_assoc();
 
 					if($row["count"] > 0){
-						array_push($this->cachedFavorites,$postId);
-						$this->saveToCache();
+						\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,true,5*60);
 					} else {
-						array_push($this->cachedNotFavorites,$postId);
-						$this->saveToCache();
+						\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,false,5*60);
 					}
 				}
 			}
 			$stmt->close();
 
-			return in_array($postId,$this->cachedFavorites);
+			return \CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
 		}
 	}
 
@@ -747,9 +715,7 @@ class User {
 			$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`post`,`sessionId`,`type`) VALUES(?,?,?,'SHARE');");
 			$stmt->bind_param("iis",$this->id,$postId,$sessionId);
 			if($stmt->execute()){
-				$this->cachedNotShares = Util::removeFromArray($this->cachedNotShares,$postId);
-				array_push($this->cachedShares,$postId);
-				$this->saveToCache();
+				\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,true,5*60);
 
 				$feedEntry = FeedEntry::getEntryById($postId);
 				if(!is_null($feedEntry))
@@ -784,9 +750,7 @@ class User {
 			$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `user` = ? AND `type` = 'SHARE' AND `post` = ?");
 			$stmt->bind_param("ii",$this->id,$postId);
 			if($stmt->execute()){
-				$this->cachedShares = Util::removeFromArray($this->cachedShares,$postId);
-				array_push($this->cachedNotShares,$postId);
-				$this->saveToCache();
+				\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,false,5*60);
 
 				$feedEntry = FeedEntry::getEntryById($postId);
 				if(!is_null($feedEntry))
@@ -803,10 +767,8 @@ class User {
 	 * @param int $postId
 	 */
 	public function hasShared($postId){
-		if(in_array($postId,$this->cachedShares)){
-			return true;
-		} else if(in_array($postId,$this->cachedNotShares)){
-			return false;
+		if(\CacheHandler::existsInCache("shareStatus_" . $this->id . "_" . $postId)){
+			return \CacheHandler::getFromCache("shareStatus_" . $this->id . "_" . $postId);
 		} else {
 			$mysqli = Database::Instance()->get();
 
@@ -819,17 +781,15 @@ class User {
 					$row = $result->fetch_assoc();
 
 					if($row["count"] > 0){
-						array_push($this->cachedShares,$postId);
-						$this->saveToCache();
+						\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,true,5*60);
 					} else {
-						array_push($this->cachedNotShares,$postId);
-						$this->saveToCache();
+						\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,false,5*60);
 					}
 				}
 			}
 			$stmt->close();
 
-			return in_array($postId,$this->cachedShares);
+			return \CacheHandler::getFromCache("shareStatus_" . $this->id . "_" . $postId);
 		}
 	}
 
