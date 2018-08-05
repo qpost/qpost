@@ -485,7 +485,7 @@ function loadHomeFeed(){
 							);
 						} else {
 							newHtml = newHtml.concat(
-								'<div class="card feedEntry mb-2" data-entry-id="' + postId + '">' +
+								'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
 									'<div class="card-body">' +
 										'<div class="row">' +
 											'<div class="col-1">' +
