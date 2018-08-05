@@ -152,7 +152,7 @@ $app->post("/scripts/toggleShare",function(){
 	}
 });
 
-/*$app->get("/scripts/desktopNotifications",function(){
+$app->post("/scripts/desktopNotifications",function(){
 	$this->response->mime = "json";
 
 	if(Util::isLoggedIn()){
@@ -169,7 +169,7 @@ $app->post("/scripts/toggleShare",function(){
 			if($result->num_rows){
 				while($row = $result->fetch_assoc()){
 					array_push($notifications,[
-						"id" => $row["notifications"],
+						"id" => $row["id"],
 						"user" => Util::userJsonData($row["user"]),
 						"type" => $row["type"],
 						"follower" => Util::userJsonData($row["follower"]),
@@ -190,7 +190,7 @@ $app->post("/scripts/toggleShare",function(){
 	} else {
 		return json_encode(["error" => "Not logged in"]);
 	}
-});*/
+});
 
 $app->post("/scripts/extendHomeFeed",function(){
 	$this->response->mime = "json";

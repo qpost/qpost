@@ -401,6 +401,11 @@ function limitString(string,length,addDots = true){
 }
 
 function loadHomeFeed(){
+	if(typeof HOME_FEED_LAST_POST == "undefined"){
+		setTimeout(loadHomeFeed,5000);
+		return;
+	}
+
 	if($("#homePostField").length && $("#homeCharacterCounter").length){
 		$.ajax({
 			url: "/scripts/extendHomeFeed",
@@ -543,7 +548,72 @@ function loadHomeFeed(){
 		setTimeout(loadHomeFeed,5000);
 	}
 }
-loadHomeFeed();
+
+function checkForNotifications(){
+	console.log("checking");
+	$.ajax({
+		url: "/scripts/desktopNotifications",
+		data: {
+			csrf_token: CSRF_TOKEN
+		},
+		method: "POST",
+
+		success: function(result){
+			console.log(result);
+			if(result.length > 0){
+				result.forEach(notificationData => {
+					let title = null;
+					let text = null;
+					if(notificationData.type == "NEW_FOLLOWER"){
+						title = notificationData.follower.displayName + " is now following you";
+						text = notificationData.follower.bio != null ? notificationData.follower.bio : ""
+					} else if(notificationData.type == "MENTION"){
+						title = notificationData.follower.displayName + " mentioned you";
+						text = notificationData.post.text;
+					} else if(notificationData.type == "FAVORITE"){
+						title = notificationData.follower.displayName + " favorited your post";
+						text = notificationData.post.text;
+					} else if(notificationData.type == "SHARE"){
+						title = notificationData.follower.displayName + " shared your post";
+						text = notificationData.post.text;
+					} else if(notificationData.type == "REPLY"){
+						title = notificationData.follower.displayName + " replied to your post";
+						text = notificationData.post.text;
+					}
+
+					if(title != null && text != null){
+						console.log(title);
+						console.log(text);
+						let notification = new Notification(
+							title,
+	
+							{
+								body: text,
+								image: notificationData.follower.avatar,
+								icon: "https://qpost.gigadrivegroup.com/android-chrome-192x192.png"
+							}
+						);
+	
+						notification.onclick = (event) => {
+							event.preventDefault();
+							window.open("/notifications","_blank");
+						};
+					}
+				});
+			}
+
+			setTimeout(checkForNotifications,3000);
+		},
+
+		error: function(xhr,status,error){
+			console.log(xhr);
+			console.log(status);
+			console.log(error);
+
+			setTimeout(checkForNotifications,3000);
+		}
+	});
+}
 
 function loadOldHomeFeed(){
 	if($("#homePostField").length && $("#homeCharacterCounter").length){
@@ -724,6 +794,8 @@ $(document).ready(function(){
 	load();
 	loadNotificationAlert();
 	resetStatusModal();
+	checkForNotifications();
+	loadHomeFeed();
 
 	if("serviceWorker" in navigator){
 		navigator.serviceWorker.register("/serviceWorker.js").then((reg) => {})
