@@ -553,10 +553,7 @@ function checkForNotifications(){
 	console.log("checking");
 	$.ajax({
 		url: "/scripts/desktopNotifications",
-		data: {
-			csrf_token: CSRF_TOKEN
-		},
-		method: "POST",
+		method: "GET",
 
 		success: function(result){
 			console.log(result);

@@ -152,7 +152,7 @@ $app->post("/scripts/toggleShare",function(){
 	}
 });
 
-$app->post("/scripts/desktopNotifications",function(){
+$app->get("/scripts/desktopNotifications",function(){
 	$this->response->mime = "json";
 
 	if(Util::isLoggedIn()){

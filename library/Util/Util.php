@@ -970,6 +970,7 @@ class Util {
 	 * @return array
 	 */
 	public static function postJsonData($postId,$parentDepth = 0){
+		if(is_object($postId)) $postId = $postId->getId();
 		$post = !is_null($postId) ? FeedEntry::getEntryById($postId) : null;
 		if(!is_null($post)){
 			return [
@@ -981,7 +982,6 @@ class Util {
 				"shares" => $post->getShares(),
 				"favorites" => $post->getFavorites(),
 				"postActionButtons" => self::getPostActionButtons($post),
-				"replies" => $replies,
 				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1) : null)
 			];
 		} else {
@@ -997,6 +997,7 @@ class Util {
 	 * @return array
 	 */
 	public static function userJsonData($userId){
+		if(is_object($userId)) $userId = $userId->getId();
 		$user = !is_null($userId) ? User::getUserById($userId) : null;
 		if(!is_null($user)){
 			return [
