@@ -36,6 +36,8 @@ require $app->path("routes:Edit.php");
 require $app->path("routes:Search.php");
 require $app->path("routes:ScriptsRoute.php");
 
+require $app->path("routes:Cronjobs/UpdateUserData.php");
+
 $app->on("after",function() {
 	if($this->response->status == "404"){
 		$data = array(
