@@ -59,7 +59,6 @@ if(!isset($socialImage) || empty($socialImage))
 			"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js",
 			"assets:js/bootstrap.min.js",
 			"assets:js/jquery.timeago.js",
-			"assets:js/desktopify.js",
 			"assets:js/app.js",
 			"https://www.google.com/recaptcha/api.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
