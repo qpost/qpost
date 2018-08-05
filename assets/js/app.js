@@ -587,7 +587,7 @@ function checkForNotifications(){
 							{
 								body: text,
 								image: notificationData.follower.avatar,
-								icon: "https://qpost.gigadrivegroup.com/android-chrome-192x192.png"
+								icon: notificationData.follower.avatar
 							}
 						);
 	
