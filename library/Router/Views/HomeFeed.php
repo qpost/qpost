@@ -203,10 +203,31 @@
 					$stmt->close();
 				}
 
+				$newUsers = [];
+				$n = "newUsers";
+
+				if(CacheHandler::existsInCache($n)){
+					$newUsers = CacheHandler::getFromCache($n);
+				} else {
+					$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `privacy.level` = 'PUBLIC' ORDER BY `time` DESC LIMIT 5");
+					if($stmt->execute()){
+						$result = $stmt->get_result();
+						
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								array_push($newUsers,User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["time"]));
+							}
+
+							CacheHandler::setToCache($n,$newUsers,2*60);
+						}
+					}
+					$stmt->close();
+				}
+
 				if(count($trendingUsers) > 0){
 					?>
 			<div class="card my-3">
-				<h6 class="card-header">Trending Users</h6>
+				<h6 class="card-header">Trending users</h6>
 
 				<?php
 
@@ -238,6 +259,37 @@
 				}
 
 				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-3"]);
+
+				if(count($newUsers) > 0){
+					?>
+			<div class="card my-3">
+				<h6 class="card-header">New users</h6>
+
+				<?php
+
+					foreach($newUsers as $u){
+						?>
+				<div class="px-2 py-1 my-1">
+					
+					<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+						<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded float-left"/>
+					</a>
+
+					<div class="float-left ml-2">
+						<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+							<b><?= $u->getDisplayName() ?></b> <div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
+						</a>
+
+						<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+					</div>
+				</div>
+						<?php
+					}
+
+				?>
+			</div>
+					<?php
+				}
 
 			?>
 		</div>
