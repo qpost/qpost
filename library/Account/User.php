@@ -99,7 +99,8 @@ class User {
 			$stmt->close();
 
 			self::getUserById($id)->removeFromCache();
-			self::getUserById($id);
+
+			$user = self::getUserById($id);
 		} else {
 			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ? WHERE `id` = ?");
 			$stmt->bind_param("ssssi",$username,$email,$avatar,$token,$id);
@@ -111,6 +112,8 @@ class User {
 			$user->avatar = $avatar;
 			$user->saveToCache();
 		}
+
+		return $user;
 	}
 
 	/**
@@ -435,6 +438,32 @@ class User {
 	 */
 	public function getLastGigadriveUpdate(){
 		return $this->lastGigadriveUpdate;
+	}
+
+	/**
+	 * Updates the last gigadrive update date to right now
+	 * 
+	 * @access public
+	 */
+	public function updateLastGigadriveUpdate(){
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("UPDATE `users` SET `lastGigadriveUpdate` = CURRENT_TIMESTAMP WHERE `id` = ?");
+		$stmt->bind_param("i",$this->id);
+		if($stmt->execute()){
+			$s = $mysqli->prepare("SELECT `lastGigadriveUpdate` FROM `users` WHERE `id` = ?");
+			$s->bind_param("i",$this->id);
+			if($s->execute()){
+				$result = $s->get_result();
+				
+				if($result->num_rows){
+					$this->lastGigadriveUpdate = $result->fetch_assoc()["lastGigadriveUpdate"];
+					$this->saveToCache();
+				}
+			}
+			$s->close();
+		}
+		$stmt->close();
 	}
 
 	/**

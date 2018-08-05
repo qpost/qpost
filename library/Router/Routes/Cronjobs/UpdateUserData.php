@@ -26,7 +26,7 @@ $app->get("/cronjobs/updateuserdata",function(){
                             $avatar = isset($userData["avatar"]["url"]) ? $userData["avatar"]["url"] : null;
                             $email = $userData["email"];
 
-                            User::registerUser($id,$username,$avatar,$email,$token);
+                            User::registerUser($id,$username,$avatar,$email,$token)->updateLastGigadriveUpdate();
                         }
                     }
                 }
