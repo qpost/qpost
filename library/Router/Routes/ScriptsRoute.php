@@ -82,7 +82,7 @@ $app->post("/scripts/deletePost",function(){
 			if(is_null($post))
 				return json_encode(["error" => "Unknown post"]);
 
-			if($post->getUserId() == $user->getId() && $post->getType() == "POST"){
+			if($post->getUserId() == $user->getId() && ($post->getType() == "POST" || $post->getType() == "NEW_FOLLOWING")){
 				$post->delete();
 
 				return json_encode(["status" => "done"]);
@@ -333,97 +333,93 @@ $app->post("/scripts/postInfo",function(){
 		$post = FeedEntry::getEntryById($postId);
 
 		if(!is_null($post)){
-			if($post->getType() == "POST"){
-				$user = $post->getUser();
+			$user = $post->getUser();
 
-				if(!is_null($user)){
-					$followButton = Util::followButton($user,false,["float-right"]);
+			if(!is_null($user)){
+				$followButton = Util::followButton($user,false,["float-right"]);
 
-					if(is_null($followButton))
-						$followButton = "";
+				if(is_null($followButton))
+					$followButton = "";
 
-					$postActionButtons = Util::getPostActionButtons($post);
+				$postActionButtons = Util::getPostActionButtons($post);
 
-					$replies = [];
-					if($post->getReplies() > 0){
-						$mysqli = Database::Instance()->get();
+				$replies = [];
+				if($post->getReplies() > 0){
+					$mysqli = Database::Instance()->get();
 						
-						$postId = $post->getId();
-						$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
+					$postId = $post->getId();
+					$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
 
-						$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`privacy.level`,u.`featuredBox.title`,u.`featuredBox.content`,u.`time` AS `userTime` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
-						$stmt->bind_param("ii",$postId,$uid);
-						if($stmt->execute()){
-							$result = $stmt->get_result();
+					$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`privacy.level`,u.`featuredBox.title`,u.`featuredBox.content`,u.`time` AS `userTime` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
+					$stmt->bind_param("ii",$postId,$uid);
+					if($stmt->execute()){
+						$result = $stmt->get_result();
 
-							if($result->num_rows){
-								while($row = $result->fetch_assoc()){
-									$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["time"]);
-									$u = User::getUserByData($row["userId"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["userTime"]);
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["time"]);
+								$u = User::getUserByData($row["userId"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["userTime"]);
 
-									array_push($replies,[
-										"id" => $f->getId(),
-										"user" => [
-											"id" => $u->getId(),
-											"displayName" => $u->getDisplayName(),
-											"username" => $u->getUsername(),
-											"avatar" => $u->getAvatarURL()
-										],
-										"text" => Util::convertPost($f->getText()),
-										"textUnfiltered" => Util::sanatizeString($f->getText()),
-										"time" => Util::timeago($f->getTime()),
-										"postActionButtons" => Util::getPostActionButtons($f)
-									]);
-								}
+								array_push($replies,[
+									"id" => $f->getId(),
+									"user" => [
+										"id" => $u->getId(),
+										"displayName" => $u->getDisplayName(),
+										"username" => $u->getUsername(),
+										"avatar" => $u->getAvatarURL()
+									],
+									"text" => Util::convertPost($f->getText()),
+									"textUnfiltered" => Util::sanatizeString($f->getText()),
+									"time" => Util::timeago($f->getTime()),
+									"postActionButtons" => Util::getPostActionButtons($f)
+								]);
 							}
 						}
-						$stmt->close();
 					}
-
-					$parent = null;
-					if(!is_null($post->getPost())){
-						$pp = $post->getPost(); // pp stands for parent post not what you're thinking
-
-						$parent = [
-							"id" => $pp->getId(),
-							"user" => [
-								"id" => $pp->getUser()->getId(),
-								"displayName" => $pp->getUser()->getDisplayName(),
-								"username" => $pp->getUser()->getUsername(),
-								"avatar" => $pp->getUser()->getAvatarURL()
-							],
-							"text" => Util::convertPost($pp->getText()),
-							"textUnfiltered" => Util::sanatizeString($pp->getText()),
-							"time" => Util::timeago($pp->getTime()),
-							"shares" => $pp->getShares(),
-							"favorites" => $pp->getFavorites(),
-							"postActionButtons" => Util::getPostActionButtons($pp)
-						];
-					}
-					
-					return json_encode([
-						"id" => $post->getId(),
-						"user" => [
-							"id" => $user->getId(),
-							"displayName" => $user->getDisplayName(),
-							"username" => $user->getUsername(),
-							"avatar" => $user->getAvatarURL()
-						],
-						"text" => Util::convertPost($post->getText()),
-						"textUnfiltered" => Util::sanatizeString($post->getText()),
-						"time" => Util::timeago($post->getTime()),
-						"shares" => $post->getShares(),
-						"favorites" => $post->getFavorites(),
-						"followButton" => $followButton,
-						"postActionButtons" => $postActionButtons,
-						"replies" => $replies,
-						"parent" => $parent
-					]);
-				} else {
-					return json_encode(["error" => "User not found"]);
+					$stmt->close();
 				}
+
+				$parent = null;
+				if(!is_null($post->getPost())){
+					$pp = $post->getPost(); // pp stands for parent post not what you're thinking
+
+					$parent = [
+						"id" => $pp->getId(),
+						"user" => [
+							"id" => $pp->getUser()->getId(),
+							"displayName" => $pp->getUser()->getDisplayName(),
+							"username" => $pp->getUser()->getUsername(),
+							"avatar" => $pp->getUser()->getAvatarURL()
+						],
+						"text" => Util::convertPost($pp->getText()),
+						"textUnfiltered" => Util::sanatizeString($pp->getText()),
+						"time" => Util::timeago($pp->getTime()),
+						"shares" => $pp->getShares(),
+						"favorites" => $pp->getFavorites(),
+						"postActionButtons" => Util::getPostActionButtons($pp)
+					];
+				}
+					
+				return json_encode([
+					"id" => $post->getId(),
+					"user" => [
+						"id" => $user->getId(),
+						"displayName" => $user->getDisplayName(),
+						"username" => $user->getUsername(),
+						"avatar" => $user->getAvatarURL()
+					],
+					"text" => Util::convertPost($post->getText()),
+					"textUnfiltered" => Util::sanatizeString($post->getText()),
+					"time" => Util::timeago($post->getTime()),
+					"shares" => $post->getShares(),
+					"favorites" => $post->getFavorites(),
+					"followButton" => $followButton,
+					"postActionButtons" => $postActionButtons,
+					"replies" => $replies,
+					"parent" => $parent
+				]);
 			} else {
-				return json_encode(["error" => "Not a post"]);
+				return json_encode(["error" => "User not found"]);
 			}
 		} else {
 			return json_encode(["error" => "Invalid ID"]);

@@ -1122,7 +1122,7 @@ function load(){
 							console.error("Invalid status: " + json.status);
 						}
 					} else {
-						console.log(result);
+						console.log(json);
 					}
 				},
 		

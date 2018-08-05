@@ -86,15 +86,20 @@ if($num > 0){
 			</div>
 		</div>
 		<?php
-				$l = false;
 			} else if($entry->getType() == "NEW_FOLLOWING") {
 				$u2 = $entry->getFollowing();
 				?>
-		<p class="my-1 px-2 py-2 border-top<?= $l ? " border-bottom" : ""; ?>" style="border-color: #CCC">
+		<div class="my-1 px-2 py-0" data-entry-id="<?= $entry->getId() ?>">
+			<?php if(Util::isLoggedIn() && Util::getCurrentUser()->getId() == $entry->getUserId()){ ?>
+			<div class="float-right">
+				<span class="deleteButton ml-2" data-post-id="<?= $entry->getId() ?>" data-toggle="tooltip" title="Delete">
+					<i class="fas fa-trash-alt"></i>
+				</span>
+			</div>
+			<?php } ?>
 			<b><a href="/<?= $user->getUsername(); ?>" class="clearUnderline"><?= $user->getDisplayName(); ?></a></b> is now following <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><?= $u2->getDisplayName(); ?></a> &bull; <span class="text-muted"><?= Util::timeago($entry->getTime()); ?></span>
-		</p>
+		</div>
 				<?php
-				$l = true;
 			} else if($entry->getType() == "SHARE"){
 				$sharedPost = $entry->getPost();
 				$u = $sharedPost->getUser();
