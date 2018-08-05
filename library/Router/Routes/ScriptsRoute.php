@@ -110,14 +110,10 @@ $app->post("/scripts/toggleFavorite",function(){
 
 			if($user->hasFavorited($post->getId())){
 				$user->unfavorite($post->getId());
+				return json_encode(["status" => "Favorite removed"]);
 			} else {
 				$user->favorite($post->getId());
-			}
-
-			if($user->hasFavorited($post->getId())){
 				return json_encode(["status" => "Favorite added"]);
-			} else {
-				return json_encode(["status" => "Favorite removed"]);
 			}
 		} else {
 			return json_encode(["error" => "Not logged in"]);
@@ -143,14 +139,10 @@ $app->post("/scripts/toggleShare",function(){
 
 			if($user->hasShared($post->getId())){
 				$user->unshare($post->getId());
+				return json_encode(["status" => "Share removed"]);
 			} else {
 				$user->share($post->getId());
-			}
-
-			if($user->hasShared($post->getId())){
 				return json_encode(["status" => "Share added"]);
-			} else {
-				return json_encode(["status" => "Share removed"]);
 			}
 		} else {
 			return json_encode(["error" => "Not logged in"]);
