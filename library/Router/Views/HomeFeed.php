@@ -223,7 +223,7 @@
 
 					<div class="float-left ml-2">
 						<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-							<b style="font-size: 18px"><?= $u->getDisplayName() ?></b> <span class="text-muted small">@<?= $u->getUsername(); ?></span><br/>
+							<b><?= $u->getDisplayName() ?></b> <div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
 						</a>
 
 						<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
