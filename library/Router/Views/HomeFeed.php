@@ -258,11 +258,11 @@
 					<?php
 				}
 
-				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-3"]);
+				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mb-1"]);
 
 				if(count($newUsers) > 0){
 					?>
-			<div class="card my-3">
+			<div class="card mb-3 mt-0">
 				<h6 class="card-header">New users</h6>
 
 				<?php
