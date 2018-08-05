@@ -722,10 +722,39 @@ function loadBasic(){
 
 $(document).ready(function(){
 	load();
+	loadNotificationAlert();
 	resetStatusModal();
 });
 
+function loadNotificationAlert(){
+	let pointer = ".notificationPermissionAlert";
+
+	if($(pointer).length > 0){
+		if(!hasNotificationPermissions() && (!hasCookie("ignoreNotificationAlert") || getCookie("ignoreNotificationAlert") != "true")){
+			$(pointer).removeClass("d-none");
+		}
+	}
+}
+
+function hasNotificationPermissions(){
+	return Notification.permission === "granted";
+}
+
 function load(){
+	$(document).on("click",".enableNotifications",function(e){
+		e.preventDefault();
+
+		$(".notificationPermissionAlert").addClass("d-none");
+		Notification.requestPermission();
+	});
+
+	$(document).on("click",".hideNotifications",function(e){
+		e.preventDefault();
+
+		$(".notificationPermissionAlert").addClass("d-none");
+		setCookie("ignoreNotificationAlert","true",7);
+	});
+
 	$(document).on("click","#homePostButton",function(e){
 		e.preventDefault();
 	
@@ -1432,6 +1461,32 @@ function setCookie(cname, cvalue, exdays) {
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+// https://stackoverflow.com/a/5968306
+function getCookie(name) {
+    var dc = document.cookie;
+    var prefix = name + "=";
+    var begin = dc.indexOf("; " + prefix);
+    if (begin == -1) {
+        begin = dc.indexOf(prefix);
+        if (begin != 0) return null;
+    }
+    else
+    {
+        begin += 2;
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+        end = dc.length;
+        }
+    }
+    // because unescape has been deprecated, replaced with decodeURI
+    //return unescape(dc.substring(begin + prefix.length, end));
+    return decodeURI(dc.substring(begin + prefix.length, end));
+} 
+
+function hasCookie(name){
+	return getCookie(name) != null;
 }
 
 function saveDismiss(id){

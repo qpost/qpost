@@ -78,7 +78,7 @@ if(!isset($socialImage) || empty($socialImage))
 
 				<div class="float-right">
 					<button class="btn btn-primary btn-sm enableNotifications">Yes</button>
-					<button class="btn btn-light btn-sm hideNotifications">No</button>
+					<button class="btn btn-light btn-sm hideNotifications" data-toggle="tooltip" title="Hide this alert for 7 days">No</button>
 				</div>
 			</div>
 		</div>
@@ -453,7 +453,7 @@ if(!isset($socialImage) || empty($socialImage))
 		</div>
 
 		<script src="<?= $app->baseUrl("/assets/js/instantclick.min.js"); ?>" data-no-instant></script>
-		<script data-no-instant>loadBasic();InstantClick.init();InstantClick.on("change",function(){loadBasic();});</script>
+		<script data-no-instant>loadBasic();InstantClick.init();InstantClick.on("change",function(){loadBasic();loadNotificationAlert();});</script>
 		<script>if($(".convertEmoji").length){$(".convertEmoji").html(function(){return twemoji.parse($(this).html());});}</script>
 	</body>
 </html>
