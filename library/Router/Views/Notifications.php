@@ -60,7 +60,7 @@ if(CacheHandler::existsInCache($n)){
 					if(!is_null($post)){
 						$u = $post->getUser();
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
 						<i class="fas fa-at text-primary"></i> <a href="/<?= $u->getUsername(); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="16" height="16"/> <?= $u->getDisplayName(); ?></a> mentioned you &bull; <?= Util::timeago($notification["time"]); ?>
@@ -102,7 +102,7 @@ if(CacheHandler::existsInCache($n)){
 
 					if(!is_null($u2)){
 						?>
-			<div class="my-1 px-2 py-2 border-top<?= $l ? " border-bottom" : ""; ?>" style="border-color: #CCC;<?= $notification["seen"] == false ? " background: #9FCCFC" : ""; ?>">
+			<div class="my-1 px-2 py-2 border-top<?= $l ? " border-bottom" : ""; ?>" style="border-color: #CCC;<?= $notification["seen"] == false ? " background: #D6EAFF; border-color: #9FCCFC;border-width: 3px" : ""; ?>">
 				<div class="row">
 					<div class="col-lg-1">
 						<a href="/<?= $u2->getUsername(); ?>" class="clearUnderline">
@@ -127,7 +127,7 @@ if(CacheHandler::existsInCache($n)){
 						$u = $post->getUser();
 						$u2 = User::getUserById($notification["follower"]);
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
 						<i class="fas fa-star" style="color:gold"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName(); ?></a> favorited your post &bull; <?= Util::timeago($notification["time"]); ?>
@@ -171,7 +171,7 @@ if(CacheHandler::existsInCache($n)){
 						$u = $post->getUser();
 						$u2 = User::getUserById($notification["follower"]);
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
 						<i class="fas fa-share-alt text-primary"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName(); ?></a> shared your post &bull; <?= Util::timeago($notification["time"]); ?>
@@ -214,7 +214,7 @@ if(CacheHandler::existsInCache($n)){
 					if(!is_null($post)){
 						$u = $post->getUser();
 						?>
-			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #9FCCFC;"' : ""; ?>>
+			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
 						<i class="fas fa-share text-primary"></i> <a href="/<?= $u->getUsername(); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="16" height="16"/> <?= $u->getDisplayName(); ?></a> replied to your post &bull; <?= Util::timeago($notification["time"]); ?>
