@@ -126,7 +126,7 @@ class User {
 	 * @param string $time
 	 * @return User
 	 */
-	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$time){
+	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$time){
 		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
 
 		$user->id = $id;
@@ -139,6 +139,7 @@ class User {
 		$user->privacyLevel = $privacyLevel;
 		$user->featuredBoxTitle = $featuredBoxTitle;
 		$user->featuredBoxContent = is_null($featuredBoxContent) ? [] : (is_string($featuredBoxContent) ? json_decode($featuredBoxContent,true) : $featuredBoxContent);
+		$user->lastGigadriveUpdate = $lastGigadriveUpdate;
 		$user->time = $time;
 
 		$user->saveToCache();
@@ -205,6 +206,12 @@ class User {
 	 * @var int[] $featuredBoxContent
 	 */
 	private $featuredBoxContent;
+
+	/**
+	 * @access private
+	 * @var string $lastGigadriveUpdate
+	 */
+	private $lastGigadriveUpdate;
 
 	/**
 	 * @access private
@@ -320,6 +327,7 @@ class User {
 				$this->privacyLevel = $row["privacy.level"];
 				$this->featuredBoxTitle = $row["featuredBox.title"];
 				$this->featuredBoxContent = is_null($row["featuredBox.content"]) ? [] : json_decode($row["featuredBox.content"],true);
+				$this->lastGigadriveUpdate = $row["lastGigadriveUpdate"];
 				$this->time = $row["time"];
 
 				$this->exists = true;
@@ -417,6 +425,16 @@ class User {
 	 */
 	public function getPrivacyLevel(){
 		return $this->privacyLevel;
+	}
+
+	/**
+	 * Returns the timestamp of the last time the user's data was updated with the Gigadrive API
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getLastGigadriveUpdate(){
+		return $this->lastGigadriveUpdate;
 	}
 
 	/**
