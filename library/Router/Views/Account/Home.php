@@ -16,8 +16,13 @@ $user = Util::getCurrentUser();
 		</tr>
 
 		<tr>
-			<td style="width: 50%"><b>Registration Date</b></td>
+			<td style="width: 50%"><b>Registration Date (qpost)</b></td>
 			<td style="width: 50%"><?= Util::timeago($user->getTime()); ?></td>
+		</tr>
+
+		<tr>
+			<td style="width: 50%"><b>Registration Date (Gigadrive)</b></td>
+			<td style="width: 50%"><?= Util::timeago($user->getGigadriveRegistrationDate()); ?></td>
 		</tr>
 
 		<tr>

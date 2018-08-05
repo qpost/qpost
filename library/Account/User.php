@@ -88,13 +88,13 @@ class User {
 		return \CacheHandler::existsInCache("user_id_" . $id);
 	}
 
-	public static function registerUser($id,$username,$avatar,$email,$token){
+	public static function registerUser($id,$username,$avatar,$email,$token,$registerDate){
 		$mysqli = Database::Instance()->get();
 		$user = self::getUserById($id);
 
 		if($user == null){
-			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`id`,`displayName`,`username`,`email`,`avatar`,`token`) VALUES(?,?,?,?,?,?);");
-			$stmt->bind_param("isssss",$id,$username,$username,$email,$avatar,$token);
+			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`id`,`displayName`,`username`,`email`,`avatar`,`token`,`gigadriveJoinDate`) VALUES(?,?,?,?,?,?,?);");
+			$stmt->bind_param("issssss",$id,$username,$username,$email,$avatar,$token,$registerDate);
 			$stmt->execute();
 			$stmt->close();
 
@@ -102,14 +102,15 @@ class User {
 
 			$user = self::getUserById($id);
 		} else {
-			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ? WHERE `id` = ?");
-			$stmt->bind_param("ssssi",$username,$email,$avatar,$token,$id);
+			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ?, `gigadriveJoinDate` = ? WHERE `id` = ?");
+			$stmt->bind_param("sssssi",$username,$email,$avatar,$token,$registerDate,$id);
 			$stmt->execute();
 			$stmt->close();
 
 			$user->username = $username;
 			$user->email = $email;
 			$user->avatar = $avatar;
+
 			$user->saveToCache();
 		}
 
@@ -129,7 +130,7 @@ class User {
 	 * @param string $time
 	 * @return User
 	 */
-	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$time){
+	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time){
 		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
 
 		$user->id = $id;
@@ -143,6 +144,7 @@ class User {
 		$user->featuredBoxTitle = $featuredBoxTitle;
 		$user->featuredBoxContent = is_null($featuredBoxContent) ? [] : (is_string($featuredBoxContent) ? json_decode($featuredBoxContent,true) : $featuredBoxContent);
 		$user->lastGigadriveUpdate = $lastGigadriveUpdate;
+		$user->gigadriveJoinDate = $gigadriveJoinDate;
 		$user->time = $time;
 
 		$user->saveToCache();
@@ -215,6 +217,12 @@ class User {
 	 * @var string $lastGigadriveUpdate
 	 */
 	private $lastGigadriveUpdate;
+
+	/**
+	 * @access private
+	 * @var string $gigadriveJoinDate
+	 */
+	private $gigadriveJoinDate;
 
 	/**
 	 * @access private
@@ -331,6 +339,7 @@ class User {
 				$this->featuredBoxTitle = $row["featuredBox.title"];
 				$this->featuredBoxContent = is_null($row["featuredBox.content"]) ? [] : json_decode($row["featuredBox.content"],true);
 				$this->lastGigadriveUpdate = $row["lastGigadriveUpdate"];
+				$this->gigadriveJoinDate = $row["gigadriveJoinDate"];
 				$this->time = $row["time"];
 
 				$this->exists = true;
@@ -438,6 +447,16 @@ class User {
 	 */
 	public function getLastGigadriveUpdate(){
 		return $this->lastGigadriveUpdate;
+	}
+
+	/**
+	 * Returns the timestamp of when the Gigadrive account was created
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getGigadriveRegistrationDate(){
+		return $this->gigadriveJoinDate;
 	}
 
 	/**

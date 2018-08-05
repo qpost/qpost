@@ -31,8 +31,9 @@ $app->bind("/loginCallback",function(){
 						$username = $userData["username"];
 						$avatar = isset($userData["avatar"]["url"]) ? $userData["avatar"]["url"] : null;
 						$email = $userData["email"];
+						$registerDate = $userData["joinDate"];
 
-						User::registerUser($id,$username,$avatar,$email,$token);
+						User::registerUser($id,$username,$avatar,$email,$token,$registerDate)->updateLastGigadriveUpdate();
 
 						$_SESSION["id"] = $id;
 
