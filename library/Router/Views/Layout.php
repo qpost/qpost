@@ -69,6 +69,21 @@ if(!isset($socialImage) || empty($socialImage))
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "";var restoreTitle = "";</script>
 	</head>
 	<body>
+		<?php if(Util::isLoggedIn()){ ?>
+		<div class="d-none notificationPermissionAlert py-2">
+			<div class="container">
+				<div class="float-left mt-1">
+					Do you want to receive desktop notifications to keep up to date with the people you follow?
+				</div>
+
+				<div class="float-right">
+					<button class="btn btn-primary btn-sm enableNotifications">Yes</button>
+					<button class="btn btn-light btn-sm hideNotifications">No</button>
+				</div>
+			</div>
+		</div>
+		<?php } ?>
+
 		<nav id="mainNavSmall" class="d-xs-block d-lg-none navbar navbar-expand-lg navbar-dark bg-primary">
 			<div class="container-fluid container">
 				<div class="navbar-header">

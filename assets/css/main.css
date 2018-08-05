@@ -76,3 +76,9 @@ img.emoji {
 	border: 2px solid #ced4da !important;
 	transition: none !important;
  }
+
+ .notificationPermissionAlert {
+	background: #D6EAFF;
+	border-bottom: #9FCCFC 3px solid;
+	height: 50px;
+ }
