@@ -611,153 +611,151 @@ function loadHomeFeed(){
 	}
 	
 	function loadOldHomeFeed(){
-		if($("#homePostField").length && $("#homeCharacterCounter").length){
-			let oldHtml = $(".homeFeedLoadMore").html();
+		let oldHtml = $(".homeFeedLoadMore").html();
+		
+		$(".homeFeedLoadMore").html('<i class="fas fa-spinner fa-pulse"></i>');
+		
+		$.ajax({
+			url: "/scripts/extendHomeFeed",
+			data: {
+				csrf_token: CSRF_TOKEN,
+				mode: "loadOld",
+				firstPost: HOME_FEED_FIRST_POST
+			},
+			method: "POST",
 			
-			$(".homeFeedLoadMore").html('<i class="fas fa-spinner fa-pulse"></i>');
-			
-			$.ajax({
-				url: "/scripts/extendHomeFeed",
-				data: {
-					csrf_token: CSRF_TOKEN,
-					mode: "loadOld",
-					firstPost: HOME_FEED_FIRST_POST
-				},
-				method: "POST",
+			success: function(result){
+				let json = result;
 				
-				success: function(result){
-					let json = result;
+				if(json.hasOwnProperty("result")){
+					let newHtml = "";
 					
-					if(json.hasOwnProperty("result")){
-						let newHtml = "";
-						
-						if(json.result.length > 0){
-							let i;
-							for(i = 0; i < json.result.length; i++){
-								let post = json.result[i];
-								
-								let postId = post.id;
-								
-								if(i == json.result.length-1){
-									HOME_FEED_FIRST_POST = postId;
-								}
-								
-								let postTime = post.time;
-								let postText = post.text;
-								
-								let userName = post.userName;
-								let userDisplayName = post.userDisplayName;
-								let userAvatar = post.userAvatar;
-								
-								let postActionButtons = post.postActionButtons;
-								
-								if(post.hasOwnProperty("shared")){
-									let shared = post.shared;
-									
-									let sharedId = shared.id;
-									let sharedText = shared.text;
-									let sharedTime = shared.time;
-									let sharedUserId = shared.userId;
-									let sharedUserName = shared.userName;
-									let sharedUserDisplayName = shared.userDisplayName;
-									let sharedAvatar = shared.userAvatar;
-									
-									newHtml = newHtml.concat(
-										'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-										'<div class="card-body">' +
-										'<div class="small text-muted">' +
-										'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline ignoreParentClick">' + userDisplayName + '</a> &bull; ' + postTime +
-										'</div>' +
-										'<div class="row">' +
-										'<div class="col-1">' +
-										'<a href="/' + sharedUserName + '" class="clearUnderline ignoreParentClick">' +
-										'<img class="rounded mx-1 my-1" src="' + sharedAvatar + '" width="40" height="40"/>' +
-										'</a>' +
-										'</div>' +
-										
-										'<div class="col-11">' +
-										'<p class="mb-0">' +
-										'<a href="/' + sharedUserName + '" class="clearUnderline ignoreParentClick">' +
-										'<span class="font-weight-bold">' + sharedUserDisplayName + '</span>' +
-										'</a>' +
-										
-										' <span class="text-muted font-weight-normal">@' + sharedUserName + '</span> ' +
-										
-										'&bull; ' +
-										
-										sharedTime +
-										'</p>' +
-										
-										'<p class="mb-0 convertEmoji">' +
-										twemoji.parse(sharedText) +
-										'</p>' +
-										
-										postActionButtons +
-										'</div>' +
-										'</div>' +
-										'</div>' +
-										'</div>'
-									);
-								} else {
-									newHtml = newHtml.concat(
-										'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-										'<div class="card-body">' +
-										'<div class="row">' +
-										'<div class="col-1">' +
-										'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-										'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
-										'</a>' +
-										'</div>' +
-										
-										'<div class="col-11">' +
-										'<p class="mb-0">' +
-										'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-										'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-										'</a>' +
-										
-										' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
-										
-										' &bull; ' +
-										
-										postTime +
-										'</p>' +
-										
-										'<p class="mb-0 convertEmoji">' +
-										twemoji.parse(postText) +
-										'</p>' +
-										
-										postActionButtons +
-										'</div>' +
-										'</div>' +
-										'</div>' +
-										'</div>');
-									}
-								}
-								
-								if($(".feedEntry").length){
-									$(".feedContainer").append(newHtml);
-								} else {
-									$(".feedContainer").html(newHtml);
-								}
-								
-								$(".homeFeedLoadMore").html(oldHtml);
-								
-								loadBasic();
-							} else {
-								$(".homeFeedLoadMore").html('<b>Oops!</b><br/>It seems there is nothing else to load for your home feed.');
+					if(json.result.length > 0){
+						let i;
+						for(i = 0; i < json.result.length; i++){
+							let post = json.result[i];
+							
+							let postId = post.id;
+							
+							if(i == json.result.length-1){
+								HOME_FEED_FIRST_POST = postId;
 							}
+							
+							let postTime = post.time;
+							let postText = post.text;
+							
+							let userName = post.userName;
+							let userDisplayName = post.userDisplayName;
+							let userAvatar = post.userAvatar;
+							
+							let postActionButtons = post.postActionButtons;
+							
+							if(post.hasOwnProperty("shared")){
+								let shared = post.shared;
+								
+								let sharedId = shared.id;
+								let sharedText = shared.text;
+								let sharedTime = shared.time;
+								let sharedUserId = shared.userId;
+								let sharedUserName = shared.userName;
+								let sharedUserDisplayName = shared.userDisplayName;
+								let sharedAvatar = shared.userAvatar;
+								
+								newHtml = newHtml.concat(
+									'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
+									'<div class="card-body">' +
+									'<div class="small text-muted">' +
+									'<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' + userName + '" class="clearUnderline ignoreParentClick">' + userDisplayName + '</a> &bull; ' + postTime +
+									'</div>' +
+									'<div class="row">' +
+									'<div class="col-1">' +
+									'<a href="/' + sharedUserName + '" class="clearUnderline ignoreParentClick">' +
+									'<img class="rounded mx-1 my-1" src="' + sharedAvatar + '" width="40" height="40"/>' +
+									'</a>' +
+									'</div>' +
+									
+									'<div class="col-11">' +
+									'<p class="mb-0">' +
+									'<a href="/' + sharedUserName + '" class="clearUnderline ignoreParentClick">' +
+									'<span class="font-weight-bold">' + sharedUserDisplayName + '</span>' +
+									'</a>' +
+									
+									' <span class="text-muted font-weight-normal">@' + sharedUserName + '</span> ' +
+									
+									'&bull; ' +
+									
+									sharedTime +
+									'</p>' +
+									
+									'<p class="mb-0 convertEmoji">' +
+									twemoji.parse(sharedText) +
+									'</p>' +
+									
+									postActionButtons +
+									'</div>' +
+									'</div>' +
+									'</div>' +
+									'</div>'
+								);
+							} else {
+								newHtml = newHtml.concat(
+									'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
+									'<div class="card-body">' +
+									'<div class="row">' +
+									'<div class="col-1">' +
+									'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+									'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
+									'</a>' +
+									'</div>' +
+									
+									'<div class="col-11">' +
+									'<p class="mb-0">' +
+									'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+									'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+									'</a>' +
+									
+									' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
+									
+									' &bull; ' +
+									
+									postTime +
+									'</p>' +
+									
+									'<p class="mb-0 convertEmoji">' +
+									twemoji.parse(postText) +
+									'</p>' +
+									
+									postActionButtons +
+									'</div>' +
+									'</div>' +
+									'</div>' +
+									'</div>');
+								}
+							}
+							
+							if($(".feedEntry").length){
+								$(".feedContainer").append(newHtml);
+							} else {
+								$(".feedContainer").html(newHtml);
+							}
+							
+							$(".homeFeedLoadMore").html(oldHtml);
+							
+							loadBasic();
 						} else {
-							console.log(result);
+							$(".homeFeedLoadMore").html('<b>Oops!</b><br/>It seems there is nothing else to load for your home feed.');
 						}
-					},
-					
-					error: function(xhr,status,error){
-						console.log(xhr);
-						console.log(status);
-						console.log(error);
+					} else {
+						console.log(result);
 					}
-				});
-			}
+				},
+				
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				}
+			});
 		}
 		
 		function loadBasic(){
@@ -783,7 +781,7 @@ function loadHomeFeed(){
 					}
 				})
 			});
-
+			
 			$(".datepicker").datepicker();
 		}
 		
@@ -823,10 +821,10 @@ function loadHomeFeed(){
 				$(".notificationPermissionAlert").addClass("d-none");
 				Notification.requestPermission();
 			});
-
+			
 			$(document).on("scroll",function(e){
 				let scrollValue = $(document).scrollTop();
-
+				
 				if(scrollValue >= 120){
 					$(".homeFeedSidebar").attr("style","position: fixed; margin-top: -130px");
 				} else {
@@ -843,15 +841,15 @@ function loadHomeFeed(){
 			
 			$(document).on("click",".postButton",function(e){
 				e.preventDefault();
-
+				
 				let postBox = $(this).parent().parent();
 				let postField = $(this).parent().find(".postField");
 				let postCharacterCounter = $(this).parent().find(".postCharacterCounter");
-
+				
 				let isReply = postBox.hasClass("replyForm");
 				
 				let text = postField.val().trim();
-
+				
 				let replyTo = isReply && CURRENT_STATUS_MODAL > 0 ? CURRENT_STATUS_MODAL : null;
 				
 				if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
@@ -892,41 +890,41 @@ function loadHomeFeed(){
 										let postActionButtons = json.postActionButtons;
 										
 										let newHtml = "";
-
+										
 										if(!isReply){
 											newHtml =
-												'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-												'<div class="card-body">' +
-												'<div class="row">' +
-												'<div class="col-1">' +
-												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-												'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
-												'</a>' +
-												'</div>' +
-												
-												'<div class="col-11">' +
-												'<p class="mb-0">' +
-												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-												'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-												'</a>' +
-												
-												' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
-												
-												' &bull; ' +
-												
-												postTime +
-												'</p>' +
-												
-												'<p class="mb-0 convertEmoji">' +
-												twemoji.parse(postText) +
-												'</p>' +
-												
-												postActionButtons +
-												'</div>' +
-												'</div>' +
-												'</div>' +
-												'</div>';
-
+											'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
+											'<div class="card-body">' +
+											'<div class="row">' +
+											'<div class="col-1">' +
+											'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+											'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
+											'</a>' +
+											'</div>' +
+											
+											'<div class="col-11">' +
+											'<p class="mb-0">' +
+											'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+											'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+											'</a>' +
+											
+											' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
+											
+											' &bull; ' +
+											
+											postTime +
+											'</p>' +
+											
+											'<p class="mb-0 convertEmoji">' +
+											twemoji.parse(postText) +
+											'</p>' +
+											
+											postActionButtons +
+											'</div>' +
+											'</div>' +
+											'</div>' +
+											'</div>';
+											
 											if($(".feedEntry").length){
 												$(".feedContainer").prepend(newHtml);
 											} else {
@@ -934,38 +932,38 @@ function loadHomeFeed(){
 											}
 										} else {
 											newHtml =
-												'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-												'<div class="py-1 px-3">' +
-												'<div class="row">' +
-												'<div class="float-left">' +
-												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-												'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="36" height="36"/>' +
-												'</a>' +
-												'</div>' +
-												
-												'<div class="float-left ml-1" style="max-width: 414px;">' +
-												'<p class="mb-0 small">' +
-												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-												'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-												'</a>' +
-												
-												' <span class="text-muted font-weight-normal">@' + userName + '</span> ' +
-												
-												'&bull; ' +
-												
-												postTime +
-												'</p>' +
-												
-												'<p class="mb-0 convertEmoji">' +
-												twemoji.parse(postText) +
-												'</p>' +
-												
-												postActionButtons +
-												'</div>' +
-												'</div>' +
-												'</div>' +
-												'</div>';
-
+											'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
+											'<div class="py-1 px-3">' +
+											'<div class="row">' +
+											'<div class="float-left">' +
+											'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+											'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="36" height="36"/>' +
+											'</a>' +
+											'</div>' +
+											
+											'<div class="float-left ml-1" style="max-width: 414px;">' +
+											'<p class="mb-0 small">' +
+											'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+											'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+											'</a>' +
+											
+											' <span class="text-muted font-weight-normal">@' + userName + '</span> ' +
+											
+											'&bull; ' +
+											
+											postTime +
+											'</p>' +
+											
+											'<p class="mb-0 convertEmoji">' +
+											twemoji.parse(postText) +
+											'</p>' +
+											
+											postActionButtons +
+											'</div>' +
+											'</div>' +
+											'</div>' +
+											'</div>';
+											
 											if($("#statusModal .replies>.card").length){
 												$("#statusModal .replies").prepend(newHtml);
 											} else {
