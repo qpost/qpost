@@ -75,6 +75,8 @@ class Util {
      */
 	public static function sendMail($to,$subject,$contentHTML,$contentAlt,$toName = null,$fromName = null){
 		$mail = new PHPMailer;
+		$mail->CharSet = "UTF-8";
+		$mail->Encoding = "base64";
 		$mail->isSMTP();
 		$mail->SMTPDebug = 0;
 		$mail->Debugoutput = "html";
