@@ -562,7 +562,14 @@ function checkForNotifications(){
 		method: "GET",
 
 		success: function(result){
-			if(result.length > 0){
+			let unreadCount = result.unreadCount;
+			if(unreadCount > 0){
+				$(".notificationTabMainNav").html("notifications <b>(" + unreadCount + ")</b>");
+			} else {
+				$(".notificationTabMainNav").html("notifications");
+			}
+
+			if(result.notifications.length > 0){
 				result.forEach(notificationData => {
 					let title = null;
 					let text = null;

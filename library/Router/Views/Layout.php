@@ -131,7 +131,7 @@ if(isset($_SESSION["profileLoadPost"])){
 							</li>
 
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_NOTIFICATIONS) ? " active" : ""; ?>">
-								<a href="/notifications" class="nav-link" data-no-instant>
+								<a href="/notifications" class="nav-link notificationTabMainNav" data-no-instant>
 									notifications<?= !is_null($unreadNotifications) && $unreadNotifications > 0 ? " <b>(" . $unreadNotifications . ")</b>" : "</b>"; ?>
 								</a>
 							</li>
@@ -225,7 +225,7 @@ if(isset($_SESSION["profileLoadPost"])){
 								</li>
 
 								<li class="nav-item<?= (isset($nav) && $nav == NAV_NOTIFICATIONS) ? " active" : ""; ?>">
-									<a href="/notifications" class="nav-link" data-no-instant>
+									<a href="/notifications" class="nav-link notificationTabMainNav" data-no-instant>
 										notifications<?= !is_null($unreadNotifications) && $unreadNotifications > 0 ? " <b>(" . $unreadNotifications . ")</b>" : "</b>"; ?>
 									</a>
 								</li>

@@ -186,7 +186,7 @@ $app->get("/scripts/desktopNotifications",function(){
 		$stmt->execute();
 		$stmt->close();
 
-		return json_encode($notifications);
+		return json_encode(["notifications" => $notifications,"unreadCount" => Util::getCurrentUser()->getUnreadNotifications()]);
 	} else {
 		return json_encode(["error" => "Not logged in"]);
 	}
