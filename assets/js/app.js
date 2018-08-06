@@ -570,7 +570,7 @@ function checkForNotifications(){
 			}
 
 			if(result.notifications.length > 0){
-				result.forEach(notificationData => {
+				result.notifications.forEach(notificationData => {
 					let title = null;
 					let text = null;
 					if(notificationData.type == "NEW_FOLLOWER"){
