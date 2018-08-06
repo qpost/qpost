@@ -779,9 +779,11 @@ class User {
 	 */
 	public function removeNotification($type,$follower,$post){
 		$mysqli = Database::Instance()->get();
+		$follower = is_null($follower) ? "IS NULL" : "= '" . $mysqli->real_escape_string($follower) . "'";
+		$post = is_null($post) ? "IS NULL" : "= '" . $mysqli->real_escape_string($post) . "'";
 		
-		$stmt = $mysqli->prepare("DELETE FROM `notifications` WHERE `type` = ? AND `follower` = ? AND `post` = ? AND `user` = ?");
-		$stmt->bind_param("siii",$type,$follower,$post,$this->id);
+		$stmt = $mysqli->prepare("DELETE FROM `notifications` WHERE `type` = ? AND `follower` " . $follower . " AND `post` " . $post . " AND `user` = ?");
+		$stmt->bind_param("si",$type,$this->id);
 		$stmt->execute();
 		$stmt->close();
 
@@ -798,9 +800,11 @@ class User {
 	 */
 	public function removeFeedEntry($type,$following,$post){
 		$mysqli = Database::Instance()->get();
+		$following = is_null($following) ? "IS NULL" : "= '" . $mysqli->real_escape_string($following) . "'";
+		$post = is_null($post) ? "IS NULL" : "= '" . $mysqli->real_escape_string($post) . "'";
 		
-		$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `type` = ? AND `following` = ? AND `post` = ? AND `user` = ?");
-		$stmt->bind_param("siii",$type,$follower,$post,$this->id);
+		$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `type` = ? AND `following` " . $following . " AND `post` " . $post . " AND `user` = ?");
+		$stmt->bind_param("si",$type,$this->id);
 		$stmt->execute();
 		$stmt->close();
 
