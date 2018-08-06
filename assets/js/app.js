@@ -596,7 +596,6 @@ function loadHomeFeed(){
 								
 								{
 									body: text,
-									image: notificationData.follower.avatar,
 									icon: notificationData.follower.avatar
 								}
 							);
