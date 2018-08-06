@@ -7,10 +7,11 @@ $successMsg = null;
 
 $featuredBoxLimit = 5;
 
-if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"])){
+if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"]) && isset($_POST["birthday"])){
 	$displayName = $_POST["displayName"];
 	$bio = $_POST["bio"];
 	$featuredBoxTitle = trim($_POST["featuredBoxTitle"]);
+	$birthday = trim($_POST["birthday"]);
 
 	if(!empty(trim($displayName))){
 		if(strlen($displayName) >= 1 && strlen($displayName) <= 25){
@@ -46,6 +47,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						$displayName = Util::sanatizeString($displayName);
 						$bio = Util::sanatizeString($bio);
 						$userId = $user->getId();
+						$birthday = strtotime($birthday) == false ? null : date("Y-m-d",strtotime($birthday));
 
 						if(empty($bio))
 							$bio = null;
@@ -53,8 +55,8 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
 
 						$mysqli = Database::Instance()->get();
-						$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ? WHERE `id` = ?");
-						$stmt->bind_param("ssssi",$displayName,$bio,$featuredBoxTitle,$boxUsersSerialized,$userId);
+						$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ? WHERE `id` = ?");
+						$stmt->bind_param("sssssi",$displayName,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$userId);
 						if($stmt->execute()){
 							$successMsg = "Your changes have been saved.";
 							$user->reload();
@@ -116,6 +118,14 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 
 				<div class="col-sm-10 input-group mb-3">
 					<textarea class="form-control" name="bio" id="bio" style="resize:none !important;" max="400"><?= isset($_POST["bio"]) ? Util::sanatizeString($_POST["bio"]) : (!is_null($user->getBio()) ? $user->getBio() : "") ?></textarea>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="birthday" class="control-label col-sm-2 col-form-label">Birthday</label>
+
+				<div class="col-sm-10 input-group mb-3">
+					<input type="text" class="form-control datepicker" name="birthday" id="birthday" value="<?= isset($_POST["birthday"]) ? Util::sanatizeString($_POST["birthday"]) : (!is_null($user->getBirthday()) ? date("m/d/Y",strtotime($user->getBirthday())) : "") ?>"/>
 				</div>
 			</div>
 

@@ -794,6 +794,8 @@ function loadHomeFeed(){
 					}
 				})
 			});
+
+			$(".datepicker").datepicker();
 		}
 		
 		$(document).ready(function(){

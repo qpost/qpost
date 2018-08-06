@@ -66,7 +66,8 @@ if(isset($_SESSION["profileLoadPost"])){
 			"assets:css/bootstrap.min.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
 			"assets:css/main.css",
-			"assets:css/twemoji-picker.css"]); ?>
+			"assets:css/twemoji-picker.css",
+			"https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"]); ?>
 
 		<?= $app->script([
 			"https://code.jquery.com/jquery-latest.min.js",
@@ -77,7 +78,8 @@ if(isset($_SESSION["profileLoadPost"])){
 			"https://www.google.com/recaptcha/api.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
 			"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
-			"assets:js/twemoji-picker.js"]); ?>
+			"assets:js/twemoji-picker.js",
+			"https://code.jquery.com/ui/1.12.1/jquery-ui.js"]); ?>
 
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";</script><?php unset($_SESSION["profileLoadPost"]); ?>
 	</head>
@@ -316,8 +318,8 @@ if(isset($_SESSION["profileLoadPost"])){
 										$date = strtotime($user->getGigadriveRegistrationDate());
 									}
 
-								?><i class="fas fa-globe"></i> Joined <?= date("F Y",$date); ?>
-								<?= !is_null($user->getBirthday()) ? '<i class="fas fa-birthday-cake"></i> ' . date("F jS Y",strtotime($user->getBirthday())) : "" ?>
+								?><i class="fas fa-globe"></i><span style="margin-left: 5px">Joined <?= date("F Y",$date); ?></span>
+								<?= !is_null($user->getBirthday()) ? '<br/><i class="fas fa-birthday-cake"></i><span style="margin-left: 7px">' . date("F jS Y",strtotime($user->getBirthday())) . '</span>' : "" ?>
 							</p>
 
 							<?= Util::followButton($user->getId(),true,["btn-block","mt-2"],false) ?>
