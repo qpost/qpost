@@ -7,8 +7,6 @@ date_default_timezone_set("UTC");
 ini_set("session.cookie_lifetime",(60*60*24)*3);
 ini_set("session.gc_maxlifetime",(60*60*24)*3);
 
-session_start();
-
 if(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["HTTP_HOST"])[0] == "localhost" || explode(":",$_SERVER["HTTP_HOST"])[0] == "127.0.0.1")){
 	require_once __DIR__ . "/../../../twitter-config.php";
 } else {
@@ -24,6 +22,7 @@ require_once __DIR__ . "/../Database/Database.php";
 require_once __DIR__ . "/../Feed/FeedEntry.php";
 require_once __DIR__ . "/../Util/Util.php";
 require_once __DIR__ . "/../Lime/App.php";
+require_once __DIR__ . "/../Session/session.php";
 
 //\CacheHandler::Manager()->clear();
 
