@@ -726,8 +726,10 @@ class User {
 				\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,false,5*60);
 
 				$feedEntry = FeedEntry::getEntryById($postId);
-				if(!is_null($feedEntry))
+				if(!is_null($feedEntry)){
 					$feedEntry->reloadFavorites();
+					$feedEntry->getUser()->removeNotification("FAVORITE",$this->id,$postId);
+				}
 			}
 			$stmt->close();
 		}
@@ -765,6 +767,45 @@ class User {
 
 			return \CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
 		}
+	}
+
+	/**
+	 * Removes notification matching specified parameters
+	 * 
+	 * @access public
+	 * @param string $type
+	 * @param int $follower
+	 * @param int $post
+	 */
+	public function removeNotification($type,$follower,$post){
+		$mysqli = Database::Instance()->get();
+		
+		$stmt = $mysqli->prepare("DELETE FROM `notifications` WHERE `type` = ? AND `follower` = ? AND `post` = ? AND `user` = ?");
+		$stmt->bind_param("siii",$type,$follower,$post,$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		$this->reloadUnreadNotifications();
+	}
+
+	/**
+	 * Removes notification matching specified parameters
+	 * 
+	 * @access public
+	 * @param string $type
+	 * @param int $following
+	 * @param int $post
+	 */
+	public function removeFeedEntry($type,$following,$post){
+		$mysqli = Database::Instance()->get();
+		
+		$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `type` = ? AND `following` = ? AND `post` = ? AND `user` = ?");
+		$stmt->bind_param("siii",$type,$follower,$post,$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		$this->reloadFeedEntriesCount();
+		$this->reloadPostsCount();
 	}
 
 	/**
@@ -819,8 +860,10 @@ class User {
 				\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,false,5*60);
 
 				$feedEntry = FeedEntry::getEntryById($postId);
-				if(!is_null($feedEntry))
+				if(!is_null($feedEntry)){
 					$feedEntry->reloadShares();
+					$feedEntry->getUser()->removeNotification("SHARE",$this->id,$postId);
+				}
 			}
 			$stmt->close();
 		}
