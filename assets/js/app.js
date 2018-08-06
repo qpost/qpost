@@ -550,13 +550,11 @@ function loadHomeFeed(){
 }
 
 function checkForNotifications(){
-	console.log("checking");
 	$.ajax({
 		url: "/scripts/desktopNotifications",
 		method: "GET",
 
 		success: function(result){
-			console.log(result);
 			if(result.length > 0){
 				result.forEach(notificationData => {
 					let title = null;
@@ -579,8 +577,6 @@ function checkForNotifications(){
 					}
 
 					if(title != null && text != null){
-						console.log(title);
-						console.log(text);
 						let notification = new Notification(
 							title,
 	
