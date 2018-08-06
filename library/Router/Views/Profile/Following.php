@@ -39,7 +39,7 @@ if($num > 0){
 			<div class="card userCard" data-user-id="<?= $u->getId(); ?>">
 				<div class="card-body">
 					<center>
-						<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/>
+						<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60" class="rounded"/>
 
 						<h5 class="mb-0"><?= $u->getDisplayName(); ?></h5></a>
 						<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
