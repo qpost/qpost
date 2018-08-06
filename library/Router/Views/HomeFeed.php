@@ -227,71 +227,81 @@
 				if(count($trendingUsers) > 0){
 					?>
 			<div class="card my-3">
-				<h6 class="card-header">Trending users</h6>
+				<div class="card-header">
+					<ul class="nav nav-pills nav-fill" id="users-tablist" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="trending-tab" data-toggle="pill" href="#trendingUsers" role="tab" aria-controls="trendingUsers" aria-selected="true">
+								Trending users
+							</a>
+						</li>
 
-				<?php
+						<li class="nav-item">
+							<a class="nav-link" id="new-tab" data-toggle="pill" href="#newUsers" role="tab" aria-controls="newUsers" aria-selected="false">
+								New users
+							</a>
+						</li>
+					</ul>
+				</div>
 
-					foreach($trendingUsers as $trendingUser){
-						$increase = $trendingUser["increase"];
-						$u = $trendingUser["user"];
+				<div class="tab-content" id="users-tablist-content">
+					<div class="tab-pane fade show active" id="trendingUsers" role="tabpanel" aria-labelledby="trending-tab">
+						<?php
+
+							foreach($trendingUsers as $trendingUser){
+								$increase = $trendingUser["increase"];
+								$u = $trendingUser["user"];
+
+								?>
+							<div class="px-2 py-1 my-1" style="height: 70px">
+								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline float-left">
+									<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded"/>
+								</a>
+
+								<div class="ml-2 float-left">
+									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+										<div class="font-weight-bold float-left small mt-1" style="max-width: 120px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
+										<div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
+									</a>
+
+									<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+								</div>
+							</div>
+								<?php
+							}
 
 						?>
-				<div class="px-2 py-1 my-1">
-					
-					<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-						<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded float-left"/>
-					</a>
+					</div>
 
-					<div class="float-left ml-2">
-						<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-							<div class="font-weight-bold float-left small mt-1" style="max-width: 120px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
-							<div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
-						</a>
+					<div class="tab-pane fade" id="newUsers" role="tabpanel" aria-labelledby="new-tab">
+						<?php
 
-						<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+							foreach($newUsers as $u){
+									?>
+							<div class="px-2 py-1 my-1" style="height: 70px">
+								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline float-left">
+									<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded"/>
+								</a>
+
+								<div class="ml-2 float-left">
+									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+										<div class="font-weight-bold float-left small mt-1" style="max-width: 120px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
+										<div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
+									</a>
+
+									<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+								</div>
+							</div>
+									<?php
+							}
+
+						?>
 					</div>
 				</div>
-						<?php
-					}
-
-				?>
 			</div>
 					<?php
 				}
 
 				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mb-1"]);
-
-				if(count($newUsers) > 0){
-					?>
-			<div class="card mb-3 mt-0">
-				<h6 class="card-header">New users</h6>
-
-				<?php
-
-					foreach($newUsers as $u){
-						?>
-				<div class="px-2 py-1 my-1">
-					
-					<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-						<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded float-left"/>
-					</a>
-
-					<div class="float-left ml-2">
-						<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-							<div class="font-weight-bold float-left small mt-1" style="max-width: 120px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
-							<div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
-						</a>
-
-						<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
-					</div>
-				</div>
-						<?php
-					}
-
-				?>
-			</div>
-					<?php
-				}
 
 			?>
 		</div>
