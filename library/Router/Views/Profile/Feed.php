@@ -12,8 +12,6 @@ if(isset($_SESSION["profileLoadPost"])){
 	if(!isset($preventStatusModal) || $preventStatusModal != false){
 		echo '<script>showStatusModal(' . $_SESSION["profileLoadPost"] . ');</script>';
 	}
-
-	unset($_SESSION["profileLoadPost"]);
 }
 
 if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId()){

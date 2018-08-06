@@ -6,16 +6,30 @@ if(isset($title) && !empty($title)){
 	$title = $app["config.site"]["name"];
 }
 
+$originalTitle = $title;
+
 if(!isset($description) || empty($description))
 	$description = DEFAULT_DESCRIPTION;
 
 if(!isset($socialImage) || empty($socialImage))
 	$socialImage = DEFAULT_TWITTER_IMAGE;
+	
+if(isset($_SESSION["profileLoadPost"])){
+	$post = FeedEntry::getEntryById($_SESSION["profileLoadPost"]);
+
+	if(!is_null($post)){
+		if(!is_null($post->getText()) && !empty(trim($post->getText()))){
+			$title = $post->getUser()->getDisplayName() . " on qpost: \"" . Util::limitString($post->getText(),34,true) . "\"";
+			$description = Util::limitString($post->getText(),150,true);
+			$socialImage = $post->getUser()->getAvatarURL();
+		}
+	}
+}
 
 ?><!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title><?= $title ?></title>
+		<title><?= Util::sanatizeHTMLAttribute($title) ?></title>
 
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -65,7 +79,7 @@ if(!isset($socialImage) || empty($socialImage))
 			"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
 			"assets:js/twemoji-picker.js"]); ?>
 
-		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "";var restoreTitle = "";</script>
+		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";</script><?php unset($_SESSION["profileLoadPost"]); ?>
 	</head>
 	<body>
 		<?php if(Util::isLoggedIn()){ ?>
