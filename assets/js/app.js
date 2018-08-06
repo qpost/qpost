@@ -1086,16 +1086,16 @@ function load(){
 	
 								let newHtml =
 								'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-									'<div class="card-body">' +
+									'<div class="py-1 px-3">' +
 										'<div class="row">' +
-											'<div class="col-2">' +
+											'<div class="float-left">' +
 												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-													'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="64" height="64"/>' +
+													'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="36" height="36"/>' +
 												'</a>' +
 											'</div>' +
 
-											'<div class="col-10">' +
-												'<p class="mb-0">' +
+											'<div class="float-left ml-1">' +
+												'<p class="mb-0 small">' +
 													'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
 														'<span class="font-weight-bold">' + userDisplayName + '</span>' +
 													'</a>' +
