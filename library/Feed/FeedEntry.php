@@ -428,6 +428,11 @@ class FeedEntry {
 
         $this->removeFromCache();
 
+        $parent = $this->getPost();
+        if(!is_null($parent) && $this->type == "POST"){
+            $this->getPost()->reloadReplies();
+        }
+
         $stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `id` = ? OR (`post` = ? AND `type` = 'SHARE')");
         $stmt->bind_param("ii",$this->id,$this->id);
         $stmt->execute();
