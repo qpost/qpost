@@ -187,43 +187,50 @@ function showStatusModal(postId){
 
 				let replies = json.replies;
 
-				if(json.hasOwnProperty("parent") && json.parent != null){
-					let parent = json.parent;
+				let d = json;
+				let hasParent = false;
 
-					content = content.concat(
-						'<div class="card feedEntry mb-3 statusTrigger" data-status-render="' + parent.id + '" data-entry-id="' + parent.id + '">' +
+				while(d.hasOwnProperty("parent") && d.parent != null){
+					d = d.parent;
+					hasParent = true;
+
+					content =
+						'<div class="card feedEntry mb-3 statusTrigger" data-status-render="' + d.id + '" data-entry-id="' + d.id + '">' +
 							'<div class="card-body">' +
 								'<div class="row">' +
 									'<div class="col-2">' +
-										'<a href="/' + parent.user.username + '" class="clearUnderline ignoreParentClick">' +
-											'<img class="rounded mx-1 my-1" src="' + parent.user.avatar + '" width="64" height="64"/>' +
+										'<a href="/' + d.user.username + '" class="clearUnderline ignoreParentClick">' +
+											'<img class="rounded mx-1 my-1" src="' + d.user.avatar + '" width="64" height="64"/>' +
 										'</a>' +
 									'</div>' +
 
 									'<div class="col-10">' +
 										'<p class="mb-0">' +
-											'<a href="/' + parent.user.username + '" class="clearUnderline ignoreParentClick">' +
-												'<span class="font-weight-bold">' + parent.user.displayName + '</span>' +
+											'<a href="/' + d.user.username + '" class="clearUnderline ignoreParentClick">' +
+												'<span class="font-weight-bold">' + d.user.displayName + '</span>' +
 											'</a>' +
 
-											' <span class="text-muted font-weight-normal">@' + parent.user.username + '</span> ' +
+											' <span class="text-muted font-weight-normal">@' + d.user.username + '</span> ' +
 
 											'&bull; ' +
 
-											parent.time +
+											d.time +
 										'</p>' +
 
 										'<p class="mb-0 convertEmoji">' +
-											twemoji.parse(parent.text) +
+											twemoji.parse(d.text) +
 										'</p>' +
 
-										parent.postActionButtons +
+										d.postActionButtons +
 									'</div>' +
 								'</div>' +
 							'</div>' +
-						'</div><hr/>'
-					);
+						'</div>'
+					.concat(content);
 				}
+
+				if(hasParent == true)
+					content = content.concat("<hr/>");
 
 				content = content.concat('<div class="mb-4">');
 
