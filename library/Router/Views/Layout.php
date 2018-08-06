@@ -317,7 +317,7 @@ if(isset($_SESSION["profileLoadPost"])){
 									}
 
 								?><i class="fas fa-globe"></i> Joined <?= date("F Y",$date); ?>
-								<?= !is_null($user->getBirthday()) ? date("F jS Y",strtotime($user->getBirthday())) : "" ?>
+								<?= !is_null($user->getBirthday()) ? '<i class="fas fa-birthday-cake"></i> ' . date("F jS Y",strtotime($user->getBirthday())) : "" ?>
 							</p>
 
 							<?= Util::followButton($user->getId(),true,["btn-block","mt-2"],false) ?>
