@@ -169,8 +169,8 @@ function showStatusModal(postId){
 
 	let statusModal = $("#statusModal");
 
-	restoreUrl = window.location.pathname;
-	restoreTitle = $(document).find("title").text();
+	if(restoreUrl == null || restoreUrl == "") restoreUrl = window.location.pathname;
+	if(restoreTitle == null || restoreTitle == "") restoreTitle = $(document).find("title").text();
 
 	$.ajax({
 		url: "/scripts/postInfo",
@@ -1171,6 +1171,9 @@ function load(){
 		if(typeof restoreUrl !== "undefined" && typeof restoreTitle !== "undefined"){
 			history.pushState("",restoreTitle,restoreUrl);
 			document.title = restoreTitle;
+
+			restoreUrl = "";
+			restoreTitle = "";
 		}
 	});
 
