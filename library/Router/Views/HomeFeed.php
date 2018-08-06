@@ -5,19 +5,9 @@
 			<?= Util::createAlert("socialNetFeedInfo","Did you know about the <b>social net</b>? We created that page to suggest users that you might be interested in. <a href=\"/socialnet\">Click here to check it out!</a> (it's still experimental!)",ALERT_TYPE_INFO,true,true) ?>
 			<h4>Feed</h4>
 
-			<div class="card my-2 border-primary" style="background: #9FCCFC" id="homePostBox">
-				<div class="card-body">
-					<textarea class="form-control" id="homePostField" placeholder="Post something for your followers!"></textarea>
-
-					<p class="mb-0 mt-2 float-left small" id="homeCharacterCounter">
-						<?= POST_CHARACTER_LIMIT ?> characters left
-					</p>
-
-					<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2" id="homePostButton">Post</button>
-				</div>
-			</div>
-
 			<?php
+
+				echo Util::renderCreatePostForm();
 
 				$user = Util::getCurrentUser();
 				$mysqli = Database::Instance()->get();

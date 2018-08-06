@@ -81,7 +81,7 @@ if(isset($_SESSION["profileLoadPost"])){
 			"assets:js/twemoji-picker.js",
 			"https://code.jquery.com/ui/1.12.1/jquery-ui.js"]); ?>
 
-		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";</script><?php unset($_SESSION["profileLoadPost"]); ?>
+		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";var CURRENT_STATUS_MODAL = 0;</script><?php unset($_SESSION["profileLoadPost"]); ?>
 	</head>
 	<body>
 		<?php if(Util::isLoggedIn()){ ?>

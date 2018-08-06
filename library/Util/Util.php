@@ -1136,4 +1136,37 @@ class Util {
 
 		return $postActionButtons;
 	}
+
+	/**
+	 * Returns HTML code for a post form with specific parameters
+	 * 
+	 * @access public
+	 * @param int $replyTo The id of the post that is being replied to, null if it's a standalone post
+	 * @param string[] $classes An array of css classes attached to the box
+	 * @param bool $includeExtraOptions Whether or not to include extra options and tabs for media sharing etc.
+	 */
+	public static function renderCreatePostForm($classes = null,$includeExtraOptions = true){
+		if(!self::isLoggedIn() || is_null(self::getCurrentUser()))
+			return "";
+
+		$isReply = !is_null($classes) && is_array($classes) && count($classes) > 0 && in_array("replyForm",$classes);
+
+		$placeholder = !$isReply ? "Post something for your followers!" : "Post your reply";
+
+		$box = "";
+
+		$box .= '<div class="card my-2 border-primary postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
+		$box .= '<div class="card-body">';
+		$box .= '<textarea class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
+
+		$box .= '<p class="mb-0 mt-2 float-left small postCharacterCounter">';
+		$box .= POST_CHARACTER_LIMIT . ' characters left';
+		$box .= '</p>';
+
+		$box .= '<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2 postButton">Post</button>';
+		$box .= '</div>';
+		$box .= '</div>';
+
+		return $box;
+	}
 }

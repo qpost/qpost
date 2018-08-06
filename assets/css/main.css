@@ -17,15 +17,13 @@ body,html {
 	text-decoration: none !important;
 }
 
-#profilePostField,
-#homePostField {
+.postField {
 	height: 100px;
 	resize: none !important;
 }
 
-#statusModalPostField {
-	height: 70px;
-	resize: none !important;
+.replyForm {
+	margin-top: 60px !important;
 }
 
 img.emoji {
@@ -89,4 +87,8 @@ img.emoji {
 	background: #D6EAFF;
 	border-bottom: #9FCCFC 3px solid;
 	height: 50px;
+ }
+
+ .postBox {
+	background: #9FCCFC;
  }

@@ -413,6 +413,7 @@ $app->post("/scripts/postInfo",function(){
 
 				$jsonData["followButton"] = $followButton;
 				$jsonData["replies"] = $replies;
+				$jsonData["postForm"] = Util::renderCreatePostForm(["replyForm"],false);
 
 				return json_encode($jsonData);
 			} else {

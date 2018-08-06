@@ -182,6 +182,7 @@ function showStatusModal(postId){
 		
 		success: function(json){
 			if(json.hasOwnProperty("id")){
+				CURRENT_STATUS_MODAL = json.id;
 				let user = json.user;
 				let content = "";
 				
@@ -280,20 +281,8 @@ function showStatusModal(postId){
 				
 				content = content.concat(json.postActionButtons);
 				
-				if(typeof CURRENT_USER !== "undefined"){
-					content = content.concat(
-						'<div class="card border-primary" style="background: #9FCCFC; margin-top: 60px" id="statusModalPostBox">' +
-						'<div class="card-body">' +
-						'<textarea class="form-control" id="statusModalPostField" placeholder="Post your reply" data-reply-to="' + json.id + '"></textarea>' +
-						
-						'<p class="mb-0 mt-2 float-left small" id="statusModalCharacterCounter">' +
-						POST_CHARACTER_LIMIT + ' characters left' +
-						'</p>' +
-						
-						'<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2" id="statusModalPostButton">Post</button>' +
-						'</div>' +
-						'</div>'
-					);
+				if(typeof CURRENT_USER !== "undefined" && json.hasOwnProperty("postForm")){
+					content = content.concat(json.postForm);
 				}
 				
 				content = content.concat('<div class="replies">');
@@ -852,229 +841,27 @@ function loadHomeFeed(){
 				setCookie("ignoreNotificationAlert","true",7);
 			});
 			
-			$(document).on("click","#homePostButton",function(e){
+			$(document).on("click",".postButton",function(e){
 				e.preventDefault();
+
+				let postBox = $(this).parent().parent();
+				let postField = $(this).parent().find(".postField");
+				let postCharacterCounter = $(this).parent().find(".postCharacterCounter");
+
+				let isReply = postBox.hasClass("replyForm");
 				
-				let text = $("#homePostField").val().trim();
+				let text = postField.val().trim();
+
+				let replyTo = isReply && CURRENT_STATUS_MODAL > 0 ? CURRENT_STATUS_MODAL : null;
 				
 				if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
 					let token = CSRF_TOKEN;
 					let limit = POST_CHARACTER_LIMIT;
 					
-					let oldHtml = $("#homePostBox").html();
+					let oldHtml = postBox.html();
 					
 					if(text.length > 0 && text.length <= limit){
-						console.log("Sending post!");
-						
-						$("#homePostBox").html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-						
-						$.ajax({
-							url: "/scripts/createPost",
-							data: {
-								csrf_token: token,
-								text: text
-							},
-							method: "POST",
-							
-							success: function(result){
-								let json = result;
-								
-								if(json.hasOwnProperty("post")){
-									let post = json.post;
-									
-									if(post.hasOwnProperty("id") && post.hasOwnProperty("time") && post.hasOwnProperty("text") && post.hasOwnProperty("userName") && post.hasOwnProperty("userDisplayName") && post.hasOwnProperty("userAvatar")){
-										let postId = post.id;
-										let postTime = post.time;
-										let postText = post.text;
-										
-										let userName = post.userName;
-										let userDisplayName = post.userDisplayName;
-										let userAvatar = post.userAvatar;
-										
-										HOME_FEED_LAST_POST = postId;
-										
-										let postActionButtons = json.postActionButtons;
-										
-										let newHtml =
-										'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-										'<div class="card-body">' +
-										'<div class="row">' +
-										'<div class="col-1">' +
-										'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-										'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
-										'</a>' +
-										'</div>' +
-										
-										'<div class="col-11">' +
-										'<p class="mb-0">' +
-										'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-										'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-										'</a>' +
-										
-										' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
-										
-										' &bull; ' +
-										
-										postTime +
-										'</p>' +
-										
-										'<p class="mb-0 convertEmoji">' +
-										twemoji.parse(postText) +
-										'</p>' +
-										
-										postActionButtons +
-										'</div>' +
-										'</div>' +
-										'</div>' +
-										'</div>';
-										
-										if($(".feedEntry").length){
-											$(".feedContainer").prepend(newHtml);
-										} else {
-											$(".feedContainer").html(newHtml);
-										}
-										
-										$("#homePostBox").html(oldHtml);
-										$("#homePostField").val("");
-										$("#homeCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
-										loadBasic();
-									} else {
-										console.log(result);
-									}
-								} else {
-									console.log(result);
-								}
-							},
-							
-							error: function(xhr,status,error){
-								console.log(xhr);
-								console.log(status);
-								console.log(error);
-							}
-						})
-					} else {
-						console.error("Post text too long or too short!");
-					}
-				}
-			});
-			
-			$(document).on("click","#profilePostButton",function(e){
-				e.preventDefault();
-				
-				let text = $("#profilePostField").val().trim();
-				
-				if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
-					let token = CSRF_TOKEN;
-					let limit = POST_CHARACTER_LIMIT;
-					
-					let oldHtml = $("#profilePostBox").html();
-					
-					if(text.length > 0 && text.length <= limit){
-						console.log("Sending post!");
-						
-						$("#profilePostBox").html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-						
-						$.ajax({
-							url: "/scripts/createPost",
-							data: {
-								csrf_token: token,
-								text: text
-							},
-							method: "POST",
-							
-							success: function(result){
-								let json = result;
-								
-								if(json.hasOwnProperty("post")){
-									let post = json.post;
-									
-									if(post.hasOwnProperty("id") && post.hasOwnProperty("time") && post.hasOwnProperty("text") && post.hasOwnProperty("userName") && post.hasOwnProperty("userDisplayName") && post.hasOwnProperty("userAvatar")){
-										let postId = post.id;
-										let postTime = post.time;
-										let postText = post.text;
-										
-										let userName = post.userName;
-										let userDisplayName = post.userDisplayName;
-										let userAvatar = post.userAvatar;
-										
-										let postActionButtons = json.postActionButtons;
-										
-										let newHtml =
-										'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-										'<div class="card-body">' +
-										'<div class="row">' +
-										'<div class="col-1">' +
-										'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
-										'</div>' +
-										
-										'<div class="col-11">' +
-										'<p class="mb-0">' +
-										'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-										
-										' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
-										
-										' &bull; ' +
-										
-										postTime +
-										'</p>' +
-										
-										'<p class="mb-0">' +
-										postText +
-										'</p>' +
-										
-										postActionButtons +
-										'</div>' +
-										'</div>' +
-										'</div>' +
-										'</div>';
-										
-										if($(".feedEntry").length){
-											$(".feedContainer").prepend(newHtml);
-										} else {
-											$(".feedContainer").html(newHtml);
-										}
-										
-										$("#profilePostBox").html(oldHtml);
-										$("#profilePostField").val("");
-										$("#profileCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
-										loadBasic();
-									} else {
-										console.log(result);
-									}
-								} else {
-									console.log(result);
-								}
-							},
-							
-							error: function(xhr,status,error){
-								console.log(xhr);
-								console.log(status);
-								console.log(error);
-							}
-						})
-					} else {
-						console.error("Post text too long or too short!");
-					}
-				}
-			});
-			
-			$(document).on("click","#statusModalPostButton",function(e){
-				e.preventDefault();
-				
-				let text = $("#statusModalPostField").val();
-				
-				if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
-					let token = CSRF_TOKEN;
-					let limit = POST_CHARACTER_LIMIT;
-					
-					let oldHtml = $("#statusModalPostBox").html();
-					
-					if(text.length > 0 && text.length <= limit){
-						console.log("Sending post!");
-						
-						let replyTo = $("#statusModalPostField").attr("data-reply-to");
-						
-						$("#statusModalPostBox").html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
+						postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
 						
 						$.ajax({
 							url: "/scripts/createPost",
@@ -1100,50 +887,95 @@ function loadHomeFeed(){
 										let userDisplayName = post.userDisplayName;
 										let userAvatar = post.userAvatar;
 										
+										HOME_FEED_LAST_POST = postId;
+										
 										let postActionButtons = json.postActionButtons;
 										
-										let newHtml =
-										'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-										'<div class="py-1 px-3">' +
-										'<div class="row">' +
-										'<div class="float-left">' +
-										'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-										'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="36" height="36"/>' +
-										'</a>' +
-										'</div>' +
-										
-										'<div class="float-left ml-1" style="max-width: 414px;">' +
-										'<p class="mb-0 small">' +
-										'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-										'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-										'</a>' +
-										
-										' <span class="text-muted font-weight-normal">@' + userName + '</span> ' +
-										
-										'&bull; ' +
-										
-										postTime +
-										'</p>' +
-										
-										'<p class="mb-0 convertEmoji">' +
-										twemoji.parse(postText) +
-										'</p>' +
-										
-										postActionButtons +
-										'</div>' +
-										'</div>' +
-										'</div>' +
-										'</div>';
-										
-										if($("#statusModal .replies>.card").length){
-											$("#statusModal .replies").prepend(newHtml);
+										let newHtml = "";
+
+										if(!isReply){
+											newHtml =
+												'<div class="card feedEntry mb-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
+												'<div class="card-body">' +
+												'<div class="row">' +
+												'<div class="col-1">' +
+												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+												'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="40" height="40"/>' +
+												'</a>' +
+												'</div>' +
+												
+												'<div class="col-11">' +
+												'<p class="mb-0">' +
+												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+												'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+												'</a>' +
+												
+												' <span class="text-muted font-weight-normal">@' + userName + '</span>' +
+												
+												' &bull; ' +
+												
+												postTime +
+												'</p>' +
+												
+												'<p class="mb-0 convertEmoji">' +
+												twemoji.parse(postText) +
+												'</p>' +
+												
+												postActionButtons +
+												'</div>' +
+												'</div>' +
+												'</div>' +
+												'</div>';
+
+											if($(".feedEntry").length){
+												$(".feedContainer").prepend(newHtml);
+											} else {
+												$(".feedContainer").html(newHtml);
+											}
 										} else {
-											$("#statusModal .replies").html(newHtml);
+											newHtml =
+												'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
+												'<div class="py-1 px-3">' +
+												'<div class="row">' +
+												'<div class="float-left">' +
+												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+												'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="36" height="36"/>' +
+												'</a>' +
+												'</div>' +
+												
+												'<div class="float-left ml-1" style="max-width: 414px;">' +
+												'<p class="mb-0 small">' +
+												'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+												'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+												'</a>' +
+												
+												' <span class="text-muted font-weight-normal">@' + userName + '</span> ' +
+												
+												'&bull; ' +
+												
+												postTime +
+												'</p>' +
+												
+												'<p class="mb-0 convertEmoji">' +
+												twemoji.parse(postText) +
+												'</p>' +
+												
+												postActionButtons +
+												'</div>' +
+												'</div>' +
+												'</div>' +
+												'</div>';
+
+											if($("#statusModal .replies>.card").length){
+												$("#statusModal .replies").prepend(newHtml);
+											} else {
+												$("#statusModal .replies").html(newHtml);
+											}
 										}
 										
-										$("#statusModalPostBox").html(oldHtml);
-										$("#statusModalPostField").val("");
-										$("#statusModalCharacterCounter").html(POST_CHARACTER_LIMIT + " characters left");
+										postBox.html(oldHtml);
+										postField.val("");
+										postCharacterCounter.html(POST_CHARACTER_LIMIT + " characters left");
 										loadBasic();
 									} else {
 										console.log(result);
@@ -1192,6 +1024,7 @@ function loadHomeFeed(){
 					
 					restoreUrl = "";
 					restoreTitle = "";
+					CURRENT_STATUS_MODAL = 0;
 				}
 			});
 			
