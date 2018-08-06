@@ -165,7 +165,7 @@
 					<div class="card userCard col-md-6 offset-md-3 mb-3" data-user-id="<?= $u->getId(); ?>">
 						<div class="card-body">
 							<center>
-								<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60" class="rounded"/>
+								<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60" class="rounded mb-1"/>
 
 								<h5 class="mb-0"><?= $u->getDisplayName(); ?></a></h5>
 								<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
