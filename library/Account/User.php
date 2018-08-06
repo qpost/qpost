@@ -130,7 +130,7 @@ class User {
 	 * @param string $time
 	 * @return User
 	 */
-	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time){
+	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$birthday,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time){
 		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
 
 		$user->id = $id;
@@ -140,6 +140,7 @@ class User {
 		$user->avatar = $avatar;
 		$user->bio = $bio;
 		$user->token = $token;
+		$user->birthday = $birthday;
 		$user->privacyLevel = $privacyLevel;
 		$user->featuredBoxTitle = $featuredBoxTitle;
 		$user->featuredBoxContent = is_null($featuredBoxContent) ? [] : (is_string($featuredBoxContent) ? json_decode($featuredBoxContent,true) : $featuredBoxContent);
@@ -193,6 +194,12 @@ class User {
 	 * @var string $token
 	 */
 	private $token;
+
+	/**
+	 * @access private
+	 * @var string $birthday
+	 */
+	private $birthday;
 
 	/**
 	 * @access private
@@ -335,6 +342,7 @@ class User {
 				$this->avatar = $row["avatar"];
 				$this->bio = $row["bio"];
 				$this->token = $row["token"];
+				$this->birthday = $row["birthday"];
 				$this->privacyLevel = $row["privacy.level"];
 				$this->featuredBoxTitle = $row["featuredBox.title"];
 				$this->featuredBoxContent = is_null($row["featuredBox.content"]) ? [] : json_decode($row["featuredBox.content"],true);
@@ -427,6 +435,16 @@ class User {
 	 */
 	public function getToken(){
 		return $this->token;
+	}
+
+	/**
+	 * Returns the user's birthday
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getBirthday(){
+		return $this->birthday;
 	}
 
 	/**
