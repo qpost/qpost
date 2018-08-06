@@ -1282,6 +1282,8 @@ class User {
 				if(!is_null($u)){
 					$u->uncacheFollower($this->id);
 					$u->reloadFollowerCount();
+					$u->removeNotification("NEW_FOLLOWER",$this->id,null);
+					$this->removeFeedEntry("NEW_FOLLOWING",$u->getId(),null);
 					$this->reloadFollowingCount();
 				}
 			}
