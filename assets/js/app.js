@@ -837,7 +837,7 @@ function load(){
 	$(document).on("click","#homePostButton",function(e){
 		e.preventDefault();
 	
-		let text = $("#homePostField").val();
+		let text = trim($("#homePostField").val());
 	
 		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
 			let token = CSRF_TOKEN;
@@ -943,7 +943,7 @@ function load(){
 	$(document).on("click","#profilePostButton",function(e){
 		e.preventDefault();
 	
-		let text = $("#profilePostField").val();
+		let text = trim($("#profilePostField").val());
 	
 		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
 			let token = CSRF_TOKEN;

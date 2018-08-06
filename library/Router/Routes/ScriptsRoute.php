@@ -432,7 +432,7 @@ $app->post("/scripts/createPost",function(){
 	if(isset($_POST["text"])){
 		if(Util::isLoggedIn()){
 			$user = Util::getCurrentUser();
-			$text = $_POST["text"];
+			$text = trim($_POST["text"]);
 
 			$mentioned = Util::getUsersMentioned($text);
 
