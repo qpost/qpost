@@ -204,7 +204,7 @@ function showStatusModal(postId){
 										'</a>' +
 									'</div>' +
 
-									'<div class="float-left ml-1">' +
+									'<div class="float-left ml-1" style="max-width: 414px;">' +
 										'<p class="mb-0 small">' +
 											'<a href="/' + d.user.username + '" class="clearUnderline ignoreParentClick">' +
 												'<span class="font-weight-bold">' + d.user.displayName + '</span>' +
@@ -310,7 +310,7 @@ function showStatusModal(postId){
 											'</a>' +
 										'</div>' +
 
-										'<div class="float-left ml-1">' +
+										'<div class="float-left ml-1" style="max-width: 414px;">' +
 											'<p class="mb-0 small">' +
 												'<a href="/' + reply.user.username + '" class="clearUnderline ignoreParentClick">' +
 													'<span class="font-weight-bold">' + reply.user.displayName + '</span>' +
@@ -1101,7 +1101,7 @@ function load(){
 												'</a>' +
 											'</div>' +
 
-											'<div class="float-left ml-1">' +
+											'<div class="float-left ml-1" style="max-width: 414px;">' +
 												'<p class="mb-0 small">' +
 													'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
 														'<span class="font-weight-bold">' + userDisplayName + '</span>' +
