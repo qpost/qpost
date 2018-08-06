@@ -159,151 +159,153 @@
 		</div>
 
 		<div class="col-lg-4">
-			<form action="<?= $app->routeUrl("/search"); ?>" method="get">
-				<div class="input-group input-group-sm">
-					<input class="form-control" name="query" placeholder="Search <?= $app["config.site"]["name"] ?>" type="text"/>
+			<div class="homeFeedSidebar">
+				<form action="<?= $app->routeUrl("/search"); ?>" method="get">
+					<div class="input-group input-group-sm">
+						<input class="form-control" name="query" placeholder="Search <?= $app["config.site"]["name"] ?>" type="text"/>
 
-					<div class="input-group-append">
-						<button class="btn btn-primary px-3" type="submit"><i class="fas fa-search"></i></button>
+						<div class="input-group-append">
+							<button class="btn btn-primary px-3" type="submit"><i class="fas fa-search"></i></button>
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
 
-			<?php
+				<?php
 
-				$openRequests = Util::getCurrentUser()->getOpenFollowRequests();
-				if($openRequests > 0){
-					?>
-			<a href="/requests" class="btn btn-info btn-block mt-3 mb-2"><?= $openRequests ?> open follow request<?= $openRequests > 1 ? "s" : "" ?></a>
-					<?php
-				}
-
-
-				$trendingUsers = [];
-				$n = "trendingUsers";
-
-				if(CacheHandler::existsInCache($n)){
-					$trendingUsers = CacheHandler::getFromCache($n);
-				} else {
-					$stmt = $mysqli->prepare("SELECT COUNT(f.following) as `increase`,u.* FROM `users` AS u LEFT JOIN `follows` AS f ON f.`following` = u.`id` WHERE f.`time` > (NOW() - INTERVAL 24 HOUR) AND u.`privacy.level` = 'PUBLIC' GROUP BY u.`id` ORDER BY `increase` DESC LIMIT 5");
-					if($stmt->execute()){
-						$result = $stmt->get_result();
-						
-						if($result->num_rows){
-							while($row = $result->fetch_assoc()){
-								array_push($trendingUsers,[
-									"increase" => $row["increase"],
-									"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"])
-								]);
-							}
-
-							CacheHandler::setToCache($n,$trendingUsers,3*60);
-						}
-					}
-					$stmt->close();
-				}
-
-				$newUsers = [];
-				$n = "newUsers";
-
-				if(CacheHandler::existsInCache($n)){
-					$newUsers = CacheHandler::getFromCache($n);
-				} else {
-					$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `privacy.level` = 'PUBLIC' ORDER BY `time` DESC LIMIT 5");
-					if($stmt->execute()){
-						$result = $stmt->get_result();
-						
-						if($result->num_rows){
-							while($row = $result->fetch_assoc()){
-								array_push($newUsers,User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"]));
-							}
-
-							CacheHandler::setToCache($n,$newUsers,2*60);
-						}
-					}
-					$stmt->close();
-				}
-
-				if(count($trendingUsers) > 0){
-					?>
-			<div class="card my-3">
-				<div class="card-header">
-					<ul class="nav nav-pills nav-fill" id="users-tablist" role="tablist">
-						<li class="nav-item">
-							<a class="nav-link active" id="trending-tab" data-toggle="pill" href="#trendingUsers" role="tab" aria-controls="trendingUsers" aria-selected="true">
-								Trending users
-							</a>
-						</li>
-
-						<li class="nav-item">
-							<a class="nav-link" id="new-tab" data-toggle="pill" href="#newUsers" role="tab" aria-controls="newUsers" aria-selected="false">
-								New users
-							</a>
-						</li>
-					</ul>
-				</div>
-
-				<div class="tab-content" id="users-tablist-content">
-					<div class="tab-pane fade show active" id="trendingUsers" role="tabpanel" aria-labelledby="trending-tab">
-						<?php
-
-							foreach($trendingUsers as $trendingUser){
-								$increase = $trendingUser["increase"];
-								$u = $trendingUser["user"];
-
-								?>
-							<div class="px-2 py-1 my-1" style="height: 70px">
-								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline float-left">
-									<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded"/>
-								</a>
-
-								<div class="ml-2 float-left">
-									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-										<div class="font-weight-bold float-left small mt-1" style="max-width: 120px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
-										<div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
-									</a>
-
-									<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
-								</div>
-							</div>
-								<?php
-							}
-
+					$openRequests = Util::getCurrentUser()->getOpenFollowRequests();
+					if($openRequests > 0){
 						?>
+				<a href="/requests" class="btn btn-info btn-block mt-3 mb-2"><?= $openRequests ?> open follow request<?= $openRequests > 1 ? "s" : "" ?></a>
+						<?php
+					}
+
+
+					$trendingUsers = [];
+					$n = "trendingUsers";
+
+					if(CacheHandler::existsInCache($n)){
+						$trendingUsers = CacheHandler::getFromCache($n);
+					} else {
+						$stmt = $mysqli->prepare("SELECT COUNT(f.following) as `increase`,u.* FROM `users` AS u LEFT JOIN `follows` AS f ON f.`following` = u.`id` WHERE f.`time` > (NOW() - INTERVAL 24 HOUR) AND u.`privacy.level` = 'PUBLIC' GROUP BY u.`id` ORDER BY `increase` DESC LIMIT 5");
+						if($stmt->execute()){
+							$result = $stmt->get_result();
+							
+							if($result->num_rows){
+								while($row = $result->fetch_assoc()){
+									array_push($trendingUsers,[
+										"increase" => $row["increase"],
+										"user" => User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"])
+									]);
+								}
+
+								CacheHandler::setToCache($n,$trendingUsers,3*60);
+							}
+						}
+						$stmt->close();
+					}
+
+					$newUsers = [];
+					$n = "newUsers";
+
+					if(CacheHandler::existsInCache($n)){
+						$newUsers = CacheHandler::getFromCache($n);
+					} else {
+						$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `privacy.level` = 'PUBLIC' ORDER BY `time` DESC LIMIT 5");
+						if($stmt->execute()){
+							$result = $stmt->get_result();
+							
+							if($result->num_rows){
+								while($row = $result->fetch_assoc()){
+									array_push($newUsers,User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"]));
+								}
+
+								CacheHandler::setToCache($n,$newUsers,2*60);
+							}
+						}
+						$stmt->close();
+					}
+
+					if(count($trendingUsers) > 0){
+						?>
+				<div class="card my-3">
+					<div class="card-header">
+						<ul class="nav nav-pills nav-fill" id="users-tablist" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" id="trending-tab" data-toggle="pill" href="#trendingUsers" role="tab" aria-controls="trendingUsers" aria-selected="true">
+									Trending users
+								</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" id="new-tab" data-toggle="pill" href="#newUsers" role="tab" aria-controls="newUsers" aria-selected="false">
+									New users
+								</a>
+							</li>
+						</ul>
 					</div>
 
-					<div class="tab-pane fade" id="newUsers" role="tabpanel" aria-labelledby="new-tab">
-						<?php
+					<div class="tab-content" id="users-tablist-content">
+						<div class="tab-pane fade show active" id="trendingUsers" role="tabpanel" aria-labelledby="trending-tab">
+							<?php
 
-							foreach($newUsers as $u){
+								foreach($trendingUsers as $trendingUser){
+									$increase = $trendingUser["increase"];
+									$u = $trendingUser["user"];
+
 									?>
-							<div class="px-2 py-1 my-1" style="height: 70px">
-								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline float-left">
-									<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded"/>
-								</a>
-
-								<div class="ml-2 float-left">
-									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-										<div class="font-weight-bold float-left small mt-1" style="max-width: 120px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
-										<div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
+								<div class="px-2 py-1 my-1" style="height: 70px">
+									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline float-left">
+										<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded"/>
 									</a>
 
-									<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
-								</div>
-							</div>
-									<?php
-							}
+									<div class="ml-2 float-left">
+										<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+											<div class="font-weight-bold float-left small mt-1" style="max-width: 120px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
+											<div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
+										</a>
 
-						?>
+										<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+									</div>
+								</div>
+									<?php
+								}
+
+							?>
+						</div>
+
+						<div class="tab-pane fade" id="newUsers" role="tabpanel" aria-labelledby="new-tab">
+							<?php
+
+								foreach($newUsers as $u){
+										?>
+								<div class="px-2 py-1 my-1" style="height: 70px">
+									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline float-left">
+										<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded"/>
+									</a>
+
+									<div class="ml-2 float-left">
+										<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+											<div class="font-weight-bold float-left small mt-1" style="max-width: 120px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
+											<div class="text-muted small float-right mt-1 ml-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
+										</a>
+
+										<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+									</div>
+								</div>
+										<?php
+								}
+
+							?>
+						</div>
 					</div>
 				</div>
-			</div>
 					<?php
 				}
 
 				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mb-1"]);
 
 			?>
+			</div>
 		</div>
 	</div>
 </div>

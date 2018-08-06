@@ -832,6 +832,16 @@ function loadHomeFeed(){
 				$(".notificationPermissionAlert").addClass("d-none");
 				Notification.requestPermission();
 			});
+
+			$(document).on("scroll",function(e){
+				let scrollValue = $(document).scrollTop();
+
+				if(scrollValue >= 120){
+					$(".homeFeedSidebar").attr("style","position: fixed; margin-top: -130px");
+				} else {
+					$(".homeFeedSidebar").removeAttr("style");
+				}
+			});
 			
 			$(document).on("click",".hideNotifications",function(e){
 				e.preventDefault();
