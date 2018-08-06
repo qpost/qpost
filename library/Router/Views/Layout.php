@@ -279,6 +279,8 @@ if(isset($_SESSION["profileLoadPost"])){
 					<?php
 				}
 
+				?><div class="wrapper"><?php
+
 				if(isset($showProfile) && $showProfile == true && isset($user)){
 					?>
 				<div class="card-body">
@@ -441,6 +443,7 @@ if(isset($_SESSION["profileLoadPost"])){
 					echo $content_for_layout;
 				}
 				?>
+				</div>
 			</div>
 
 			<footer class="small text-muted">
