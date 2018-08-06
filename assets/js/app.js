@@ -195,17 +195,17 @@ function showStatusModal(postId){
 					hasParent = true;
 
 					content =
-						'<div class="card feedEntry mb-3 statusTrigger" data-status-render="' + d.id + '" data-entry-id="' + d.id + '">' +
-							'<div class="card-body">' +
+						'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + d.id + '" data-entry-id="' + d.id + '">' +
+							'<div class="py-1 px-3">' +
 								'<div class="row">' +
-									'<div class="col-2">' +
+									'<div class="float-left">' +
 										'<a href="/' + d.user.username + '" class="clearUnderline ignoreParentClick">' +
-											'<img class="rounded mx-1 my-1" src="' + d.user.avatar + '" width="64" height="64"/>' +
+											'<img class="rounded mx-1 my-1" src="' + d.user.avatar + '" width="36" height="36"/>' +
 										'</a>' +
 									'</div>' +
 
-									'<div class="col-10">' +
-										'<p class="mb-0">' +
+									'<div class="float-left ml-1">' +
+										'<p class="mb-0 small">' +
 											'<a href="/' + d.user.username + '" class="clearUnderline ignoreParentClick">' +
 												'<span class="font-weight-bold">' + d.user.displayName + '</span>' +
 											'</a>' +
@@ -302,16 +302,16 @@ function showStatusModal(postId){
 					replies.forEach(reply => {
 						content = content.concat(
 							'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + reply.id + '" data-entry-id="' + reply.id + '">' +
-								'<div class="card-body">' +
+								'<div class="py-1 px-3">' +
 									'<div class="row">' +
-										'<div class="col-2">' +
+										'<div class="float-left">' +
 											'<a href="/' + reply.user.username + '" class="clearUnderline ignoreParentClick">' +
-												'<img class="rounded mx-1 my-1" src="' + reply.user.avatar + '" width="64" height="64"/>' +
+												'<img class="rounded mx-1 my-1" src="' + reply.user.avatar + '" width="36" height="36"/>' +
 											'</a>' +
 										'</div>' +
 
-										'<div class="col-10">' +
-											'<p class="mb-0">' +
+										'<div class="float-left ml-1">' +
+											'<p class="mb-0 small">' +
 												'<a href="/' + reply.user.username + '" class="clearUnderline ignoreParentClick">' +
 													'<span class="font-weight-bold">' + reply.user.displayName + '</span>' +
 												'</a>' +
