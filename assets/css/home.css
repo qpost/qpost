@@ -1,0 +1,26 @@
+.homeWrapper {
+    margin-top: 100px;
+}
+
+.homeTopNav {
+    margin-top: 40px;
+}
+
+.homeLeftBox {
+    padding: 40px 10px;
+    text-align: center;
+}
+
+.homeFooter {
+    margin-top: 70px;
+}
+
+.featuresIcon {
+	font-size: 120px;
+}
+
+.featureParagraph {
+	margin: 110px 0px !important;
+	font-size: 21px;
+	font-weight: lighter;
+}

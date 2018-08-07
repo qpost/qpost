@@ -2,12 +2,7 @@
 
 $app->bind("/",function(){
 	if(!Util::isLoggedIn()){
-		$data = array(
-			"title" => "Home",
-			"nav" => NAV_HOME
-		);
-	
-		return $this->render("views:Home.php with views:Layout.php",$data);
+		return $this->render("views:Home.php with views:HomeLayout.php");
 	} else {
 		$data = array(
 			"title" => "Home",
