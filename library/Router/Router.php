@@ -23,7 +23,6 @@ define("CSRF_TOKEN",$csrf->getToken());
 
 require $app->path("routes:Home.php");
 require $app->path("routes:Notifications.php");
-require $app->path("routes:SocialNet.php");
 require $app->path("routes:Status.php");
 require $app->path("routes:Out.php");
 require $app->path("routes:Login.php");

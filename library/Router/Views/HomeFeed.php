@@ -2,7 +2,6 @@
 	<div class="row">
 		<div class="col-lg-8">
 			<?= Util::createAlert("feedInfo","The home feed shows the posts and activities of you and the people you follow on the network. Follow people you are interested in to see what they're doing!",ALERT_TYPE_INFO,true,true); ?>
-			<?= Util::createAlert("socialNetFeedInfo","Did you know about the <b>social net</b>? We created that page to suggest users that you might be interested in. <a href=\"/socialnet\">Click here to check it out!</a> (it's still experimental!)",ALERT_TYPE_INFO,true,true) ?>
 			<h4>Feed</h4>
 
 			<?php
@@ -215,27 +214,87 @@
 						$stmt->close();
 					}
 
-					if(count($trendingUsers) > 0){
-						?>
+					$currentUser = Util::getCurrentUser()->getId();
+
+					// query is a combination of https://stackoverflow.com/a/12915720 and https://stackoverflow.com/a/24165699
+					$suggestedUsers = [];
+					$stmt = $mysqli->prepare("SELECT COUNT(*)       AS mutuals, u.* FROM users      AS me INNER JOIN follows    AS my_friends ON my_friends.follower = me.id INNER JOIN follows    AS their_friends ON their_friends.follower = my_friends.following INNER JOIN  users 	   AS u ON u.id = their_friends.following WHERE me.id = ? AND their_friends.following != ? AND NOT EXISTS (SELECT 1 FROM follows fu3 WHERE fu3.follower = ? AND fu3.following = their_friends.following) GROUP BY me.id, their_friends.following");
+					$stmt->bind_param("iii",$currentUser,$currentUser,$currentUser);
+					if($stmt->execute()){
+						$result = $stmt->get_result();
+
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								$u = User::getUserByData($row["id"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"]);
+								$mutuals = $row["mutuals"];
+
+								array_push($suggestedUsers,[
+									"user" => $u,
+									"mutuals" => $mutuals
+								]);
+							}
+						}
+					}
+					$stmt->close();
+
+					?>
 				<div class="card my-3">
 					<div class="card-header">
 						<ul class="nav nav-pills nav-fill" id="users-tablist" role="tablist">
+							<?php if(count($suggestedUsers) > 0){ ?>
 							<li class="nav-item">
-								<a class="nav-link active" id="trending-tab" data-toggle="pill" href="#trendingUsers" role="tab" aria-controls="trendingUsers" aria-selected="true">
-									Trending users
+								<a class="nav-link active" id="suggested-tab" data-toggle="pill" href="#suggestedUsers" role="tab" aria-controls="suggestedUsers" aria-selected="<?= count($suggestedUsers) > 0 ? "true" : "false" ?>">
+									Suggested
+								</a>
+							</li>
+							<?php } ?>
+
+							<li class="nav-item">
+								<a class="nav-link<?= count($suggestedUsers) == 0 ? " active" : "" ?>" id="trending-tab" data-toggle="pill" href="#trendingUsers" role="tab" aria-controls="trendingUsers" aria-selected="<?= count($suggestedUsers) > 0 ? "false" : "true" ?>">
+									Trending
 								</a>
 							</li>
 
 							<li class="nav-item">
 								<a class="nav-link" id="new-tab" data-toggle="pill" href="#newUsers" role="tab" aria-controls="newUsers" aria-selected="false">
-									New users
+									New
 								</a>
 							</li>
 						</ul>
 					</div>
 
 					<div class="tab-content" id="users-tablist-content">
-						<div class="tab-pane fade show active" id="trendingUsers" role="tabpanel" aria-labelledby="trending-tab">
+						<?php if(count($suggestedUsers) > 0){ ?>
+						<div class="tab-pane fade show active" id="suggestedUsers" role="tabpanel" aria-labelledby="suggested-tab">
+							<?php
+
+								foreach($suggestedUsers as $suggestedUser){
+									$mutuals = $suggestedUser["mutuals"];
+									$u = $suggestedUser["user"];
+
+									?>
+								<div class="px-2 py-1 my-1" style="height: 70px">
+									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline float-left">
+										<img src="<?= $u->getAvatarURL() ?>" width="64" height="64" class="rounded"/>
+									</a>
+
+									<div class="ml-2 float-left">
+										<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
+											<div class="font-weight-bold float-left small mt-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
+											<div class="text-muted small float-right mt-1 ml-1" style="max-width: 80px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
+										</a>
+
+										<?= Util::followButton($u->getId(),true,["mt-0","btn-sm","ignoreParentClick"]) ?>
+									</div>
+								</div>
+									<?php
+								}
+
+							?>
+						</div>
+						<?php } ?>
+
+						<div class="tab-pane fade<?= count($suggestedUsers) == 0 ? " show active" : "" ?>" id="trendingUsers" role="tabpanel" aria-labelledby="trending-tab">
 							<?php
 
 								foreach($trendingUsers as $trendingUser){
@@ -289,8 +348,7 @@
 						</div>
 					</div>
 				</div>
-					<?php
-				}
+				<?php
 
 				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mb-1"]);
 
