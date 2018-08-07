@@ -760,7 +760,12 @@ function loadHomeFeed(){
 		
 		function loadBasic(){
 			$('[data-toggle="tooltip"]').tooltip({
-				trigger: 'hover'
+				trigger: "hover"
+			});
+
+			$('[data-toggle="popover"]').popover({
+				//trigger: "focus",
+				html: true
 			});
 			
 			$("time.timeago").timeago();

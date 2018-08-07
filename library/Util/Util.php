@@ -1153,11 +1153,47 @@ class Util {
 
 		$placeholder = !$isReply ? "Post something for your followers!" : "Post your reply";
 
+		$popoverHtml = "";
+
+		$popoverHtml .= '<div class="addElementGroupContainer">';
+		$popoverHtml .= '<div class="addElementGroup">';
+		$popoverHtml .= '<a href="#" class="addImage clearUnderline">';
+		$popoverHtml .= '<i class="float-left fas fa-images addElementIcon"></i> <div class="addElementText">Picture</div>';
+		$popoverHtml .= '</a>';
+		$popoverHtml .= '</div>';
+		$popoverHtml .= '</div>';
+
+		$popoverHtml .= '<div class="addElementGroupContainer">';
+		$popoverHtml .= '<div class="addElementGroup">';
+		$popoverHtml .= '<a href="#" class="addImage clearUnderline">';
+		$popoverHtml .= '<i class="float-left fas fa-video addElementIcon"></i> <div class="addElementText">Video</div>';
+		$popoverHtml .= '</a>';
+		$popoverHtml .= '</div>';
+		$popoverHtml .= '</div>';
+		
+		$popoverHtml .= '<div class="addElementGroupContainer">';
+		$popoverHtml .= '<div class="addElementGroup">';
+		$popoverHtml .= '<a href="#" class="addImage clearUnderline">';
+		$popoverHtml .= '<i class="float-left fas fa-volume-up addElementIcon"></i> <div class="addElementText">Audio</div>';
+		$popoverHtml .= '</a>';
+		$popoverHtml .= '</div>';
+		$popoverHtml .= '</div>';
+
+		$popoverHtml .= '<div class="addElementGroupContainer">';
+		$popoverHtml .= '<div class="addElementGroup">';
+		$popoverHtml .= '<a href="#" class="addImage clearUnderline">';
+		$popoverHtml .= '<i class="float-left fas fa-link addElementIcon"></i> <div class="addElementText">Link</div>';
+		$popoverHtml .= '</a>';
+		$popoverHtml .= '</div>';
+		$popoverHtml .= '</div>';
+
 		$box = "";
 
 		$box .= '<div class="card my-2 border-primary postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
 		$box .= '<div class="card-body">';
 		$box .= '<textarea class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
+
+		$box .= '<button type="button" class="btn btn-info btn-sm float-left mt-2 rounded-circle addElement" data-toggle="popover" title="Add an element" data-content="' . self::sanatizeHTMLAttribute($popoverHtml) . '" data-placement="bottom"><i class="fas fa-plus"></i></button>';
 
 		$box .= '<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2 postButton">Post</button>';
 

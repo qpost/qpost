@@ -92,3 +92,26 @@ img.emoji {
  .postBox {
 	background: #9FCCFC;
  }
+
+ i.addElementIcon {
+	 font-size: 27px;
+	 margin-right: 5px;
+	 float: left;
+ }
+
+ .addElementGroup {
+	 height: 29px;
+ }
+
+ .addElementText {
+	 float: left;
+	 margin-top: 3px;
+ }
+
+ .addElementGroupContainer {
+	margin-bottom: 7px;
+ }
+
+ .addElementGroupContainer:last-of-type {
+	 margin-bottom: 0px;
+ }
