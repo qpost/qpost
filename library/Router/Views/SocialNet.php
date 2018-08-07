@@ -7,24 +7,32 @@
 
 	$currentUser = Util::getCurrentUser()->getId();
 
-	// https://stackoverflow.com/a/24165699
+	// https://stackoverflow.com/a/12915720 (slightly edited)
 
 	$mysqli = Database::Instance()->get();
 	$stmt = $mysqli->prepare("SELECT
-		COUNT(*) AS mutuals,
+	COUNT(*)       AS mutuals,
 		u.*
-		FROM follows fu
-		JOIN follows fu2
-			ON fu2.following = fu.follower
-			AND NOT EXISTS (SELECT 1 FROM follows fu3 
-				WHERE fu3.following = ?
-				AND fu3.follower = fu2.follower)
-		INNER JOIN users AS u
-			ON u.id = fu2.follower
-		WHERE fu.following = ?
-		AND fu2.follower != ?
-		GROUP BY fu2.follower
-		ORDER BY mutuals DESC");
+	FROM
+		users      AS me
+	INNER JOIN
+		follows    AS my_friends
+		ON my_friends.follower = me.id
+	INNER JOIN
+		follows    AS their_friends
+		ON their_friends.follower = my_friends.following
+	INNER JOIN 
+		users 	   AS u
+		ON u.id = their_friends.following
+	WHERE
+		me.id = ?
+		AND their_friends.following != ?
+		AND NOT EXISTS (SELECT 1 FROM follows fu3
+						WHERE fu3.follower = ?
+						AND fu3.following = their_friends.following)
+	GROUP BY
+		me.id,
+		their_friends.following");
 	$stmt->bind_param("iii",$currentUser,$currentUser,$currentUser);
 	if($stmt->execute()){
 		$result = $stmt->get_result();
