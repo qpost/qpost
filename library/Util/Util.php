@@ -1159,11 +1159,12 @@ class Util {
 		$box .= '<div class="card-body">';
 		$box .= '<textarea class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
 
-		$box .= '<p class="mb-0 mt-2 float-left small postCharacterCounter">';
-		$box .= POST_CHARACTER_LIMIT . ' characters left';
-		$box .= '</p>';
-
 		$box .= '<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2 postButton">Post</button>';
+
+		$box .= '<div class="mb-0 mt-3 mr-3 text-right float-right small postCharacterCounter">';
+		$box .= POST_CHARACTER_LIMIT . ' characters left';
+		$box .= '</div>';
+
 		$box .= '</div>';
 		$box .= '</div>';
 

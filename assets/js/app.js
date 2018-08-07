@@ -1210,98 +1210,35 @@ function loadHomeFeed(){
 			});
 			
 			
-			$(document).on("change keyup keydown paste","#profilePostField",function(){
+			$(document).on("change keyup keydown paste",".postField",function(){
 				let limit = POST_CHARACTER_LIMIT;
-				let used = $("#profilePostField").val().length;
+				let used = $(this).val().length;
 				let left = limit-used;
+				let counter = $(this).parent().find(".postCharacterCounter");
 				
 				if(left > 0){
 					if(left > limit/2){
 						if(left == 1){
-							$("#profileCharacterCounter").html(left + " character left");
+							counter.html(left + " character left");
 						} else {
-							$("#profileCharacterCounter").html(left + " characters left");
+							counter.html(left + " characters left");
 						}
 					} else {
 						if(left == 1){
-							$("#profileCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
+							counter.html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
 						} else {
-							$("#profileCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
+							counter.html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
 						}
 					}
 				} else if(left == 0){
-					$("#profileCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
+					counter.html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
 				} else {
 					left = left/(-1);
 					
 					if(left == 1){
-						$("#profileCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
+						counter.html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
 					} else {
-						$("#profileCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
-					}
-				}
-			});
-			
-			$(document).on("change keyup keydown paste","#statusModalPostField",function(){
-				let limit = POST_CHARACTER_LIMIT;
-				let used = $("#statusModalPostField").val().length;
-				let left = limit-used;
-				
-				if(left > 0){
-					if(left > limit/2){
-						if(left == 1){
-							$("#statusModalCharacterCounter").html(left + " character left");
-						} else {
-							$("#statusModalCharacterCounter").html(left + " characters left");
-						}
-					} else {
-						if(left == 1){
-							$("#statusModalCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
-						} else {
-							$("#statusModalCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
-						}
-					}
-				} else if(left == 0){
-					$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
-				} else {
-					left = left/(-1);
-					
-					if(left == 1){
-						$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
-					} else {
-						$("#statusModalCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
-					}
-				}
-			});
-			
-			$(document).on("change keyup keydown paste","#homePostField",function(){
-				let limit = POST_CHARACTER_LIMIT;
-				let used = $("#homePostField").val().length;
-				let left = limit-used;
-				
-				if(left > 0){
-					if(left > limit/2){
-						if(left == 1){
-							$("#homeCharacterCounter").html(left + " character left");
-						} else {
-							$("#homeCharacterCounter").html(left + " characters left");
-						}
-					} else {
-						if(left == 1){
-							$("#homeCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
-						} else {
-							$("#homeCharacterCounter").html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
-						}
-					}
-				} else if(left == 0){
-					$("#homeCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
-				} else {
-					left = left/(-1);
-					
-					if(left == 1){
-						$("#homeCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
-					} else {
-						$("#homeCharacterCounter").html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
+						counter.html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
 					}
 				}
 			});
