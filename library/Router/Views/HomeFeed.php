@@ -243,20 +243,20 @@
 						<ul class="nav nav-pills nav-fill" id="users-tablist" role="tablist">
 							<?php if(count($suggestedUsers) > 0){ ?>
 							<li class="nav-item">
-								<a class="nav-link active" id="suggested-tab" data-toggle="pill" href="#suggestedUsers" role="tab" aria-controls="suggestedUsers" aria-selected="<?= count($suggestedUsers) > 0 ? "true" : "false" ?>">
+								<a class="nav-link active small" id="suggested-tab" data-toggle="pill" href="#suggestedUsers" role="tab" aria-controls="suggestedUsers" aria-selected="<?= count($suggestedUsers) > 0 ? "true" : "false" ?>">
 									Suggested
 								</a>
 							</li>
 							<?php } ?>
 
 							<li class="nav-item">
-								<a class="nav-link<?= count($suggestedUsers) == 0 ? " active" : "" ?>" id="trending-tab" data-toggle="pill" href="#trendingUsers" role="tab" aria-controls="trendingUsers" aria-selected="<?= count($suggestedUsers) > 0 ? "false" : "true" ?>">
+								<a class="nav-link<?= count($suggestedUsers) == 0 ? " active" : "" ?> small" id="trending-tab" data-toggle="pill" href="#trendingUsers" role="tab" aria-controls="trendingUsers" aria-selected="<?= count($suggestedUsers) > 0 ? "false" : "true" ?>">
 									Trending
 								</a>
 							</li>
 
 							<li class="nav-item">
-								<a class="nav-link" id="new-tab" data-toggle="pill" href="#newUsers" role="tab" aria-controls="newUsers" aria-selected="false">
+								<a class="nav-link small" id="new-tab" data-toggle="pill" href="#newUsers" role="tab" aria-controls="newUsers" aria-selected="false">
 									New
 								</a>
 							</li>
