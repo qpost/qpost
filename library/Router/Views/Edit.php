@@ -15,7 +15,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 
 	if(!empty(trim($displayName))){
 		if(strlen($displayName) >= 1 && strlen($displayName) <= 25){
-			if(strlen($bio) <= 400){
+			if(strlen($bio) <= 160){
 				if(empty($featuredBoxTitle) || strlen($featuredBoxTitle) <= 25){
 					$boxUsers = [];
 
@@ -69,7 +69,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 					$errorMsg = "The Featured box title must be less than 25 characters long.";
 				}
 			} else {
-				$errorMsg = "The bio must be less than 400 characters long.";
+				$errorMsg = "The bio must be less than 160 characters long.";
 			}
 		} else {
 			$errorMsg = "The display name must be between 1 and 25 characters long.";

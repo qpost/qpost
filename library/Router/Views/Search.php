@@ -159,26 +159,28 @@
 
 				echo '</div></div>';
 			} else if($type == "users"){
+				?><div class="row my-2"><?php
 				foreach($results as $u){
 					?>
-				<div class="row my-2">
-					<div class="card userCard col-md-6 offset-md-3 mb-3" data-user-id="<?= $u->getId(); ?>">
-						<div class="card-body">
-							<center>
-								<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60" class="rounded mb-1"/>
+					<div class="col-md-4 px-1 py-1">
+						<div class="card userCard" data-user-id="<?= $u->getId(); ?>" style="height: 327px">
+							<div class="px-2 py-2">
+								<center>
+									<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60" class="rounded mb-1"/>
 
-								<h5 class="mb-0"><?= $u->getDisplayName(); ?></a></h5>
-								<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
+									<h5 class="mb-0"><?= $u->getDisplayName(); ?></a></h5>
+									<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
 
-								<?= (($u->getPrivacyLevel() == PRIVACY_LEVEL_PUBLIC || (Util::isLoggedIn() && $u->isFollower($_SESSION["id"]))) && (!is_null($u->getBio()))) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+									<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
 
-								<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
-							</center>
+									<?= (($u->getPrivacyLevel() == PRIVACY_LEVEL_PUBLIC || (Util::isLoggedIn() && $u->isFollower($_SESSION["id"]))) && (!is_null($u->getBio()))) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+								</center>
+							</div>
 						</div>
 					</div>
-				</div>
 					<?php
 				}
+				?></div><?php
 			}
 
 			echo Util::paginate($page,$itemsPerPage,$num,"/search?query=" . urlencode($query) . "&type=" . $type . "&page=(:num)");
