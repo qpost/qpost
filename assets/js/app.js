@@ -764,7 +764,7 @@ function loadHomeFeed(){
 			});
 
 			$('[data-toggle="popover"]').popover({
-				//trigger: "focus",
+				trigger: "focus",
 				html: true
 			});
 			
