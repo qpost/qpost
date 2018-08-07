@@ -66,8 +66,8 @@ if(isset($_SESSION["profileLoadPost"])){
 			"assets:css/bootstrap.min.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
 			"assets:css/main.css",
-			"assets:css/twemoji-picker.css",
-			"https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"]); ?>
+			"assets:css/datepicker.min.css",
+			"assets:css/twemoji-picker.css"]); ?>
 
 		<?= $app->script([
 			"https://code.jquery.com/jquery-latest.min.js",
@@ -75,11 +75,11 @@ if(isset($_SESSION["profileLoadPost"])){
 			"assets:js/bootstrap.min.js",
 			"assets:js/jquery.timeago.js",
 			"assets:js/app.js",
+			"assets:js/datepicker.min.js",
 			"https://www.google.com/recaptcha/api.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
 			"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
-			"assets:js/twemoji-picker.js",
-			"https://code.jquery.com/ui/1.12.1/jquery-ui.js"]); ?>
+			"assets:js/twemoji-picker.js"]); ?>
 
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";var CURRENT_STATUS_MODAL = 0;</script><?php unset($_SESSION["profileLoadPost"]); ?>
 	</head>
