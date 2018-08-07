@@ -1153,7 +1153,7 @@ class Util {
 
 		$placeholder = !$isReply ? "Post something for your followers!" : "Post your reply";
 
-		$popoverHtml = "";
+		/*$popoverHtml = "";
 
 		$popoverHtml .= '<div class="addElementGroupContainer">';
 		$popoverHtml .= '<div class="addElementGroup">';
@@ -1185,7 +1185,7 @@ class Util {
 		$popoverHtml .= '<i class="float-left fas fa-link addElementIcon"></i> <div class="addElementText">Link</div>';
 		$popoverHtml .= '</a>';
 		$popoverHtml .= '</div>';
-		$popoverHtml .= '</div>';
+		$popoverHtml .= '</div>';*/
 
 		$box = "";
 
@@ -1193,7 +1193,14 @@ class Util {
 		$box .= '<div class="card-body">';
 		$box .= '<textarea class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
 
-		$box .= '<button type="button" class="btn btn-info btn-sm float-left mt-2 rounded-circle addElement" data-toggle="popover" title="Add an element" data-content="' . self::sanatizeHTMLAttribute($popoverHtml) . '" data-placement="bottom"><i class="fas fa-plus"></i></button>';
+		//$box .= '<button type="button" class="btn btn-info btn-sm float-left mt-2 rounded-circle addElement" data-toggle="popover" title="Add an element" data-content="' . self::sanatizeHTMLAttribute($popoverHtml) . '" data-placement="bottom"><i class="fas fa-plus"></i></button>';
+
+		$box .= '<div class="float-left mt-2">';
+		$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add photo"><i class="fas fa-images"></i></button>';
+		$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add video"><i class="fas fa-video"></i></button>';
+		$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add audio"><i class="fas fa-volume-up"></i></button>';
+		$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add link"><i class="fas fa-link"></i></button>';
+		$box .= '</div>';
 
 		$box .= '<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2 postButton">Post</button>';
 
