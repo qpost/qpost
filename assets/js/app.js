@@ -584,7 +584,7 @@ function loadHomeFeed(){
 								title,
 								
 								{
-									body: text,
+									body: text.replace("<br/>","\n"),
 									icon: notificationData.follower.avatar
 								}
 							);
