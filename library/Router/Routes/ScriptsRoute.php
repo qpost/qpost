@@ -439,8 +439,6 @@ $app->post("/scripts/createPost",function(){
 
 			if(strlen($text) <= POST_CHARACTER_LIMIT){
 				if(count($mentioned) < 15){
-					$text = Util::sanatizeString($text);
-
 					$userId = $user->getId();
 					$sessionId = session_id();
 					$type = FEED_ENTRY_TYPE_POST;
