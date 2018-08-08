@@ -544,6 +544,12 @@ function loadHomeFeed(){
 			setTimeout(loadHomeFeed,5000);
 		}
 	}
+
+	function loadFileUpload(){
+		$(".postFileUpload").fileupload({
+			dataType: "json"
+		});
+	}
 	
 	function checkForNotifications(){
 		$.ajax({
@@ -567,16 +573,16 @@ function loadHomeFeed(){
 							text = notificationData.follower.bio != null ? notificationData.follower.bio : ""
 						} else if(notificationData.type == "MENTION"){
 							title = notificationData.follower.displayName + " mentioned you";
-							text = notificationData.post.text;
+							text = notificationData.post.textUnfiltered;
 						} else if(notificationData.type == "FAVORITE"){
 							title = notificationData.follower.displayName + " favorited your post";
-							text = notificationData.post.text;
+							text = notificationData.post.textUnfiltered;
 						} else if(notificationData.type == "SHARE"){
 							title = notificationData.follower.displayName + " shared your post";
-							text = notificationData.post.text;
+							text = notificationData.post.textUnfiltered;
 						} else if(notificationData.type == "REPLY"){
 							title = notificationData.follower.displayName + " replied to your post";
-							text = notificationData.post.text;
+							text = notificationData.post.textUnfiltered;
 						}
 						
 						if(title != null && text != null){
@@ -796,6 +802,8 @@ function loadHomeFeed(){
 			resetStatusModal();
 			checkForNotifications();
 			loadHomeFeed();
+			loadDropzones();
+			loadFileUpload();
 			
 			if("serviceWorker" in navigator){
 				navigator.serviceWorker.register("/serviceWorker.js").then((reg) => {})
