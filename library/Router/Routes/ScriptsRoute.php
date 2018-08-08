@@ -456,6 +456,8 @@ $app->post("/scripts/createPost",function(){
 						if($parentCreator->hasBlocked($userId)) return json_encode(["error" => "Parent has blocked"]);
 					}
 
+					if($parent == 0) $parent = null;
+
 					$mysqli = Database::Instance()->get();
 					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`) VALUES(?,?,NULL,?,?,?);");
 					$stmt->bind_param("isssi", $userId,$text,$sessionId,$type,$parent);
