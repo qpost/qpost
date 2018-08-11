@@ -546,9 +546,9 @@ function loadHomeFeed(){
 	}
 
 	function loadFileUpload(){
-		$(".postFileUpload").fileupload({
+		/*$(".postFileUpload").fileupload({
 			dataType: "json"
-		});
+		});*/
 	}
 	
 	function checkForNotifications(){
@@ -802,7 +802,6 @@ function loadHomeFeed(){
 			resetStatusModal();
 			checkForNotifications();
 			loadHomeFeed();
-			loadDropzones();
 			loadFileUpload();
 			
 			if("serviceWorker" in navigator){

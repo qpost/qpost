@@ -1,7 +1,7 @@
 <?php
 
-use phpFastCache\CacheManager;
-use phpFastCache\Core\phpFastCache;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\Config;
 
 /**
  * Class CacheHandler
@@ -37,12 +37,13 @@ class CacheHandler {
 	 * @param int $expiry The amount in seconds for which the object should be held in the cache
 	 */
 	public static function setToCache($name,$value,$expiry){
-		if(CacheHandler::existsInCache($name)) CacheHandler::deleteFromCache($name);
+		$name = self::validateName($name);
+		if(\CacheHandler::existsInCache($name)) \CacheHandler::deleteFromCache($name);
 		
-		$c = CacheHandler::Manager()->getItem($name);
+		$c = \CacheHandler::Manager()->getItem($name);
 		if(is_null($c->get())){
 			$c->set($value)->expiresAfter($expiry);
-			CacheHandler::Manager()->save($c);
+			\CacheHandler::Manager()->save($c);
 		}
 	}
 	
@@ -54,8 +55,9 @@ class CacheHandler {
 	 * @return mixed Returns the cached object
 	 */
 	public static function getFromCache($name){
-		if(CacheHandler::existsInCache($name)){
-			$c = CacheHandler::Manager()->getItem($name);
+		$name = self::validateName($name);
+		if(\CacheHandler::existsInCache($name)){
+			$c = \CacheHandler::Manager()->getItem($name);
 			
 			return $c->get();
 		} else {
@@ -71,7 +73,8 @@ class CacheHandler {
 	 * @return bool Returns true if the object exists
 	 */
 	public static function existsInCache($name){
-		return CacheHandler::Manager()->hasItem($name);
+		$name = self::validateName($name);
+		return \CacheHandler::Manager()->hasItem($name);
 		//return getFromCache($name) != null;
 	}
 	
@@ -83,13 +86,22 @@ class CacheHandler {
 	 * @return bool Returns true if the object could be removed
 	 */
 	public static function deleteFromCache($name){
+		$name = self::validateName($name);
 		$r = false;
 		
-		if(CacheHandler::existsInCache($name)){
-			CacheHandler::Manager()->deleteItem($name);
+		if(\CacheHandler::existsInCache($name)){
+			\CacheHandler::Manager()->deleteItem($name);
 			$r = true;
 		}
 		
 		return $r;
 	}
+
+	private static function validateName($name){
+		return str_replace("{","-",str_replace("}","-",str_replace("(","-",str_replace(")","-",str_replace("/","-",str_replace("\\","-",str_replace("@","-",str_replace(":","-",$name))))))));
+	}
 }
+
+CacheManager::setDefaultConfig(new Config([
+	"path" => __DIR__ . "/../../tmp/"
+]));
