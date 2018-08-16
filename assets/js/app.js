@@ -76,7 +76,7 @@ function showDeleteModal(postId){
 					'<p style="font-size: 27px;">' +
 					twemoji.parse(json.text) +
 					'</p>' +
-					'<p class="small text-muted">Posted ' +
+					'<p class="small text-muted"><i class="far fa-clock"></i> Posted ' +
 					json.time +
 					'</p>' +
 					'</div>'
@@ -271,7 +271,7 @@ function showStatusModal(postId){
 					'<p style="font-size: 27px;">' +
 					twemoji.parse(json.text) +
 					'</p>' +
-					'<p class="small text-muted">Posted ' +
+					'<p class="small text-muted"><i class="far fa-clock"></i> Posted ' +
 					json.time +
 					'</p>' +
 					'</div>'
