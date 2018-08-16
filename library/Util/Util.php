@@ -1190,7 +1190,7 @@ class Util {
 
 		$box = "";
 
-		$box .= '<div class="card my-2 border-primary postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
+		$box .= '<div class="card border-primary postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
 		$box .= '<div class="card-body">';
 		$box .= '<textarea class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
 

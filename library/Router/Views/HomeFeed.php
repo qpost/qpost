@@ -2,11 +2,9 @@
 	<div class="row">
 		<div class="col-lg-8">
 			<?= Util::createAlert("feedInfo","The home feed shows the posts and activities of you and the people you follow on the network. Follow people you are interested in to see what they're doing!",ALERT_TYPE_INFO,true,true); ?>
-			<h4>Feed</h4>
-
 			<?php
 
-				echo Util::renderCreatePostForm();
+				echo Util::renderCreatePostForm(["mb-2"]);
 
 				$user = Util::getCurrentUser();
 				$mysqli = Database::Instance()->get();

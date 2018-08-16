@@ -15,7 +15,7 @@ if(isset($_SESSION["profileLoadPost"])){
 }
 
 if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId())
-	echo Util::renderCreatePostForm();
+	echo Util::renderCreatePostForm(["my-2"]);
 
 if($num > 0){
 	$feedEntries = [];
