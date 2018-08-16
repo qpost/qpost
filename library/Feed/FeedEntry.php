@@ -455,9 +455,10 @@ class FeedEntry {
      * Returns HTML code to use in a feed entry list (search, profile, home feed, ...)
      * 
      * @access public
+     * @param int $maxWidth Max width of the content part in px
      * @return string
      */
-    public function toListHTML(){
+    public function toListHTML($maxWidth = 658){
         $user = $this->getUser();
 
         if($this->getType() == "POST"){
@@ -469,7 +470,7 @@ class FeedEntry {
 			$s .= '</a>';
 			$s .= '</div>';
 
-			$s .= '<div class="float-left ml-1">';
+			$s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px">';
 			$s .= '<p class="mb-0">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<span class="font-weight-bold">' . $user->getDisplayName() . '</span>';
