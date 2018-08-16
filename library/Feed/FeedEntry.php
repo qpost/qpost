@@ -461,16 +461,15 @@ class FeedEntry {
         $user = $this->getUser();
 
         if($this->getType() == "POST"){
-            $s = '<li class="list-group-item feedEntry statusTrigger px-2 py-2" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';
-			$s .= '<div class="card-body">';
+            $s = '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';
 			$s .= '<div class="row">';
-            $s .= '<div class="col-1">';
+            $s .= '<div class="float-left">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<img class="rounded mx-1 my-1" src="' . $user->getAvatarURL() . '" width="40" height="40"/>';
 			$s .= '</a>';
 			$s .= '</div>';
 
-			$s .= '<div class="col-11">';
+			$s .= '<div class="float-left ml-1">';
 			$s .= '<p class="mb-0">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<span class="font-weight-bold">' . $user->getDisplayName() . '</span>';
@@ -488,7 +487,6 @@ class FeedEntry {
 			$s .= '</p>';
 
 			$s .= Util::getPostActionButtons($this);
-			$s .= '</div>';
 			$s .= '</div>';
 			$s .= '</div>';
             $s .= '</li>';
@@ -518,19 +516,18 @@ class FeedEntry {
 			if(is_null($sharedPost) || is_null($sharedUser))
 				return "";
 
-			$s = '<li class="list-group-item feedEntry statusTrigger px-2 py-2" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
-			$s .= '<div class="card-body">';
+			$s = '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
 			$s .= '<div class="small text-muted">';
 			$s .= '<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . '</a> &bull; ' . Util::timeago($this->getTime());
 			$s .= '</div>';
 			$s .= '<div class="row">';
-			$s .= '<div class="col-1">';
+			$s .= '<div class="float-left">';
 			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<img class="rounded mx-1 my-1" src="' . $sharedUser->getAvatarURL() . '" width="40" height="40"/>';
 			$s .= '</a>';
             $s .= '</div>';
 
-            $s .= '<div class="col-11">';
+            $s .= '<div class="float-left ml-1">';
 			$s .= '<p class="mb-0">';
 			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<span class="font-weight-bold">' . $sharedUser->getDisplayName() . '</span>';
@@ -548,7 +545,6 @@ class FeedEntry {
 			$s .= '</p>';
 
 			$s .= Util::getPostActionButtons($sharedPost);
-			$s .= '</div>';
 			$s .= '</div>';
 			$s .= '</div>';
             $s .= '</li>';
