@@ -188,6 +188,17 @@ if(isset($_SESSION["profileLoadPost"])){
 			<div class="legacyCard">
 				<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 				<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+				<div class="modal fade" id="dropzoneModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+				<span class="dz-message"></span>
+				
+				<div class="preview-template d-none">
+					<div class="dz-preview dz-file-preview well mt-2 mr-2 float-left" id="dz-preview-template">
+						<img data-dz-thumbnail width="100" height="100" class="rounded border border-primary"/>
+						<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+						<div class="dz-success-mark"><span></span></div>
+						<div class="dz-error-mark"><span></span></div>
+					</div>
+				</div>
 
 				<div class="wrapper"><?php
 
@@ -389,7 +400,7 @@ if(isset($_SESSION["profileLoadPost"])){
 		</div>
 
 		<script src="<?= $app->baseUrl("/assets/js/instantclick.min.js"); ?>" data-no-instant></script>
-		<script data-no-instant>loadBasic();InstantClick.init();InstantClick.on("change",function(){loadBasic();loadNotificationAlert();loadFileUpload();});</script>
+		<script data-no-instant>loadBasic();InstantClick.init();InstantClick.on("change",function(){loadBasic();loadNotificationAlert();loadDropzone();});</script>
 		<script>if($(".convertEmoji").length){$(".convertEmoji").html(function(){return twemoji.parse($(this).html());});}</script>
 	</body>
 </html>

@@ -457,12 +457,6 @@ function loadHomeFeed(){
 	}
 }
 
-function loadFileUpload(){
-	/*$(".postFileUpload").fileupload({
-		dataType: "json"
-	});*/
-}
-
 function checkForNotifications(){
 	$.ajax({
 		url: "/scripts/desktopNotifications",
@@ -629,7 +623,7 @@ $(document).ready(function(){
 	resetStatusModal();
 	checkForNotifications();
 	loadHomeFeed();
-	loadFileUpload();
+	loadDropzone();
 	
 	if("serviceWorker" in navigator){
 		navigator.serviceWorker.register("/serviceWorker.js").then((reg) => {})
@@ -653,12 +647,50 @@ function hasNotificationPermissions(){
 	return Notification.permission === "granted";
 }
 
+function loadDropzone(){
+	let dz = new Dropzone(document.body, {
+		url: "/scripts/mediaUpload",
+		paramName: "file",
+		maxFilesize: 10,
+		maxFiles: 4,
+		acceptedFiles: "image/*",
+		previewsContainer: ".dropzone-previews",
+		clickable: ".addMediaAttachment",
+		previewTemplate: $(".preview-template").html()
+	});
+
+	dz.on("sending",(file,xhr,formData) => {
+		formData.append("csrf_token",CSRF_TOKEN);
+	});
+
+	dz.on("addedfile", (file) => {
+		let button = Dropzone.createElement("<button class=\"btn btn-danger btn-sm float-right\" style=\"margin-left: -50px; z-index: 99999; position: relative;\"><i class=\"fas fa-trash-alt\"></i></button>");
+
+		button.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+
+			dz.removeFile(file);
+		});
+
+		file.previewElement.prepend(button);
+	});
+}
+
 function load(){
+	Dropzone.autoDiscover = false;
+
 	$(document).on("click",".enableNotifications",function(e){
 		e.preventDefault();
 		
 		$(".notificationPermissionAlert").addClass("d-none");
 		Notification.requestPermission();
+	});
+
+	$(document).on("click",".addMediaAttachment",function(e){
+		e.preventDefault();
+
+		
 	});
 	
 	/*$(document).on("scroll",function(e){

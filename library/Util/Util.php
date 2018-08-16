@@ -1210,9 +1210,11 @@ class Util {
 
 		//$box .= '<button type="button" class="btn btn-info btn-sm float-left mt-2 rounded-circle addElement" data-toggle="popover" title="Add an element" data-content="' . self::sanatizeHTMLAttribute($popoverHtml) . '" data-placement="bottom"><i class="fas fa-plus"></i></button>';
 
+		$box .= '<div class="dropzone-previews row ml-2"></div>';
+
 		if($includeExtraOptions){
 			$box .= '<div class="float-left mt-2">';
-			$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
+			$box .= '<button type="button" class="btn btn-link mb-0 addMediaAttachment" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
 			$box .= '</div>';
 		}
 
