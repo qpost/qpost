@@ -67,7 +67,7 @@
 		</div>
 
 		<div class="col-lg-4">
-			<div class="homeFeedSidebar">
+			<div class="homeFeedSidebar" style="position: fixed;">
 				<form action="<?= $app->routeUrl("/search"); ?>" method="get">
 					<div class="input-group input-group-sm">
 						<input class="form-control" name="query" placeholder="Search <?= $app["config.site"]["name"] ?>" type="text"/>

@@ -661,7 +661,7 @@ function load(){
 		Notification.requestPermission();
 	});
 	
-	$(document).on("scroll",function(e){
+	/*$(document).on("scroll",function(e){
 		let scrollValue = $(document).scrollTop();
 		
 		if(scrollValue >= 10){
@@ -669,7 +669,7 @@ function load(){
 		} else {
 			$(".homeFeedSidebar").removeAttr("style");
 		}
-	});
+	});*/
 	
 	$(document).on("click",".hideNotifications",function(e){
 		e.preventDefault();
