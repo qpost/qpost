@@ -667,9 +667,9 @@ class Util {
 		curl_close($curl);
 
 		if(Util::contains($result,"ERROR: ") == false){
-			return ["result" => $result, "url" => sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,$result)];
+			return ["result" => $result, "url" => sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,$path . $result)];
 		} else {
-			return null;
+			return ["error" => $result];
 		}
 	}
 
@@ -1216,6 +1216,8 @@ class Util {
 			$box .= '<div class="float-left mt-2">';
 			$box .= '<button type="button" class="btn btn-link mb-0 addMediaAttachment" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
 			$box .= '</div>';
+
+			$box .= '<input type="hidden" name="attachmentData" value=""/>';
 		}
 
 		$box .= '<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2 postButton">Post</button>';

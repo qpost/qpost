@@ -117,6 +117,12 @@ class MediaFile {
 
     /**
      * @access private
+     * @var string $url
+     */
+    private $url;
+
+    /**
+     * @access private
      * @var int $originalUploader
      */
     private $originalUploader;
@@ -164,6 +170,16 @@ class MediaFile {
     }
 
     /**
+     * Returns the URL on the Gigadrive CDN
+     * 
+     * @access public
+     * @return string
+     */
+    public function getURL(){
+        return $this->url;
+    }
+
+    /**
      * Returns the id of the original uploader
      * 
      * @access public
@@ -201,6 +217,7 @@ class MediaFile {
 
                 $this->id = $row["id"];
                 $this->sha256 = $row["sha256"];
+                $this->url = $row["url"];
                 $this->originalUploader = $row["originalUploader"];
                 $this->time = $row["time"];
 

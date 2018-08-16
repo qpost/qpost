@@ -197,6 +197,7 @@ if(isset($_SESSION["profileLoadPost"])){
 						<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
 						<div class="dz-success-mark"><span></span></div>
 						<div class="dz-error-mark"><span></span></div>
+						<div class="dz-error-message"><span data-dz-errormessage></span></div>
 					</div>
 				</div>
 

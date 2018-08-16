@@ -264,6 +264,81 @@ $app->post("/scripts/extendHomeFeed",function(){
 	}
 });
 
+$app->post("/scripts/mediaUpload",function(){
+	$this->response->mime = "json";
+
+	if(Util::isLoggedIn()){
+		$user = Util::getCurrentUser();
+
+		if(!empty($_FILES)){
+			if(is_array($_FILES) && count($_FILES) > 0){
+				$mysqli = Database::Instance()->get();
+				$mediaIDs = [];
+
+				foreach($_FILES as $file){
+					$tmpName = $file["tmp_name"];
+					$fileName = $file["name"];
+	
+					if(is_uploaded_file($tmpName)){
+						$ext = strtolower(pathinfo($fileName,PATHINFO_EXTENSION));
+	
+						if($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif"){
+							if(@getimagesize($tmpName) === false){
+								continue;
+							}
+						}
+
+						$sha256 = hash("sha256",file_get_contents($tmpName));
+						$mediaFile = MediaFile::getMediaFileFromSHA($sha256);
+						if(!is_null($mediaFile)){
+							array_push($mediaIDs,$mediaFile->getId());
+							continue;
+						}
+
+						$mediaID = MediaFile::generateNewID();
+
+						$cdnResult = Util::storeFileOnCDN("serv/qpost/media/" . $mediaID . "/",$tmpName);
+						if(!is_null($cdnResult)){
+							if(isset($cdnResult["url"])){
+								$url = $cdnResult["url"];
+
+								$originalUploader = $user->getId();
+
+								$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`) VALUES(?,?,?,?);");
+								$stmt->bind_param("sssi",$mediaID,$sha256,$url,$originalUploader);
+								if($stmt->execute()){
+									$mediaFile = MediaFile::getMediaFileFromID($mediaID);
+
+									array_push($mediaIDs,$mediaID);
+								} else {
+									$stmt->close();
+									return json_encode(["error" => "Database error: " . $stmt->error]);
+								}
+
+								$stmt->close();
+							} else {
+								return json_encode(["error" => $cdnResult["error"]]);
+							}
+						} else {
+							return json_encode(["error" => "Failed to upload to CDN"]);
+						}
+					} else {
+						return json_encode(["error" => "Invalid file"]);
+					}
+				}
+
+				return json_encode(["ids" => $mediaIDs]);
+			} else {
+				return json_encode(["error" => "No filed passed"]);
+			}
+		} else {
+			return json_encode(["error" => "No filed passed"]);
+		}
+	} else {
+		return json_encode(["error" => "Not logged in"]);
+	}
+});
+
 $app->post("/scripts/postInfo",function(){
 	$this->response->mime = "json";
 
