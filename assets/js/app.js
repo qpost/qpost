@@ -195,8 +195,8 @@ function showStatusModal(postId){
 					d = d.parent;
 					hasParent = true;
 					
-					content =
-					'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + d.id + '" data-entry-id="' + d.id + '">' +
+					content = content.concat(d.listHtml);
+					/*'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + d.id + '" data-entry-id="' + d.id + '">' +
 					'<div class="py-1 px-3">' +
 					'<div class="row">' +
 					'<div class="float-left">' +
@@ -227,7 +227,7 @@ function showStatusModal(postId){
 					'</div>' +
 					'</div>' +
 					'</div>'
-					.concat(content);
+					.concat(content);*/
 				}
 				
 				if(hasParent == true)
@@ -289,7 +289,8 @@ function showStatusModal(postId){
 				
 				if(replies.length > 0){
 					replies.forEach(reply => {
-						content = content.concat(
+						content = content.concat(reply.listHtml);
+						/*content = content.concat(
 							'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + reply.id + '" data-entry-id="' + reply.id + '">' +
 							'<div class="py-1 px-3">' +
 							'<div class="row">' +
@@ -321,7 +322,7 @@ function showStatusModal(postId){
 							'</div>' +
 							'</div>' +
 							'</div>'
-						);
+						);*/
 					});
 				}
 				

@@ -299,19 +299,7 @@ $app->post("/scripts/postInfo",function(){
 								$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["time"]);
 								$u = User::getUserByData($row["userId"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["userTime"]);
 
-								array_push($replies,[
-									"id" => $f->getId(),
-									"user" => [
-										"id" => $u->getId(),
-										"displayName" => $u->getDisplayName(),
-										"username" => $u->getUsername(),
-										"avatar" => $u->getAvatarURL()
-									],
-									"text" => Util::convertPost($f->getText()),
-									"textUnfiltered" => Util::sanatizeString($f->getText()),
-									"time" => Util::timeago($f->getTime()),
-									"postActionButtons" => Util::getPostActionButtons($f)
-								]);
+								array_push($replies,Util::postJsonData($f));
 							}
 						}
 					}
