@@ -6,8 +6,7 @@ $app->bind("/",function(){
 	} else {
 		$data = array(
 			"title" => "Home",
-			"nav" => NAV_HOME,
-			"subtitle" => "Hello, " . Util::getCurrentUser()->getDisplayName() . "!"
+			"nav" => NAV_HOME
 		);
 	
 		return $this->render("views:HomeFeed.php with views:Layout.php",$data);

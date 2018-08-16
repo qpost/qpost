@@ -6,7 +6,6 @@ $app->bind("/account",function(){
 	$data = array(
 		"title" => "Account",
 		"nav" => NAV_ACCOUNT,
-		"subtitle" => "My account",
 		"showAccountNav" => true,
 		"accountNav" => ACCOUNT_NAV_HOME
 	);
@@ -20,7 +19,6 @@ $app->bind("/account/privacy",function(){
 	$data = array(
 		"title" => "Privacy",
 		"nav" => NAV_ACCOUNT,
-		"subtitle" => "Privacy settings",
 		"showAccountNav" => true,
 		"accountNav" => ACCOUNT_NAV_PRIVACY
 	);

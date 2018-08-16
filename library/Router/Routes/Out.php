@@ -13,7 +13,6 @@ $app->bind("/out",function(){
 
 				$data = array(
 					"title" => "You are now headed to a different website",
-					"subtitle" => "You are now headed to a different website",
 					"link" => $link,
 					"host" => $host
 				);

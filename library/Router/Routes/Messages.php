@@ -5,8 +5,7 @@ $app->bind("/messages",function(){
 
 	$data = array(
 		"title" => "Messages (" . Util::getCurrentUser()->getUnreadMessages() . ")",
-		"nav" => NAV_MESSAGES,
-		"subtitle" => "Messages (" . Util::getCurrentUser()->getUnreadMessages() . ")"
+		"nav" => NAV_MESSAGES
 	);
 
 	return $this->render("views:Messages.php with views:Layout.php",$data);

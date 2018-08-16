@@ -8,7 +8,6 @@ $app->bind("/notifications/:page",function($params){
 	$data = array(
 		"title" => "Notifications (" . Util::getCurrentUser()->getUnreadNotifications() . ")",
 		"nav" => NAV_NOTIFICATIONS,
-		"subtitle" => "Notifications (" . Util::getCurrentUser()->getUnreadNotifications() . ")",
 		"currentPage" => $page
 	);
 
@@ -23,7 +22,6 @@ $app->bind("/notifications",function(){
 	$data = array(
 		"title" => "Notifications (" . Util::getCurrentUser()->getUnreadNotifications() . ")",
 		"nav" => NAV_NOTIFICATIONS,
-		"subtitle" => "Notifications (" . Util::getCurrentUser()->getUnreadNotifications() . ")",
 		"currentPage" => $page
 	);
 

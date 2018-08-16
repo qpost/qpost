@@ -1,4 +1,4 @@
-<div class="card-body text-center">
+<div class="legacyCardBody text-center">
 	<img src="<?= $user->getAvatarURL(); ?>" width="150" height="150"/>
 
 	<h4 class="mb-1"><?= $user->getDisplayName(); ?></h4>

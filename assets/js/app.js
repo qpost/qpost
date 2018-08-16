@@ -837,8 +837,8 @@ function loadHomeFeed(){
 			$(document).on("scroll",function(e){
 				let scrollValue = $(document).scrollTop();
 				
-				if(scrollValue >= 120){
-					$(".homeFeedSidebar").attr("style","position: fixed; margin-top: -130px");
+				if(scrollValue >= 10){
+					$(".homeFeedSidebar").attr("style","position: fixed; margin-top: -10px");
 				} else {
 					$(".homeFeedSidebar").removeAttr("style");
 				}

@@ -1,4 +1,4 @@
-<div class="card-body text-center">
+<div class="legacyCardBody text-center">
 	<h4><?= $host; ?> is not part of this website!</h4>
 
 	<p>

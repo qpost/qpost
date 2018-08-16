@@ -27,7 +27,7 @@ if(CacheHandler::existsInCache($n)){
 }
 
 ?>
-<div class="card-body">
+<div class="legacyCardBody">
 	<div class="row">
 		<div class="col-lg-8 offset-lg-2 border rounded px-3 py-3">
 	<?php

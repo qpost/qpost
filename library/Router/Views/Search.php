@@ -1,4 +1,4 @@
-<div class="card-body">
+<div class="legacyCardBody">
 	<div class="row">
 		<div class="col-lg-8 offset-lg-2">
 			<form action="<?= $app->routeUrl("/search"); ?>" method="get">

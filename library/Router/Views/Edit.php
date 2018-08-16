@@ -79,7 +79,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 	}
 }
 
-?><div class="card-body">
+?><div class="legacyCardBody">
 	<?php
 
 	if(!is_null($errorMsg))

@@ -1,4 +1,4 @@
-<div class="card-body">
+<div class="legacyCardBody">
     <?php
 
     $mysqli = Database::Instance()->get();

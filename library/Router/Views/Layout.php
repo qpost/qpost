@@ -100,10 +100,10 @@ if(isset($_SESSION["profileLoadPost"])){
 		</div>
 		<?php } ?>
 
-		<nav id="mainNavSmall" class="d-xs-block d-lg-none navbar navbar-expand-lg navbar-dark bg-primary">
+		<nav id="mainNav" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
 			<div class="container-fluid container">
 				<div class="navbar-header">
-					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation-small" aria-controls="main-navigation-small" aria-expanded="false" aria-label="Toggle navigation" style="">
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation" aria-controls="main-navigation" aria-expanded="false" aria-label="Toggle navigation" style="">
 						<span class="navbar-toggler-icon"></span>
 					</button>
 
@@ -112,8 +112,8 @@ if(isset($_SESSION["profileLoadPost"])){
 					</a>
 				</div>
 
-				<div class="collapse navbar-collapse" id="main-navigation-small">
-					<ul class="nav navbar-nav mr-auto">
+				<div class="collapse navbar-collapse" id="main-navigation">
+					<ul class="nav navbar-nav ml-auto">
 						<?php
 
 						if(Util::isLoggedIn()){
@@ -185,108 +185,15 @@ if(isset($_SESSION["profileLoadPost"])){
 		</nav>
 
 		<div class="container">
-			<div class="card rounded my-3">
-				<nav id="mainNav" class="rounded-top d-none d-lg-block navbar navbar-expand-lg navbar-dark bg-primary">
-					<div class="container-fluid container">
-						<div class="navbar-header">
-							<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation" aria-controls="main-navigation" aria-expanded="false" aria-label="Toggle navigation" style="">
-								<span class="navbar-toggler-icon"></span>
-							</button>
-
-							<a class="navbar-brand" href="/">
-								<img src="/assets/img/navlogo.png" style="height: 30px"/>
-							</a>
-						</div>
-
-						<div class="collapse navbar-collapse" id="main-navigation">
-							<ul class="nav navbar-nav mr-auto">
-								<?php
-
-								if(Util::isLoggedIn()){
-									?>
-									<?php
-								}
-
-								?>
-							</ul>
-
-							<ul class="nav navbar-nav navbar-right">
-								<?php
-
-								if(Util::isLoggedIn()){
-									?>
-								<li class="nav-item<?= (isset($nav) && $nav == NAV_HOME) ? " active" : ""; ?>">
-									<a href="/" class="nav-link">
-										home
-									</a>
-								</li>
-
-								<li class="nav-item<?= (isset($nav) && $nav == NAV_PROFILE) ? " active" : ""; ?>">
-									<a href="/<?= Util::getCurrentUser()->getUsername(); ?>" class="nav-link">
-										my profile
-									</a>
-								</li>
-
-								<li class="nav-item<?= (isset($nav) && $nav == NAV_NOTIFICATIONS) ? " active" : ""; ?>">
-									<a href="/notifications" class="nav-link notificationTabMainNav" data-no-instant>
-										notifications<?= !is_null($unreadNotifications) && $unreadNotifications > 0 ? " <b>(" . $unreadNotifications . ")</b>" : "</b>"; ?>
-									</a>
-								</li>
-
-								<li class="nav-item<?= (isset($nav) && $nav == NAV_MESSAGES) ? " active" : ""; ?>">
-									<a href="/messages" class="nav-link">
-										messages<?= !is_null($unreadMessages) && $unreadMessages > 0 ? " <b>(" . $unreadMessages . ")</b>" : "</b>"; ?>
-									</a>
-								</li>
-
-								<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
-									<a href="/account" class="nav-link">
-										account
-									</a>
-								</li>
-
-								<li class="nav-item">
-									<a href="/logout" class="nav-link" data-no-instant>
-										log out
-									</a>
-								</li>
-									<?php
-								} else {
-									if($app->route != "/"){
-									?>
-								<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
-									<a href="/login" class="nav-link" data-no-instant>
-										log in
-									</a>
-								</li>
-									<?php
-									}
-								}
-
-								?>
-							</ul>
-						</div>
-					</div>
-				</nav>
-
+			<div class="legacyCard">
 				<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 				<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
-				<?php
-
-				if(isset($subtitle)){
-					?>
-				<div class="pageSubtitle">
-					<?= $subtitle; ?>
-				</div>
-					<?php
-				}
-
-				?><div class="wrapper"><?php
+				<div class="wrapper"><?php
 
 				if(isset($showProfile) && $showProfile == true && isset($user)){
 					?>
-				<div class="card-body">
+				<div class="legacyCardBody">
 					<?php
 
 						if(Util::isLoggedIn()){
@@ -425,7 +332,7 @@ if(isset($_SESSION["profileLoadPost"])){
 					<?php
 				} else if(isset($showAccountNav) && $showAccountNav == true){
 					?>
-				<div class="card-body">
+				<div class="legacyCardBody">
 					<div class="row">
 						<div class="col-lg-3 mb-3">
 							<ul class="nav nav-pills flex-column">
@@ -450,7 +357,9 @@ if(isset($_SESSION["profileLoadPost"])){
 				</div>
 			</div>
 
-			<footer class="small text-muted">
+			<hr class="mt-2"/>
+
+			<footer class="small text-muted my-2">
 				&copy; Copyright <?= date("Y"); ?> Gigadrive Group - All rights reserved.
 
 				<div class="float-right">

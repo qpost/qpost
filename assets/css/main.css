@@ -115,3 +115,7 @@ img.emoji {
  .addElementGroupContainer:last-of-type {
 	 margin-bottom: 0px;
  }
+
+ .legacyCard {
+	 margin-top: 70px;
+ }
