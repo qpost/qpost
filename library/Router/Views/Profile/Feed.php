@@ -82,7 +82,7 @@ if($num > 0){
 				</span>
 			</div>
 			<?php } ?>
-			<b><a href="/<?= $user->getUsername(); ?>" class="clearUnderline"><?= $user->getDisplayName(); ?></a></b> is now following <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><?= $u2->getDisplayName(); ?></a> &bull; <span class="text-muted"><?= Util::timeago($entry->getTime()); ?></span>
+			<i class="fas fa-user-plus text-info"></i> <b><a href="/<?= $user->getUsername(); ?>" class="clearUnderline"><?= $user->getDisplayName(); ?></a></b> is now following <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline"><?= $u2->getDisplayName(); ?></a> &bull; <span class="text-muted"><?= Util::timeago($entry->getTime()); ?></span>
 		</div>
 				<?php
 			} else if($entry->getType() == "SHARE"){
