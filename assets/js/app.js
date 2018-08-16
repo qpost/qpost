@@ -218,7 +218,7 @@ function showStatusModal(postId){
 					d.time +
 					'</p>' +
 					
-					'<p class="mb-0 convertEmoji">' +
+					'<p class="mb-0">' +
 					twemoji.parse(d.text) +
 					'</p>' +
 					
@@ -312,7 +312,7 @@ function showStatusModal(postId){
 							reply.time +
 							'</p>' +
 							
-							'<p class="mb-0 convertEmoji">' +
+							'<p class="mb-0">' +
 							twemoji.parse(reply.text) +
 							'</p>' +
 							
@@ -619,7 +619,7 @@ function loadBasic(){
 
 	$(".convertEmoji").html(function(){
 		return twemoji.parse($(this).html());
-	});
+	}).removeClass("convertEmoji");
 }
 
 $(document).ready(function(){
@@ -761,7 +761,7 @@ function load(){
 									postTime +
 									'</p>' +
 									
-									'<p class="mb-0 convertEmoji">' +
+									'<p class="mb-0">' +
 									twemoji.parse(postText) +
 									'</p>' +
 									
