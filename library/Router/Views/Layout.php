@@ -85,21 +85,6 @@ if(isset($_SESSION["profileLoadPost"])){
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";var CURRENT_STATUS_MODAL = 0;</script><?php unset($_SESSION["profileLoadPost"]); ?>
 	</head>
 	<body>
-		<?php if(Util::isLoggedIn()){ ?>
-		<div class="d-none notificationPermissionAlert py-2">
-			<div class="container">
-				<div class="float-left mt-1">
-					Do you want to receive desktop notifications to keep up to date with the people you follow?
-				</div>
-
-				<div class="float-right">
-					<button class="btn btn-primary btn-sm enableNotifications">Yes</button>
-					<button class="btn btn-light btn-sm hideNotifications" data-toggle="tooltip" title="Hide this alert for 7 days">No</button>
-				</div>
-			</div>
-		</div>
-		<?php } ?>
-
 		<nav id="mainNav" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
 			<div class="container-fluid container">
 				<div class="navbar-header">
@@ -186,6 +171,21 @@ if(isset($_SESSION["profileLoadPost"])){
 
 		<div class="container">
 			<div class="legacyCard">
+				<?php if(Util::isLoggedIn()){ ?>
+				<div class="d-none notificationPermissionAlert py-2 mb-3">
+					<div class="container">
+						<div class="float-left mt-1">
+							Do you want to receive desktop notifications to keep up to date with the people you follow?
+						</div>
+
+						<div class="float-right">
+							<button class="btn btn-primary btn-sm enableNotifications">Yes</button>
+							<button class="btn btn-light btn-sm hideNotifications" data-toggle="tooltip" title="Hide this alert for 7 days">No</button>
+						</div>
+					</div>
+				</div>
+				<?php } ?>
+
 				<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 				<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 				<div class="modal fade" id="dropzoneModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
