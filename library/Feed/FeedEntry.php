@@ -451,6 +451,114 @@ class FeedEntry {
         if($this->type == "POST") $this->getUser()->reloadPostsCount();
     }
 
+    /**
+     * Returns HTML code to use in a feed entry list (search, profile, home feed, ...)
+     * 
+     * @access public
+     * @return string
+     */
+    public function toListHTML(){
+        $user = $this->getUser();
+
+        if($this->getType() == "POST"){
+            $s = '<li class="list-group-item feedEntry statusTrigger px-2 py-2" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';
+			$s .= '<div class="card-body">';
+			$s .= '<div class="row">';
+            $s .= '<div class="col-1">';
+			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
+			$s .= '<img class="rounded mx-1 my-1" src="' . $user->getAvatarURL() . '" width="40" height="40"/>';
+			$s .= '</a>';
+			$s .= '</div>';
+
+			$s .= '<div class="col-11">';
+			$s .= '<p class="mb-0">';
+			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
+			$s .= '<span class="font-weight-bold">' . $user->getDisplayName() . '</span>';
+			$s .= '</a>';
+
+			$s .= '<span class="text-muted font-weight-normal"> @' . $user->getUsername() . ' </span>';
+
+			$s .= '&bull; ';
+
+			$s .= Util::timeago($this->getTime());
+			$s .= '</p>';
+
+			$s .= '<p class="mb-0 convertEmoji">';
+            $s .= Util::convertPost($this->getText());
+			$s .= '</p>';
+
+			$s .= Util::getPostActionButtons($this);
+			$s .= '</div>';
+			$s .= '</div>';
+			$s .= '</div>';
+            $s .= '</li>';
+
+            return $s;
+        } else if($this->getType() == "NEW_FOLLOWING"){
+            $u2 = $this->getFollowing();
+				
+            $s = '<li class="list-group-item px-2 py-2" data-entry-id="<?= $this->getId() ?>">';
+            
+			if(Util::isLoggedIn() && Util::getCurrentUser()->getId() == $this->getUserId()){
+			    $s .= '<div class="float-right">';
+			    $s .= '<span class="deleteButton ml-2" data-post-id="' . $this->getId() . '" data-toggle="tooltip" title="Delete">';
+                $s .= '<i class="fas fa-trash-alt"></i>';
+			    $s .= '</span>';
+			    $s .= '</div>';
+            }
+            
+			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline">' . $user->getDisplayName() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
+            $s .= '</li>';
+            
+            return $s;
+        } else if($this->getType() == "SHARE"){
+            $sharedPost = $this->getPost();
+			$sharedUser = $sharedPost->getUser();
+
+			if(is_null($sharedPost) || is_null($sharedUser))
+				return "";
+
+			$s = '<li class="list-group-item feedEntry statusTrigger px-2 py-2" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
+			$s .= '<div class="card-body">';
+			$s .= '<div class="small text-muted">';
+			$s .= '<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . '</a> &bull; ' . Util::timeago($this->getTime());
+			$s .= '</div>';
+			$s .= '<div class="row">';
+			$s .= '<div class="col-1">';
+			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
+			$s .= '<img class="rounded mx-1 my-1" src="' . $sharedUser->getAvatarURL() . '" width="40" height="40"/>';
+			$s .= '</a>';
+            $s .= '</div>';
+
+            $s .= '<div class="col-11">';
+			$s .= '<p class="mb-0">';
+			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
+			$s .= '<span class="font-weight-bold">' . $sharedUser->getDisplayName() . '</span>';
+			$s .= '</a>';
+
+			$s .= '<span class="text-muted font-weight-normal"> @' . $sharedUser->getUsername() . ' </span>';
+
+			$s .= '&bull; ';
+
+            $s .= Util::timeago($sharedPost->getTime());
+			$s .= '</p>';
+
+			$s .= '<p class="mb-0 convertEmoji">';
+			$s .= Util::convertPost($sharedPost->getText());
+			$s .= '</p>';
+
+			$s .= Util::getPostActionButtons($sharedPost);
+			$s .= '</div>';
+			$s .= '</div>';
+			$s .= '</div>';
+            $s .= '</li>';
+            
+            return $s;
+        }
+
+        return "";
+    }
+
     public function saveToCache(){
         \CacheHandler::setToCache("feedEntry_" . $this->id,$this,20*60);
     }

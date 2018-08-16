@@ -984,6 +984,7 @@ class Util {
 				"shares" => $post->getShares(),
 				"favorites" => $post->getFavorites(),
 				"postActionButtons" => self::getPostActionButtons($post),
+				"listHtml" => $post->toListHTML(),
 				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1) : null)
 			];
 		} else {
