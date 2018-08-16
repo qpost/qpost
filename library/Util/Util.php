@@ -800,6 +800,20 @@ class Util {
 	}
 
 	/**
+	 * Returns whether a string is valid json
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public static function isValidJSON($string){
+		if(strlen($string) == 0 || empty(trim($string))) return false;
+		if(!self::startsWith($string,"{") && !self::startsWith($string,"[")) return false;
+
+		@json_decode($string);
+		return (json_last_error() == JSON_ERROR_NONE);
+	}
+
+	/**
 	 * Converts \n characters to <br/>
 	 * 
 	 * @access public
