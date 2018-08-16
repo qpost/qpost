@@ -6,6 +6,12 @@ if(isset($title) && !empty($title)){
 	$title = $app["config.site"]["name"];
 }
 
+if(!isset($description) || empty($description))
+	$description = DEFAULT_DESCRIPTION;
+
+if(!isset($socialImage) || empty($socialImage))
+	$socialImage = DEFAULT_TWITTER_IMAGE;
+
 ?><!DOCTYPE html>
 <html lang="en">
 	<head>
