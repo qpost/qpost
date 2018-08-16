@@ -1198,10 +1198,7 @@ class Util {
 
 		if($includeExtraOptions){
 			$box .= '<div class="float-left mt-2">';
-			$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add photo"><i class="fas fa-images"></i></button>';
-			$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add video"><i class="fas fa-video"></i></button>';
-			$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add audio"><i class="fas fa-volume-up"></i></button>';
-			$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add link"><i class="fas fa-link"></i></button>';
+			$box .= '<button type="button" class="btn btn-link mb-0" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
 			$box .= '</div>';
 		}
 
