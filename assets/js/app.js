@@ -647,11 +647,12 @@ function hasNotificationPermissions(){
 	return Notification.permission === "granted";
 }
 
+var dz = null;
 function loadDropzone(){
 	let postBox = $(".dropzone-previews").closest(".postBox");
 	let attachmentValueField = postBox.find("input[name=\"attachmentData\"]");
 	
-	var dz = new Dropzone(document.body, {
+	dz = new Dropzone(document.body, {
 		url: "/scripts/mediaUpload",
 		paramName: "file",
 		maxFilesize: 10,
@@ -889,7 +890,7 @@ function load(){
 						if(json.hasOwnProperty("post")){
 							let post = json.post;
 							
-							if(post.hasOwnProperty("id") && post.hasOwnProperty("time") && post.hasOwnProperty("text") && post.hasOwnProperty("userName") && post.hasOwnProperty("userDisplayName") && post.hasOwnProperty("userAvatar")){
+							if(post.hasOwnProperty("id") && post.hasOwnProperty("time") && post.hasOwnProperty("text") && post.hasOwnProperty("user")){
 								let postId = post.id;
 								let postTime = post.time;
 								let postText = post.text;
@@ -957,7 +958,10 @@ function load(){
 								postField.val("");
 								postCharacterCounter.html(POST_CHARACTER_LIMIT + " characters left");
 								loadBasic();
+								dz.destroy();
 								loadDropzone();
+
+								$(".dropzone-previews").html("");
 							} else {
 								console.log(result);
 							}

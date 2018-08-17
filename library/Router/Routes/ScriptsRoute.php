@@ -432,14 +432,14 @@ $app->post("/scripts/createPost",function(){
 							$attachments = json_decode($_POST["attachments"],true);
 
 							foreach($attachments as $attachment){
-								if(is_numeric($attachment)){
+								if(is_string($attachment)){
 									$mediaFile = MediaFile::getMediaFileFromID($attachment);
 
 									if(is_null($mediaFile)){
-										return json_encode(["error" => "Invalid attachment ID"]);
+										return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
 									}
 								} else {
-									return json_encode(["error" => "Invalid attachment ID"]);
+									return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
 								}
 							}
 						}
