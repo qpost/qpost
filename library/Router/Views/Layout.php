@@ -187,8 +187,8 @@ if(isset($_SESSION["profileLoadPost"])){
 				<?php } ?>
 
 				<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+				<div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 				<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
-				<div class="modal fade" id="dropzoneModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 				<span class="dz-message"></span>
 				
 				<div class="preview-template d-none">

@@ -142,6 +142,109 @@ function showDeleteModal(postId){
 	});
 }
 
+function resetMediaModal(){
+	$("#mediaModal").html(
+		'<div class="modal-dialog" role="document">' +
+		'<div class="modal-content">' +
+		'<div class="modal-body">' +
+		'<div class="text-center">' +
+		'<i class="fas fa-spinner fa-pulse"></i>' +
+		'</div>' +
+		'</div>' +
+		'</div>' +
+		'</div>'
+	);
+}
+
+function isMediaModalOpen(){
+	return $("#mediaModal").hasClass('show');
+}
+
+function closeMediaModal(){
+	$("#mediaModal").modal('hide');
+}
+
+function showMediaModal(mediaId,postId){
+	resetMediaModal();
+	
+	let mediaModal = $("#mediaModal");
+	
+	$.ajax({
+		url: "/scripts/mediaInfo",
+		data: {
+			csrf_token: CSRF_TOKEN,
+			postId: postId,
+			mediaId: mediaId
+		},
+		method: "POST",
+		
+		success: function(json){
+			if(json.hasOwnProperty("post") && json.hasOwnProperty("attachment")){
+				let post = json.post;
+				let attachment = json.attachment;
+				
+				let content = "";
+
+				content = content.concat(
+					'<img src="' + attachment.fileUrl + '" style="width: 100%"/>'
+				);
+				
+				mediaModal.html(
+					'<div class="modal-dialog modal-lg" role="document">' +
+					'<div class="modal-content">' +
+					
+					content +
+					
+					'<div class="modal-footer d-block">' +
+					'<div class="px-3">' +
+					post.limitedHtml +
+					'</div>' +
+					'</div>' +
+					'</div>' +
+					'</div>'
+				);
+				
+				loadBasic();
+				
+				if(!isMediaModalOpen())
+					mediaModal.modal();
+			} else if(json.hasOwnProperty("error")){
+				mediaModal.html(
+					'<div class="modal-dialog" role="document">' +
+					'<div class="modal-content">' +
+					'<div class="modal-body">' +
+					json.error +
+					'</div>' +
+					'</div>' +
+					'</div>'
+				);
+				
+				if(!isMediaModalOpen())
+					mediaModal.modal();
+			} else {
+				mediaModal.html(
+					'<div class="modal-dialog" role="document">' +
+					'<div class="modal-content">' +
+					'<div class="modal-body">' +
+					json +
+					'</div>' +
+					'</div>' +
+					'</div>'
+				);
+				
+				if(!isMediaModalOpen())
+					mediaModal.modal();
+			}
+		},
+		
+		error: function(xhr,status,error){
+			console.log(xhr);
+			console.log(status);
+			console.log(error);
+		}
+	});
+}
+
 function resetStatusModal(){
 	$("#statusModal").html(
 		'<div class="modal-dialog" role="document">' +
@@ -828,25 +931,16 @@ function load(){
 		
 	});
 
-	$(document).on("hidden.bs.modal",".modal",(e) => {
-		$(this).removeClass("fv-modal-stack");
-
-		$("body").data("fv_open_modals",$("body").data("fv_open_modals")-1);
-		$("body").addClass("modal-open");
+	$(document).on('show.bs.modal', '.modal', function () {
+		var zIndex = 1040 + (10 * $('.modal:visible').length);
+		$(this).css('z-index', zIndex);
+		setTimeout(function() {
+			$('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+		}, 0);
 	});
 
-	$(document).on("shown.bs.modal",".modal",(e) => {
-		if(typeof($("body").data("fv_open_modals")) == "undefined")
-			$("body").data("fv_open_modals",0);
-
-		if($(this).hasClass("fv-modal-stack"))
-			return;
-
-		$(this).addClass("fv-modal-stack");
-		$("body").data("fv_open_modals",$("body").data("fv_open_modals")+1);
-		$(this).css("z-index",1040+(10*($("body").data("fv_open_modals"))));
-		$(".modal-backdrop").not(".fv-modal-stack").css("z-index",1039+(10*($("body").data("fv_open_modals"))));
-		$(".modal-backdrop").not(".fv-modal-stack").addClass("fv-modal-stack");
+	$(document).on('hidden.bs.modal', '.modal', function () {
+		$('.modal:visible').length && $(document.body).addClass('modal-open');
 	});
 	
 	/*$(document).on("scroll",function(e){

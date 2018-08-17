@@ -397,6 +397,44 @@ $app->post("/scripts/postInfo",function(){
 	}
 });
 
+$app->post("/scripts/mediaInfo",function(){
+	$this->response->mime = "json";
+
+	if(isset($_POST["postId"]) && isset($_POST["mediaId"])){
+		$postId = $_POST["postId"];
+		$post = FeedEntry::getEntryById($postId);
+
+		if(!is_null($post)){
+			$user = $post->getUser();
+
+			if(!is_null($user)){
+				$mediaFile = MediaFile::getMediaFileFromID($_POST["mediaId"]);
+
+				if(!is_null($mediaFile)){
+					$followButton = Util::followButton($user,false,["float-right"]);
+
+					if(is_null($followButton))
+						$followButton = "";
+
+					$postJsonData = Util::postJsonData($postId);
+					$postJsonData["limitedHtml"] = $post->toListHTML(658,true);
+					$mediaJsonData = Util::mediaJsonData($_POST["mediaId"]);
+
+					return json_encode(["post" => $postJsonData,"attachment" => $mediaJsonData]);
+				} else {
+					return json_encode(["error" => "File not found"]);
+				}
+			} else {
+				return json_encode(["error" => "User not found"]);
+			}
+		} else {
+			return json_encode(["error" => "Invalid ID"]);
+		}
+	} else {
+		return json_encode(["error" => "Bad request"]);
+	}
+});
+
 $app->post("/scripts/createPost",function(){
 	$this->response->mime = "json";
 	

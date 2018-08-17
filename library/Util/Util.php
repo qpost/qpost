@@ -1007,6 +1007,27 @@ class Util {
 	}
 
 	/**
+	 * Returns an array of data used in a JSON API for a media file
+	 * 
+	 * @access public
+	 * @param int $mediaId
+	 * @return array
+	 */
+	public static function mediaJsonData($mediaId){
+		if(is_object($mediaId)) $mediaId = $mediaId->getId();
+		$mediaFile = !is_null($mediaId) ? MediaFile::getMediaFileFromID($mediaId) : null;
+		if(!is_null($mediaFile)){
+			return [
+				"id" => $mediaFile->getId(),
+				"sha256" => $mediaFile->getSHA256(),
+				"fileUrl" => $mediaFile->getURL()
+			];
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * Returns an array of data used in a JSON API for a user
 	 * 
 	 * @access public

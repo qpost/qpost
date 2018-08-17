@@ -493,13 +493,16 @@ class FeedEntry {
      * 
      * @access public
      * @param int $maxWidth Max width of the content part in px
+     * @param bool $noBorder If false, the additional HTML for easier use in bootstrap lists won't be included
      * @return string
      */
-    public function toListHTML($maxWidth = 658){
+    public function toListHTML($maxWidth = 658, $noBorder = false){
         $user = $this->getUser();
 
+        $s = "";
+
         if($this->getType() == "POST"){
-            $s = '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';
+            if($noBorder == false) $s .= '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';
 			$s .= '<div class="row">';
             $s .= '<div class="float-left">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
@@ -527,13 +530,13 @@ class FeedEntry {
 			$s .= Util::getPostActionButtons($this);
 			$s .= '</div>';
 			$s .= '</div>';
-            $s .= '</li>';
+            if($noBorder == false) $s .= '</li>';
 
             return $s;
         } else if($this->getType() == "NEW_FOLLOWING"){
             $u2 = $this->getFollowing();
 				
-            $s = '<li class="list-group-item px-2 py-2" data-entry-id="<?= $this->getId() ?>">';
+            if($noBorder == false) $s .= '<li class="list-group-item px-2 py-2" data-entry-id="<?= $this->getId() ?>">';
             
 			if(Util::isLoggedIn() && Util::getCurrentUser()->getId() == $this->getUserId()){
 			    $s .= '<div class="float-right">';
@@ -544,7 +547,7 @@ class FeedEntry {
             }
             
 			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline">' . $user->getDisplayName() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
-            $s .= '</li>';
+            if($noBorder == false) $s .= '</li>';
             
             return $s;
         } else if($this->getType() == "SHARE"){
@@ -554,7 +557,7 @@ class FeedEntry {
 			if(is_null($sharedPost) || is_null($sharedUser))
 				return "";
 
-			$s = '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
+            if($noBorder == false) $s .= '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
 			$s .= '<div class="small text-muted">';
 			$s .= '<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . '</a> &bull; ' . Util::timeago($this->getTime());
 			$s .= '</div>';
@@ -585,7 +588,7 @@ class FeedEntry {
 			$s .= Util::getPostActionButtons($sharedPost);
 			$s .= '</div>';
 			$s .= '</div>';
-            $s .= '</li>';
+            if($noBorder == false) $s .= '</li>';
             
             return $s;
         }
