@@ -754,7 +754,7 @@ function loadDropzone(){
 	dz.on("sending",(file,xhr,formData) => {
 		formData.append("csrf_token",CSRF_TOKEN);
 		
-		postBox.find(".postButton").attr("disabled","disabled");
+		postBox.find(".postButton").addClass("disabled");
 	});
 	
 	dz.on("success",(file,responseText,e) => {
@@ -771,7 +771,7 @@ function loadDropzone(){
 	});
 	
 	dz.on("queuecomplete",(progress) => {
-		postBox.find(".postButton").removeAttr("disabled");
+		postBox.find(".postButton").removeClass("disabled");
 	});
 	
 	dz.on("error",(file,message,xhr) => {
@@ -856,8 +856,10 @@ function load(){
 		let text = postField.val().trim();
 		
 		let replyTo = isReply && CURRENT_STATUS_MODAL > 0 ? CURRENT_STATUS_MODAL : null;
+
+		let attachmentValueField = $(this).closest(".postBox").find("input[name=\"attachmentData\"]");
 		
-		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined){
+		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined && !$(this).hasClass("disabled")){
 			let token = CSRF_TOKEN;
 			let limit = POST_CHARACTER_LIMIT;
 			
@@ -865,13 +867,19 @@ function load(){
 			
 			if(text.length > 0 && text.length <= limit){
 				postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
+
+				let attachments = "[]";
+
+				if(attachmentValueField.length && attachmentValueField.val() != "")
+					attachments = atob(attachmentValueField.val());
 				
 				$.ajax({
 					url: "/scripts/createPost",
 					data: {
 						csrf_token: token,
 						text: text,
-						replyTo: replyTo
+						replyTo: replyTo,
+						attachments: attachments
 					},
 					method: "POST",
 					
@@ -949,6 +957,7 @@ function load(){
 								postField.val("");
 								postCharacterCounter.html(POST_CHARACTER_LIMIT + " characters left");
 								loadBasic();
+								loadDropzone();
 							} else {
 								console.log(result);
 							}
