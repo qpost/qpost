@@ -827,6 +827,27 @@ function load(){
 		
 		
 	});
+
+	$(document).on("hidden.bs.modal",".modal",(e) => {
+		$(this).removeClass("fv-modal-stack");
+
+		$("body").data("fv_open_modals",$("body").data("fv_open_modals")-1);
+		$("body").addClass("modal-open");
+	});
+
+	$(document).on("shown.bs.modal",".modal",(e) => {
+		if(typeof($("body").data("fv_open_modals")) == "undefined")
+			$("body").data("fv_open_modals",0);
+
+		if($(this).hasClass("fv-modal-stack"))
+			return;
+
+		$(this).addClass("fv-modal-stack");
+		$("body").data("fv_open_modals",$("body").data("fv_open_modals")+1);
+		$(this).css("z-index",1040+(10*($("body").data("fv_open_modals"))));
+		$(".modal-backdrop").not(".fv-modal-stack").css("z-index",1039+(10*($("body").data("fv_open_modals"))));
+		$(".modal-backdrop").not(".fv-modal-stack").addClass("fv-modal-stack");
+	});
 	
 	/*$(document).on("scroll",function(e){
 		let scrollValue = $(document).scrollTop();
