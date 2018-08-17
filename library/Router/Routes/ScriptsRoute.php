@@ -210,14 +210,14 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$firstPost = (int)$_POST["firstPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,f.`attachments`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$firstPost);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
 
 						if($result->num_rows){
 							while($row = $result->fetch_assoc()){
-								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["postTime"]);
+								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["postTime"]);
 
 								array_push($posts,Util::postJsonData($entry));
 							}
@@ -234,14 +234,14 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$lastPost = (int)$_POST["lastPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,f.`attachments`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$lastPost);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
 
 						if($result->num_rows){
 							while($row = $result->fetch_assoc()){
-								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["postTime"]);
+								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["postTime"]);
 
 								array_push($posts,Util::postJsonData($entry));
 							}
@@ -371,7 +371,7 @@ $app->post("/scripts/postInfo",function(){
 
 						if($result->num_rows){
 							while($row = $result->fetch_assoc()){
-								$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["time"]);
+								$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["time"]);
 								$u = User::getUserByData($row["userId"],$row["displayName"],$row["username"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["userTime"]);
 
 								array_push($replies,Util::postJsonData($f,0,414));
