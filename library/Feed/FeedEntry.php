@@ -50,7 +50,7 @@ class FeedEntry {
      * @access public
      * @return FeedEntry
      */
-    public static function getEntryFromData($id,$user,$text,$following,$post,$sessionId,$type,$replies,$shares,$favorites,$time){
+    public static function getEntryFromData($id,$user,$text,$following,$post,$sessionId,$type,$replies,$shares,$favorites,$attachments,$time){
         $entry = self::isCached($id) ? self::getEntryById($id) : new self($id);
 
         $entry->id = $id;
@@ -63,6 +63,7 @@ class FeedEntry {
         $entry->replies = $replies;
         $entry->shares = $shares;
         $entry->favorites = $favorites;
+        $entry->attachments = is_null($attachments) ? [] : json_decode($attachments,true);
         $entry->time = $time;
         $entry->exists = true;
         $entry->saveToCache();
@@ -143,6 +144,12 @@ class FeedEntry {
     private $favorites;
 
     /**
+     * @access private
+     * @var int[] $attachments
+     */
+    private $attachments;
+
+    /**
      * Constructor
      * 
      * @access protected
@@ -178,6 +185,7 @@ class FeedEntry {
                 $this->replies = $row["count.replies"];
                 $this->shares = $row["count.shares"];
                 $this->favorites = $row["count.favorites"];
+                $this->attachments = is_null($row["attachments"]) ? [] : json_decode($row["attachments"],true);
                 $this->time = $row["time"];
                 $this->exists = true;
 
@@ -285,6 +293,35 @@ class FeedEntry {
      */
     public function getType(){
         return $this->type;
+    }
+
+    /**
+     * Returns an array of the IDs of the attachments
+     * 
+     * @access public
+     * @return int[]
+     */
+    public function getAttachments(){
+        return $this->attachments;
+    }
+
+    /**
+     * Returns an array of the MediaFile objects of the attachments
+     * 
+     * @access public
+     * @return MediaFile[]
+     */
+    public function getAttachmentObjects(){
+        $a = [];
+
+        foreach($this->attachments as $a){
+            $m = MediaFile::getMediaFileFromID($a);
+
+            if(!is_null($m))
+                array_push($a,$m);
+        }
+
+        return $a;
     }
 
     /**

@@ -426,9 +426,30 @@ $app->post("/scripts/createPost",function(){
 
 					if($parent == 0) $parent = null;
 
+					$attachments = null;
+					if(isset($_POST["attachments"]) && !empty($_POST["attachments"])){
+						if(Util::isValidJSON($_POST["attachments"]) && is_array(json_decode($_POST["attachments"],true))){
+							$attachments = json_decode($_POST["attachments"],true);
+
+							foreach($attachments as $attachment){
+								if(is_numeric($attachment)){
+									$mediaFile = MediaFile::getMediaFileFromID($attachment);
+
+									if(is_null($mediaFile)){
+										return json_encode(["error" => "Invalid attachment ID"]);
+									}
+								} else {
+									return json_encode(["error" => "Invalid attachment ID"]);
+								}
+							}
+						}
+					}
+
+					$attachmentsString = is_null($attachments) ? "[]" : json_encode($attachments);
+
 					$mysqli = Database::Instance()->get();
-					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`) VALUES(?,?,NULL,?,?,?);");
-					$stmt->bind_param("isssi", $userId,$text,$sessionId,$type,$parent);
+					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`,`attachments`) VALUES(?,?,NULL,?,?,?,?);");
+					$stmt->bind_param("isssis", $userId,$text,$sessionId,$type,$parent,$attachmentsString);
 					if($stmt->execute()){
 						$postId = $stmt->insert_id;
 					}
