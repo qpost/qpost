@@ -312,16 +312,16 @@ class FeedEntry {
      * @return MediaFile[]
      */
     public function getAttachmentObjects(){
-        $a = [];
+        $array = [];
 
         foreach($this->attachments as $a){
             $m = MediaFile::getMediaFileFromID($a);
 
             if(!is_null($m))
-                array_push($a,$m);
+                array_push($array,$m);
         }
 
-        return $a;
+        return $array;
     }
 
     /**
@@ -525,7 +525,17 @@ class FeedEntry {
 
 			$s .= '<p class="mb-0 convertEmoji">';
             $s .= Util::convertPost($this->getText());
-			$s .= '</p>';
+            $s .= '</p>';
+            
+            if(count($this->attachments) > 0){
+                $s .= '<div class="my-2">';
+
+                foreach($this->getAttachmentObjects() as $mediaFile){
+                    $s .= $mediaFile->toThumbnailHTML($this->id);
+                }
+
+                $s .= '</div>';
+            }
 
 			$s .= Util::getPostActionButtons($this);
 			$s .= '</div>';

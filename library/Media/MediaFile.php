@@ -180,6 +180,16 @@ class MediaFile {
     }
 
     /**
+     * Returns the URL of the thumbnail image
+     * 
+     * @access public
+     * @return string
+     */
+    public function getThumbnailURL(){
+        return "/mediaThumbnail?id=" . urlencode($this->id);
+    }
+
+    /**
      * Returns the id of the original uploader
      * 
      * @access public
@@ -197,6 +207,21 @@ class MediaFile {
      */
     public function getOriginalUploader(){
         return !is_null($this->originalUploader) ? User::getUserById($this->originalUploader) : null;
+    }
+
+    /**
+     * Returns HTML code to display a clickable thumbnail
+     * 
+     * @access public
+     * @param int $postId The id of the post to use for the media modal, if null the thumbnail won't be clickable
+     * @return string
+     */
+    public function toThumbnailHTML($postId = null){
+        $s = "";
+
+        $s .= '<img src="' . $this->getThumbnailURL() . '" width="100" height="100" class="rounded border border-primary bg-dark ignoreParentClick"' . (!is_null($postId) ? ' style="cursor: pointer" onclick="showMediaModal(\'' . $this->id . '\',' . $postId . ');"' : "") . '/>';
+
+        return $s;
     }
 
     /**

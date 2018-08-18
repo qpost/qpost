@@ -418,7 +418,7 @@ $app->post("/scripts/mediaInfo",function(){
 
 					$postJsonData = Util::postJsonData($postId);
 					$postJsonData["limitedHtml"] = $post->toListHTML(658,true);
-					$mediaJsonData = Util::mediaJsonData($_POST["mediaId"]);
+					$mediaJsonData = Util::mediaJsonData($_POST["mediaId"],$_POST["postId"]);
 
 					return json_encode(["post" => $postJsonData,"attachment" => $mediaJsonData]);
 				} else {
@@ -432,6 +432,57 @@ $app->post("/scripts/mediaInfo",function(){
 		}
 	} else {
 		return json_encode(["error" => "Bad request"]);
+	}
+});
+
+$app->bind("/mediaThumbnail", function($params){
+	$id = isset($_GET["id"]) ? $_GET["id"] : null;
+	if(!is_null($id) && !empty($id)){
+		$mediaFile = MediaFile::getMediaFileFromID($id);
+
+		if($mediaFile != null){
+			$url = $mediaFile->getURL();
+
+			$n = "thumbnail_" . $mediaFile->getId();
+
+			$this->response->mime = "jpg";
+
+			if(\CacheHandler::existsInCache($n)){
+				return imagejpeg(imagecreatefromstring(base64_decode(\CacheHandler::getFromCache($n))));
+			} else {
+				$imageString = file_get_contents($url);
+				$size = getimagesizefromstring($imageString);
+
+				if($size !== false){
+					$width = -1;
+					$height = -1;
+					list($width,$height) = $size;
+
+					if($width > -1 && $height > -1){
+						$source = imagecreatefromstring($imageString);
+
+						$virtualImage = imagecreatetruecolor(100,100);
+						imagecopyresampled($virtualImage,$source,0,0,0,0,100,100,$width,$height);
+
+						ob_start();
+						imagejpeg($virtualImage);
+						$imgSource = ob_get_clean();
+
+						\CacheHandler::setToCache($n,base64_encode($imgSource),20*60);
+
+						return imagejpeg($virtualImage);
+					} else {
+						return $this->reroute("/");
+					}
+				} else {
+					return $this->reroute("/");
+				}
+			}
+		} else {
+			return $this->reroute("/");
+		}
+	} else {
+		return $this->reroute("/");
 	}
 });
 
