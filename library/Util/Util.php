@@ -989,6 +989,11 @@ class Util {
 		if(is_object($postId)) $postId = $postId->getId();
 		$post = !is_null($postId) ? FeedEntry::getEntryById($postId) : null;
 		if(!is_null($post)){
+			$attachments = [];
+
+			foreach($post->getAttachments() as $attachmentId)
+				array_push($attachments,self::mediaJsonData($attachmentId,$postId));
+
 			return [
 				"id" => $post->getId(),
 				"user" => self::userJsonData($post->getUser()),
@@ -997,6 +1002,7 @@ class Util {
 				"time" => Util::timeago($post->getTime()),
 				"shares" => $post->getShares(),
 				"favorites" => $post->getFavorites(),
+				"attachments" => $attachments,
 				"postActionButtons" => self::getPostActionButtons($post),
 				"listHtml" => $post->toListHTML($maxContentWidth),
 				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1) : null)

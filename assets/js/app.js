@@ -334,7 +334,7 @@ function showStatusModal(postId){
 				}
 				
 				if(hasParent == true)
-				content = content.concat("<hr/>");
+					content = content.concat("<hr/>");
 				
 				content = content.concat('<div class="mb-4">');
 				
@@ -371,9 +371,22 @@ function showStatusModal(postId){
 				content = content.concat(
 					'<div class="mt-2">' +
 					c + 
-					'<p style="font-size: 27px;">' +
+					'<p style="font-size: 27px;" class="mb-0">' +
 					twemoji.parse(json.text) +
-					'</p>' +
+					'</p>'
+				);
+
+				if(json.hasOwnProperty("attachments") && json.attachments.length > 0){
+					content = content.concat('<div class="mb-4 mt-2">');
+
+					json.attachments.forEach(attachment => {
+						content = content.concat(attachment.thumbnailHtml);
+					});
+
+					content = content.concat('</div>');
+				}
+
+				content = content.concat(
 					'<p class="small text-muted"><i class="far fa-clock"></i> Posted ' +
 					json.time +
 					'</p>' +
