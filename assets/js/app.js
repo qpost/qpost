@@ -767,6 +767,7 @@ var dz = null;
 function loadDropzone(){
 	let postBox = $(".dropzone-previews").closest(".postBox");
 	let attachmentValueField = postBox.find("input[name=\"attachmentData\"]");
+	let postButton = postBox.find(".postButton");
 	
 	dz = new Dropzone(document.body, {
 		url: "/scripts/mediaUpload",
@@ -871,7 +872,7 @@ function loadDropzone(){
 	dz.on("sending",(file,xhr,formData) => {
 		formData.append("csrf_token",CSRF_TOKEN);
 		
-		postBox.find(".postButton").addClass("disabled");
+		postButton.html('<i class="fas fa-spinner fa-pulse"></i>');
 	});
 	
 	dz.on("success",(file,responseText,e) => {
@@ -888,11 +889,7 @@ function loadDropzone(){
 	});
 	
 	dz.on("queuecomplete",(progress) => {
-		postBox.find(".postButton").removeClass("disabled");
-	});
-
-	dz.on("totaluploadprogress",(totalUploadProgress,totalBytes,totalBytesSent) => {
-		postBox.find(".postButton").removeClass("disabled");
+		postButton.html("Post");
 	});
 	
 	dz.on("error",(file,message,xhr) => {
@@ -992,7 +989,7 @@ function load(){
 
 		let attachmentValueField = $(this).closest(".postBox").find("input[name=\"attachmentData\"]");
 		
-		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined && !$(this).hasClass("disabled")){
+		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined && !$(this).html().includes("<i")){
 			let token = CSRF_TOKEN;
 			let limit = POST_CHARACTER_LIMIT;
 			
