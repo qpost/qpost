@@ -20,12 +20,16 @@ class CacheHandler {
 	 * @return CacheManager
 	 */
 	public static function Manager(){
-		static $InstanceCache = null;
-		if($InstanceCache == null){
-			$InstanceCache = CacheManager::getInstance("files");
+		try {
+			static $InstanceCache = null;
+			if($InstanceCache == null){
+				$InstanceCache = CacheManager::getInstance("files");
+			}
+	
+			return $InstanceCache;
+		} catch(Exception $e){
+			return CacheManager::getInstance("files");
 		}
-
-		return $InstanceCache;
 	}
 
 	/**
@@ -37,14 +41,16 @@ class CacheHandler {
 	 * @param int $expiry The amount in seconds for which the object should be held in the cache
 	 */
 	public static function setToCache($name,$value,$expiry){
-		$name = self::validateName($name);
-		if(\CacheHandler::existsInCache($name)) \CacheHandler::deleteFromCache($name);
-		
-		$c = \CacheHandler::Manager()->getItem($name);
-		if(is_null($c->get())){
-			$c->set($value)->expiresAfter($expiry);
-			\CacheHandler::Manager()->save($c);
-		}
+		try {
+			$name = self::validateName($name);
+			if(\CacheHandler::existsInCache($name)) \CacheHandler::deleteFromCache($name);
+			
+			$c = \CacheHandler::Manager()->getItem($name);
+			if(is_null($c->get())){
+				$c->set($value)->expiresAfter($expiry);
+				\CacheHandler::Manager()->save($c);
+			}
+		} catch(Exception $e){}
 	}
 	
 	/**
@@ -55,12 +61,16 @@ class CacheHandler {
 	 * @return mixed Returns the cached object
 	 */
 	public static function getFromCache($name){
-		$name = self::validateName($name);
-		if(\CacheHandler::existsInCache($name)){
-			$c = \CacheHandler::Manager()->getItem($name);
-			
-			return $c->get();
-		} else {
+		try {
+			$name = self::validateName($name);
+			if(\CacheHandler::existsInCache($name)){
+				$c = \CacheHandler::Manager()->getItem($name);
+				
+				return $c->get();
+			} else {
+				return null;
+			}
+		} catch(Exception $e){
 			return null;
 		}
 	}
@@ -73,9 +83,13 @@ class CacheHandler {
 	 * @return bool Returns true if the object exists
 	 */
 	public static function existsInCache($name){
-		$name = self::validateName($name);
-		return \CacheHandler::Manager()->hasItem($name);
-		//return getFromCache($name) != null;
+		try {
+			$name = self::validateName($name);
+			return \CacheHandler::Manager()->hasItem($name);
+			//return getFromCache($name) != null;
+		} catch(Exception $e){
+			return false;
+		}
 	}
 	
 	/**
@@ -86,19 +100,27 @@ class CacheHandler {
 	 * @return bool Returns true if the object could be removed
 	 */
 	public static function deleteFromCache($name){
-		$name = self::validateName($name);
-		$r = false;
-		
-		if(\CacheHandler::existsInCache($name)){
-			\CacheHandler::Manager()->deleteItem($name);
-			$r = true;
+		try {
+			$name = self::validateName($name);
+			$r = false;
+			
+			if(\CacheHandler::existsInCache($name)){
+				\CacheHandler::Manager()->deleteItem($name);
+				$r = true;
+			}
+			
+			return $r;
+		} catch(Exception $e){
+			return false;
 		}
-		
-		return $r;
 	}
 
 	private static function validateName($name){
-		return str_replace("{","-",str_replace("}","-",str_replace("(","-",str_replace(")","-",str_replace("/","-",str_replace("\\","-",str_replace("@","-",str_replace(":","-",$name))))))));
+		try {
+			return str_replace("{","-",str_replace("}","-",str_replace("(","-",str_replace(")","-",str_replace("/","-",str_replace("\\","-",str_replace("@","-",str_replace(":","-",$name))))))));
+		} catch(Exception $e){
+			return $name;
+		}
 	}
 }
 
