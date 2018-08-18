@@ -33,7 +33,7 @@
 
 				<div class="col-lg-6">
 					<p class="featureParagraph">
-						Share your favorite photos, videos or audio files with the internet.
+						Share your favorite photos with the internet.
 					</p>
 				</div>
 			</div>
