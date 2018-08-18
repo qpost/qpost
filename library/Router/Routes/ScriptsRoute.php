@@ -286,6 +286,8 @@ $app->post("/scripts/mediaUpload",function(){
 							if(@getimagesize($tmpName) === false){
 								continue;
 							}
+						} else {
+							continue;
 						}
 
 						$sha256 = hash("sha256",file_get_contents($tmpName));
