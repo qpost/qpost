@@ -890,6 +890,10 @@ function loadDropzone(){
 	dz.on("queuecomplete",(progress) => {
 		postBox.find(".postButton").removeClass("disabled");
 	});
+
+	dz.on("totaluploadprogress",(totalUploadProgress,totalBytes,totalBytesSent) => {
+		postBox.find(".postButton").removeClass("disabled");
+	});
 	
 	dz.on("error",(file,message,xhr) => {
 		console.error("Dropzone encountered error",message,xhr);
