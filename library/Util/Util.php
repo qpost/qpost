@@ -1197,6 +1197,8 @@ class Util {
 
 		$placeholder = !$isReply ? "Post something for your followers!" : "Post your reply";
 
+		$formId = rand(1,getrandmax());
+
 		/*$popoverHtml = "";
 
 		$popoverHtml .= '<div class="addElementGroupContainer">';
@@ -1231,19 +1233,24 @@ class Util {
 		$popoverHtml .= '</div>';
 		$popoverHtml .= '</div>';*/
 
+		$emojiPopover = "asd";
+
 		$box = "";
 
 		$box .= '<div class="card border-primary postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
 		$box .= '<div class="card-body">';
-		$box .= '<textarea class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
+		$box .= '<textarea id="postField' . $formId . '" class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
 
 		//$box .= '<button type="button" class="btn btn-info btn-sm float-left mt-2 rounded-circle addElement" data-toggle="popover" title="Add an element" data-content="' . self::sanatizeHTMLAttribute($popoverHtml) . '" data-placement="bottom"><i class="fas fa-plus"></i></button>';
 
 		if($includeExtraOptions){
+			$faces = ["tired","suprise","smile-wink","smile-beam","sad-tear","sad-cry","meh-rolling-eyes","meh-blank","meh","grin-wink","grin-stars","grin-squint-tears","grin-squint","grin-hearts","grin-beam-sweat","grin-beam","grin-alt","grin","smile","laugh-wink","laugh-squint","laugh-beam","laugh","kiss-wink-heart","kiss-beam","kiss","grin-tongue-wink","grin-tongue-squint","grin-tongue","grin-tears","grimace","frown-open","flushed","angry","dizzy"];
+
 			$box .= '<div class="dropzone-previews row ml-2"></div>';
 
 			$box .= '<div class="float-left mt-2">';
 			$box .= '<button type="button" class="btn btn-link mb-0 addMediaAttachment" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
+			$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
 			$box .= '</div>';
 
 			$box .= '<input type="hidden" name="attachmentData" value=""/>';

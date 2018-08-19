@@ -60,14 +60,13 @@ if(isset($_SESSION["profileLoadPost"])){
 
 		<noscript><meta http-equiv="refresh" content="0; URL=https://gigadrivegroup.com/badbrowser"></noscript>
 
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
 		<?= $app->style([
 			"assets:css/bootstrap.min.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
 			"assets:css/main.css",
-			"assets:css/datepicker.min.css",
-			"assets:css/twemoji-picker.css"]); ?>
+			"assets:css/datepicker.min.css"]); ?>
 
 		<?= $app->script([
 			"https://code.jquery.com/jquery-latest.min.js",
@@ -79,7 +78,6 @@ if(isset($_SESSION["profileLoadPost"])){
 			"https://www.google.com/recaptcha/api.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
 			"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
-			"assets:js/twemoji-picker.js",
 			"assets:js/dropzone.js"]); ?>
 
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";var CURRENT_STATUS_MODAL = 0;</script><?php unset($_SESSION["profileLoadPost"]); ?>

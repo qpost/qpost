@@ -293,12 +293,19 @@ function showStatusModal(postId){
 				
 				let d = json;
 				let hasParent = false;
+
+				let echoParentList = false;
+
+				if(d.hasOwnProperty("parent") && d.parent != null){
+					content = content.concat('<ul class="list-group parents">');
+					echoParentList = true;
+				}
 				
 				while(d.hasOwnProperty("parent") && d.parent != null){
 					d = d.parent;
 					hasParent = true;
 					
-					content = content.concat(d.listHtml);
+					content = d.listHtml.concat(content);
 					/*'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + d.id + '" data-entry-id="' + d.id + '">' +
 					'<div class="py-1 px-3">' +
 					'<div class="row">' +
@@ -331,6 +338,10 @@ function showStatusModal(postId){
 					'</div>' +
 					'</div>'
 					.concat(content);*/
+				}
+
+				if(echoParentList){
+					content = content.concat('</ul>');
 				}
 				
 				if(hasParent == true)
@@ -401,7 +412,7 @@ function showStatusModal(postId){
 					content = content.concat(json.postForm);
 				}
 				
-				content = content.concat('<div class="replies">');
+				content = content.concat('<ul class="list-group replies">');
 				
 				if(replies.length > 0){
 					replies.forEach(reply => {
@@ -442,7 +453,7 @@ function showStatusModal(postId){
 					});
 				}
 				
-				content = content.concat('</div>');
+				content = content.concat('</ul>');
 				
 				statusModal.html(
 					'<div class="modal-dialog" role="document">' +
