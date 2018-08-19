@@ -85,13 +85,11 @@ if(isset($_POST["action"]) && !empty($_POST["action"])){
                         $ipInfo = IPInformation::getInformationFromIP($row["ip"]);
                         
                         ?>
-            <tr>
+            <tr<?= $isCurrent ? ' class="bg-dark text-white"' : "" ?>>
                 <td style="text-align: center; font-size: 36px;"><i class="<?= $icon ?>"></i></td>
                 <td>
                     <?= $platform; ?>
-					<?php if($isCurrent){ ?>
-					<span style="color: #808080">(current)</span>
-					<?php } ?>
+					<?php if($isCurrent){ ?>(current)<?php } ?>
 					<br/>
 					<?= $browser; ?>
 					<?= $browserVersion; ?>
