@@ -101,7 +101,7 @@
 							</div>
 
 							<div class="col">
-								<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="clearUnderline">
+								<a href="/<?= Util::getCurrentUser()->getUsername() ?>/following" class="clearUnderline">
 									<div class="font-weight-bold">
 										<?= Util::getCurrentUser()->getFollowing() ?>
 									</div>
@@ -110,7 +110,7 @@
 							</div>
 
 							<div class="col">
-								<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="clearUnderline">
+								<a href="/<?= Util::getCurrentUser()->getUsername() ?>/followers" class="clearUnderline">
 									<div class="font-weight-bold">
 										<?= Util::getCurrentUser()->getFollowers() ?>
 									</div>
