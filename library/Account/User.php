@@ -93,7 +93,7 @@ class User {
 		$user = self::getUserById($id);
 
 		if($user == null){
-			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`id`,`displayName`,`username`,`email`,`avatar`,`token`,`gigadriveJoinDate`) VALUES(?,?,?,?,?,?,?);");
+			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`gigadriveId`,`displayName`,`username`,`email`,`avatar`,`token`,`gigadriveJoinDate`) VALUES(?,?,?,?,?,?,?);");
 			$stmt->bind_param("issssss",$id,$username,$username,$email,$avatar,$token,$registerDate);
 			$stmt->execute();
 			$stmt->close();
@@ -102,7 +102,7 @@ class User {
 
 			$user = self::getUserById($id);
 		} else {
-			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ?, `gigadriveJoinDate` = ? WHERE `id` = ?");
+			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ?, `gigadriveJoinDate` = ? WHERE `gigadriveId` = ?");
 			$stmt->bind_param("sssssi",$username,$email,$avatar,$token,$registerDate,$id);
 			$stmt->execute();
 			$stmt->close();
