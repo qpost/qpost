@@ -77,11 +77,11 @@
 
 							<div class="ml-2 float-left mt-1">
 								<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="clearUnderline float-left">
-									<div class="font-weight-bold">
+									<div class="font-weight-bold" style="max-width: 168px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">
 										<?= Util::getCurrentUser()->getDisplayName() ?>
 									</div>
 
-									<div class="text-muted small" style="margin-top: -7px">
+									<div class="text-muted small" style="max-width: 168px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; margin-top: -7px;">
 										@<?= Util::getCurrentUser()->getUsername() ?>
 									</div>
 								</a>
