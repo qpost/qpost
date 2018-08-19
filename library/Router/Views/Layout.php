@@ -122,11 +122,11 @@ if(isset($_SESSION["profileLoadPost"])){
 								</a>
 							</li>
 
-							<li class="nav-item<?= (isset($nav) && $nav == NAV_MESSAGES) ? " active" : ""; ?>">
+							<!--<li class="nav-item<?= (isset($nav) && $nav == NAV_MESSAGES) ? " active" : ""; ?>">
 								<a href="/messages" class="nav-link">
 									messages<?= !is_null($unreadMessages) && $unreadMessages > 0 ? " <b>(" . $unreadMessages . ")</b>" : "</b>"; ?>
 								</a>
-							</li>
+							</li>-->
 
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
 								<a href="/account" class="nav-link">
