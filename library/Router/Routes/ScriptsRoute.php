@@ -357,7 +357,7 @@ $app->post("/scripts/postInfo",function(){
 				if(is_null($followButton))
 					$followButton = "";
 
-				$jsonData = Util::postJsonData($postId);
+				$jsonData = Util::postJsonData($postId,0,658,394);
 
 				$replies = [];
 				if($post->getReplies() > 0){
