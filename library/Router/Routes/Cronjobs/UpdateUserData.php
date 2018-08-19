@@ -6,7 +6,7 @@ $app->get("/cronjobs/updateuserdata",function(){
 
         $mysqli = Database::Instance()->get();
 
-        $stmt = $mysqli->prepare("SELECT `token` FROM `users` ORDER BY `lastGigadriveUpdate` ASC LIMIT 7");
+        $stmt = $mysqli->prepare("SELECT `token` FROM `users` WHERE `token` IS NOT NULL ORDER BY `lastGigadriveUpdate` ASC LIMIT 7");
         if($stmt->execute()){
             $result = $stmt->get_result();
 
