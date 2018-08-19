@@ -4,37 +4,37 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f793a77976d3b10f449073683c1ccbc0",
+    "content-hash": "764733ca90a4078ec2ab7a9703d70a11",
     "packages": [
         {
             "name": "doctrine/inflector",
-            "version": "v1.1.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
+                "reference": "5527a48b7313d15261292c149e55e26eae771b0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
-                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/5527a48b7313d15261292c149e55e26eae771b0a",
+                "reference": "5527a48b7313d15261292c149e55e26eae771b0a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": "^7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*"
+                "phpunit/phpunit": "^6.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Inflector\\": "lib/"
+                "psr-4": {
+                    "Doctrine\\Common\\Inflector\\": "lib/Doctrine/Common/Inflector"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -71,7 +71,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06T14:35:42+00:00"
+            "time": "2018-01-09T20:05:19+00:00"
         },
         {
             "name": "donatj/phpuseragentparser",
@@ -195,16 +195,16 @@
         },
         {
             "name": "gumlet/php-image-resize",
-            "version": "1.9.0",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gumlet/php-image-resize.git",
-                "reference": "2a38f3a49e2ee907f16064d8def6828c7902c0b6"
+                "reference": "d36a7bcd679445ec8f310fdbecac5d40b0c587de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gumlet/php-image-resize/zipball/2a38f3a49e2ee907f16064d8def6828c7902c0b6",
-                "reference": "2a38f3a49e2ee907f16064d8def6828c7902c0b6",
+                "url": "https://api.github.com/repos/gumlet/php-image-resize/zipball/d36a7bcd679445ec8f310fdbecac5d40b0c587de",
+                "reference": "d36a7bcd679445ec8f310fdbecac5d40b0c587de",
                 "shasum": ""
             },
             "require": {
@@ -246,7 +246,7 @@
                 "resize",
                 "scale"
             ],
-            "time": "2018-06-25T06:41:48+00:00"
+            "time": "2018-07-28T11:04:15+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -431,25 +431,27 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.4.36",
+            "version": "v5.6.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "67f642e018f3e95fb0b2ebffc206c3200391b1ab"
+                "reference": "2c029101285f6066f45e3ae5910b1b5f900fdcb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/67f642e018f3e95fb0b2ebffc206c3200391b1ab",
-                "reference": "67f642e018f3e95fb0b2ebffc206c3200391b1ab",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/2c029101285f6066f45e3ae5910b1b5f900fdcb4",
+                "reference": "2c029101285f6066f45e3ae5910b1b5f900fdcb4",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.4"
+                "php": "^7.1.3",
+                "psr/container": "~1.0",
+                "psr/simple-cache": "~1.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.4-dev"
+                    "dev-master": "5.6-dev"
                 }
             },
             "autoload": {
@@ -469,41 +471,42 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "https://laravel.com",
-            "time": "2017-08-26T23:56:53+00:00"
+            "time": "2018-07-31T12:49:53+00:00"
         },
         {
             "name": "illuminate/support",
-            "version": "v5.4.36",
+            "version": "v5.6.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "feab1d1495fd6d38970bd6c83586ba2ace8f299a"
+                "reference": "0561e4e48797fbaeafeec0054b14605b08722a5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/feab1d1495fd6d38970bd6c83586ba2ace8f299a",
-                "reference": "feab1d1495fd6d38970bd6c83586ba2ace8f299a",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/0561e4e48797fbaeafeec0054b14605b08722a5a",
+                "reference": "0561e4e48797fbaeafeec0054b14605b08722a5a",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "~1.1",
                 "ext-mbstring": "*",
-                "illuminate/contracts": "5.4.*",
-                "paragonie/random_compat": "~1.4|~2.0",
-                "php": ">=5.6.4"
+                "illuminate/contracts": "5.6.*",
+                "nesbot/carbon": "^1.24.1",
+                "php": "^7.1.3"
             },
-            "replace": {
-                "tightenco/collect": "self.version"
+            "conflict": {
+                "tightenco/collect": "<5.5.33"
             },
             "suggest": {
-                "illuminate/filesystem": "Required to use the composer class (5.2.*).",
-                "symfony/process": "Required to use the composer class (~3.2).",
-                "symfony/var-dumper": "Required to use the dd function (~3.2)."
+                "illuminate/filesystem": "Required to use the composer class (5.6.*).",
+                "ramsey/uuid": "Required to use Str::uuid() (^3.7).",
+                "symfony/process": "Required to use the composer class (~4.0).",
+                "symfony/var-dumper": "Required to use the dd function (~4.0)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.4-dev"
+                    "dev-master": "5.6-dev"
                 }
             },
             "autoload": {
@@ -526,7 +529,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2017-08-15T13:25:41+00:00"
+            "time": "2018-08-06T19:58:11+00:00"
         },
         {
             "name": "ircmaxell/random-lib",
@@ -631,16 +634,16 @@
         },
         {
             "name": "jasongrimes/paginator",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jasongrimes/php-paginator.git",
-                "reference": "8b18245b8a9dbdf69918ebd1e1f4a229a06030cd"
+                "reference": "3411e3cd0c6479a0b514f26e4358f0273552f221"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jasongrimes/php-paginator/zipball/8b18245b8a9dbdf69918ebd1e1f4a229a06030cd",
-                "reference": "8b18245b8a9dbdf69918ebd1e1f4a229a06030cd",
+                "url": "https://api.github.com/repos/jasongrimes/php-paginator/zipball/3411e3cd0c6479a0b514f26e4358f0273552f221",
+                "reference": "3411e3cd0c6479a0b514f26e4358f0273552f221",
                 "shasum": ""
             },
             "require": {
@@ -672,7 +675,7 @@
                 "pagination",
                 "paginator"
             ],
-            "time": "2015-10-15T09:42:44+00:00"
+            "time": "2018-07-11T18:11:49+00:00"
         },
         {
             "name": "league/oauth2-client",
@@ -791,6 +794,61 @@
             "time": "2018-05-13T14:59:18+00:00"
         },
         {
+            "name": "nesbot/carbon",
+            "version": "1.33.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/briannesbitt/Carbon.git",
+                "reference": "55667c1007a99e82030874b1bb14d24d07108413"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/55667c1007a99e82030874b1bb14d24d07108413",
+                "reference": "55667c1007a99e82030874b1bb14d24d07108413",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9",
+                "symfony/translation": "~2.6 || ~3.0 || ~4.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2",
+                "phpunit/phpunit": "^4.8.35 || ^5.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Carbon\\Laravel\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Nesbitt",
+                    "email": "brian@nesbot.com",
+                    "homepage": "http://nesbot.com"
+                }
+            ],
+            "description": "A simple API extension for DateTime.",
+            "homepage": "http://carbon.nesbot.com",
+            "keywords": [
+                "date",
+                "datetime",
+                "time"
+            ],
+            "time": "2018-08-07T08:39:47+00:00"
+        },
+        {
             "name": "nicklaw5/twitch-api-php",
             "version": "v1.2",
             "source": {
@@ -840,33 +898,29 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.12",
+            "version": "v9.99.99",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
+                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
-                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.0"
+                "php": "^7"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*|5.*"
+                "phpunit/phpunit": "4.*|5.*",
+                "vimeo/psalm": "^1"
             },
             "suggest": {
                 "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
             },
             "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/random.php"
-                ]
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -881,10 +935,11 @@
             "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
             "keywords": [
                 "csprng",
+                "polyfill",
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-04-04T21:24:14+00:00"
+            "time": "2018-07-02T15:55:56+00:00"
         },
         {
             "name": "paragonie/sodium_compat",
@@ -969,156 +1024,6 @@
             "time": "2018-06-06T17:30:29+00:00"
         },
         {
-            "name": "phpfastcache/phpfastcache",
-            "version": "7.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHPSocialNetwork/phpfastcache.git",
-                "reference": "949146e0a83d8d30871d18e16dd1021407c9b17c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPSocialNetwork/phpfastcache/zipball/949146e0a83d8d30871d18e16dd1021407c9b17c",
-                "reference": "949146e0a83d8d30871d18e16dd1021407c9b17c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "php": ">=7.0",
-                "psr/cache": "~1.0.0",
-                "psr/simple-cache": "~1.0.0"
-            },
-            "conflict": {
-                "basho/riak": "*",
-                "doctrine/couchdb": "*"
-            },
-            "suggest": {
-                "ext-apc": "*",
-                "ext-couchbase": "*",
-                "ext-intl": "*",
-                "ext-leveldb": "*",
-                "ext-memcache": "*",
-                "ext-memcached": "*",
-                "ext-redis": "*",
-                "ext-sqlite": "*",
-                "ext-wincache": "*",
-                "ext-xcache": "*",
-                "mongodb/mongodb": "^1.1",
-                "phpfastcache/couchdb": "~1.0.0",
-                "phpfastcache/phpssdb": "~1.0.0",
-                "phpfastcache/riak-client": "~1.4.4",
-                "predis/predis": "~1.1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Phpfastcache\\": "lib/Phpfastcache/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Georges.L",
-                    "email": "contact@geolim4.com",
-                    "homepage": "https://github.com/Geolim4",
-                    "role": "Actual Project Manager/Developer"
-                },
-                {
-                    "name": "Khoa Bui",
-                    "email": "khoaofgod@gmail.com",
-                    "homepage": "https://www.phpfastcache.com",
-                    "role": "Former Project Developer/Original Creator"
-                }
-            ],
-            "description": "PHP Abstract Cache Class - Reduce your database call using cache system. PhpFastCache handles a lot of drivers such as Apc(u), Cassandra, CouchBase, Couchdb, Mongodb, Files, (P)redis, Leveldb, Memcache(d), Ssdb, Sqlite, Wincache, Xcache, Zend Data Cache.",
-            "homepage": "https://www.phpfastcache.com",
-            "keywords": [
-                "LevelDb",
-                "abstract",
-                "apc",
-                "apcu",
-                "cache",
-                "cache class",
-                "caching",
-                "cassandra",
-                "cookie",
-                "couchbase",
-                "couchdb",
-                "files cache",
-                "memcache",
-                "memcached",
-                "mongodb",
-                "mysql cache",
-                "pdo cache",
-                "php cache",
-                "predis",
-                "redis",
-                "ssdb",
-                "wincache",
-                "xcache",
-                "zend",
-                "zend data cache",
-                "zend disk cache",
-                "zend memory cache",
-                "zend server"
-            ],
-            "time": "2018-07-23T19:06:45+00:00"
-        },
-        {
-            "name": "phpfastcache/phpssdb",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHPSocialNetwork/phpssdb.git",
-                "reference": "60cc285bf622664d9899da699503754259e8c970"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPSocialNetwork/phpssdb/zipball/60cc285bf622664d9899da699503754259e8c970",
-                "reference": "60cc285bf622664d9899da699503754259e8c970",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "phpssdb\\": "src/phpssdb/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Khoa Bui",
-                    "email": "khoaofgod@gmail.com",
-                    "homepage": "http://www.phpfastcache.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Georges.L",
-                    "email": "contact@geolim4.com",
-                    "homepage": "https://github.com/Geolim4",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP SSDB Driver for phpFastCache",
-            "homepage": "http://www.phpfastcache.com",
-            "keywords": [
-                "cache",
-                "driver",
-                "ssdb"
-            ],
-            "time": "2017-04-21T22:22:57+00:00"
-        },
-        {
             "name": "phpmailer/phpmailer",
             "version": "v5.2.26",
             "source": {
@@ -1196,56 +1101,6 @@
             "time": "2017-11-04T09:26:05+00:00"
         },
         {
-            "name": "predis/predis",
-            "version": "v1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nrk/predis.git",
-                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
-                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8"
-            },
-            "suggest": {
-                "ext-curl": "Allows access to Webdis when paired with phpiredis",
-                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Predis\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniele Alessandri",
-                    "email": "suppakilla@gmail.com",
-                    "homepage": "http://clorophilla.net"
-                }
-            ],
-            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
-            "homepage": "http://github.com/nrk/predis",
-            "keywords": [
-                "nosql",
-                "predis",
-                "redis"
-            ],
-            "time": "2016-06-16T16:22:20+00:00"
-        },
-        {
             "name": "psr/cache",
             "version": "1.0.1",
             "source": {
@@ -1290,6 +1145,55 @@
                 "psr-6"
             ],
             "time": "2016-08-06T20:24:11+00:00"
+        },
+        {
+            "name": "psr/container",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "time": "2017-02-14T16:28:37+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1538,6 +1442,134 @@
             "time": "2016-01-21T19:50:30+00:00"
         },
         {
+            "name": "symfony/polyfill-mbstring",
+            "version": "v1.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-mbstring.git",
+                "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d0cd638f4634c16d8df4508e847f14e9e43168b8",
+                "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for the Mbstring extension",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "mbstring",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2018-08-06T14:22:27+00:00"
+        },
+        {
+            "name": "symfony/translation",
+            "version": "v4.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/translation.git",
+                "reference": "6fcd1bd44fd6d7181e6ea57a6f4e08a09b29ef65"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/6fcd1bd44fd6d7181e6ea57a6f4e08a09b29ef65",
+                "reference": "6fcd1bd44fd6d7181e6ea57a6f4e08a09b29ef65",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "conflict": {
+                "symfony/config": "<3.4",
+                "symfony/dependency-injection": "<3.4",
+                "symfony/yaml": "<3.4"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "~3.4|~4.0",
+                "symfony/console": "~3.4|~4.0",
+                "symfony/dependency-injection": "~3.4|~4.0",
+                "symfony/finder": "~2.8|~3.0|~4.0",
+                "symfony/intl": "~3.4|~4.0",
+                "symfony/yaml": "~3.4|~4.0"
+            },
+            "suggest": {
+                "psr/log-implementation": "To use logging capability in translator",
+                "symfony/config": "",
+                "symfony/yaml": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Translation\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Translation Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-07-26T11:24:31+00:00"
+        },
+        {
             "name": "team-reflex/oauth2-discord",
             "version": "v1.0",
             "source": {
@@ -1579,6 +1611,66 @@
             ],
             "description": "OAuth2 client for authenticating with the Discord API servers",
             "time": "2016-06-20T22:20:04+00:00"
+        },
+        {
+            "name": "tedivm/stash",
+            "version": "v0.14.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tedious/Stash.git",
+                "reference": "7ea9749784152dcd2dab72c4bbf2bef18c326e41"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tedious/Stash/zipball/7ea9749784152dcd2dab72c4bbf2bef18c326e41",
+                "reference": "7ea9749784152dcd2dab72c4bbf2bef18c326e41",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4|^7.0",
+                "psr/cache": "~1.0"
+            },
+            "provide": {
+                "psr/cache-implementation": "1.0.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^1.9",
+                "phpunit/phpunit": "4.8.*",
+                "satooshi/php-coveralls": "1.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stash\\": "src/Stash/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Hafner",
+                    "email": "tedivm@tedivm.com"
+                },
+                {
+                    "name": "Josh Hall-Bachner",
+                    "email": "charlequin@gmail.com"
+                }
+            ],
+            "description": "The place to keep your cache.",
+            "homepage": "http://github.com/tedious/Stash",
+            "keywords": [
+                "apc",
+                "cache",
+                "caching",
+                "memcached",
+                "psr-6",
+                "psr6",
+                "redis",
+                "sessions"
+            ],
+            "time": "2017-04-23T17:16:57+00:00"
         },
         {
             "name": "web-token/jwt-core",

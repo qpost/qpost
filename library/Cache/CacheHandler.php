@@ -4,9 +4,8 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Config\Config;
 
 /**
- * Class CacheHandler
+ * Utility methods to use with caching
  * 
- * @description Utility methods to use with phpFastCache
  * @package Cache
  * @author Gigadrive (support@gigadrivegroup.com)
  * @copyright 2016-2018 Gigadrive
@@ -14,22 +13,19 @@ use Phpfastcache\Config\Config;
  */
 class CacheHandler {
 	/**
-	 * Gets the phpFastCache CacheManager object
+	 * Gets the stash caching pool object
 	 * 
 	 * @access public
-	 * @return CacheManager
+	 * @return Stash\Pool
 	 */
 	public static function Manager(){
-		try {
-			static $InstanceCache = null;
-			if($InstanceCache == null){
-				$InstanceCache = CacheManager::getInstance("files");
-			}
-	
-			return $InstanceCache;
-		} catch(Exception $e){
-			return CacheManager::getInstance("files");
+		static $InstanceCache = null;
+		if($InstanceCache == null){
+			$driver = new Stash\Driver\FileSystem(array());
+			$InstanceCache = new Stash\Pool($driver);
 		}
+	
+		return $InstanceCache;
 	}
 
 	/**
@@ -41,16 +37,14 @@ class CacheHandler {
 	 * @param int $expiry The amount in seconds for which the object should be held in the cache
 	 */
 	public static function setToCache($name,$value,$expiry){
-		try {
-			$name = self::validateName($name);
-			if(\CacheHandler::existsInCache($name)) \CacheHandler::deleteFromCache($name);
-			
-			$c = \CacheHandler::Manager()->getItem($name);
-			if(is_null($c->get())){
-				$c->set($value)->expiresAfter($expiry);
-				\CacheHandler::Manager()->save($c);
-			}
-		} catch(Exception $e){}
+		$pool = self::Manager();
+
+		$item = $pool->getItem($name);
+		
+		$item->set($value);
+		$item->expiresAfter($expiry);
+
+		$pool->save($item);
 	}
 	
 	/**
@@ -61,16 +55,11 @@ class CacheHandler {
 	 * @return mixed Returns the cached object
 	 */
 	public static function getFromCache($name){
-		try {
-			$name = self::validateName($name);
-			if(\CacheHandler::existsInCache($name)){
-				$c = \CacheHandler::Manager()->getItem($name);
-				
-				return $c->get();
-			} else {
-				return null;
-			}
-		} catch(Exception $e){
+		if(self::existsInCache($name)){
+			$item = self::Manager()->getItem($name);
+
+			return $item->get();
+		} else {
 			return null;
 		}
 	}
@@ -83,11 +72,12 @@ class CacheHandler {
 	 * @return bool Returns true if the object exists
 	 */
 	public static function existsInCache($name){
-		try {
-			$name = self::validateName($name);
-			return \CacheHandler::Manager()->hasItem($name);
-			//return getFromCache($name) != null;
-		} catch(Exception $e){
+		$pool = self::Manager();
+
+		$item = $pool->getItem($name);
+		if(!is_null($item) && $item->isHit()){
+			return true;
+		} else {
 			return false;
 		}
 	}
@@ -100,30 +90,19 @@ class CacheHandler {
 	 * @return bool Returns true if the object could be removed
 	 */
 	public static function deleteFromCache($name){
-		try {
-			$name = self::validateName($name);
-			$r = false;
-			
-			if(\CacheHandler::existsInCache($name)){
-				\CacheHandler::Manager()->deleteItem($name);
-				$r = true;
-			}
-			
-			return $r;
-		} catch(Exception $e){
+		if(self::existsInCache($name)){
+			self::Manager()->deleteItem($name);
+		} else {
 			return false;
 		}
 	}
 
-	private static function validateName($name){
-		try {
-			return str_replace("{","-",str_replace("}","-",str_replace("(","-",str_replace(")","-",str_replace("/","-",str_replace("\\","-",str_replace("@","-",str_replace(":","-",$name))))))));
-		} catch(Exception $e){
-			return $name;
-		}
+	/**
+	 * Clears the entire cache
+	 * 
+	 * @access public
+	 */
+	public static function clearCache(){
+		self::Manager()->clear();
 	}
 }
-
-CacheManager::setDefaultConfig(new Config([
-	"path" => __DIR__ . "/../../tmp/"
-]));
