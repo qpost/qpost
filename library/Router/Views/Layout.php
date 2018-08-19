@@ -348,6 +348,7 @@ if(isset($_SESSION["profileLoadPost"])){
 							<ul class="nav nav-pills flex-column">
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_HOME) echo ' active'; ?>" href="/account">Account</a></li>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_PRIVACY) echo ' active'; ?>" href="/account/privacy">Privacy</a></li>
+								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_SESSIONS) echo ' active'; ?>" href="/account/sessions">Active sessions</a></li>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_LOGOUT) echo ' active'; ?>" href="/logout" data-no-instant>Logout</a></li>
 							</ul>
 

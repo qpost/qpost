@@ -1,5 +1,7 @@
 <?php
 
+use Gigadrive\Account\IPInformation;
+
 define("DEVELOPER_MODE",(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["HTTP_HOST"])[0] == "localhost" || explode(":",$_SERVER["HTTP_HOST"])[0] == "127.0.0.1")));
 define("DEFAULT_TWITTER_IMAGE","https://qpost.gigadrivegroup.com/android-chrome-192x192.png");
 
@@ -11,6 +13,7 @@ define("NAV_ACCOUNT","NAV_ACCOUNT");
 
 define("ACCOUNT_NAV_HOME","ACCOUNT_NAV_HOME");
 define("ACCOUNT_NAV_PRIVACY","ACCOUNT_NAV_PRIVACY");
+define("ACCOUNT_NAV_SESSIONS","ACCOUNT_NAV_SESSIONS");
 define("ACCOUNT_NAV_LOGOUT","ACCOUNT_NAV_LOGOUT");
 
 define("ALERT_TYPE_INFO","info");
@@ -1269,3 +1272,11 @@ class Util {
 		return $box;
 	}
 }
+$ipinfo = IPInformation::getInformationFromIP(Util::getIP());
+/*if($ipinfo !== null && (isset($_SERVER["PATH_INFO"]) ? $_SERVER["PATH_INFO"] : strtok($_SERVER["REQUEST_URI"],'?')) !== "/banned/vpn"){
+	if(((double)($ipinfo->getVPNCheckResult())) >= 0.90){
+		header("Location: /banned/vpn");
+		shutdown();
+		exit();
+	}
+}*/

@@ -37,3 +37,5 @@ define("FOLLOW_LIMIT","");
 define("POST_CHARACTER_LIMIT","");
 
 define("MAX_PARENT_DEPTH","");
+
+define("IPSTACK_KEY","");
