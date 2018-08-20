@@ -158,14 +158,13 @@ class User {
 
 			$user = self::getUserByGigadriveId($id);
 		} else {
-			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ?, `gigadriveJoinDate` = ? WHERE `gigadriveId` = ?");
+			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `token` = ?, `gigadriveJoinDate` = ? WHERE `gigadriveId` = ?");
 			$stmt->bind_param("sssssi",$username,$email,$avatar,$token,$registerDate,$id);
 			$stmt->execute();
 			$stmt->close();
 
 			$user->username = $username;
 			$user->email = $email;
-			$user->avatar = $avatar;
 
 			$user->saveToCache();
 		}
@@ -188,9 +187,10 @@ class User {
 	 * @param string $time
 	 * @param bool $emailActivated
 	 * @param string $emailActivationToken
+	 * @param string $lastUsernameChange
 	 * @return User
 	 */
-	public static function getUserByData($id,$gigadriveId,$displayName,$username,$password,$email,$avatar,$bio,$token,$birthday,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time,$emailActivated,$emailActivationToken){
+	public static function getUserByData($id,$gigadriveId,$displayName,$username,$password,$email,$avatar,$bio,$token,$birthday,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time,$emailActivated,$emailActivationToken,$lastUsernameChange){
 		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
 
 		$user->id = $id;
@@ -211,6 +211,7 @@ class User {
 		$user->time = $time;
 		$user->emailActivated = $emailActivated;
 		$user->emailActivationToken = $emailActivationToken;
+		$user->lastUsernameChange = $lastUsernameChange;
 
 		$user->saveToCache();
 
@@ -327,6 +328,12 @@ class User {
 
 	/**
 	 * @access private
+	 * @var string $lastUsernameChange
+	 */
+	private $lastUsernameChange;
+
+	/**
+	 * @access private
 	 * @var bool $exists
 	 */
 	private $exists;
@@ -415,6 +422,8 @@ class User {
 	public function reload(){
 		$mysqli = Database::Instance()->get();
 
+		$this->removeFromCache();
+
 		$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id` = ?");
 		$stmt->bind_param("i",$this->id);
 		if($stmt->execute()){
@@ -441,6 +450,7 @@ class User {
 				$this->time = $row["time"];
 				$this->emailActivated = $row["emailActivated"];
 				$this->emailActivationToken = $row["emailActivationToken"];
+				$this->lastUsernameChange = $row["lastUsernameChange"];
 
 				$this->exists = true;
 
@@ -471,9 +481,22 @@ class User {
 
 	/**
 	 * Returns the user's gigadrive ID
+	 * 
+	 * @access public
+	 * @return int
 	 */
 	public function getGigadriveId(){
 		return $this->gigadriveId;
+	}
+
+	/**
+	 * Returns whether this account was created with the "Sign in with Gigadrive" button
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isGigadriveLinked(){
+		return !is_null($this->gigadriveId) && !is_null($this->token);
 	}
 
 	/**
@@ -524,6 +547,23 @@ class User {
 	 */
 	public function getAvatarURL(){
 		return is_null($this->avatar) ? sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,"defaultAvatar.png") : $this->avatar;
+	}
+
+	/**
+	 * Resets the user's avatar
+	 * 
+	 * @access public
+	 */
+	public function resetAvatar(){
+		$this->avatar = null;
+
+		$mysqli = Database::Instance()->get();
+		$stmt = $mysqli->prepare("UPDATE `users` SET `avatar` = NULL WHERE `id` = ?");
+		$stmt->bind_param("i",$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		$this->saveToCache();
 	}
 
 	/**
@@ -640,6 +680,36 @@ class User {
 	 */
 	public function getEmailActivationToken(){
 		return $this->emailActivationToken;
+	}
+
+	/**
+	 * Returns the timestamp of the last username change
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getLastUsernameChange(){
+		return $this->lastUsernameChange;
+	}
+
+	/**
+	 * Updates the user's last username change
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function updateLastUsernameChange(){
+		$date = date("Y-m-d H:i:s");
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("UPDATE `users` SET `lastUsernameChange` = ? WHERE `id` = ?");
+		$stmt->bind_param("si",$date,$this->id);
+		if($stmt->execute()){
+			$this->lastUsernameChange = $date;
+			$this->saveToCache();
+		}
+		$stmt->close();
 	}
 
 	/**

@@ -7,11 +7,12 @@ $successMsg = null;
 
 $featuredBoxLimit = 5;
 
-if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"]) && isset($_POST["birthday"])){
+if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"]) && isset($_POST["birthday"]) && isset($_POST["username"])){
 	$displayName = $_POST["displayName"];
 	$bio = $_POST["bio"];
 	$featuredBoxTitle = trim($_POST["featuredBoxTitle"]);
 	$birthday = trim($_POST["birthday"]);
+	$username = trim($_POST["username"]);
 
 	if(!empty(trim($displayName))){
 		if(strlen($displayName) >= 1 && strlen($displayName) <= 25){
@@ -37,6 +38,40 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						}
 					}
 
+					$usernameChange = false;
+
+					if(!$user->isGigadriveLinked()){
+						if($username !== $user->getUsername()){
+							if(is_null($user->getLastUsernameChange()) || (time()-strtotime($user->getLastUsernameChange())) >= 30*24*60*60){
+								if(!empty($username)){
+									if(strlen($username) >= 3){
+										if(strlen($username) <= 16){
+											if(ctype_alnum($username)){
+												if(Util::isUsernameAvailable($username)){
+													$usernameChange = true;
+												} else {
+													$errorMsg = "That username is not available anymore.";
+												}
+											} else {
+												$errorMsg = "Your username may only consist of letters and numbers.";
+											}
+										} else {
+											$errorMsg = "Your username may not be longer than 16 characters.";
+										}
+									} else {
+										$errorMsg = "Your username must at least be 3 characters long.";
+									}
+								} else {
+									$errorMsg = "Please enter a username.";
+								}
+							} else {
+								$errorMsg = "You may only change your username every 30 days.";
+							}
+						}
+					} else {
+						$username = $user->getUsername();
+					}
+
 					if(is_null($errorMsg)){
 						if(count($boxUsers) == 0)
 							$boxUsers = null;
@@ -55,9 +90,12 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
 
 						$mysqli = Database::Instance()->get();
-						$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ? WHERE `id` = ?");
-						$stmt->bind_param("sssssi",$displayName,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$userId);
+						$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `username` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ? WHERE `id` = ?");
+						$stmt->bind_param("ssssssi",$displayName,$username,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$userId);
 						if($stmt->execute()){
+							if($usernameChange)
+								$user->updateLastUsernameChange();
+
 							$successMsg = "Your changes have been saved.";
 							$user->reload();
 						} else {
@@ -103,15 +141,29 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 			</div>
 
 			<div class="form-group row">
-				<label for="username" class="control-label col-sm-2 col-form-label">Username *</label>
+				<label for="username" class="control-label col-sm-2 col-form-label">Username</label>
 
-				<div class="col-sm-10 input-group mb-3">
+				<div class="col-sm-10 input-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">@</span>
 					</div>
-					<input class="form-control disabled" disabled type="text" name="username" id="username" value="<?= $user->getUsername(); ?>"/>
+					<input class="form-control disabled" <?php if($user->isGigadriveLinked()){ ?>disabled <?php } ?>type="text" name="username" id="username" value="<?= isset($_POST["username"]) ? Util::sanatizeString($_POST["username"]) : $user->getUsername(); ?>"/>
 				</div>
 			</div>
+
+			<?php if($user->isGigadriveLinked()){ ?>
+			<div class="form-group row">
+				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
+					Your username can only be changed on <a href="https://gigadrivegroup.com/account" target="_blank" class="ml-1">gigadrivegroup.com</a>.
+				</div>
+			</div>
+			<?php } else { ?>
+			<div class="form-group row">
+				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
+					<b class="mr-1">Note:</b> You can only change your username every 30 days!
+				</div>
+			</div>
+			<?php } ?>
 
 			<div class="form-group row">
 				<label for="bio" class="control-label col-sm-2 col-form-label">Bio</label>
@@ -130,7 +182,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 			</div>
 
 			<div class="form-group row">
-				<label for="bio" class="control-label col-sm-2 col-form-label">Profile Picture *</label>
+				<label for="bio" class="control-label col-sm-2 col-form-label">Profile Picture</label>
 
 				<div class="col-sm-10 input-group mb-3">
 					<img src="<?= $user->getAvatarURL(); ?>" width="300" height="300"/>
@@ -173,6 +225,4 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 			</div>
 		</fieldset>
 	</form>
-
-	<p class="mb-0 small">Fields marked with a <b>*</b> can only be changed on <a href="https://gigadrivegroup.com/account" target="_blank">gigadrivegroup.com</a>.</p>
 </div>
