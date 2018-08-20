@@ -971,7 +971,7 @@ function load(){
 	/*$(document).on("scroll",function(e){
 		let scrollValue = $(document).scrollTop();
 		
-		if(scrollValue >= 10){
+		if(scrollValue >= 100){
 			$(".homeFeedSidebar").attr("style","position: fixed; margin-top: -10px");
 		} else {
 			$(".homeFeedSidebar").removeAttr("style");

@@ -6,6 +6,8 @@
 
 				echo Util::renderCreatePostForm(["mb-2"]);
 
+				echo Util::renderAd(Util::AD_TYPE_LEADERBOARD,true,["my-1"]);
+
 				$user = Util::getCurrentUser();
 				$mysqli = Database::Instance()->get();
 				
@@ -67,7 +69,7 @@
 		</div>
 
 		<div class="col-lg-4">
-			<div class="homeFeedSidebar d-none d-md-block" style="position: fixed;">
+			<div class="homeFeedSidebar d-none d-md-block" style="position: fixed">
 				<div class="homeFeedProfileBox card mb-3">
 					<div class="px-2 py-2">
 						<div class="d-block" style="height: 50px">
@@ -322,11 +324,7 @@
 						</div>
 					</div>
 				</div>
-				<?php
 
-				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-1"]);
-
-				?>
 				<div class="card">
 					<div class="px-2 py-2 small">
 						&copy; <?= date("Y") ?> Gigadrive &bull;
