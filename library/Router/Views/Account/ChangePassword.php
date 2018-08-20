@@ -77,7 +77,7 @@ if(!is_null($errorMsg))
                 </div>
 
                 <div class="form-group row">
-                    <div class="col-sm-9 input-group mb-3 offset-sm-3">
+                    <div class="col-sm-9 input-group offset-sm-3">
                         <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
