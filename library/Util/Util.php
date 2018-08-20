@@ -1090,7 +1090,7 @@ class Util {
 	 * @return string
 	 */
 	public static function convertHashtags($string){
-		return str_replace("/#","/", preg_replace("/(?:^|\s)#(\w+)/", " <a href=\"/search?query=" . urlencode("#") . "$1\" class\"ignoreParentClick\">#$1</a>", $string));
+		return str_replace("/#","/", preg_replace("/(?:^|\s)#(\w+)/", " <a href=\"/search?query=" . urlencode("#") . "$1\" class=\"ignoreParentClick\">#$1</a>", $string));
 	}
 
 	/**
