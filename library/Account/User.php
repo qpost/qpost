@@ -149,7 +149,7 @@ class User {
 		$user = self::getUserByGigadriveId($id);
 
 		if($user == null){
-			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`gigadriveId`,`displayName`,`username`,`email`,`avatar`,`token`,`gigadriveJoinDate`) VALUES(?,?,?,?,?,?,?);");
+			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`gigadriveId`,`displayName`,`username`,`email`,`avatar`,`token`,`gigadriveJoinDate`,`emailActivated`) VALUES(?,?,?,?,?,?,?,1);");
 			$stmt->bind_param("issssss",$id,$username,$username,$email,$avatar,$token,$registerDate);
 			$stmt->execute();
 			$stmt->close();
