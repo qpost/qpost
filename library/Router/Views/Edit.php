@@ -7,12 +7,12 @@ $successMsg = null;
 
 $featuredBoxLimit = 5;
 
-if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"]) && isset($_POST["birthday"]) && isset($_POST["username"]) && isset($_POST["submit"])){
+if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"]) && isset($_POST["birthday"]) && isset($_POST["submit"])){
 	$displayName = $_POST["displayName"];
 	$bio = $_POST["bio"];
 	$featuredBoxTitle = trim($_POST["featuredBoxTitle"]);
 	$birthday = trim($_POST["birthday"]);
-	$username = trim($_POST["username"]);
+	$username = $user->getUsername();	
 
 	if(!empty(trim($displayName))){
 		if(strlen($displayName) >= 1 && strlen($displayName) <= 25){
@@ -40,7 +40,9 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 
 					$usernameChange = false;
 
-					if(!$user->isGigadriveLinked()){
+					if(!$user->isGigadriveLinked() && isset($_POST["username"])){
+						$username = trim($_POST["username"]);
+
 						if($username !== $user->getUsername()){
 							if(is_null($user->getLastUsernameChange()) || (time()-strtotime($user->getLastUsernameChange())) >= 30*24*60*60){
 								if(!empty($username)){
