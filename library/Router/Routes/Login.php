@@ -94,7 +94,10 @@ $app->bind("/loginCallback",function(){
 						$registerDate = $userData["joinDate"];
 
 						$user = User::getUserByGigadriveId($id);
-						if(is_null($user)){
+						if(!is_null($user)){
+							if($user->getEmail() != $email && !Util::isEmailAvailable($email)) return $this->reroute("/?msg=gigadriveLoginEmailNotAvailable");
+							if($user->getUsername() != $username && !Util::isUsernameAvailable($username)) return $this->reroute("/?msg=gigadriveLoginUsernameNotAvailable");
+
 							$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
 							$user->updateLastGigadriveUpdate();
 
