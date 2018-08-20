@@ -69,7 +69,7 @@
 		</div>
 
 		<div class="col-lg-4">
-			<div class="homeFeedSidebar d-none d-md-block" style="position: fixed">
+			<div class="homeFeedSidebar d-none d-md-block sticky-top" style="top: 70px">
 				<div class="homeFeedProfileBox card mb-3">
 					<div class="px-2 py-2">
 						<div class="d-block" style="height: 50px">
