@@ -35,7 +35,7 @@
 				$stmt->close();
 
 				if(count($results) > 0){
-					echo '<ul class="list-group feedContainer">';
+					echo '<ul class="list-group feedContainer mt-2">';
 
 					for($i = 0; $i < count($results); $i++){
 						$result = $results[$i];
