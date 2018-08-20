@@ -578,7 +578,7 @@ class FeedEntry {
 			$s .= '</a>';
             $s .= '</div>';
 
-            $s .= '<div class="float-left ml-1">';
+            $s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px">';
 			$s .= '<p class="mb-0">';
 			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<span class="font-weight-bold">' . $sharedUser->getDisplayName() . '</span>';
