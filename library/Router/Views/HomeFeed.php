@@ -322,9 +322,30 @@
 				</div>
 				<?php
 
-				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mb-1"]);
+				echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["my-1"]);
 
-			?>
+				?>
+				<div class="card">
+					<div class="px-2 py-2 small">
+						&copy; <?= date("Y") ?> Gigadrive &bull;
+
+						<a href="https://gigadrivegroup.com/legal/contact" target="_blank" class="mx-1">
+							Contact Info
+						</a>
+
+						<a href="https://gigadrivegroup.com/legal/tos" target="_blank" class="mx-1">
+							Terms of Service
+						</a>
+
+						<a href="https://gigadrivegroup.com/legal/privacy" target="_blank" class="mx-1">
+							Privacy Policy
+						</a>
+
+						<a href="https://gigadrivegroup.com/legal/disclaimer" target="_blank" class="mx-1">
+							Disclaimer
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -369,6 +369,7 @@ if(isset($_SESSION["profileLoadPost"])){
 				</div>
 			</div>
 
+			<?php if(!isset($hideFooter) || $hideFooter == false){ ?>
 			<hr class="mt-2"/>
 
 			<footer class="small text-muted my-2">
@@ -398,6 +399,7 @@ if(isset($_SESSION["profileLoadPost"])){
 					</a>
 				</div>
 			</footer>
+			<?php } ?>
 		</div>
 
 		<script src="<?= $app->baseUrl("/assets/js/instantclick.min.js"); ?>" data-no-instant></script>
