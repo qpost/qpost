@@ -349,7 +349,7 @@ if(isset($_SESSION["profileLoadPost"])){
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_HOME) echo ' active'; ?>" href="/account">Account</a></li>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_PRIVACY) echo ' active'; ?>" href="/account/privacy">Privacy</a></li>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_SESSIONS) echo ' active'; ?>" href="/account/sessions">Active sessions</a></li>
-								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_CHANGE_PASSWORD) echo ' active'; ?>" href="/account/change-password">Change password</a></li>
+								<?php if(!Util::getCurrentUser()->isGigadriveLinked()){ ?><li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_CHANGE_PASSWORD) echo ' active'; ?>" href="/account/change-password">Change password</a></li><?php } ?>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_LOGOUT) echo ' active'; ?>" href="/logout" data-no-instant>Logout</a></li>
 							</ul>
 
