@@ -17,8 +17,8 @@ $app->bind("/login",function(){
 				if(!empty($email) && !empty($password)){
 					$mysqli = Database::Instance()->get();
 
-					$stmt = $mysqli->prepare("SELECT `id`,`token`,`email`,`password`,`emailActivated` FROM `users` WHERE `email` = ?");
-					$stmt->bind_param("s",$email);
+					$stmt = $mysqli->prepare("SELECT `id`,`token`,`email`,`password`,`emailActivated` FROM `users` WHERE `email` = ? OR `username` = ?");
+					$stmt->bind_param("ss",$email,$email);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
 
@@ -35,13 +35,13 @@ $app->bind("/login",function(){
 										$errorMsg = "Please activate your email address before logging in.";
 									}
 								} else {
-									$errorMsg = "Invalid email/password combination.";
+									$errorMsg = "Invalid credentials.";
 								}
 							} else {
 								$errorMsg = "Please log in via Gigadrive.";
 							}
 						} else {
-							$errorMsg = "Invalid email/password combination.";
+							$errorMsg = "Invalid credentials.";
 						}
 					} else {
 						$errorMsg = "An error occurred. " . $stmt->error;

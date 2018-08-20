@@ -12,7 +12,7 @@
 
                 <form action="/login" method="post">
                     <?= Util::insertCSRFToken() ?>
-                    <input type="email" class="form-control mb-2" name="email" placeholder="Email address"<?= isset($_POST["email"]) ? ' value="' . Util::sanatizeHTMLAttribute($_POST["email"]) . '"' : "" ?>/>
+                    <input type="text" class="form-control mb-2" name="email" placeholder="Email address or username"<?= isset($_POST["email"]) ? ' value="' . Util::sanatizeHTMLAttribute($_POST["email"]) . '"' : "" ?>/>
                     <input type="password" class="form-control mb-2" name="password" placeholder="Password"/>
                     <input type="submit" class="btn btn-block btn-primary" value="Log in"/>
 
