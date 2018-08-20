@@ -34,6 +34,50 @@ class User {
 	}
 
 	/**
+	 * Gets a user object by the user's gigadrive ID
+	 * 
+	 * @access public
+	 * @param int $id
+	 * @return User
+	 */
+	public static function getUserByGigadriveId($id){
+		$n = "user_gigadriveId_" . $id;
+
+		if(CacheHandler::existsInCache($n)){
+			return CacheHandler::getFromCache($n);
+		} else {
+			$gigadriveId = null;
+
+			$mysqli = Database::Instance()->get();
+			$stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE `gigadriveId` = ?");
+			$stmt->bind_param("i",$id);
+			if($stmt->execute()){
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+					$row = $result->fetch_assoc();
+
+					$id = $row["id"];
+				}
+			}
+			$stmt->close();
+
+			if(!is_null($id)){
+				$user = new User($id);
+				$user->reload();
+	
+				if($user->exists == true){
+					return $user;
+				} else {
+					return null;
+				}
+			} else {
+				return null;
+			}
+		}
+	}
+
+	/**
 	 * Gets a user object by the user's username
 	 * 
 	 * @access public
@@ -88,9 +132,21 @@ class User {
 		return \CacheHandler::existsInCache("user_id_" . $id);
 	}
 
+	/**
+	 * Updates a Gigadrive user's data in the database
+	 * 
+	 * @access public
+	 * @param int $id
+	 * @param string $username
+	 * @param string $avatar
+	 * @param string $email
+	 * @param string $token
+	 * @param string $registerDate
+	 * @return User
+	 */
 	public static function registerUser($id,$username,$avatar,$email,$token,$registerDate){
 		$mysqli = Database::Instance()->get();
-		$user = self::getUserById($id);
+		$user = self::getUserByGigadriveId($id);
 
 		if($user == null){
 			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`gigadriveId`,`displayName`,`username`,`email`,`avatar`,`token`,`gigadriveJoinDate`) VALUES(?,?,?,?,?,?,?);");
@@ -100,7 +156,7 @@ class User {
 
 			self::getUserById($id)->removeFromCache();
 
-			$user = self::getUserById($id);
+			$user = self::getUserByGigadriveId($id);
 		} else {
 			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `avatar` = ?, `token` = ?, `gigadriveJoinDate` = ? WHERE `gigadriveId` = ?");
 			$stmt->bind_param("sssssi",$username,$email,$avatar,$token,$registerDate,$id);
@@ -122,20 +178,26 @@ class User {
 	 * 
 	 * @access public
 	 * @param int $id
+	 * @param int $gigadriveId
 	 * @param string $displayName
 	 * @param string $username
+	 * @param string $password
 	 * @param string $email
 	 * @param string $avatar
 	 * @param string $bio
 	 * @param string $time
+	 * @param bool $emailActivated
+	 * @param string $emailActivationToken
 	 * @return User
 	 */
-	public static function getUserByData($id,$displayName,$username,$email,$avatar,$bio,$token,$birthday,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time){
+	public static function getUserByData($id,$gigadriveId,$displayName,$username,$password,$email,$avatar,$bio,$token,$birthday,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time,$emailActivated,$emailActivationToken){
 		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
 
 		$user->id = $id;
+		$user->gigadriveId = $gigadriveId;
 		$user->displayName = $displayName;
 		$user->username = $username;
+		$user->password = $password;
 		$user->email = $email;
 		$user->avatar = $avatar;
 		$user->bio = $bio;
@@ -147,6 +209,8 @@ class User {
 		$user->lastGigadriveUpdate = $lastGigadriveUpdate;
 		$user->gigadriveJoinDate = $gigadriveJoinDate;
 		$user->time = $time;
+		$user->emailActivated = $emailActivated;
+		$user->emailActivationToken = $emailActivationToken;
 
 		$user->saveToCache();
 
@@ -161,6 +225,12 @@ class User {
 
 	/**
 	 * @access private
+	 * @var int $gigadriveId
+	 */
+	private $gigadriveId;
+
+	/**
+	 * @access private
 	 * @var string $displayName
 	 */
 	private $displayName;
@@ -170,6 +240,12 @@ class User {
 	 * @var string $username
 	 */
 	private $username;
+
+	/**
+	 * @access private
+	 * @var string $password
+	 */
+	private $password;
 
 	/**
 	 * @access private
@@ -236,6 +312,18 @@ class User {
 	 * @var string $time
 	 */
 	private $time;
+
+	/**
+	 * @access private
+	 * @var bool $emailActivated;
+	 */
+	private $emailActivated;
+
+	/**
+	 * @access private
+	 * @var string $emailActivationToken
+	 */
+	private $emailActivationToken;
 
 	/**
 	 * @access private
@@ -336,8 +424,10 @@ class User {
 				$row = $result->fetch_assoc();
 
 				$this->id = $row["id"];
+				$this->gigadriveId = $row["gigadriveId"];
 				$this->displayName = $row["displayName"];
 				$this->username = $row["username"];
+				$this->password = $row["password"];
 				$this->email = $row["email"];
 				$this->avatar = $row["avatar"];
 				$this->bio = $row["bio"];
@@ -349,6 +439,8 @@ class User {
 				$this->lastGigadriveUpdate = $row["lastGigadriveUpdate"];
 				$this->gigadriveJoinDate = $row["gigadriveJoinDate"];
 				$this->time = $row["time"];
+				$this->emailActivated = $row["emailActivated"];
+				$this->emailActivationToken = $row["emailActivationToken"];
 
 				$this->exists = true;
 
@@ -378,6 +470,13 @@ class User {
 	}
 
 	/**
+	 * Returns the user's gigadrive ID
+	 */
+	public function getGigadriveId(){
+		return $this->gigadriveId;
+	}
+
+	/**
 	 * Returns the user's display name
 	 * 
 	 * @access public
@@ -395,6 +494,16 @@ class User {
 	 */
 	public function getUsername(){
 		return $this->username;
+	}
+
+	/**
+	 * Returns the user's password hash
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getPassword(){
+		return $this->password;
 	}
 
 	/**
@@ -511,6 +620,26 @@ class User {
 	 */
 	public function getTime(){
 		return $this->time;
+	}
+
+	/**
+	 * Returns whether the user has activated their email
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isEmailActivated(){
+		return $this->emailActivated;
+	}
+
+	/**
+	 * Returns the user's email activation token
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getEmailActivationToken(){
+		return $this->emailActivationToken;
 	}
 
 	/**
@@ -1597,6 +1726,7 @@ class User {
 	public function saveToCache(){
 		\CacheHandler::setToCache("user_id_" . $this->id,$this,20*60);
 		\CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,20*60);
+		\CacheHandler::setToCache("user_gigadriveId_" . $this->gigadriveId,$this,20*60);
 	}
 
 	/**
@@ -1607,5 +1737,6 @@ class User {
 	public function removeFromCache(){
 		\CacheHandler::deleteFromCache("user_id_" . $this->id);
 		\CacheHandler::deleteFromCache("user_name_" . strtolower($this->username));
+		\CacheHandler::deleteFromCache("user_gigadriveId_" . $this->gigadriveId);
 	}
 }

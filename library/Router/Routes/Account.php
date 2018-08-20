@@ -38,3 +38,11 @@ $app->bind("/account/sessions",function(){
 
 	return $this->render("views:Account/Sessions.php with views:Layout.php",$data);
 });
+
+$app->bind("/account/verify-email",function(){
+    $data = array(
+        "title" => "Verify your Email address"
+    );
+
+    return $this->render("views:Account/VerifyEmail.php with views:Layout.php",$data);
+});

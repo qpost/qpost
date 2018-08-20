@@ -90,7 +90,7 @@ if(isset($_SESSION["profileLoadPost"])){
 						<span class="navbar-toggler-icon"></span>
 					</button>
 
-					<a class="navbar-brand" href="/">
+					<a class="navbar-brand" href="/"<?= !Util::isLoggedIn() ? " data-no-instant" : "" ?>>
 						<img src="/assets/img/navlogo.png" style="height: 30px"/>
 					</a>
 				</div>

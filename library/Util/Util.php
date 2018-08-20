@@ -587,6 +587,70 @@ class Util {
 	}
 
 	/**
+	 * Returns whether an email is available
+	 * 
+	 * @access public
+	 * @param string $email
+	 * @return bool
+	 */
+	public static function isEmailAvailable($email){
+		$b = true;
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `users` WHERE `email` = ?");
+		$stmt->bind_param("s",$email);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
+				if($row["count"] > 0){
+					$b = false;
+				} else {
+					$b = true;
+				}
+			}
+		}
+		$stmt->close();
+
+		return $b;
+	}
+
+	/**
+	 * Returns whether an username is available
+	 * 
+	 * @access public
+	 * @param string $username
+	 * @return bool
+	 */
+	public static function isUsernameAvailable($username){
+		$b = true;
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `users` WHERE `username` = ?");
+		$stmt->bind_param("s",$username);
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
+				if($row["count"] > 0){
+					$b = false;
+				} else {
+					$b = true;
+				}
+			}
+		}
+		$stmt->close();
+
+		return $b;
+	}
+
+	/**
      * Gets the current user's IP address
 	 * 
 	 * @access public
@@ -702,60 +766,6 @@ class Util {
 			$string = substr($string,0,($addDots ? $length-3 : $length)) . ($addDots ? "..." : "");
 
 		return $string;
-	}
-
-	/**
-     * Checks whether a specific email address is available or not
-	 * 
-	 * @access public
-     * @param string $email
-     * @return bool
-     */
-	public static function isEmailAvailable($email){
-		$b = true;
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `users` WHERE `email` = ?");
-		$stmt->bind_param("s",$email);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-				if($row["count"] > 0){
-					$b = false;
-				}
-			}
-		}
-		$stmt->close();
-
-		return $b;
-	}
-
-	/**
-     * Checks whether a specific username is available or not
-	 * 
-	 * @access public
-     * @param string $email
-     * @return bool
-     */
-	public static function isUsernameAvailable($username){
-		$b = true;
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `users` WHERE `username` = ?");
-		$stmt->bind_param("s",$username);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-				if($row["count"] > 0){
-					$b = false;
-				}
-			}
-		}
-		$stmt->close();
-
-		return $b;
 	}
 
 	/**
@@ -1254,7 +1264,7 @@ class Util {
 
 			$box .= '<div class="float-left mt-2">';
 			$box .= '<button type="button" class="btn btn-link mb-0 addMediaAttachment" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
-			$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
+			//$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
 			$box .= '</div>';
 
 			$box .= '<input type="hidden" name="attachmentData" value=""/>';

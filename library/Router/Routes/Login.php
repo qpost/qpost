@@ -7,8 +7,68 @@ $app->bind("/login",function(){
 		$_SESSION["id"] = (int)$_GET["id"];
 		return $this->reroute("/");
 	} else {
-		return $this->reroute("https://gigadrivegroup.com/authorize?app=" . GIGADRIVE_APP_ID . "&scopes=user:info,user:email");
+		if(!Util::isLoggedIn()){
+			$errorMsg = null;
+
+			if(isset($_POST["email"]) && isset($_POST["password"])){
+				$email = trim($_POST["email"]);
+				$password = trim($_POST["password"]);
+
+				if(!empty($email) && !empty($password)){
+					$mysqli = Database::Instance()->get();
+
+					$stmt = $mysqli->prepare("SELECT `id`,`token`,`email`,`password`,`emailActivated` FROM `users` WHERE `email` = ?");
+					$stmt->bind_param("s",$email);
+					if($stmt->execute()){
+						$result = $stmt->get_result();
+
+						if($result->num_rows){
+							$row = $result->fetch_assoc();
+
+							if(is_null($row["token"])){
+								if(password_verify($password,$row["password"])){
+									if($row["emailActivated"] == true){
+										$user = User::getUserById($row["id"]);
+	
+										$_SESSION["id"] = $user->getId();
+									} else {
+										$errorMsg = "Please activate your email address before logging in.";
+									}
+								} else {
+									$errorMsg = "Invalid email/password combination.";
+								}
+							} else {
+								$errorMsg = "Please log in via Gigadrive.";
+							}
+						} else {
+							$errorMsg = "Invalid email/password combination.";
+						}
+					} else {
+						$errorMsg = "An error occurred. " . $stmt->error;
+					}
+					$stmt->close();
+
+					if(is_null($errorMsg))
+						return $this->reroute("/");
+				} else {
+					$errorMsg = "Please fill all the fields.";
+				}
+			}
+
+			$data = array(
+				"title" => "Log in",
+				"errorMsg" => $errorMsg
+			);
+		
+			return $this->render("views:Login.php with views:Layout.php",$data);
+		} else {
+			return $this->reroute("/");
+		}
 	}
+});
+
+$app->bind("/login/gigadrive",function(){
+	return $this->reroute("https://gigadrivegroup.com/authorize?app=" . GIGADRIVE_APP_ID . "&scopes=user:info,user:email");
 });
 
 $app->bind("/loginCallback",function(){
@@ -33,11 +93,30 @@ $app->bind("/loginCallback",function(){
 						$email = $userData["email"];
 						$registerDate = $userData["joinDate"];
 
-						User::registerUser($id,$username,$avatar,$email,$token,$registerDate)->updateLastGigadriveUpdate();
+						$user = User::getUserByGigadriveId($id);
+						if(is_null($user)){
+							$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
+							$user->updateLastGigadriveUpdate();
 
-						$_SESSION["id"] = $id;
+							$_SESSION["id"] = $user->getId();
 
-						return $this->reroute("/");
+							return $this->reroute("/");
+						} else {
+							if(Util::isEmailAvailable($email)){
+								if(Util::isUsernameAvailable($username)){
+									$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
+									$user->updateLastGigadriveUpdate();
+
+									$_SESSION["id"] = $user->getId();
+
+									return $this->reroute("/");
+								} else {
+									return $this->reroute("/?msg=gigadriveLoginUsernameNotAvailable");
+								}
+							} else {
+								return $this->reroute("/?msg=gigadriveLoginEmailNotAvailable");
+							}
+						}
 					} else {
 						return $this->reroute("/");
 					}
