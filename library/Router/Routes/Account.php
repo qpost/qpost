@@ -39,6 +39,20 @@ $app->bind("/account/sessions",function(){
 	return $this->render("views:Account/Sessions.php with views:Layout.php",$data);
 });
 
+$app->bind("/account/change-password",function(){
+	if(!Util::isLoggedIn()) return $this->reroute("/login");
+	if(Util::getCurrentUser()->isGigadriveLinked()) return $this->reroute("/account");
+
+	$data = array(
+		"title" => "Change your password",
+		"nav" => NAV_ACCOUNT,
+		"showAccountNav" => true,
+		"accountNav" => ACCOUNT_NAV_CHANGE_PASSWORD
+	);
+
+	return $this->render("views:Account/ChangePassword.php with views:Layout.php",$data);
+});
+
 $app->bind("/account/verify-email",function(){
     $data = array(
         "title" => "Verify your Email address"

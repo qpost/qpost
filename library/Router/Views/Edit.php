@@ -207,7 +207,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 					<div class="input-group-prepend">
 						<span class="input-group-text">@</span>
 					</div>
-					<input class="form-control disabled" <?php if($user->isGigadriveLinked()){ ?>disabled <?php } ?>type="text" name="username" id="username" value="<?= isset($_POST["username"]) ? Util::sanatizeString($_POST["username"]) : $user->getUsername(); ?>"/>
+					<input class="form-control disabled" <?php if($user->isGigadriveLinked()){ ?>disabled <?php } ?>type="text" min="3" max="16" name="username" id="username" value="<?= isset($_POST["username"]) ? Util::sanatizeString($_POST["username"]) : $user->getUsername(); ?>"/>
 				</div>
 			</div>
 
