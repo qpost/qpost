@@ -7,7 +7,7 @@ $successMsg = null;
 
 $featuredBoxLimit = 5;
 
-if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"]) && isset($_POST["birthday"]) && isset($_POST["username"])){
+if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"]) && isset($_POST["birthday"]) && isset($_POST["username"]) && isset($_POST["submit"])){
 	$displayName = $_POST["displayName"];
 	$bio = $_POST["bio"];
 	$featuredBoxTitle = trim($_POST["featuredBoxTitle"]);
@@ -72,6 +72,63 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						$username = $user->getUsername();
 					}
 
+					$avatarUrl = $user->getAvatarURL();
+
+					if(count($_FILES) > 0){
+						$validFiles = 0;
+						foreach($_FILES as $file){
+							if(is_uploaded_file(realpath($file["tmp_name"]))){
+								$validFiles++;
+							}
+						}
+
+						if($validFiles > 0 && isset($_FILES["file"])){
+							$file = $_FILES["file"];
+
+							if(Util::startsWith($file["type"],"image/")){
+								$tmpName = realpath($file["tmp_name"]);
+								$fileName = $file["name"];
+
+								if(is_uploaded_file($tmpName)){
+									$ext = strtolower(pathinfo($fileName,PATHINFO_EXTENSION));
+
+									if($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif"){
+										if(getimagesize($file["tmp_name"]) !== false){
+											if($file["size"] <= 1000000){
+												$size = 300;
+
+												$tmpFile = __DIR__ . "/../../../tmp/" . rand(1,10000) . ".jpg";
+
+												$image = new \Gumlet\ImageResize($file["tmp_name"]);
+												$image->crop($size,$size);
+												$image->save($tmpFile);
+												
+												$upload = Util::storeFileOnCDN("serv/qpost/avatars/" . $user->getId() . "/",$tmpFile);
+												if(is_array($upload) && isset($upload["result"])){
+													$avatarUrl = sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,"serv/qpost/avatars/" . $user->getId() . "/" . $upload["result"]);
+												} else {
+													$errorMsg = "An error occurred.";
+												}
+
+												unlink($tmpFile);
+											} else {
+												$errorMsg = "The selected file is too large.";
+											}
+										} else {
+											$errorMsg = "Plase select an image file.";
+										}
+									} else {
+										$errorMsg = "Please select an image file.";
+									}
+								} else {
+									$errorMsg = "An error occurred.";
+								}
+							} else {
+								$errorMsg = "Please select an image file.";
+							}
+						}
+					}
+
 					if(is_null($errorMsg)){
 						if(count($boxUsers) == 0)
 							$boxUsers = null;
@@ -90,8 +147,8 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
 
 						$mysqli = Database::Instance()->get();
-						$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `username` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ? WHERE `id` = ?");
-						$stmt->bind_param("ssssssi",$displayName,$username,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$userId);
+						$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `username` = ?, `avatar` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ? WHERE `id` = ?");
+						$stmt->bind_param("sssssssi",$displayName,$username,$avatarUrl,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$userId);
 						if($stmt->execute()){
 							if($usernameChange)
 								$user->updateLastUsernameChange();
@@ -115,6 +172,9 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 	} else {
 		$errorMsg = "Please enter a display name.";
 	}
+} else if(isset($_POST["deleteProfilePicture"])){
+	$user->resetAvatar();
+	$successMsg = "Your profile picture has been removed." . ($user->isGigadriveLinked() ? "<br/>Please note that this does not affect your linked Gigadrive account." : "");
 }
 
 ?><div class="legacyCardBody">
@@ -128,7 +188,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 
 	?>
 
-	<form action="<?= $app->routeUrl("/edit") ?>" method="post">
+	<form action="<?= $app->routeUrl("/edit") ?>" method="post" enctype="multipart/form-data">
 		<?= Util::insertCSRFToken(); ?>
 
 		<fieldset>
@@ -182,10 +242,24 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 			</div>
 
 			<div class="form-group row">
-				<label for="bio" class="control-label col-sm-2 col-form-label">Profile Picture</label>
+				<label class="control-label col-sm-2 col-form-label">Profile Picture</label>
 
-				<div class="col-sm-10 input-group mb-3">
-					<img src="<?= $user->getAvatarURL(); ?>" width="300" height="300"/>
+				<div class="col-sm-10 mb-3 text-center">
+					<div class="mt-3">
+						<img src="<?= $user->getAvatarURL() ?>" width="300" height="300" class="rounded"/>
+
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" id="customFile" name="file">
+							<label class="custom-file-label text-left" for="customFile">Choose file</label>
+						</div>
+
+						<small>
+							Allowed file types: .jpg, .png, .gif | Max size: 1 MB<br/>
+							Optimal resolution: 300x300 pixels<br/>
+						</small>
+
+						<button type="submit" name="deleteProfilePicture" class="btn btn-danger btn-sm mt-2">Delete profile picture</button>
+					</div>
 				</div>
 			</div>
 
@@ -220,7 +294,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 
 			<div class="form-group row">
 				<div class="col-sm-10 input-group mb-3 offset-sm-2">
-					<button type="submit" class="btn btn-primary">Save changes</button>
+					<button type="submit" name="submit" class="btn btn-primary">Save changes</button>
 				</div>
 			</div>
 		</fieldset>
