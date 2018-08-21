@@ -755,6 +755,7 @@ $(document).ready(function(){
 	checkForNotifications();
 	loadHomeFeed();
 	loadDropzone();
+	loadBasic();
 	
 	if("serviceWorker" in navigator){
 		navigator.serviceWorker.register("/serviceWorker.js").then((reg) => {})
