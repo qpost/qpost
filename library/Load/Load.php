@@ -16,6 +16,7 @@ if(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["HTTP_HOST"])[0] == "lo
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 require_once __DIR__ . "/../Account/User.php";
+require_once __DIR__ . "/../Account/Suspension.php";
 require_once __DIR__ . "/../Account/IPInformation.php";
 require_once __DIR__ . "/../Cache/CacheHandler.php";
 require_once __DIR__ . "/../Shutdown/Shutdown.php";
