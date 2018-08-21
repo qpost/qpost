@@ -123,3 +123,7 @@ img.emoji {
  #instantclick-bar {
 	 background: white;
  }
+
+ #accountDropdown:after {
+	 display: none;
+ }

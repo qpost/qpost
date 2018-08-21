@@ -128,16 +128,32 @@ if(isset($_SESSION["profileLoadPost"])){
 								</a>
 							</li>-->
 
-							<li class="nav-item<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
-								<a href="/account" class="nav-link">
-									account
+							<li class="nav-item dropdown<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
+								<a href="#" class="nav-link dropdown-toggle" id="accountDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<img src="<?= Util::getCurrentUser()->getAvatarUrl() ?>" width="24" height="24" class="rounded border border-white"/>
 								</a>
-							</li>
 
-							<li class="nav-item">
-								<a href="/logout" class="nav-link" data-no-instant>
-									log out
-								</a>
+								<div class="dropdown-menu dropdown-menu-right" aria-labelledBy="accountDropdown">
+									<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="dropdown-item">
+										<div class="font-weight-bold" style="font-size: 21px">
+											<?= Util::getCurrentUser()->getDisplayName() ?>
+										</div>
+										<div class="text-muted" style="margin-top: -8px">
+											@<?= Util::getCurrentUser()->getUsername() ?>
+										</div>
+									</a>
+
+									<div class="dropdown-divider"></div>
+
+									<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="dropdown-item"><i class="far fa-user"></i> Profile</a>
+									<a href="/notifications" class="dropdown-item" data-no-instant><i class="far fa-bell"></i> Notifications</a>
+									<a href="/messages" class="dropdown-item"><i class="far fa-envelope"></i> Messages</a>
+
+									<div class="dropdown-divider"></div>
+
+									<a href="/account" class="dropdown-item">Settings and privacy</a>
+									<a href="/logout" class="dropdown-item" data-no-instant>Log out</a>
+								</div>
 							</li>
 							<?php
 						}
