@@ -238,7 +238,7 @@ if(isset($_SESSION["profileLoadPost"])){
 					?>
 					<div class="row">
 						<div class="col-lg-3 mb-3">
-							<center><img class="rounded border-primary mb-2" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
+							<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
 							<h4 class="mb-0"><?= $user->getDisplayName(); ?></h4>
 							<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small bg-light text-muted px-1 py-1">follows you</span>' : ""; ?>
 
