@@ -133,7 +133,7 @@ if(isset($_SESSION["profileLoadPost"])){
 									<img src="<?= Util::getCurrentUser()->getAvatarUrl() ?>" width="24" height="24" class="rounded border border-white"/>
 								</a>
 
-								<div class="dropdown-menu dropdown-menu-right" aria-labelledBy="accountDropdown">
+								<div class="dropdown-menu dropdown-menu-right shadow" aria-labelledBy="accountDropdown">
 									<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="dropdown-item">
 										<div class="font-weight-bold" style="font-size: 21px">
 											<?= Util::getCurrentUser()->getDisplayName() ?>
