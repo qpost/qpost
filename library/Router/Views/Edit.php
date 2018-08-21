@@ -141,26 +141,38 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						$displayName = Util::sanatizeString($displayName);
 						$bio = Util::sanatizeString($bio);
 						$userId = $user->getId();
-						$birthday = strtotime($birthday) == false ? null : date("Y-m-d",strtotime($birthday));
 
-						if(empty($bio))
-							$bio = null;
+						$birthdayTime = strtotime($birthday);
+						$birthday = null;
 
-						$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
-
-						$mysqli = Database::Instance()->get();
-						$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `username` = ?, `avatar` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ? WHERE `id` = ?");
-						$stmt->bind_param("sssssssi",$displayName,$username,$avatarUrl,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$userId);
-						if($stmt->execute()){
-							if($usernameChange)
-								$user->updateLastUsernameChange();
-
-							$successMsg = "Your changes have been saved.";
-							$user->reload();
-						} else {
-							$errorMsg = "An error occurred. (" . $stmt->error . ")";
+						if($birthdayTime !== false){
+							if($birthdayTime <= time()-(13*365*24*60*60)){
+								$birthday = date("Y-m-d",$birthdayTime);
+							} else {
+								$errorMsg = "Please select a valid birthday.";
+							}
 						}
-						$stmt->close();
+
+						if(is_null($errorMsg)){
+							if(empty($bio))
+								$bio = null;
+
+							$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
+
+							$mysqli = Database::Instance()->get();
+							$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `username` = ?, `avatar` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ? WHERE `id` = ?");
+							$stmt->bind_param("sssssssi",$displayName,$username,$avatarUrl,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$userId);
+							if($stmt->execute()){
+								if($usernameChange)
+									$user->updateLastUsernameChange();
+
+								$successMsg = "Your changes have been saved.";
+								$user->reload();
+							} else {
+								$errorMsg = "An error occurred. (" . $stmt->error . ")";
+							}
+							$stmt->close();
+						}
 					}
 				} else {
 					$errorMsg = "The Featured box title must be less than 25 characters long.";
@@ -239,7 +251,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 				<label for="birthday" class="control-label col-sm-2 col-form-label">Birthday</label>
 
 				<div class="col-sm-10 input-group mb-3">
-					<input type="text" class="form-control datepicker" name="birthday" id="birthday" value="<?= isset($_POST["birthday"]) ? Util::sanatizeString($_POST["birthday"]) : (!is_null($user->getBirthday()) ? date("m/d/Y",strtotime($user->getBirthday())) : "") ?>"/>
+					<input type="text" class="form-control birthdayDatepicker" name="birthday" id="birthday" value="<?= isset($_POST["birthday"]) ? Util::sanatizeString($_POST["birthday"]) : (!is_null($user->getBirthday()) ? date("m/d/Y",strtotime($user->getBirthday())) : "") ?>"/>
 				</div>
 			</div>
 
