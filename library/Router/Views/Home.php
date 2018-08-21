@@ -19,6 +19,8 @@ if(isset($_POST["email"]) && isset($_POST["displayName"]) && isset($_POST["usern
 						if(strlen($username) <= 16){
 							if(Util::isEmailAvailable($email)){
 								if(Util::isUsernameAvailable($username)){
+									$displayName = Util::sanatizeString($displayName);
+
 									$mysqli = Database::Instance()->get();
 
 									$emailToken = Util::getRandomString(7);
