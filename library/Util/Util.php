@@ -719,25 +719,34 @@ class Util {
      * @return string
      */
 	public static function storeFileOnCDN($path,$file){
-		$curl = curl_init();
-		curl_setopt_array($curl,array(
-			CURLOPT_URL => GIGADRIVE_CDN_UPLOAD_SCRIPT,
-			CURLOPT_POST => 1,
-			CURLOPT_POSTFIELDS => array(
-				"path" => $path,
-				"secret" => GIGADRIVE_CDN_UPLOAD_SCRIPT_SECRET,
-				"file_contents" => curl_file_create(realpath($file))
-			),
-			CURLOPT_RETURNTRANSFER => 1
-		));
+		try {
+			$curl = curl_init();
+			curl_setopt_array($curl,array(
+				CURLOPT_URL => GIGADRIVE_CDN_UPLOAD_SCRIPT,
+				CURLOPT_POST => 1,
+				CURLOPT_POSTFIELDS => array(
+					"path" => $path,
+					"secret" => GIGADRIVE_CDN_UPLOAD_SCRIPT_SECRET,
+					"file_contents" => curl_file_create(realpath($file))
+				),
+				CURLOPT_RETURNTRANSFER => 1
+			));
+	
+			$result = curl_exec($curl);
 
-		$result = curl_exec($curl);
-		curl_close($curl);
+			if($result === false){
+				throw new Exception(curl_error($curl),curl_errno($curl));
+			}
 
-		if(Util::contains($result,"ERROR: ") == false){
-			return ["result" => $result, "url" => sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,$path . $result)];
-		} else {
-			return ["error" => $result];
+			curl_close($curl);
+	
+			if(Util::contains($result,"ERROR: ") == false){
+				return ["result" => $result, "url" => sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,$path . $result)];
+			} else {
+				return ["error" => $result];
+			}
+		} catch(Exception $e){
+			return ["error" => $e->getMessage()];
 		}
 	}
 
