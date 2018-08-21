@@ -1172,6 +1172,7 @@ class Util {
 
 		if(Util::isLoggedIn()){
 			$currentUser = Util::getCurrentUser();
+			if(is_null($currentUser)) return "";
 
 			$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
 			$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
