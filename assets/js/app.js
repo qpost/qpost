@@ -1035,9 +1035,9 @@ function load(){
 								let postTime = post.time;
 								let postText = post.text;
 								
-								let userName = post.userName;
-								let userDisplayName = post.userDisplayName;
-								let userAvatar = post.userAvatar;
+								let userName = post.user.username;
+								let userDisplayName = post.user.displayName;
+								let userAvatar = post.user.avatar;
 								
 								HOME_FEED_LAST_POST = postId;
 								
