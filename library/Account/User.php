@@ -713,6 +713,26 @@ class User {
 	}
 
 	/**
+	 * Returns the currently active suspension of the user, if available
+	 * 
+	 * @access public
+	 * @return Suspension
+	 */
+	public function getActiveSuspension(){
+		return Suspension::getSuspensionByUser($this->id);
+	}
+
+	/**
+	 * Returns whether the user is currently suspended
+	 * 
+	 * @access public
+	 * @return bool;
+	 */
+	public function isSuspended(){
+		return !is_null($this->getActiveSuspension());
+	}
+
+	/**
 	 * Gets the user's feed entries count
 	 * 
 	 * @access public

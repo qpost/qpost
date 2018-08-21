@@ -10,6 +10,14 @@ $app->bind("/login",function(){
 		if(!Util::isLoggedIn()){
 			$errorMsg = null;
 
+			if(isset($_GET["msg"])){
+				switch($_GET["msg"]){
+					case "suspended":
+						$errorMsg = "Your account has been suspended.";
+						break;
+				}
+			}
+
 			if(isset($_POST["email"]) && isset($_POST["password"])){
 				$email = trim($_POST["email"]);
 				$password = trim($_POST["password"]);
@@ -30,7 +38,11 @@ $app->bind("/login",function(){
 									if($row["emailActivated"] == true){
 										$user = User::getUserById($row["id"]);
 	
-										$_SESSION["id"] = $user->getId();
+										if($user->isSuspended() === false){
+											$_SESSION["id"] = $user->getId();
+										} else {
+											$errorMsg = "Your account has been suspended.";
+										}
 									} else {
 										$errorMsg = "Please activate your email address before logging in.";
 									}
@@ -95,15 +107,19 @@ $app->bind("/loginCallback",function(){
 
 						$user = User::getUserByGigadriveId($id);
 						if(!is_null($user)){
-							if($user->getEmail() != $email && !Util::isEmailAvailable($email)) return $this->reroute("/?msg=gigadriveLoginEmailNotAvailable");
-							if($user->getUsername() != $username && !Util::isUsernameAvailable($username)) return $this->reroute("/?msg=gigadriveLoginUsernameNotAvailable");
+							if($user->isSuspended() === false){
+								if($user->getEmail() != $email && !Util::isEmailAvailable($email)) return $this->reroute("/?msg=gigadriveLoginEmailNotAvailable");
+								if($user->getUsername() != $username && !Util::isUsernameAvailable($username)) return $this->reroute("/?msg=gigadriveLoginUsernameNotAvailable");
 
-							$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
-							$user->updateLastGigadriveUpdate();
+								$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
+								$user->updateLastGigadriveUpdate();
 
-							$_SESSION["id"] = $user->getId();
+								$_SESSION["id"] = $user->getId();
 
-							return $this->reroute("/");
+								return $this->reroute("/");
+							} else {
+								return $this->reroute("/login?msg=suspended");
+							}
 						} else {
 							if(Util::isEmailAvailable($email)){
 								if(Util::isUsernameAvailable($username)){

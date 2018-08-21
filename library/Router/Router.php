@@ -21,6 +21,10 @@ try {
 
 define("CSRF_TOKEN",$csrf->getToken());
 
+if(Util::isLoggedIn() && Util::getCurrentUser()->isSuspended()){
+	unset($_SESSION["id"]);
+}
+
 require $app->path("routes:Home.php");
 require $app->path("routes:Notifications.php");
 require $app->path("routes:Status.php");
