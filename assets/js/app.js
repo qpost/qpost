@@ -784,6 +784,8 @@ function loadDropzone(){
 	let postBox = $(".dropzone-previews").closest(".postBox");
 	let attachmentValueField = postBox.find("input[name=\"attachmentData\"]");
 	let postButton = postBox.find(".postButton");
+
+	if($(".dropzone-previews").length == 0) return;
 	
 	dz = new Dropzone(document.body, {
 		url: "/scripts/mediaUpload",
