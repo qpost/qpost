@@ -127,3 +127,14 @@ img.emoji {
  #accountDropdown:after {
 	 display: none;
  }
+
+ .homeFeedLoadMore {
+	cursor: pointer;
+	background: #9FCCFC;
+	border-color: #007bff !important;
+ }
+
+ .followsYouBadge {
+	 color: #8e8f91 !important;
+	 background-color: #F8F9FA !important;
+ }

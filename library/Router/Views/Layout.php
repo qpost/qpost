@@ -68,6 +68,13 @@ if(isset($_SESSION["profileLoadPost"])){
 			"assets:css/main.css",
 			"assets:css/datepicker.min.css"]); ?>
 
+		<?php
+
+		if(Util::isUsingNightMode())
+			echo $app->style("assets:css/nightmode.css");
+
+		?>
+
 		<?= $app->script([
 			"https://code.jquery.com/jquery-latest.min.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js",
@@ -153,6 +160,10 @@ if(isset($_SESSION["profileLoadPost"])){
 
 									<a href="/account" class="dropdown-item">Settings and privacy</a>
 									<a href="/logout" class="dropdown-item" data-no-instant>Log out</a>
+
+									<div class="dropdown-divider"></div>
+
+									<a href="/nightmode" class="dropdown-item" data-no-instant>Night mode <span style="margin-top: -21px" class="float-right badge badge-<?= Util::isUsingNightMode() ? "success" : "danger" ?>"><?= Util::isUsingNightMode() ? "On" : "Off" ?></span></a>
 								</div>
 							</li>
 							<?php
@@ -240,7 +251,7 @@ if(isset($_SESSION["profileLoadPost"])){
 						<div class="col-lg-3 mb-3">
 							<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
 							<h4 class="mb-0"><?= $user->getDisplayName(); ?></h4>
-							<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small bg-light text-muted px-1 py-1">follows you</span>' : ""; ?>
+							<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
 
 							<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
 

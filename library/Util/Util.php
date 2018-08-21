@@ -1261,7 +1261,7 @@ class Util {
 
 		$box = "";
 
-		$box .= '<div class="card border-primary postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
+		$box .= '<div class="card postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
 		$box .= '<div class="card-body">';
 		$box .= '<textarea id="postField' . $formId . '" class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
 
@@ -1270,10 +1270,12 @@ class Util {
 		if($includeExtraOptions){
 			$faces = ["tired","suprise","smile-wink","smile-beam","sad-tear","sad-cry","meh-rolling-eyes","meh-blank","meh","grin-wink","grin-stars","grin-squint-tears","grin-squint","grin-hearts","grin-beam-sweat","grin-beam","grin-alt","grin","smile","laugh-wink","laugh-squint","laugh-beam","laugh","kiss-wink-heart","kiss-beam","kiss","grin-tongue-wink","grin-tongue-squint","grin-tongue","grin-tears","grimace","frown-open","flushed","angry","dizzy"];
 
+			$linkColor = self::isUsingNightMode() ? "light" : "primary";
+
 			$box .= '<div class="dropzone-previews row ml-2"></div>';
 
 			$box .= '<div class="float-left mt-2">';
-			$box .= '<button type="button" class="btn btn-link mb-0 addMediaAttachment" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
+			$box .= '<button type="button" class="btn btn-link text-' . $linkColor . ' mb-0 addMediaAttachment" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
 			//$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
 			$box .= '</div>';
 

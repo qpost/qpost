@@ -1,0 +1,155 @@
+body,html {
+	background: #474747;
+	color: #FFF;
+}
+
+#footer-socialMedia {
+	background-color: #2E2E2E !important;
+	color: #FFF !important;
+}
+
+.dropdown-menu {
+	background-color: #0D0D0D;
+}
+
+.card {
+	border: 1px solid #222222;
+	background-color: #222222;
+}
+
+.card > .card-header {
+    color: #FFF;
+    background-color: #444444;
+    border-color: #222222;
+}
+
+.card > .card-body {
+	background-color: #383838;
+}
+
+.card-default > .card-footer {
+	background-color: #3f3f3f;
+	border-top: 1px solid #222222;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    color: #ffffff !important;
+}
+
+.form-control,
+.form-control:focus,
+.breadcrumb {
+	border: 1px solid #222222;
+	background-color: #535353;
+	color: #FFF !important;
+	box-shadow: none;
+}
+
+.postCharacterCounter {
+	color: white !important;
+}
+
+.dropdown-item {
+	color: white !important;
+}
+
+dropdown-item:focus, .dropdown-item:hover {
+    text-decoration: none;
+    background-color: #525252;
+}
+
+.text-muted {
+	color: #8e8f91 !important;
+}
+
+#footer {
+	color: #bbbbbb;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	color: #FFF !important;
+}
+
+.page-link {
+    color: #dddddd;
+    background-color: #3f3f3f;
+    border-color: #222222 !important;
+}
+
+.page-item.disabled .page-link {
+	background-color: #3f3f3f !important;
+}
+
+.page-item.active .page-link,
+.page-item.disabled .page-link {
+	color: #FFF !important;
+}
+
+.table-bordered {
+    border: 1px solid #222222;
+}
+
+.card > .card-header > a {
+	color: #FFF !important;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+	border-color: #222222;
+}
+
+.modal,.modal-title {
+	color: #FFF !important;
+}
+
+.modal-content {
+	background: #474747;
+}
+
+.list-group-item {
+	background-color: #383838;
+	border-color: #242526;
+}
+
+a.list-group-item:hover,
+a.list-group-item:active,
+a.list-group-item:focus {
+    background-color: #2e2d2d;
+	border-color: #242526;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+	color: #FFF !important;
+}
+
+.statusTrigger {
+	cursor: pointer;
+	-webkit-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+ }
+
+ .statusTrigger:hover {
+	background-color: #000;
+	-webkit-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+ }
+
+ .postBox {
+	border-color: #000 !important;
+ }
+
+ .homeFeedLoadMore {
+	background: #383838 !important;
+	border-color: #000 !important;
+	color: white;
+ }
+
+ .modal .statusTrigger {
+	color: white !important;
+}
+
+.followsYouBadge {
+	color: #FFF !important;
+	background-color: #000 !important;
+}

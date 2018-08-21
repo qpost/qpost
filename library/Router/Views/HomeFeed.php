@@ -57,7 +57,7 @@
 					echo '</ul>';
 
 					?>
-			<div class="card homeFeedLoadMore px-3 py-3 text-center my-2 border-primary" style="cursor: pointer; background: #9FCCFC" onclick="loadOldHomeFeed();">
+			<div class="card homeFeedLoadMore px-3 py-3 text-center my-2" style="cursor: pointer; background: #9FCCFC" onclick="loadOldHomeFeed();">
 				Click to load more
 			</div>
 					<?php

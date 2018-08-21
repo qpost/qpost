@@ -37,6 +37,7 @@ require $app->path("routes:Features.php");
 require $app->path("routes:Discover.php");
 require $app->path("routes:ScriptsRoute.php");
 require $app->path("routes:Sitemap.php");
+require $app->path("routes:NightMode.php");
 
 require $app->path("routes:Cronjobs/UpdateUserData.php");
 
