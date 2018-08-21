@@ -1278,7 +1278,7 @@ class Util {
 			$box .= '<div class="dropzone-previews row ml-2"></div>';
 
 			$box .= '<div class="float-left mt-2">';
-			$box .= '<button type="button" class="btn btn-link text-' . $linkColor . ' mb-0 addMediaAttachment" data-toggle="tooltip" title="Add media attachment"><i class="fas fa-images"></i></button>';
+			$box .= '<button type="button" class="btn btn-link text-' . $linkColor . ' mb-0 addMediaAttachment" data-toggle="tooltip" title="Add photo"><i class="fas fa-images"></i></button>';
 			//$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
 			$box .= '</div>';
 
