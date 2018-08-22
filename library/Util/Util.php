@@ -1303,19 +1303,21 @@ class Util {
 
 		$linkColor = self::isUsingNightMode() ? "light" : "primary";
 
-		$box .= '<div class="card card-sm card-social-post">';
+		$box .= '<div class="card card-sm card-social-post' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
 
-		$box .= '<div class="p-0">';
+		if($includeExtraOptions){
+			$box .= '<div class="p-0">';
 
-		$box .= '<ul class="list-inline m-0" class="listPostActions">';
+			$box .= '<ul class="list-inline m-0" class="listPostActions">';
 
-		$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
-		$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share video"><i class="fas fa-video"></i></button></li>';
-		$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share video"><i class="fas fa-video"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
 
-		$box .= '</ul>';
+			$box .= '</ul>';
 
-		$box .= '</div>';
+			$box .= '</div>';
+		}
 
 		$box .= '<textarea id="postField' . $formId . '" class="rounded-0 form-control postField" placeholder="' . $placeholder . '"></textarea>';
 
