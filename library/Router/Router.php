@@ -44,6 +44,7 @@ require $app->path("routes:Sitemap.php");
 require $app->path("routes:NightMode.php");
 
 require $app->path("routes:Cronjobs/UpdateUserData.php");
+require $app->path("routes:Cronjobs/DeleteStaleAccounts.php");
 
 $app->on("after",function() {
 	if($this->response->status == "404"){
