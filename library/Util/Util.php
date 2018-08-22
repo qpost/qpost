@@ -1264,7 +1264,10 @@ class Util {
 
 		$box = "";
 
-		$box .= '<div class="card postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
+		//
+		// V1
+		//
+		/*$box .= '<div class="card postBox' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
 		$box .= '<div class="card-body">';
 		$box .= '<textarea id="postField' . $formId . '" class="form-control postField" placeholder="' . $placeholder . '"></textarea>';
 
@@ -1292,6 +1295,53 @@ class Util {
 		$box .= '</div>';
 
 		$box .= '</div>';
+		$box .= '</div>';*/
+
+		//
+		// V2
+		//
+
+		$linkColor = self::isUsingNightMode() ? "light" : "primary";
+
+		$box .= '<div class="card card-sm card-social-post">';
+
+		$box .= '<div class="p-0">';
+
+		$box .= '<ul class="list-inline m-0" class="listPostActions">';
+
+		$box .= '<li class="list-inline-item active"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
+		$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share video"><i class="fas fa-video"></i></button></li>';
+		$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
+
+		$box .= '</ul>';
+
+		$box .= '</div>';
+
+		$box .= '<textarea id="postField' . $formId . '" class="border-right-0 border-left-0 rounded-0 form-control postField" placeholder="' . $placeholder . '"></textarea>';
+
+		$box .= '<div class="pb-2 px-2 d-block">';
+
+		if($includeExtraOptions){
+			$faces = ["tired","suprise","smile-wink","smile-beam","sad-tear","sad-cry","meh-rolling-eyes","meh-blank","meh","grin-wink","grin-stars","grin-squint-tears","grin-squint","grin-hearts","grin-beam-sweat","grin-beam","grin-alt","grin","smile","laugh-wink","laugh-squint","laugh-beam","laugh","kiss-wink-heart","kiss-beam","kiss","grin-tongue-wink","grin-tongue-squint","grin-tongue","grin-tears","grimace","frown-open","flushed","angry","dizzy"];
+
+			$box .= '<div class="dropzone-previews row ml-2"></div>';
+
+			$box .= '<div class="float-left mt-2">';
+			$box .= '<button type="button" class="btn btn-link text-' . $linkColor . ' mb-0 addMediaAttachment" data-toggle="tooltip" title="Add photo"><i class="fas fa-images"></i></button>';
+			//$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
+			$box .= '</div>';
+
+			$box .= '<input type="hidden" name="attachmentData" value=""/>';
+		}
+
+		$box .= '<button type="button" class="btn btn-primary float-right mb-0 mt-2 postButton">Post</button>';
+
+		$box .= '<div class="mb-0 mt-3 mr-3 text-right float-right small postCharacterCounter">';
+		$box .= POST_CHARACTER_LIMIT . ' characters left';
+		$box .= '</div>';
+
+		$box .= '</div>';
+
 		$box .= '</div>';
 
 		return $box;

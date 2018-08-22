@@ -153,3 +153,8 @@ a.list-group-item:focus {
 	color: #FFF !important;
 	background-color: #000 !important;
 }
+
+.postField:focus {
+	border-color: #222222 !important;
+	box-shadow: none !important;
+ }

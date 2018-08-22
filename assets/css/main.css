@@ -138,3 +138,8 @@ img.emoji {
 	 color: #8e8f91 !important;
 	 background-color: #F8F9FA !important;
  }
+
+ .postField:focus {
+	border-color: #ced4da !important;
+	box-shadow: none !important;
+ }
