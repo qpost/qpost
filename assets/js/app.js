@@ -794,7 +794,7 @@ function loadDropzone(){
 		maxFiles: 4,
 		acceptedFiles: "image/*",
 		previewsContainer: ".dropzone-previews",
-		clickable: ".addMediaAttachment",
+		clickable: ".addPhoto",
 		previewTemplate: $(".preview-template").html(),
 		thumbnailWidth: 100,
 		thumbnailHeight: 100,
@@ -957,7 +957,7 @@ function load(){
 		Notification.requestPermission();
 	});
 	
-	$(document).on("click",".addMediaAttachment",function(e){
+	$(document).on("click",".addPhoto",function(e){
 		e.preventDefault();
 		
 		
