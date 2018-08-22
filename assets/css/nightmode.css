@@ -9,12 +9,12 @@ body,html {
 }
 
 .dropdown-menu {
-	background-color: #0D0D0D;
+	background-color: #525252;
 }
 
 .card {
 	border: 1px solid #222222;
-	background-color: #222222;
+	background-color: #383838;
 }
 
 .card > .card-header {
@@ -55,7 +55,7 @@ body,html {
 
 dropdown-item:focus, .dropdown-item:hover {
     text-decoration: none;
-    background-color: #525252;
+    background-color: #0D0D0D;
 }
 
 .text-muted {
