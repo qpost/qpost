@@ -597,7 +597,7 @@ function checkForNotifications(){
 				$(".notificationTabMainNav").html("notifications");
 			}
 			
-			if(result.notifications.length > 0){
+			if(result.hasOwnProperty("notifications") && result.notifications.length > 0){
 				result.notifications.forEach(notificationData => {
 					let title = null;
 					let text = null;
@@ -991,6 +991,39 @@ function load(){
 		$(".notificationPermissionAlert").addClass("d-none");
 		setCookie("ignoreNotificationAlert","true",7);
 	});
+
+	let birthdayBox = $(".birthdayContainer");
+	if(birthdayBox.length > 0){
+		let now = new Date();
+		let dateString = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+
+		$.ajax({
+			url: "/scripts/loadBirthdays",
+			data: {
+				csrf_token: CSRF_TOKEN,
+				dateString: dateString
+			},
+			method: "POST",
+			
+			success: function(result){
+				let json = result;
+				
+				if(json.hasOwnProperty("results") && json.hasOwnProperty("html")){
+					if(json.results > 0){
+						birthdayBox.html(json.html);
+					}
+				} else {
+					console.log(result);
+				}
+			},
+			
+			error: function(xhr,status,error){
+				console.log(xhr);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	}
 	
 	$(document).on("click",".postButton",function(e){
 		e.preventDefault();

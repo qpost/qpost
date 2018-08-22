@@ -325,6 +325,8 @@
 					</div>
 				</div>
 
+				<div class="birthdayContainer"></div>
+
 				<div class="card">
 					<div class="px-2 py-2 small">
 						&copy; <?= date("Y") ?> Gigadrive &bull;

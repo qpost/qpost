@@ -399,6 +399,89 @@ $app->post("/scripts/postInfo",function(){
 	}
 });
 
+$app->post("/scripts/loadBirthdays",function(){
+	$this->response->mime = "json";
+
+	if(isset($_POST["dateString"])){
+		$dateString = trim($_POST["dateString"]);
+
+		if(strlen($dateString) == strlen("2018-01-01")){
+			if(Util::isLoggedIn()){
+				$user = Util::getCurrentUser();
+	
+				if(!is_null($user)){
+					$birthdayUsers = [];
+					$n = "birthdayUsers_" . $user->getId();
+	
+					if(CacheHandler::existsInCache($n)){
+						$birthdayUsers = CacheHandler::getFromCache($n);
+					} else {
+						$followingArray = $user->getFollowingAsArray();
+	
+						if(count($followingArray) > 0){
+							$mysqli = Database::Instance()->get();
+	
+							$i = $mysqli->real_escape_string(implode(",",$user->getFollowingAsArray()));
+	
+							$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id` IN ($i) AND `birthday` IS NOT NULL AND DATE_FORMAT(`birthday`,'%m-%d') = DATE_FORMAT(?,'%m-%d')");
+							$stmt->bind_param("s",$dateString);
+							if($stmt->execute()){
+								$result = $stmt->get_result();
+
+								if($result->num_rows){
+									while($row = $result->fetch_assoc()){
+										array_push($birthdayUsers,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]));
+									}
+								}
+							}
+							$stmt->close();
+
+							CacheHandler::setToCache($n,$birthdayUsers,5*60);
+						}
+					}
+	
+					$html = "";
+	
+					if(count($birthdayUsers) > 0){
+						$html .= '<div class="card mb-3">';
+
+						$html .= '<div class="card-header">Today\'s birthdays</div>';
+
+						foreach($birthdayUsers as $birthdayUser){
+							$html .= '<div class="px-2 py-1 my-1" style="height: 70px">';
+							$html .= '<a href="/' . $birthdayUser->getUsername() . '" class="clearUnderline float-left">';
+							$html .= '<img src="' . $birthdayUser->getAvatarURL() . '" width="64" height="64" class="rounded"/>';
+							$html .= '</a>';
+
+							$html .= '<div class="ml-2 float-left">';
+							$html .= '<a href="/' . $birthdayUser->getUsername() . '" class="clearUnderline">';
+							$html .= '<div class="font-weight-bold float-left small mt-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">' . $birthdayUser->getDisplayName() . '</div>';
+							$html .= '<div class="text-muted small float-right mt-1 ml-1" style="max-width: 80px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@' . $birthdayUser->getUsername() . '</div><br/>';
+							$html .= '</a>';
+
+							$html .= Util::followButton($birthdayUser->getId(),true,["mt-0","btn-sm","ignoreParentClick"]);
+							$html .= '</div>';
+							$html .= '</div>';
+						}
+
+						$html .= '</div>';
+					}
+	
+					return json_encode(["results" => count($birthdayUsers),"html" => $html]);
+				} else {
+					return json_encode(["error" => "Not logged in"]);
+				}
+			} else {
+				return json_encode(["error" => "Not logged in"]);
+			}
+		} else {
+			return json_encode(["error" => "Bad request"]);
+		}
+	} else {
+		return json_encode(["error" => "Bad request"]);
+	}
+});
+
 $app->post("/scripts/mediaInfo",function(){
 	$this->response->mime = "json";
 
