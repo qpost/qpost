@@ -155,17 +155,6 @@ a.list-group-item:focus {
 }
 
 .hwt-container {
-	border-top: 1px solid #222222;
-	border-bottom: 1px solid #222222;
-	padding: 10px;
- }
-
- .hwt-content {
-	 padding: 10px;
- }
-
-.postField,
-.postField:focus {
-	border: none !important;
-	box-shadow: none !important;
+	border-top: 1px solid #222222 !important;
+	border-bottom: 1px solid #222222 !important;
  }
