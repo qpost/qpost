@@ -27,7 +27,8 @@ $app->bind("/:query/following",function($params){
 						"socialImage" => $user->getAvatarURL(),
 						"showProfile" => true,
 						"profileTab" => PROFILE_TAB_FOLLOWING,
-						"currentPage" => $page
+						"currentPage" => $page,
+						"description" => $user->getBio()
 					);
 				
 					return $this->render("views:Profile/Following.php with views:Layout.php",$data);
@@ -64,7 +65,8 @@ $app->bind("/:query/following/:page",function($params){
 						"socialImage" => $user->getAvatarURL(),
 						"showProfile" => true,
 						"profileTab" => PROFILE_TAB_FOLLOWING,
-						"currentPage" => $page
+						"currentPage" => $page,
+						"description" => $user->getBio()
 					);
 				
 					return $this->render("views:Profile/Following.php with views:Layout.php",$data);
@@ -101,7 +103,8 @@ $app->bind("/:query/followers",function($params){
 						"socialImage" => $user->getAvatarURL(),
 						"showProfile" => true,
 						"profileTab" => PROFILE_TAB_FOLLOWERS,
-						"currentPage" => $page
+						"currentPage" => $page,
+						"description" => $user->getBio()
 					);
 				
 					return $this->render("views:Profile/Followers.php with views:Layout.php",$data);
@@ -138,7 +141,8 @@ $app->bind("/:query/followers/:page",function($params){
 						"socialImage" => $user->getAvatarURL(),
 						"showProfile" => true,
 						"profileTab" => PROFILE_TAB_FOLLOWERS,
-						"currentPage" => $page
+						"currentPage" => $page,
+						"description" => $user->getBio()
 					);
 				
 					return $this->render("views:Profile/Followers.php with views:Layout.php",$data);
@@ -193,7 +197,8 @@ $app->bind("/:query",function($params){
 						"socialImage" => $user->getAvatarURL(),
 						"showProfile" => true,
 						"profileTab" => PROFILE_TAB_FEED,
-						"currentPage" => $page
+						"currentPage" => $page,
+						"description" => $user->getBio()
 					);
 				
 					return $this->render("views:Profile/Feed.php with views:Layout.php",$data);
@@ -234,7 +239,8 @@ $app->bind("/:query/:page",function($params){
 							"socialImage" => $user->getAvatarURL(),
 							"showProfile" => true,
 							"profileTab" => PROFILE_TAB_FEED,
-							"currentPage" => $page
+							"currentPage" => $page,
+							"description" => $user->getBio()
 						);
 					
 						return $this->render("views:Profile/Feed.php with views:Layout.php",$data);

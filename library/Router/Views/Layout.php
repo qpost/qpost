@@ -8,10 +8,10 @@ if(isset($title) && !empty($title)){
 
 $originalTitle = $title;
 
-if(!isset($description) || empty($description))
+if(!isset($description) || is_null($description) || empty($description))
 	$description = DEFAULT_DESCRIPTION;
 
-if(!isset($socialImage) || empty($socialImage))
+if(!isset($socialImage) || is_null($socialImage) || empty($socialImage))
 	$socialImage = DEFAULT_TWITTER_IMAGE;
 	
 if(isset($_SESSION["profileLoadPost"])){
