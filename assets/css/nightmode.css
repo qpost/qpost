@@ -154,7 +154,18 @@ a.list-group-item:focus {
 	background-color: #000 !important;
 }
 
+.hwt-container {
+	border-top: 1px solid #222222;
+	border-bottom: 1px solid #222222;
+	padding: 10px;
+ }
+
+ .hwt-content {
+	 padding: 10px;
+ }
+
+.postField,
 .postField:focus {
-	border-color: #222222 !important;
+	border: none !important;
 	box-shadow: none !important;
  }

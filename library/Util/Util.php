@@ -1309,7 +1309,7 @@ class Util {
 
 		$box .= '<ul class="list-inline m-0" class="listPostActions">';
 
-		$box .= '<li class="list-inline-item active"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
+		$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
 		$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share video"><i class="fas fa-video"></i></button></li>';
 		$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
 
@@ -1317,7 +1317,7 @@ class Util {
 
 		$box .= '</div>';
 
-		$box .= '<textarea id="postField' . $formId . '" class="border-right-0 border-left-0 rounded-0 form-control postField" placeholder="' . $placeholder . '"></textarea>';
+		$box .= '<textarea id="postField' . $formId . '" class="rounded-0 form-control postField" placeholder="' . $placeholder . '"></textarea>';
 
 		$box .= '<div class="pb-2 px-2 d-block">';
 

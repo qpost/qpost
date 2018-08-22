@@ -1024,6 +1024,18 @@ function load(){
 			}
 		});
 	}
+
+	if($(".postField").length > 0){
+		$(".postField").highlightWithinTextarea({
+			highlight: (input) => {
+				if(input.length > POST_CHARACTER_LIMIT){
+					return [POST_CHARACTER_LIMIT+1,input.length];
+				} else {
+					return false;
+				}
+			}
+		});
+	}
 	
 	$(document).on("click",".postButton",function(e){
 		e.preventDefault();
@@ -1381,7 +1393,10 @@ function load(){
 		let limit = POST_CHARACTER_LIMIT;
 		let used = $(this).val().length;
 		let left = limit-used;
-		let counter = $(this).parent().find(".postCharacterCounter");
+		let counter = $(this).parent().parent().find(".postCharacterCounter");
+
+		counter.html("gay");
+		console.log(counter);
 		
 		if(left > 0){
 			if(left > limit/2){

@@ -139,7 +139,22 @@ img.emoji {
 	 background-color: #F8F9FA !important;
  }
 
- .postField:focus {
-	border-color: #ced4da !important;
+ .hwt-container {
+	border-top: 1px solid #ced4da;
+	border-bottom: 1px solid #ced4da;
+	padding: 10px;
+ }
+
+ .hwt-content {
+	 padding: 10px;
+ }
+
+ .postField,
+.postField:focus {
+	border: none !important;
 	box-shadow: none !important;
+ }
+
+ .hwt-content mark {
+	 background-color: #FF4F4F;
  }
