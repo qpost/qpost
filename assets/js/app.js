@@ -1401,26 +1401,24 @@ function load(){
 		if(left > 0){
 			if(left > limit/2){
 				if(left == 1){
-					counter.html(left + " character left");
+					counter.html(left);
 				} else {
-					counter.html(left + " characters left");
+					counter.html(left);
 				}
 			} else {
 				if(left == 1){
-					counter.html("<span style=\"color: #F94F12;\">" + left + " character left</span>");
+					counter.html("<span style=\"color: #F94F12;\">" + left + "</span>");
 				} else {
-					counter.html("<span style=\"color: #F94F12;\">" + left + " characters left</span>");
+					counter.html("<span style=\"color: #F94F12;\">" + left + "</span>");
 				}
 			}
 		} else if(left == 0){
-			counter.html("<span style=\"color: #FF0000; font-weight: bold\">You have reached the character limit</span>");
+			counter.html("<span style=\"color: #FF0000; font-weight: bold\">0</span>");
 		} else {
-			left = left/(-1);
-			
 			if(left == 1){
-				counter.html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " character over the limit</span>");
+				counter.html("<span style=\"color: #FF0000; font-weight: bold\">" + left + "</span>");
 			} else {
-				counter.html("<span style=\"color: #FF0000; font-weight: bold\">You are " + left + " characters over the limit</span>");
+				counter.html("<span style=\"color: #FF0000; font-weight: bold\">" + left + "</span>");
 			}
 		}
 	});
