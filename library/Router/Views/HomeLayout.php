@@ -91,11 +91,11 @@ if(!isset($socialImage) || empty($socialImage))
 					Contact Info
 				</a>
 
-				<a href="https://gigadrivegroup.com/legal/tos" target="_blank" class="clearUnderline mx-3">
+				<a href="https://gigadrivegroup.com/legal/terms-of-service" target="_blank" class="clearUnderline mx-3">
 					Terms of Service
 				</a>
 
-				<a href="https://gigadrivegroup.com/legal/privacy" target="_blank" class="clearUnderline mx-3">
+				<a href="https://gigadrivegroup.com/legal/privacy-policy" target="_blank" class="clearUnderline mx-3">
 					Privacy Policy
 				</a>
 
