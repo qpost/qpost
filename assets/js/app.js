@@ -743,9 +743,9 @@ function loadBasic(){
 		endDate: new Date(new Date().setFullYear(new Date().getFullYear() - 13))
 	});
 	
-	$(".convertEmoji").html(function(){
+	/*$(".convertEmoji").html(function(){
 		return twemoji.parse($(this).html());
-	}).removeClass("convertEmoji");
+	}).removeClass("convertEmoji");*/
 }
 
 $(document).ready(function(){
