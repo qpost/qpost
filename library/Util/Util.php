@@ -1303,16 +1303,16 @@ class Util {
 
 		$linkColor = self::isUsingNightMode() ? "light" : "primary";
 
-		$box .= '<div class="card card-sm card-social-post' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
+		$box .= '<div class="postBox card card-sm card-social-post' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
 
 		if($includeExtraOptions){
 			$box .= '<div class="p-0">';
 
 			$box .= '<ul class="list-inline m-0" class="listPostActions">';
 
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share video"><i class="fas fa-video"></i></button></li>';
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="postFormTextButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormVideoButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share video"><i class="fas fa-video"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormLinkButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
 
 			$box .= '</ul>';
 
@@ -1320,6 +1320,20 @@ class Util {
 		}
 
 		$box .= '<textarea id="postField' . $formId . '" class="rounded-0 form-control postField" placeholder="' . $placeholder . '"></textarea>';
+
+		if($includeExtraOptions){
+			$box .= '<div class="row videoURL my-3 mx-2 d-none">';
+			$box .= '<div class="col-12">';
+			$box .= '<input type="text" class="form-control" placeholder="Add the URL of a video" style="width: 100%"/>';
+			$box .= '</div>';
+			$box .= '</div>';
+
+			$box .= '<div class="row linkURL my-3 mx-2 d-none">';
+			$box .= '<div class="col-12">';
+			$box .= '<input type="text" class="form-control" placeholder="Add an URL to share" style="width: 100%"/>';
+			$box .= '</div>';
+			$box .= '</div>';
+		}
 
 		$box .= '<div class="pb-2 px-2 d-block">';
 

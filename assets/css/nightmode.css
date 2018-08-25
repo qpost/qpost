@@ -135,10 +135,6 @@ a.list-group-item:focus {
     transition: background-color 200ms linear;
  }
 
- .postBox {
-	border-color: #000 !important;
- }
-
  .homeFeedLoadMore {
 	background: #383838 !important;
 	border-color: #000 !important;

@@ -897,7 +897,10 @@ function loadDropzone(){
 		if(responseText.hasOwnProperty("ids")){
 			responseText.ids.forEach(id => {
 				let array = [];
-				if(attachmentValueField.val() != "") array = JSON.parse(atob(attachmentValueField.val()));
+				if(typeof attachmentValueField.val() !== typeof undefined && attachmentValueField.val() != ""){
+					let b64 = atob(attachmentValueField.val().replace(/\s/g,""));
+					array = JSON.parse(b64);
+				}
 				
 				array.push(id);
 				
@@ -945,6 +948,10 @@ function loadDropzone(){
 			//dz.enqueueFile(file);
 		}
 	});
+}
+
+function hasAttr(element,attribute){
+	return element.attr(attribute) !== false && typeof element.attr(attribute) !== typeof undefined;
 }
 
 function load(){
@@ -1036,13 +1043,101 @@ function load(){
 			}
 		});
 	}
+
+	$(document).on("click",".postFormTextButton",function(e){
+		e.preventDefault();
+
+		let postBox = $(this).parent().parent().parent().parent();
+
+		let textButton = $(this);
+		let videoButton = $(this).parent().parent().find(".postFormVideoButton");
+		let linkButton = $(this).parent().parent().find(".postFormLinkButton");
+
+		let linkURLBox = postBox.find(".linkURL");
+		let videoURLBox = postBox.find(".videoURL");
+
+		let dropzonePreviews = postBox.find(".dropzone-previews");
+		let addPhotoButton = postBox.find(".addPhoto");
+
+		if(!hasAttr($(this),"disabled")){
+			$(this).prop("disabled",true);
+			if(hasAttr(videoButton,"disabled")) videoButton.removeAttr("disabled");
+			if(hasAttr(linkButton,"disabled")) linkButton.removeAttr("disabled");
+
+			if(linkURLBox.length > 0 && !linkURLBox.hasClass("d-none")) linkURLBox.addClass("d-none");
+			if(videoURLBox.length > 0 && !videoURLBox.hasClass("d-none")) videoURLBox.addClass("d-none");
+
+			if(dropzonePreviews.length > 0 && dropzonePreviews.hasClass("d-none")) dropzonePreviews.removeClass("d-none");
+			if(addPhotoButton.length > 0 && addPhotoButton.hasClass("d-none")) addPhotoButton.removeClass("d-none");
+		}
+	});
+
+	$(document).on("click",".postFormVideoButton",function(e){
+		e.preventDefault();
+
+		let postBox = $(this).parent().parent().parent().parent();
+
+		let textButton = $(this).parent().parent().find(".postFormTextButton");
+		let videoButton = $(this);
+		let linkButton = $(this).parent().parent().find(".postFormLinkButton");
+
+		let linkURLBox = postBox.find(".linkURL");
+		let videoURLBox = postBox.find(".videoURL");
+
+		let dropzonePreviews = postBox.find(".dropzone-previews");
+		let addPhotoButton = postBox.find(".addPhoto");
+
+		if(!hasAttr($(this),"disabled")){
+			$(this).prop("disabled",true);
+			if(hasAttr(textButton,"disabled")) textButton.removeAttr("disabled");
+			if(hasAttr(linkButton,"disabled")) linkButton.removeAttr("disabled");
+
+			if(linkURLBox.length > 0 && !linkURLBox.hasClass("d-none")) linkURLBox.addClass("d-none");
+			if(videoURLBox.length > 0 && videoURLBox.hasClass("d-none")) videoURLBox.removeClass("d-none");
+
+			if(dropzonePreviews.length > 0 && !dropzonePreviews.hasClass("d-none")) dropzonePreviews.addClass("d-none");
+			if(addPhotoButton.length > 0 && !addPhotoButton.hasClass("d-none")) addPhotoButton.addClass("d-none");
+		}
+	});
+
+	$(document).on("click",".postFormLinkButton",function(e){
+		e.preventDefault();
+
+		let postBox = $(this).parent().parent().parent().parent();
+
+		let textButton = $(this).parent().parent().find(".postFormTextButton");
+		let videoButton = $(this).parent().parent().find(".postFormVideoButton");
+		let linkButton = $(this);
+
+		let linkURLBox = postBox.find(".linkURL");
+		let videoURLBox = postBox.find(".videoURL");
+
+		let dropzonePreviews = postBox.find(".dropzone-previews");
+		let addPhotoButton = postBox.find(".addPhoto");
+
+		if(!hasAttr($(this),"disabled")){
+			$(this).prop("disabled",true);
+			if(hasAttr(textButton,"disabled")) textButton.removeAttr("disabled");
+			if(hasAttr(videoButton,"disabled")) videoButton.removeAttr("disabled");
+
+			if(linkURLBox.length > 0 && linkURLBox.hasClass("d-none")) linkURLBox.removeClass("d-none");
+			if(videoURLBox.length > 0 && !videoURLBox.hasClass("d-none")) videoURLBox.addClass("d-none");
+
+			if(dropzonePreviews.length > 0 && !dropzonePreviews.hasClass("d-none")) dropzonePreviews.addClass("d-none");
+			if(addPhotoButton.length > 0 && !addPhotoButton.hasClass("d-none")) addPhotoButton.addClass("d-none");
+		}
+	});
 	
 	$(document).on("click",".postButton",function(e){
 		e.preventDefault();
 		
 		let postBox = $(this).parent().parent();
-		let postField = $(this).parent().find(".postField");
+		let postField = postBox.find(".postField");
 		let postCharacterCounter = $(this).parent().find(".postCharacterCounter");
+
+		let textButton = postBox.find(".postFormTextButton");
+		let videoButton = postBox.find(".postFormVideoButton");
+		let linkButton = postBox.find(".postFormLinkButton");
 		
 		let isReply = postBox.hasClass("replyForm");
 		
