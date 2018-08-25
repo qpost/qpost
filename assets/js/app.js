@@ -1138,6 +1138,35 @@ function load(){
 		let textButton = postBox.find(".postFormTextButton");
 		let videoButton = postBox.find(".postFormVideoButton");
 		let linkButton = postBox.find(".postFormLinkButton");
+
+		let linkURLBox = postBox.find(".linkURL");
+		let videoURLBox = postBox.find(".videoURL");
+
+		let currentMode = "TEXT";
+		if(textButton.length > 0 && hasAttr(textButton,"disabled")){
+			currentMode = "TEXT";
+		} else if(videoButton.length > 0 && hasAttr(videoButton,"disabled")){
+			currentMode = "VIDEO";
+		} else if(linkButton.length > 0 && hasAttr(linkButton,"disabled")){
+			currentMode = "LINK";
+		}
+
+		let linkURL = null;
+		let videoURL = null;
+
+		if(currentMode == "VIDEO" && videoURLBox.length && videoURLBox.find("input").length){
+			videoURL = videoURLBox.find("input").val().trim();
+
+			if(videoURL === ""){
+				videoURL = null;
+			}
+		} else if(currentMode == "LINK" && linkURLBox.length && linkURLBox.find("input").length){
+			linkURL = linkURLBox.find("input").val().trim();
+
+			if(linkURL === ""){
+				linkURL = null;
+			}
+		}
 		
 		let isReply = postBox.hasClass("replyForm");
 		
@@ -1158,8 +1187,9 @@ function load(){
 
 				let attachments = "[]";
 
-				if(attachmentValueField.length && attachmentValueField.val() != "")
+				if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
 					attachments = atob(attachmentValueField.val());
+				}
 				
 				$.ajax({
 					url: "/scripts/createPost",
@@ -1167,7 +1197,9 @@ function load(){
 						csrf_token: token,
 						text: text,
 						replyTo: replyTo,
-						attachments: attachments
+						attachments: attachments,
+						linkURL: linkURL,
+						videoURL: videoURL
 					},
 					method: "POST",
 					
