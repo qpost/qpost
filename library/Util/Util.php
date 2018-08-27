@@ -1157,6 +1157,60 @@ class Util {
 		return $a;
 	}
 
+	/**
+	 * Returns HTML code to use for embedding a video
+	 * 
+	 * @access public
+	 * @param string $url
+	 * @return string
+	 */
+	public static function getVideoEmbedCodeFromURL($url){
+		$mediaEmbed = new MediaEmbed\MediaEmbed();
+
+		$mediaObject = $mediaEmbed->parseUrl($url);
+		if($mediaObject){
+			return sprintf('<div class="embed-responsive embed-responsive-16by9">%s</div>',$mediaObject->getEmbedCode());
+		} else {
+			return null;
+		}
+
+		/*$match = [];
+
+		if(preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match)){
+			// IS YOUTUBE URL
+			// https://gist.github.com/ghalusa/6c7f3a00fd2383e5ef33
+
+			$videoID = $match[1];
+
+			return '<div class="embed-responsive embed-responsive-16by9"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $videoID . '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>';
+		} else if(preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $match)){
+			// IS VIMEO URL
+			// https://gist.github.com/anjan011/1fcecdc236594e6d700f
+
+			$videoID = $match[3];
+
+			return '<div class="embed-responsive embed-responsive-16by9"><iframe src="https://player.vimeo.com/video/' . $videoID . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div>';
+		} else if(preg_match('!^.+dailymotion\.com/(video|hub)/([^_]+)[^#]*(#video=([^_&]+))?|(dai\.ly/([^_]+))!', $url, $match)){
+			// IS DAILYMOTION URL
+			// https://stackoverflow.com/a/32831355
+
+			$videoID = isset($match[6]) ? $match[6] : isset($match[4]) ? $match[4] : isset($match[2]) ? $match[2] : null;
+
+			return !is_null($videoID) ? '<div class="embed-responsive embed-responsive-16by9"><iframe frameborder="0" src="//www.dailymotion.com/embed/video/' . $videoID . '" allowfullscreen allow="autoplay"></iframe></div>' : null;
+		}*/
+	}
+
+	/**
+	 * Returns whether or not a string is a valid, embeddable video URL
+	 * 
+	 * @access public
+	 * @param string $url
+	 * @return bool
+	 */
+	public static function isValidVideoURL($url){
+		return filter_var($url,FILTER_VALIDATE_URL) && !is_null(self::getVideoEmbedCodeFromURL($url));
+	}
+
 	/**<div class="col-md-4 px-1 py-1">
 	 * Returns HTML for a post's postActionButtons
 	 * 
