@@ -1,15 +1,6 @@
 function isValidURL(str) {
-	var pattern = new RegExp('^(https?:\/\/)?'+ // protocol
-	'((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+ // domain name
-	'((\d{1,3}\.){3}\d{1,3}))'+ // OR ip (v4) address
-	'(\:\d+)?(\/[-a-z\d%_.~+]*)*'+ // port and path
-	'(\?[;&a-z\d%_.~+=-]*)?'+ // query string
-	'(\#[-a-z\d_]*)?$','i'); // fragment locater
-	if(!pattern.test(str)) {
-		return false;
-	} else {
-		return true;
-	}
+	let regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    return regexp.test(str);
 }
 
 function resetDeleteModal(){
@@ -1141,6 +1132,113 @@ function load(){
 			if(addPhotoButton.length > 0 && !addPhotoButton.hasClass("d-none")) addPhotoButton.addClass("d-none");
 		}
 	});
+
+	function handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments){
+		$.ajax({
+			url: "/scripts/createPost",
+			data: {
+				csrf_token: token,
+				text: text,
+				replyTo: replyTo,
+				attachments: attachments,
+				linkURL: linkURL,
+				videoURL: videoURL
+			},
+			method: "POST",
+			
+			success: function(result){
+				let json = result;
+				
+				if(json.hasOwnProperty("post")){
+					let post = json.post;
+					
+					if(post.hasOwnProperty("id") && post.hasOwnProperty("time") && post.hasOwnProperty("text") && post.hasOwnProperty("user")){
+						let postId = post.id;
+						let postTime = post.time;
+						let postText = post.text;
+						
+						let userName = post.user.username;
+						let userDisplayName = post.user.displayName;
+						let userAvatar = post.user.avatar;
+						
+						HOME_FEED_LAST_POST = postId;
+						
+						let postActionButtons = json.postActionButtons;
+						
+						let newHtml = "";
+						
+						if(!isReply){
+							newHtml = post.listHtml;
+							
+							if($(".feedEntry").length){
+								$(".feedContainer").prepend(newHtml);
+							} else {
+								$(".feedContainer").html(newHtml);
+							}
+						} else {
+							newHtml =
+							'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
+							'<div class="py-1 px-3">' +
+							'<div class="row">' +
+							'<div class="float-left">' +
+							'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+							'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="36" height="36"/>' +
+							'</a>' +
+							'</div>' +
+							
+							'<div class="float-left ml-1" style="max-width: 414px;">' +
+							'<p class="mb-0 small">' +
+							'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
+							'<span class="font-weight-bold">' + userDisplayName + '</span>' +
+							'</a>' +
+							
+							' <span class="text-muted font-weight-normal">@' + userName + '</span> ' +
+							
+							'&bull; ' +
+							
+							postTime +
+							'</p>' +
+							
+							'<p class="mb-0">' +
+							twemoji.parse(postText) +
+							'</p>' +
+							
+							postActionButtons +
+							'</div>' +
+							'</div>' +
+							'</div>' +
+							'</div>';
+							
+							if($("#statusModal .replies>.card").length){
+								$("#statusModal .replies").prepend(newHtml);
+							} else {
+								$("#statusModal .replies").html(newHtml);
+							}
+						}
+						
+						postBox.html(oldHtml);
+						postField.val("");
+						postCharacterCounter.html(POST_CHARACTER_LIMIT + " characters left");
+						loadBasic();
+						dz.destroy();
+						loadDropzone();
+						
+						$(".dropzone-previews").html("");
+					} else {
+						console.log(result);
+					}
+				} else {
+					console.log(result);
+				}
+			},
+			
+			error: function(xhr,status,error){
+				console.log(xhr);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	}
 	
 	$(document).on("click",".postButton",function(e){
 		e.preventDefault();
@@ -1212,111 +1310,39 @@ function load(){
 				if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
 					attachments = atob(attachmentValueField.val());
 				}
-				
-				$.ajax({
-					url: "/scripts/createPost",
-					data: {
-						csrf_token: token,
-						text: text,
-						replyTo: replyTo,
-						attachments: attachments,
-						linkURL: linkURL,
-						videoURL: videoURL
-					},
-					method: "POST",
-					
-					success: function(result){
-						let json = result;
+
+				if(currentMode == "TEXT" || (currentMode == "VIDEO" && videoURL == null) || currentMode == "LINK"){
+					handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments);
+				} else if(currentMode == "VIDEO"){
+					$.ajax({
+						url: "/scripts/validateVideoURL",
+						data: {
+							csrf_token: token,
+							videoURL: videoURL
+						},
+						method: "POST",
 						
-						if(json.hasOwnProperty("post")){
-							let post = json.post;
-							
-							if(post.hasOwnProperty("id") && post.hasOwnProperty("time") && post.hasOwnProperty("text") && post.hasOwnProperty("user")){
-								let postId = post.id;
-								let postTime = post.time;
-								let postText = post.text;
-								
-								let userName = post.user.username;
-								let userDisplayName = post.user.displayName;
-								let userAvatar = post.user.avatar;
-								
-								HOME_FEED_LAST_POST = postId;
-								
-								let postActionButtons = json.postActionButtons;
-								
-								let newHtml = "";
-								
-								if(!isReply){
-									newHtml = post.listHtml;
-									
-									if($(".feedEntry").length){
-										$(".feedContainer").prepend(newHtml);
-									} else {
-										$(".feedContainer").html(newHtml);
-									}
+						success: function(json){
+							if(json.hasOwnProperty("status")){
+								if(json.status == "valid"){
+									handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments);
 								} else {
-									newHtml =
-									'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
-									'<div class="py-1 px-3">' +
-									'<div class="row">' +
-									'<div class="float-left">' +
-									'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-									'<img class="rounded mx-1 my-1" src="' + userAvatar + '" width="36" height="36"/>' +
-									'</a>' +
-									'</div>' +
-									
-									'<div class="float-left ml-1" style="max-width: 414px;">' +
-									'<p class="mb-0 small">' +
-									'<a href="/' + userName + '" class="clearUnderline ignoreParentClick">' +
-									'<span class="font-weight-bold">' + userDisplayName + '</span>' +
-									'</a>' +
-									
-									' <span class="text-muted font-weight-normal">@' + userName + '</span> ' +
-									
-									'&bull; ' +
-									
-									postTime +
-									'</p>' +
-									
-									'<p class="mb-0">' +
-									twemoji.parse(postText) +
-									'</p>' +
-									
-									postActionButtons +
-									'</div>' +
-									'</div>' +
-									'</div>' +
-									'</div>';
-									
-									if($("#statusModal .replies>.card").length){
-										$("#statusModal .replies").prepend(newHtml);
-									} else {
-										$("#statusModal .replies").html(newHtml);
-									}
+									console.error("Invalid video URL");
 								}
-								
-								postBox.html(oldHtml);
-								postField.val("");
-								postCharacterCounter.html(POST_CHARACTER_LIMIT + " characters left");
-								loadBasic();
-								dz.destroy();
-								loadDropzone();
-								
-								$(".dropzone-previews").html("");
 							} else {
-								console.log(result);
+								console.error(json);
 							}
-						} else {
-							console.log(result);
+						},
+						
+						error: function(xhr,status,error){
+							console.log(xhr);
+							console.log(status);
+							console.log(error);
 						}
-					},
-					
-					error: function(xhr,status,error){
-						console.log(xhr);
-						console.log(status);
-						console.log(error);
-					}
-				})
+					});
+				} else {
+					console.error("Invalid mode");
+				}
 			} else {
 				console.error("Post text too long or too short!");
 			}
