@@ -1,3 +1,17 @@
+function isValidURL(str) {
+	var pattern = new RegExp('^(https?:\/\/)?'+ // protocol
+	'((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+ // domain name
+	'((\d{1,3}\.){3}\d{1,3}))'+ // OR ip (v4) address
+	'(\:\d+)?(\/[-a-z\d%_.~+]*)*'+ // port and path
+	'(\?[;&a-z\d%_.~+=-]*)?'+ // query string
+	'(\#[-a-z\d_]*)?$','i'); // fragment locater
+	if(!pattern.test(str)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
 function resetDeleteModal(){
 	$("#deleteModal").html(
 		'<div class="modal-dialog" role="document">' +
@@ -184,7 +198,7 @@ function showMediaModal(mediaId,postId){
 				let attachment = json.attachment;
 				
 				let content = "";
-
+				
 				content = content.concat(
 					'<img src="' + attachment.fileUrl + '" style="width: 100%"/>'
 				);
@@ -207,7 +221,7 @@ function showMediaModal(mediaId,postId){
 				loadBasic();
 				
 				if(!isMediaModalOpen())
-					mediaModal.modal();
+				mediaModal.modal();
 			} else if(json.hasOwnProperty("error")){
 				mediaModal.html(
 					'<div class="modal-dialog" role="document">' +
@@ -220,7 +234,7 @@ function showMediaModal(mediaId,postId){
 				);
 				
 				if(!isMediaModalOpen())
-					mediaModal.modal();
+				mediaModal.modal();
 			} else {
 				mediaModal.html(
 					'<div class="modal-dialog" role="document">' +
@@ -233,7 +247,7 @@ function showMediaModal(mediaId,postId){
 				);
 				
 				if(!isMediaModalOpen())
-					mediaModal.modal();
+				mediaModal.modal();
 			}
 		},
 		
@@ -293,9 +307,9 @@ function showStatusModal(postId){
 				
 				let d = json;
 				let hasParent = false;
-
+				
 				let echoParentList = false;
-
+				
 				if(d.hasOwnProperty("parent") && d.parent != null){
 					content = content.concat('<ul class="list-group parents">');
 					echoParentList = true;
@@ -339,13 +353,13 @@ function showStatusModal(postId){
 					'</div>'
 					.concat(content);*/
 				}
-
+				
 				if(echoParentList){
 					content = content.concat('</ul>');
 				}
 				
 				if(hasParent == true)
-					content = content.concat("<hr/>");
+				content = content.concat("<hr/>");
 				
 				content = content.concat('<div class="mb-4">');
 				
@@ -386,17 +400,17 @@ function showStatusModal(postId){
 					twemoji.parse(json.text) +
 					'</p>'
 				);
-
+				
 				if(json.hasOwnProperty("attachments") && json.attachments.length > 0){
 					content = content.concat('<div class="mb-4 mt-2">');
-
+					
 					json.attachments.forEach(attachment => {
 						content = content.concat(attachment.thumbnailHtml);
 					});
-
+					
 					content = content.concat('</div>');
 				}
-
+				
 				content = content.concat(
 					'<p class="small text-muted"><i class="far fa-clock"></i> Posted ' +
 					json.time +
@@ -738,7 +752,7 @@ function loadBasic(){
 	});
 	
 	$(".datepicker").datepicker();
-
+	
 	$(".birthdayDatepicker").datepicker({
 		endDate: new Date(new Date().setFullYear(new Date().getFullYear() - 13))
 	});
@@ -784,7 +798,7 @@ function loadDropzone(){
 	let postBox = $(".dropzone-previews").closest(".postBox");
 	let attachmentValueField = postBox.find("input[name=\"attachmentData\"]");
 	let postButton = postBox.find(".postButton");
-
+	
 	if($(".dropzone-previews").length == 0) return;
 	
 	dz = new Dropzone(document.body, {
@@ -969,7 +983,7 @@ function load(){
 		
 		
 	});
-
+	
 	$(document).on('show.bs.modal', '.modal', function () {
 		var zIndex = 1040 + (10 * $('.modal:visible').length);
 		$(this).css('z-index', zIndex);
@@ -977,7 +991,7 @@ function load(){
 			$('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
 		}, 0);
 	});
-
+	
 	$(document).on('hidden.bs.modal', '.modal', function () {
 		$('.modal:visible').length && $(document.body).addClass('modal-open');
 	});
@@ -998,12 +1012,12 @@ function load(){
 		$(".notificationPermissionAlert").addClass("d-none");
 		setCookie("ignoreNotificationAlert","true",7);
 	});
-
+	
 	let birthdayBox = $(".birthdayContainer");
 	if(birthdayBox.length > 0){
 		let now = new Date();
 		let dateString = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
-
+		
 		$.ajax({
 			url: "/scripts/loadBirthdays",
 			data: {
@@ -1031,7 +1045,7 @@ function load(){
 			}
 		});
 	}
-
+	
 	if($(".postField").length > 0){
 		$(".postField").highlightWithinTextarea({
 			highlight: (input) => {
@@ -1043,86 +1057,86 @@ function load(){
 			}
 		});
 	}
-
+	
 	$(document).on("click",".postFormTextButton",function(e){
 		e.preventDefault();
-
+		
 		let postBox = $(this).parent().parent().parent().parent();
-
+		
 		let textButton = $(this);
 		let videoButton = $(this).parent().parent().find(".postFormVideoButton");
 		let linkButton = $(this).parent().parent().find(".postFormLinkButton");
-
+		
 		let linkURLBox = postBox.find(".linkURL");
 		let videoURLBox = postBox.find(".videoURL");
-
+		
 		let dropzonePreviews = postBox.find(".dropzone-previews");
 		let addPhotoButton = postBox.find(".addPhoto");
-
+		
 		if(!hasAttr($(this),"disabled")){
 			$(this).prop("disabled",true);
 			if(hasAttr(videoButton,"disabled")) videoButton.removeAttr("disabled");
 			if(hasAttr(linkButton,"disabled")) linkButton.removeAttr("disabled");
-
+			
 			if(linkURLBox.length > 0 && !linkURLBox.hasClass("d-none")) linkURLBox.addClass("d-none");
 			if(videoURLBox.length > 0 && !videoURLBox.hasClass("d-none")) videoURLBox.addClass("d-none");
-
+			
 			if(dropzonePreviews.length > 0 && dropzonePreviews.hasClass("d-none")) dropzonePreviews.removeClass("d-none");
 			if(addPhotoButton.length > 0 && addPhotoButton.hasClass("d-none")) addPhotoButton.removeClass("d-none");
 		}
 	});
-
+	
 	$(document).on("click",".postFormVideoButton",function(e){
 		e.preventDefault();
-
+		
 		let postBox = $(this).parent().parent().parent().parent();
-
+		
 		let textButton = $(this).parent().parent().find(".postFormTextButton");
 		let videoButton = $(this);
 		let linkButton = $(this).parent().parent().find(".postFormLinkButton");
-
+		
 		let linkURLBox = postBox.find(".linkURL");
 		let videoURLBox = postBox.find(".videoURL");
-
+		
 		let dropzonePreviews = postBox.find(".dropzone-previews");
 		let addPhotoButton = postBox.find(".addPhoto");
-
+		
 		if(!hasAttr($(this),"disabled")){
 			$(this).prop("disabled",true);
 			if(hasAttr(textButton,"disabled")) textButton.removeAttr("disabled");
 			if(hasAttr(linkButton,"disabled")) linkButton.removeAttr("disabled");
-
+			
 			if(linkURLBox.length > 0 && !linkURLBox.hasClass("d-none")) linkURLBox.addClass("d-none");
 			if(videoURLBox.length > 0 && videoURLBox.hasClass("d-none")) videoURLBox.removeClass("d-none");
-
+			
 			if(dropzonePreviews.length > 0 && !dropzonePreviews.hasClass("d-none")) dropzonePreviews.addClass("d-none");
 			if(addPhotoButton.length > 0 && !addPhotoButton.hasClass("d-none")) addPhotoButton.addClass("d-none");
 		}
 	});
-
+	
 	$(document).on("click",".postFormLinkButton",function(e){
 		e.preventDefault();
-
+		
 		let postBox = $(this).parent().parent().parent().parent();
-
+		
 		let textButton = $(this).parent().parent().find(".postFormTextButton");
 		let videoButton = $(this).parent().parent().find(".postFormVideoButton");
 		let linkButton = $(this);
-
+		
 		let linkURLBox = postBox.find(".linkURL");
 		let videoURLBox = postBox.find(".videoURL");
-
+		
 		let dropzonePreviews = postBox.find(".dropzone-previews");
 		let addPhotoButton = postBox.find(".addPhoto");
-
+		
 		if(!hasAttr($(this),"disabled")){
 			$(this).prop("disabled",true);
 			if(hasAttr(textButton,"disabled")) textButton.removeAttr("disabled");
 			if(hasAttr(videoButton,"disabled")) videoButton.removeAttr("disabled");
-
+			
 			if(linkURLBox.length > 0 && linkURLBox.hasClass("d-none")) linkURLBox.removeClass("d-none");
 			if(videoURLBox.length > 0 && !videoURLBox.hasClass("d-none")) videoURLBox.addClass("d-none");
-
+			
 			if(dropzonePreviews.length > 0 && !dropzonePreviews.hasClass("d-none")) dropzonePreviews.addClass("d-none");
 			if(addPhotoButton.length > 0 && !addPhotoButton.hasClass("d-none")) addPhotoButton.addClass("d-none");
 		}
@@ -1134,14 +1148,14 @@ function load(){
 		let postBox = $(this).parent().parent();
 		let postField = postBox.find(".postField");
 		let postCharacterCounter = $(this).parent().find(".postCharacterCounter");
-
+		
 		let textButton = postBox.find(".postFormTextButton");
 		let videoButton = postBox.find(".postFormVideoButton");
 		let linkButton = postBox.find(".postFormLinkButton");
-
+		
 		let linkURLBox = postBox.find(".linkURL");
 		let videoURLBox = postBox.find(".videoURL");
-
+		
 		let currentMode = "TEXT";
 		if(textButton.length > 0 && hasAttr(textButton,"disabled")){
 			currentMode = "TEXT";
@@ -1150,22 +1164,30 @@ function load(){
 		} else if(linkButton.length > 0 && hasAttr(linkButton,"disabled")){
 			currentMode = "LINK";
 		}
-
+		
 		let linkURL = null;
 		let videoURL = null;
-
+		
 		if(currentMode == "VIDEO" && videoURLBox.length && videoURLBox.find("input").length){
 			videoURL = videoURLBox.find("input").val().trim();
-
+			
 			if(videoURL === ""){
 				videoURL = null;
 			}
 		} else if(currentMode == "LINK" && linkURLBox.length && linkURLBox.find("input").length){
 			linkURL = linkURLBox.find("input").val().trim();
-
+			
 			if(linkURL === ""){
 				linkURL = null;
 			}
+		}
+
+		if(linkURL != null && !isValidURL(linkURL)){
+			return console.error("Invalid link URL");
+		}
+
+		if(videoURL != null && !isValidURL(videoURL)){
+			return console.error("Invalid video URL");
 		}
 		
 		let isReply = postBox.hasClass("replyForm");
@@ -1173,7 +1195,7 @@ function load(){
 		let text = postField.val().trim();
 		
 		let replyTo = isReply && CURRENT_STATUS_MODAL > 0 ? CURRENT_STATUS_MODAL : null;
-
+		
 		let attachmentValueField = $(this).closest(".postBox").find("input[name=\"attachmentData\"]");
 		
 		if(typeof CSRF_TOKEN !== undefined && typeof POST_CHARACTER_LIMIT !== undefined && !$(this).html().includes("<i")){
@@ -1184,9 +1206,9 @@ function load(){
 			
 			if(text.length > 0 && text.length <= limit){
 				postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-
+				
 				let attachments = "[]";
-
+				
 				if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
 					attachments = atob(attachmentValueField.val());
 				}
@@ -1279,7 +1301,7 @@ function load(){
 								loadBasic();
 								dz.destroy();
 								loadDropzone();
-
+								
 								$(".dropzone-previews").html("");
 							} else {
 								console.log(result);
@@ -1521,7 +1543,7 @@ function load(){
 		let used = $(this).val().length;
 		let left = limit-used;
 		let counter = $(this).parent().parent().find(".postCharacterCounter");
-
+		
 		counter.html("gay");
 		console.log(counter);
 		
