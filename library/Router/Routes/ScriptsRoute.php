@@ -192,6 +192,22 @@ $app->get("/scripts/desktopNotifications",function(){
 	}
 });
 
+$app->post("/scripts/validateVideoURL",function(){
+	$this->response->mime = "json";
+
+	if(Util::isLoggedIn()){
+		$currentUser = Util::getCurrentUser();
+
+		if(isset($_POST["videoURL"])){
+			return json_encode(["status" => Util::isValidVideoURL($_POST["videoURL"]) ? "valid" : "invalid"]);
+		} else {
+			return json_encode(["error" => "Bad request"]);
+		}
+	} else {
+		return json_encode(["error" => "Not logged in"]);	
+	}
+});
+
 $app->post("/scripts/extendHomeFeed",function(){
 	$this->response->mime = "json";
 
