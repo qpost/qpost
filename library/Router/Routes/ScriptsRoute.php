@@ -597,6 +597,8 @@ $app->post("/scripts/createPost",function(){
 
 			$mentioned = Util::getUsersMentioned($text);
 
+			$mysqli = Database::Instance()->get();
+
 			if(strlen($text) <= POST_CHARACTER_LIMIT){
 				if(count($mentioned) < 15){
 					$userId = $user->getId();
@@ -630,6 +632,68 @@ $app->post("/scripts/createPost",function(){
 									}
 								} else {
 									return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
+								}
+							}
+						}
+					} else if(isset($_POST["videoURL"]) && !is_null($_POST["videoURL"])){
+						$videoURL = trim($_POST["videoURL"]);
+
+						if(!empty($videoURL)){
+							if(Util::isValidVideoURL($videoURL)){
+								$sha = hash("sha256",$videoURL);
+
+								$mediaFile = MediaFile::getMediaFileFromSHA($sha);
+								if(is_null($mediaFile)){
+									$mediaID = MediaFile::generateNewID();
+
+									$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'VIDEO');");
+									$stmt->bind_param("sssi",$mediaID,$sha,$videoURL,$userId);
+									if($stmt->execute()){
+										$mediaFile = MediaFile::getMediaFileFromID($mediaID);
+									} else {
+										$a = json_encode(["error" => "Database error: " . $stmt->error]);
+										$stmt->close();
+										return $a;
+									}
+
+									$stmt->close();
+								}
+
+								if(!is_null($mediaFile)){
+									if(is_null($attachments)) $attachments = [];
+
+									array_push($attachments,$mediaFile->getId());
+								}
+							}
+						}
+					} else if(isset($_POST["linkURL"]) && !is_null($_POST["linkURL"])){
+						$linkURL = trim($_POST["linkURL"]);
+
+						if(!empty($linkURL)){
+							if(filter_var($linkURL,FILTER_VALIDATE_URL)){
+								$sha = hash("sha256",$linkURL);
+
+								$mediaFile = MediaFile::getMediaFileFromSHA($sha);
+								if(is_null($mediaFile)){
+									$mediaID = MediaFile::generateNewID();
+
+									$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'LINK');");
+									$stmt->bind_param("sssi",$mediaID,$sha,$linkURL,$userId);
+									if($stmt->execute()){
+										$mediaFile = MediaFile::getMediaFileFromID($mediaID);
+									} else {
+										$a = json_encode(["error" => "Database error: " . $stmt->error]);
+										$stmt->close();
+										return $a;
+									}
+
+									$stmt->close();
+								}
+
+								if(!is_null($mediaFile)){
+									if(is_null($attachments)) $attachments = [];
+
+									array_push($attachments,$mediaFile->getId());
 								}
 							}
 						}
