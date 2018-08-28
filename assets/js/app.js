@@ -1303,8 +1303,6 @@ function load(){
 			let oldHtml = postBox.html();
 			
 			if(text.length > 0 && text.length <= limit){
-				postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-				
 				let attachments = "[]";
 				
 				if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
@@ -1325,6 +1323,7 @@ function load(){
 						success: function(json){
 							if(json.hasOwnProperty("status")){
 								if(json.status == "valid"){
+									postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
 									handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments);
 								} else {
 									console.error("Invalid video URL");
