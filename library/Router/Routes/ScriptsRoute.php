@@ -677,8 +677,10 @@ $app->post("/scripts/createPost",function(){
 								if(is_null($mediaFile)){
 									$mediaID = MediaFile::generateNewID();
 
-									$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'LINK');");
-									$stmt->bind_param("sssi",$mediaID,$sha,$linkURL,$userId);
+									$type = Util::isValidVideoURL($linkURL) ? "VIDEO" : "LINK";
+
+									$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,?);");
+									$stmt->bind_param("sssis",$mediaID,$sha,$linkURL,$userId,$type);
 									if($stmt->execute()){
 										$mediaFile = MediaFile::getMediaFileFromID($mediaID);
 									} else {
