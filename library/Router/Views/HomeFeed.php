@@ -163,7 +163,7 @@
 
 									$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]);
 
-									if($u->isSuspended()) continue;
+									if(!$u->mayView()) continue;
 
 									array_push($trendingUsers,[
 										"increase" => $row["increase"],
@@ -197,7 +197,7 @@
 									
 									$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]);
 
-									if($u->isSuspended()) continue;
+									if(!$u->mayView()) continue;
 
 									array_push($newUsers,$u);
 
@@ -227,7 +227,7 @@
 
 								$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]);
 
-								if($u->isSuspended()) continue;
+								if(!$u->mayView()) continue;
 
 								$mutuals = $row["mutuals"];
 

@@ -486,7 +486,17 @@ class FeedEntry {
         }
 
         if($this->type == "POST") $this->getUser()->reloadPostsCount();
-    }
+	}
+	
+	/**
+	 * Returns whether the current user may view this feed entry
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function mayView(){
+		return $this->getUser()->mayView();
+	}
 
     /**
      * Returns HTML code to use in a feed entry list (search, profile, home feed, ...)
@@ -497,9 +507,11 @@ class FeedEntry {
      * @return string
      */
     public function toListHTML($maxWidth = 658, $noBorder = false){
+		if(!$this->mayView()) return "";
+
         $user = $this->getUser();
 
-        $s = "";
+		$s = "";
 
         if($this->getType() == "POST"){
             if($noBorder == false) $s .= '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';

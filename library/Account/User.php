@@ -1809,6 +1809,30 @@ class User {
 	}
 
 	/**
+	 * Returns whether the current user may view this user
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function mayView(){
+		if($this->isSuspended()){
+			return false;
+		} else {
+			if(Util::isLoggedIn()){
+				$user = Util::getCurrentUser();
+
+				if(!is_null($user)){
+					if($user->hasBlocked($this) || $user->isBlocked($this)){
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+	}
+
+	/**
 	 * Saves the user object to the cache
 	 * 
 	 * @access public
