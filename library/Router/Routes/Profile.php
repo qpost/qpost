@@ -11,6 +11,8 @@ $app->bind("/:query/following",function($params){
 		if(!is_null($user)){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
 				return $this->reroute("/" . $user->getUsername());
+			} else if($user->isSuspended()){
+				return $this->reroute("/" . $user->getUsername());
 			} else {
 				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					return $this->reroute("/" . $user->getUsername());
@@ -48,6 +50,8 @@ $app->bind("/:query/following/:page",function($params){
 
 		if(!is_null($user)){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
+				return $this->reroute("/" . $user->getUsername());
+			} else if($user->isSuspended()){
 				return $this->reroute("/" . $user->getUsername());
 			} else {
 				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
@@ -87,6 +91,8 @@ $app->bind("/:query/followers",function($params){
 		if(!is_null($user)){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
 				return $this->reroute("/" . $user->getUsername());
+			} else if($user->isSuspended()){
+				return $this->reroute("/" . $user->getUsername());
 			} else {
 				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					return $this->reroute("/" . $user->getUsername());
@@ -124,6 +130,8 @@ $app->bind("/:query/followers/:page",function($params){
 
 		if(!is_null($user)){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
+				return $this->reroute("/" . $user->getUsername());
+			} else if($user->isSuspended()){
 				return $this->reroute("/" . $user->getUsername());
 			} else {
 				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
@@ -169,6 +177,14 @@ $app->bind("/:query",function($params){
 				);
 			
 				return $this->render("views:Profile/Blocked.php with views:Layout.php",$data);
+			} else if($user->isSuspended()){
+				$data = array(
+					"title" => "Account suspended",
+					"user" => $user,
+					"preventStatusModal" => true
+				);
+			
+				return $this->render("views:Profile/Suspended.php with views:Layout.php",$data);
 			} else {
 				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
 					$data = array(
@@ -218,6 +234,8 @@ $app->bind("/:query/:page",function($params){
 
 		if(!is_null($user)){
 			if(Util::isLoggedIn() && $user->hasBlocked(Util::getCurrentUser())){
+				return $this->reroute("/" . $user->getUsername());
+			} else if($user->isSuspended()){
 				return $this->reroute("/" . $user->getUsername());
 			} else {
 				if($user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
