@@ -251,111 +251,113 @@ if(isset($_SESSION["profileLoadPost"])){
 					?>
 					<div class="row">
 						<div class="col-lg-3 mb-3">
-							<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
-							<h4 class="mb-0"><?= $user->getDisplayName(); ?></h4>
-							<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
+							<div class="sticky-top" style="top: 70px">
+								<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
+								<h4 class="mb-0"><?= $user->getDisplayName(); ?></h4>
+								<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
 
-							<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
+								<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
 
-							<p class="my-2 text-muted">
-								<?php
-
-									$date = strtotime($user->getTime());
-									if(!is_null($user->getGigadriveRegistrationDate())){
-										$date = strtotime($user->getGigadriveRegistrationDate());
-									}
-
-								?><i class="fas fa-globe"></i><span style="margin-left: 5px">Joined <?= date("F Y",$date); ?></span>
-								<?= !is_null($user->getBirthday()) ? '<br/><i class="fas fa-birthday-cake"></i><span style="margin-left: 7px">' . date("F jS Y",strtotime($user->getBirthday())) . '</span>' : "" ?>
-							</p>
-
-							<?= Util::followButton($user->getId(),true,["btn-block","mt-2"],false) ?>
-
-							<?php
-
-								if(Util::isLoggedIn() && Util::getCurrentUser()->getId() != $user->getId()){
-									if(Util::getCurrentUser()->hasBlocked($user)){
-										?>
-							<form action="/<?= $user->getUsername(); ?>" method="post">
-								<?= Util::insertCSRFToken(); ?>
-								<input type="hidden" name="action" value="unblock"/>
-
-								<button type="submit" class="btn btn-light btn-block mt-2">
-									Unblock
-								</button>
-							</form>
-										<?php
-									} else {
-										?>
-							<button type="button" class="btn btn-light btn-block mt-2" data-toggle="modal" data-target="#blockModal">
-								Block
-							</button>
-
-							<div class="modal fade" id="blockModal" tabindex="-1" role="dialog" aria-labelledby="blockModalLabel" aria-hidden="true">
-								<div class="modal-dialog modal-dialog-centered" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title" id="blockModalLabel">Block @<?= $user->getUsername(); ?></h5>
-
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-										</div>
-
-										<div class="modal-body">
-											@<?= $user->getUsername(); ?> will no longer be able to follow or message you, and you will not see notifications from @<?= $user->getUsername(); ?>.
-										</div>
-
-										<div class="modal-footer">
-											<form action="/<?= $user->getUsername(); ?>" method="post">
-												<?= Util::insertCSRFToken(); ?>
-												<input type="hidden" name="action" value="block"/>
-												<button type="submit" class="btn btn-danger">Block</button>
-											</form>
-
-											<button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-										</div>
-									</div>
-								</div>
-							</div>
-										<?php
-									}
-								}
-
-								if(!is_null($user->getFeaturedBoxContent()) && count($user->getFeaturedBoxContent()) > 0){
-									$boxTitle = is_null($user->getFeaturedBoxTitle()) ? "Featured" : $user->getFeaturedBoxTitle();
-
-									?>
-							<h5 class="mt-4 mb-0"><?= Util::sanatizeString($boxTitle) ?></h5>
+								<p class="my-2 text-muted">
 									<?php
 
-									foreach($user->getFeaturedBoxContent() as $uid){
-										$featuredUser = User::getUserById($uid);
+										$date = strtotime($user->getTime());
+										if(!is_null($user->getGigadriveRegistrationDate())){
+											$date = strtotime($user->getGigadriveRegistrationDate());
+										}
 
-										if(is_null($featuredUser)) continue;
+									?><i class="fas fa-globe"></i><span style="margin-left: 5px">Joined <?= date("F Y",$date); ?></span>
+									<?= !is_null($user->getBirthday()) ? '<br/><i class="fas fa-birthday-cake"></i><span style="margin-left: 7px">' . date("F jS Y",strtotime($user->getBirthday())) . '</span>' : "" ?>
+								</p>
 
-										?>
-							<div class="my-2">
-								<a href="/<?= $featuredUser->getUsername() ?>" class="clearUnderline">
-									<div class="card">
-										<div class="card-body">
-											<img src="<?= $featuredUser->getAvatarURL() ?>" width="48" height="48" class="float-left rounded mr-2"/>
+								<?= Util::followButton($user->getId(),true,["btn-block","mt-2"],false) ?>
 
-											<div class="mt-1">
-												<b><?= $featuredUser->getDisplayName() ?></b>
-												<div class="small text-muted">@<?= $featuredUser->getUsername() ?></div>
+								<?php
+
+									if(Util::isLoggedIn() && Util::getCurrentUser()->getId() != $user->getId()){
+										if(Util::getCurrentUser()->hasBlocked($user)){
+											?>
+								<form action="/<?= $user->getUsername(); ?>" method="post">
+									<?= Util::insertCSRFToken(); ?>
+									<input type="hidden" name="action" value="unblock"/>
+
+									<button type="submit" class="btn btn-light btn-block mt-2">
+										Unblock
+									</button>
+								</form>
+											<?php
+										} else {
+											?>
+								<button type="button" class="btn btn-light btn-block mt-2" data-toggle="modal" data-target="#blockModal">
+									Block
+								</button>
+
+								<div class="modal fade" id="blockModal" tabindex="-1" role="dialog" aria-labelledby="blockModalLabel" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="blockModalLabel">Block @<?= $user->getUsername(); ?></h5>
+
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+
+											<div class="modal-body">
+												@<?= $user->getUsername(); ?> will no longer be able to follow or message you, and you will not see notifications from @<?= $user->getUsername(); ?>.
+											</div>
+
+											<div class="modal-footer">
+												<form action="/<?= $user->getUsername(); ?>" method="post">
+													<?= Util::insertCSRFToken(); ?>
+													<input type="hidden" name="action" value="block"/>
+													<button type="submit" class="btn btn-danger">Block</button>
+												</form>
+
+												<button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
 											</div>
 										</div>
 									</div>
-								</a>
-							</div>
-										<?php
+								</div>
+											<?php
+										}
 									}
-								}
 
-								echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["my-3"]);
+									if(!is_null($user->getFeaturedBoxContent()) && count($user->getFeaturedBoxContent()) > 0){
+										$boxTitle = is_null($user->getFeaturedBoxTitle()) ? "Featured" : $user->getFeaturedBoxTitle();
 
-							?>
+										?>
+								<h5 class="mt-4 mb-0"><?= Util::sanatizeString($boxTitle) ?></h5>
+										<?php
+
+										foreach($user->getFeaturedBoxContent() as $uid){
+											$featuredUser = User::getUserById($uid);
+
+											if(is_null($featuredUser)) continue;
+
+											?>
+								<div class="my-2">
+									<a href="/<?= $featuredUser->getUsername() ?>" class="clearUnderline">
+										<div class="card">
+											<div class="card-body">
+												<img src="<?= $featuredUser->getAvatarURL() ?>" width="48" height="48" class="float-left rounded mr-2"/>
+
+												<div class="mt-1">
+													<b><?= $featuredUser->getDisplayName() ?></b>
+													<div class="small text-muted">@<?= $featuredUser->getUsername() ?></div>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+											<?php
+										}
+									}
+
+									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["my-3"]);
+
+								?>
+							</div>
 						</div>
 
 						<div class="col-lg-9">
