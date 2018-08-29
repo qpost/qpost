@@ -20,9 +20,11 @@ $user = Util::getCurrentUser();
 			<td style="width: 50%"><?= Util::timeago($user->getTime()); ?></td>
 		</tr>
 
+		<?php if($user->isGigadriveLinked()){ ?>
 		<tr>
 			<td style="width: 50%">&nbsp;</td>
 			<td style="width: 50%"><b>To further manage your account, visit the <a href="https://gigadrivegroup.com/account" target="_blank">Gigadrive website</a>.</b></td>
 		</tr>
+		<?php } ?>
 	</table>
 </div>
