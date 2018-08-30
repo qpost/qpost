@@ -647,7 +647,8 @@ $app->post("/scripts/createPost",function(){
 	
 							if(!empty($videoURL)){
 								if(Util::isValidVideoURL($videoURL)){
-									$sha = hash("sha256",Util::stripUnneededInfoFromVideoURL($videoURL));
+									$videoURL = Util::stripUnneededInfoFromVideoURL($videoURL);
+									$sha = hash("sha256",$videoURL);
 	
 									$mediaFile = MediaFile::getMediaFileFromSHA($sha);
 									if(is_null($mediaFile)){
