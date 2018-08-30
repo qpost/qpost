@@ -138,8 +138,12 @@ $app->post("/scripts/toggleShare",function(){
 				return json_encode(["error" => "Cant share own post"]);
 
 			if($user->hasShared($post->getId())){
-				$user->unshare($post->getId());
-				return json_encode(["status" => "Share removed"]);
+				if($post->getUser()->getPrivacyLevel() == "PUBLIC"){
+					$user->unshare($post->getId());
+					return json_encode(["status" => "Share removed"]);
+				} else {
+					return json_encode(["error" => "Invalid privacy level"]);
+				}
 			} else {
 				$user->share($post->getId());
 				return json_encode(["status" => "Share added"]);
