@@ -597,214 +597,195 @@ $app->post("/scripts/createPost",function(){
 	if(isset($_POST["text"])){
 		if(Util::isLoggedIn()){
 			$user = Util::getCurrentUser();
-			$text = trim($_POST["text"]);
+			
+			if(!$user->isSuspended()){
+				$text = trim($_POST["text"]);
 
-			$mentioned = Util::getUsersMentioned($text);
+				$mentioned = Util::getUsersMentioned($text);
 
-			$mysqli = Database::Instance()->get();
+				$mysqli = Database::Instance()->get();
 
-			if(strlen($text) <= POST_CHARACTER_LIMIT){
-				if(count($mentioned) < 15){
-					$userId = $user->getId();
-					$sessionId = session_id();
-					$type = FEED_ENTRY_TYPE_POST;
+				if(strlen($text) <= POST_CHARACTER_LIMIT){
+					if(count($mentioned) < 15){
+						$userId = $user->getId();
+						$sessionId = session_id();
+						$type = FEED_ENTRY_TYPE_POST;
 
-					$postId = null;
+						$postId = null;
 
-					$parent = isset($_POST["replyTo"]) ? $_POST["replyTo"] : null;
+						$parent = isset($_POST["replyTo"]) ? $_POST["replyTo"] : null;
 
-					if(!is_null($parent) && !is_null(FeedEntry::getEntryById($parent))){
-						$parentCreator = FeedEntry::getEntryById($parent)->getUser();
-						if($parentCreator->getPrivacyLevel() == "CLOSED" && $parentCreator->getId() != $userId) return json_encode(["error" => "Parent owner is closed"]);
-						if($parentCreator->getPrivacyLevel() == "PRIVATE" && !$parentCreator->isFollower($userId)) return json_encode(["error" => "Parent owner is private and not followed"]);
-						if($parentCreator->hasBlocked($userId)) return json_encode(["error" => "Parent has blocked"]);
-					}
+						if(!is_null($parent) && !is_null(FeedEntry::getEntryById($parent))){
+							$parentCreator = FeedEntry::getEntryById($parent)->getUser();
+							if($parentCreator->getPrivacyLevel() == "CLOSED" && $parentCreator->getId() != $userId) return json_encode(["error" => "Parent owner is closed"]);
+							if($parentCreator->getPrivacyLevel() == "PRIVATE" && !$parentCreator->isFollower($userId)) return json_encode(["error" => "Parent owner is private and not followed"]);
+							if($parentCreator->hasBlocked($userId)) return json_encode(["error" => "Parent has blocked"]);
+						}
 
-					if($parent == 0) $parent = null;
+						if($parent == 0) $parent = null;
 
-					$furtherProccess = true;
+						$furtherProccess = true;
 
-					$attachments = null;
-					if(isset($_POST["attachments"]) && !empty($_POST["attachments"])){
-						if(Util::isValidJSON($_POST["attachments"]) && is_array(json_decode($_POST["attachments"],true))){
-							$attachments = json_decode($_POST["attachments"],true);
+						$attachments = null;
+						if(isset($_POST["attachments"]) && !empty($_POST["attachments"])){
+							if(Util::isValidJSON($_POST["attachments"]) && is_array(json_decode($_POST["attachments"],true))){
+								$attachments = json_decode($_POST["attachments"],true);
 
-							foreach($attachments as $attachment){
-								if(is_string($attachment)){
-									$mediaFile = MediaFile::getMediaFileFromID($attachment);
+								foreach($attachments as $attachment){
+									if(is_string($attachment)){
+										$mediaFile = MediaFile::getMediaFileFromID($attachment);
 
-									if(is_null($mediaFile)){
+										if(is_null($mediaFile)){
+											return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
+										}
+									} else {
 										return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
 									}
-								} else {
-									return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
-								}
 
-								$furtherProccess = false;
-							}
-						}
-					}
-					
-					if($furtherProccess){
-						if(isset($_POST["videoURL"]) && !is_null($_POST["videoURL"])){
-							$videoURL = trim($_POST["videoURL"]);
-	
-							if(!empty($videoURL)){
-								if(Util::isValidVideoURL($videoURL)){
-									$videoURL = Util::stripUnneededInfoFromVideoURL($videoURL);
-									$sha = hash("sha256",$videoURL);
-	
-									$mediaFile = MediaFile::getMediaFileFromSHA($sha);
-									if(is_null($mediaFile)){
-										$mediaID = MediaFile::generateNewID();
-	
-										$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'VIDEO');");
-										$stmt->bind_param("sssi",$mediaID,$sha,$videoURL,$userId);
-										if($stmt->execute()){
-											$mediaFile = MediaFile::getMediaFileFromID($mediaID);
-										} else {
-											$a = json_encode(["error" => "Database error: " . $stmt->error]);
-											$stmt->close();
-											return $a;
-										}
-	
-										$stmt->close();
-									}
-	
-									if(!is_null($mediaFile)){
-										if(is_null($attachments)) $attachments = [];
-	
-										array_push($attachments,$mediaFile->getId());
-									}
-								}
-							}
-						} else if(isset($_POST["linkURL"]) && !is_null($_POST["linkURL"])){
-							$linkURL = trim($_POST["linkURL"]);
-	
-							if(!empty($linkURL)){
-								if(filter_var($linkURL,FILTER_VALIDATE_URL)){
-									$sha = hash("sha256",$linkURL);
-	
-									$mediaFile = MediaFile::getMediaFileFromSHA($sha);
-									if(is_null($mediaFile)){
-										$mediaID = MediaFile::generateNewID();
-	
-										$type = Util::isValidVideoURL($linkURL) ? "VIDEO" : "LINK";
-	
-										$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,?);");
-										$stmt->bind_param("sssis",$mediaID,$sha,$linkURL,$userId,$type);
-										if($stmt->execute()){
-											$mediaFile = MediaFile::getMediaFileFromID($mediaID);
-										} else {
-											$a = json_encode(["error" => "Database error: " . $stmt->error]);
-											$stmt->close();
-											return $a;
-										}
-	
-										$stmt->close();
-									}
-	
-									if(!is_null($mediaFile)){
-										if(is_null($attachments)) $attachments = [];
-	
-										array_push($attachments,$mediaFile->getId());
-									}
+									$furtherProccess = false;
 								}
 							}
 						}
-					}
-
-					$attachmentsString = is_null($attachments) ? "[]" : json_encode($attachments);
-
-					$mysqli = Database::Instance()->get();
-					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`,`attachments`) VALUES(?,?,NULL,?,?,?,?);");
-					$stmt->bind_param("isssis", $userId,$text,$sessionId,$type,$parent,$attachmentsString);
-					if($stmt->execute()){
-						$postId = $stmt->insert_id;
-					}
-					$stmt->close();
-
-					if(!is_null($postId)){
-						$postData = FeedEntry::getEntryById($postId);
-						$post = Util::postJsonData($postData);
-
-						if(!is_null($parent)){
-							$parentData = FeedEntry::getEntryById($parent);
-
-							if(!is_null($parentData)){
-								$parentData->reloadReplies();
-
-								if($parentData->getUserId() != $userId){
-									if($parentData->getUser()->canPostNotification(NOTIFICATION_TYPE_REPLY,null,$postId)){
-										$uid = $parentData->getUserId();
-
-										$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'REPLY',?);");
-										$stmt->bind_param("ii",$uid,$postId);
-										$stmt->execute();
-										$stmt->close();
-
-										$parentData->getUser()->reloadUnreadNotifications();
-									}
-								}
-							}
-						}
-
-						if(count($mentioned) > 0){
-							foreach($mentioned as $u){
-								$uid = $u->getId();
-								if($uid == $userId) continue;
-
-								if(!$user->isBlocked($u)){
-									if($u->canPostNotification(NOTIFICATION_TYPE_MENTION,null,$postId)){
-										$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'MENTION',?);");
-										$stmt->bind_param("ii",$uid,$postId);
-										$stmt->execute();
-										$stmt->close();
-
-										$u->reloadUnreadNotifications();
-									}
-								}
-							}
-						}
-
-						$postActionButtons = Util::getPostActionButtons($postData);
-
-						$user->reloadFeedEntriesCount();
-						$user->reloadPostsCount();
-
-						return json_encode(["post" => $post,"postActionButtons" => $postActionButtons]);
-					} else {
-						return json_encode(["error" => "Empty post id"]);
-					}
-				} else {
-					return json_encode(["error" => "Too many mentions"]);
-				}
-			} else {
-				return json_encode(["error" => "Exceeded character limit"]);
-			}
-
-			if($user->getFollowers() < FOLLOW_LIMIT){
-				if(!is_null($user) && !is_null($toFollow)){
-					if($user->getId() != $toFollow->getId()){
-						$followStatus = -1;
-
-						if($user->isFollowing($toFollow)){
-							$user->unfollow($toFollow);
-							$followStatus = 0;
-						} else {
-							$user->follow($toFollow);
-							$followStatus = 1;
-						}
+						
+						if($furtherProccess){
+							if(isset($_POST["videoURL"]) && !is_null($_POST["videoURL"])){
+								$videoURL = trim($_POST["videoURL"]);
 		
-						return json_encode(["followStatus" => $followStatus]);
+								if(!empty($videoURL)){
+									if(Util::isValidVideoURL($videoURL)){
+										$videoURL = Util::stripUnneededInfoFromVideoURL($videoURL);
+										$sha = hash("sha256",$videoURL);
+		
+										$mediaFile = MediaFile::getMediaFileFromSHA($sha);
+										if(is_null($mediaFile)){
+											$mediaID = MediaFile::generateNewID();
+		
+											$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'VIDEO');");
+											$stmt->bind_param("sssi",$mediaID,$sha,$videoURL,$userId);
+											if($stmt->execute()){
+												$mediaFile = MediaFile::getMediaFileFromID($mediaID);
+											} else {
+												$a = json_encode(["error" => "Database error: " . $stmt->error]);
+												$stmt->close();
+												return $a;
+											}
+		
+											$stmt->close();
+										}
+		
+										if(!is_null($mediaFile)){
+											if(is_null($attachments)) $attachments = [];
+		
+											array_push($attachments,$mediaFile->getId());
+										}
+									}
+								}
+							} else if(isset($_POST["linkURL"]) && !is_null($_POST["linkURL"])){
+								$linkURL = trim($_POST["linkURL"]);
+		
+								if(!empty($linkURL)){
+									if(filter_var($linkURL,FILTER_VALIDATE_URL)){
+										$sha = hash("sha256",$linkURL);
+		
+										$mediaFile = MediaFile::getMediaFileFromSHA($sha);
+										if(is_null($mediaFile)){
+											$mediaID = MediaFile::generateNewID();
+		
+											$type = Util::isValidVideoURL($linkURL) ? "VIDEO" : "LINK";
+		
+											$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,?);");
+											$stmt->bind_param("sssis",$mediaID,$sha,$linkURL,$userId,$type);
+											if($stmt->execute()){
+												$mediaFile = MediaFile::getMediaFileFromID($mediaID);
+											} else {
+												$a = json_encode(["error" => "Database error: " . $stmt->error]);
+												$stmt->close();
+												return $a;
+											}
+		
+											$stmt->close();
+										}
+		
+										if(!is_null($mediaFile)){
+											if(is_null($attachments)) $attachments = [];
+		
+											array_push($attachments,$mediaFile->getId());
+										}
+									}
+								}
+							}
+						}
+
+						$attachmentsString = is_null($attachments) ? "[]" : json_encode($attachments);
+
+						$mysqli = Database::Instance()->get();
+						$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`,`attachments`) VALUES(?,?,NULL,?,?,?,?);");
+						$stmt->bind_param("isssis", $userId,$text,$sessionId,$type,$parent,$attachmentsString);
+						if($stmt->execute()){
+							$postId = $stmt->insert_id;
+						}
+						$stmt->close();
+
+						if(!is_null($postId)){
+							$postData = FeedEntry::getEntryById($postId);
+							$post = Util::postJsonData($postData);
+
+							if(!is_null($parent)){
+								$parentData = FeedEntry::getEntryById($parent);
+
+								if(!is_null($parentData)){
+									$parentData->reloadReplies();
+
+									if($parentData->getUserId() != $userId){
+										if($parentData->getUser()->canPostNotification(NOTIFICATION_TYPE_REPLY,null,$postId)){
+											$uid = $parentData->getUserId();
+
+											$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'REPLY',?);");
+											$stmt->bind_param("ii",$uid,$postId);
+											$stmt->execute();
+											$stmt->close();
+
+											$parentData->getUser()->reloadUnreadNotifications();
+										}
+									}
+								}
+							}
+
+							if(count($mentioned) > 0){
+								foreach($mentioned as $u){
+									$uid = $u->getId();
+									if($uid == $userId) continue;
+
+									if(!$user->isBlocked($u)){
+										if($u->canPostNotification(NOTIFICATION_TYPE_MENTION,null,$postId)){
+											$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'MENTION',?);");
+											$stmt->bind_param("ii",$uid,$postId);
+											$stmt->execute();
+											$stmt->close();
+
+											$u->reloadUnreadNotifications();
+										}
+									}
+								}
+							}
+
+							$postActionButtons = Util::getPostActionButtons($postData);
+
+							$user->reloadFeedEntriesCount();
+							$user->reloadPostsCount();
+
+							return json_encode(["post" => $post,"postActionButtons" => $postActionButtons]);
+						} else {
+							return json_encode(["error" => "Empty post id"]);
+						}
 					} else {
-						return json_encode(["error" => "Can't follow self"]);
+						return json_encode(["error" => "Too many mentions"]);
 					}
 				} else {
-					return json_encode(["error" => "Invalid user"]);
+					return json_encode(["error" => "Exceeded character limit"]);
 				}
 			} else {
-				return json_encode(["error" => "Reached follow limit"]);
+				return json_encode(["error" => "User suspended"]);
 			}
 		} else {
 			return json_encode(["error" => "Not logged in"]);
