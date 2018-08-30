@@ -387,7 +387,7 @@ function showStatusModal(postId){
 				content = content.concat(
 					'<div class="mt-2">' +
 					c + 
-					'<p style="font-size: 27px;" class="mb-0">' +
+					'<p style="font-size: 27px;">' +
 					twemoji.parse(json.text) +
 					'</p>'
 				);
