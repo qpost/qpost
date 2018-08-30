@@ -652,6 +652,8 @@ $app->post("/scripts/createPost",function(){
 									$mediaFile = MediaFile::getMediaFileFromSHA($sha);
 									if(is_null($mediaFile)){
 										$mediaID = MediaFile::generateNewID();
+
+										$videoURL = Util::stripUnneededInfoFromVideoURL($videoURL);
 	
 										$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'VIDEO');");
 										$stmt->bind_param("sssi",$mediaID,$sha,$videoURL,$userId);

@@ -1158,6 +1158,34 @@ class Util {
 	}
 
 	/**
+	 * Returns a video URL stripped off of it's unneeded parameters and info
+	 * 
+	 * @access public
+	 * @param string $url
+	 * @return string
+	 */
+	public static function stripUnneededInfoFromVideoURL($url){
+		$mediaEmbed = new MediaEmbed\MediaEmbed();
+
+		$mediaObject = $mediaEmbed->parseUrl($url);
+		if($mediaObject){
+			if(isset($mediaObject->stub()["match"])){
+				$match = $mediaObject->stub()["match"];
+
+				if(isset($match[0])){
+					return $match[0];
+				} else {
+					return $url;
+				}
+			} else {
+				return $url;
+			}
+		} else {
+			return $url;
+		}
+	}
+
+	/**
 	 * Returns HTML code to use for embedding a video
 	 * 
 	 * @access public
