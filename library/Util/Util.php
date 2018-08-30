@@ -1264,7 +1264,7 @@ class Util {
 			$postActionButtons .= '</span><span class="replyCount small text-primary mx-2">';
 			$postActionButtons .= $post->getReplies();
 			$postActionButtons .= '</span>';
-			$postActionButtons .= '<span' . ($currentUser->getId() != $post->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post"') . ' data-post-id="' . $post->getId() . '">';
+			$postActionButtons .= '<span' . ($currentUser->getId() != $post->getUser()->getId() ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
 			$postActionButtons .= '<i class="fas fa-share-alt' . ($currentUser->hasShared($post->getId()) ? ' text-primary' : "")  . '"' . ($currentUser->hasShared($post->getId()) ? "" : ' style="color: gray"') . '></i>';
 			$postActionButtons .= '</span>';
 
