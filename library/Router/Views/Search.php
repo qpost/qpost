@@ -126,47 +126,18 @@
 			echo Util::paginate($page,$itemsPerPage,$num,"/search?query=" . urlencode($query) . "&type=" . $type . "&page=(:num)");
 
 			if($type == "posts"){
-				echo '<div class="card postContainer mt-2"><div class="card-body">';
+				echo '<ul class="list-group feedContainer mt-2">';
 
 				foreach($results as $result){
 					$post = $result["post"];
 					$u = $result["user"];
 
-					if(Util::isLoggedIn() && ($u->hasBlocked(Util::getCurrentUser()) || $u->isBlocked(Util::getCurrentUser()))) continue;
+					if(!$post->mayView()) continue;
 
-					?>
-				<div class="card post<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-post-id="<?= $post->getId(); ?>">
-					<div class="card-body">
-						<div class="row">
-							<div class="col-1">
-								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick">
-									<img class="rounded mx-1 my-1" src="<?= $u->getAvatarURL(); ?>" width="40" height="40"/>
-								</a>
-							</div>
-
-							<div class="col-11">
-								<p class="mb-0">
-									<a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick"><span class="font-weight-bold"><?= $u->getDisplayName(); ?></span></a>
-									<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
-
-									&bull;
-
-									<?= Util::timeago($post->getTime()); ?>
-								</p>
-
-								<p class="mb-0 convertEmoji">
-									<?= Util::convertPost($post->getText()); ?>
-								</p>
-
-								<?= Util::getPostActionButtons($post); ?>
-							</div>
-						</div>
-					</div>
-				</div>
-				<?php
+					echo $post->toListHTML();
 				}
 
-				echo '</div></div>';
+				echo '</ul>';
 			} else if($type == "users"){
 				?><div class="row my-2"><?php
 				foreach($results as $u){
