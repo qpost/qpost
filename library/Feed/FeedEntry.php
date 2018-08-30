@@ -525,7 +525,7 @@ class FeedEntry {
 			$s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px">';
 			$s .= '<p class="mb-0">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
-			$s .= '<span class="font-weight-bold">' . $user->getDisplayName() . '</span>';
+			$s .= '<span class="font-weight-bold convertEmoji">' . $user->getDisplayName() . '</span>';
 			$s .= '</a>';
 
 			$s .= '<span class="text-muted font-weight-normal"> @' . $user->getUsername() . ' </span>';
@@ -568,7 +568,7 @@ class FeedEntry {
 			    $s .= '</div>';
             }
             
-			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline">' . $user->getDisplayName() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
+			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline convertEmoji">' . $user->getDisplayName() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
             if($noBorder == false) $s .= '</li>';
             
             return $s;
@@ -593,7 +593,7 @@ class FeedEntry {
             $s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px">';
 			$s .= '<p class="mb-0">';
 			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
-			$s .= '<span class="font-weight-bold">' . $sharedUser->getDisplayName() . '</span>';
+			$s .= '<span class="font-weight-bold convertEmoji">' . $sharedUser->getDisplayName() . '</span>';
 			$s .= '</a>';
 
 			$s .= '<span class="text-muted font-weight-normal"> @' . $sharedUser->getUsername() . ' </span>';

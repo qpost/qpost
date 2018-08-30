@@ -253,7 +253,7 @@ if(isset($_SESSION["profileLoadPost"])){
 						<div class="col-lg-3 mb-3">
 							<div class="sticky-top" style="top: 70px">
 								<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
-								<h4 class="mb-0"><?= $user->getDisplayName(); ?></h4>
+								<h4 class="mb-0 convertEmoji"><?= $user->getDisplayName(); ?></h4>
 								<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
 
 								<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
@@ -327,7 +327,7 @@ if(isset($_SESSION["profileLoadPost"])){
 										$boxTitle = is_null($user->getFeaturedBoxTitle()) ? "Featured" : $user->getFeaturedBoxTitle();
 
 										?>
-								<h5 class="mt-4 mb-0"><?= Util::sanatizeString($boxTitle) ?></h5>
+								<h5 class="mt-4 mb-0 convertEmoji"><?= Util::sanatizeString($boxTitle) ?></h5>
 										<?php
 
 										foreach($user->getFeaturedBoxContent() as $uid){
