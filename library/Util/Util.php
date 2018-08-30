@@ -1169,6 +1169,8 @@ class Util {
 
 		$mediaObject = $mediaEmbed->parseUrl($url);
 		if($mediaObject){
+			$mediaObject->setAttribute("class","embed-responsive-item");
+
 			return sprintf('<div class="embed-responsive embed-responsive-16by9">%s</div>',$mediaObject->getEmbedCode());
 		} else {
 			return null;
@@ -1366,7 +1368,7 @@ class Util {
 
 			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="postFormTextButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
 			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormVideoButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share video"><i class="fas fa-video"></i></button></li>';
-			//$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormLinkButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="d-none postFormLinkButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
 
 			$box .= '</ul>';
 
@@ -1382,11 +1384,11 @@ class Util {
 			$box .= '</div>';
 			$box .= '</div>';
 
-			/*$box .= '<div class="row linkURL my-3 mx-2 d-none">';
+			$box .= '<div class="row linkURL my-3 mx-2 d-none">';
 			$box .= '<div class="col-12">';
 			$box .= '<input type="text" class="form-control" placeholder="Add an URL to share" style="width: 100%"/>';
 			$box .= '</div>';
-			$box .= '</div>';*/
+			$box .= '</div>';
 		}
 
 		$box .= '<div class="pb-2 px-2 d-block">';

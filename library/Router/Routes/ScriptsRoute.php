@@ -618,6 +618,8 @@ $app->post("/scripts/createPost",function(){
 
 					if($parent == 0) $parent = null;
 
+					$furtherProccess = true;
+
 					$attachments = null;
 					if(isset($_POST["attachments"]) && !empty($_POST["attachments"])){
 						if(Util::isValidJSON($_POST["attachments"]) && is_array(json_decode($_POST["attachments"],true))){
@@ -633,69 +635,75 @@ $app->post("/scripts/createPost",function(){
 								} else {
 									return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
 								}
+
+								$furtherProccess = false;
 							}
 						}
-					} else if(isset($_POST["videoURL"]) && !is_null($_POST["videoURL"])){
-						$videoURL = trim($_POST["videoURL"]);
-
-						if(!empty($videoURL)){
-							if(Util::isValidVideoURL($videoURL)){
-								$sha = hash("sha256",$videoURL);
-
-								$mediaFile = MediaFile::getMediaFileFromSHA($sha);
-								if(is_null($mediaFile)){
-									$mediaID = MediaFile::generateNewID();
-
-									$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'VIDEO');");
-									$stmt->bind_param("sssi",$mediaID,$sha,$videoURL,$userId);
-									if($stmt->execute()){
-										$mediaFile = MediaFile::getMediaFileFromID($mediaID);
-									} else {
-										$a = json_encode(["error" => "Database error: " . $stmt->error]);
+					}
+					
+					if($furtherProccess){
+						if(isset($_POST["videoURL"]) && !is_null($_POST["videoURL"])){
+							$videoURL = trim($_POST["videoURL"]);
+	
+							if(!empty($videoURL)){
+								if(Util::isValidVideoURL($videoURL)){
+									$sha = hash("sha256",$videoURL);
+	
+									$mediaFile = MediaFile::getMediaFileFromSHA($sha);
+									if(is_null($mediaFile)){
+										$mediaID = MediaFile::generateNewID();
+	
+										$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'VIDEO');");
+										$stmt->bind_param("sssi",$mediaID,$sha,$videoURL,$userId);
+										if($stmt->execute()){
+											$mediaFile = MediaFile::getMediaFileFromID($mediaID);
+										} else {
+											$a = json_encode(["error" => "Database error: " . $stmt->error]);
+											$stmt->close();
+											return $a;
+										}
+	
 										$stmt->close();
-										return $a;
 									}
-
-									$stmt->close();
-								}
-
-								if(!is_null($mediaFile)){
-									if(is_null($attachments)) $attachments = [];
-
-									array_push($attachments,$mediaFile->getId());
+	
+									if(!is_null($mediaFile)){
+										if(is_null($attachments)) $attachments = [];
+	
+										array_push($attachments,$mediaFile->getId());
+									}
 								}
 							}
-						}
-					} else if(isset($_POST["linkURL"]) && !is_null($_POST["linkURL"])){
-						$linkURL = trim($_POST["linkURL"]);
-
-						if(!empty($linkURL)){
-							if(filter_var($linkURL,FILTER_VALIDATE_URL)){
-								$sha = hash("sha256",$linkURL);
-
-								$mediaFile = MediaFile::getMediaFileFromSHA($sha);
-								if(is_null($mediaFile)){
-									$mediaID = MediaFile::generateNewID();
-
-									$type = Util::isValidVideoURL($linkURL) ? "VIDEO" : "LINK";
-
-									$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,?);");
-									$stmt->bind_param("sssis",$mediaID,$sha,$linkURL,$userId,$type);
-									if($stmt->execute()){
-										$mediaFile = MediaFile::getMediaFileFromID($mediaID);
-									} else {
-										$a = json_encode(["error" => "Database error: " . $stmt->error]);
+						} else if(isset($_POST["linkURL"]) && !is_null($_POST["linkURL"])){
+							$linkURL = trim($_POST["linkURL"]);
+	
+							if(!empty($linkURL)){
+								if(filter_var($linkURL,FILTER_VALIDATE_URL)){
+									$sha = hash("sha256",$linkURL);
+	
+									$mediaFile = MediaFile::getMediaFileFromSHA($sha);
+									if(is_null($mediaFile)){
+										$mediaID = MediaFile::generateNewID();
+	
+										$type = Util::isValidVideoURL($linkURL) ? "VIDEO" : "LINK";
+	
+										$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,?);");
+										$stmt->bind_param("sssis",$mediaID,$sha,$linkURL,$userId,$type);
+										if($stmt->execute()){
+											$mediaFile = MediaFile::getMediaFileFromID($mediaID);
+										} else {
+											$a = json_encode(["error" => "Database error: " . $stmt->error]);
+											$stmt->close();
+											return $a;
+										}
+	
 										$stmt->close();
-										return $a;
 									}
-
-									$stmt->close();
-								}
-
-								if(!is_null($mediaFile)){
-									if(is_null($attachments)) $attachments = [];
-
-									array_push($attachments,$mediaFile->getId());
+	
+									if(!is_null($mediaFile)){
+										if(is_null($attachments)) $attachments = [];
+	
+										array_push($attachments,$mediaFile->getId());
+									}
 								}
 							}
 						}

@@ -9,7 +9,7 @@ class MediaFile {
      * @return MediaFile
      */
     public static function getMediaFileFromID($id){
-        $n = "media_id_" . $id;
+		$n = "media_id_" . $id;
 
         if(CacheHandler::existsInCache($n)){
             return CacheHandler::getFromCache($n);
@@ -125,7 +125,13 @@ class MediaFile {
      * @access private
      * @var int $originalUploader
      */
-    private $originalUploader;
+	private $originalUploader;
+	
+	/**
+	 * @access private
+	 * @var string $type
+	 */
+	private $type;
 
     /**
      * @access private
@@ -207,7 +213,17 @@ class MediaFile {
      */
     public function getOriginalUploader(){
         return !is_null($this->originalUploader) ? User::getUserById($this->originalUploader) : null;
-    }
+	}
+	
+	/**
+	 * Returns the media file type
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getType(){
+		return $this->type;
+	}
 
     /**
      * Returns HTML code to display a clickable thumbnail
@@ -217,9 +233,15 @@ class MediaFile {
      * @return string
      */
     public function toThumbnailHTML($postId = null){
-        $s = "";
-
-        $s .= '<img src="' . $this->getThumbnailURL() . '" width="100" height="100" class="rounded border border-primary bg-dark ignoreParentClick mr-2"' . (!is_null($postId) ? ' style="cursor: pointer" onclick="showMediaModal(\'' . $this->id . '\',' . $postId . ');"' : "") . '/>';
+		$s = "";
+		
+		if($this->type == "IMAGE"){
+			$s .= '<img src="' . $this->getThumbnailURL() . '" width="100" height="100" class="rounded border border-primary bg-dark ignoreParentClick mr-2"' . (!is_null($postId) ? ' style="cursor: pointer" onclick="showMediaModal(\'' . $this->id . '\',' . $postId . ');"' : "") . '/>';
+		} else if($this->type == "VIDEO"){
+			$s .= Util::getVideoEmbedCodeFromURL($this->url);
+		} else if($this->type == "LINK"){
+			// TODO
+		}
 
         return $s;
     }
@@ -243,7 +265,8 @@ class MediaFile {
                 $this->id = $row["id"];
                 $this->sha256 = $row["sha256"];
                 $this->url = $row["url"];
-                $this->originalUploader = $row["originalUploader"];
+				$this->originalUploader = $row["originalUploader"];
+				$this->type = $row["type"];
                 $this->time = $row["time"];
 
                 $this->exists = true;
