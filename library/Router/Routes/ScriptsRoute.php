@@ -553,29 +553,49 @@ $app->bind("/mediaThumbnail", function($params){
 			$this->response->mime = "jpg";
 
 			if(\CacheHandler::existsInCache($n)){
-				return imagejpeg(imagecreatefromstring(base64_decode(\CacheHandler::getFromCache($n))));
+				$imageString = base64_decode(\CacheHandler::getFromCache($n));
+
+				$image = \Gumlet\ImageResize::createFromString($imageString);
+
+				if(!is_null($image)){
+					return $image->output(IMAGETYPE_JPEG,100);
+				} else {
+					return $this->reroute("/");
+				}
 			} else {
-				$imageString = file_get_contents($url);
-				$size = getimagesizefromstring($imageString);
+				if($mediaFile->getType() == "IMAGE"){
+					$imageString = file_get_contents($url);
+					$size = getimagesizefromstring($imageString);
 
-				if($size !== false){
-					$width = -1;
-					$height = -1;
-					list($width,$height) = $size;
+					if($size !== false){
+						$width = -1;
+						$height = -1;
+						list($width,$height) = $size;
 
-					if($width > -1 && $height > -1){
-						$source = imagecreatefromstring($imageString);
+						if($width > -1 && $height > -1){
+							$image = \Gumlet\ImageResize::createFromString($imageString);
+							
+							if(!is_null($image)){
+								/*$source = imagecreatefromstring($imageString);
 
-						$virtualImage = imagecreatetruecolor(100,100);
-						imagecopyresampled($virtualImage,$source,0,0,0,0,100,100,$width,$height);
+								$virtualImage = imagecreatetruecolor(100,100);
+								imagecopyresampled($virtualImage,$source,0,0,0,0,100,100,$width,$height);*/
 
-						ob_start();
-						imagejpeg($virtualImage);
-						$imgSource = ob_get_clean();
+								$image->resizeToBestFit(800,450,true);
+	
+								$imageString = $image->getImageAsString();
+	
+								\CacheHandler::setToCache($n,base64_encode($imageString),20*60);
 
-						\CacheHandler::setToCache($n,base64_encode($imgSource),20*60);
-
-						return imagejpeg($virtualImage);
+								$image = \Gumlet\ImageResize::createFromString(base64_decode(\CacheHandler::getFromCache($n)));
+	
+								return $image->output(IMAGETYPE_JPEG,100);
+							} else {
+								return $this->reroute("/");
+							}
+						} else {
+							return $this->reroute("/");
+						}
 					} else {
 						return $this->reroute("/");
 					}

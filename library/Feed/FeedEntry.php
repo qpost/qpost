@@ -542,9 +542,7 @@ class FeedEntry {
             if(count($this->attachments) > 0){
 				$s .= '<div class="my-2">';
 
-                foreach($this->getAttachmentObjects() as $mediaFile){
-					$s .= $mediaFile->toThumbnailHTML($this->id);
-                }
+				$s .= Util::renderAttachmentEmbeds($this->getAttachmentObjects(),$this->id);
 
                 $s .= '</div>';
             }
@@ -610,9 +608,7 @@ class FeedEntry {
 			if(count($sharedPost->attachments) > 0){
 				$s .= '<div class="my-2">';
 
-				foreach($sharedPost->getAttachmentObjects() as $mediaFile){
-					$s .= $mediaFile->toThumbnailHTML($sharedPost->id);
-                }
+				$s .= Util::renderAttachmentEmbeds($sharedPost->getAttachmentObjects(),$this->id);
 
                 $s .= '</div>';
             }

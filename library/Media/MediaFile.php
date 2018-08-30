@@ -226,27 +226,6 @@ class MediaFile {
 	}
 
     /**
-     * Returns HTML code to display a clickable thumbnail
-     * 
-     * @access public
-     * @param int $postId The id of the post to use for the media modal, if null the thumbnail won't be clickable
-     * @return string
-     */
-    public function toThumbnailHTML($postId = null){
-		$s = "";
-		
-		if($this->type == "IMAGE"){
-			$s .= '<img src="' . $this->getThumbnailURL() . '" width="100" height="100" class="rounded border border-primary bg-dark ignoreParentClick mr-2"' . (!is_null($postId) ? ' style="cursor: pointer" onclick="showMediaModal(\'' . $this->id . '\',' . $postId . ');"' : "") . '/>';
-		} else if($this->type == "VIDEO"){
-			$s .= Util::getVideoEmbedCodeFromURL($this->url);
-		} else if($this->type == "LINK"){
-			// TODO
-		}
-
-        return $s;
-    }
-
-    /**
      * Reloads data from the database
      * 
      * @access public

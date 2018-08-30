@@ -1029,6 +1029,7 @@ class Util {
 				"attachments" => $attachments,
 				"postActionButtons" => self::getPostActionButtons($post),
 				"listHtml" => $post->toListHTML($maxContentWidth),
+				"attachmentHtml" => Util::renderAttachmentEmbeds($post->getAttachmentObjects()),
 				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1,$parentMaxContentWidth,$parentMaxContentWidth) : null)
 			];
 		} else {
@@ -1051,8 +1052,7 @@ class Util {
 			return [
 				"id" => $mediaFile->getId(),
 				"sha256" => $mediaFile->getSHA256(),
-				"fileUrl" => $mediaFile->getURL(),
-				"thumbnailHtml" => $mediaFile->toThumbnailHTML($postId)
+				"fileUrl" => $mediaFile->getURL()
 			];
 		} else {
 			return null;
@@ -1290,6 +1290,83 @@ class Util {
 		}
 
 		return $postActionButtons;
+	}
+
+	/**
+	 * Returns html code of embeds for media files
+	 * 
+	 * @access public
+	 * @param MediaFile[]|MediaFile $mediaFiles
+	 * @param int $postId
+	 * @return string
+	 */
+	public static function renderAttachmentEmbeds($mediaFiles, $postId = null){
+		if(is_array($mediaFiles)){
+			$s = "";
+
+			if(count($mediaFiles) > 0){
+				if(count($mediaFiles) == 1){
+					$mediaFile = $mediaFiles[0];
+
+					if($mediaFile->getType() == "IMAGE"){
+						$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+						//$s .= '<div class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+					} else if($mediaFile->getType() == "VIDEO"){
+						$s .= self::getVideoEmbedCodeFromURL($mediaFile->url);
+					} else if($mediaFile->getType() == "LINK"){
+						// TODO
+					}
+				} else if(count($mediaFiles) == 2){
+					$s .= '<div style="height: 237px;">';
+
+					$i = 1;
+					foreach($mediaFiles as $mediaFile){
+						if($mediaFile->getType() == "IMAGE"){
+							$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
+							$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+							$s .= '</div>';
+
+							$i++;
+						}
+					}
+
+					$s .= '</div>';
+				} else if(count($mediaFiles) == 3){
+					$s .= '<div style="margin-bottom: -30px; height: 237px;">';
+
+					$i = 1;
+					foreach($mediaFiles as $mediaFile){
+						if($mediaFile->getType() == "IMAGE"){
+							if($i == 1){
+								$s .= '<div class="d-inline-block" style="width: 66.66666%; position: relative; top: -59px; height: 100%;">';
+								$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+								$s .= '</div>';
+							} else if($i == 2){
+								$s .= '<div class="d-inline-block" style="width: calc(100% / 3 - 1px); height: 100%;">';
+								$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary border-left-0 border-bottom-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+							} else if($i == 3){
+								$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+								$s .= '</div>';
+							}
+
+							$i++;	
+						}
+					}
+
+					$s .= '</div>';
+				} else if(count($mediaFiles) == 4){
+					foreach($mediaFiles as $mediaFile){
+						if($mediaFile->getType() == "IMAGE"){
+							
+						}
+					}	
+				}
+			}
+
+			return $s;
+		} else {
+			return self::renderThumbnails([$mediaFiles]);
+		}
 	}
 
 	/**

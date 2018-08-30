@@ -395,9 +395,7 @@ function showStatusModal(postId){
 				if(json.hasOwnProperty("attachments") && json.attachments.length > 0){
 					content = content.concat('<div class="mb-4 mt-2">');
 					
-					json.attachments.forEach(attachment => {
-						content = content.concat(attachment.thumbnailHtml);
-					});
+					content = content.concat(json.attachmentHtml);
 					
 					content = content.concat('</div>');
 				}
