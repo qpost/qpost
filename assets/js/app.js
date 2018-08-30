@@ -1217,6 +1217,7 @@ function load(){
 						
 						postBox.html(oldHtml);
 						postField.val("");
+						postBox.find("input[name=\"attachmentData\"]").val("");
 						postCharacterCounter.html(POST_CHARACTER_LIMIT + " characters left");
 						loadBasic();
 						dz.destroy();
@@ -1241,7 +1242,7 @@ function load(){
 	
 	$(document).on("click",".postButton",function(e){
 		e.preventDefault();
-		
+
 		let postBox = $(this).parent().parent();
 		let postField = postBox.find(".postField");
 		let postCharacterCounter = $(this).parent().find(".postCharacterCounter");
