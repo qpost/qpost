@@ -18,52 +18,56 @@ if(isset($_POST["email"]) && isset($_POST["displayName"]) && isset($_POST["usern
 					if(strlen($username) >= 3){
 						if(strlen($username) <= 16){
 							if(ctype_alnum($username)){
-								if(Util::isEmailAvailable($email)){
-									if(Util::isUsernameAvailable($username)){
-										$displayName = Util::sanatizeString($displayName);
-	
-										$mysqli = Database::Instance()->get();
-	
-										$emailToken = Util::getRandomString(7);
-	
-										$password = password_hash($password,PASSWORD_BCRYPT);
-	
-										$stmt = $mysqli->prepare("INSERT INTO `users` (`displayName`,`username`,`email`,`password`,`emailActivationToken`) VALUES(?,?,?,?,?);");
-										$stmt->bind_param("sssss",$displayName,$username,$email,$password,$emailToken);
-										if($stmt->execute()){
-											$id = $stmt->insert_id;
-	
-											$mailContent = MailTemplates::readTemplate("verifyEmail",[
-												"qpost: Verify your email address",
-												"Complete your qpost registration!",
-												"Hello, " . $displayName . "!",
-												"To complete the creation of your qpost account, please click the button below and verify your email address.",
-												"https://qpost.gigadrivegroup.com/account/verify-email?account=" . $id . "&verificationtoken=" . $emailToken,
-												"Verify",
-												"You did not register for qpost?",
-												"Don't worry! Simply ignore this email and the account registered with this email address will be deleted in 2 weeks.",
-												"Contact Info",
-												"Terms of Service",
-												"Privacy Policy",
-												"Disclaimer",
-												"You don't want to receive this type of emails?",
-												"Click here to change your email settings or unsubscribe."
-											]);
-	
-											Util::sendMail($email,"qpost: Verify your email address",$mailContent,"Paste this link into your browser to verify your account on qpost: https://qpost.gigadrivegroup.com/account/verify-email?account=" . $id . "&verificationtoken=" . $emailToken,$displayName);
-	
-											$user = User::getUserById($id);
-	
-											$successMsg = "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)";
+								if(!Util::contains($displayName,"☑️") && !Util::contains($displayName,"✔️") && !Util::contains($displayName,"✅") && !Util::contains($displayName,"🗹") && !Util::contains($displayName,"🗸")){
+									if(Util::isEmailAvailable($email)){
+										if(Util::isUsernameAvailable($username)){
+											$displayName = Util::sanatizeString($displayName);
+		
+											$mysqli = Database::Instance()->get();
+		
+											$emailToken = Util::getRandomString(7);
+		
+											$password = password_hash($password,PASSWORD_BCRYPT);
+		
+											$stmt = $mysqli->prepare("INSERT INTO `users` (`displayName`,`username`,`email`,`password`,`emailActivationToken`) VALUES(?,?,?,?,?);");
+											$stmt->bind_param("sssss",$displayName,$username,$email,$password,$emailToken);
+											if($stmt->execute()){
+												$id = $stmt->insert_id;
+		
+												$mailContent = MailTemplates::readTemplate("verifyEmail",[
+													"qpost: Verify your email address",
+													"Complete your qpost registration!",
+													"Hello, " . $displayName . "!",
+													"To complete the creation of your qpost account, please click the button below and verify your email address.",
+													"https://qpost.gigadrivegroup.com/account/verify-email?account=" . $id . "&verificationtoken=" . $emailToken,
+													"Verify",
+													"You did not register for qpost?",
+													"Don't worry! Simply ignore this email and the account registered with this email address will be deleted in 2 weeks.",
+													"Contact Info",
+													"Terms of Service",
+													"Privacy Policy",
+													"Disclaimer",
+													"You don't want to receive this type of emails?",
+													"Click here to change your email settings or unsubscribe."
+												]);
+		
+												Util::sendMail($email,"qpost: Verify your email address",$mailContent,"Paste this link into your browser to verify your account on qpost: https://qpost.gigadrivegroup.com/account/verify-email?account=" . $id . "&verificationtoken=" . $emailToken,$displayName);
+		
+												$user = User::getUserById($id);
+		
+												$successMsg = "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)";
+											} else {
+												$errorMsg = "An error occurred. " . $stmt->error;
+											}
+											$stmt->close();
 										} else {
-											$errorMsg = "An error occurred. " . $stmt->error;
+											$errorMsg = "That username is not available anymore.";
 										}
-										$stmt->close();
 									} else {
-										$errorMsg = "That username is not available anymore.";
+										$errorMsg = "That email is not available anymore.";
 									}
 								} else {
-									$errorMsg = "That email is not available anymore.";
+									$errorMsg = "Invalid display name.";
 								}
 							} else {
 								$errorMsg = "Your username may only consist of letters and numbers.";
