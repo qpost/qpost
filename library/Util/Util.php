@@ -1309,7 +1309,7 @@ class Util {
 					$mediaFile = $mediaFiles[0];
 
 					if($mediaFile->getType() == "IMAGE"){
-						$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+						$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
 						//$s .= '<div class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 					} else if($mediaFile->getType() == "VIDEO"){
 						$s .= self::getVideoEmbedCodeFromURL($mediaFile->url);
@@ -1322,9 +1322,11 @@ class Util {
 					$i = 1;
 					foreach($mediaFiles as $mediaFile){
 						if($mediaFile->getType() == "IMAGE"){
+							$d = $i == 2 ? " border-left-0" : "";
+
 							$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
 							//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-							$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+							$s .= '<div class="border border-primary' . $d . ' bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 							$s .= '</div>';
 
 							$i++;
@@ -1341,7 +1343,7 @@ class Util {
 							if($i == 1){
 								$s .= '<div class="d-inline-block" style="width: 66.66666%; position: relative; height: 100%;">';
 								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+								$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 								$s .= '</div>';
 							} else if($i == 2){
 								$s .= '<div class="d-inline-block" style="width: calc(100% / 3 - 1px); height: 100%;">';
@@ -1349,7 +1351,7 @@ class Util {
 								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 							} else if($i == 3){
 								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+								$s .= '<div class="border border-primary border-left-0 boder-top-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 								$s .= '</div>';
 							}
 
@@ -1366,15 +1368,15 @@ class Util {
 						if($mediaFile->getType() == "IMAGE"){
 							if($i == 1){
 								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
-								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+								$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 							} else if($i == 2){
-								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+								$s .= '<div class="border border-primary border-top-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 								$s .= '</div>';
 							} else if($i == 3){
 								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
 								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 							} else if($i == 4){
-								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+								$s .= '<div class="border border-primary border-left-0 border-top-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 								$s .= '</div>';
 							}
 
