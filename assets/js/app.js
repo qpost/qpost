@@ -1176,7 +1176,7 @@ function load(){
 								$(".feedContainer").html(newHtml);
 							}
 						} else {
-							newHtml =
+							/*newHtml =
 							'<div class="card feedEntry my-2 statusTrigger" data-status-render="' + postId + '" data-entry-id="' + postId + '">' +
 							'<div class="py-1 px-3">' +
 							'<div class="row">' +
@@ -1207,9 +1207,10 @@ function load(){
 							'</div>' +
 							'</div>' +
 							'</div>' +
-							'</div>';
+							'</div>';*/
+							newHtml = post.listHtml;
 							
-							if($("#statusModal .replies>.card").length){
+							if($("#statusModal .replies>.list-group-item").length){
 								$("#statusModal .replies").prepend(newHtml);
 							} else {
 								$("#statusModal .replies").html(newHtml);
