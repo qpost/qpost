@@ -568,7 +568,7 @@ class FeedEntry {
 			    $s .= '</div>';
             }
             
-			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline convertEmoji">' . $user->getDisplayName() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
+			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline convertEmoji">' . $user->getDisplayName() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline convertEmoji">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
             if($noBorder == false) $s .= '</li>';
             
             return $s;
