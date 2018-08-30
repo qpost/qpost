@@ -1569,9 +1569,6 @@ function load(){
 		let left = limit-used;
 		let counter = $(this).parent().parent().find(".postCharacterCounter");
 		
-		counter.html("gay");
-		console.log(counter);
-		
 		if(left > 0){
 			if(left > limit/2){
 				if(left == 1){
