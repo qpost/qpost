@@ -45,12 +45,12 @@ if($num > 0){
 					<center>
 						<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60" class="rounded mb-1"/>
 
-						<h5 class="mb-0"><?= $u->getDisplayName(); ?></h5></a>
+						<h5 class="mb-0 convertEmoji"><?= $u->getDisplayName(); ?></h5></a>
 						<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
 
 						<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
 
-						<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+						<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
 					</center>
 				</div>
 			</div>
