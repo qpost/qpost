@@ -607,6 +607,16 @@ class FeedEntry {
 			$s .= Util::convertPost($sharedPost->getText());
 			$s .= '</p>';
 
+			if(count($sharedPost->attachments) > 0){
+                $s .= '<div class="my-2">';
+
+                foreach($sharedPost->getAttachmentObjects() as $mediaFile){
+                    $s .= $mediaFile->toThumbnailHTML($sharedPost->id);
+                }
+
+                $s .= '</div>';
+            }
+
 			$s .= Util::getPostActionButtons($sharedPost);
 			$s .= '</div>';
 			$s .= '</div>';
