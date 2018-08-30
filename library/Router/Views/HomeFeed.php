@@ -285,7 +285,7 @@
 
 									<div class="ml-2 float-left">
 										<a href="/<?= $u->getUsername(); ?>" class="clearUnderline" data-user-id="<?= $u->getId() ?>">
-											<div class="font-weight-bold float-left small mt-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
+											<div class="font-weight-bold float-left small mt-1 convertEmoji" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
 											<div class="text-muted small float-right mt-1 ml-1" style="max-width: 80px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
 										</a>
 
@@ -314,7 +314,7 @@
 
 									<div class="ml-2 float-left">
 										<a href="/<?= $u->getUsername(); ?>" class="clearUnderline" data-user-id="<?= $u->getId() ?>">
-											<div class="font-weight-bold float-left small mt-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
+											<div class="font-weight-bold float-left small mt-1 convertEmoji" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
 											<div class="text-muted small float-right mt-1 ml-1" style="max-width: 80px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
 										</a>
 
@@ -339,7 +339,7 @@
 
 									<div class="ml-2 float-left">
 										<a href="/<?= $u->getUsername(); ?>" class="clearUnderline" data-user-id="<?= $u->getId() ?>">
-											<div class="font-weight-bold float-left small mt-1" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
+											<div class="font-weight-bold float-left small mt-1 convertEmoji" style="max-width: 100px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"><?= $u->getDisplayName() ?></div>
 											<div class="text-muted small float-right mt-1 ml-1" style="max-width: 80px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">@<?= $u->getUsername(); ?></div><br/>
 										</a>
 
