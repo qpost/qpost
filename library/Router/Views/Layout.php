@@ -354,7 +354,7 @@ if(isset($_SESSION["profileLoadPost"])){
 										}
 									}
 
-									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["my-3"]);
+									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["my-3","d-none","d-md-block"]);
 
 								?>
 							</div>
