@@ -1029,7 +1029,7 @@ class Util {
 				"attachments" => $attachments,
 				"postActionButtons" => self::getPostActionButtons($post),
 				"listHtml" => $post->toListHTML($maxContentWidth),
-				"attachmentHtml" => Util::renderAttachmentEmbeds($post->getAttachmentObjects()),
+				"attachmentHtml" => Util::renderAttachmentEmbeds($post->getAttachmentObjects(),$postId),
 				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1,$parentMaxContentWidth,$parentMaxContentWidth) : null)
 			];
 		} else {
