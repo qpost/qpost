@@ -1217,8 +1217,8 @@ function load(){
 						
 						postBox.html(oldHtml);
 						postField.val("");
+						postBox.find(".postCharacterCounter").html(POST_CHARACTER_LIMIT);
 						postBox.find("input[name=\"attachmentData\"]").val("");
-						postCharacterCounter.html(POST_CHARACTER_LIMIT + " characters left");
 						loadBasic();
 						dz.destroy();
 						loadDropzone();
@@ -1310,6 +1310,7 @@ function load(){
 				}
 
 				if(currentMode == "TEXT" || (currentMode == "VIDEO" && videoURL == null) || currentMode == "LINK"){
+					postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
 					handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments);
 				} else if(currentMode == "VIDEO"){
 					$.ajax({
