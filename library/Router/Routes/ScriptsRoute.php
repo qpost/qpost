@@ -396,7 +396,7 @@ $app->post("/scripts/postInfo",function(){
 								$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["time"]);
 								$u = User::getUserByData($row["userId"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["userTime"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]);
 
-								array_push($replies,Util::postJsonData($f,0,394));
+								array_push($replies,Util::postJsonData($f,0,394,658,true));
 							}
 						}
 					}
@@ -522,7 +522,7 @@ $app->post("/scripts/mediaInfo",function(){
 						$followButton = "";
 
 					$postJsonData = Util::postJsonData($postId);
-					$postJsonData["limitedHtml"] = $post->toListHTML(658,true);
+					$postJsonData["limitedHtml"] = $post->toListHTML(false,658,true);
 					$mediaJsonData = Util::mediaJsonData($_POST["mediaId"],$_POST["postId"]);
 
 					return json_encode(["post" => $postJsonData,"attachment" => $mediaJsonData]);

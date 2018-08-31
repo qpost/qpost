@@ -30,7 +30,7 @@ $app->bind("/status/:id",function($params){
 					"profileTab" => PROFILE_TAB_FEED,
 					"currentPage" => 1,
 					"description" => Util::limitString($post->getText(),150,true),
-					"bigSocialImage" => $bigSocialImage
+					"bigSocialImage" => isset($bigSocialImage) ? $bigSocialImage : null
 				);
 			
 				return $this->render("views:Profile/Feed.php with views:Layout.php",$data);

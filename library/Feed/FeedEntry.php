@@ -502,11 +502,12 @@ class FeedEntry {
      * Returns HTML code to use in a feed entry list (search, profile, home feed, ...)
      * 
      * @access public
+	 * @param bool $small If true, the text will be rendered smaller
      * @param int $maxWidth Max width of the content part in px
      * @param bool $noBorder If false, the additional HTML for easier use in bootstrap lists won't be included
      * @return string
      */
-    public function toListHTML($maxWidth = 658, $noBorder = false){
+    public function toListHTML($small = false, $maxWidth = 658, $noBorder = false){
 		if(!$this->mayView()) return "";
 
         $user = $this->getUser();
@@ -523,7 +524,7 @@ class FeedEntry {
 			$s .= '</div>';
 
 			$s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px">';
-			$s .= '<p class="mb-0">';
+			$s .= '<p class="mb-0' . ($small ? ' small' : '') . '">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<span class="font-weight-bold convertEmoji">' . $user->getDisplayName() . '</span>';
 			$s .= '</a>';

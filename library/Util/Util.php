@@ -1007,9 +1007,10 @@ class Util {
 	 * @param int $postId
 	 * @param int $parentDepth
 	 * @param int $parentMaxContentWidth
+	 * @param bool $small
 	 * @return array
 	 */
-	public static function postJsonData($postId,$parentDepth = 0,$maxContentWidth = 658,$parentMaxContentWidth = 658){
+	public static function postJsonData($postId,$parentDepth = 0,$maxContentWidth = 658,$parentMaxContentWidth = 658,$small = false){
 		if(is_object($postId)) $postId = $postId->getId();
 		$post = !is_null($postId) ? FeedEntry::getEntryById($postId) : null;
 		if(!is_null($post)){
@@ -1028,9 +1029,9 @@ class Util {
 				"favorites" => $post->getFavorites(),
 				"attachments" => $attachments,
 				"postActionButtons" => self::getPostActionButtons($post),
-				"listHtml" => $post->toListHTML($maxContentWidth),
+				"listHtml" => $post->toListHTML($small,$maxContentWidth),
 				"attachmentHtml" => Util::renderAttachmentEmbeds($post->getAttachmentObjects(),$postId),
-				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1,$parentMaxContentWidth,$parentMaxContentWidth) : null)
+				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1,$parentMaxContentWidth,$parentMaxContentWidth,true) : null)
 			];
 		} else {
 			return null;
