@@ -1339,7 +1339,7 @@ class Util {
 					$mediaFile = $mediaFiles[0];
 
 					if($mediaFile->getType() == "IMAGE"){
-						$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="max-height: 500px; width: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+						$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2" style="max-height: 500px; width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 						//$s .= '<div class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 					} else if($mediaFile->getType() == "VIDEO"){
 						$s .= self::getVideoEmbedCodeFromURL($mediaFile->url);
