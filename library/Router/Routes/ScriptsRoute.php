@@ -619,7 +619,7 @@ $app->post("/scripts/createPost",function(){
 			$user = Util::getCurrentUser();
 			
 			if(!$user->isSuspended()){
-				$text = trim($_POST["text"]);
+				$text = trim(Util::fixString($_POST["text"]));
 
 				$mentioned = Util::getUsersMentioned($text);
 

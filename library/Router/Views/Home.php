@@ -6,9 +6,9 @@ $errorMsg = null;
 $successMsg = null;
 
 if(isset($_POST["email"]) && isset($_POST["displayName"]) && isset($_POST["username"]) && isset($_POST["password"])){
-	$email = trim($_POST["email"]);
-	$displayName = trim($_POST["displayName"]);
-	$username = trim($_POST["username"]);
+	$email = trim(Util::fixString($_POST["email"]));
+	$displayName = trim(Util::fixString($_POST["displayName"]));
+	$username = trim(Util::fixString($_POST["username"]));
 	$password = trim($_POST["password"]);
 
 	if(!Util::isEmpty($email) && !Util::isEmpty($displayName) && !Util::isEmpty($username) && !Util::isEmpty($password)){

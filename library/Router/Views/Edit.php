@@ -8,10 +8,10 @@ $successMsg = null;
 $featuredBoxLimit = 5;
 
 if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["featuredBoxTitle"]) && isset($_POST["birthday"]) && isset($_POST["submit"])){
-	$displayName = $_POST["displayName"];
-	$bio = $_POST["bio"];
-	$featuredBoxTitle = trim($_POST["featuredBoxTitle"]);
-	$birthday = trim($_POST["birthday"]);
+	$displayName = Util::fixString($_POST["displayName"]);
+	$bio = Util::fixString($_POST["bio"]);
+	$featuredBoxTitle = trim(Util::fixString($_POST["featuredBoxTitle"]));
+	$birthday = trim(Util::fixString($_POST["birthday"]));
 	$username = $user->getUsername();	
 
 	if(!Util::isEmpty(trim($displayName))){

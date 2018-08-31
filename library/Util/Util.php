@@ -1152,6 +1152,7 @@ class Util {
 	 * Returns an array of users mentioned in a post
 	 * 
 	 * @access public
+	 * @param string $string
 	 * @return User[]
 	 */
 	public static function getUsersMentioned($string){
@@ -1173,6 +1174,17 @@ class Util {
 		}
 
 		return $a;
+	}
+
+	/**
+	 * Returns a string that fixes exploits like a zero-width space
+	 * 
+	 * @access public
+	 * @param string $string
+	 * @return string
+	 */
+	public static function fixString($string){
+		return str_replace("\xE2\x80\x8B","",$string);
 	}
 
 	/**
