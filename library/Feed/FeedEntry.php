@@ -523,7 +523,7 @@ class FeedEntry {
 			$s .= '</a>';
 			$s .= '</div>';
 
-			$s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px">';
+			$s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px; width: 100%">';
 			$s .= '<p class="mb-0' . ($small ? ' small' : '') . '">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<span class="font-weight-bold convertEmoji">' . $user->getDisplayName() . '</span>';
