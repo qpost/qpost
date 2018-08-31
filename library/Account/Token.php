@@ -42,6 +42,7 @@ class Token {
 		if(is_object($user)) $user = $user->getId();
 
 		$token = null;
+		$id = self::generateId();
 
 		$mysqli = Database::Instance()->get();
 
