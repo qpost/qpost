@@ -1336,12 +1336,14 @@ class Util {
 
 			if(count($mediaFiles) > 0){
 				if(count($mediaFiles) == 1){
-					$s .= '<div style="height: 237px;">';
+					$s .= '<div>';
 
 					$mediaFile = $mediaFiles[0];
 
 					if($mediaFile->getType() == "IMAGE"){
-						$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2" style="height: 100%; max-height: 500px; width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+						$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2" style="background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '>
+						<img src="' . $mediaFile->getThumbnailURL() . '" style="max-height: 500px; width: 100%; height: 100%; visibility: hidden;"/>
+						</div>';
 						//$s .= '<div class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 					} else if($mediaFile->getType() == "VIDEO"){
 						$s .= self::getVideoEmbedCodeFromURL($mediaFile->url);
@@ -1360,7 +1362,9 @@ class Util {
 
 							$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
 							//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-							$s .= '<div class="border border-primary' . $d . ' bg-dark ignoreParentClick mr-2" style="max-height: 500px; width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+							$s .= '<div class="border border-primary' . $d . ' bg-dark ignoreParentClick mr-2" style="background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '>
+							<img src="' . $mediaFile->getThumbnailURL() . '" style="max-height: 500px; width: 100%; height: 100%; visibility: hidden;"/>
+							</div>';
 							$s .= '</div>';
 
 							$i++;
