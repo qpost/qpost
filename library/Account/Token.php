@@ -30,6 +30,78 @@ class Token {
 	}
 
 	/**
+	 * Returns a new token object generated for a user
+	 * 
+	 * @access public
+	 * @param int|User $user
+	 * @param string $userAgent
+	 * @param string $ip
+	 * @return Token
+	 */
+	public static function createToken($user,$userAgent,$ip){
+		if(is_object($user)) $user = $user->getId();
+
+		$token = null;
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("INSERT INTO `tokens` (`id`,`user`,`lastIP`,`userAgent`,`expiry`) VALUES(?,?,?,?,DATE_ADD(NOW(), INTERVAL 6 MONTH));");
+		$stmt->bind_param("siss",$id,$user,$ip,$userAgent);
+		if($stmt->execute()){
+			$token = self::getTokenById($stmt->insert_id);
+		}
+		$stmt->close();
+
+		return $token;
+	}
+
+	/**
+	 * Returns a string that can be used as an ID for a token
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public static function generateId(){
+		$id = null;
+
+		while($id == null || self::isIdUnused($id) == false){
+			$id = Util::getRandomString(128);
+		}
+
+		return $id;
+	}
+
+	/**
+	 * Returns whether a token ID is free to use
+	 * 
+	 * @access public
+	 * @param string $id
+	 * @return bool
+	 */
+	public static function isIdUnused($id){
+		$b = true;
+
+		$mysqli = Database::Instance()->get();
+
+		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `tokens` WHERE `id` = ?");
+		$stmt->bind_param("s",$id);
+
+		if($stmt->execute()){
+			$result = $stmt->get_result();
+
+			if($result->num_rows){
+				if($row["count"] > 0){
+					$b = false;
+				}
+			}
+		}
+
+		$stmt->close();
+
+		return $b;
+	}
+
+	/**
 	 * @access private
 	 * @var string $id
 	 */
