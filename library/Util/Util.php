@@ -575,7 +575,7 @@ class Util {
      * @return bool
      */
 	public static function isLoggedIn(){
-		if(isset($_SESSION["id"]) && !is_null($_SESSION["id"]) && !empty($_SESSION["id"])){
+		if(isset($_SESSION["id"]) && !is_null($_SESSION["id"]) && !Util::isEmpty($_SESSION["id"])){
 			if(!is_null(User::getUserById($_SESSION["id"]))){
 				return true;
 			} else {
@@ -660,9 +660,9 @@ class Util {
 	public static function getIP(){
 		$ip = "undefined";
 		
-		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+		if (!Util::isEmpty($_SERVER['HTTP_CLIENT_IP'])) {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		} elseif (!Util::isEmpty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		} else {
 			$ip = $_SERVER['REMOTE_ADDR'];
@@ -763,6 +763,23 @@ class Util {
 	}
 
 	/**
+	 * Returns wheter a string or array is empty
+	 * 
+	 * @access public
+	 * @param string|array $var
+	 * @return bool
+	 */
+	public static function isEmpty($var){
+		if(is_array($var)){
+			return count($var) == 0;
+		} else if(is_string($var)){
+			return $var == "" || trim($var) == "" || str_replace(" ","",$var) == "" || strlen($var) == 0;
+		} else {
+			return is_null($var) || empty($var);
+		}
+	}
+
+	/**
      * Limits a string to a specific length and adds "..." to the end if needed
 	 * 
 	 * @access public
@@ -829,7 +846,7 @@ class Util {
 	 * @return bool
 	 */
 	public static function isValidJSON($string){
-		if(strlen($string) == 0 || empty(trim($string))) return false;
+		if(Util::isEmpty($string)) return false;
 		if(!self::startsWith($string,"{") && !self::startsWith($string,"[")) return false;
 
 		@json_decode($string);

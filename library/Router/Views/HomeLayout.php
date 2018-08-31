@@ -1,15 +1,15 @@
 <?php
 
-if(isset($title) && !empty($title)){
+if(isset($title) && !Util::isEmpty($title)){
 	$title = $title . " - " . $app["config.site"]["name"];
 } else {
 	$title = $app["config.site"]["name"];
 }
 
-if(!isset($description) || empty($description))
+if(!isset($description) || Util::isEmpty($description))
 	$description = DEFAULT_DESCRIPTION;
 
-if(!isset($socialImage) || empty($socialImage))
+if(!isset($socialImage) || Util::isEmpty($socialImage))
 	$socialImage = DEFAULT_TWITTER_IMAGE;
 
 ?><!DOCTYPE html>

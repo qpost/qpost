@@ -11,7 +11,7 @@ if(isset($_POST["email"]) && isset($_POST["displayName"]) && isset($_POST["usern
 	$username = trim($_POST["username"]);
 	$password = trim($_POST["password"]);
 
-	if(!empty($email) && !empty($displayName) && !empty($username) && !empty($password)){
+	if(!Util::isEmpty($email) && !Util::isEmpty($displayName) && !Util::isEmpty($username) && !Util::isEmpty($password)){
 		if(strlen($email) >= 3){
 			if(filter_var($email,FILTER_VALIDATE_EMAIL)){
 				if(strlen($displayName) >= 1 && strlen($displayName) <= 25){

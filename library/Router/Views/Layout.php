@@ -1,6 +1,6 @@
 <?php
 
-if(isset($title) && !empty($title)){
+if(isset($title) && !Util::isEmpty($title)){
 	$title = $title . " - " . $app["config.site"]["name"];
 } else {
 	$title = $app["config.site"]["name"];
@@ -9,17 +9,17 @@ if(isset($title) && !empty($title)){
 if(!isset($originalTitle))
 	$originalTitle = $title;
 
-if(!isset($description) || is_null($description) || empty($description))
+if(!isset($description) || is_null($description) || Util::isEmpty($description))
 	$description = DEFAULT_DESCRIPTION;
 
-if(!isset($socialImage) || is_null($socialImage) || empty($socialImage))
+if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 	$socialImage = DEFAULT_TWITTER_IMAGE;
 	
 /*if(isset($_SESSION["profileLoadPost"])){
 	$post = FeedEntry::getEntryById($_SESSION["profileLoadPost"]);
 
 	if(!is_null($post)){
-		if(!is_null($post->getText()) && !empty(trim($post->getText()))){
+		if(!is_null($post->getText()) && !Util::isEmpty(trim($post->getText()))){
 			$title = $post->getUser()->getDisplayName() . " on qpost: \"" . Util::limitString($post->getText(),34,true) . "\"";
 			$description = Util::limitString($post->getText(),150,true);
 			$socialImage = $post->getUser()->getAvatarURL();
@@ -49,7 +49,7 @@ if(!isset($socialImage) || is_null($socialImage) || empty($socialImage))
 		<meta name="og:site_name" content="<?= Util::sanatizeHTMLAttribute($app["config.site"]["name"]) ?>" />
 		<meta name="og:title" content="<?= Util::sanatizeHTMLAttribute($title) ?>" />
 		<meta name="og:description" content="<?= Util::sanatizeHTMLAttribute($description) ?>" />
-		<?php if(isset($bigSocialImage) && !is_null($bigSocialImage) && !empty($bigSocialImage)){ ?><meta name="og:image" content="<?= Util::sanatizeHTMLAttribute($bigSocialImage) ?>"/><?php } ?>
+		<?php if(isset($bigSocialImage) && !is_null($bigSocialImage) && !Util::isEmpty($bigSocialImage)){ ?><meta name="og:image" content="<?= Util::sanatizeHTMLAttribute($bigSocialImage) ?>"/><?php } ?>
 
 		<meta name="twitter:title" content="<?= Util::sanatizeHTMLAttribute($title) ?>" />
 		<meta name="twitter:description" content="<?= Util::sanatizeHTMLAttribute($description) ?>" />

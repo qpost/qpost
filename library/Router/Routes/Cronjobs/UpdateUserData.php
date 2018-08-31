@@ -17,7 +17,7 @@ $app->get("/cronjobs/updateuserdata",function(){
                     $url = "https://api.gigadrivegroup.com/v3/userdata?secret=" . GIGADRIVE_API_SECRET . "&token=" . urlencode($token);
                     $j = @json_decode(@file_get_contents($url),true);
 
-                    if(isset($j["success"]) && !empty($j["success"]) && isset($j["user"])){
+                    if(isset($j["success"]) && !Util::isEmpty($j["success"]) && isset($j["user"])){
                         $userData = $j["user"];
 
                         if(isset($userData["id"]) && isset($userData["username"]) && isset($userData["avatar"]) && isset($userData["email"])){

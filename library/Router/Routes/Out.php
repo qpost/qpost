@@ -5,7 +5,7 @@ $app->bind("/out",function(){
 		if(filter_var($_GET["link"],FILTER_VALIDATE_URL)){
 			$link = $_GET["link"];
 
-			$host = !is_null(parse_url($link,PHP_URL_HOST)) && !empty(parse_url($link,PHP_URL_HOST)) ? parse_url($link,PHP_URL_HOST) : $link;
+			$host = !is_null(parse_url($link,PHP_URL_HOST)) && !Util::isEmpty(parse_url($link,PHP_URL_HOST)) ? parse_url($link,PHP_URL_HOST) : $link;
 			
 			if($host != $_SERVER["HTTP_HOST"]){
 				$host = Util::sanatizeString($host);

@@ -3,7 +3,7 @@
 $app->bind("/status/:id",function($params){
     $id = $params["id"];
 
-    if(!empty($id) && is_numeric($id)){
+    if(!Util::isEmpty($id) && is_numeric($id)){
         $post = FeedEntry::getEntryById($id);
 
         if(!is_null($post) && !is_null($post->getUser())){

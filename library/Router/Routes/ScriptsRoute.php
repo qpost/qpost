@@ -290,7 +290,7 @@ $app->post("/scripts/mediaUpload",function(){
 	if(Util::isLoggedIn()){
 		$user = Util::getCurrentUser();
 
-		if(!empty($_FILES)){
+		if(!Util::isEmpty($_FILES)){
 			if(is_array($_FILES) && count($_FILES) > 0){
 				$mysqli = Database::Instance()->get();
 				$mediaIDs = [];
@@ -542,7 +542,7 @@ $app->post("/scripts/mediaInfo",function(){
 
 $app->bind("/mediaThumbnail", function($params){
 	$id = isset($_GET["id"]) ? $_GET["id"] : null;
-	if(!is_null($id) && !empty($id)){
+	if(!is_null($id) && !Util::isEmpty($id)){
 		$mediaFile = MediaFile::getMediaFileFromID($id);
 
 		if($mediaFile != null){
@@ -647,7 +647,7 @@ $app->post("/scripts/createPost",function(){
 						$furtherProccess = true;
 
 						$attachments = null;
-						if(isset($_POST["attachments"]) && !empty($_POST["attachments"])){
+						if(isset($_POST["attachments"]) && !Util::isEmpty($_POST["attachments"])){
 							if(Util::isValidJSON($_POST["attachments"]) && is_array(json_decode($_POST["attachments"],true))){
 								$attachments = json_decode($_POST["attachments"],true);
 
@@ -671,7 +671,7 @@ $app->post("/scripts/createPost",function(){
 							if(isset($_POST["videoURL"]) && !is_null($_POST["videoURL"])){
 								$videoURL = trim($_POST["videoURL"]);
 		
-								if(!empty($videoURL)){
+								if(!Util::isEmpty($videoURL)){
 									if(Util::isValidVideoURL($videoURL)){
 										$videoURL = Util::stripUnneededInfoFromVideoURL($videoURL);
 										$sha = hash("sha256",$videoURL);
@@ -703,7 +703,7 @@ $app->post("/scripts/createPost",function(){
 							} else if(isset($_POST["linkURL"]) && !is_null($_POST["linkURL"])){
 								$linkURL = trim($_POST["linkURL"]);
 		
-								if(!empty($linkURL)){
+								if(!Util::isEmpty($linkURL)){
 									if(filter_var($linkURL,FILTER_VALIDATE_URL)){
 										$sha = hash("sha256",$linkURL);
 		

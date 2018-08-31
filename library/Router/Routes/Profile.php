@@ -4,7 +4,7 @@ $app->bind("/:query/following",function($params){
 	$query = $params["query"];
 	$page = 1;
 
-	if(!empty($query)){
+	if(!Util::isEmpty($query)){
 		$user = User::getUserByUsername($query);
 		if(is_null($user) && is_numeric($query)) $user = @User::getUserById((int)$query);
 
@@ -44,7 +44,7 @@ $app->bind("/:query/following/:page",function($params){
 	$query = $params["query"];
 	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
 
-	if(!empty($query)){
+	if(!Util::isEmpty($query)){
 		$user = User::getUserByUsername($query);
 		if(is_null($user) && is_numeric($query)) $user = @User::getUserById((int)$query);
 
@@ -84,7 +84,7 @@ $app->bind("/:query/followers",function($params){
 	$query = $params["query"];
 	$page = 1;
 
-	if(!empty($query)){
+	if(!Util::isEmpty($query)){
 		$user = User::getUserByUsername($query);
 		if(is_null($user) && is_numeric($query)) $user = @User::getUserById((int)$query);
 
@@ -124,7 +124,7 @@ $app->bind("/:query/followers/:page",function($params){
 	$query = $params["query"];
 	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
 
-	if(!empty($query)){
+	if(!Util::isEmpty($query)){
 		$user = User::getUserByUsername($query);
 		if(is_null($user) && is_numeric($query)) $user = @User::getUserById((int)$query);
 
@@ -164,7 +164,7 @@ $app->bind("/:query",function($params){
 	$query = $params["query"];
 	$page = 1;
 
-	if(!empty($query)){
+	if(!Util::isEmpty($query)){
 		$user = User::getUserByUsername($query);
 		if(is_null($user) && is_numeric($query)) $user = @User::getUserById((int)$query);
 
@@ -228,7 +228,7 @@ $app->bind("/:query/:page",function($params){
 	$query = $params["query"];
 	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
 
-	if(!empty($query)){
+	if(!Util::isEmpty($query)){
 		$user = User::getUserByUsername($query);
 		if(is_null($user) && is_numeric($query)) $user = @User::getUserById((int)$query);
 

@@ -7,7 +7,7 @@ $errorMsg = null;
 $successMsg = null;
 
 if(isset($_POST["privacyLevel"])){
-	if(!empty($_POST["privacyLevel"]) && ($_POST["privacyLevel"] == PRIVACY_LEVEL_PUBLIC || $_POST["privacyLevel"] == PRIVACY_LEVEL_PRIVATE  || $_POST["privacyLevel"] == PRIVACY_LEVEL_CLOSED)){
+	if(!Util::isEmpty($_POST["privacyLevel"]) && ($_POST["privacyLevel"] == PRIVACY_LEVEL_PUBLIC || $_POST["privacyLevel"] == PRIVACY_LEVEL_PRIVATE  || $_POST["privacyLevel"] == PRIVACY_LEVEL_CLOSED)){
 		$privacyLevel = $_POST["privacyLevel"];
 
 		$mysqli = Database::Instance()->get();

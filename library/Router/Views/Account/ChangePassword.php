@@ -10,7 +10,7 @@ if(isset($_POST["currentPassword"]) && isset($_POST["newPassword"]) && isset($_P
     $newPassword = $_POST["newPassword"];
     $newPassword2 = $_POST["newPassword2"];
 
-    if(!empty($currentPassword) && !empty($newPassword) && !empty($newPassword2)){
+    if(!Util::isEmpty($currentPassword) && !Util::isEmpty($newPassword) && !Util::isEmpty($newPassword2)){
         if(password_verify($currentPassword,$user->getPassword())){
             if($newPassword == $newPassword2){
                 $newHash = password_hash($newPassword,PASSWORD_BCRYPT);

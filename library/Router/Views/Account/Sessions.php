@@ -4,11 +4,11 @@ use Gigadrive\Account\IPInformation;
 
 $mysqli = Database::Instance()->get();
 
-if(isset($_POST["action"]) && !empty($_POST["action"])){
+if(isset($_POST["action"]) && !Util::isEmpty($_POST["action"])){
     $action = $_POST["action"];
 
     if($action == "logOutSession"){
-        if(isset($_POST["sessionAID"]) && !empty($_POST["sessionAID"])){
+        if(isset($_POST["sessionAID"]) && !Util::isEmpty($_POST["sessionAID"])){
             $aid = $_POST["sessionAID"];
             $s = "%id|i:" . Util::getCurrentUser()->getID() . ";%";
 

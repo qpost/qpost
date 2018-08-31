@@ -14,10 +14,10 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 	$birthday = trim($_POST["birthday"]);
 	$username = $user->getUsername();	
 
-	if(!empty(trim($displayName))){
+	if(!Util::isEmpty(trim($displayName))){
 		if(strlen($displayName) >= 1 && strlen($displayName) <= 25){
 			if(strlen($bio) <= 160){
-				if(empty($featuredBoxTitle) || strlen($featuredBoxTitle) <= 25){
+				if(Util::isEmpty($featuredBoxTitle) || strlen($featuredBoxTitle) <= 25){
 					if(!Util::contains($displayName,"☑️") && !Util::contains($displayName,"✔️") && !Util::contains($displayName,"✅") && !Util::contains($displayName,"🗹") && !Util::contains($displayName,"🗸")){
 						$boxUsers = [];
 
@@ -25,7 +25,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 							if(isset($_POST["featuredBoxUser" . $i])){
 								$c = $_POST["featuredBoxUser" . $i];
 	
-								if(!empty($c)){
+								if(!Util::isEmpty($c)){
 									$linkedUser = User::getUserByUsername($c);
 	
 									if(is_null($linkedUser)){
@@ -46,7 +46,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 	
 							if($username !== $user->getUsername()){
 								if(is_null($user->getLastUsernameChange()) || (time()-strtotime($user->getLastUsernameChange())) >= 30*24*60*60){
-									if(!empty($username)){
+									if(!Util::isEmpty($username)){
 										if(strlen($username) >= 3){
 											if(strlen($username) <= 16){
 												if(ctype_alnum($username)){
@@ -136,7 +136,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 							if(count($boxUsers) == 0)
 								$boxUsers = null;
 	
-							if(empty($featuredBoxTitle))
+							if(Util::isEmpty($featuredBoxTitle))
 								$featuredBoxTitle = null;
 	
 							$displayName = Util::sanatizeString($displayName);
@@ -155,7 +155,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 							}
 	
 							if(is_null($errorMsg)){
-								if(empty($bio))
+								if(Util::isEmpty($bio))
 									$bio = null;
 	
 								$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
