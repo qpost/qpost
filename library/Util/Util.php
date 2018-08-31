@@ -660,11 +660,11 @@ class Util {
 	public static function getIP(){
 		$ip = "undefined";
 		
-		if (!Util::isEmpty($_SERVER['HTTP_CLIENT_IP'])) {
+		if (isset($_SERVER['HTTP_CLIENT_IP']) && !Util::isEmpty($_SERVER['HTTP_CLIENT_IP'])) {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		} elseif (!Util::isEmpty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !Util::isEmpty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} else {
+		} else if(isset($_SERVER['REMOTE_ADDR'])) {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 		
