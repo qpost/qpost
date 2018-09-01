@@ -1346,7 +1346,7 @@ class Util {
 						</div>';
 						//$s .= '<div class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 					} else if($mediaFile->getType() == "VIDEO"){
-						$s .= self::getVideoEmbedCodeFromURL($mediaFile->url);
+						$s .= self::getVideoEmbedCodeFromURL($mediaFile->getURL());
 					} else if($mediaFile->getType() == "LINK"){
 						// TODO
 					}
