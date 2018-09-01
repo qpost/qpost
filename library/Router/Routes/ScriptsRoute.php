@@ -333,8 +333,9 @@ $app->post("/scripts/mediaUpload",function(){
 
 									array_push($mediaIDs,$mediaID);
 								} else {
+									$a = json_encode(["error" => "Database error: " . $stmt->error]);
 									$stmt->close();
-									return json_encode(["error" => "Database error: " . $stmt->error]);
+									return $a;
 								}
 
 								$stmt->close();
