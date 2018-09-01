@@ -50,7 +50,7 @@ class MediaFile {
                 if($result->num_rows){
                     $row = $result->fetch_assoc();
 
-                    $media = self::getMediaFileFromID($media);
+                    $media = self::getMediaFileFromID($row["id"]);
                 }
             }
             $stmt->close();
