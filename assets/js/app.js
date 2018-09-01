@@ -197,9 +197,11 @@ function showMediaModal(mediaId,postId){
 				mediaModal.html(
 					'<div class="modal-dialog modal-lg" role="document">' +
 					'<div class="modal-content">' +
+					'<div class="d-inline-block text-center bg-dark">' +
 					
 					content +
 					
+					'</div>' +
 					'<div class="modal-footer d-block">' +
 					'<div class="px-3">' +
 					post.limitedHtml +
