@@ -1818,7 +1818,7 @@ class User {
 		if($this->isSuspended()){
 			return false;
 		} else {
-			if($user->getPrivacyLevel() == "PUBLIC"){
+			if($this->getPrivacyLevel() == "PUBLIC"){
 				if(Util::isLoggedIn()){
 					$user = Util::getCurrentUser();
 	
@@ -1830,7 +1830,7 @@ class User {
 				}
 	
 				return true;
-			} else if($user->getPrivacyLevel() == "PRIVATE"){
+			} else if($this->getPrivacyLevel() == "PRIVATE"){
 				if(Util::isLoggedIn()){
 					if(!is_null($user)){
 						if($user->hasBlocked($this) || $user->isBlocked($this)){
@@ -1844,7 +1844,7 @@ class User {
 						return true;
 					}
 				}
-			} else if($user->getPrivacyLevel() == "CLOSED"){
+			} else if($this->getPrivacyLevel() == "CLOSED"){
 				if(Util::isLoggedIn()){
 					if(!is_null($user)){
 						return $user->getId() == $this->getId();
