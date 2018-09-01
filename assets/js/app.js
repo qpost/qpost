@@ -535,7 +535,7 @@ function loadHomeFeed(){
 		return;
 	}
 	
-	if($("#homePostField").length && $("#homeCharacterCounter").length){
+	if($(".homePostField").length){
 		$.ajax({
 			url: "/scripts/extendHomeFeed",
 			data: {
