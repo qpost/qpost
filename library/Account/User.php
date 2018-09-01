@@ -1818,18 +1818,42 @@ class User {
 		if($this->isSuspended()){
 			return false;
 		} else {
-			if(Util::isLoggedIn()){
-				$user = Util::getCurrentUser();
+			if($user->getPrivacyLevel() == "PUBLIC"){
+				if(Util::isLoggedIn()){
+					$user = Util::getCurrentUser();
+	
+					if(!is_null($user)){
+						if($user->hasBlocked($this) || $user->isBlocked($this)){
+							return false;
+						}
+					}
+				}
+	
+				return true;
+			} else if($user->getPrivacyLevel() == "PRIVATE"){
+				if(Util::isLoggedIn()){
+					if(!is_null($user)){
+						if($user->hasBlocked($this) || $user->isBlocked($this)){
+							return false;
+						}
 
-				if(!is_null($user)){
-					if($user->hasBlocked($this) || $user->isBlocked($this)){
-						return false;
+						if(!$user->isFollowing($this)){
+							return false;
+						}
+
+						return true;
+					}
+				}
+			} else if($user->getPrivacyLevel() == "CLOSED"){
+				if(Util::isLoggedIn()){
+					if(!is_null($user)){
+						return $user->getId() == $this->getId();
 					}
 				}
 			}
-
-			return true;
 		}
+
+		return false;
 	}
 
 	/**
