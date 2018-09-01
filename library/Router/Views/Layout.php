@@ -267,7 +267,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 								<h4 class="mb-0 convertEmoji"><?= $user->getDisplayName(); ?></h4>
 								<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
 
-								<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
+								<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
 
 								<p class="my-2 text-muted">
 									<?php
