@@ -773,7 +773,7 @@ class Util {
 		if(is_array($var)){
 			return count($var) == 0;
 		} else if(is_string($var)){
-			return $var == "" || trim($var) == "" || str_replace(" ","",$var) == "" || strlen($var) == 0;
+			return $var == "" || trim($var) == "" || str_replace(" ","",str_replace(" ","",$var)) == "" || strlen($var) == 0;
 		} else {
 			return is_null($var) || empty($var);
 		}
