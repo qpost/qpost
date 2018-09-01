@@ -3,8 +3,29 @@
 $mysqli = Database::Instance()->get();
 $itemsPerPage = 40;
 
-$num = $user->getFeedEntries();
 $uID = $user->getId();
+
+$num = 0;
+$n = "profile_feed_num_" . $uID;
+
+if(CacheHandler::existsInCache($n)){
+	$num = CacheHandler::getFromCache($n);
+} else {
+	$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE ((`post` IS NULL AND `type` = 'POST') OR (`type` != 'POST')) AND `user` = ?");
+	$stmt->bind_param("i",$uID);
+	if($stmt->execute()){
+		$result = $stmt->get_result();
+
+		if($result->num_rows){
+			$row = $result->fetch_assoc();
+
+			$num = $row["count"];
+
+			CacheHandler::setToCache($n,$num,2*60);
+		}
+	}
+	$stmt->close();
+}
 
 $showNoEntriesInfo = false;
 
