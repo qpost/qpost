@@ -7,7 +7,7 @@ $app->bind("/status/:id",function($params){
         $post = FeedEntry::getEntryById($id);
 
         if(!is_null($post) && !is_null($post->getUser())){
-            if($post->getType() == "POST"){
+            if($post->getType() == "POST" && $post->mayView()){
 				$user = $post->getUser();
 				$_SESSION["profileLoadPost"] = $post->getId();
 

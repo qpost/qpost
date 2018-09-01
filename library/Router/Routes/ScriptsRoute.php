@@ -373,42 +373,46 @@ $app->post("/scripts/postInfo",function(){
 			$user = $post->getUser();
 
 			if(!is_null($user)){
-				$followButton = Util::followButton($user,false,["float-right"]);
+				if($post->mayView()){
+					$followButton = Util::followButton($user,false,["float-right"]);
 
-				if(is_null($followButton))
-					$followButton = "";
+					if(is_null($followButton))
+						$followButton = "";
 
-				$jsonData = Util::postJsonData($postId,0,658,394);
+					$jsonData = Util::postJsonData($postId,0,658,394);
 
-				$replies = [];
-				if($post->getReplies() > 0){
-					$mysqli = Database::Instance()->get();
-						
-					$postId = $post->getId();
-					$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
+					$replies = [];
+					if($post->getReplies() > 0){
+						$mysqli = Database::Instance()->get();
+							
+						$postId = $post->getId();
+						$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
 
-					$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`birthday`,u.`privacy.level`,u.`featuredBox.title`,u.`featuredBox.content`,u.`lastGigadriveUpdate`,u.`gigadriveJoinDate`,u.`time` AS `userTime`,u.`password`,u.`emailActivated`,u.`emailActivationToken`,u.`gigadriveId`,u.`lastUsernameChange` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
-					$stmt->bind_param("ii",$postId,$uid);
-					if($stmt->execute()){
-						$result = $stmt->get_result();
+						$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`birthday`,u.`privacy.level`,u.`featuredBox.title`,u.`featuredBox.content`,u.`lastGigadriveUpdate`,u.`gigadriveJoinDate`,u.`time` AS `userTime`,u.`password`,u.`emailActivated`,u.`emailActivationToken`,u.`gigadriveId`,u.`lastUsernameChange` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
+						$stmt->bind_param("ii",$postId,$uid);
+						if($stmt->execute()){
+							$result = $stmt->get_result();
 
-						if($result->num_rows){
-							while($row = $result->fetch_assoc()){
-								$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["time"]);
-								$u = User::getUserByData($row["userId"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["userTime"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]);
+							if($result->num_rows){
+								while($row = $result->fetch_assoc()){
+									$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["time"]);
+									$u = User::getUserByData($row["userId"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["userTime"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]);
 
-								array_push($replies,Util::postJsonData($f,0,394,658,true));
+									array_push($replies,Util::postJsonData($f,0,394,658,true));
+								}
 							}
 						}
+						$stmt->close();
 					}
-					$stmt->close();
+
+					$jsonData["followButton"] = $followButton;
+					$jsonData["replies"] = $replies;
+					$jsonData["postForm"] = Util::renderCreatePostForm(["replyForm","my-2"],false);
+
+					return json_encode($jsonData);
+				} else {
+					return json_encode(["error" => "You may not view this post."]);
 				}
-
-				$jsonData["followButton"] = $followButton;
-				$jsonData["replies"] = $replies;
-				$jsonData["postForm"] = Util::renderCreatePostForm(["replyForm","my-2"],false);
-
-				return json_encode($jsonData);
 			} else {
 				return json_encode(["error" => "User not found"]);
 			}
