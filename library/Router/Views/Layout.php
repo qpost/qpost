@@ -338,7 +338,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 										$boxTitle = is_null($user->getFeaturedBoxTitle()) ? "Featured" : $user->getFeaturedBoxTitle();
 
 										?>
-								<h5 class="mt-4 mb-0 convertEmoji"><?= Util::sanatizeString($boxTitle) ?></h5>
+								<h5 class="mt-4 mb-0 convertEmoji" style="word-wrap: break-word;"><?= Util::sanatizeString($boxTitle) ?></h5>
 										<?php
 
 										foreach($user->getFeaturedBoxContent() as $uid){
