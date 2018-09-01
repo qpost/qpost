@@ -369,13 +369,13 @@ function showStatusModal(postId){
 				content = content.concat('<div class="ml-2">');
 				
 				content = content.concat(
-					'<div><a href="/' + user.username + '" class="clearUnderline font-weight-bold mb-0" style="font-size:20px">' +
+					'<div><a href="/' + user.username + '" class="clearUnderline font-weight-bold mb-0" style="font-size:20px; word-wrap: break-word;">' +
 					twemoji.parse(user.displayName) +
 					'</a></div>'
 				);
 				
 				content = content.concat(
-					'<div class="text-muted" style="margin-top: -6px">' +
+					'<div class="text-muted" style="margin-top: -6px; word-wrap: break-word;">' +
 					'@' + user.username +
 					'</div>'
 				);
@@ -389,7 +389,7 @@ function showStatusModal(postId){
 				content = content.concat(
 					'<div class="mt-2">' +
 					c + 
-					'<p style="font-size: 27px;">' +
+					'<p style="font-size: 27px; word-wrap: break-word;">' +
 					twemoji.parse(json.text) +
 					'</p>'
 				);
