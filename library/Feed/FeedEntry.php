@@ -537,7 +537,7 @@ class FeedEntry {
 			$s .= Util::timeago($this->getTime());
 			$s .= '</p>';
 
-			$s .= '<p class="mb-0 convertEmoji">';
+			$s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
             $s .= Util::convertPost($this->getText());
             $s .= '</p>';
             
@@ -603,7 +603,7 @@ class FeedEntry {
             $s .= Util::timeago($sharedPost->getTime());
 			$s .= '</p>';
 
-			$s .= '<p class="mb-0 convertEmoji">';
+			$s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
 			$s .= Util::convertPost($sharedPost->getText());
 			$s .= '</p>';
 
