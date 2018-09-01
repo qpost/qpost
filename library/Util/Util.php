@@ -1145,7 +1145,7 @@ class Util {
 	 * @return string
 	 */
 	public static function convertPost($string){
-		return trim(self::convertLinks(self::convertHashtags(self::convertMentions(self::convertLineBreaksToHTML($string)))));
+		return trim(self::sanatizeString(self::convertLinks(self::convertHashtags(self::convertMentions(self::convertLineBreaksToHTML($string))))));
 	}
 
 	/**
