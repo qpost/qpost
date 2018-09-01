@@ -191,7 +191,7 @@ function showMediaModal(mediaId,postId){
 				let content = "";
 				
 				content = content.concat(
-					'<img src="' + attachment.fileUrl + '" style="width: 100%"/>'
+					'<img src="' + attachment.fileUrl + '" style="max-width: 100%; max-height: 700px; width: auto; height: auto;"/>'
 				);
 				
 				mediaModal.html(
