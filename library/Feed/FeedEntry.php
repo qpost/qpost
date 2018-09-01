@@ -510,7 +510,8 @@ class FeedEntry {
     public function toListHTML($small = false, $maxWidth = 658, $noBorder = false){
 		if(!$this->mayView()) return "";
 
-        $user = $this->getUser();
+		$user = $this->getUser();
+		if(is_null($user)) return "";
 
 		$s = "";
 
