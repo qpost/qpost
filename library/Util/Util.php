@@ -1145,7 +1145,7 @@ class Util {
 		$mentions = self::getUsersMentioned($string);
 
 		foreach($mentions as $u){
-			$string = str_ireplace("@" . $u->getUsername(),'<a href="/' . $u->getUsername() . '" class="ignoreParentClick" data-no-instant>@' . $u->getUsername() . '</a>',$string);
+			if($u->mayView()) $string = str_ireplace("@" . $u->getUsername(),'<a href="/' . $u->getUsername() . '" class="ignoreParentClick" data-no-instant>@' . $u->getUsername() . '</a>',$string);
 		}
 
 		return $string;
