@@ -171,6 +171,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 
 									<div class="dropdown-divider"></div>
 
+									<a href="/edit" class="dropdown-item">Edit profile</a>
 									<a href="/account" class="dropdown-item">Settings and privacy</a>
 									<a href="/logout" class="dropdown-item" data-no-instant>Log out</a>
 
