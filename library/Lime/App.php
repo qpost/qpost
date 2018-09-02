@@ -42,7 +42,7 @@ class App implements \ArrayAccess {
     protected static $apps = [];
 
     protected $registry = [];
-    protected $routes   = [];
+    public $routes   = [];
     protected $paths    = [];
     protected $events   = [];
     protected $blocks   = [];

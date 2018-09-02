@@ -624,10 +624,23 @@ class Util {
 	 * 
 	 * @access public
 	 * @param string $username
+	 * @param Lime\App $app
 	 * @return bool
 	 */
-	public static function isUsernameAvailable($username){
+	public static function isUsernameAvailable($username,$app = null){
 		$b = true;
+
+		$lowerName = strtolower($username);
+
+		if(!is_null($app)){
+			foreach($app->routes as $route => $closure){
+				$lowerRoute = strtolower($route);
+
+				if($lowerRoute == $lowerName) return false;
+				if(strlen($lowerRoute) > 1 && substr(1,strlen($lowerRoute)) == $lowerName) return false;
+				if(str_replace("/","",str_replace(":","",$lowerRoute)) == $lowerName) return false;
+			}
+		}
 
 		$mysqli = Database::Instance()->get();
 
