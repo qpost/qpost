@@ -506,7 +506,7 @@ class User {
 	 * @return string
 	 */
 	public function getDisplayName(){
-		return $this->displayName;
+		return Util::fixString($this->displayName);
 	}
 
 	/**
