@@ -1,6 +1,6 @@
 function isValidURL(str) {
 	let regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    return regexp.test(str);
+	return regexp.test(str);
 }
 
 function resetDeleteModal(){
@@ -805,6 +805,33 @@ function loadDropzone(){
 		thumbnailHeight: 100,
 		parallelUploads: 4,
 		accept: (file,done) => { return done(); },
+		thumbnail: function thumbnail(file, dataUrl) {
+			if (file.previewElement) {
+				file.previewElement.classList.remove("dz-file-preview");
+				for (var _iterator6 = file.previewElement.querySelectorAll("[data-dz-thumbnail]"), _isArray6 = true, _i6 = 0, _iterator6 = _isArray6 ? _iterator6 : _iterator6[Symbol.iterator]();;) {
+					var _ref5;
+					
+					if (_isArray6) {
+						if (_i6 >= _iterator6.length) break;
+						_ref5 = _iterator6[_i6++];
+					} else {
+						_i6 = _iterator6.next();
+						if (_i6.done) break;
+						_ref5 = _i6.value;
+					}
+					
+					var thumbnailElement = _ref5;
+					
+					/*thumbnailElement.alt = file.name;
+					thumbnailElement.src = dataUrl;*/
+					thumbnailElement.style.backgroundImage = "url('" + dataUrl + "')";
+				}
+				
+				return setTimeout(function () {
+					return file.previewElement.classList.add("dz-image-preview");
+				}, 1);
+			}
+		},
 		addedfile: function addedfile(file) {
 			if(dz.getAcceptedFiles().length >= 4) return;
 			
@@ -1132,7 +1159,7 @@ function load(){
 			if(addPhotoButton.length > 0 && !addPhotoButton.hasClass("d-none")) addPhotoButton.addClass("d-none");
 		}
 	});
-
+	
 	function handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments){
 		$.ajax({
 			url: "/scripts/createPost",
@@ -1244,7 +1271,7 @@ function load(){
 	
 	$(document).on("click",".postButton",function(e){
 		e.preventDefault();
-
+		
 		let postBox = $(this).parent().parent();
 		let postField = postBox.find(".postField");
 		let postCharacterCounter = $(this).parent().find(".postCharacterCounter");
@@ -1281,11 +1308,11 @@ function load(){
 				linkURL = null;
 			}
 		}
-
+		
 		if(linkURL != null && !isValidURL(linkURL)){
 			return console.error("Invalid link URL");
 		}
-
+		
 		if(videoURL != null && !isValidURL(videoURL)){
 			return console.error("Invalid video URL");
 		}
@@ -1310,7 +1337,7 @@ function load(){
 				if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
 					attachments = atob(attachmentValueField.val());
 				}
-
+				
 				if(currentMode == "TEXT" || (currentMode == "VIDEO" && videoURL == null) || currentMode == "LINK"){
 					postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
 					handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments);

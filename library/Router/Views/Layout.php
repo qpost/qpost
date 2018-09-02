@@ -232,7 +232,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 				
 				<div class="preview-template d-none">
 					<div class="dz-preview dz-file-preview well mt-2 mr-2 float-left" id="dz-preview-template">
-						<img data-dz-thumbnail width="100" height="100" class="rounded border border-primary bg-dark"/>
+						<div style="width: 100px; height: 100px; background-size: cover;" data-dz-thumbnail class="rounded border border-primary bg-dark"></div>
 						<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
 						<div class="dz-success-mark"><span></span></div>
 						<div class="dz-error-mark"><span></span></div>
