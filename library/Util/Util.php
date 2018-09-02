@@ -1184,7 +1184,7 @@ class Util {
 	 * @return string
 	 */
 	public static function fixString($string){
-		return str_replace("\xE2\x80\x8B","",$string);
+		return str_replace("\xE2\x80\x8B","",str_replace("\xE2\x80\xAE","",$string));
 	}
 
 	/**
