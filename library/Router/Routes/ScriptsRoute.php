@@ -527,7 +527,7 @@ $app->post("/scripts/mediaInfo",function(){
 						$followButton = "";
 
 					$postJsonData = Util::postJsonData($postId);
-					$postJsonData["limitedHtml"] = $post->toListHTML(false,658,true);
+					$postJsonData["limitedHtml"] = $post->toListHTML(false,658,true,true);
 					$mediaJsonData = Util::mediaJsonData($_POST["mediaId"],$_POST["postId"]);
 
 					return json_encode(["post" => $postJsonData,"attachment" => $mediaJsonData]);

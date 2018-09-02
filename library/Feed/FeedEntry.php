@@ -505,9 +505,10 @@ class FeedEntry {
 	 * @param bool $small If true, the text will be rendered smaller
      * @param int $maxWidth Max width of the content part in px
      * @param bool $noBorder If false, the additional HTML for easier use in bootstrap lists won't be included
+	 * @param bool $hideAttachments If true, the attachments will be hidden
      * @return string
      */
-    public function toListHTML($small = false, $maxWidth = 658, $noBorder = false){
+    public function toListHTML($small = false, $maxWidth = 658, $noBorder = false, $hideAttachments = false){
 		if(!$this->mayView()) return "";
 
 		$user = $this->getUser();
@@ -541,7 +542,7 @@ class FeedEntry {
             $s .= Util::convertPost($this->getText());
             $s .= '</p>';
             
-            if(count($this->attachments) > 0){
+            if($hideAttachments == false && count($this->attachments) > 0){
 				$s .= '<div class="my-2">';
 
 				$s .= Util::renderAttachmentEmbeds($this->getAttachmentObjects(),$this->id);
