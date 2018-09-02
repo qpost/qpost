@@ -153,7 +153,7 @@
 
 									<?= Util::followButton($u->getId(),true,["btn-block","mt-2"]) ?>
 
-									<?= (($u->getPrivacyLevel() == PRIVACY_LEVEL_PUBLIC || (Util::isLoggedIn() && $u->isFollower($_SESSION["id"]))) && (!is_null($u->getBio()))) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+									<?= (($u->getPrivacyLevel() == PrivacyLevel::PUBLIC || (Util::isLoggedIn() && $u->isFollower($_SESSION["id"]))) && (!is_null($u->getBio()))) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
 								</center>
 							</div>
 						</div>

@@ -7,7 +7,7 @@ $errorMsg = null;
 $successMsg = null;
 
 if(isset($_POST["privacyLevel"])){
-	if(!Util::isEmpty($_POST["privacyLevel"]) && ($_POST["privacyLevel"] == PRIVACY_LEVEL_PUBLIC || $_POST["privacyLevel"] == PRIVACY_LEVEL_PRIVATE  || $_POST["privacyLevel"] == PRIVACY_LEVEL_CLOSED)){
+	if(!Util::isEmpty($_POST["privacyLevel"]) && ($_POST["privacyLevel"] == PrivacyLevel::PUBLIC || $_POST["privacyLevel"] == PrivacyLevel::PRIVATE  || $_POST["privacyLevel"] == PrivacyLevel::CLOSED)){
 		$privacyLevel = $_POST["privacyLevel"];
 
 		$mysqli = Database::Instance()->get();
@@ -15,7 +15,7 @@ if(isset($_POST["privacyLevel"])){
 		$stmt->bind_param("si",$privacyLevel,$uID);
 
 		if($stmt->execute()){
-			if($user->getOpenFollowRequests() > 0 && $privacyLevel == "PUBLIC"){
+			if($user->getOpenFollowRequests() > 0 && $privacyLevel == PrivacyLevel::PUBLIC){
 				$s = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `following` = ?");
 				$s->bind_param("i",$uID);
 				$s->execute();
@@ -49,9 +49,9 @@ if(!is_null($successMsg))
 
 			<div class="col-sm-10 input-group">
 				<select class="form-control custom-select" name="privacyLevel" id="privacyLevel">
-					<option value="<?= PRIVACY_LEVEL_PUBLIC ?>"<?= $user->getPrivacyLevel() == PRIVACY_LEVEL_PUBLIC ? " selected" : "" ?>>Public - everyone can see your profile</option>
-					<option value="<?= PRIVACY_LEVEL_PRIVATE ?>"<?= $user->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE ? " selected" : "" ?>>Private - only your followers can see your profile, followers must be confirmed</option>
-					<option value="<?= PRIVACY_LEVEL_CLOSED ?>"<?= $user->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED ? " selected" : "" ?>>Closed - only you can see your profile</option>
+					<option value="<?= PrivacyLevel::PUBLIC ?>"<?= $user->getPrivacyLevel() == PrivacyLevel::PUBLIC ? " selected" : "" ?>>Public - everyone can see your profile</option>
+					<option value="<?= PrivacyLevel::PRIVATE ?>"<?= $user->getPrivacyLevel() == PrivacyLevel::PRIVATE ? " selected" : "" ?>>Private - only your followers can see your profile, followers must be confirmed</option>
+					<option value="<?= PrivacyLevel::CLOSED ?>"<?= $user->getPrivacyLevel() == PrivacyLevel::CLOSED ? " selected" : "" ?>>Closed - only you can see your profile</option>
 				</select>
 			</div>
 		</div>

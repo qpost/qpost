@@ -21,6 +21,7 @@ require_once __DIR__ . "/../Account/User.php";
 require_once __DIR__ . "/../Account/Suspension.php";
 require_once __DIR__ . "/../Account/IPInformation.php";
 require_once __DIR__ . "/../Account/Token.php";
+require_once __DIR__ . "/../Account/PrivacyLevel.php";
 require_once __DIR__ . "/../Cache/CacheHandler.php";
 require_once __DIR__ . "/../Shutdown/Shutdown.php";
 require_once __DIR__ . "/../Database/Database.php";

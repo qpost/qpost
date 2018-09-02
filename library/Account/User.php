@@ -915,7 +915,7 @@ class User {
 
 			if(!is_null($post) && $post->getType() == FEED_ENTRY_TYPE_POST){
 				if(!$this->isBlocked($post->getUserId())){
-					if(($this->id != $post->getUserId()) && (($post->getUser()->getPrivacyLevel() == PRIVACY_LEVEL_PRIVATE && !$this->isFollowing($post->getUserId())) || ($post->getUser()->getPrivacyLevel() == PRIVACY_LEVEL_CLOSED))){
+					if(($this->id != $post->getUserId()) && (($post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC && !$this->isFollowing($post->getUserId())) || ($post->getUser()->getPrivacyLevel() == PrivacyLevel::CLOSED))){
 						return;
 					}
 
@@ -1256,7 +1256,7 @@ class User {
 	 * Returns the amount of open follow requests the user has
 	 */
 	public function getOpenFollowRequests(){
-		if($this->getPrivacyLevel() == "PRIVATE"){
+		if($this->getPrivacyLevel() == PrivacyLevel::PRIVATE){
 			$mysqli = Database::Instance()->get();
 
 			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follow_requests` WHERE `following` = ?");
@@ -1285,7 +1285,7 @@ class User {
 	 * @access public
 	 */
 	public function reloadOpenFollowRequests(){
-		if($this->getPrivacyLevel() == "PRIVATE"){
+		if($this->getPrivacyLevel() == PrivacyLevel::PRIVATE){
 			$this->followRequests = null;
 			$this->getOpenFollowRequests();
 		}
@@ -1440,9 +1440,9 @@ class User {
 
 			$u = self::getUserById($user);
 			if(!is_null($u)){
-				if($u->getPrivacyLevel() == "CLOSED"){
+				if($u->getPrivacyLevel() == PrivacyLevel::CLOSED){
 					return;
-				} else if($u->getPrivacyLevel() == "PRIVATE"){
+				} else if($u->getPrivacyLevel() == PrivacyLevel::PRIVATE){
 					if(!$this->hasSentFollowRequest($user)){
 						$stmt = $mysqli->prepare("INSERT INTO `follow_requests` (`follower`,`following`) VALUES(?,?);");
 						$stmt->bind_param("ii",$this->id,$user);
@@ -1818,7 +1818,7 @@ class User {
 		if($this->isSuspended()){
 			return false;
 		} else {
-			if($this->getPrivacyLevel() == "PUBLIC"){
+			if($this->getPrivacyLevel() == PrivacyLevel::PUBLIC){
 				if(Util::isLoggedIn()){
 					$user = Util::getCurrentUser();
 	
@@ -1830,7 +1830,7 @@ class User {
 				}
 	
 				return true;
-			} else if($this->getPrivacyLevel() == "PRIVATE"){
+			} else if($this->getPrivacyLevel() == PrivacyLevel::PRIVATE){
 				if(Util::isLoggedIn()){
 					if(!is_null($user)){
 						if($user->hasBlocked($this) || $user->isBlocked($this)){
@@ -1844,7 +1844,7 @@ class User {
 						return true;
 					}
 				}
-			} else if($this->getPrivacyLevel() == "CLOSED"){
+			} else if($this->getPrivacyLevel() == PrivacyLevel::CLOSED){
 				if(Util::isLoggedIn()){
 					if(!is_null($user)){
 						return $user->getId() == $this->getId();

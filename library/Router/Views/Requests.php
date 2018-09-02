@@ -47,7 +47,7 @@
 					<h5 class="mb-0"><?= $u->getDisplayName(); ?></a></h5>
 					<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
 
-					<?= (($u->getPrivacyLevel() == PRIVACY_LEVEL_PUBLIC || (Util::isLoggedIn() && $u->isFollower($_SESSION["id"]))) && (!is_null($u->getBio()))) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+					<?= (($u->getPrivacyLevel() == PrivacyLevel::PUBLIC || (Util::isLoggedIn() && $u->isFollower($_SESSION["id"]))) && (!is_null($u->getBio()))) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
 
 					<form action="/requests" method="post">
                         <?= Util::insertCSRFToken() ?>

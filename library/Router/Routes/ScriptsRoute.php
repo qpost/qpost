@@ -14,7 +14,7 @@ $app->post("/scripts/toggleFollow",function(){
 					if($user->getId() != $toFollow->getId()){
 						$followStatus = -1;
 
-						if($toFollow->getPrivacyLevel() == "PUBLIC"){
+						if($toFollow->getPrivacyLevel() == PrivacyLevel::PUBLIC){
 							if($user->isFollowing($toFollow)){
 								$user->unfollow($toFollow);
 								$followStatus = 0;
@@ -22,7 +22,7 @@ $app->post("/scripts/toggleFollow",function(){
 								$user->follow($toFollow);
 								$followStatus = 1;
 							}
-						} else if($toFollow->getPrivacyLevel() == "PRIVATE"){
+						} else if($toFollow->getPrivacyLevel() == PrivacyLevel::PRIVATE){
 							$u1 = $user->getId();
 							$u2 = $toFollow->getId();
 
@@ -138,7 +138,7 @@ $app->post("/scripts/toggleShare",function(){
 				return json_encode(["error" => "Cant share own post"]);
 
 			if($user->hasShared($post->getId())){
-				if($post->getUser()->getPrivacyLevel() == "PUBLIC"){
+				if($post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC){
 					$user->unshare($post->getId());
 					return json_encode(["status" => "Share removed"]);
 				} else {
@@ -642,8 +642,8 @@ $app->post("/scripts/createPost",function(){
 
 						if(!is_null($parent) && !is_null(FeedEntry::getEntryById($parent))){
 							$parentCreator = FeedEntry::getEntryById($parent)->getUser();
-							if($parentCreator->getPrivacyLevel() == "CLOSED" && $parentCreator->getId() != $userId) return json_encode(["error" => "Parent owner is closed"]);
-							if($parentCreator->getPrivacyLevel() == "PRIVATE" && !$parentCreator->isFollower($userId)) return json_encode(["error" => "Parent owner is private and not followed"]);
+							if($parentCreator->getPrivacyLevel() == PrivacyLevel::CLOSED && $parentCreator->getId() != $userId) return json_encode(["error" => "Parent owner is closed"]);
+							if($parentCreator->getPrivacyLevel() == PrivacyLevel::PRIVATE && !$parentCreator->isFollower($userId)) return json_encode(["error" => "Parent owner is private and not followed"]);
 							if($parentCreator->hasBlocked($userId)) return json_encode(["error" => "Parent has blocked"]);
 						}
 

@@ -39,10 +39,6 @@ define("NOTIFICATION_TYPE_FAVORITE","FAVORITE");
 define("NOTIFICATION_TYPE_SHARE","SHARE");
 define("NOTIFICATION_TYPE_REPLY","REPLY");
 
-define("PRIVACY_LEVEL_PUBLIC","PUBLIC");
-define("PRIVACY_LEVEL_PRIVATE","PRIVATE");
-define("PRIVACY_LEVEL_CLOSED","CLOSED");
-
 if(DEVELOPER_MODE == true){
 	error_reporting(E_ALL);
 	ini_set("display_errors",1);
@@ -991,13 +987,13 @@ class Util {
 				if($defaultToEdit && $currentUser->getId() == $user){
 					return '<a href="/edit" class="btn btn-light' . $classString . '">Edit profile</a>';
 				} else if($currentUser->getId() != $user){
-					if(User::getUserById($user)->getPrivacyLevel() == "PUBLIC"){
+					if(User::getUserById($user)->getPrivacyLevel() == PrivacyLevel::PUBLIC){
 						if($currentUser->isFollowing($user)){
 							return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Unfollow</button>';
 						} else {
 							return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Follow</button>';
 						}
-					} else if(User::getUserById($user)->getPrivacyLevel() == "PRIVATE"){
+					} else if(User::getUserById($user)->getPrivacyLevel() == PrivacyLevel::PRIVATE){
 						if($currentUser->isFollowing($user)){
 							return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Unfollow</button>';
 						} else {
@@ -1007,7 +1003,7 @@ class Util {
 								return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '" onclick="toggleFollow(this,' . $user . ');">Follow</button>';
 							}
 						}
-					} else if(User::getUserById($user)->getPrivacyLevel() == "CLOSED"){
+					} else if(User::getUserById($user)->getPrivacyLevel() == PrivacyLevel::CLOSED){
 						return "";
 					}
 				}
@@ -1307,7 +1303,7 @@ class Util {
 			$postActionButtons .= '</span><span class="replyCount small text-primary mx-2">';
 			$postActionButtons .= $post->getReplies();
 			$postActionButtons .= '</span>';
-			$postActionButtons .= '<span' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == "PUBLIC" ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
+			$postActionButtons .= '<span' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
 			$postActionButtons .= '<i class="fas fa-share-alt' . ($currentUser->hasShared($post->getId()) ? ' text-primary' : "")  . '"' . ($currentUser->hasShared($post->getId()) ? "" : ' style="color: gray"') . '></i>';
 			$postActionButtons .= '</span>';
 
