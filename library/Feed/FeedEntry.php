@@ -608,7 +608,7 @@ class FeedEntry {
 			$s .= Util::convertPost($sharedPost->getText());
 			$s .= '</p>';
 
-			if(count($sharedPost->attachments) > 0){
+			if($hideAttachments == false && count($sharedPost->attachments) > 0){
 				$s .= '<div class="my-2">';
 
 				$s .= Util::renderAttachmentEmbeds($sharedPost->getAttachmentObjects(),$this->id);
