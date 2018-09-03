@@ -154,3 +154,7 @@ img.emoji {
  .hwt-content mark {
 	 background-color: #FF4F4F;
  }
+
+ .btn.focus, .btn:focus {
+	box-shadow: none !important;
+}

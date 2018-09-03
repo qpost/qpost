@@ -74,7 +74,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
 		<?= $app->style([
-			"assets:css/bootstrap.min.css",
+			"assets:css/" . (Util::isUsingNightMode() ? "nightmode." : "") . "bootstrap.min.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
 			"assets:css/main.css",
 			"assets:css/datepicker.min.css",
@@ -103,7 +103,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";var CURRENT_STATUS_MODAL = 0;</script><?php unset($_SESSION["profileLoadPost"]); ?>
 	</head>
 	<body>
-		<nav id="mainNav" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+		<nav id="mainNav" class="navbar navbar-expand-lg navbar-dark bg-<?= Util::isUsingNightMode() ? "dark" : "primary" ?> fixed-top">
 			<div class="container-fluid container">
 				<div class="navbar-header">
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation" aria-controls="main-navigation" aria-expanded="false" aria-label="Toggle navigation" style="">

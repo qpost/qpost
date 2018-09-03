@@ -3,6 +3,16 @@ body,html {
 	color: #FFF;
 }
 
+a {
+	color:#FFF !important;
+}
+
+.btn-light {
+	color: #f8f9fa !important;
+	background-color: #212529 !important;
+	border-color: #212529 !important;
+}
+
 #footer-socialMedia {
 	background-color: #2E2E2E !important;
 	color: #FFF !important;
@@ -38,10 +48,19 @@ body,html {
 
 .form-control,
 .form-control:focus,
-.breadcrumb {
+.breadcrumb,
+.custom-file-label,
+.input-group-text {
 	border: 1px solid #222222;
 	background-color: #535353;
 	color: #FFF !important;
+	box-shadow: none;
+}
+
+.form-control:disabled {
+	border: 1px solid #222222;
+	background-color: #535353;
+	color: #d1d1d1 !important;
 	box-shadow: none;
 }
 
@@ -129,7 +148,7 @@ a.list-group-item:focus {
  }
 
  .statusTrigger:hover {
-	background-color: #000;
+	background-color: #2b2b2b;
 	-webkit-transition: background-color 200ms linear;
     -ms-transition: background-color 200ms linear;
     transition: background-color 200ms linear;
