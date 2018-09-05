@@ -1,6 +1,6 @@
 <?php
 
-$app->route("/api/token/verify",function(){
+$app->bind("/api/token/verify",function(){
 	$this->response->mime = "json";
 
 	if(isset($_GET["token"])){

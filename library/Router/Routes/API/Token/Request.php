@@ -1,6 +1,6 @@
 <?php
 
-$app->route("/api/token/request",function(){
+$app->bind("/api/token/request",function(){
 	$this->response->mime = "json";
 
 	if(isset($_GET["email"])){
