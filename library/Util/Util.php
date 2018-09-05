@@ -1193,7 +1193,7 @@ class Util {
 	 * @return string
 	 */
 	public static function fixString($string){
-		return preg_replace('/[[:cntrl:]]/','',str_replace("\xE2\x80\x8B","",str_replace("\xE2\x80\xAE","",$string)));
+		return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/','',str_replace("\xE2\x80\x8B","",str_replace("\xE2\x80\xAE","",$string)));
 	}
 
 	/**
