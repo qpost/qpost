@@ -229,6 +229,52 @@ class Token {
 	}
 
 	/**
+	 * Returns whether the token has expired
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isExpired(){
+		return !is_null($this->expiry) && strtotime($this->expiry) <= time();
+	}
+
+	/**
+	 * Renews the token expiry date
+	 * 
+	 * @access public
+	 */
+	public function renew(){
+		if(!$this->isExpired()){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("UPDATE `tokens` SET `expiry` = DATE_ADD(NOW(), INTERVAL 6 MONTH) WHERE `id` = ?");
+			$stmt->bind_param("s",$this->id);
+			if($stmt->execute()){
+				$this->reload();
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
+	 * Expires the token
+	 * 
+	 * @access public
+	 */
+	public function expire(){
+		if(!$this->isExpired()){
+			$mysqli = Database::Instance()->get();
+
+			$stmt = $mysqli->prepare("UPDATE `tokens` SET `expiry` = CURRENT_TIMESTAMP WHERE `id` = ?");
+			$stmt->bind_param("s",$this->id);
+			if($stmt->execute()){
+				$this->reload();
+			}
+			$stmt->close();
+		}
+	}
+
+	/**
 	 * Saves the token data to the cache
 	 * 
 	 * @access public
