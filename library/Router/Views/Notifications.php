@@ -63,7 +63,7 @@ if(CacheHandler::existsInCache($n)){
 			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
-						<i class="fas fa-at text-blue"></i> <a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick convertEmoji"><img src="<?= $u->getAvatarURL(); ?>" width="16" height="16"/> <?= $u->getDisplayName(); ?></a> mentioned you &bull; <?= Util::timeago($notification["time"]); ?>
+						<i class="fas fa-at text-blue"></i> <a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick convertEmoji"><img src="<?= $u->getAvatarURL(); ?>" width="16" height="16"/> <?= $u->getDisplayName() . $u->renderCheckMark(); ?></a> mentioned you &bull; <?= Util::timeago($notification["time"]); ?>
 					</div>
 					<hr/>
 					<div class="row">
@@ -76,7 +76,7 @@ if(CacheHandler::existsInCache($n)){
 						<div class="col-11">
 							<p class="mb-0">
 								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-									<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
+									<span class="font-weight-bold"><?= $u->getDisplayName() . $u->renderCheckMark(); ?></span>
 								</a>
 
 								<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
@@ -112,7 +112,7 @@ if(CacheHandler::existsInCache($n)){
 
 					<div class="col-lg-11">
 						<div class="text-muted small">New follower - @<?= $u2->getUsername(); ?></div>
-						<b><a href="/<?= $u2->getUsername(); ?>" class="clearUnderline convertEmoji"><?= $u2->getDisplayName(); ?></a></b> is now following you. &bull; <span class="text-muted"><?= Util::timeago($notification["time"]); ?></span>
+						<b><a href="/<?= $u2->getUsername(); ?>" class="clearUnderline convertEmoji"><?= $u2->getDisplayName() . $u2->renderCheckMark(); ?></a></b> is now following you. &bull; <span class="text-muted"><?= Util::timeago($notification["time"]); ?></span>
 					</div>
 				</div>
 			</div>
@@ -130,7 +130,7 @@ if(CacheHandler::existsInCache($n)){
 			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
-						<i class="fas fa-star" style="color:gold"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline ignoreParentClick convertEmoji"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName(); ?></a> favorited your post &bull; <?= Util::timeago($notification["time"]); ?>
+						<i class="fas fa-star" style="color:gold"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline ignoreParentClick convertEmoji"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName() . $u2->renderCheckMark(); ?></a> favorited your post &bull; <?= Util::timeago($notification["time"]); ?>
 					</div>
 					<hr/>
 					<div class="row">
@@ -143,7 +143,7 @@ if(CacheHandler::existsInCache($n)){
 						<div class="col-11">
 							<p class="mb-0">
 								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-									<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
+									<span class="font-weight-bold"><?= $u->getDisplayName() . $u->renderCheckMark(); ?></span>
 								</a>
 
 								<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
@@ -174,7 +174,7 @@ if(CacheHandler::existsInCache($n)){
 			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
-						<i class="fas fa-share-alt text-blue"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline ignoreParentClick convertEmoji"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName(); ?></a> shared your post &bull; <?= Util::timeago($notification["time"]); ?>
+						<i class="fas fa-share-alt text-blue"></i> <a href="/<?= $u2->getUsername(); ?>" class="clearUnderline ignoreParentClick convertEmoji"><img src="<?= $u2->getAvatarURL(); ?>" width="16" height="16"/> <?= $u2->getDisplayName() . $u2->renderCheckMark(); ?></a> shared your post &bull; <?= Util::timeago($notification["time"]); ?>
 					</div>
 					<hr/>
 					<div class="row">
@@ -187,7 +187,7 @@ if(CacheHandler::existsInCache($n)){
 						<div class="col-11">
 							<p class="mb-0">
 								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-									<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
+									<span class="font-weight-bold"><?= $u->getDisplayName() . $u->renderCheckMark(); ?></span>
 								</a>
 
 								<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>
@@ -217,7 +217,7 @@ if(CacheHandler::existsInCache($n)){
 			<div class="card feedEntry<?= !$last ? " mb-2" : "" ?> statusTrigger" data-status-render="<?= $post->getId() ?>" data-entry-id="<?= $post->getId() ?>"<?= $notification["seen"] == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : ""; ?>>
 				<div class="card-body">
 					<div class="small text-muted">
-						<i class="fas fa-share text-blue"></i> <a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick convertEmoji"><img src="<?= $u->getAvatarURL(); ?>" width="16" height="16"/> <?= $u->getDisplayName(); ?></a> replied to your post &bull; <?= Util::timeago($notification["time"]); ?>
+						<i class="fas fa-share text-blue"></i> <a href="/<?= $u->getUsername(); ?>" class="clearUnderline ignoreParentClick convertEmoji"><img src="<?= $u->getAvatarURL(); ?>" width="16" height="16"/> <?= $u->getDisplayName() . $u->renderCheckMark(); ?></a> replied to your post &bull; <?= Util::timeago($notification["time"]); ?>
 					</div>
 					<hr/>
 					<div class="row">
@@ -230,7 +230,7 @@ if(CacheHandler::existsInCache($n)){
 						<div class="col-11">
 							<p class="mb-0">
 								<a href="/<?= $u->getUsername(); ?>" class="clearUnderline">
-									<span class="font-weight-bold"><?= $u->getDisplayName(); ?></span>
+									<span class="font-weight-bold"><?= $u->getDisplayName() . $u->renderCheckMark(); ?></span>
 								</a>
 
 								<span class="text-muted font-weight-normal">@<?= $u->getUsername(); ?></span>

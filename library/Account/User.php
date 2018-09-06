@@ -540,6 +540,16 @@ class User {
 	public function isVerified(){
 		return $this->verified;
 	}
+
+	/**
+	 * Returns HTML code for check icon for verified users
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function renderCheckMark(){
+		return $this->verified ? ' <a href="#" class="ignoreParentClick clearUnderline" data-toggle="tooltip" title="Verified account"><i class="fas fa-check-circle"></i></a>' : "";
+	}
 	
 	/**
 	* Returns the user's display name
@@ -2016,7 +2026,7 @@ class User {
         $s .= '<div class="float-left ml-1">';
 		$s .= '<p class="mb-0" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 200px !important;">';
 		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
-		$s .= '<span class="font-weight-bold convertEmoji">' . $this->getDisplayName() . '</span>';
+		$s .= '<span class="font-weight-bold convertEmoji">' . $this->getDisplayName() . $this->renderCheckMark() . '</span>';
 		$s .= '</a>';
 		$s .= '<div class="text-muted font-weight-normal" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 200px !important;"> @' . $this->getUsername() . ' </div>';
 		$s .= '</p>';

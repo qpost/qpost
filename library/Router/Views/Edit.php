@@ -40,6 +40,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						}
 	
 						$usernameChange = false;
+						$verified = $user->isVerified();
 	
 						if(!$user->isGigadriveLinked() && isset($_POST["username"])){
 							$username = trim($_POST["username"]);
@@ -52,6 +53,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 												if(ctype_alnum($username)){
 													if(Util::isUsernameAvailable($username)){
 														$usernameChange = true;
+														$verified = false;
 													} else {
 														$errorMsg = "That username is not available anymore.";
 													}
@@ -161,8 +163,8 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 								$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
 	
 								$mysqli = Database::Instance()->get();
-								$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `username` = ?, `avatar` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ? WHERE `id` = ?");
-								$stmt->bind_param("sssssssi",$displayName,$username,$avatarUrl,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$userId);
+								$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `username` = ?, `avatar` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ?, `verified` = ? WHERE `id` = ?");
+								$stmt->bind_param("sssssssii",$displayName,$username,$avatarUrl,$bio,$featuredBoxTitle,$boxUsersSerialized,$birthday,$verified,$userId);
 								if($stmt->execute()){
 									if($usernameChange)
 										$user->updateLastUsernameChange();
@@ -229,10 +231,23 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 				</div>
 			</div>
 
-			<?php if($user->isGigadriveLinked()){ ?>
+			<?php if($user->isGigadriveLinked() == true && $user->isVerified() == false){ ?>
 			<div class="form-group row">
 				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
-					Your username can only be changed on <a href="https://gigadrivegroup.com/account" target="_blank" class="ml-1">gigadrivegroup.com</a>.
+					<b class="mr-1">Note:</b> Your username can only be changed on <a href="https://gigadrivegroup.com/account" target="_blank" class="ml-1">gigadrivegroup.com</a>.
+				</div>
+			</div>
+			<?php } else if($user->isGigadriveLinked() == false && $user->isVerified() == true) { ?>
+			<div class="form-group row">
+				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
+					<b class="mr-1">Note:</b> Changing your username will result in losing your verified status.
+				</div>
+			</div>
+			<?php } else if($user->isGigadriveLinked() == true && $user->isVerified() == true) { ?>
+			<div class="form-group row">
+				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
+					<b class="mr-1">Note:</b> You can only change your username every 30 days!<br/>
+					Changing your username will result in losing your verified status.
 				</div>
 			</div>
 			<?php } else { ?>

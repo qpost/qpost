@@ -555,7 +555,7 @@ class FeedEntry {
 			$s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px; width: 100%">';
 			$s .= '<p class="mb-0' . ($small ? ' small' : '') . '">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
-			$s .= '<span class="font-weight-bold convertEmoji">' . $user->getDisplayName() . '</span>';
+			$s .= '<span class="font-weight-bold convertEmoji">' . $user->getDisplayName() . $user->renderCheckMark() . '</span>';
 			$s .= '</a>';
 
 			$s .= '<span class="text-muted font-weight-normal"> @' . $user->getUsername() . ' </span>';
@@ -596,7 +596,7 @@ class FeedEntry {
 			    $s .= '</div>';
             }
             
-			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline convertEmoji">' . $user->getDisplayName() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline convertEmoji">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
+			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline convertEmoji">' . $user->getDisplayName() . $user->renderCheckMark() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline convertEmoji">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
             if($noBorder == false) $s .= '</li>';
             
             return $s;
@@ -609,7 +609,7 @@ class FeedEntry {
 
             if($noBorder == false) $s .= '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
 			$s .= '<div class="small text-muted">';
-			$s .= '<i class="fas fa-share-alt text-blue"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . '</a> &bull; ' . Util::timeago($this->getTime());
+			$s .= '<i class="fas fa-share-alt text-blue"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . $user->renderCheckMark() . '</a> &bull; ' . Util::timeago($this->getTime());
 			$s .= '</div>';
 			$s .= '<div class="row">';
 			$s .= '<div class="float-left">';
@@ -621,7 +621,7 @@ class FeedEntry {
             $s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px; width: 100%">';
 			$s .= '<p class="mb-0">';
 			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
-			$s .= '<span class="font-weight-bold convertEmoji">' . $sharedUser->getDisplayName() . '</span>';
+			$s .= '<span class="font-weight-bold convertEmoji">' . $sharedUser->getDisplayName() . $sharedUser->renderCheckMark() . '</span>';
 			$s .= '</a>';
 
 			$s .= '<span class="text-muted font-weight-normal"> @' . $sharedUser->getUsername() . ' </span>';

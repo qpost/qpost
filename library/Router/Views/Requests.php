@@ -44,7 +44,7 @@
 				<center>
 					<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60"/>
 
-					<h5 class="mb-0"><?= $u->getDisplayName(); ?></a></h5>
+					<h5 class="mb-0"><?= $u->getDisplayName() . $u->renderCheckMark(); ?></a></h5>
 					<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
 
 					<?= (($u->getPrivacyLevel() == PrivacyLevel::PUBLIC || (Util::isLoggedIn() && $u->isFollower($_SESSION["id"]))) && (!is_null($u->getBio()))) ? '<p class="mb-0 mt-2">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
