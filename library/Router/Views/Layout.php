@@ -339,7 +339,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 									if(!is_null($followersYouFollow) && count($followersYouFollow) > 0){
 										?>
 								<div class="mt-2">
-									<i class="far fa-user text-muted"></i> <a href="/<?= $user->getUsername() ?>/followers_you_follow"><?= count($followersYouFollow) ?> follower<?= count($followersYouFollow) > 1 ? "s" : "" ?> you know</a>
+									<i class="far fa-user text-muted"></i> <?= count($followersYouFollow) ?> follower<?= count($followersYouFollow) > 1 ? "s" : "" ?> you know
 
 									<div class="d-block ml-1">
 									<?php
