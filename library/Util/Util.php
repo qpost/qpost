@@ -1313,7 +1313,7 @@ class Util {
 			$postActionButtons .= $post->getShares();
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="favoriteButton" data-post-id="' . $post->getId() . '">';
+			$postActionButtons .= '<span class="favoriteButton" data-toggle="tooltip" title="Favorite" data-post-id="' . $post->getId() . '">';
 			$postActionButtons .= '<i class="fas fa-star"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
