@@ -405,7 +405,7 @@ function showStatusModal(postId){
 				content = content.concat(
 					'<p class="small text-muted"><i class="far fa-clock"></i> Posted ' +
 					json.time +
-					'</p>' +
+					' | #' + json.id + '</p>' +
 					'</div>'
 				);
 				
