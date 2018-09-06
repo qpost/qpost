@@ -1309,7 +1309,7 @@ class Util {
 			$postActionButtons .= '<i class="fas fa-share-alt"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="shareCount ml-2 mr-2" style="color: ' . $gray . ' !important">';
+			$postActionButtons .= '<span class="shareCount ml-2 mr-2"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '>';
 			$postActionButtons .= $post->getShares();
 			$postActionButtons .= '</span>';
 
@@ -1317,7 +1317,7 @@ class Util {
 			$postActionButtons .= '<i class="fas fa-star"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="favoriteCount ml-2 mr-4" style="color: ' . $gray . ' !important">';
+			$postActionButtons .= '<span class="favoriteCount ml-2 mr-4"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '>';
 			$postActionButtons .= $post->getFavorites();
 			$postActionButtons .= '</span>';
 
