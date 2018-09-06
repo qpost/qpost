@@ -114,6 +114,12 @@ h1,h2,h3,h4,h5,h6 {
 	color: #FFF !important;
 }
 
+.page-link:hover {
+    color: #dddddd;
+    background-color: #2b2b2b;
+    border-color: #222222 !important;
+}
+
 .table-bordered {
     border: 1px solid #222222;
 }
