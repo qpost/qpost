@@ -20,6 +20,8 @@
 		<a class="nav-item nav-link<?php if(isset($type) && $type == "users") echo " active"; ?>" href="<?= $app->routeUrl("/search?query=" . urlencode($query) . "&type=users"); ?>">Users</a>
 	</nav>
 
+	<div class="row">
+		<div class="col-lg-10 offset-lg-1">
 <?php
 
 	$num = 0;
@@ -157,4 +159,6 @@
 }
 
 ?>
+		</div>
+	</div>
 </div>
