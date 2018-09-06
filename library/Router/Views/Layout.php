@@ -340,8 +340,9 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 										?>
 								<div class="mt-2">
 									<i class="far fa-user text-muted"></i> <?= count($followersYouFollow) ?> follower<?= count($followersYouFollow) > 1 ? "s" : "" ?> you know
+								</div>
 
-									<div class="d-block ml-1">
+								<div class="d-inline-block ml-1">
 									<?php
 
 										for ($i = 0; $i < min(count($followersYouFollow),24); $i++){
@@ -355,7 +356,6 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 										}
 
 									?>
-									</div>
 								</div>
 										<?php
 									}
