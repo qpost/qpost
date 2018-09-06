@@ -1939,7 +1939,7 @@ class User {
 
 		// V2
 		$s .= '<div class="col-md-4 px-1 py-1">';
-		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 100%">';
+		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 100%; min-height: 200px;">';
 		$s .= '<div class="px-4 pt-2">';
 		$s .= '<div class="row">';
 		$s .= '<div class="float-left">';
