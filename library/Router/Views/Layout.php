@@ -335,6 +335,31 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 										}
 									}
 
+									$followersYouFollow = $user->followersYouFollow();
+									if(!is_null($followersYouFollow) && count($followersYouFollow) > 0){
+										?>
+								<div class="mt-2">
+									<i class="far fa-user text-muted"></i> <a href="/<?= $user->getUsername() ?>/followers_you_follow"><?= count($followersYouFollow) ?> follower<?= count($followersYouFollow) > 1 ? "s" : "" ?> you know</a>
+
+									<div class="d-block ml-1">
+									<?php
+
+										for ($i = 0; $i < min(count($followersYouFollow),24); $i++){
+											$follower = $followersYouFollow[$i];
+
+											echo '<div class="float-left mt-1 mr-1">';
+											echo '<a href="/' . $follower->getUsername() . '" class="clearUnderline">';
+											echo '<img src="' . $follower->getAvatarURL() . '" class="rounded" width="56" height="56" data-toggle="tooltip" title="' . $follower->getDisplayName() . ' (@' . $follower->getUsername() . ')"/>';
+											echo '</a>';
+											echo '</div>';
+										}
+
+									?>
+									</div>
+								</div>
+										<?php
+									}
+
 									if(!is_null($user->getFeaturedBoxContent()) && count($user->getFeaturedBoxContent()) > 0){
 										$boxTitle = is_null($user->getFeaturedBoxTitle()) ? "Featured" : $user->getFeaturedBoxTitle();
 

@@ -1903,6 +1903,52 @@ class User {
 	}
 
 	/**
+	 * Returns an array of user objects that follow the user and are followed by the current user
+	 * 
+	 * @access public
+	 * @return User[]
+	 */
+	public function followersYouFollow(){
+		if(Util::isLoggedIn()){
+			$user = Util::getCurrentUser();
+
+			if(!is_null($user)){
+				$n = "followersYouFollow_" . $user->getId() . "_" . $this->id;
+
+				if(CacheHandler::existsInCache($n)){
+					return CacheHandler::getFromCache($n);
+				} else {
+					$mysqli = Database::Instance()->get();
+
+					$thisID = $this->id;
+					$uID = $user->getId();
+
+					$a = [];
+
+					$stmt = $mysqli->prepare("SELECT u.* FROM `users` AS u WHERE EXISTS (SELECT 1 FROM follows f WHERE f.following = ? AND f.follower = u.id) AND EXISTS (SELECT 1 FROM follows f WHERE f.following = u.id AND f.follower = ?) ORDER BY RAND()");
+					$stmt->bind_param("ii",$thisID,$uID);
+					if($stmt->execute()){
+						$result = $stmt->get_result();
+
+						if($result->num_rows){
+							while($row = $result->fetch_assoc()){
+								array_push($a,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]));
+							}
+
+							CacheHandler::setToCache($n,$a,3*60);
+						}
+					}
+					$stmt->close();
+
+					return $a;
+				}
+			}
+		}
+
+		return [];
+	}
+
+	/**
 	 * Returns HTML code to use in an user list
 	 * 
 	 * @access public
