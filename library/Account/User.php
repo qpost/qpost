@@ -214,7 +214,7 @@ class User {
 	* @param string $lastUsernameChange
 	* @return User
 	*/
-	public static function getUserByData($id,$gigadriveId,$displayName,$username,$password,$email,$avatar,$bio,$token,$birthday,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time,$emailActivated,$emailActivationToken,$lastUsernameChange){
+	public static function getUserByData($id,$gigadriveId,$displayName,$username,$password,$email,$avatar,$bio,$token,$birthday,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time,$emailActivated,$emailActivationToken,$lastUsernameChange,$verified){
 		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
 		
 		$user->id = $id;
@@ -236,6 +236,7 @@ class User {
 		$user->emailActivated = $emailActivated;
 		$user->emailActivationToken = $emailActivationToken;
 		$user->lastUsernameChange = $lastUsernameChange;
+		$user->verified = $verified ? true : false;
 		
 		$user->saveToCache();
 		
@@ -349,6 +350,12 @@ class User {
 	* @var string $emailActivationToken
 	*/
 	private $emailActivationToken;
+
+	/**
+	 * @access private
+	 * @var bool $verified
+	 */
+	private $verified;
 	
 	/**
 	* @access private
@@ -475,6 +482,7 @@ class User {
 				$this->emailActivated = $row["emailActivated"];
 				$this->emailActivationToken = $row["emailActivationToken"];
 				$this->lastUsernameChange = $row["lastUsernameChange"];
+				$this->verified = $row["verified"] ? true : false;
 				
 				$this->exists = true;
 				
@@ -521,6 +529,16 @@ class User {
 	*/
 	public function isGigadriveLinked(){
 		return !is_null($this->gigadriveId) && !is_null($this->token);
+	}
+
+	/**
+	 * Returns whether the user is verified
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isVerified(){
+		return $this->verified;
 	}
 	
 	/**
@@ -1656,6 +1674,7 @@ class User {
 			"username" => $this->username,
 			"bio" => $this->bio,
 			"avatar" => $this->getAvatarURL(),
+			"verified" => $this->verified,
 			"birthday" => $this->birthday,
 			"privacyLevel" => $this->privacyLevel,
 			"joinDate" => $this->time,
@@ -1932,7 +1951,7 @@ class User {
 
 						if($result->num_rows){
 							while($row = $result->fetch_assoc()){
-								array_push($a,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"]));
+								array_push($a,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]));
 							}
 
 							CacheHandler::setToCache($n,$a,3*60);
