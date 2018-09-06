@@ -138,7 +138,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_NOTIFICATIONS) ? " active" : ""; ?>">
 								<a href="/notifications" class="nav-link notificationTabMainNav" data-no-instant>
-									notifications<?= !is_null($unreadNotifications) && $unreadNotifications > 0 ? " <b>(" . $unreadNotifications . ")</b>" : "</b>"; ?>
+									notifications<?= !is_null($unreadNotifications) && $unreadNotifications > 0 ? " <b>(" . $unreadNotifications . ")</b>" : ""; ?>
 								</a>
 							</li>
 
