@@ -582,7 +582,7 @@ class FeedEntry {
 
             if($noBorder == false) $s .= '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
 			$s .= '<div class="small text-muted">';
-			$s .= '<i class="fas fa-share-alt text-primary"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . '</a> &bull; ' . Util::timeago($this->getTime());
+			$s .= '<i class="fas fa-share-alt text-blue"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . '</a> &bull; ' . Util::timeago($this->getTime());
 			$s .= '</div>';
 			$s .= '<div class="row">';
 			$s .= '<div class="float-left">';

@@ -1539,7 +1539,7 @@ function load(){
 		
 		let postId = $(this).attr("data-post-id");
 		
-		let sharedHtml = '<i class="fas fa-share-alt text-primary"></i>';
+		let sharedHtml = '<i class="fas fa-share-alt text-blue"></i>';
 		let unsharedHtml = '<i class="fas fa-share-alt" style="color: gray"></i>';
 		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
 		
