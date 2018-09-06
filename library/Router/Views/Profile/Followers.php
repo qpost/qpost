@@ -57,7 +57,7 @@ if($num > 0){
 				<div class="px-2 py-2 text-center">
 					<?php } ?>
 
-					<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertLineBreaksToHTML($u->getBio()) . '</p>' : ""; ?>
+					<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($u->getBio()) . '</p>' : ""; ?>
 				</div>
 			</div>
 		</div>
