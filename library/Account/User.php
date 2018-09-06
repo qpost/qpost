@@ -1642,6 +1642,28 @@ class User {
 		
 		return $this->followingArray;
 	}
+
+	/**
+	 * Returns this object as json object to be used in the API
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function toAPIJson(){
+		return json_encode([
+			"id" => $this->id,
+			"displayName" => $this->displayName,
+			"username" => $this->username,
+			"bio" => $this->bio,
+			"avatar" => $this->getAvatarURL(),
+			"birthday" => $this->birthday,
+			"privacyLevel" => $this->privacyLevel,
+			"joinDate" => $this->time,
+			"gigadriveJoinDate" => $this->gigadriveJoinDate,
+			"suspended" => $this->isSuspended() ? true : false,
+			"emailActivated" => $this->emailActivated ? true : false
+		]);
+	}
 	
 	/**
 	* Returns true if a feed entry may be posted with the given parameters

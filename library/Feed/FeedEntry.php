@@ -498,6 +498,33 @@ class FeedEntry {
 		return $this->getUser()->mayView() && (!is_null($this->getPost()) ? $this->getPost()->getUser()->mayView() : true);
 	}
 
+	/**
+	 * Returns this object as json object to be used in the API
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function toAPIJson(){
+		$a = [];
+		foreach($this->getAttachmentObjects() as $at){
+			array_push($a,$at->toAPIJson());
+		}
+
+		return json_encode([
+			"id" => $this->id,
+			"user" => !is_null($this->getUser()) ? $this->getUser()->toAPIJson() : null,
+			"text" => $this->text,
+			"referencedUser" => !is_null($this->getFollowing()) ? $this->getFollowing()->toAPIJson() : null,
+			"referencedPost" => !is_null($this->getPost()) ? $this->getPost()->toAPIJson() : null,
+			"type" => $this->type,
+			"replies" => $this->replies,
+			"shares" => $this->shares,
+			"favorites" => $this->favorites,
+			"attachments" => $a,
+			"time" => $this->time
+		]);
+	}
+
     /**
      * Returns HTML code to use in a feed entry list (search, profile, home feed, ...)
      * 

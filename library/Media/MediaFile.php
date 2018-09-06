@@ -225,6 +225,22 @@ class MediaFile {
 		return $this->type;
 	}
 
+	/**
+	 * Returns this object as json object to be used in the API
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function toAPIJson(){
+		return json_encode([
+			"id" => $this->id,
+			"sha256" => $this->sha256,
+			"url" => $this->url,
+			"type" => $this->type,
+			"time" => $this->time
+		]);
+	}
+
     /**
      * Returns HTML code to display a clickable thumbnail
      * 
