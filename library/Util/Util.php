@@ -1302,14 +1302,14 @@ class Util {
 			$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
 			$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
 			$postActionButtons .= '<i class="fas fa-share" style="color: ' . $gray . '"></i>';
-			$postActionButtons .= '</span><span class="replyCount small mx-2" style="color: ' . $gray . ' !important">';
+			$postActionButtons .= '</span><span class="replyCount mx-2" style="color: ' . $gray . ' !important">';
 			$postActionButtons .= $post->getReplies();
 			$postActionButtons .= '</span>';
 			$postActionButtons .= '<span' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
 			$postActionButtons .= '<i class="fas fa-share-alt"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="shareCount small ml-2 mr-2" style="color: ' . $gray . ' !important">';
+			$postActionButtons .= '<span class="shareCount ml-2 mr-2" style="color: ' . $gray . ' !important">';
 			$postActionButtons .= $post->getShares();
 			$postActionButtons .= '</span>';
 
@@ -1317,7 +1317,7 @@ class Util {
 			$postActionButtons .= '<i class="fas fa-star"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="favoriteCount small ml-2 mr-4" style="color: ' . $gray . ' !important">';
+			$postActionButtons .= '<span class="favoriteCount ml-2 mr-4" style="color: ' . $gray . ' !important">';
 			$postActionButtons .= $post->getFavorites();
 			$postActionButtons .= '</span>';
 

@@ -35,6 +35,11 @@ img.emoji {
 
  .favoriteButton,.shareButton,.replyButton,.deleteButton {
 	 cursor: pointer;
+	 font-size: 19px;
+ }
+
+ .favoriteCount,.shareCount,.replyCount {
+	 font-size: 16px;
  }
 
  .replyButton>i,
