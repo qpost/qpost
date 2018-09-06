@@ -1297,25 +1297,27 @@ class Util {
 			$currentUser = Util::getCurrentUser();
 			if(is_null($currentUser)) return "";
 
+			$gray = self::isUsingNightMode() ? "#9b9b9b" : "gray";
+
 			$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
 			$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
-			$postActionButtons .= '<i class="fas fa-share"></i>';
-			$postActionButtons .= '</span><span class="replyCount small text-primary mx-2">';
+			$postActionButtons .= '<i class="fas fa-share" style="color: ' . $gray . '"></i>';
+			$postActionButtons .= '</span><span class="replyCount small text-primary mx-2" style="color: ' . $gray . ' !important">';
 			$postActionButtons .= $post->getReplies();
 			$postActionButtons .= '</span>';
 			$postActionButtons .= '<span' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
-			$postActionButtons .= '<i class="fas fa-share-alt' . ($currentUser->hasShared($post->getId()) ? ' text-primary' : "")  . '"' . ($currentUser->hasShared($post->getId()) ? "" : ' style="color: gray"') . '></i>';
+			$postActionButtons .= '<i class="fas fa-share-alt"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="shareCount small text-primary ml-2 mr-2">';
+			$postActionButtons .= '<span class="shareCount small text-primary ml-2 mr-2" style="color: ' . $gray . ' !important">';
 			$postActionButtons .= $post->getShares();
 			$postActionButtons .= '</span>';
 
 			$postActionButtons .= '<span class="favoriteButton" data-post-id="' . $post->getId() . '">';
-			$postActionButtons .= '<i class="fas fa-star"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: gray"') . '></i>';
+			$postActionButtons .= '<i class="fas fa-star"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="favoriteCount small ml-2 mr-4" style="color: #ff960c">';
+			$postActionButtons .= '<span class="favoriteCount small ml-2 mr-4" style="color: ' . $gray . ' !important">';
 			$postActionButtons .= $post->getFavorites();
 			$postActionButtons .= '</span>';
 
