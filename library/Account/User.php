@@ -1913,7 +1913,8 @@ class User {
 
 		$s = "";
 
-		$s .= '<div class="col-md-4 px-1 py-1">';
+		// V1
+		/*$s .= '<div class="col-md-4 px-1 py-1">';
 		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 327px">';
 		$s .= '<div class="px-2 py-2 text-center">';
 		$s .= '<a href="/' . $this->username . '" class="clearUnderline"><img src="' . $this->getAvatarURL() . '" width="60" height="60" class="rounded mb-1"/>';
@@ -1932,6 +1933,40 @@ class User {
 		}
 
 		$s .= !is_null($this->bio) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($this->bio) . '</p>' : "";
+		$s .= '</div>';
+		$s .= '</div>';
+		$s .= '</div>';*/
+
+		// V2
+		$s .= '<div class="col-md-4 px-1 py-1">';
+		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 100%">';
+		$s .= '<div class="px-4 pt-2">';
+		$s .= '<div class="row">';
+		$s .= '<div class="float-left">';
+		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
+		$s .= '<img class="rounded mx-1 my-1" src="' . $this->getAvatarURL() . '" width="40" height="40"/>';
+		$s .= '</a>';
+        $s .= '</div>';
+
+        $s .= '<div class="float-left ml-1">';
+		$s .= '<p class="mb-0" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 200px !important;">';
+		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
+		$s .= '<span class="font-weight-bold convertEmoji">' . $this->getDisplayName() . '</span>';
+		$s .= '</a>';
+		$s .= '<div class="text-muted font-weight-normal" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 200px !important;"> @' . $this->getUsername() . ' </div>';
+		$s .= '</p>';
+		$s .= '</div>';
+		$s .= '</div>';
+		if(Util::isLoggedIn()){
+			$s .= '</div>';
+
+			$s .= '<div class="text-center px-2 py-2" style="background: #212529">';
+			$s .= Util::followButton($this->id,true,["btn-block"]);
+			$s .= '</div>';
+
+			$s .= '<div class="px-4 py-2 text-center">';
+		}
+		$s .= !is_null($this->bio) ? '<p class="mb-0 mt-1 convertEmoji">' . Util::convertPost($this->bio) . '</p>' : "<em>No bio set.</em>";
 		$s .= '</div>';
 		$s .= '</div>';
 		$s .= '</div>';
