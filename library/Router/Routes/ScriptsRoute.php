@@ -753,7 +753,7 @@ $app->post("/scripts/createPost",function(){
 
 						if(!is_null($postId)){
 							$postData = FeedEntry::getEntryById($postId);
-							$post = Util::postJsonData($postData);
+							$post = Util::postJsonData($postData,0,394,658,true);
 
 							if(!is_null($parent)){
 								$parentData = FeedEntry::getEntryById($parent);
