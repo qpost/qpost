@@ -548,7 +548,7 @@ class User {
 	 * @return string
 	 */
 	public function renderCheckMark(){
-		return $this->verified ? '<a href="#" class="ml-1 ignoreParentClick clearUnderline" data-toggle="tooltip" title="Verified account"><i class="fas fa-check-circle"></i></a>' : "";
+		return $this->verified ? '<a href="#" class="ml-1 ignoreParentClick clearUnderline" data-toggle="tooltip" title="Verified account"><i class="fas fa-check-circle"' . (Util::isUsingNightMode() ? "" : ' style="color: #007bff"') . '></i></a>' : "";
 	}
 	
 	/**
