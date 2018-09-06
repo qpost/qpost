@@ -38,30 +38,8 @@ if($num > 0){
 			$last = $i == count($users)-1;
 
 			$user->cacheFollower($u->getId());
-		?>
-		<div class="col-md-4 px-1 py-1">
-			<div class="card userCard" data-user-id="<?= $u->getId(); ?>" style="height: 327px">
-				<div class="px-2 py-2 text-center">
-					<a href="<?= $app->routeUrl("/" . $u->getUsername()); ?>" class="clearUnderline"><img src="<?= $u->getAvatarURL(); ?>" width="60" height="60" class="rounded mb-1"/>
 
-					<h5 class="mb-0 convertEmoji"><?= $u->getDisplayName(); ?></a></h5>
-					<p class="text-muted my-0" style="font-size: 16px">@<?= $u->getUsername(); ?></p>
-
-					<?php if(Util::isLoggedIn()){ ?>
-				</div>
-
-				<div class="text-center px-2 py-2" style="background: #212529">
-					<?= Util::followButton($u->getId(),true,["btn-block"]) ?>
-				</div>
-
-				<div class="px-2 py-2 text-center">
-					<?php } ?>
-
-					<?= !is_null($u->getBio()) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($u->getBio()) . '</p>' : ""; ?>
-				</div>
-			</div>
-		</div>
-		<?php
+			echo $u->renderForUserList();
 		}
 
 		echo '</div>';

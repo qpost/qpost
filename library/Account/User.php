@@ -1901,6 +1901,43 @@ class User {
 		
 		return false;
 	}
+
+	/**
+	 * Returns HTML code to use in an user list
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function renderForUserList(){
+		if(!$this->mayView()) return "";
+
+		$s = "";
+
+		$s .= '<div class="col-md-4 px-1 py-1">';
+		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 327px">';
+		$s .= '<div class="px-2 py-2 text-center">';
+		$s .= '<a href="/' . $this->username . '" class="clearUnderline"><img src="' . $this->getAvatarURL() . '" width="60" height="60" class="rounded mb-1"/>';
+
+		$s .= '<h5 class="mb-0 convertEmoji">' . $this->getDisplayName() . '</a></h5>';
+		$s .= '<p class="text-muted my-0" style="font-size: 16px">@' . $this->username . '</p>';
+
+		if(Util::isLoggedIn()){
+			$s .= '</div>';
+
+			$s .= '<div class="text-center px-2 py-2" style="background: #212529">';
+			$s .= Util::followButton($this->id,true,["btn-block"]);
+			$s .= '</div>';
+
+			$s .= '<div class="px-2 py-2 text-center">';
+		}
+
+		$s .= !is_null($this->bio) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($this->bio) . '</p>' : "";
+		$s .= '</div>';
+		$s .= '</div>';
+		$s .= '</div>';
+
+		return $s;
+	}
 	
 	/**
 	* Saves the user object to the cache
