@@ -229,16 +229,19 @@ class MediaFile {
 	 * Returns this object as json object to be used in the API
 	 * 
 	 * @access public
-	 * @return string
+	 * @param bool $encode If true, will return a json string, else an associative array
+	 * @return string|array
 	 */
-	public function toAPIJson(){
-		return json_encode([
+	public function toAPIJson($encode = true){
+		$a = [
 			"id" => $this->id,
 			"sha256" => $this->sha256,
 			"url" => $this->url,
 			"type" => $this->type,
 			"time" => $this->time
-		]);
+		];
+
+		return $encode == true ? json_encode($a) : $a;
 	}
 
     /**

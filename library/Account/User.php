@@ -1675,10 +1675,11 @@ class User {
 	 * Returns this object as json object to be used in the API
 	 * 
 	 * @access public
-	 * @return string
+	 * @param bool $encode If true, will return a json string, else an associative array
+	 * @return string|array
 	 */
-	public function toAPIJson(){
-		return json_encode([
+	public function toAPIJson($encode = true){
+		$a = [
 			"id" => $this->id,
 			"displayName" => $this->displayName,
 			"username" => $this->username,
@@ -1691,7 +1692,9 @@ class User {
 			"gigadriveJoinDate" => $this->gigadriveJoinDate,
 			"suspended" => $this->isSuspended() ? true : false,
 			"emailActivated" => $this->emailActivated ? true : false
-		]);
+		];
+
+		return $encode == true ? json_encode($a) : $a;
 	}
 	
 	/**

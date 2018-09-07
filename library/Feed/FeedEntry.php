@@ -502,15 +502,16 @@ class FeedEntry {
 	 * Returns this object as json object to be used in the API
 	 * 
 	 * @access public
-	 * @return string
+	 * @param bool $encode If true, will return a json string, else an associative array
+	 * @return string|array
 	 */
-	public function toAPIJson(){
-		$a = [];
+	public function toAPIJson($encode = true){
+		$ar = [];
 		foreach($this->getAttachmentObjects() as $at){
-			array_push($a,$at->toAPIJson());
+			array_push($ar,$at->toAPIJson());
 		}
 
-		return json_encode([
+		$a = [
 			"id" => $this->id,
 			"user" => !is_null($this->getUser()) ? $this->getUser()->toAPIJson() : null,
 			"text" => $this->text,
@@ -520,9 +521,11 @@ class FeedEntry {
 			"replies" => $this->replies,
 			"shares" => $this->shares,
 			"favorites" => $this->favorites,
-			"attachments" => $a,
+			"attachments" => $ar,
 			"time" => $this->time
-		]);
+		];
+
+		return $encode == true ? json_encode($a) : $a;
 	}
 
     /**
