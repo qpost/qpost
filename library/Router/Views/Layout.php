@@ -376,11 +376,11 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 								<div class="my-2">
 									<a href="/<?= $featuredUser->getUsername() ?>" class="clearUnderline">
 										<div class="card">
-											<div class="card-body">
+											<div class="px-2 py-2">
 												<img src="<?= $featuredUser->getAvatarURL() ?>" width="48" height="48" class="float-left rounded mr-2"/>
 
 												<div class="mt-1">
-													<b><?= $featuredUser->getDisplayName() ?></b>
+													<b style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 200px !important;"><?= $featuredUser->getDisplayName() . $featuredUser->renderCheckMark() ?></b>
 													<div class="small text-muted">@<?= $featuredUser->getUsername() ?></div>
 												</div>
 											</div>
