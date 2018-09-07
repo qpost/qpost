@@ -102,7 +102,7 @@ if(CacheHandler::existsInCache($n)){
 
 					if(!is_null($u2)){
 						?>
-			<div class="my-1 px-2 py-2 border-top<?= $l ? " border-bottom" : ""; ?>" style="border-color: #CCC;<?= $notification["seen"] == false ? " background: #D6EAFF; border-color: #9FCCFC;border-width: 3px" : ""; ?>">
+			<div class="my-1 px-2 py-2 border-top<?= $l ? " border-bottom" : ""; ?>" style="border-color: #CCC;<?= $notification["seen"] == false ? " background: " . (Util::isUsingNightMode() ? "#595959" : "#D6EAFF") . "; border-color: #9FCCFC;border-width: 3px" : ""; ?>">
 				<div class="row">
 					<div class="col-lg-1">
 						<a href="/<?= $u2->getUsername(); ?>" class="clearUnderline">
