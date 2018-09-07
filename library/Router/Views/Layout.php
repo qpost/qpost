@@ -348,7 +348,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 										for ($i = 0; $i < min(count($followersYouFollow),24); $i++){
 											$follower = $followersYouFollow[$i];
 
-											echo '<div class="float-left mt-1 mr-1' . ($i == min(count($followersYouFollow),24)-1 ? ' mb-2' : '') . '">';
+											echo '<div class="float-left mt-1 mr-1">';
 											echo '<a href="/' . $follower->getUsername() . '" class="clearUnderline">';
 											echo '<img src="' . $follower->getAvatarURL() . '" class="rounded" width="56" height="56" data-toggle="tooltip" title="' . $follower->getDisplayName() . ' (@' . $follower->getUsername() . ')"/>';
 											echo '</a>';
@@ -364,7 +364,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 										$boxTitle = is_null($user->getFeaturedBoxTitle()) ? "Featured" : $user->getFeaturedBoxTitle();
 
 										?>
-								<h5 class="mt-4 mb-0 convertEmoji" style="word-wrap: break-word;"><?= Util::sanatizeString($boxTitle) ?></h5>
+								<h5 class="mt-2 mb-0 convertEmoji" style="word-wrap: break-word;"><?= Util::sanatizeString($boxTitle) ?></h5>
 										<?php
 
 										foreach($user->getFeaturedBoxContent() as $uid){
