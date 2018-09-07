@@ -265,7 +265,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 						<div class="col-lg-3 mb-3">
 							<div class="sticky-top" style="top: 70px">
 								<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
-								<h4 class="mb-0 convertEmoji"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
+								<h4 class="mb-0 convertEmoji" style="word-wrap: break-word;"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
 								<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
 
 								<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
