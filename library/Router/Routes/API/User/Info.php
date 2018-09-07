@@ -15,7 +15,10 @@ $app->bind("/api/user/info",function(){
 							if(is_null($user) && is_numeric($_GET["user"])) $user = User::getUserById($_GET["user"]);
 
 							if(!is_null($user)){
-								return $user->toAPIJson();
+								$a = $user->toAPIJson(false);
+								$a["followersYouKnow"] = $user->followersYouFollow($token->getUser());
+
+								return json_encode($a);
 							} else {
 								return json_encode(["error" => "Unknown user"]);
 							}

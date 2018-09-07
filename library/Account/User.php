@@ -79,7 +79,7 @@ class User {
 	*/
 	public static function getUserByEmail($email){
 		$id = null;
-
+		
 		$mysqli = Database::Instance()->get();
 		$stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE `email` = ?");
 		$stmt->bind_param("s",$email);
@@ -350,11 +350,11 @@ class User {
 	* @var string $emailActivationToken
 	*/
 	private $emailActivationToken;
-
+	
 	/**
-	 * @access private
-	 * @var bool $verified
-	 */
+	* @access private
+	* @var bool $verified
+	*/
 	private $verified;
 	
 	/**
@@ -530,23 +530,23 @@ class User {
 	public function isGigadriveLinked(){
 		return !is_null($this->gigadriveId) && !is_null($this->token);
 	}
-
+	
 	/**
-	 * Returns whether the user is verified
-	 * 
-	 * @access public
-	 * @return bool
-	 */
+	* Returns whether the user is verified
+	* 
+	* @access public
+	* @return bool
+	*/
 	public function isVerified(){
 		return $this->verified;
 	}
-
+	
 	/**
-	 * Returns HTML code for check icon for verified users
-	 * 
-	 * @access public
-	 * @return string
-	 */
+	* Returns HTML code for check icon for verified users
+	* 
+	* @access public
+	* @return string
+	*/
 	public function renderCheckMark(){
 		return $this->verified ? '<span class="ml-1 small" data-placement="right" data-toggle="tooltip" data-html="true" title="<b>Verified account</b><br/>This account has has been confirmed as an authentic page for this public figure, media company or brand"><i class="fas fa-check-circle"' . (Util::isUsingNightMode() ? "" : ' style="color: #007bff"') . '></i></span>' : "";
 	}
@@ -1670,14 +1670,14 @@ class User {
 		
 		return $this->followingArray;
 	}
-
+	
 	/**
-	 * Returns this object as json object to be used in the API
-	 * 
-	 * @access public
-	 * @param bool $encode If true, will return a json string, else an associative array
-	 * @return string|array
-	 */
+	* Returns this object as json object to be used in the API
+	* 
+	* @access public
+	* @param bool $encode If true, will return a json string, else an associative array
+	* @return string|array
+	*/
 	public function toAPIJson($encode = true){
 		$a = [
 			"id" => $this->id,
@@ -1693,7 +1693,7 @@ class User {
 			"suspended" => $this->isSuspended() ? true : false,
 			"emailActivated" => $this->emailActivated ? true : false
 		];
-
+		
 		return $encode == true ? json_encode($a) : $a;
 	}
 	
@@ -1933,88 +1933,86 @@ class User {
 		
 		return false;
 	}
-
+	
 	/**
-	 * Returns an array of user objects that follow the user and are followed by the current user
-	 * 
-	 * @access public
-	 * @return User[]
-	 */
-	public function followersYouFollow(){
-		if(Util::isLoggedIn()){
-			$user = Util::getCurrentUser();
-
-			if(!is_null($user)){
-				$n = "followersYouFollow_" . $user->getId() . "_" . $this->id;
-
-				if(CacheHandler::existsInCache($n)){
-					return CacheHandler::getFromCache($n);
-				} else {
-					$mysqli = Database::Instance()->get();
-
-					$thisID = $this->id;
-					$uID = $user->getId();
-
-					$a = [];
-
-					$stmt = $mysqli->prepare("SELECT u.* FROM `users` AS u WHERE EXISTS (SELECT 1 FROM follows f WHERE f.following = ? AND f.follower = u.id) AND EXISTS (SELECT 1 FROM follows f WHERE f.following = u.id AND f.follower = ?) ORDER BY RAND()");
-					$stmt->bind_param("ii",$thisID,$uID);
-					if($stmt->execute()){
-						$result = $stmt->get_result();
-
-						if($result->num_rows){
-							while($row = $result->fetch_assoc()){
-								array_push($a,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]));
-							}
-
-							CacheHandler::setToCache($n,$a,3*60);
+	* Returns an array of user objects that follow the user and are followed by the current user
+	* 
+	* @access public
+	* @return User[]
+	*/
+	public function followersYouFollow($user = null){
+		if(is_null($user) && Util::isLoggedIn() && !is_null(Util::getCurrentUser())) $user = Util::getCurrentUser();
+		
+		if(!is_null($user)){
+			$n = "followersYouFollow_" . $user->getId() . "_" . $this->id;
+			
+			if(CacheHandler::existsInCache($n)){
+				return CacheHandler::getFromCache($n);
+			} else {
+				$mysqli = Database::Instance()->get();
+				
+				$thisID = $this->id;
+				$uID = $user->getId();
+				
+				$a = [];
+				
+				$stmt = $mysqli->prepare("SELECT u.* FROM `users` AS u WHERE EXISTS (SELECT 1 FROM follows f WHERE f.following = ? AND f.follower = u.id) AND EXISTS (SELECT 1 FROM follows f WHERE f.following = u.id AND f.follower = ?) ORDER BY RAND()");
+				$stmt->bind_param("ii",$thisID,$uID);
+				if($stmt->execute()){
+					$result = $stmt->get_result();
+					
+					if($result->num_rows){
+						while($row = $result->fetch_assoc()){
+							array_push($a,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]));
 						}
+						
+						CacheHandler::setToCache($n,$a,3*60);
 					}
-					$stmt->close();
-
-					return $a;
 				}
+				$stmt->close();
+				
+				return $a;
 			}
 		}
-
+		
 		return [];
 	}
-
+	
 	/**
-	 * Returns HTML code to use in an user list
-	 * 
-	 * @access public
-	 * @return string
-	 */
+	* Returns HTML code to use in an user list
+	* 
+	* @access public
+	* @return string
+	*/
 	public function renderForUserList(){
 		if(!$this->mayView()) return "";
-
+		
 		$s = "";
-
+		
 		// V1
 		/*$s .= '<div class="col-md-4 px-1 py-1">';
 		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 327px">';
 		$s .= '<div class="px-2 py-2 text-center">';
 		$s .= '<a href="/' . $this->username . '" class="clearUnderline"><img src="' . $this->getAvatarURL() . '" width="60" height="60" class="rounded mb-1"/>';
-
+		
 		$s .= '<h5 class="mb-0 convertEmoji">' . $this->getDisplayName() . '</a></h5>';
 		$s .= '<p class="text-muted my-0" style="font-size: 16px">@' . $this->username . '</p>';
-
+		
 		if(Util::isLoggedIn()){
 			$s .= '</div>';
-
+			
 			$s .= '<div class="text-center px-2 py-2" style="background: #212529">';
 			$s .= Util::followButton($this->id,true,["btn-block"]);
 			$s .= '</div>';
-
+			
 			$s .= '<div class="px-2 py-2 text-center">';
 		}
-
+		
 		$s .= !is_null($this->bio) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($this->bio) . '</p>' : "";
 		$s .= '</div>';
 		$s .= '</div>';
 		$s .= '</div>';*/
-
+		
 		// V2
 		$s .= '<div class="col-md-4 px-1 py-1">';
 		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 100%; min-height: 200px;">';
@@ -2024,9 +2022,9 @@ class User {
 		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
 		$s .= '<img class="rounded mx-1 my-1" src="' . $this->getAvatarURL() . '" width="40" height="40"/>';
 		$s .= '</a>';
-        $s .= '</div>';
-
-        $s .= '<div class="float-left ml-1">';
+		$s .= '</div>';
+		
+		$s .= '<div class="float-left ml-1">';
 		$s .= '<p class="mb-0" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 200px !important;">';
 		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
 		$s .= '<span class="font-weight-bold convertEmoji">' . $this->getDisplayName() . $this->renderCheckMark() . '</span>';
@@ -2037,18 +2035,18 @@ class User {
 		$s .= '</div>';
 		if(Util::isLoggedIn()){
 			$s .= '</div>';
-
+			
 			$s .= '<div class="text-center px-2 py-2" style="background: #212529">';
 			$s .= Util::followButton($this->id,true,["btn-block"]);
 			$s .= '</div>';
-
+			
 			$s .= '<div class="px-4 py-2 text-center">';
 		}
 		$s .= !is_null($this->bio) ? '<p class="mb-0 mt-1 convertEmoji">' . Util::convertPost($this->bio) . '</p>' : "<em>No bio set.</em>";
 		$s .= '</div>';
 		$s .= '</div>';
 		$s .= '</div>';
-
+		
 		return $s;
 	}
 	
