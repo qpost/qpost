@@ -83,7 +83,7 @@
 										<?= Util::getCurrentUser()->getDisplayName() . Util::getCurrentUser()->renderCheckMark() ?>
 									</div>
 
-									<div class="text-muted small" style="max-width: 168px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; margin-top: -7px;">
+									<div class="text-muted small" style="max-width: 168px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; margin-top: -5px;">
 										@<?= Util::getCurrentUser()->getUsername() ?>
 									</div>
 								</a>
