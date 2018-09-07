@@ -47,3 +47,10 @@ require_once __DIR__ . "/../Media/MediaFile.php";
 }*/
 
 Util::cleanupTempFolder();
+if(Util::isLoggedIn()){
+	$token = Token::getTokenById($_COOKIE["sesstoken"]);
+
+	if(!is_null($token)){
+		$token->renew();
+	}
+}

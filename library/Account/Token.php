@@ -138,6 +138,12 @@ class Token {
 
 	/**
 	 * @access private
+	 * @var string $lastAccessTime
+	 */
+	private $lastAccessTime;
+
+	/**
+	 * @access private
 	 * @var string $expiry
 	 */
 	private $expiry;
@@ -219,6 +225,16 @@ class Token {
 	}
 
 	/**
+	 * Returns the time the token was last used
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function getLastAccessTime(){
+		return $this->lastAccessTime;
+	}
+
+	/**
 	 * Returns the time this token will expire
 	 * 
 	 * @access public
@@ -247,7 +263,7 @@ class Token {
 		if(!$this->isExpired()){
 			$mysqli = Database::Instance()->get();
 
-			$stmt = $mysqli->prepare("UPDATE `tokens` SET `expiry` = DATE_ADD(NOW(), INTERVAL 6 MONTH) WHERE `id` = ?");
+			$stmt = $mysqli->prepare("UPDATE `tokens` SET `expiry` = DATE_ADD(NOW(), INTERVAL 6 MONTH), `lastAccessTime` = CURRENT_TIMESTAMP WHERE `id` = ?");
 			$stmt->bind_param("s",$this->id);
 			if($stmt->execute()){
 				$this->reload();
@@ -314,6 +330,7 @@ class Token {
 				$this->lastIP = $row["lastIP"];
 				$this->userAgent = $row["userAgent"];
 				$this->time = $row["time"];
+				$this->lastAccessTime = $row["lastAccessTime"];
 				$this->expiry = $row["expiry"];
 
 				$this->exists = true;
