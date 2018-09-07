@@ -4,7 +4,16 @@ $app->bind("/login",function(){
 	if(DEVELOPER_MODE !== null && DEVELOPER_MODE == true && isset($_GET["id"])){
 		// DEBUG ROUTE FOR FORCING LOGIN
 
-		$_SESSION["id"] = (int)$_GET["id"];
+		$user = User::getUserById($_GET["id"]);
+	
+		if($user->isSuspended() === false){
+			$token = Token::createToken($user,$_SERVER["HTTP_USER_AGENT"],Util::getIP());
+
+			if(!is_null($token)){
+				Util::setCookie("sesstoken",$token->getId(),180);
+			}
+		}
+
 		return $this->reroute("/");
 	} else {
 		if(!Util::isLoggedIn()){
@@ -39,7 +48,13 @@ $app->bind("/login",function(){
 										$user = User::getUserById($row["id"]);
 	
 										if($user->isSuspended() === false){
-											$_SESSION["id"] = $user->getId();
+											$token = Token::createToken($user,$_SERVER["HTTP_USER_AGENT"],Util::getIP());
+
+											if(!is_null($token)){
+												Util::setCookie("sesstoken",$token->getId(),180);
+											} else {
+												$errorMsg = "Your session token could not be created.";
+											}
 										} else {
 											$errorMsg = "Your account has been suspended.";
 										}
@@ -114,9 +129,14 @@ $app->bind("/loginCallback",function(){
 								$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
 								$user->updateLastGigadriveUpdate();
 
-								$_SESSION["id"] = $user->getId();
+								$token = Token::createToken($user,$_SERVER["HTTP_USER_AGENT"],Util::getIP());
 
-								return $this->reroute("/");
+								if(!is_null($token)){
+									Util::setCookie("sesstoken",$token->getId(),180);
+									return $this->reroute("/");
+								} else {
+									return $this->reroute("/?msg=sessionTokenCouldNotBeCreated");
+								}
 							} else {
 								return $this->reroute("/login?msg=suspended");
 							}

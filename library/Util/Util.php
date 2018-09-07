@@ -106,7 +106,17 @@ class Util {
 	 * @return User
 	 */
 	public static function getCurrentUser(){
-		return self::isLoggedIn() ? User::getUserById($_SESSION["id"]) : null;
+		if(isset($_COOKIE["sesstoken"]) && !Util::isEmpty($_COOKIE["sesstoken"])){
+			$token = Token::getTokenById($_COOKIE["sesstoken"]);
+
+			if(!is_null($token)){
+				if($token->isExpired() == false){
+					return $token->getUser();
+				}
+			}
+		}
+
+		return null;
 	}
 	
 	/**
@@ -571,7 +581,9 @@ class Util {
      * @return bool
      */
 	public static function isLoggedIn(){
-		if(isset($_SESSION["id"]) && !is_null($_SESSION["id"]) && !Util::isEmpty($_SESSION["id"])){
+		return !is_null(self::getCurrentUser());
+
+		/*if(isset($_SESSION["id"]) && !is_null($_SESSION["id"]) && !Util::isEmpty($_SESSION["id"])){
 			if(!is_null(User::getUserById($_SESSION["id"]))){
 				return true;
 			} else {
@@ -580,7 +592,7 @@ class Util {
 			}
 		} else {
 			return false;
-		}
+		}*/
 	}
 
 	/**

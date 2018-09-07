@@ -49,7 +49,7 @@ class Token {
 		$stmt = $mysqli->prepare("INSERT INTO `tokens` (`id`,`user`,`lastIP`,`userAgent`,`expiry`) VALUES(?,?,?,?,DATE_ADD(NOW(), INTERVAL 6 MONTH));");
 		$stmt->bind_param("siss",$id,$user,$ip,$userAgent);
 		if($stmt->execute()){
-			$token = self::getTokenById($stmt->insert_id);
+			$token = self::getTokenById($id);
 		}
 		$stmt->close();
 
@@ -102,6 +102,10 @@ class Token {
 		return $b;
 	}
 
+	protected function __construct($id){
+		$this->id = $id;
+	}
+
 	/**
 	 * @access private
 	 * @var string $id
@@ -143,10 +147,6 @@ class Token {
 	 * @var bool $exists
 	 */
 	private $exists = false;
-
-	protected function __construct($id){
-		$this->id = $id;
-	}
 	
 	/**
 	 * Returns the ID of the token
