@@ -548,7 +548,7 @@ class User {
 	 * @return string
 	 */
 	public function renderCheckMark(){
-		return $this->verified ? '<span class="ml-1" data-placement="right" data-toggle="tooltip" data-html="true" title="<b>Verified account</b><br/>This account has has been confirmed as an authentic page for this public figure, media company or brand"><i class="fas fa-check-circle"' . (Util::isUsingNightMode() ? "" : ' style="color: #007bff"') . '></i></span>' : "";
+		return $this->verified ? '<span class="ml-1 small" data-placement="right" data-toggle="tooltip" data-html="true" title="<b>Verified account</b><br/>This account has has been confirmed as an authentic page for this public figure, media company or brand"><i class="fas fa-check-circle"' . (Util::isUsingNightMode() ? "" : ' style="color: #007bff"') . '></i></span>' : "";
 	}
 	
 	/**
