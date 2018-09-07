@@ -1679,6 +1679,14 @@ class User {
 	* @return string|array
 	*/
 	public function toAPIJson($encode = true){
+		$featuredBox = [];
+		foreach($this->featuredBoxContent as $uID){
+			$u = User::getUserById($uID);
+			if(is_null($u)) continue;
+
+			array_push($featuredBox,$u);
+		}
+
 		$a = [
 			"id" => $this->id,
 			"displayName" => $this->displayName,
@@ -1691,7 +1699,11 @@ class User {
 			"joinDate" => $this->time,
 			"gigadriveJoinDate" => $this->gigadriveJoinDate,
 			"suspended" => $this->isSuspended() ? true : false,
-			"emailActivated" => $this->emailActivated ? true : false
+			"emailActivated" => $this->emailActivated ? true : false,
+			"featuredBox" => [
+				"title" => !is_null($this->featuredBoxTitle) ? $this->featuredBoxTitle : "Featured",
+				"content" => $featuredBox
+			]
 		];
 		
 		return $encode == true ? json_encode($a) : $a;
