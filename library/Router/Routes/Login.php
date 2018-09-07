@@ -146,9 +146,14 @@ $app->bind("/loginCallback",function(){
 									$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
 									$user->updateLastGigadriveUpdate();
 
-									$_SESSION["id"] = $user->getId();
+									$token = Token::createToken($user,$_SERVER["HTTP_USER_AGENT"],Util::getIP());
 
-									return $this->reroute("/");
+									if(!is_null($token)){
+										Util::setCookie("sesstoken",$token->getId(),180);
+										return $this->reroute("/");
+									} else {
+										return $this->reroute("/?msg=sessionTokenCouldNotBeCreated");
+									}
 								} else {
 									return $this->reroute("/?msg=gigadriveLoginUsernameNotAvailable");
 								}

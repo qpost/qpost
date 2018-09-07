@@ -15,9 +15,9 @@ $app->bind("/:query/following",function($params){
 				} else if($user->isSuspended()){
 					return $this->reroute("/" . $user->getUsername());
 				} else {
-					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
+					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!is_null(Util::getCurrentUser()) || $user->getId() != Util::getCurrentUser()->getId())){
 						return $this->reroute("/" . $user->getUsername());
-					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
+					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != Util::getCurrentUser()->getId() && !$user->isFollower(Util::getCurrentUser()->getId())))){
 						return $this->reroute("/" . $user->getUsername());
 					} else {
 						if($query !== $user->getUsername())
@@ -25,7 +25,7 @@ $app->bind("/:query/following",function($params){
 		
 						$data = array(
 							"title" => "People followed by " . $user->getUsername(),
-							"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
+							"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
 							"user" => $user,
 							"socialImage" => $user->getAvatarURL(),
 							"showProfile" => true,
@@ -57,9 +57,9 @@ $app->bind("/:query/following/:page",function($params){
 				} else if($user->isSuspended()){
 					return $this->reroute("/" . $user->getUsername());
 				} else {
-					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
+					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!is_null(Util::getCurrentUser()) || $user->getId() != Util::getCurrentUser()->getId())){
 						return $this->reroute("/" . $user->getUsername());
-					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
+					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != Util::getCurrentUser()->getId() && !$user->isFollower(Util::getCurrentUser()->getId())))){
 						return $this->reroute("/" . $user->getUsername());
 					} else {
 						if($query !== $user->getUsername())
@@ -67,7 +67,7 @@ $app->bind("/:query/following/:page",function($params){
 		
 						$data = array(
 							"title" => "People followed by " . $user->getUsername(),
-							"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
+							"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
 							"user" => $user,
 							"socialImage" => $user->getAvatarURL(),
 							"showProfile" => true,
@@ -99,9 +99,9 @@ $app->bind("/:query/followers",function($params){
 				} else if($user->isSuspended()){
 					return $this->reroute("/" . $user->getUsername());
 				} else {
-					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
+					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!is_null(Util::getCurrentUser()) || $user->getId() != Util::getCurrentUser()->getId())){
 						return $this->reroute("/" . $user->getUsername());
-					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
+					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != Util::getCurrentUser()->getId() && !$user->isFollower(Util::getCurrentUser()->getId())))){
 						return $this->reroute("/" . $user->getUsername());
 					} else {
 						if($query !== $user->getUsername())
@@ -109,7 +109,7 @@ $app->bind("/:query/followers",function($params){
 		
 						$data = array(
 							"title" => "People following " . $user->getUsername(),
-							"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
+							"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
 							"user" => $user,
 							"socialImage" => $user->getAvatarURL(),
 							"showProfile" => true,
@@ -141,9 +141,9 @@ $app->bind("/:query/followers/:page",function($params){
 				} else if($user->isSuspended()){
 					return $this->reroute("/" . $user->getUsername());
 				} else {
-					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
+					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!is_null(Util::getCurrentUser()) || $user->getId() != Util::getCurrentUser()->getId())){
 						return $this->reroute("/" . $user->getUsername());
-					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
+					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != Util::getCurrentUser()->getId() && !$user->isFollower(Util::getCurrentUser()->getId())))){
 						return $this->reroute("/" . $user->getUsername());
 					} else {
 						if($query !== $user->getUsername())
@@ -151,7 +151,7 @@ $app->bind("/:query/followers/:page",function($params){
 		
 						$data = array(
 							"title" => "People following " . $user->getUsername(),
-							"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
+							"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
 							"user" => $user,
 							"socialImage" => $user->getAvatarURL(),
 							"showProfile" => true,
@@ -195,7 +195,7 @@ $app->bind("/:query",function($params){
 				
 					return $this->render("views:Profile/Suspended.php with views:Layout.php",$data);
 				} else {
-					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
+					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!is_null(Util::getCurrentUser()) || $user->getId() != Util::getCurrentUser()->getId())){
 						$data = array(
 							"user" => $user,
 							"socialImage" => $user->getAvatarURL(),
@@ -203,7 +203,7 @@ $app->bind("/:query",function($params){
 						);
 					
 						return $this->render("views:Profile/ClosedLevel.php with views:Layout.php",$data);
-					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
+					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != Util::getCurrentUser()->getId() && !$user->isFollower(Util::getCurrentUser()->getId())))){
 						$data = array(
 							"user" => $user,
 							"socialImage" => $user->getAvatarURL(),
@@ -217,7 +217,7 @@ $app->bind("/:query",function($params){
 		
 						$data = array(
 							"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
-							"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
+							"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
 							"user" => $user,
 							"socialImage" => $user->getAvatarURL(),
 							"showProfile" => true,
@@ -249,9 +249,9 @@ $app->bind("/:query/:page",function($params){
 				} else if($user->isSuspended()){
 					return $this->reroute("/" . $user->getUsername());
 				} else {
-					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!isset($_SESSION["id"]) || $user->getId() != $_SESSION["id"])){
+					if($user->getPrivacyLevel() == PrivacyLevel::CLOSED && (!is_null(Util::getCurrentUser()) || $user->getId() != Util::getCurrentUser()->getId())){
 						return $this->reroute("/" . $user->getUsername());
-					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != $_SESSION["id"] && !$user->isFollower($_SESSION["id"])))){
+					} else if($user->getPrivacyLevel() == PrivacyLevel::PRIVATE && (!Util::isLoggedIn() || ($user->getId() != Util::getCurrentUser()->getId() && !$user->isFollower(Util::getCurrentUser()->getId())))){
 						return $this->reroute("/" . $user->getUsername());
 					} else {
 						$user = User::getUserByUsername($query);
@@ -263,7 +263,7 @@ $app->bind("/:query/:page",function($params){
 			
 							$data = array(
 								"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
-								"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
+								"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
 								"user" => $user,
 								"socialImage" => $user->getAvatarURL(),
 								"showProfile" => true,

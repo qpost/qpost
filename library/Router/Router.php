@@ -22,7 +22,7 @@ try {
 define("CSRF_TOKEN",$csrf->getToken());
 
 if(Util::isLoggedIn() && Util::getCurrentUser()->isSuspended()){
-	unset($_SESSION["id"]);
+	unset($_COOKIE["sesstoken"]);
 }
 
 require $app->path("routes:Home.php");

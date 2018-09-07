@@ -23,7 +23,7 @@ $app->bind("/status/:id",function($params){
 				$data = array(
 					"title" => $post->getUser()->getDisplayName() . " on qpost: \"" . Util::limitString($post->getText(),34,true) . "\"",
 					"originalTitle" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
-					"nav" => Util::isLoggedIn() && $user->getId() == $_SESSION["id"] ? NAV_PROFILE : null,
+					"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
 					"user" => $user,
 					"socialImage" => $user->getAvatarURL(),
 					"showProfile" => true,

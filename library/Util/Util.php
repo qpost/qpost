@@ -582,17 +582,6 @@ class Util {
      */
 	public static function isLoggedIn(){
 		return !is_null(self::getCurrentUser());
-
-		/*if(isset($_SESSION["id"]) && !is_null($_SESSION["id"]) && !Util::isEmpty($_SESSION["id"])){
-			if(!is_null(User::getUserById($_SESSION["id"]))){
-				return true;
-			} else {
-				unset($_SESSION["id"]);
-				return false;
-			}
-		} else {
-			return false;
-		}*/
 	}
 
 	/**
