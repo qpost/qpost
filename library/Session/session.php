@@ -14,7 +14,24 @@ function openSession($path,$name){
 	} else {
 		return false;
 	}*/
-	return true;
+	//return true;
+
+	$data = "";
+
+	$mysqli = \Database::Instance()->get();
+	$ip = Util::getIP();
+
+	$userAgent = $_SERVER["HTTP_USER_AGENT"];
+	
+	$stmt = $mysqli->prepare("INSERT IGNORE INTO `sessions` (`id`,`data`,`lastAccessTime`,`userAgent`,`ip`) VALUES(?,?,CURRENT_TIMESTAMP,?,?)");
+	$stmt->bind_param("sssssss",$name,$data,$userAgent,$ip);
+	if($stmt->execute()){
+		$stmt->close();
+		return true;
+	} else {
+		$stmt->close();
+		return false;
+	}
 }
 
 function closeSession(){
