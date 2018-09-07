@@ -30,7 +30,6 @@ require_once __DIR__ . "/../Mail/Templates/autoload.php";
 require_once __DIR__ . "/../Util/Util.php";
 require_once __DIR__ . "/../Lime/App.php";
 require_once __DIR__ . "/../Media/MediaFile.php";
-require_once __DIR__ . "/../Session/session.php";
 
 //\CacheHandler::clearCache();
 
