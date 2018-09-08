@@ -13,10 +13,11 @@ $app->bind("/api/token/request",function(){
 					$password = $_GET["password"];
 
 					$user = User::getUserByEmail($email);
+					if(is_null($user)) $user = User::getUserByUsername($email);
 
 					if(!is_null($user)){
 						if($user->isGigadriveLinked()){
-							$content = @file_get_contents("https://api.gigadrivegroup.com/v1/login/");
+							$content = @file_get_contents("https://api.gigadrivegroup.com/v1/login/?apiKey=" . urlencode(GIGADRIVE_API_LEGACY_KEY) . "&username=" . urlencode($email) . "&password=" . urlencode($password));
 
 							if($content && Util::isValidJSON($content)){
 								$result = json_decode($content,true);
