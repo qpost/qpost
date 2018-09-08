@@ -47,7 +47,7 @@ $app->bind("/api/token/request",function(){
 						$token = Token::createToken($user,isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : null,Util::getIP());
 
 						if(!is_null($token)){
-							return json_encode(["token" => ["id" => $token->getId(),"expiry" => $token->getExpiryTime()]]);
+							return json_encode(["token" => ["id" => $token->getId(),"expiry" => $token->getExpiryTime()], "user" => $user->toAPIJson(false)]);
 						} else {
 							return json_encode(["error" => "An error occurred"]);
 						}
