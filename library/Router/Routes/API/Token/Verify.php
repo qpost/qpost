@@ -2,6 +2,7 @@
 
 $app->bind("/api/token/verify",function(){
 	$this->response->mime = "json";
+	header("Access-Control-Allow-Origin: *");
 
 	if(isset($_GET["token"])){
 		if(!Util::isEmpty($_GET["token"])){
