@@ -1676,17 +1676,10 @@ class User {
 	* 
 	* @access public
 	* @param bool $encode If true, will return a json string, else an associative array
+	* @param bool $includeFeaturedBox If true, the featured box will be included
 	* @return string|array
 	*/
-	public function toAPIJson($encode = true){
-		$featuredBox = [];
-		foreach($this->featuredBoxContent as $uID){
-			$u = User::getUserById($uID);
-			if(is_null($u)) continue;
-
-			array_push($featuredBox,$u->toAPIJson(false));
-		}
-
+	public function toAPIJson($encode = true,$includeFeaturedBox = true){
 		$a = [
 			"id" => $this->id,
 			"displayName" => $this->displayName,
@@ -1703,12 +1696,23 @@ class User {
 			"posts" => $this->getPosts(),
 			"feedEntries" => $this->getFeedEntries(),
 			"following" => $this->getFollowing(),
-			"followers" => $this->getFollowers(),
-			"featuredBox" => [
+			"followers" => $this->getFollowers()
+		];
+
+		if($includeFeaturedBox){
+			$featuredBox = [];
+			foreach($this->featuredBoxContent as $uID){
+				$u = User::getUserById($uID);
+				if(is_null($u)) continue;
+
+				array_push($featuredBox,$u->toAPIJson(false,false));
+			}
+
+			$a["featuredBox"] = [
 				"title" => !is_null($this->featuredBoxTitle) ? $this->featuredBoxTitle : "Featured",
 				"content" => $featuredBox
-			]
-		];
+			];
+		}
 		
 		return $encode == true ? json_encode($a) : $a;
 	}
