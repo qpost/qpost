@@ -1684,7 +1684,7 @@ class User {
 			$u = User::getUserById($uID);
 			if(is_null($u)) continue;
 
-			array_push($featuredBox,$u);
+			array_push($featuredBox,$u->toAPIJson(false));
 		}
 
 		$a = [
