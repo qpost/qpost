@@ -1700,6 +1700,10 @@ class User {
 			"gigadriveJoinDate" => $this->gigadriveJoinDate,
 			"suspended" => $this->isSuspended() ? true : false,
 			"emailActivated" => $this->emailActivated ? true : false,
+			"posts" => $this->getPosts(),
+			"feedEntries" => $this->getFeedEntries(),
+			"following" => $this->getFollowing(),
+			"followers" => $this->getFollowers(),
 			"featuredBox" => [
 				"title" => !is_null($this->featuredBoxTitle) ? $this->featuredBoxTitle : "Featured",
 				"content" => $featuredBox
