@@ -16,8 +16,14 @@ $app->bind("/api/user/info",function(){
 							if(is_null($user) && is_numeric($_GET["user"])) $user = User::getUserById($_GET["user"]);
 
 							if(!is_null($user)){
+								$followersYouKnow = [];
+
+								foreach($user->followersYouFollow($token->getUser()) as $u){
+									array_push($followersYouKnow,$u->toAPIJson(false));
+								}
+
 								$a = $user->toAPIJson(false);
-								$a["followersYouKnow"] = $user->followersYouFollow($token->getUser());
+								$a["followersYouKnow"] = $followersYouKnow;
 
 								return json_encode($a);
 							} else {
