@@ -19,10 +19,10 @@ $app->bind("/api/user/info",function(){
 								$followersYouKnow = [];
 
 								foreach($user->followersYouFollow($token->getUser()) as $u){
-									array_push($followersYouKnow,$u->toAPIJson(false));
+									array_push($followersYouKnow,$u->toAPIJson($token->getUser(),false));
 								}
 
-								$a = $user->toAPIJson(false);
+								$a = $user->toAPIJson($token->getUser(),false);
 								$a["followersYouKnow"] = $followersYouKnow;
 
 								return json_encode($a);

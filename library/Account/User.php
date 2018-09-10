@@ -1675,11 +1675,12 @@ class User {
 	* Returns this object as json object to be used in the API
 	* 
 	* @access public
+	* @param User $view User to use as "current"
 	* @param bool $encode If true, will return a json string, else an associative array
 	* @param bool $includeFeaturedBox If true, the featured box will be included
 	* @return string|array
 	*/
-	public function toAPIJson($encode = true,$includeFeaturedBox = true){
+	public function toAPIJson($view,$encode = true,$includeFeaturedBox = true){
 		$a = [
 			"id" => $this->id,
 			"displayName" => $this->displayName,
@@ -1696,7 +1697,9 @@ class User {
 			"posts" => $this->getPosts(),
 			"feedEntries" => $this->getFeedEntries(),
 			"following" => $this->getFollowing(),
-			"followers" => $this->getFollowers()
+			"followers" => $this->getFollowers(),
+			"followStatus" => $view->isFollowing($this) ? 1 : ($view->hasSentFollowRequest($this) ? 2 : 0),
+			"followedStatus" => $this->isFollowing($view) ? 1 : ($this->hasSentFollowRequest($view) ? 2 : 0),
 		];
 
 		if($includeFeaturedBox){
@@ -1705,7 +1708,7 @@ class User {
 				$u = User::getUserById($uID);
 				if(is_null($u)) continue;
 
-				array_push($featuredBox,$u->toAPIJson(false,false));
+				array_push($featuredBox,$u->toAPIJson($view,false,false));
 			}
 
 			$a["featuredBox"] = [

@@ -23,7 +23,7 @@ $app->bind("/api/token/verify",function(){
 									if(!$token->isExpired()){
 										$token->renew();
 
-										return json_encode(["status" => "Token valid","user" => $user->toAPIJson(false)]);
+										return json_encode(["status" => "Token valid","user" => $user->toAPIJson($token->getUser(),false)]);
 									} else {
 										return json_encode(["status" => "Token expired"]);
 									}
