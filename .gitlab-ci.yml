@@ -18,6 +18,12 @@ deploy:
     - 'which rsync || apk add rsync'
     - 'which ssh-agent || apk add openssh-client'
     - 'which git || apk add git'
+    - 'which php7 || apk add php7'
+    - 'which php7-fileinfo || apk add php7-fileinfo'
+    - 'which php7-curl || apk add php7-curl'
+    - 'which php7-ctype || apk add php7-ctype'
+    - 'which php7-gmp || apk add php7-gmp'
+    - 'which php7-mbstring || apk add php7-mbstring'
     - 'which composer || apk add composer'
     - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
