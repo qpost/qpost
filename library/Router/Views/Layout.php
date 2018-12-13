@@ -177,7 +177,9 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 
 									<div class="dropdown-divider"></div>
 
-									<a href="/nightmode" class="dropdown-item" data-no-instant>Night mode <span style="margin-top: -21px" class="float-right badge badge-<?= Util::isUsingNightMode() ? "success" : "danger" ?>"><?= Util::isUsingNightMode() ? "On" : "Off" ?></span></a>
+									<a href="/nightmode" class="dropdown-item" data-no-instant>
+										<?= Util::isUsingNightMode() ? "Disable night mode" : "Enable night mode" ?>
+									</a>
 								</div>
 							</li>
 							<?php
