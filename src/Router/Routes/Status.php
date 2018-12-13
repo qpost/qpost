@@ -20,7 +20,7 @@ $app->bind("/status/:id",function($params){
 					}
 				}
 				
-				$data = array(
+				return $this->render("views:Profile/Feed.php with views:Layout.php",[
 					"title" => $post->getUser()->getDisplayName() . " on qpost: \"" . Util::limitString($post->getText(),34,true) . "\"",
 					"originalTitle" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 					"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
@@ -31,9 +31,7 @@ $app->bind("/status/:id",function($params){
 					"currentPage" => 1,
 					"description" => Util::limitString($post->getText(),150,true),
 					"bigSocialImage" => isset($bigSocialImage) ? $bigSocialImage : null
-				);
-			
-				return $this->render("views:Profile/Feed.php with views:Layout.php",$data);
+				]);
 
                 //return $this->reroute("/" . $post->getUser()->getUsername());
             }

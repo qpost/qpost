@@ -3,9 +3,7 @@
 $app->bind("/requests",function(){
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
 
-	$data = array(
+	return $this->render("views:Requests.php with views:Layout.php",[
 		"title" => "Follow requests (" . Util::getCurrentUser()->getOpenFollowRequests() . ")"
-	);
-
-	return $this->render("views:Requests.php with views:Layout.php",$data);
+	]);
 });

@@ -11,13 +11,11 @@ $app->bind("/out",function(){
 				$host = Util::sanatizeString($host);
 				$link = Util::sanatizeString($link);
 
-				$data = array(
+				return $this->render("views:Out.php with views:Layout.php",[
 					"title" => "You are now headed to a different website",
 					"link" => $link,
 					"host" => $host
-				);
-			
-				return $this->render("views:Out.php with views:Layout.php",$data);
+				]);
 			} else {
 				return $this->reroute($link);
 			}

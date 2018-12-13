@@ -1,9 +1,7 @@
 <?php
 
 $app->bind("/features",function(){
-	$data = array(
+	return $this->render("views:Features.php with views:HomeLayout.php",[
         "title" => "Features"
-    );
-
-    return $this->render("views:Features.php with views:HomeLayout.php",$data);
+    ]);
 });

@@ -5,13 +5,11 @@ $app->bind("/notifications/:page",function($params){
 
 	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
 
-	$data = array(
+	return $this->render("views:Notifications.php with views:Layout.php",[
 		"title" => "Notifications (" . Util::getCurrentUser()->getUnreadNotifications() . ")",
 		"nav" => NAV_NOTIFICATIONS,
 		"currentPage" => $page
-	);
-
-	return $this->render("views:Notifications.php with views:Layout.php",$data);
+	]);
 });
 
 $app->bind("/notifications",function(){
@@ -19,11 +17,9 @@ $app->bind("/notifications",function(){
 
 	$page = 1;
 
-	$data = array(
+	return $this->render("views:Notifications.php with views:Layout.php",[
 		"title" => "Notifications (" . Util::getCurrentUser()->getUnreadNotifications() . ")",
 		"nav" => NAV_NOTIFICATIONS,
 		"currentPage" => $page
-	);
-
-	return $this->render("views:Notifications.php with views:Layout.php",$data);
+	]);
 });

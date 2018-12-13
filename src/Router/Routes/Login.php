@@ -82,12 +82,10 @@ $app->bind("/login",function(){
 				}
 			}
 
-			$data = array(
+			return $this->render("views:Login.php with views:Layout.php",[
 				"title" => "Log in",
 				"errorMsg" => $errorMsg
-			);
-		
-			return $this->render("views:Login.php with views:Layout.php",$data);
+			]);
 		} else {
 			return $this->reroute("/");
 		}
