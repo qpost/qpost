@@ -1,0 +1,31 @@
+image: alpine:latest
+
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+
+stages:
+    - deploy
+
+cache:
+    paths:
+    - ~/.ssh/
+    - vendor/
+
+deploy:
+    stage: deploy
+    script:
+    - apk update
+    - 'which rsync || apk add rsync'
+    - 'which ssh-agent || apk add openssh-client'
+    - 'which git || apk add git'
+    - 'which composer || apk add composer'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - git submodule update --depth 50
+    - composer install --no-dev
+    - rsync -avze ssh --exclude=tmp --exclude=config.php --exclude=composer.json --exclude=composer.lock --exclude=.gitignore --exclude=.gitmodules --exclude=.gitlab-ci.yml --exclude=.git --exclude=LICENSE --exclude=README.md ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/
+    only:
+    - master
