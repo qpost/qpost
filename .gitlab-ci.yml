@@ -23,6 +23,7 @@ deploy:
     - 'which php7-curl || apk add php7-curl'
     - 'which php7-ctype || apk add php7-ctype'
     - 'which php7-gmp || apk add php7-gmp'
+    - 'which php7-gd || apk add php7-gd'
     - 'which php7-mbstring || apk add php7-mbstring'
     - 'which composer || apk add composer'
     - eval $(ssh-agent -s)
