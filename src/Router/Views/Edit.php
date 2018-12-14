@@ -262,7 +262,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 					<div class="mt-3">
 						<img src="<?= $user->getAvatarURL() ?>" width="300" height="300" class="rounded"/>
 
-						<div class="custom-file">
+						<div class="custom-file mt-2">
 							<input type="file" class="custom-file-input" id="customFile" name="file">
 							<label class="custom-file-label text-left" for="customFile">Choose file</label>
 						</div>
