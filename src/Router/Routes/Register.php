@@ -1,5 +1,7 @@
 <?php
 
+use \Gigadrive\MailTemplates\MailTemplates;
+
 $app->bind("/register",function(){
     if(!Util::isLoggedIn()){
 		if(isset($_GET["code"])){
@@ -59,10 +61,14 @@ $app->bind("/register",function(){
 																$mysqli = Database::Instance()->get();
 		
 																$emailActivated = !$verifyEmail;
-																$emailToken = Util::getRandomString(7);
+                                                                $emailToken = Util::getRandomString(7);
+
+                                                                $displayName = $username;
+                                                                
+                                                                mysqli_report(MYSQLI_REPORT_ALL);
 							
-																$stmt = $mysqli->prepare("INSERT INTO `users` (`displayName`,`username`,`email`,`emailActivated`,`emailActivationToken`,`token`) VALUES(?,?,?,?,?,?,?);");
-																$stmt->bind_param("sssss",$displayName,$username,$email,$emailActivated,$emailToken,$token);
+																$stmt = $mysqli->prepare("INSERT INTO `users` (`gigadriveId`,`displayName`,`username`,`email`,`emailActivated`,`emailActivationToken`,`token`) VALUES(?,?,?,?,?,?,?);");
+																$stmt->bind_param("isssiss",$id,$displayName,$username,$email,$emailActivated,$emailToken,$token);
 																if($stmt->execute()){
 																	$id = $stmt->insert_id;
 							
