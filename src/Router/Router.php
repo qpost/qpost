@@ -49,12 +49,10 @@ require $app->path("routes:API/autoload.php");
 
 $app->on("after",function() {
 	if($this->response->status == "404"){
-		$data = array(
+		$this->response->body = $this->render("views:ErrorPages/404.php with views:Layout.php",[
 			"title" => "Error 404: Page not found",
 			"subtitle" => "Error 404: Page not found"
-		);
-
-		$this->response->body = $this->render("views:ErrorPages/404.php with views:Layout.php",$data);
+		]);
 	}
 });
 
