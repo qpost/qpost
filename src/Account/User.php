@@ -181,16 +181,6 @@ class User {
 			self::getUserById($id)->removeFromCache();
 			
 			$user = self::getUserByGigadriveId($id);
-		} else {
-			$stmt = $mysqli->prepare("UPDATE `users` SET `username` = ?, `email` = ?, `token` = ?, `gigadriveJoinDate` = ? WHERE `gigadriveId` = ?");
-			$stmt->bind_param("sssssi",$username,$email,$avatar,$token,$registerDate,$id);
-			$stmt->execute();
-			$stmt->close();
-			
-			$user->username = $username;
-			$user->email = $email;
-			
-			$user->saveToCache();
 		}
 		
 		return $user;
