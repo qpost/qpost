@@ -761,13 +761,6 @@ $(document).ready(function(){
 	loadHomeFeed();
 	loadDropzone();
 	loadBasic();
-	
-	if("serviceWorker" in navigator){
-		navigator.serviceWorker.register("/serviceWorker.js").then((reg) => {})
-		.catch((err) => {
-			console.error("Failed to register the service worker",err);
-		});
-	}
 });
 
 function loadNotificationAlert(){
