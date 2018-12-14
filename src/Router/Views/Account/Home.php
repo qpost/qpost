@@ -3,7 +3,7 @@
 $user = Util::getCurrentUser();
 
 ?>
-<div class="card">
+<div class="card mb-3">
 	<table class="table my-0">
 		<tr>
 			<td style="width: 50%"><b>Account ID</b></td>
@@ -28,3 +28,7 @@ $user = Util::getCurrentUser();
 		<?php } ?>
 	</table>
 </div>
+
+<a href="<?= $app->routeUrl("/delete") ?>" class="btn btn-danger">
+	Delete this account
+</a>

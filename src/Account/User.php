@@ -2092,6 +2092,77 @@ class User {
 		
 		return $s;
 	}
+
+	/**
+	 * Deletes this account from the database and the cache, as well as all of their posts, favorites, followings etc.
+	 * 
+	 * @access public
+	 */
+	public function deleteAccount(){
+		$mysqli = \Database::Instance()->get();
+
+		$this->removeFromCache();
+
+		// remove user data
+		$stmt = $mysqli->prepare("DELETE FROM `users` WHERE `id` = ?");
+		$stmt->bind_param("i",$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all session tokens
+		$stmt = $mysqli->prepare("DELETE FROM `tokens` WHERE `user` = ?");
+		$stmt->bind_param("i",$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all suspensions
+		$stmt = $mysqli->prepare("DELETE FROM `suspensions` WHERE `target` = ?");
+		$stmt->bind_param("i",$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all notifications
+		$stmt = $mysqli->prepare("DELETE FROM `notifications` WHERE `user` = ? OR `follower` = ?");
+		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all messages
+		$stmt = $mysqli->prepare("DELETE FROM `messages` WHERE `sender` = ? OR `receiver` = ?");
+		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all follower requests
+		$stmt = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `follower` = ? OR `following` = ?");
+		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all followers and followings
+		$stmt = $mysqli->prepare("DELETE FROM `follows` WHERE `follower` = ? OR `following` = ?");
+		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all feed entries
+		$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `user` = ? OR `following` = ?");
+		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all favorites
+		$stmt = $mysqli->prepare("DELETE FROM `favorites` WHERE `user` = ?");
+		$stmt->bind_param("i",$this->id);
+		$stmt->execute();
+		$stmt->close();
+
+		// remove all blocks
+		$stmt = $mysqli->prepare("DELETE FROM `blocks` WHERE `user` = ? OR `target` = ?");
+		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->execute();
+		$stmt->close();
+	}
 	
 	/**
 	* Saves the user object to the cache
