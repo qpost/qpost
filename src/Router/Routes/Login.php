@@ -1,5 +1,7 @@
 <?php
 
+use Gigadrive\MailTemplates\MailTemplates;
+
 $app->bind("/login",function(){
 	if(DEVELOPER_MODE !== null && DEVELOPER_MODE == true && isset($_GET["id"])){
 		// DEBUG ROUTE FOR FORCING LOGIN
@@ -99,12 +101,9 @@ $app->bind("/login/gigadrive",function(){
 $app->bind("/loginCallback",function(){
 	if(!Util::isLoggedIn()){
 		if(isset($_GET["code"])){
-			$url = "https://api.gigadrivegroup.com/v3/gettoken?secret=" . GIGADRIVE_API_SECRET . "&code=" . urlencode($_GET["code"]);
-			$j = @json_decode(@file_get_contents($url),true);
+			$token = User::getGigadriveTokenFromCode($_GET["code"]);
 
-			if(isset($j["success"]) && !Util::isEmpty($j["success"]) && isset($j["token"]) && !Util::isEmpty($j["token"])){
-				$token = $j["token"];
-
+			if(!is_null($token)){
 				$url = "https://api.gigadrivegroup.com/v3/userdata?secret=" . GIGADRIVE_API_SECRET . "&token=" . urlencode($token);
 				$j = @json_decode(@file_get_contents($url),true);
 
@@ -124,9 +123,6 @@ $app->bind("/loginCallback",function(){
 								if($user->getEmail() != $email && !Util::isEmailAvailable($email)) return $this->reroute("/?msg=gigadriveLoginEmailNotAvailable");
 								if($user->getUsername() != $username && !Util::isUsernameAvailable($username)) return $this->reroute("/?msg=gigadriveLoginUsernameNotAvailable");
 
-								$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
-								$user->updateLastGigadriveUpdate();
-
 								$token = Token::createToken($user,$_SERVER["HTTP_USER_AGENT"],Util::getIP());
 
 								if(!is_null($token)){
@@ -139,25 +135,7 @@ $app->bind("/loginCallback",function(){
 								return $this->reroute("/login?msg=suspended");
 							}
 						} else {
-							if(Util::isEmailAvailable($email)){
-								if(Util::isUsernameAvailable($username)){
-									$user = User::registerUser($id,$username,$avatar,$email,$token,$registerDate);
-									$user->updateLastGigadriveUpdate();
-
-									$token = Token::createToken($user,$_SERVER["HTTP_USER_AGENT"],Util::getIP());
-
-									if(!is_null($token)){
-										Util::setCookie("sesstoken",$token->getId(),180);
-										return $this->reroute("/");
-									} else {
-										return $this->reroute("/?msg=sessionTokenCouldNotBeCreated");
-									}
-								} else {
-									return $this->reroute("/?msg=gigadriveLoginUsernameNotAvailable");
-								}
-							} else {
-								return $this->reroute("/?msg=gigadriveLoginEmailNotAvailable");
-							}
+							return $this->reroute("/register?code=" . $_GET["code"]);
 						}
 					} else {
 						return $this->reroute("/");

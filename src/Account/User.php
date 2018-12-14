@@ -185,6 +185,36 @@ class User {
 		
 		return $user;
 	}
+
+	/**
+	 * Gets a Gigadrive API token from the passed code
+	 * 
+	 * @access public
+	 * @param string $code
+	 * @return string|null
+	 */
+	public static function getGigadriveTokenFromCode($code){
+		if(Util::isEmpty($code)) return null;
+
+		$n = "gigadriveTokenFromCode_" . $code . "_" . Util::getIP();
+
+		if(\CacheHandler::existsInCache($n)){
+			return \CacheHandler::getFromCache($n);
+		} else {
+			$url = "https://api.gigadrivegroup.com/v3/gettoken?secret=" . GIGADRIVE_API_SECRET . "&code=" . urlencode($_GET["code"]);
+			$j = @json_decode(@file_get_contents($url),true);
+
+			if(isset($j["success"]) && !Util::isEmpty($j["success"]) && isset($j["token"]) && !Util::isEmpty($j["token"])){
+				$token = $j["token"];
+
+				\CacheHandler::setToCache($n,$token,30*60);
+
+				return $token;
+			}
+		}
+
+		return null;
+	}
 	
 	/**
 	* Gets a user object by data
