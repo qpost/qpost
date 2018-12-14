@@ -43,6 +43,7 @@ require $app->path("routes:ScriptsRoute.php");
 require $app->path("routes:Sitemap.php");
 require $app->path("routes:NightMode.php");
 require $app->path("routes:Register.php");
+require $app->path("routes:Delete.php");
 
 require $app->path("routes:Cronjobs/DeleteStaleAccounts.php");
 

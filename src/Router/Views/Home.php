@@ -103,6 +103,9 @@ if(isset($_POST["email"]) && isset($_POST["displayName"]) && isset($_POST["usern
 				case "gigadriveLoginEmailNotAvailable":
 					echo Util::createAlert($_GET["msg"],"Your email address has already been used on qpost. Please change your Gigadrive email address or consider registering via the formular below.",ALERT_TYPE_DANGER);
 					break;
+				case "accountDeleted":
+					echo Util::createAlert($_GET["msg"],"Your account and all it's data has been permanently deleted.",ALERT_TYPE_INFO);
+					break;
 			}
 		}
 
