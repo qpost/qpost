@@ -42,7 +42,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 						$usernameChange = false;
 						$verified = $user->isVerified();
 	
-						if(!$user->isGigadriveLinked() && isset($_POST["username"])){
+						if(isset($_POST["username"])){
 							$username = trim($_POST["username"]);
 	
 							if($username !== $user->getUsername()){
@@ -227,36 +227,17 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 					<div class="input-group-prepend">
 						<span class="input-group-text">@</span>
 					</div>
-					<input class="form-control disabled" <?php if($user->isGigadriveLinked()){ ?>disabled <?php } ?>type="text" min="3" max="16" name="username" id="username" value="<?= isset($_POST["username"]) ? Util::sanatizeString($_POST["username"]) : $user->getUsername(); ?>"/>
+					<input class="form-control disabled" type="text" min="3" max="16" name="username" id="username" value="<?= isset($_POST["username"]) ? Util::sanatizeString($_POST["username"]) : $user->getUsername(); ?>"/>
 				</div>
 			</div>
 
-			<?php if($user->isGigadriveLinked() == true && $user->isVerified() == false){ ?>
 			<div class="form-group row">
 				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
-					<b class="mr-1">Note:</b> Your username can only be changed on <a href="https://gigadrivegroup.com/account" target="_blank" class="ml-1">gigadrivegroup.com</a>.
+					<div class="w-100">You can only change your username every 30 days!</div>
+					<?php if($user->isGigadriveLinked() == true){ ?><div class="w-100">This will <u>not</u> affect your username on <a href="https://gigadrivegroup.com/account" target="_blank" class="ml-1">gigadrivegroup.com</a>.</div><?php } ?>
+					<?php if($user->isVerified() == true){ ?><div class="w-100">Changing your username will result in losing your verified status.</div><?php } ?>
 				</div>
 			</div>
-			<?php } else if($user->isGigadriveLinked() == false && $user->isVerified() == true) { ?>
-			<div class="form-group row">
-				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
-					<b class="mr-1">Note:</b> Changing your username will result in losing your verified status.
-				</div>
-			</div>
-			<?php } else if($user->isGigadriveLinked() == true && $user->isVerified() == true) { ?>
-			<div class="form-group row">
-				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
-					<b class="mr-1">Note:</b> You can only change your username every 30 days!<br/>
-					Changing your username will result in losing your verified status.
-				</div>
-			</div>
-			<?php } else { ?>
-			<div class="form-group row">
-				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
-					<b class="mr-1">Note:</b> You can only change your username every 30 days!
-				</div>
-			</div>
-			<?php } ?>
 
 			<div class="form-group row">
 				<label for="bio" class="control-label col-sm-2 col-form-label">Bio</label>
