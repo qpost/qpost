@@ -1,13 +1,10 @@
 {
     "require": {
         "phpmailer/phpmailer": "^5.2",
-        "team-reflex/oauth2-discord": "^1.0",
         "jasongrimes/paginator": "~1.0",
-        "nicklaw5/twitch-api-php": "^1.1",
         "donatj/phpuseragentparser": "^0.10.0",
         "gumlet/php-image-resize": "^1.9",
         "riimu/kit-csrf": "^2.4",
-        "minishlink/web-push": "^4.0",
         "tedivm/stash": "^0.14.2",
         "dereuromark/media-embed": "^0.4.2"
     }
