@@ -278,7 +278,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 			</div>
 
 			<div class="form-group row">
-				<label for="bio" class="control-label col-sm-2 col-form-label">Featured Box Title</label>
+				<label for="featuredBoxTitle" class="control-label col-sm-2 col-form-label">Featured Box Title</label>
 
 				<div class="col-sm-10 input-group mb-3">
 					<input class="form-control" type="text" name="featuredBoxTitle" id="featuredBoxTitle" max="25" value="<?= isset($_POST["featuredBoxTitle"]) ? Util::sanatizeString($_POST["featuredBoxTitle"]) : $user->getFeaturedBoxTitle(); ?>" placeholder="Featured"/>
@@ -286,7 +286,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 			</div>
 
 			<div class="form-group row">
-				<label for="bio" class="control-label col-sm-2 col-form-label">Featured Box Users</label>
+				<label for="featuredBoxUser1" class="control-label col-sm-2 col-form-label">Featured Box Users</label>
 
 				<div class="col-sm-10 mb-3">
 					<?php
