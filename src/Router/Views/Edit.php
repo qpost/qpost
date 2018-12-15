@@ -110,7 +110,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 													
 													$upload = Util::storeFileOnCDN("qpost/avatars/" . $user->getId() . "/",$tmpFile);
 													if(is_array($upload) && isset($upload["result"])){
-														$avatarUrl = sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,"serv/qpost/avatars/" . $user->getId() . "/" . $upload["result"]);
+														$avatarUrl = sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,"qpost/avatars/" . $user->getId() . "/" . $upload["result"]);
 													} else {
 														$errorMsg = "An error occurred." . (isset($upload["error"]) ? " (" . $upload["error"] . ")" : "");
 													}
