@@ -319,7 +319,7 @@ $app->post("/scripts/mediaUpload",function(){
 
 						$mediaID = MediaFile::generateNewID();
 
-						$cdnResult = Util::storeFileOnCDN("serv/qpost/media/" . $mediaID . "/",$tmpName);
+						$cdnResult = Util::storeFileOnCDN("qpost/media/" . $mediaID . "/",$tmpName);
 						if(!is_null($cdnResult)){
 							if(isset($cdnResult["url"])){
 								$url = $cdnResult["url"];
