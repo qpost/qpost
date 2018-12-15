@@ -201,7 +201,7 @@ class User {
 		if(\CacheHandler::existsInCache($n)){
 			return \CacheHandler::getFromCache($n);
 		} else {
-			$url = "https://api.gigadrivegroup.com/v3/gettoken?secret=" . GIGADRIVE_API_SECRET . "&code=" . urlencode($_GET["code"]);
+			$url = "https://gigadrivegroup.com/api/v3/token?secret=" . GIGADRIVE_API_SECRET . "&code=" . urlencode($_GET["code"]);
 			$j = @json_decode(@file_get_contents($url),true);
 
 			if(isset($j["success"]) && !Util::isEmpty($j["success"]) && isset($j["token"]) && !Util::isEmpty($j["token"])){

@@ -8,7 +8,7 @@ $app->bind("/register",function(){
 			$token = User::getGigadriveTokenFromCode($_GET["code"]);
 
 			if(!is_null($token)){
-				$url = "https://api.gigadrivegroup.com/v3/userdata?secret=" . GIGADRIVE_API_SECRET . "&token=" . urlencode($token);
+				$url = "https://gigadrivegroup.com/api/v3/user?secret=" . GIGADRIVE_API_SECRET . "&token=" . urlencode($token);
 				$j = @json_decode(@file_get_contents($url),true);
 
 				if(isset($j["success"]) && !Util::isEmpty($j["success"]) && isset($j["user"])){
