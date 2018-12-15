@@ -108,7 +108,7 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 													$image->crop($size,$size);
 													$image->save($tmpFile);
 													
-													$upload = Util::storeFileOnCDN("serv/qpost/avatars/" . $user->getId() . "/",$tmpFile);
+													$upload = Util::storeFileOnCDN("qpost/avatars/" . $user->getId() . "/",$tmpFile);
 													if(is_array($upload) && isset($upload["result"])){
 														$avatarUrl = sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,"serv/qpost/avatars/" . $user->getId() . "/" . $upload["result"]);
 													} else {
