@@ -73,48 +73,48 @@
 				<div class="homeFeedProfileBox card mb-3">
 					<div class="px-2 py-2">
 						<div class="d-block" style="height: 50px">
-							<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="clearUnderline float-left">
-								<img src="<?= Util::getCurrentUser()->getAvatarURL() ?>" class="rounded" width="48" height="48"/>
+							<a href="/<?= $user->getUsername() ?>" class="clearUnderline float-left">
+								<img src="<?= $user->getAvatarURL() ?>" class="rounded" width="48" height="48"/>
 							</a>
 
 							<div class="ml-2 float-left mt-1">
-								<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="clearUnderline float-left">
+								<a href="/<?= $user->getUsername() ?>" class="clearUnderline float-left">
 									<div class="font-weight-bold" style="max-width: 168px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">
-										<?= Util::getCurrentUser()->getDisplayName() . Util::getCurrentUser()->renderCheckMark() ?>
+										<?= $user->getDisplayName() . $user->renderCheckMark() ?>
 									</div>
 
 									<div class="text-muted small" style="max-width: 168px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; margin-top: -5px;">
-										@<?= Util::getCurrentUser()->getUsername() ?>
+										@<?= $user->getUsername() ?>
 									</div>
 								</a>
 							</div>
 
-							<?= Util::followButton(Util::getCurrentUser(),true,["float-right","mt-2","btn-sm"],false) ?>
+							<?= Util::followButton($user,true,["float-right","mt-2","btn-sm"],false) ?>
 						</div>
 
 						<div class="row mt-2 text-center pr-3">
 							<div class="col">
-								<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="clearUnderline">
+								<a href="/<?= $user->getUsername() ?>" class="clearUnderline">
 									<div class="font-weight-bold">
-										<?= Util::getCurrentUser()->getPosts() ?>
+										<?= Util::formatNumberShort($user->getPosts()) ?>
 									</div>
 									<div class="text-uppercase text-muted small">Posts</div>
 								</a>
 							</div>
 
 							<div class="col">
-								<a href="/<?= Util::getCurrentUser()->getUsername() ?>/following" class="clearUnderline">
+								<a href="/<?= $user->getUsername() ?>/following" class="clearUnderline">
 									<div class="font-weight-bold">
-										<?= Util::getCurrentUser()->getFollowing() ?>
+										<?= Util::formatNumberShort($user->getFollowing()) ?>
 									</div>
 									<div class="text-uppercase text-muted small">Following</div>
 								</a>
 							</div>
 
 							<div class="col">
-								<a href="/<?= Util::getCurrentUser()->getUsername() ?>/followers" class="clearUnderline">
+								<a href="/<?= $user->getUsername() ?>/followers" class="clearUnderline">
 									<div class="font-weight-bold">
-										<?= Util::getCurrentUser()->getFollowers() ?>
+										<?= Util::formatNumberShort($user->getFollowers()) ?>
 									</div>
 									<div class="text-uppercase text-muted small">Followers</div>
 								</a>

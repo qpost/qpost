@@ -1304,14 +1304,14 @@ class Util {
 			$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
 			$postActionButtons .= '<i class="fas fa-share" style="color: ' . $gray . '"></i>';
 			$postActionButtons .= '</span><span class="replyCount mx-2" style="color: ' . $gray . ' !important">';
-			$postActionButtons .= $post->getReplies();
+			$postActionButtons .= self::formatNumberShort($post->getReplies());
 			$postActionButtons .= '</span>';
 			$postActionButtons .= '<span' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
 			$postActionButtons .= '<i class="fas fa-share-alt"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
 			$postActionButtons .= '<span class="shareCount ml-2 mr-2"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '>';
-			$postActionButtons .= $post->getShares();
+			$postActionButtons .= self::formatNumberShort($post->getShares());
 			$postActionButtons .= '</span>';
 
 			$postActionButtons .= '<span class="favoriteButton" data-toggle="tooltip" title="Favorite" data-post-id="' . $post->getId() . '">';
@@ -1319,7 +1319,7 @@ class Util {
 			$postActionButtons .= '</span>';
 
 			$postActionButtons .= '<span class="favoriteCount ml-2 mr-4"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '>';
-			$postActionButtons .= $post->getFavorites();
+			$postActionButtons .= self::formatNumberShort($post->getFavorites());
 			$postActionButtons .= '</span>';
 
 			if($currentUser->getId() == $post->getUserId()){
@@ -1441,6 +1441,23 @@ class Util {
 			return $s;
 		} else {
 			return self::renderThumbnails([$mediaFiles]);
+		}
+	}
+
+	/**
+	 * Formats a number to a short format (e.g. 4823 to 4.8K)
+	 * 
+	 * @access public
+	 * @param int $number The number to be formatted
+	 * @return string The formatted number
+	 */
+	public static function formatNumberShort($number){
+		if($number <= 999){
+			return $number;
+		} else if($number >= 1000 && $number <= 999999){
+			return round(($number/1000),1) . "K";
+		} else {
+			return round(($number/1000000),1) . "M";
 		}
 	}
 
