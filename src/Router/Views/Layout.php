@@ -276,9 +276,6 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 									<?php
 
 										$date = strtotime($user->getTime());
-										if(!is_null($user->getGigadriveRegistrationDate())){
-											$date = strtotime($user->getGigadriveRegistrationDate());
-										}
 
 									?><i class="fas fa-globe"></i><span style="margin-left: 5px">Joined <?= date("F Y",$date); ?></span>
 									<?= !is_null($user->getBirthday()) ? '<br/><i class="fas fa-birthday-cake"></i><span style="margin-left: 7px">' . date("F jS Y",strtotime($user->getBirthday())) . '</span>' : "" ?>
