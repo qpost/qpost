@@ -21,7 +21,7 @@ class CacheHandler {
 	public static function Manager(){
 		static $InstanceCache = null;
 		if($InstanceCache == null){
-			$driver = new Stash\Driver\FileSystem(array());
+			$driver = new Stash\Driver\FileSystem(["path" => __DIR__ . "/../../tmp/"]);
 			$InstanceCache = new Stash\Pool($driver);
 		}
 	
