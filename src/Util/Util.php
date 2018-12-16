@@ -1365,7 +1365,7 @@ class Util {
 
 					$s .= '</div>';
 				} else if(count($mediaFiles) == 2){
-					$s .= '<div style="height: 337px;">';
+					$s .= '<div style="height: 437px;">';
 
 					$i = 1;
 					foreach($mediaFiles as $mediaFile){
@@ -1412,7 +1412,7 @@ class Util {
 
 					$s .= '</div>';
 				} else if(count($mediaFiles) == 4){
-					$s .= '<div style="height: 237px;">';
+					$s .= '<div style="height: 437px;">';
 
 					$i = 1;
 					foreach($mediaFiles as $mediaFile){
