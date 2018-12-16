@@ -1546,9 +1546,9 @@ class Util {
 
 			$box .= '<ul class="list-inline m-0" class="listPostActions">';
 
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="postFormTextButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Update status"><i class="fas fa-font"></i></button></li>';
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormVideoButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share video"><i class="fas fa-video"></i></button></li>';
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="d-none postFormLinkButton clearUnderline btn btn-link text-' . $linkColor . '" data-toggle="tooltip" title="Share link"><i class="fas fa-link"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="postFormTextButton clearUnderline btn btn-link text-' . $linkColor . '"><i class="fas fa-font"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormVideoButton clearUnderline btn btn-link text-' . $linkColor . '"><i class="fas fa-video"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="d-none postFormLinkButton clearUnderline btn btn-link text-' . $linkColor . '"><i class="fas fa-link"></i></button></li>';
 
 			$box .= '</ul>';
 
