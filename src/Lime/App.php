@@ -188,7 +188,7 @@ class App implements \ArrayAccess {
             'session.name' => 'limeappsession',
             'autoload'     => new \ArrayObject([]),
             'sec-key'      => 'xxxxx-SiteSecKeyPleaseChangeMe-xxxxx',
-            'route'        => isset($_SERVER["PATH_INFO"]) ? $_SERVER["PATH_INFO"] : strtok($_SERVER["REQUEST_URI"],'?'),
+            'route'        => isset($_SERVER["PATH_INFO"]) && trim($_SERVER["PATH_INFO"]) != "" ? $_SERVER["PATH_INFO"] : strtok($_SERVER["REQUEST_URI"],'?'),
             'charset'      => 'UTF-8',
             'helpers'      => [],
             'base_url'     => implode("/", array_slice(explode("/", $_SERVER['SCRIPT_NAME']), 0, -1)),
