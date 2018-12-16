@@ -34,5 +34,6 @@ deploy:
     - git submodule update --depth 50
     - composer install --no-dev
     - rsync -avze ssh --exclude=tmp --exclude=config.php --exclude=composer.json --exclude=composer.lock --exclude=.gitignore --exclude=.gitmodules --exclude=.gitlab-ci.yml --exclude=.git --exclude=LICENSE --exclude=README.md ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/
+    - rsync -avze ssh --exclude=tmp --exclude=config.php --exclude=composer.json --exclude=composer.lock --exclude=.gitignore --exclude=.gitmodules --exclude=.gitlab-ci.yml --exclude=.git --exclude=LICENSE --exclude=README.md ./ root@ssh.gigadrivegroup.com:/home/web/qpost/
     only:
     - master
