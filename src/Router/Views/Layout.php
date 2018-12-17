@@ -14,6 +14,8 @@ if(!isset($description) || is_null($description) || Util::isEmpty($description))
 
 if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 	$socialImage = DEFAULT_TWITTER_IMAGE;
+
+$user = Util::getCurrentUser();
 	
 /*if(isset($_SESSION["profileLoadPost"])){
 	$post = FeedEntry::getEntryById($_SESSION["profileLoadPost"]);
@@ -100,7 +102,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 			"assets:js/dropzone.js",
 			"assets:js/jquery.highlight-within-textarea.js"]); ?>
 
-		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() ? 'var CURRENT_USER = ' . Util::getCurrentUser()->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";var CURRENT_STATUS_MODAL = 0;</script><?php unset($_SESSION["profileLoadPost"]); ?>
+		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= POST_CHARACTER_LIMIT ?>;<?= Util::isLoggedIn() && !is_null($user) ? 'var CURRENT_USER = ' . $user->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";var CURRENT_STATUS_MODAL = 0;</script><?php unset($_SESSION["profileLoadPost"]); ?>
 	</head>
 	<body>
 		<nav id="mainNav" class="navbar navbar-expand-lg navbar-dark bg-<?= Util::isUsingNightMode() ? "dark" : "primary" ?> fixed-top">
@@ -119,9 +121,9 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 					<ul class="nav navbar-nav ml-auto">
 						<?php
 
-						if(Util::isLoggedIn()){
-							$unreadMessages = Util::getCurrentUser()->getUnreadMessages();
-							$unreadNotifications = Util::getCurrentUser()->getUnreadNotifications();
+						if(Util::isLoggedIn() && !is_null($user)){
+							$unreadMessages = $user->getUnreadMessages();
+							$unreadNotifications = $user->getUnreadNotifications();
 
 							?>
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_HOME) ? " active" : ""; ?>">
@@ -131,7 +133,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 							</li>
 
 							<li class="nav-item<?= (isset($nav) && $nav == NAV_PROFILE) ? " active" : ""; ?>">
-								<a href="/<?= Util::getCurrentUser()->getUsername(); ?>" class="nav-link">
+								<a href="/<?= $user->getUsername(); ?>" class="nav-link">
 									my profile
 								</a>
 							</li>
@@ -150,22 +152,22 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 
 							<li class="nav-item dropdown<?= (isset($nav) && $nav == NAV_ACCOUNT) ? " active" : ""; ?>">
 								<a href="#" class="nav-link dropdown-toggle" id="accountDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<img src="<?= Util::getCurrentUser()->getAvatarUrl() ?>" width="24" height="24" class="rounded border border-white"/>
+									<img src="<?= $user->getAvatarUrl() ?>" width="24" height="24" class="rounded border border-white"/>
 								</a>
 
 								<div class="dropdown-menu dropdown-menu-right shadow" aria-labelledBy="accountDropdown">
-									<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="dropdown-item">
+									<a href="/<?= $user->getUsername() ?>" class="dropdown-item">
 										<div class="font-weight-bold" style="font-size: 21px">
-											<?= Util::getCurrentUser()->getDisplayName() ?>
+											<?= $user->getDisplayName() ?>
 										</div>
 										<div class="text-muted" style="margin-top: -8px">
-											@<?= Util::getCurrentUser()->getUsername() ?>
+											@<?= $user->getUsername() ?>
 										</div>
 									</a>
 
 									<div class="dropdown-divider"></div>
 
-									<a href="/<?= Util::getCurrentUser()->getUsername() ?>" class="dropdown-item"><i class="far fa-user"></i> Profile</a>
+									<a href="/<?= $user->getUsername() ?>" class="dropdown-item"><i class="far fa-user"></i> Profile</a>
 									<a href="/notifications" class="dropdown-item" data-no-instant><i class="far fa-bell"></i> Notifications</a>
 									<a href="/messages" class="dropdown-item"><i class="far fa-envelope"></i> Messages</a>
 
@@ -249,16 +251,16 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 				<div class="legacyCardBody">
 					<?php
 
-						if(Util::isLoggedIn()){
+						if(Util::isLoggedIn() && !is_null($user)){
 							if(isset($_POST["action"]) && $_POST["action"] == "block"){
-								Util::getCurrentUser()->block($user);
+								$user->block($user);
 							} else if(isset($_POST["action"]) && $_POST["action"] == "unblock"){
-								Util::getCurrentUser()->unblock($user);
+								$user->unblock($user);
 							}
 						}
 
 
-						if(Util::isLoggedIn() && Util::getCurrentUser()->hasBlocked($user)){
+						if(Util::isLoggedIn() && !is_null($user) && $user->hasBlocked($user)){
 							echo Util::createAlert("blocking","<b>You blocked @" . $user->getUsername() . "</b><br/>@" . $user->getUsername() . " won't be able to view your profile or posts.",ALERT_TYPE_DANGER);
 						}
 
@@ -268,7 +270,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 							<div class="sticky-top" style="top: 70px">
 								<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
 								<h4 class="mb-0 convertEmoji" style="word-wrap: break-word;"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
-								<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && $user->isFollowing(Util::getCurrentUser()) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
+								<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && !is_null($user) && $user->isFollowing($user) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
 
 								<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
 
@@ -285,8 +287,8 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 
 								<?php
 
-									if(Util::isLoggedIn() && Util::getCurrentUser()->getId() != $user->getId()){
-										if(Util::getCurrentUser()->hasBlocked($user)){
+									if(Util::isLoggedIn() && !is_null($user) && $user->getId() != $user->getId()){
+										if($user->hasBlocked($user)){
 											?>
 								<form action="/<?= $user->getUsername(); ?>" method="post">
 									<?= Util::insertCSRFToken(); ?>
@@ -415,7 +417,7 @@ if(!isset($socialImage) || is_null($socialImage) || Util::isEmpty($socialImage))
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_HOME) echo ' active'; ?>" href="/account">Account</a></li>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_PRIVACY) echo ' active'; ?>" href="/account/privacy">Privacy</a></li>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_SESSIONS) echo ' active'; ?>" href="/account/sessions">Active sessions</a></li>
-								<?php if(!Util::getCurrentUser()->isGigadriveLinked()){ ?><li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_CHANGE_PASSWORD) echo ' active'; ?>" href="/account/change-password">Change password</a></li><?php } ?>
+								<?php if(!$user->isGigadriveLinked()){ ?><li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_CHANGE_PASSWORD) echo ' active'; ?>" href="/account/change-password">Change password</a></li><?php } ?>
 								<li class="nav-item"><a class="nav-link<?php if(isset($accountNav) && $accountNav == ACCOUNT_NAV_LOGOUT) echo ' active'; ?>" href="/logout" data-no-instant>Logout</a></li>
 							</ul>
 
