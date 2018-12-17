@@ -721,23 +721,21 @@ class Util {
 	}
 
 	/**
-     * Stores a file on the Gigadrive CDN to use in the future on a specified path and returns the full final URL
+     * Stores a file on the Gigadrive CDN to use in the future and returns the full final URL (null if the upload fails)
 	 * 
 	 * @access public
-     * @param string $path The path the file should have on the CDN
 	 * @param string $file The path of the file to be uploaded
-     * @return string
+     * @return string|null
      */
-	public static function storeFileOnCDN($path,$file){
+	public static function storeFileOnCDN($file){
 		try {
 			$curl = curl_init();
 			curl_setopt_array($curl,array(
-				CURLOPT_URL => GIGADRIVE_CDN_UPLOAD_SCRIPT,
+				CURLOPT_URL => "https://gigadrivegroup.com/api/v3/file",
 				CURLOPT_POST => 1,
 				CURLOPT_POSTFIELDS => array(
-					"path" => $path,
-					"secret" => GIGADRIVE_CDN_UPLOAD_SCRIPT_SECRET,
-					"file_contents" => curl_file_create(realpath($file))
+					"secret" => GIGADRIVE_API_SECRET,
+					"data" => base64_encode(file_get_contents(realpath($file)))
 				),
 				CURLOPT_RETURNTRANSFER => 1
 			));
@@ -749,12 +747,13 @@ class Util {
 			}
 
 			curl_close($curl);
-	
-			if(Util::contains($result,"ERROR: ") == false){
-				return ["result" => $result, "url" => sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,$path . $result)];
-			} else {
-				return ["error" => $result];
+
+			$fileData = json_decode($result,true);
+			if(isset($fileData["success"]) && isset($fileData["file"]) && isset($fileData["file"]["url"])){
+				return ["result" => $result, "url" => $fileData["file"]["url"]];
 			}
+	
+			return null;
 		} catch(Exception $e){
 			return ["error" => $e->getMessage()];
 		}
