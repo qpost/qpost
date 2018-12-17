@@ -658,7 +658,7 @@ class FeedEntry {
     }
 
     public function saveToCache(){
-        \CacheHandler::setToCache("feedEntry_" . $this->id,$this,20*60);
+        \CacheHandler::setToCache("feedEntry_" . $this->id,$this,60);
     }
 
     public function removeFromCache(){
