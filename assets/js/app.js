@@ -1002,6 +1002,103 @@ function load(){
 			$('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
 		}, 0);
 	});
+
+	var LOADED_SHARES = [];
+	var LOADED_FAVORITES = [];
+
+	$(document).on("shown.bs.tooltip",".shareCount", function(e){
+		let title = $(this).attr("data-original-title");
+		let postID = $(this).attr("data-post-id");
+
+		if(title === "Loading..." && postID && !LOADED_SHARES.includes(postID)){
+			LOADED_SHARES.push(postID);
+
+			let t = this;
+
+			$.ajax({
+				url: "/scripts/shareSample",
+				data: {
+					csrf_token: CSRF_TOKEN,
+					post: postID
+				},
+				method: "POST",
+				
+				success: function(result){
+					let json = result;
+
+					if(json.hasOwnProperty("users") && json.hasOwnProperty("showMore") && json.hasOwnProperty("showMoreCount")){
+						if(json.users.length > 0){
+							let s = "";
+
+							json.users.forEach(user => {
+								if(s !== "") s += "<br/>";
+								s += user.displayName + " (@" + user.username + ")";
+							});
+
+							if(json.showMore === true){
+								s += "<br/>and " + json.showMoreCount + " more...";
+							}
+
+							$(t).attr("title",s).tooltip("_fixTitle").tooltip("show");
+						}
+					}
+				},
+				
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		}
+	});
+
+	$(document).on("shown.bs.tooltip",".favoriteCount", function(e){
+		let title = $(this).attr("data-original-title");
+		let postID = $(this).attr("data-post-id");
+
+		if(title === "Loading..." && postID && !LOADED_FAVORITES.includes(postID)){
+			LOADED_FAVORITES.push(postID);
+
+			let t = this;
+
+			$.ajax({
+				url: "/scripts/favoriteSample",
+				data: {
+					csrf_token: CSRF_TOKEN,
+					post: postID
+				},
+				method: "POST",
+				
+				success: function(result){
+					let json = result;
+
+					if(json.hasOwnProperty("users") && json.hasOwnProperty("showMore") && json.hasOwnProperty("showMoreCount")){
+						if(json.users.length > 0){
+							let s = "";
+
+							json.users.forEach(user => {
+								if(s !== "") s += "<br/>";
+								s += user.displayName + " (@" + user.username + ")";
+							});
+
+							if(json.showMore === true){
+								s += "<br/>and " + json.showMoreCount + " more...";
+							}
+
+							$(t).attr("title",s).tooltip("_fixTitle").tooltip("show");
+						}
+					}
+				},
+				
+				error: function(xhr,status,error){
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		}
+	});
 	
 	$(document).on('hidden.bs.modal', '.modal', function () {
 		$('.modal:visible').length && $(document.body).addClass('modal-open');

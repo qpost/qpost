@@ -616,6 +616,91 @@ $app->bind("/mediaThumbnail", function($params){
 	}
 });
 
+$app->post("/scripts/favoriteSample",function(){
+	$this->response->mime = "json";
+
+	if(isset($_POST["post"])){
+		$postId = $_POST["post"];
+
+		$post = FeedEntry::getEntryById($postId);
+		if(!is_null($post)){
+			if($post->getType() == FEED_ENTRY_TYPE_POST){
+				if($post->mayView()){
+					$favoriteSample = $post->getFavoriteSample();
+
+					if(!is_null($favoriteSample) && !is_null($favoriteSample->getUsers())){
+						$users = [];
+
+						foreach($favoriteSample->getUsers() as $user){
+							array_push($users,[
+								"username" => Util::sanatizeString($user->getUsername()),
+								"displayName" => Util::sanatizeString($user->getDisplayName())
+							]);
+						}
+
+						return json_encode([
+							"users" => $users,
+							"showMore" => $favoriteSample->showsMore(),
+							"showMoreCount" => $favoriteSample->getShowMoreCount()
+						]);
+					} else {
+						return json_encode(["error" => "Failed to load"]);
+					}
+				} else {
+					return json_encode(["error" => "Unknown post"]);
+				}
+			} else {
+				return json_encode(["error" => "Unknown post"]);
+			}
+		} else {
+			return json_encode(["error" => "Unknown post"]);
+		}
+	} else {
+		return json_encode(["error" => "Bad request"]);
+	}
+});
+
+$app->post("/scripts/shareSample",function(){
+	$this->response->mime = "json";
+
+	if(isset($_POST["post"])){
+		$postId = $_POST["post"];
+
+		$post = FeedEntry::getEntryById($postId);
+		if(!is_null($post)){
+			if($post->getType() == FEED_ENTRY_TYPE_POST){
+				if($post->mayView()){
+					$shareSample = $post->getShareSample();
+
+					if(!is_null($shareSample) && !is_null($shareSample->getUsers())){
+						$users = [];
+
+						foreach($shareSample->getUsers() as $user){
+							array_push($users,$user->toAPIJson(Util::getCurrentUser(),false,false));
+						}
+
+						return json_encode([
+							"users" => $users,
+							"showMore" => $shareSample->showsMore(),
+							"showMoreCount" => $shareSample->getShowMoreCount()
+						]);
+					} else {
+						return json_encode(["error" => "Failed to load"]);
+					}
+				} else {
+					return json_encode(["error" => "Unknown post"]);
+				}
+			} else {
+				return json_encode(["error" => "Unknown post"]);
+			}
+		} else {
+			return json_encode(["error" => "Unknown post"]);
+		}
+	} else {
+		return json_encode(["error" => "Bad request"]);
+	}
+});
+
 $app->post("/scripts/createPost",function(){
 	$this->response->mime = "json";
 	

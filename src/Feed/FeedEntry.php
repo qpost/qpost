@@ -139,9 +139,21 @@ class FeedEntry {
 
     /**
      * @access private
+     * @var ShareSample|null $shareSample
+     */
+    private $shareSample;
+
+    /**
+     * @access private
      * @var int $favorites
      */
     private $favorites;
+
+    /**
+     * @access private
+     * @var FavoriteSample|null $favoriteSample
+     */
+    private $favoriteSample;
 
     /**
      * @access private
@@ -417,6 +429,25 @@ class FeedEntry {
     }
 
     /**
+     * Returns a sample of users that shared this post, null if the sample could not be loaded or the feed entry is not a post.
+     * 
+     * @access public
+     * @return ShareSample|null
+     */
+    public function getShareSample(){
+        if($this->type === FEED_ENTRY_TYPE_POST && is_null($this->shareSample)){
+            $shareSample = new ShareSample($this);
+
+            if(!is_null($shareSample->getUsers())){
+                $this->shareSample = $shareSample;
+                $this->saveToCache();
+            }
+        }
+
+        return $this->shareSample;
+    }
+
+    /**
      * Returns how often the feed entry was favorized
      * 
      * @access public
@@ -453,6 +484,25 @@ class FeedEntry {
         $stmt->bind_param("ii",$this->favorites,$this->id);
         $stmt->execute();
         $stmt->close();
+    }
+
+    /**
+     * Returns a sample of users that shared this post, null if the sample could not be loaded or the feed entry is not a post.
+     * 
+     * @access public
+     * @return FavoriteSample|null
+     */
+    public function getFavoriteSample(){
+        if($this->type === FEED_ENTRY_TYPE_POST && is_null($this->favoriteSample)){
+            $favoriteSample = new FavoriteSample($this);
+
+            if(!is_null($favoriteSample->getUsers())){
+                $this->favoriteSample = $favoriteSample;
+                $this->saveToCache();
+            }
+        }
+
+        return $this->favoriteSample;
     }
 
     /**

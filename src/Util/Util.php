@@ -1309,7 +1309,7 @@ class Util {
 			$postActionButtons .= '<i class="fas fa-share-alt"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="shareCount ml-2 mr-2"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '>';
+			$postActionButtons .= '<span ' . ($post->getShares() > 0 ? 'data-post-id="' . $post->getId() . '" data-toggle="tooltip" data-html="true" title="Loading..." ' : "") . 'class="shareCount ml-2 mr-2"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '>';
 			$postActionButtons .= self::formatNumberShort($post->getShares());
 			$postActionButtons .= '</span>';
 
@@ -1317,7 +1317,7 @@ class Util {
 			$postActionButtons .= '<i class="fas fa-star"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '></i>';
 			$postActionButtons .= '</span>';
 
-			$postActionButtons .= '<span class="favoriteCount ml-2 mr-4"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '>';
+			$postActionButtons .= '<span ' . ($post->getFavorites() > 0 ? 'data-post-id="' . $post->getId() . '" data-toggle="tooltip" data-html="true" title="Loading..." ' : "") . 'class="favoriteCount ml-2 mr-4"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '>';
 			$postActionButtons .= self::formatNumberShort($post->getFavorites());
 			$postActionButtons .= '</span>';
 
