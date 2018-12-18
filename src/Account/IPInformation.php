@@ -207,6 +207,6 @@ class IPInformation {
 	 */
 	public function saveToCache(){
 		$n = "ipInformation_" . $this->ip;
-		\CacheHandler::setToCache($n,$this,6*60*60);
+		\CacheHandler::setToCache($n,$this,\CacheHandler::OBJECT_CACHE_TIME);
 	}
 }

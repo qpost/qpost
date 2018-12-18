@@ -683,7 +683,7 @@ class FeedEntry {
     }
 
     public function saveToCache(){
-        \CacheHandler::setToCache("feedEntry_" . $this->id,$this,60);
+        \CacheHandler::setToCache("feedEntry_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
     }
 
     public function removeFromCache(){

@@ -2123,9 +2123,9 @@ class User {
 	* @access public
 	*/
 	public function saveToCache(){
-		\CacheHandler::setToCache("user_id_" . $this->id,$this,60);
-		\CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,60);
-		\CacheHandler::setToCache("user_gigadriveId_" . $this->gigadriveId,$this,60);
+		\CacheHandler::setToCache("user_id_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
+		\CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,\CacheHandler::OBJECT_CACHE_TIME);
+		\CacheHandler::setToCache("user_gigadriveId_" . $this->gigadriveId,$this,\CacheHandler::OBJECT_CACHE_TIME);
 	}
 	
 	/**
