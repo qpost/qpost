@@ -416,6 +416,7 @@ class FeedEntry {
                 $row = $result->fetch_assoc();
 
                 $this->shares = $row["count"];
+                $this->shareSample = null;
 
                 $this->saveToCache();
             }
@@ -474,6 +475,7 @@ class FeedEntry {
                 $row = $result->fetch_assoc();
 
                 $this->favorites = $row["count"];
+                $this->favoriteSample = null;
 
                 $this->saveToCache();
             }
