@@ -372,7 +372,7 @@
 							Contact Info
 						</a>
 
-						<a href="https://gigadrivegroup.com/legal/tos" target="_blank" class="mx-1">
+						<a href="https://gigadrivegroup.com/legal/terms-of-service" target="_blank" class="mx-1">
 							Terms of Service
 						</a>
 

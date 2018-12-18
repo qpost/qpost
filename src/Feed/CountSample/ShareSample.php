@@ -19,7 +19,7 @@ class ShareSample extends CountSample {
         if(!is_null($feedEntry)){
             $this->users = [];
 
-            if($feedEntry->getFavorites() > 0 && $feedEntry->getType() === FEED_ENTRY_TYPE_POST){
+            if($feedEntry->getShares() > 0 && $feedEntry->getType() === FEED_ENTRY_TYPE_POST){
                 $mysqli = \Database::Instance()->get();
 
                 $feedEntryId = $feedEntry->getId();
@@ -39,9 +39,9 @@ class ShareSample extends CountSample {
 
                 $stmt->close();
 
-                if($feedEntry->getFavorites() > count($this->users)){
+                if($feedEntry->getShares() > count($this->users)){
                     $this->showMore = true;
-                    $this->showMoreCount = ($feedEntry->getFavorites()-count($this->users));
+                    $this->showMoreCount = ($feedEntry->getShares()-count($this->users));
                 } else {
                     $this->showMore = false;
                     $this->showMoreCount = 0;

@@ -450,7 +450,7 @@ $currentUser = Util::getCurrentUser();
 
 					&bull;
 
-					<a href="https://gigadrivegroup.com/legal/tos" target="_blank">
+					<a href="https://gigadrivegroup.com/legal/terms-of-service" target="_blank">
 						Terms of Service
 					</a>
 
