@@ -161,7 +161,7 @@
 					if(CacheHandler::existsInCache($n)){
 						$trendingUsers = CacheHandler::getFromCache($n);
 					} else {
-						$stmt = $mysqli->prepare("SELECT COUNT(f.following) as `increase`,u.* FROM `users` AS u LEFT JOIN `follows` AS f ON f.`following` = u.`id` WHERE f.`time` > (NOW() - INTERVAL 24 HOUR) AND u.`privacy.level` = 'PUBLIC' AND `emailActivated` = 1 GROUP BY u.`id` ORDER BY `increase` DESC LIMIT " . $maxLimit);
+						$stmt = $mysqli->prepare("SELECT COUNT(f.following) as `increase`,`id` FROM `users` AS u LEFT JOIN `follows` AS f ON f.`following` = u.`id` WHERE f.`time` > (NOW() - INTERVAL 24 HOUR) AND u.`privacy.level` = 'PUBLIC' AND `emailActivated` = 1 GROUP BY u.`id` ORDER BY `increase` DESC LIMIT " . $maxLimit);
 						if($stmt->execute()){
 							$result = $stmt->get_result();
 							
@@ -169,7 +169,7 @@
 								while($row = $result->fetch_assoc()){
 									if($i == $limit) break;
 
-									$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]);
+									$u = User::getUserById($row["id"]);
 
 									if(!$u->mayView()) continue;
 
@@ -195,7 +195,7 @@
 					if(CacheHandler::existsInCache($n)){
 						$newUsers = CacheHandler::getFromCache($n);
 					} else {
-						$stmt = $mysqli->prepare("SELECT * FROM `users` AS u WHERE `privacy.level` = 'PUBLIC' AND `emailActivated` = 1 ORDER BY `time` DESC LIMIT " . $maxLimit);
+						$stmt = $mysqli->prepare("SELECT `id` FROM `users` AS u WHERE `privacy.level` = 'PUBLIC' AND `emailActivated` = 1 ORDER BY `time` DESC LIMIT " . $maxLimit);
 						if($stmt->execute()){
 							$result = $stmt->get_result();
 							
@@ -203,7 +203,7 @@
 								while($row = $result->fetch_assoc()){
 									if($i == $limit) break;
 									
-									$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]);
+									$u = User::getUserById($row["id"]);
 
 									if(!$u->mayView()) continue;
 
@@ -224,7 +224,7 @@
 
 					// query is a combination of https://stackoverflow.com/a/12915720 and https://stackoverflow.com/a/24165699
 					$suggestedUsers = [];
-					$stmt = $mysqli->prepare("SELECT COUNT(*)       AS mutuals, u.* FROM users      AS me INNER JOIN follows    AS my_friends ON my_friends.follower = me.id INNER JOIN follows    AS their_friends ON their_friends.follower = my_friends.following INNER JOIN  users 	   AS u ON u.id = their_friends.following WHERE u.emailActivated = 1 AND me.id = ? AND their_friends.following != ? AND NOT EXISTS (SELECT 1 FROM follows fu3 WHERE fu3.follower = ? AND fu3.following = their_friends.following) GROUP BY me.id, their_friends.following LIMIT " . $maxLimit);
+					$stmt = $mysqli->prepare("SELECT COUNT(*)       AS mutuals, u.`id` FROM users      AS me INNER JOIN follows    AS my_friends ON my_friends.follower = me.id INNER JOIN follows    AS their_friends ON their_friends.follower = my_friends.following INNER JOIN  users 	   AS u ON u.id = their_friends.following WHERE u.emailActivated = 1 AND me.id = ? AND their_friends.following != ? AND NOT EXISTS (SELECT 1 FROM follows fu3 WHERE fu3.follower = ? AND fu3.following = their_friends.following) GROUP BY me.id, their_friends.following LIMIT " . $maxLimit);
 					$stmt->bind_param("iii",$currentUser,$currentUser,$currentUser);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
@@ -233,7 +233,7 @@
 							while($row = $result->fetch_assoc()){
 								if($i == $limit) break;
 
-								$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]);
+								$u = User::getUserById($row["id"]);
 
 								if(!$u->mayView()) continue;
 

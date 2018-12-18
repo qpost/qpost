@@ -41,14 +41,14 @@ if(Util::isLoggedIn() && $uID == Util::getCurrentUser()->getId())
 if($num > 0){
 	$feedEntries = [];
 
-	$stmt = $mysqli->prepare("SELECT * FROM `feed` WHERE ((`post` IS NULL AND `type` = 'POST') OR (`type` != 'POST')) AND `user` = ? ORDER BY `time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
+	$stmt = $mysqli->prepare("SELECT `id` FROM `feed` WHERE ((`post` IS NULL AND `type` = 'POST') OR (`type` != 'POST')) AND `user` = ? ORDER BY `time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
 	$stmt->bind_param("i",$uID);
 	if($stmt->execute()){
 		$result = $stmt->get_result();
 
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				array_push($feedEntries,FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["time"]));
+				array_push($feedEntries,FeedEntry::getEntryById($row["id"]));
 			}
 		}
 	}

@@ -24,7 +24,7 @@ class FavoriteSample extends CountSample {
 
                 $feedEntryId = $feedEntry->getId();
 
-                $stmt = $mysqli->prepare("SELECT u.* FROM `favorites` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.post = ? ORDER BY f.time DESC LIMIT " . CountSample::SAMPLE_LIMIT);
+                $stmt = $mysqli->prepare("SELECT `id` FROM `favorites` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.post = ? ORDER BY f.time DESC LIMIT " . CountSample::SAMPLE_LIMIT);
                 $stmt->bind_param("i",$feedEntryId);
 
                 if($stmt->execute()){
@@ -32,7 +32,7 @@ class FavoriteSample extends CountSample {
 
                     if($result->num_rows){
                         while($row = $result->fetch_assoc()){
-                            array_push($this->users,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]));
+                            array_push($this->users,User::getUserById($row["id"]));
                         }
                     }
                 }

@@ -81,15 +81,15 @@
 		$mysqli = Database::Instance()->get();
 
 		if($type == "posts"){
-			$stmt = $mysqli->prepare("SELECT p.`id` AS `postID`,p.`text` AS `postText`,p.`time` AS `postTime`,p.`sessionId`,p.`count.replies`,p.`count.shares`,p.`count.favorites`,p.`attachments`,u.* FROM `feed` AS p INNER JOIN `users` AS u ON p.user = u.id WHERE p.`post` IS NULL AND (p.`text` LIKE ? OR u.`displayName` LIKE ? OR u.`username` LIKE ?) AND p.`type` = 'POST' AND u.`privacy.level` = 'PUBLIC' ORDER BY p.`time` DESC LIMIT " . (($page-1)*$itemsPerPage) . " , " . $itemsPerPage);
+			$stmt = $mysqli->prepare("SELECT p.`id` AS `postID`,u.`id` AS `userID` FROM `feed` AS p INNER JOIN `users` AS u ON p.user = u.id WHERE p.`post` IS NULL AND (p.`text` LIKE ? OR u.`displayName` LIKE ? OR u.`username` LIKE ?) AND p.`type` = 'POST' AND u.`privacy.level` = 'PUBLIC' ORDER BY p.`time` DESC LIMIT " . (($page-1)*$itemsPerPage) . " , " . $itemsPerPage);
 			$stmt->bind_param("sss",$q,$q,$q);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
 
 				if($result->num_rows){
 					while($row = $result->fetch_assoc()){
-						$f = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,null,$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["postTime"]);
-						$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]);
+						$f = FeedEntry::getEntryById($row["postID"]);
+						$u = User::getUserById($row["userID"]);
 
 						if(!$f->mayView() || !$u->mayView()) continue;
 
@@ -104,14 +104,14 @@
 			}
 			$stmt->close();
 		} else if($type == "users"){
-			$stmt = $mysqli->prepare("SELECT u.* FROM `users` AS u WHERE (u.`displayName` LIKE ? OR u.`username` LIKE ? OR u.`bio` LIKE ?) AND u.`privacy.level` != 'CLOSED' LIMIT " . (($page-1)*$itemsPerPage) . " , " . $itemsPerPage);
+			$stmt = $mysqli->prepare("SELECT u.`id` FROM `users` AS u WHERE (u.`displayName` LIKE ? OR u.`username` LIKE ? OR u.`bio` LIKE ?) AND u.`privacy.level` != 'CLOSED' LIMIT " . (($page-1)*$itemsPerPage) . " , " . $itemsPerPage);
 			$stmt->bind_param("sss",$q,$q,$q);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
 
 				if($result->num_rows){
 					while($row = $result->fetch_assoc()){
-						$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]);
+						$u = User::getUserById($row["id"]);
 
 						if(!$u->mayView()) continue;
 

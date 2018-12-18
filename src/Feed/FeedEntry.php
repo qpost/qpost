@@ -45,33 +45,6 @@ class FeedEntry {
     }
 
     /**
-     * Returns a feed entry object created from the specified data
-     * 
-     * @access public
-     * @return FeedEntry
-     */
-    public static function getEntryFromData($id,$user,$text,$following,$post,$sessionId,$type,$replies,$shares,$favorites,$attachments,$time){
-        $entry = self::isCached($id) ? self::getEntryById($id) : new self($id);
-
-        $entry->id = $id;
-        $entry->user = $user;
-        $entry->text = $text;
-        $entry->following = $following;
-        $entry->post = $post;
-        $entry->sessionId = $sessionId;
-        $entry->type = $type;
-        $entry->replies = $replies;
-        $entry->shares = $shares;
-        $entry->favorites = $favorites;
-        $entry->attachments = is_null($attachments) ? [] : json_decode($attachments,true);
-        $entry->time = $time;
-        $entry->exists = true;
-        $entry->saveToCache();
-
-        return $entry;
-    }
-
-    /**
      * @access private
      * @var int $id
      */

@@ -11,14 +11,14 @@ $showNoUsersInfo = false;
 if($num > 0){
 	$users = [];
 
-	$stmt = $mysqli->prepare("SELECT u.* FROM `follows` AS f INNER JOIN `users` AS u ON f.`follower` = u.`id` WHERE f.`following` = ? ORDER BY f.`time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
+	$stmt = $mysqli->prepare("SELECT u.`id` FROM `follows` AS f INNER JOIN `users` AS u ON f.`follower` = u.`id` WHERE f.`following` = ? ORDER BY f.`time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
 	$stmt->bind_param("i",$uID);
 	if($stmt->execute()){
 		$result = $stmt->get_result();
 
 		if($result->num_rows){
 			while($row = $result->fetch_assoc()){
-				$u = User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]);
+				$u = User::getUserById($row["id"]);
 
 				if(!$u->mayView()) continue;
 

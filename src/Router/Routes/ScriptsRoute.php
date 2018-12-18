@@ -230,14 +230,14 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$firstPost = (int)$_POST["firstPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,f.`attachments`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID` FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$firstPost);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
 
 						if($result->num_rows){
 							while($row = $result->fetch_assoc()){
-								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["postTime"]);
+								$entry = FeedEntry::getEntryById($row["postID"]);
 
 								array_push($posts,Util::postJsonData($entry));
 							}
@@ -254,14 +254,14 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$lastPost = (int)$_POST["lastPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,f.`attachments`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
+					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID` FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
 					$stmt->bind_param("i",$lastPost);
 					if($stmt->execute()){
 						$result = $stmt->get_result();
 
 						if($result->num_rows){
 							while($row = $result->fetch_assoc()){
-								$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["postTime"]);
+								$entry = FeedEntry::getEntryById($row["postID"]);
 
 								array_push($posts,Util::postJsonData($entry));
 							}
@@ -276,13 +276,13 @@ $app->post("/scripts/extendHomeFeed",function(){
 			} else if($_POST["mode"] == "loadFirst"){
 				$posts = [];
 
-				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,f.`attachments`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' ORDER BY f.`time` DESC LIMIT 30");
+				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID` FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' ORDER BY f.`time` DESC LIMIT 30");
 				if($stmt->execute()){
 					$result = $stmt->get_result();
 
 					if($result->num_rows){
 						while($row = $result->fetch_assoc()){
-							$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["postTime"]);
+							$entry = FeedEntry::getEntryById($row["postID"]);
 
 							array_push($posts,Util::postJsonData($entry));
 						}
@@ -406,15 +406,15 @@ $app->post("/scripts/postInfo",function(){
 						$postId = $post->getId();
 						$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
 
-						$stmt = $mysqli->prepare("SELECT f.*,u.`id` AS `userId`,u.`displayName`,u.`username`,u.`email`,u.`avatar`,u.`bio`,u.`token`,u.`birthday`,u.`privacy.level`,u.`featuredBox.title`,u.`featuredBox.content`,u.`lastGigadriveUpdate`,u.`gigadriveJoinDate`,u.`time` AS userTime,u.`verified` AS `userTime`,u.`password`,u.`emailActivated`,u.`emailActivationToken`,u.`gigadriveId`,u.`lastUsernameChange`,u.`verified` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
+						$stmt = $mysqli->prepare("SELECT f.id AS feedEntryId,u.id AS userId FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
 						$stmt->bind_param("ii",$postId,$uid);
 						if($stmt->execute()){
 							$result = $stmt->get_result();
 
 							if($result->num_rows){
 								while($row = $result->fetch_assoc()){
-									$f = FeedEntry::getEntryFromData($row["id"],$row["user"],$row["text"],$row["following"],$row["post"],$row["sessionId"],$row["type"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["time"]);
-									$u = User::getUserByData($row["userId"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["userTime"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]);
+									$f = FeedEntry::getEntryById($row["feedEntryId"]);
+									$u = User::getUserById($row["userId"]);
 
 									array_push($replies,Util::postJsonData($f,0,394,658,true));
 								}
@@ -466,14 +466,14 @@ $app->post("/scripts/loadBirthdays",function(){
 	
 							$i = $mysqli->real_escape_string(implode(",",$user->getFollowingAsArray()));
 	
-							$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id` IN ($i) AND `birthday` IS NOT NULL AND DATE_FORMAT(`birthday`,'%m-%d') = DATE_FORMAT(?,'%m-%d')");
+							$stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE `id` IN ($i) AND `birthday` IS NOT NULL AND DATE_FORMAT(`birthday`,'%m-%d') = DATE_FORMAT(?,'%m-%d')");
 							$stmt->bind_param("s",$dateString);
 							if($stmt->execute()){
 								$result = $stmt->get_result();
 
 								if($result->num_rows){
 									while($row = $result->fetch_assoc()){
-										array_push($birthdayUsers,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]));
+										array_push($birthdayUsers,User::getUserById($row["id"]));
 									}
 								}
 							}
