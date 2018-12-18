@@ -52,6 +52,8 @@
 							$(".feedContainer").html(newHtml);
 							$(".homeFeedLoadSpinner").remove();
 							$(".homeFeedLoadMore").removeClass("d-none");
+
+							loadBasic();
 						} else {
 							console.log(result);
 						}
