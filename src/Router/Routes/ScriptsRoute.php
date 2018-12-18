@@ -273,6 +273,24 @@ $app->post("/scripts/extendHomeFeed",function(){
 				} else {
 					return json_encode(["error" => "Bad request"]);
 				}
+			} else if($_POST["mode"] == "loadFirst"){
+				$posts = [];
+
+				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,f.`attachments`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' ORDER BY f.`time` DESC LIMIT 30");
+				if($stmt->execute()){
+					$result = $stmt->get_result();
+
+					if($result->num_rows){
+						while($row = $result->fetch_assoc()){
+							$entry = FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],"POST",$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["postTime"]);
+
+							array_push($posts,Util::postJsonData($entry));
+						}
+					}
+				}
+				$stmt->close();
+
+				return json_encode(["result" => $posts]);
 			} else {
 				return json_encode(["error" => "Bad request"]);
 			}

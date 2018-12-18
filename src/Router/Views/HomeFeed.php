@@ -11,61 +11,67 @@
 				$user = Util::getCurrentUser();
 				$mysqli = Database::Instance()->get();
 				
-				$a = $user->getFollowingAsArray();
-				array_push($a,$user->getId());
+			?>
+			<div class="text-center homeFeedLoadSpinner">
+				<i class="fas fa-spinner fa-pulse" style="font-size: 36px"></i>
+			</div>
 
-				$i = $mysqli->real_escape_string(implode(",",$a));
+			<script type="text/javascript">
+				var HOME_FEED_FIRST_POST;
+				var HOME_FEED_LAST_POST;
 
-				$results = [];
+				$.ajax({
+					url: "/scripts/extendHomeFeed",
+					data: {
+						csrf_token: CSRF_TOKEN,
+						mode: "loadFirst"
+					},
+					method: "POST",
+					
+					success: function(result){
+						let json = result;
+						
+						if(json.hasOwnProperty("result")){
+							let newHtml = "";
+							
+							let a = true;
+							
+							json.result.forEach(post => {
+								let postId = post.id;
+								
+								if(a == true){
+									HOME_FEED_LAST_POST = postId;
+									a = false;
+								}
+								
+								newHtml = newHtml.concat(post.listHtml);
+							});
 
-				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID`,f.`text` AS `postText`,f.`time` AS `postTime`,f.`sessionId`,f.`post` AS `sharedPost`,f.`type` AS `postType`,f.`count.replies`,f.`count.shares`,f.`count.favorites`,f.`attachments`,u.* FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' ORDER BY f.`time` DESC LIMIT 60");
-				//$stmt->bind_param("s",$i);
-				if($stmt->execute()){
-					$result = $stmt->get_result();
+							HOME_FEED_FIRST_POST = json.result[json.result.length-1].id;
 
-					if($result->num_rows){
-						while($row = $result->fetch_assoc()){
-							array_push($results,[
-								"post" => FeedEntry::getEntryFromData($row["postID"],$row["id"],$row["postText"],null,$row["sharedPost"],$row["sessionId"],$row["postType"],$row["count.replies"],$row["count.shares"],$row["count.favorites"],$row["attachments"],$row["postTime"]),
-								"user" => User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"])
-							]);
+							$(".feedContainer").html(newHtml);
+							$(".homeFeedLoadSpinner").remove();
+							$(".homeFeedLoadMore").removeClass("d-none");
+						} else {
+							console.log(result);
 						}
+					},
+					
+					error: function(xhr,status,error){
+						console.log(xhr);
+						console.log(status);
+						console.log(error);
+
+						$(".feedContainer").html('<div class="alert alert-danger" role="alert">Failed to load home feed.</div>');
 					}
-				}
-				$stmt->close();
+				});
+			</script>
 
-				if(count($results) > 0){
-					echo '<ul class="list-group feedContainer mt-2">';
+			<ul class="list-group feedContainer mt-2"></ul>
 
-					for($i = 0; $i < count($results); $i++){
-						$result = $results[$i];
-						$post = $result["post"];
-						$u = $result["user"];
-
-						$first = $i == 0;
-						$last = $i == count($results)-1;
-
-						if($last)
-							echo '<script>var HOME_FEED_FIRST_POST = ' . $post->getId() . ';</script>';
-
-						if($first)
-							echo '<script>var HOME_FEED_LAST_POST = ' . $post->getId() . ';</script>';
-
-						echo $post->toListHTML();
-					}
-
-					echo '</ul>';
-
-					?>
-			<div class="card homeFeedLoadMore px-3 py-3 text-center my-2" style="cursor: pointer; background: #9FCCFC" onclick="loadOldHomeFeed();">
+			<div class="d-none card homeFeedLoadMore px-3 py-3 text-center my-2" style="cursor: pointer; background: #9FCCFC" onclick="loadOldHomeFeed();">
 				Click to load more
 			</div>
-					<?php
-				} else {
-					echo Util::createAlert("emptyFeed","Your feed is empty! Follow somebody or post something to fill it!",ALERT_TYPE_INFO);
-				}
-
-			?>
 		</div>
 
 		<div class="col-lg-4">
