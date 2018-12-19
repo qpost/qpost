@@ -13,7 +13,7 @@
 				
 			?>
 			<div class="text-center homeFeedLoadSpinner">
-				<i class="fas fa-spinner fa-pulse" style="font-size: 36px"></i>
+				<i class="fas fa-spinner fa-pulse mt-3" style="font-size: 36px"></i>
 			</div>
 
 			<script type="text/javascript">
