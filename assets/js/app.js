@@ -78,7 +78,7 @@ function showDeleteModal(postId){
 				content = content.concat(
 					'<div class="mt-2">' +
 					c + 
-					'<p style="font-size: 27px;">' +
+					'<p style="font-size: 27px; word-wrap: break-word;">' +
 					twemoji.parse(json.text) +
 					'</p>' +
 					'<p class="small text-muted"><i class="far fa-clock"></i> Posted ' +
