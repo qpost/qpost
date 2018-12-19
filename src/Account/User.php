@@ -1906,6 +1906,8 @@ class User {
 				return true;
 			} else if($this->getPrivacyLevel() == PrivacyLevel::PRIVATE){
 				if(Util::isLoggedIn()){
+					$user = Util::getCurrentUser();
+
 					if(!is_null($user)){
 						if($user->hasBlocked($this) || $user->isBlocked($this)){
 							return false;
@@ -1920,6 +1922,8 @@ class User {
 				}
 			} else if($this->getPrivacyLevel() == PrivacyLevel::CLOSED){
 				if(Util::isLoggedIn()){
+					$user = Util::getCurrentUser();
+
 					if(!is_null($user)){
 						return $user->getId() == $this->getId();
 					}
