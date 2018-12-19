@@ -856,7 +856,7 @@ $app->post("/scripts/createPost",function(){
 
 						if(!is_null($postId)){
 							$postData = FeedEntry::getEntryById($postId);
-							$post = Util::postJsonData($postData,0,394,658,!is_null($parent));
+							$post = Util::postJsonData($postData,0,(!is_null($parent) ? 394 : 658),658,!is_null($parent));
 
 							if(!is_null($parent)){
 								$parentData = FeedEntry::getEntryById($parent);
