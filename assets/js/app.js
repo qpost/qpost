@@ -370,7 +370,7 @@ function showStatusModal(postId){
 				
 				content = content.concat(
 					'<div><a href="/' + user.username + '" class="clearUnderline font-weight-bold mb-0" style="font-size:20px; word-wrap: break-word;">' +
-					twemoji.parse(user.displayName) +
+					twemoji.parse(user.displayName) + (user.verified === true ? user.verifiedIcon : "") +
 					'</a></div>'
 				);
 				

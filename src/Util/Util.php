@@ -1102,7 +1102,9 @@ class Util {
 				"displayName" => $user->getDisplayName(),
 				"username" => $user->getUsername(),
 				"avatar" => $user->getAvatarURL(),
-				"bio" => $user->getBio()
+				"bio" => $user->getBio(),
+				"verified" => $user->isVerified(),
+				"verifiedIcon" => $user->renderCheckMark()
 			];
 		} else {
 			return null;
