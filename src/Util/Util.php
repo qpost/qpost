@@ -1578,12 +1578,14 @@ class Util {
 
 		if($includeExtraOptions){
 			$box .= '<div class="row videoURL my-3 mx-2 d-none">';
+			$box .= '<b class="ml-3">Embed video</b>';
 			$box .= '<div class="col-12">';
 			$box .= '<input type="text" class="form-control" placeholder="Add the URL of a video" style="width: 100%"/>';
 			$box .= '</div>';
 			$box .= '</div>';
 
 			$box .= '<div class="row linkURL my-3 mx-2 d-none">';
+			$box .= '<b class="ml-3">Embed URL</b>';
 			$box .= '<div class="col-12">';
 			$box .= '<input type="text" class="form-control" placeholder="Add an URL to share" style="width: 100%"/>';
 			$box .= '</div>';
