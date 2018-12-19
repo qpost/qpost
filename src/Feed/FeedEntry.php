@@ -657,7 +657,18 @@ class FeedEntry {
 			$s .= '&bull; ';
 
             $s .= Util::timeago($sharedPost->getTime());
-			$s .= '</p>';
+            $s .= '</p>';
+            
+            $parent = $sharedPost->getPost();
+            if(!is_null($parent)){
+                $parentCreator = $parent->getUser();
+
+                if(!is_null($parentCreator)){
+                    $s .= '<div class="text-muted small">';
+                    $s .= 'Replying to <a href="/' . $parentCreator->getUsername() . '">@' . $parentCreator->getUsername() . '</a>';
+                    $s .= '</div>';
+                }
+            }
 
 			$s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
 			$s .= Util::convertPost($sharedPost->getText());
