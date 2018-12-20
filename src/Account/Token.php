@@ -296,7 +296,7 @@ class Token {
 	 * @access public
 	 */
 	public function saveToCache(){
-		CacheHandler::setToCache("apiToken_" . $this->id,$this,20*60);
+		CacheHandler::setToCache("apiToken_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
 	}
 
 	/**

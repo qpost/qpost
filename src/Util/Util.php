@@ -1102,7 +1102,9 @@ class Util {
 				"displayName" => $user->getDisplayName(),
 				"username" => $user->getUsername(),
 				"avatar" => $user->getAvatarURL(),
-				"bio" => $user->getBio()
+				"bio" => $user->getBio(),
+				"verified" => $user->isVerified(),
+				"verifiedIcon" => $user->renderCheckMark()
 			];
 		} else {
 			return null;
@@ -1352,7 +1354,7 @@ class Util {
 					$mediaFile = $mediaFiles[0];
 
 					if($mediaFile->getType() == "IMAGE"){
-						$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2" style="background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '>
+						$s .= '<div class="border border-primary bg-dark ignoreParentClick" style="background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '>
 						<img src="' . $mediaFile->getURL() . '" style="max-height: 500px; width: 100%; height: 100%; visibility: hidden;"/>
 						</div>';
 						//$s .= '<div class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
@@ -1364,7 +1366,7 @@ class Util {
 
 					$s .= '</div>';
 				} else if(count($mediaFiles) == 2){
-					$s .= '<div style="height: 437px;">';
+					$s .= '<div style="height: 537px;">';
 
 					$i = 1;
 					foreach($mediaFiles as $mediaFile){
@@ -1385,7 +1387,7 @@ class Util {
 
 					$s .= '</div>';
 				} else if(count($mediaFiles) == 3){
-					$s .= '<div style="height: 237px;">';
+					$s .= '<div style="height: 537px;">';
 
 					$i = 1;
 					foreach($mediaFiles as $mediaFile){
@@ -1411,7 +1413,7 @@ class Util {
 
 					$s .= '</div>';
 				} else if(count($mediaFiles) == 4){
-					$s .= '<div style="height: 437px;">';
+					$s .= '<div style="height: 537px;">';
 
 					$i = 1;
 					foreach($mediaFiles as $mediaFile){
@@ -1576,12 +1578,14 @@ class Util {
 
 		if($includeExtraOptions){
 			$box .= '<div class="row videoURL my-3 mx-2 d-none">';
+			$box .= '<b class="ml-3">Embed video</b>';
 			$box .= '<div class="col-12">';
 			$box .= '<input type="text" class="form-control" placeholder="Add the URL of a video" style="width: 100%"/>';
 			$box .= '</div>';
 			$box .= '</div>';
 
 			$box .= '<div class="row linkURL my-3 mx-2 d-none">';
+			$box .= '<b class="ml-3">Embed URL</b>';
 			$box .= '<div class="col-12">';
 			$box .= '<input type="text" class="form-control" placeholder="Add an URL to share" style="width: 100%"/>';
 			$box .= '</div>';

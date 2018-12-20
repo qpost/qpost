@@ -217,53 +217,6 @@ class User {
 	}
 	
 	/**
-	* Gets a user object by data
-	* 
-	* @access public
-	* @param int $id
-	* @param int $gigadriveId
-	* @param string $displayName
-	* @param string $username
-	* @param string $password
-	* @param string $email
-	* @param string $avatar
-	* @param string $bio
-	* @param string $time
-	* @param bool $emailActivated
-	* @param string $emailActivationToken
-	* @param string $lastUsernameChange
-	* @return User
-	*/
-	public static function getUserByData($id,$gigadriveId,$displayName,$username,$password,$email,$avatar,$bio,$token,$birthday,$privacyLevel,$featuredBoxTitle,$featuredBoxContent,$lastGigadriveUpdate,$gigadriveJoinDate,$time,$emailActivated,$emailActivationToken,$lastUsernameChange,$verified){
-		$user = self::isCached($id) ? self::getUserById($id) : new User($id);
-		
-		$user->id = $id;
-		$user->gigadriveId = $gigadriveId;
-		$user->displayName = $displayName;
-		$user->username = $username;
-		$user->password = $password;
-		$user->email = $email;
-		$user->avatar = $avatar;
-		$user->bio = $bio;
-		$user->token = $token;
-		$user->birthday = $birthday;
-		$user->privacyLevel = $privacyLevel;
-		$user->featuredBoxTitle = $featuredBoxTitle;
-		$user->featuredBoxContent = is_null($featuredBoxContent) ? [] : (is_string($featuredBoxContent) ? json_decode($featuredBoxContent,true) : $featuredBoxContent);
-		$user->lastGigadriveUpdate = $lastGigadriveUpdate;
-		$user->gigadriveJoinDate = $gigadriveJoinDate;
-		$user->time = $time;
-		$user->emailActivated = $emailActivated;
-		$user->emailActivationToken = $emailActivationToken;
-		$user->lastUsernameChange = $lastUsernameChange;
-		$user->verified = $verified ? true : false;
-		
-		$user->saveToCache();
-		
-		return $user;
-	}
-	
-	/**
 	* @access private
 	* @var int $id
 	*/
@@ -1953,6 +1906,8 @@ class User {
 				return true;
 			} else if($this->getPrivacyLevel() == PrivacyLevel::PRIVATE){
 				if(Util::isLoggedIn()){
+					$user = Util::getCurrentUser();
+
 					if(!is_null($user)){
 						if($user->hasBlocked($this) || $user->isBlocked($this)){
 							return false;
@@ -1967,6 +1922,8 @@ class User {
 				}
 			} else if($this->getPrivacyLevel() == PrivacyLevel::CLOSED){
 				if(Util::isLoggedIn()){
+					$user = Util::getCurrentUser();
+
 					if(!is_null($user)){
 						return $user->getId() == $this->getId();
 					}
@@ -1999,14 +1956,14 @@ class User {
 				
 				$a = [];
 				
-				$stmt = $mysqli->prepare("SELECT u.* FROM `users` AS u WHERE EXISTS (SELECT 1 FROM follows f WHERE f.following = ? AND f.follower = u.id) AND EXISTS (SELECT 1 FROM follows f WHERE f.following = u.id AND f.follower = ?) ORDER BY RAND()");
+				$stmt = $mysqli->prepare("SELECT `id` FROM `users` AS u WHERE EXISTS (SELECT 1 FROM follows f WHERE f.following = ? AND f.follower = u.id) AND EXISTS (SELECT 1 FROM follows f WHERE f.following = u.id AND f.follower = ?) ORDER BY RAND()");
 				$stmt->bind_param("ii",$thisID,$uID);
 				if($stmt->execute()){
 					$result = $stmt->get_result();
 					
 					if($result->num_rows){
 						while($row = $result->fetch_assoc()){
-							array_push($a,User::getUserByData($row["id"],$row["gigadriveId"],$row["displayName"],$row["username"],$row["password"],$row["email"],$row["avatar"],$row["bio"],$row["token"],$row["birthday"],$row["privacy.level"],$row["featuredBox.title"],$row["featuredBox.content"],$row["lastGigadriveUpdate"],$row["gigadriveJoinDate"],$row["time"],$row["emailActivated"],$row["emailActivationToken"],$row["lastUsernameChange"],$row["verified"]));
+							array_push($a,User::getUserById($row["id"]));
 						}
 						
 						CacheHandler::setToCache($n,$a,3*60);
@@ -2170,9 +2127,9 @@ class User {
 	* @access public
 	*/
 	public function saveToCache(){
-		\CacheHandler::setToCache("user_id_" . $this->id,$this,60);
-		\CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,60);
-		\CacheHandler::setToCache("user_gigadriveId_" . $this->gigadriveId,$this,60);
+		\CacheHandler::setToCache("user_id_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
+		\CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,\CacheHandler::OBJECT_CACHE_TIME);
+		\CacheHandler::setToCache("user_gigadriveId_" . $this->gigadriveId,$this,\CacheHandler::OBJECT_CACHE_TIME);
 	}
 	
 	/**

@@ -155,8 +155,8 @@ class Suspension {
      * @access public
      */
     public function saveToCache(){
-        \CacheHandler::setToCache("suspension_id_" . $this->id,$this,20*60);
-        if($this->active == true) \CacheHandler::setToCache("suspension_user_" . $this->target,$this,60);
+        \CacheHandler::setToCache("suspension_id_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
+        if($this->active == true) \CacheHandler::setToCache("suspension_user_" . $this->target,$this,\CacheHandler::OBJECT_CACHE_TIME);
     }
 
     /**

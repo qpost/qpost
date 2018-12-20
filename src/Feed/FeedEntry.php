@@ -45,33 +45,6 @@ class FeedEntry {
     }
 
     /**
-     * Returns a feed entry object created from the specified data
-     * 
-     * @access public
-     * @return FeedEntry
-     */
-    public static function getEntryFromData($id,$user,$text,$following,$post,$sessionId,$type,$replies,$shares,$favorites,$attachments,$time){
-        $entry = self::isCached($id) ? self::getEntryById($id) : new self($id);
-
-        $entry->id = $id;
-        $entry->user = $user;
-        $entry->text = $text;
-        $entry->following = $following;
-        $entry->post = $post;
-        $entry->sessionId = $sessionId;
-        $entry->type = $type;
-        $entry->replies = $replies;
-        $entry->shares = $shares;
-        $entry->favorites = $favorites;
-        $entry->attachments = is_null($attachments) ? [] : json_decode($attachments,true);
-        $entry->time = $time;
-        $entry->exists = true;
-        $entry->saveToCache();
-
-        return $entry;
-    }
-
-    /**
      * @access private
      * @var int $id
      */
@@ -599,49 +572,58 @@ class FeedEntry {
 		$s = "";
 
         if($this->getType() == "POST"){
-            if($noBorder == false) $s .= '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';
+            if($noBorder == false) $s .= '<li class="list-group-item px-0 py-0 feedEntry statusTrigger" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';
+            $s .= '<div class="px-4 py-2">';
 			$s .= '<div class="row">';
             $s .= '<div class="float-left">';
-			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
+			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick float-left">';
 			$s .= '<img class="rounded mx-1 my-1" src="' . $user->getAvatarURL() . '" width="40" height="40"/>';
-			$s .= '</a>';
-			$s .= '</div>';
-
-			$s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px; width: 100%">';
-			$s .= '<p class="mb-0' . ($small ? ' small' : '') . '">';
+            $s .= '</a>';
+            $s .= '<p class="float-left ml-1 mb-0">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<span class="font-weight-bold convertEmoji">' . $user->getDisplayName() . $user->renderCheckMark() . '</span>';
 			$s .= '</a>';
 
 			$s .= '<span class="text-muted font-weight-normal"> @' . $user->getUsername() . ' </span>';
 
-			$s .= '&bull; ';
+			$s .= '<br/>';
 
-			$s .= Util::timeago($this->getTime());
+            $s .= '<span class="small text-muted"><i class="far fa-clock"></i> ';
+            $s .= Util::timeago($this->getTime());
+            $s .= '</span>';
+
 			$s .= '</p>';
+			$s .= '</div>';
+
+			$s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
 
 			$s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
             $s .= Util::convertPost($this->getText());
             $s .= '</p>';
-            
+
             if($hideAttachments == false && count($this->attachments) > 0){
-				$s .= '<div class="my-2">';
+                $s .= '</div>';
+                $s .= '</div>';
+                $s .= '</div>';
 
 				$s .= Util::renderAttachmentEmbeds($this->getAttachmentObjects(),$this->id);
 
-                $s .= '</div>';
+                $s .= '<div class="px-4">';
+                $s .= '<div class="row">';
+                $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             }
 
 			$s .= Util::getPostActionButtons($this);
 			$s .= '</div>';
-			$s .= '</div>';
+            $s .= '</div>';
+            $s .= '</div>';
             if($noBorder == false) $s .= '</li>';
 
             return $s;
         } else if($this->getType() == "NEW_FOLLOWING"){
             $u2 = $this->getFollowing();
 				
-            if($noBorder == false) $s .= '<li class="list-group-item px-2 py-2" data-entry-id="<?= $this->getId() ?>">';
+            if($noBorder == false) $s .= '<li class="list-group-item px-2 py-2" data-entry-id="' . $this->getId() . '">';
             
 			if(Util::isLoggedIn() && Util::getCurrentUser()->getId() == $this->getUserId()){
 			    $s .= '<div class="float-right">';
@@ -662,45 +644,65 @@ class FeedEntry {
 			if(is_null($sharedPost) || is_null($sharedUser))
 				return "";
 
-            if($noBorder == false) $s .= '<li class="list-group-item feedEntry statusTrigger px-4 py-2" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
+            if($noBorder == false) $s .= '<li class="list-group-item px-0 py-0 feedEntry statusTrigger" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
+            $s .= '<div class="px-4 py-2">';
 			$s .= '<div class="small text-muted">';
 			$s .= '<i class="fas fa-share-alt text-blue"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . $user->renderCheckMark() . '</a> &bull; ' . Util::timeago($this->getTime());
 			$s .= '</div>';
 			$s .= '<div class="row">';
 			$s .= '<div class="float-left">';
-			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
+			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick float-left">';
 			$s .= '<img class="rounded mx-1 my-1" src="' . $sharedUser->getAvatarURL() . '" width="40" height="40"/>';
-			$s .= '</a>';
-            $s .= '</div>';
-
-            $s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px; width: 100%">';
-			$s .= '<p class="mb-0">';
+            $s .= '</a>';
+            $s .= '<p class="float-left ml-1 mb-0">';
 			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
 			$s .= '<span class="font-weight-bold convertEmoji">' . $sharedUser->getDisplayName() . $sharedUser->renderCheckMark() . '</span>';
 			$s .= '</a>';
 
 			$s .= '<span class="text-muted font-weight-normal"> @' . $sharedUser->getUsername() . ' </span>';
 
-			$s .= '&bull; ';
+			$s .= '<br/>';
 
+            $s .= '<span class="small text-muted"><i class="far fa-clock"></i> ';
             $s .= Util::timeago($sharedPost->getTime());
-			$s .= '</p>';
+            $s .= '</span>';
+
+            $s .= '</p>';
+            $s .= '</div>';
+
+            $s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px; width: 100%">';
+            
+            $parent = $sharedPost->getPost();
+            if(!is_null($parent)){
+                $parentCreator = $parent->getUser();
+
+                if(!is_null($parentCreator)){
+                    $s .= '<div class="text-muted small">';
+                    $s .= 'Replying to <a href="/' . $parentCreator->getUsername() . '">@' . $parentCreator->getUsername() . '</a>';
+                    $s .= '</div>';
+                }
+            }
 
 			$s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
 			$s .= Util::convertPost($sharedPost->getText());
 			$s .= '</p>';
 
 			if($hideAttachments == false && count($sharedPost->attachments) > 0){
-				$s .= '<div class="my-2">';
+				$s .= '</div>';
+                $s .= '</div>';
+                $s .= '</div>';
 
 				$s .= Util::renderAttachmentEmbeds($sharedPost->getAttachmentObjects(),$this->id);
 
-                $s .= '</div>';
+                $s .= '<div class="px-4">';
+                $s .= '<div class="row">';
+                $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             }
 
 			$s .= Util::getPostActionButtons($sharedPost);
 			$s .= '</div>';
-			$s .= '</div>';
+            $s .= '</div>';
+            $s .= '</div>';
             if($noBorder == false) $s .= '</li>';
             
             return $s;
@@ -710,7 +712,7 @@ class FeedEntry {
     }
 
     public function saveToCache(){
-        \CacheHandler::setToCache("feedEntry_" . $this->id,$this,60);
+        \CacheHandler::setToCache("feedEntry_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
     }
 
     public function removeFromCache(){

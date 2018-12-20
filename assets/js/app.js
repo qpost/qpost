@@ -78,7 +78,7 @@ function showDeleteModal(postId){
 				content = content.concat(
 					'<div class="mt-2">' +
 					c + 
-					'<p style="font-size: 27px;">' +
+					'<p style="font-size: 27px; word-wrap: break-word;">' +
 					twemoji.parse(json.text) +
 					'</p>' +
 					'<p class="small text-muted"><i class="far fa-clock"></i> Posted ' +
@@ -370,7 +370,7 @@ function showStatusModal(postId){
 				
 				content = content.concat(
 					'<div><a href="/' + user.username + '" class="clearUnderline font-weight-bold mb-0" style="font-size:20px; word-wrap: break-word;">' +
-					twemoji.parse(user.displayName) +
+					twemoji.parse(user.displayName) + (user.verified === true ? user.verifiedIcon : "") +
 					'</a></div>'
 				);
 				

@@ -302,7 +302,7 @@ class MediaFile {
      * @access public
      */
     public function saveToCache(){
-        CacheHandler::setToCache("media_id_" . $this->id,$this,60);
-        CacheHandler::setToCache("media_sha256_" . $this->sha256,$this,60);
+        CacheHandler::setToCache("media_id_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
+        CacheHandler::setToCache("media_sha256_" . $this->sha256,$this,\CacheHandler::OBJECT_CACHE_TIME);
     }
 }
