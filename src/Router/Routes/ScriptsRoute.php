@@ -397,7 +397,7 @@ $app->post("/scripts/postInfo",function(){
 					if(is_null($followButton))
 						$followButton = "";
 
-					$jsonData = Util::postJsonData($postId,0,658,394);
+					$jsonData = Util::postJsonData($postId,0);
 
 					$replies = [];
 					if($post->getReplies() > 0){
@@ -416,7 +416,7 @@ $app->post("/scripts/postInfo",function(){
 									$f = FeedEntry::getEntryById($row["feedEntryId"]);
 									$u = User::getUserById($row["userId"]);
 
-									array_push($replies,Util::postJsonData($f,0,394,658,true));
+									array_push($replies,Util::postJsonData($f,0));
 								}
 							}
 						}
@@ -545,7 +545,7 @@ $app->post("/scripts/mediaInfo",function(){
 						$followButton = "";
 
 					$postJsonData = Util::postJsonData($postId);
-					$postJsonData["limitedHtml"] = $post->toListHTML(false,658,true,true);
+					$postJsonData["limitedHtml"] = $post->toListHTML(true,true);
 					$mediaJsonData = Util::mediaJsonData($_POST["mediaId"],$_POST["postId"]);
 
 					return json_encode(["post" => $postJsonData,"attachment" => $mediaJsonData]);
@@ -856,7 +856,7 @@ $app->post("/scripts/createPost",function(){
 
 						if(!is_null($postId)){
 							$postData = FeedEntry::getEntryById($postId);
-							$post = Util::postJsonData($postData,0,(!is_null($parent) ? 394 : 658),658,!is_null($parent));
+							$post = Util::postJsonData($postData,0);
 
 							if(!is_null($parent)){
 								$parentData = FeedEntry::getEntryById($parent);

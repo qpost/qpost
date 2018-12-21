@@ -1032,11 +1032,9 @@ class Util {
 	 * @access public
 	 * @param int $postId
 	 * @param int $parentDepth
-	 * @param int $parentMaxContentWidth
-	 * @param bool $small
 	 * @return array
 	 */
-	public static function postJsonData($postId,$parentDepth = 0,$maxContentWidth = 658,$parentMaxContentWidth = 658,$small = false){
+	public static function postJsonData($postId,$parentDepth = 0){
 		if(is_object($postId)) $postId = $postId->getId();
 		$post = !is_null($postId) ? FeedEntry::getEntryById($postId) : null;
 		if(!is_null($post)){
@@ -1055,9 +1053,9 @@ class Util {
 				"favorites" => $post->getFavorites(),
 				"attachments" => $attachments,
 				"postActionButtons" => self::getPostActionButtons($post),
-				"listHtml" => $post->toListHTML($small,$maxContentWidth),
+				"listHtml" => $post->toListHTML(),
 				"attachmentHtml" => Util::renderAttachmentEmbeds($post->getAttachmentObjects(),$postId),
-				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1,$parentMaxContentWidth,$parentMaxContentWidth,true) : null)
+				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1) : null)
 			];
 		} else {
 			return null;
@@ -1393,17 +1391,17 @@ class Util {
 					foreach($mediaFiles as $mediaFile){
 						if($mediaFile->getType() == "IMAGE"){
 							if($i == 1){
-								$s .= '<div class="d-inline-block" style="width: 66.66666%; position: relative; height: 100%;">';
+								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
 								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-								$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2" style="max-height: 500px; width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+								$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2" style="max-height: 537px; width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 								$s .= '</div>';
 							} else if($i == 2){
-								$s .= '<div class="d-inline-block" style="width: calc(100% / 3 - 1px); height: 100%;">';
+								$s .= '<div class="d-inline-block" style="width: 50%; height: 100%;">';
 								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary border-left-0 border-bottom-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="max-height: 537px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 							} else if($i == 3){
 								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-								$s .= '<div class="border border-primary border-left-0 boder-top-0 bg-dark ignoreParentClick mr-2" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+								$s .= '<div class="border border-primary border-left-0 boder-top-0 bg-dark ignoreParentClick mr-2" style="max-height: 537px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 								$s .= '</div>';
 							}
 
