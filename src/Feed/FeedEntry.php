@@ -557,13 +557,11 @@ class FeedEntry {
      * Returns HTML code to use in a feed entry list (search, profile, home feed, ...)
      * 
      * @access public
-	 * @param bool $small If true, the text will be rendered smaller
-     * @param int $maxWidth Max width of the content part in px
      * @param bool $noBorder If false, the additional HTML for easier use in bootstrap lists won't be included
 	 * @param bool $hideAttachments If true, the attachments will be hidden
      * @return string
      */
-    public function toListHTML($small = false, $maxWidth = 658, $noBorder = false, $hideAttachments = false){
+    public function toListHTML($noBorder = false, $hideAttachments = false){
 		if(!$this->mayView()) return "";
 
 		$user = $this->getUser();
