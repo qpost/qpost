@@ -399,32 +399,16 @@ $app->post("/scripts/postInfo",function(){
 
 					$jsonData = Util::postJsonData($postId,0);
 
-					$replies = [];
-					if($post->getReplies() > 0){
-						$mysqli = Database::Instance()->get();
-							
-						$postId = $post->getId();
-						$uid = Util::isLoggedIn() ? Util::getCurrentUser()->getId() : -1;
-
-						$stmt = $mysqli->prepare("SELECT f.id AS feedEntryId,u.id AS userId FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
-						$stmt->bind_param("ii",$postId,$uid);
-						if($stmt->execute()){
-							$result = $stmt->get_result();
-
-							if($result->num_rows){
-								while($row = $result->fetch_assoc()){
-									$f = FeedEntry::getEntryById($row["feedEntryId"]);
-									$u = User::getUserById($row["userId"]);
-
-									array_push($replies,Util::postJsonData($f,0));
-								}
-							}
+					$replyData = [];
+					$replies = $post->getReplyArray();
+					if(!is_null($replies)){
+						foreach ($replies as $reply){
+							array_push($replyData,Util::postJsonData($reply,0));
 						}
-						$stmt->close();
 					}
 
 					$jsonData["followButton"] = $followButton;
-					$jsonData["replies"] = $replies;
+					$jsonData["replies"] = $replyData;
 					$jsonData["postForm"] = Util::renderCreatePostForm(["replyForm","my-2"],false);
 
 					return json_encode($jsonData);
