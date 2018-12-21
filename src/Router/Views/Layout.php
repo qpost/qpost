@@ -344,9 +344,9 @@ $currentUser = Util::getCurrentUser();
 
 						<div class="col-lg-8 col-xl-6">
 							<nav class="nav nav-pills nav-justified">
-								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FEED) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername()); ?>">Feed (<?= $user->getPosts(); ?>)</a>
-								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWING) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/following"); ?>">Following (<?= $user->getFollowing(); ?>)</a>
-								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWERS) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/followers"); ?>">Followers (<?= $user->getFollowers(); ?>)</a>
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FEED) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername()); ?>">Feed (<?= Util::formatNumberShort($user->getPosts()); ?>)</a>
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWING) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/following"); ?>">Following (<?= Util::formatNumberShort($user->getFollowing()); ?>)</a>
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWERS) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/followers"); ?>">Followers (<?= Util::formatNumberShort($user->getFollowers()); ?>)</a>
 							</nav>
 							<?= $content_for_layout ?>
 						</div>
