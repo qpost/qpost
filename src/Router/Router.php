@@ -29,29 +29,29 @@ if(Util::isLoggedIn()){
 	}
 }
 
-require $app->path("routes:Home.php");
-require $app->path("routes:Notifications.php");
-require $app->path("routes:Status.php");
-require $app->path("routes:Out.php");
-require $app->path("routes:Login.php");
-require $app->path("routes:Logout.php");
-require $app->path("routes:Profile.php");
-require $app->path("routes:Account.php");
-require $app->path("routes:Messages.php");
-require $app->path("routes:Requests.php");
-require $app->path("routes:Edit.php");
-require $app->path("routes:Search.php");
-require $app->path("routes:Features.php");
-require $app->path("routes:Discover.php");
-require $app->path("routes:ScriptsRoute.php");
-require $app->path("routes:Sitemap.php");
-require $app->path("routes:NightMode.php");
-require $app->path("routes:Register.php");
-require $app->path("routes:Delete.php");
+require $app->path("routes:API/autoload.php");
 
 require $app->path("routes:Cronjobs/DeleteStaleAccounts.php");
 
-require $app->path("routes:API/autoload.php");
+require $app->path("routes:Account.php");
+require $app->path("routes:Delete.php");
+require $app->path("routes:Discover.php");
+require $app->path("routes:Edit.php");
+require $app->path("routes:Features.php");
+require $app->path("routes:Home.php");
+require $app->path("routes:Login.php");
+require $app->path("routes:Logout.php");
+require $app->path("routes:Messages.php");
+require $app->path("routes:NightMode.php");
+require $app->path("routes:Notifications.php");
+require $app->path("routes:Out.php");
+require $app->path("routes:Profile.php");
+require $app->path("routes:Register.php");
+require $app->path("routes:Requests.php");
+require $app->path("routes:ScriptsRoute.php");
+require $app->path("routes:Search.php");
+require $app->path("routes:Sitemap.php");
+require $app->path("routes:Status.php");
 
 $app->on("after",function() {
 	if($this->response->status == "404"){
