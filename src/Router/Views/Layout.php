@@ -336,7 +336,7 @@ $currentUser = Util::getCurrentUser();
 										}
 									}
 
-									echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mt-3"]);
+									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-3"]);
 
 								?>
 							</div>
@@ -408,7 +408,7 @@ $currentUser = Util::getCurrentUser();
 										}
 									}
 
-									echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mt-1"]);
+									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-1"]);
 
 								?>
 							</div>
