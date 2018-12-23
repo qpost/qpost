@@ -266,7 +266,7 @@ $currentUser = Util::getCurrentUser();
 
 					?>
 					<div class="row">
-						<div class="col-lg-3 mb-3">
+						<div class="col-lg-4 col-xl-3 d-none d-lg-block">
 							<div class="sticky-top" style="top: 70px">
 								<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
 								<h4 class="mb-0 convertEmoji" style="word-wrap: break-word;"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
@@ -336,14 +336,31 @@ $currentUser = Util::getCurrentUser();
 										}
 									}
 
+									echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mt-3"]);
+
+								?>
+							</div>
+						</div>
+
+						<div class="col-lg-8 col-xl-6">
+							<nav class="nav nav-pills nav-justified">
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FEED) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername()); ?>">Feed (<?= Util::formatNumberShort($user->getPosts()); ?>)</a>
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWING) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/following"); ?>">Following (<?= Util::formatNumberShort($user->getFollowing()); ?>)</a>
+								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWERS) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/followers"); ?>">Followers (<?= Util::formatNumberShort($user->getFollowers()); ?>)</a>
+							</nav>
+							<?= $content_for_layout ?>
+						</div>
+
+						<div class="col-xl-3 d-none d-xl-block">
+							<div class="sticky-top" style="top: 70px">
+								<?php
+
 									$followersYouFollow = $user->followersYouFollow();
 									if(!is_null($followersYouFollow) && count($followersYouFollow) > 0){
 										?>
-								<div class="mt-2">
 									<i class="far fa-user text-muted"></i> <?= count($followersYouFollow) ?> follower<?= count($followersYouFollow) > 1 ? "s" : "" ?> you know
-								</div>
 
-								<div class="d-inline-block ml-1">
+									<div class="d-inline-block ml-1">
 									<?php
 
 										for ($i = 0; $i < min(count($followersYouFollow),24); $i++){
@@ -357,7 +374,7 @@ $currentUser = Util::getCurrentUser();
 										}
 
 									?>
-								</div>
+									</div>
 										<?php
 									}
 
@@ -391,19 +408,10 @@ $currentUser = Util::getCurrentUser();
 										}
 									}
 
-									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["my-3","d-none","d-md-block"]);
+									echo Util::renderAd(Util::AD_TYPE_BLOCK,true,["mt-1"]);
 
 								?>
 							</div>
-						</div>
-
-						<div class="col-lg-9">
-							<nav class="nav nav-pills nav-justified">
-								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FEED) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername()); ?>">Feed (<?= $user->getPosts(); ?>)</a>
-								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWING) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/following"); ?>">Following (<?= $user->getFollowing(); ?>)</a>
-								<a class="nav-item nav-link<?php if(isset($profileTab) && $profileTab == PROFILE_TAB_FOLLOWERS) echo " active"; ?>" href="<?= $app->routeUrl("/" . $user->getUsername() . "/followers"); ?>">Followers (<?= $user->getFollowers(); ?>)</a>
-							</nav>
-							<?= $content_for_layout ?>
 						</div>
 					</div>
 				</div>

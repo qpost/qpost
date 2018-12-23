@@ -106,6 +106,12 @@ class FeedEntry {
 
     /**
      * @access private
+     * @var int[]|null
+     */
+    private $replyArray;
+
+    /**
+     * @access private
      * @var int $shares
      */
     private $shares;
@@ -334,6 +340,59 @@ class FeedEntry {
     }
 
     /**
+     * Returns objects of the replies of this feed entry in chronological order, if available
+     * 
+     * @access public
+     * @param int $limit The limit of how many replies should be loaded
+     * @return FeedEntry[]|null Returns null if the replies could not be loaded
+     */
+    public function getReplyArray($limit = 10){
+        if(is_null($this->replyArray) && $this->type == FEED_ENTRY_TYPE_POST && $this->getReplies() > 0){
+            $mysqli = Database::Instance()->get();
+							
+			$postId = $this->id;
+			$uid = $this->user;
+
+			$stmt = $mysqli->prepare("SELECT f.id AS feedEntryId,u.id AS userId FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
+            $stmt->bind_param("ii",$postId,$uid);
+            if($stmt->execute()){
+                $this->replyArray = [];
+
+				$result = $stmt->get_result();
+
+				if($result->num_rows){
+                    while($row = $result->fetch_assoc()){
+                        $f = FeedEntry::getEntryById($row["feedEntryId"]);
+                        $u = User::getUserById($row["userId"]);
+                        
+                        if(is_null($f) || is_null($u)) continue;
+
+						array_push($this->replyArray,$row["feedEntryId"]);
+                    }
+                    
+                    $this->saveToCache();
+				}
+			}
+			$stmt->close();
+        }
+
+        if(!is_null($this->replyArray)){
+            $a = [];
+            foreach ($this->replyArray as $id) {
+                $f = self::getEntryById($id);
+
+                if(!is_null($f)){
+                    array_push($a,$f);
+                }
+            }
+
+            return $a;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Reloads the reply count
      * 
      * @access public
@@ -350,6 +409,7 @@ class FeedEntry {
                 $row = $result->fetch_assoc();
 
                 $this->replies = $row["count"];
+                $this->replyArray = null;
 
                 $this->saveToCache();
             }

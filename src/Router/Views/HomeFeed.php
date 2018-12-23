@@ -59,6 +59,8 @@ $user = Util::getCurrentUser();
 						</div>
 					</div>
 				</form>
+
+				<?= Util::renderAd(Util::AD_TYPE_BLOCK,true,["mt-3"]) ?>
 			</div>
 		</div>
 
