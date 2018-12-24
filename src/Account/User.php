@@ -795,7 +795,7 @@ class User {
 		if(is_null($this->posts)){
 			$mysqli = Database::Instance()->get();
 			
-			$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `feed` WHERE `user` = ? AND `type` = 'POST' AND `post` IS NULL");
+			$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `feed` WHERE `user` = ? AND (`type` = 'POST' OR `type` = 'SHARE')");
 			$stmt->bind_param("i",$this->id);
 			if($stmt->execute()){
 				$result = $stmt->get_result();
