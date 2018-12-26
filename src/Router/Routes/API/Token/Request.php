@@ -2,15 +2,15 @@
 
 $app->bind("/api/token/request",function(){
 	if(api_method_check($this,"POST")){
-		api_headers($this);
+		$requestData = api_request_data($this);
 
-		if(isset($_POST["email"])){
-			if(!Util::isEmpty($_POST["email"])){
-				$email = $_POST["email"];
+		if(isset($requestData["email"])){
+			if(!Util::isEmpty($requestData["email"])){
+				$email = $requestData["email"];
 	
-				if(isset($_POST["password"])){
-					if(!Util::isEmpty($_POST["password"])){
-						$password = $_POST["password"];
+				if(isset($requestData["password"])){
+					if(!Util::isEmpty($requestData["password"])){
+						$password = $requestData["password"];
 	
 						$user = User::getUserByEmail($email);
 						if(is_null($user)) $user = User::getUserByUsername($email);

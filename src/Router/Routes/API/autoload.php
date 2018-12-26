@@ -13,7 +13,7 @@ function api_headers($app){
     // CORS
     $app->response->headers[] = "Access-Control-Allow-Origin: *";
     $app->response->headers[] = "Access-Control-Allow-Methods: GET,POST,OPTIONS,DELETE,PUT,PATCH";
-    $app->response->headers[] = "Access-Control-Allow-Headers: Content-Type,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control";
+    $app->response->headers[] = "Access-Control-Allow-Headers: Authorization,Content-Type,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control";
 }
 
 /**
@@ -27,6 +27,8 @@ function api_method_check($app,$method){
     if(isset($_SERVER["REQUEST_METHOD"])){
         $usedMethod = $_SERVER["REQUEST_METHOD"];
 
+        api_headers($app);
+
         if($usedMethod === "OPTIONS"){
             $app->response->status = "204";
             return false;
@@ -39,11 +41,34 @@ function api_method_check($app,$method){
             return false;
         } else {
             $app->response->status = "200";
-            return false;
+            return true;
         }
     }
 
     return false;
+}
+
+/**
+ * Gets the data from the current API request
+ * 
+ * @param Lime\App $app
+ * @return array
+ */
+function api_request_data($app){
+    if($_SERVER["REQUEST_METHOD"] === "GET"){
+        return $_GET;
+    } else {
+        $input = file_get_contents("php://input");
+
+        $json = json_decode($input,true);
+        if(is_null($json)){
+            parse_str($input, $parsed);
+
+            return $parsed ? $parsed : [];
+        } else {
+            return $json;
+        }
+    }
 }
 
 require "Token/Request.php";
