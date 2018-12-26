@@ -12,11 +12,14 @@ $app->path("views",__DIR__ . "/Views");
 
 $csrf = new \Riimu\Kit\CSRF\CSRFHandler();
 
-try {
-	$csrf->validateRequest(true);
-} catch(\Riimu\Kit\CSRF\InvalidCSRFTokenException $e){
-	header("HTTP/1.0 400 Bad Request");
-	exit("400 Bad Request");
+// dont do CSRF check on API requests
+if(!(substr($app->route,0,5) === "/api/")){
+	try {
+		$csrf->validateRequest(true);
+	} catch(\Riimu\Kit\CSRF\InvalidCSRFTokenException $e){
+		header("HTTP/1.0 400 Bad Request");
+		exit("400 Bad Request");
+	}
 }
 
 define("CSRF_TOKEN",$csrf->getToken());

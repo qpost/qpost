@@ -1,16 +1,15 @@
 <?php
 
 $app->bind("/api/token/verify",function(){
-	$this->response->mime = "json";
-	header("Access-Control-Allow-Origin: *");
+	api_headers($this);
 
-	if(isset($_GET["token"])){
-		if(!Util::isEmpty($_GET["token"])){
-			$tokenString = $_GET["token"];
+	if(isset($_POST["token"])){
+		if(!Util::isEmpty($_POST["token"])){
+			$tokenString = $_POST["token"];
 
-			if(isset($_GET["user"])){
-				if(!Util::isEmpty($_GET["user"])){
-					$userID = $_GET["user"];
+			if(isset($_POST["user"])){
+				if(!Util::isEmpty($_POST["user"])){
+					$userID = $_POST["user"];
 
 					$token = Token::getTokenById($tokenString);
 

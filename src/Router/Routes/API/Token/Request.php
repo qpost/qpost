@@ -1,8 +1,7 @@
 <?php
 
 $app->bind("/api/token/request",function(){
-	$this->response->mime = "json";
-	header("Access-Control-Allow-Origin: *");
+	api_headers($this);
 
 	if(isset($_GET["email"])){
 		if(!Util::isEmpty($_GET["email"])){
