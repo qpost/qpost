@@ -57,11 +57,13 @@ require $app->path("routes:Sitemap.php");
 require $app->path("routes:Status.php");
 
 $app->on("after",function() {
-	if($this->response->status == "404"){
-		$this->response->body = $this->render("views:ErrorPages/404.php with views:Layout.php",[
-			"title" => "Error 404: Page not found",
-			"subtitle" => "Error 404: Page not found"
-		]);
+	if(!(substr($this->route,0,5) === "/api/")){
+		if($this->response->status == "404"){
+			$this->response->body = $this->render("views:ErrorPages/404.php with views:Layout.php",[
+				"title" => "Error 404: Page not found",
+				"subtitle" => "Error 404: Page not found"
+			]);
+		}
 	}
 });
 
