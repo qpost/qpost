@@ -766,6 +766,19 @@ class FeedEntry {
             $s .= '</p>';
             $s .= '</div>';
 
+            if($sharedPost->isNSFW()){
+                $s .= '</div>';
+                $s .= '</div>';
+
+                $s .= '<div class="nsfwInfo ignoreParentClick bg-' . (Util::isUsingNightMode() ? "dark" : "light") . ' text-' . (Util::isUsingNightMode() ? "white" : "muted") . ' text-center py-4">';
+                $s .= '<div style="font-size: 26px;"><i class="fas fa-exclamation-triangle"></i></div>';
+                $s .= 'This post was marked as NSFW. Click to show.';
+                $s .= '</div>';
+
+                $s .= '<div class="px-4">';
+                $s .= '<div class="row">';
+            }
+
             $s .= '<div class="float-left ml-1" style="width: 100%">';
             
             $parent = $sharedPost->getPost();
@@ -779,7 +792,7 @@ class FeedEntry {
                 }
             }
 
-			$s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
+			$s .= '<p class="mb-0 convertEmoji' . ($sharedPost->isNSFW() ? ' hiddenNSFW d-none' : '') . '" style="word-wrap: break-word;">';
 			$s .= Util::convertPost($sharedPost->getText());
 			$s .= '</p>';
 
@@ -788,7 +801,15 @@ class FeedEntry {
                 $s .= '</div>';
                 $s .= '</div>';
 
-				$s .= Util::renderAttachmentEmbeds($sharedPost->getAttachmentObjects(),$this->id);
+                if($sharedPost->isNSFW()){
+                    $s .= '<div class="hiddenNSFW d-none">';
+                }
+
+                $s .= Util::renderAttachmentEmbeds($sharedPost->getAttachmentObjects(),$this->id);
+                
+                if($sharedPost->isNSFW()){
+                    $s .= '</div>';
+                }
 
                 $s .= '<div class="px-4">';
                 $s .= '<div class="row">';
