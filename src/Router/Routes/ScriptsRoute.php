@@ -736,7 +736,7 @@ $app->post("/scripts/createPost",function(){
 
 						if($parent == 0) $parent = null;
 
-						$nsfw = isset($_POST["nsfw"]) ? (bool)$_POST["nsfw"] : false;
+						$nsfw = isset($_POST["nsfw"]) && $_POST["nsfw"] == "true";
 
 						$furtherProccess = true;
 
