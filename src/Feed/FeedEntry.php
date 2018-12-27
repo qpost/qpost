@@ -728,7 +728,7 @@ class FeedEntry {
             $s .= '</p>';
             $s .= '</div>';
 
-            $s .= '<div class="float-left ml-1" style="max-width: ' . $maxWidth . 'px; width: 100%">';
+            $s .= '<div class="float-left ml-1" style="width: 100%">';
             
             $parent = $sharedPost->getPost();
             if(!is_null($parent)){
