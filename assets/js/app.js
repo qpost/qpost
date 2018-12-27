@@ -1683,33 +1683,40 @@ function load(){
 	});
 	
 	
-	$(document).on("change keyup keydown paste",".postField",function(){
-		let limit = POST_CHARACTER_LIMIT;
-		let used = $(this).val().length;
-		let left = limit-used;
-		let counter = $(this).parent().parent().find(".postCharacterCounter");
-		
-		if(left > 0){
-			if(left > limit/2){
-				if(left == 1){
-					counter.html(left);
-				} else {
-					counter.html(left);
-				}
-			} else {
-				if(left == 1){
-					counter.html("<span style=\"color: #F94F12;\">" + left + "</span>");
-				} else {
-					counter.html("<span style=\"color: #F94F12;\">" + left + "</span>");
-				}
-			}
-		} else if(left == 0){
-			counter.html("<span style=\"color: #FF0000; font-weight: bold\">0</span>");
+	$(document).on("change keyup keydown paste",".postField",function(e){
+		console.log("1");
+		if((e.ctrlKey || e.metaKey) && (e.keyCode == 13 || e.keyCode == 10)){
+			console.log("2");
+			// click post button
+			$(this).parent().parent().find(".postButton").click();
 		} else {
-			if(left == 1){
-				counter.html("<span style=\"color: #FF0000; font-weight: bold\">" + left + "</span>");
+			const limit = POST_CHARACTER_LIMIT;
+			const used = $(this).val().length;
+			const left = limit-used;
+			const counter = $(this).parent().parent().find(".postCharacterCounter");
+			
+			if(left > 0){
+				if(left > limit/2){
+					if(left == 1){
+						counter.html(left);
+					} else {
+						counter.html(left);
+					}
+				} else {
+					if(left == 1){
+						counter.html("<span style=\"color: #F94F12;\">" + left + "</span>");
+					} else {
+						counter.html("<span style=\"color: #F94F12;\">" + left + "</span>");
+					}
+				}
+			} else if(left == 0){
+				counter.html("<span style=\"color: #FF0000; font-weight: bold\">0</span>");
 			} else {
-				counter.html("<span style=\"color: #FF0000; font-weight: bold\">" + left + "</span>");
+				if(left == 1){
+					counter.html("<span style=\"color: #FF0000; font-weight: bold\">" + left + "</span>");
+				} else {
+					counter.html("<span style=\"color: #FF0000; font-weight: bold\">" + left + "</span>");
+				}
 			}
 		}
 	});
