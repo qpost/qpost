@@ -683,9 +683,9 @@ class FeedEntry {
                 $s .= '<div class="row">';
             }
 
-            $s .= '<div class="float-left ml-1 my-2' . ($this->nsfw ? ' hiddenNSFW d-none' : '') . '" style="width: 100%">';
+            $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             
-            $s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
+            $s .= '<p class="mb-0 convertEmoji' . ($this->nsfw ? ' hiddenNSFW d-none' : '') . '" style="word-wrap: break-word;">';
             $s .= Util::convertPost($this->getText());
             $s .= '</p>';
 
