@@ -1600,6 +1600,7 @@ class Util {
 			$box .= '<div class="float-left mt-2">';
 			$box .= '<button type="button" class="btn btn-link text-' . $linkColor . ' mb-0 addPhoto" data-toggle="tooltip" title="Add photo"><i class="fas fa-images"></i></button>';
 			//$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
+			$box .= '<button type="button" class="btn btn-link text-success mb-0 toggleNSFW" data-toggle="tooltip" title="NSFW: off"><i class="fas fa-exclamation-triangle"></i></button>';
 			$box .= '</div>';
 
 			$box .= '<input type="hidden" name="attachmentData" value=""/>';

@@ -88,6 +88,12 @@ class FeedEntry {
 
     /**
      * @access private
+     * @var bool $nsfw
+     */
+    private $nsfw;
+
+    /**
+     * @access private
      * @var string $time
      */
     private $time;
@@ -173,6 +179,7 @@ class FeedEntry {
                 $this->post = $row["post"];
                 $this->sessionId = $row["sessionId"];
                 $this->type = $row["type"];
+                $this->nsfw = $row["nsfw"];
                 $this->replies = $row["count.replies"];
                 $this->shares = $row["count.shares"];
                 $this->favorites = $row["count.favorites"];
@@ -284,6 +291,16 @@ class FeedEntry {
      */
     public function getType(){
         return $this->type;
+    }
+
+    /**
+     * Returns whether this post was marked as NSFW
+     * 
+     * @access public
+     * @return bool
+     */
+    public function isNSFW(){
+        return $this->nsfw;
     }
 
     /**
@@ -651,11 +668,24 @@ class FeedEntry {
             $s .= '</span>';
 
 			$s .= '</p>';
-			$s .= '</div>';
+            $s .= '</div>';
+            
+            if($this->nsfw){
+                $s .= '</div>';
+                $s .= '</div>';
 
-			$s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
+                $s .= '<div class="nsfwInfo ignoreParentClick bg-' . (Util::isUsingNightMode() ? "dark" : "light") . ' text-' . (Util::isUsingNightMode() ? "white" : "muted") . ' text-center py-4">';
+                $s .= '<div style="font-size: 26px;"><i class="fas fa-exclamation-triangle"></i></div>';
+                $s .= 'This post was marked as NSFW. Click to show.';
+                $s .= '</div>';
 
-			$s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
+                $s .= '<div class="px-4">';
+                $s .= '<div class="row">';
+            }
+
+            $s .= '<div class="float-left ml-1 my-2' . ($this->nsfw ? ' hiddenNSFW d-none' : '') . '" style="width: 100%">';
+            
+            $s .= '<p class="mb-0 convertEmoji" style="word-wrap: break-word;">';
             $s .= Util::convertPost($this->getText());
             $s .= '</p>';
 
@@ -664,7 +694,15 @@ class FeedEntry {
                 $s .= '</div>';
                 $s .= '</div>';
 
-				$s .= Util::renderAttachmentEmbeds($this->getAttachmentObjects(),$this->id);
+                if($this->nsfw){
+                    $s .= '<div class="hiddenNSFW d-none">';
+                }
+
+                $s .= Util::renderAttachmentEmbeds($this->getAttachmentObjects(),$this->id);
+                
+                if($this->nsfw){
+                    $s .= '</div>';
+                }
 
                 $s .= '<div class="px-4">';
                 $s .= '<div class="row">';

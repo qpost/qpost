@@ -1,3 +1,7 @@
+function updateTooltip(indicator,newTooltip){
+	$(indicator).attr("title",newTooltip).tooltip("_fixTitle").tooltip("show");
+}
+
 function isValidURL(str) {
 	let regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 	return regexp.test(str);
@@ -994,6 +998,20 @@ function load(){
 		
 		
 	});
+
+	$(document).on("click",".toggleNSFW",function(e){
+		e.preventDefault();
+
+		if($(this).hasClass("text-success")){
+			// toggle on
+			$(this).removeClass("text-success").addClass("text-danger");
+			updateTooltip(this,"NSFW: on");
+		} else {
+			// toggle off
+			$(this).removeClass("text-danger").addClass("text-success");
+			updateTooltip(this,"NSFW: off");
+		}
+	});
 	
 	$(document).on('show.bs.modal', '.modal', function () {
 		var zIndex = 1040 + (10 * $('.modal:visible').length);
@@ -1039,7 +1057,7 @@ function load(){
 								s += "<br/>and " + json.showMoreCount + " more...";
 							}
 
-							$(t).attr("title",s).tooltip("_fixTitle").tooltip("show");
+							updateTooltip(t,s);
 						}
 					}
 				},
@@ -1086,7 +1104,7 @@ function load(){
 								s += "<br/>and " + json.showMoreCount + " more...";
 							}
 
-							$(t).attr("title",s).tooltip("_fixTitle").tooltip("show");
+							updateTooltip(t,s);
 						}
 					}
 				},
@@ -1250,7 +1268,7 @@ function load(){
 		}
 	});
 	
-	function handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments){
+	function handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw){
 		$.ajax({
 			url: "/scripts/createPost",
 			data: {
@@ -1259,7 +1277,8 @@ function load(){
 				replyTo: replyTo,
 				attachments: attachments,
 				linkURL: linkURL,
-				videoURL: videoURL
+				videoURL: videoURL,
+				nsfw: nsfw
 			},
 			method: "POST",
 			
@@ -1358,6 +1377,13 @@ function load(){
 			}
 		});
 	}
+
+	$(document).on("click",".nsfwInfo",function(e){
+		e.preventDefault();
+
+		// show nsfw content
+		$(this).addClass("d-none").parent().find(".hiddenNSFW").removeClass("d-none");
+	});
 	
 	$(document).on("click",".postButton",function(e){
 		e.preventDefault();
@@ -1420,6 +1446,13 @@ function load(){
 			let limit = POST_CHARACTER_LIMIT;
 			
 			let oldHtml = postBox.html();
+
+			let nsfw = false;
+			if(postBox.find(".toggleNSFW").length){
+				if(postBox.find(".toggleNSFW").hasClass("text-danger")){
+					nsfw = true;
+				}
+			}
 			
 			if(text.length > 0 && text.length <= limit){
 				let attachments = "[]";
@@ -1430,7 +1463,7 @@ function load(){
 				
 				if(currentMode == "TEXT" || (currentMode == "VIDEO" && videoURL == null) || currentMode == "LINK"){
 					postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-					handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments);
+					handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
 				} else if(currentMode == "VIDEO"){
 					$.ajax({
 						url: "/scripts/validateVideoURL",
@@ -1444,7 +1477,7 @@ function load(){
 							if(json.hasOwnProperty("status")){
 								if(json.status == "valid"){
 									postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-									handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments);
+									handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
 								} else {
 									console.error("Invalid video URL");
 								}
@@ -1684,9 +1717,7 @@ function load(){
 	
 	
 	$(document).on("change keyup keydown paste",".postField",function(e){
-		console.log("1");
 		if((e.ctrlKey || e.metaKey) && (e.keyCode == 13 || e.keyCode == 10)){
-			console.log("2");
 			// click post button
 			$(this).parent().parent().find(".postButton").click();
 		} else {
