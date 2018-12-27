@@ -1,19 +1,19 @@
 <?php
 
 $app->bind("/api/user/info",function(){
-	$this->response->mime = "json";
-	header("Access-Control-Allow-Origin: *");
+	if(api_method_check($this,"GET")){
+		$header = Util::getAuthorizationHeader();
+		$requestData = api_request_data($this);
 
-	if(isset($_GET["token"])){
-		if(!Util::isEmpty($_GET["token"])){
-			$token = Token::getTokenById($_GET["token"]);
+		if(!is_null($header) && !Util::isEmpty($header) && Util::startsWith($header,"Token ")){
+			$token = Token::getTokenById(substr($header,strlen("Token ")));
 
 			if(!is_null($token)){
 				if(!$token->isExpired()){
-					if(isset($_GET["user"])){
-						if(!Util::isEmpty($_GET["user"])){
-							$user = User::getUserByUsername($_GET["user"]);
-							if(is_null($user) && is_numeric($_GET["user"])) $user = User::getUserById($_GET["user"]);
+					if(isset($requestData["user"])){
+						if(!Util::isEmpty($requestData["user"])){
+							$user = User::getUserByUsername($requestData["user"]);
+							if(is_null($user) && is_numeric($requestData["user"])) $user = User::getUserById($requestData["user"]);
 
 							if(!is_null($user)){
 								$followersYouKnow = [];
@@ -45,6 +45,6 @@ $app->bind("/api/user/info",function(){
 			return json_encode(["error" => "Invalid token"]);
 		}
 	} else {
-		return json_encode(["error" => "Invalid token"]);
+		return "";
 	}
 });

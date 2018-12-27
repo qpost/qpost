@@ -736,6 +736,8 @@ $app->post("/scripts/createPost",function(){
 
 						if($parent == 0) $parent = null;
 
+						$nsfw = isset($_POST["nsfw"]) ? (bool)$_POST["nsfw"] : false;
+
 						$furtherProccess = true;
 
 						$attachments = null;
@@ -831,8 +833,8 @@ $app->post("/scripts/createPost",function(){
 						$attachmentsString = is_null($attachments) ? "[]" : json_encode($attachments);
 
 						$mysqli = Database::Instance()->get();
-						$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`,`attachments`) VALUES(?,?,NULL,?,?,?,?);");
-						$stmt->bind_param("isssis", $userId,$text,$sessionId,$type,$parent,$attachmentsString);
+						$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`,`attachments`,`nsfw`) VALUES(?,?,NULL,?,?,?,?,?);");
+						$stmt->bind_param("isssisi", $userId,$text,$sessionId,$type,$parent,$attachmentsString,$nsfw);
 						if($stmt->execute()){
 							$postId = $stmt->insert_id;
 						}

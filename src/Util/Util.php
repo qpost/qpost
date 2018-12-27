@@ -1600,6 +1600,7 @@ class Util {
 			$box .= '<div class="float-left mt-2">';
 			$box .= '<button type="button" class="btn btn-link text-' . $linkColor . ' mb-0 addPhoto" data-toggle="tooltip" title="Add photo"><i class="fas fa-images"></i></button>';
 			//$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
+			$box .= '<button type="button" class="btn btn-link text-success mb-0 toggleNSFW" data-toggle="tooltip" title="NSFW: off"><i class="fas fa-exclamation-triangle"></i></button>';
 			$box .= '</div>';
 
 			$box .= '<input type="hidden" name="attachmentData" value=""/>';
@@ -1617,6 +1618,32 @@ class Util {
 
 		return $box;
 	}
+
+	// https://stackoverflow.com/a/40582472
+
+	/**
+	 * Gets the Authorization header sent in the request
+	 * 
+	 * @access public
+	 * @return string|null Null if there is no Authorization header
+	 */
+	public static function getAuthorizationHeader(){
+        $headers = null;
+        if (isset($_SERVER['Authorization'])) {
+            $headers = trim($_SERVER["Authorization"]);
+        } else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+            $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+        } elseif (function_exists('apache_request_headers')) {
+            $requestHeaders = apache_request_headers();
+            // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
+            $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
+			
+			if (isset($requestHeaders['Authorization'])) {
+                $headers = trim($requestHeaders['Authorization']);
+            }
+        }
+        return $headers;
+    }
 }
 $ipinfo = IPInformation::getInformationFromIP(Util::getIP());
 /*if($ipinfo !== null && (isset($_SERVER["PATH_INFO"]) ? $_SERVER["PATH_INFO"] : strtok($_SERVER["REQUEST_URI"],'?')) !== "/banned/vpn"){

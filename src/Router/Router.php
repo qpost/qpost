@@ -12,11 +12,14 @@ $app->path("views",__DIR__ . "/Views");
 
 $csrf = new \Riimu\Kit\CSRF\CSRFHandler();
 
-try {
-	$csrf->validateRequest(true);
-} catch(\Riimu\Kit\CSRF\InvalidCSRFTokenException $e){
-	header("HTTP/1.0 400 Bad Request");
-	exit("400 Bad Request");
+// dont do CSRF check on API requests
+if(!(substr($app->route,0,5) === "/api/")){
+	try {
+		$csrf->validateRequest(true);
+	} catch(\Riimu\Kit\CSRF\InvalidCSRFTokenException $e){
+		header("HTTP/1.0 400 Bad Request");
+		exit("400 Bad Request");
+	}
 }
 
 define("CSRF_TOKEN",$csrf->getToken());
@@ -29,36 +32,38 @@ if(Util::isLoggedIn()){
 	}
 }
 
-require $app->path("routes:API/autoload.php");
+require $app->path("routes:Home.php");
+require $app->path("routes:Notifications.php");
+require $app->path("routes:Status.php");
+require $app->path("routes:Out.php");
+require $app->path("routes:Login.php");
+require $app->path("routes:Logout.php");
+require $app->path("routes:Profile.php");
+require $app->path("routes:Account.php");
+require $app->path("routes:Messages.php");
+require $app->path("routes:Requests.php");
+require $app->path("routes:Edit.php");
+require $app->path("routes:Search.php");
+require $app->path("routes:Features.php");
+require $app->path("routes:Discover.php");
+require $app->path("routes:ScriptsRoute.php");
+require $app->path("routes:Sitemap.php");
+require $app->path("routes:NightMode.php");
+require $app->path("routes:Register.php");
+require $app->path("routes:Delete.php");
 
 require $app->path("routes:Cronjobs/DeleteStaleAccounts.php");
 
-require $app->path("routes:Account.php");
-require $app->path("routes:Delete.php");
-require $app->path("routes:Discover.php");
-require $app->path("routes:Edit.php");
-require $app->path("routes:Features.php");
-require $app->path("routes:Home.php");
-require $app->path("routes:Login.php");
-require $app->path("routes:Logout.php");
-require $app->path("routes:Messages.php");
-require $app->path("routes:NightMode.php");
-require $app->path("routes:Notifications.php");
-require $app->path("routes:Out.php");
-require $app->path("routes:Profile.php");
-require $app->path("routes:Register.php");
-require $app->path("routes:Requests.php");
-require $app->path("routes:ScriptsRoute.php");
-require $app->path("routes:Search.php");
-require $app->path("routes:Sitemap.php");
-require $app->path("routes:Status.php");
+require $app->path("routes:API/autoload.php");
 
 $app->on("after",function() {
-	if($this->response->status == "404"){
-		$this->response->body = $this->render("views:ErrorPages/404.php with views:Layout.php",[
-			"title" => "Error 404: Page not found",
-			"subtitle" => "Error 404: Page not found"
-		]);
+	if(!(substr($this->route,0,5) === "/api/")){
+		if($this->response->status == "404"){
+			$this->response->body = $this->render("views:ErrorPages/404.php with views:Layout.php",[
+				"title" => "Error 404: Page not found",
+				"subtitle" => "Error 404: Page not found"
+			]);
+		}
 	}
 });
 
