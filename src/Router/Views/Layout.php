@@ -266,7 +266,7 @@ $currentUser = Util::getCurrentUser();
 
 					?>
 					<div class="row">
-						<div class="col-lg-4 col-xl-3 d-none d-lg-block">
+						<div class="col col-xl-3 col-lg-4 mb-3">
 							<div class="sticky-top" style="top: 70px">
 								<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
 								<h4 class="mb-0 convertEmoji" style="word-wrap: break-word;"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
@@ -336,7 +336,8 @@ $currentUser = Util::getCurrentUser();
 										}
 									}
 
-									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-3"]);
+									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-3","d-none","d-lg-block"]);
+									echo Util::renderAd(Util::AD_TYPE_LEADERBOARD,true,["mt-3","d-lg-none"]);
 
 								?>
 							</div>
