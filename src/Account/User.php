@@ -386,12 +386,6 @@ class User {
 	
 	/**
 	* @access private
-	* @var int $unreadNotifications
-	*/
-	private $unreadNotifications;
-	
-	/**
-	* @access private
 	* @var int $favorites
 	*/
 	private $favorites;
@@ -962,8 +956,6 @@ class User {
 							$s->bind_param("iii",$puid,$this->id,$pid);
 							$s->execute();
 							$s->close();
-							
-							$post->getUser()->reloadUnreadNotifications();
 						}
 					}
 					$stmt->close();
@@ -1048,8 +1040,6 @@ class User {
 		$stmt->bind_param("si",$type,$this->id);
 		$stmt->execute();
 		$stmt->close();
-		
-		$this->reloadUnreadNotifications();
 	}
 	
 	/**
@@ -1102,8 +1092,6 @@ class User {
 					$s->bind_param("iii",$puid,$this->id,$pid);
 					$s->execute();
 					$s->close();
-					
-					$feedEntry->getUser()->reloadUnreadNotifications();
 				}
 			}
 			$stmt->close();
@@ -1518,8 +1506,6 @@ class User {
 					$stmt->bind_param("ii",$user,$this->id);
 					$stmt->execute();
 					$stmt->close();
-					
-					self::getUserById($user)->reloadUnreadNotifications();
 				}
 			}
 			
@@ -1833,19 +1819,8 @@ class User {
 	* @return int
 	*/
 	public function getUnreadNotifications(){
-		if(is_null($this->unreadNotifications)){
-			$this->reloadUnreadNotifications();
-		}
-		
-		return $this->unreadNotifications;
-	}
-	
-	/**
-	* Updates the number of unread messages the user has
-	* 
-	* @access public
-	*/
-	public function reloadUnreadNotifications(){
+		$unreadNotifications = 0;
+
 		$mysqli = Database::Instance()->get();
 		
 		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `notifications` WHERE `user` = ? AND `seen` = 0");
@@ -1856,12 +1831,14 @@ class User {
 			if($result->num_rows){
 				$row = $result->fetch_assoc();
 				
-				$this->unreadNotifications = $row["count"];
+				$unreadNotifications = $row["count"];
 				
 				$this->saveToCache();
 			}
 		}
 		$stmt->close();
+
+		return $unreadNotifications;
 	}
 	
 	/**
@@ -1870,16 +1847,12 @@ class User {
 	* @access public
 	*/
 	public function markNotificationsAsRead(){
-		$this->unreadNotifications = 0;
-		
 		$mysqli = Database::Instance()->get();
 		
 		$stmt = $mysqli->prepare("UPDATE `notifications` SET `seen` = 1 WHERE `user` = ? AND `seen` = 0");
 		$stmt->bind_param("i",$this->id);
 		$stmt->execute();
 		$stmt->close();
-		
-		$this->saveToCache();
 	}
 	
 	/**

@@ -1354,6 +1354,7 @@ function load(){
 						}
 						
 						postBox.html(oldHtml);
+						postBox.find(".postField").focus();
 						postField.val("");
 						postBox.find(".postCharacterCounter").html(POST_CHARACTER_LIMIT);
 						postBox.find("input[name=\"attachmentData\"]").val("");

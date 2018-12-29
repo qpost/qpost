@@ -266,44 +266,100 @@ $currentUser = Util::getCurrentUser();
 
 					?>
 					<div class="row">
-						<div class="col-lg-4 col-xl-3 d-none d-lg-block">
+						<div class="col col-xl-3 col-lg-4 mb-3">
 							<div class="sticky-top" style="top: 70px">
-								<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
-								<h4 class="mb-0 convertEmoji" style="word-wrap: break-word;"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
-								<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && !is_null($currentUser) && $user->isFollowing($currentUser) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
+								<div class="d-none d-lg-block">
+									<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
+									<h4 class="mb-0 convertEmoji" style="word-wrap: break-word;"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
+									<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && !is_null($currentUser) && $user->isFollowing($currentUser) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
 
-								<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
+									<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
 
-								<p class="my-2 text-muted">
+									<p class="my-2 text-muted">
+										<?php
+
+											$date = strtotime($user->getTime());
+
+										?><i class="fas fa-globe"></i><span style="margin-left: 5px">Joined <?= date("F Y",$date); ?></span>
+										<?= !is_null($user->getBirthday()) ? '<br/><i class="fas fa-birthday-cake"></i><span style="margin-left: 7px">' . date("F jS Y",strtotime($user->getBirthday())) . '</span>' : "" ?>
+									</p>
+
+									<?= Util::followButton($user->getId(),true,["btn-block","mt-2"],false) ?>
+
 									<?php
 
-										$date = strtotime($user->getTime());
+										if(Util::isLoggedIn() && !is_null($currentUser) && $currentUser->getId() != $user->getId()){
+											if($currentUser->hasBlocked($user)){
+												?>
+									<form action="/<?= $user->getUsername(); ?>" method="post">
+										<?= Util::insertCSRFToken(); ?>
+										<input type="hidden" name="action" value="unblock"/>
 
-									?><i class="fas fa-globe"></i><span style="margin-left: 5px">Joined <?= date("F Y",$date); ?></span>
-									<?= !is_null($user->getBirthday()) ? '<br/><i class="fas fa-birthday-cake"></i><span style="margin-left: 7px">' . date("F jS Y",strtotime($user->getBirthday())) . '</span>' : "" ?>
-								</p>
-
-								<?= Util::followButton($user->getId(),true,["btn-block","mt-2"],false) ?>
-
-								<?php
-
-									if(Util::isLoggedIn() && !is_null($currentUser) && $currentUser->getId() != $user->getId()){
-										if($currentUser->hasBlocked($user)){
-											?>
-								<form action="/<?= $user->getUsername(); ?>" method="post">
-									<?= Util::insertCSRFToken(); ?>
-									<input type="hidden" name="action" value="unblock"/>
-
-									<button type="submit" class="btn btn-light btn-block mt-2">
-										Unblock
+										<button type="submit" class="btn btn-light btn-block mt-2">
+											Unblock
+										</button>
+									</form>
+												<?php
+											} else {
+												?>
+									<button type="button" class="btn btn-light btn-block mt-2" data-toggle="modal" data-target="#blockModal">
+										Block
 									</button>
-								</form>
-											<?php
-										} else {
-											?>
-								<button type="button" class="btn btn-light btn-block mt-2" data-toggle="modal" data-target="#blockModal">
-									Block
-								</button>
+												<?php
+											}
+										}
+												?>
+								</div>
+
+								<div class="d-lg-none">
+									<div class="row">
+										<div class="col-4">
+											<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" width="150" height="150"/></center>
+										</div>
+
+										<div class="col-8">
+											<h4 class="mb-0 convertEmoji" style="word-wrap: break-word;"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
+											<span class="text-muted" style="font-size: 16px">@<?= $user->getUsername(); ?></span> <?= Util::isLoggedIn() && !is_null($currentUser) && $user->isFollowing($currentUser) ? '<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>' : ""; ?>
+
+											<?= !is_null($user->getBio()) ? '<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">' . Util::convertPost($user->getBio()) . '</p>' : ""; ?>
+										</div>
+									</div>
+
+									<p class="my-2 text-muted">
+										<?php
+
+											$date = strtotime($user->getTime());
+
+										?><i class="fas fa-globe"></i><span style="margin-left: 5px">Joined <?= date("F Y",$date); ?></span>
+										<?= !is_null($user->getBirthday()) ? '<i class="fas fa-birthday-cake ml-3"></i><span style="margin-left: 7px">' . date("F jS Y",strtotime($user->getBirthday())) . '</span>' : "" ?>
+									</p>
+
+									<?= Util::followButton($user->getId(),true,[],false) ?>
+
+									<?php
+
+										if(Util::isLoggedIn() && !is_null($currentUser) && $currentUser->getId() != $user->getId()){
+											if($currentUser->hasBlocked($user)){
+												?>
+									<form action="/<?= $user->getUsername(); ?>" method="post">
+										<?= Util::insertCSRFToken(); ?>
+										<input type="hidden" name="action" value="unblock"/>
+
+										<button type="submit" class="btn btn-light">
+											Unblock
+										</button>
+									</form>
+												<?php
+											} else {
+												?>
+									<button type="button" class="btn btn-light" data-toggle="modal" data-target="#blockModal">
+										Block
+									</button>
+												<?php
+											}
+										}
+												?>
+								</div>
 
 								<div class="modal fade" id="blockModal" tabindex="-1" role="dialog" aria-labelledby="blockModalLabel" aria-hidden="true">
 									<div class="modal-dialog modal-dialog-centered" role="document">
@@ -332,11 +388,10 @@ $currentUser = Util::getCurrentUser();
 										</div>
 									</div>
 								</div>
-											<?php
-										}
-									}
+								<?php
 
-									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-3"]);
+									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-3","d-none","d-lg-block"]);
+									echo Util::renderAd(Util::AD_TYPE_LEADERBOARD,true,["mt-3","d-lg-none"]);
 
 								?>
 							</div>
