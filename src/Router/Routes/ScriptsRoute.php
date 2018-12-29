@@ -392,7 +392,7 @@ $app->post("/scripts/postInfo",function(){
 
 			if(!is_null($user)){
 				if($post->mayView()){
-					$followButton = Util::followButton($user,false,["float-right"]);
+					$followButton = Util::followButton($user,false,["float-right","mt-2"]);
 
 					if(is_null($followButton))
 						$followButton = "";

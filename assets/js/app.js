@@ -359,7 +359,9 @@ function showStatusModal(postId){
 				content = content.concat("<hr/>");
 				
 				content = content.concat('<div class="mb-4">');
-				
+
+				content = content.concat('<button type="button" class="close float-right" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><br/>');
+
 				content = content.concat(json.followButton);
 				
 				content = content.concat(
