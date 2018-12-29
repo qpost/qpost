@@ -720,6 +720,8 @@ function loadOldHomeFeed(){
 }
 
 function loadBasic(){
+	console.log("load basic");
+
 	$('[data-toggle="tooltip"]').tooltip({
 		trigger: "hover"
 	});
@@ -754,9 +756,9 @@ function loadBasic(){
 		endDate: new Date(new Date().setFullYear(new Date().getFullYear() - 13))
 	});
 	
-	/*$(".convertEmoji").html(function(){
+	$(".convertEmoji").html(function(){
 		return twemoji.parse($(this).html());
-	}).removeClass("convertEmoji");*/
+	}).removeClass("convertEmoji");
 }
 
 $(document).ready(function(){
