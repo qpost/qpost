@@ -35,6 +35,8 @@ if(CacheHandler::existsInCache($n)){
 	$notifications = [];
 
 	if($num > 0){
+		$markAsRead = [];
+
 		$stmt = $mysqli->prepare("SELECT * FROM `notifications` WHERE `user` = ? ORDER BY `time` DESC LIMIT " . (($currentPage-1)*$itemsPerPage) . " , " . $itemsPerPage);
 		$stmt->bind_param("i",$uID);
 		if($stmt->execute()){
@@ -42,11 +44,19 @@ if(CacheHandler::existsInCache($n)){
 
 			if($result->num_rows){
 				while($row = $result->fetch_assoc()){
+					if($row["seen"] == false){
+						array_push($markAsRead,$row["id"]);
+					}
+
 					array_push($notifications,$row);
 				}
 			}
 		}
 		$stmt->close();
+
+		if(count($markAsRead) > 0){
+			$user->markNotificationsAsRead($markAsRead);
+		}
 
 		if(count($notifications) > 0){
 			$l = false;
