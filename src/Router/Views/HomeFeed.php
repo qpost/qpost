@@ -28,24 +28,44 @@ $user = Util::getCurrentUser();
 							<?= Util::followButton($user,true,["float-right","mt-2","btn-sm"],false) ?>
 						</div>
 
-						<div class="row mt-2 text-center pr-3">
-							<div class="col-6">
-								<a href="/<?= $user->getUsername() ?>" class="clearUnderline">
-									<div class="font-weight-bold">
+						<hr class="mb-2 mt-3"/>
+
+						<div>
+							<a href="/<?= $user->getUsername() ?>" class="clearUnderline mb-1">
+								<div style="height: 24px">
+									<div class="text-muted text-uppercase small float-left pt-1">
+										Posts
+									</div>
+
+									<div class="font-weight-bold text-uppercase float-right">
 										<?= Util::formatNumberShort($user->getPosts()) ?>
 									</div>
-									<div class="text-uppercase text-muted small">Posts</div>
-								</a>
-							</div>
+								</div>
+							</a>
 
-							<div class="col-6">
-								<a href="/<?= $user->getUsername() ?>/followers" class="clearUnderline">
-									<div class="font-weight-bold">
+							<a href="/<?= $user->getUsername() ?>/following" class="clearUnderline mb-1">
+								<div style="height: 24px">
+									<div class="text-muted text-uppercase small float-left pt-1">
+										Following
+									</div>
+
+									<div class="font-weight-bold text-uppercase float-right">
+										<?= Util::formatNumberShort($user->getFollowing()) ?>
+									</div>
+								</div>
+							</a>
+
+							<a href="/<?= $user->getUsername() ?>/followers" class="clearUnderline mb-1">
+								<div style="height: 24px">
+									<div class="text-muted text-uppercase small float-left pt-1">
+										Followers
+									</div>
+
+									<div class="font-weight-bold text-uppercase float-right">
 										<?= Util::formatNumberShort($user->getFollowers()) ?>
 									</div>
-									<div class="text-uppercase text-muted small">Followers</div>
-								</a>
-							</div>
+								</div>
+							</a>
 						</div>
 					</div>
 				</div>
