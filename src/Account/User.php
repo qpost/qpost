@@ -1844,15 +1844,25 @@ class User {
 	/**
 	* Marks all unread notifications as read
 	* 
+	* @param int[] $ids IDs of the notifications to mark as read
 	* @access public
 	*/
-	public function markNotificationsAsRead(){
+	public function markNotificationsAsRead($ids = []){
 		$mysqli = Database::Instance()->get();
 		
-		$stmt = $mysqli->prepare("UPDATE `notifications` SET `seen` = 1 WHERE `user` = ? AND `seen` = 0");
-		$stmt->bind_param("i",$this->id);
-		$stmt->execute();
-		$stmt->close();
+		if(is_null($ids) || count($ids) == 0){
+			$stmt = $mysqli->prepare("UPDATE `notifications` SET `seen` = 1 WHERE `user` = ? AND `seen` = 0");
+			$stmt->bind_param("i",$this->id);
+			$stmt->execute();
+			$stmt->close();
+		} else {
+			$i = implode(",",$ids);
+
+			$stmt = $mysqli->prepare("UPDATE `notifications` SET `seen` = 1 WHERE `user` = ? AND `seen` = 0 AND `id` IN ($i)");
+			$stmt->bind_param("i",$this->id);
+			$stmt->execute();
+			$stmt->close();
+		}
 	}
 	
 	/**

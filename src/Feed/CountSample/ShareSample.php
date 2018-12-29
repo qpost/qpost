@@ -24,7 +24,7 @@ class ShareSample extends CountSample {
 
                 $feedEntryId = $feedEntry->getId();
 
-                $stmt = $mysqli->prepare("SELECT `id` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.type = 'SHARE' AND f.post = ? ORDER BY f.time DESC LIMIT " . CountSample::SAMPLE_LIMIT);
+                $stmt = $mysqli->prepare("SELECT u.`id` FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.type = 'SHARE' AND f.post = ? ORDER BY f.time DESC LIMIT " . CountSample::SAMPLE_LIMIT);
                 $stmt->bind_param("i",$feedEntryId);
 
                 if($stmt->execute()){
