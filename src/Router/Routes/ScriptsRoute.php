@@ -858,8 +858,6 @@ $app->post("/scripts/createPost",function(){
 											$stmt->bind_param("ii",$uid,$postId);
 											$stmt->execute();
 											$stmt->close();
-
-											$parentData->getUser()->reloadUnreadNotifications();
 										}
 									}
 								}
@@ -876,8 +874,6 @@ $app->post("/scripts/createPost",function(){
 											$stmt->bind_param("ii",$uid,$postId);
 											$stmt->execute();
 											$stmt->close();
-
-											$u->reloadUnreadNotifications();
 										}
 									}
 								}
