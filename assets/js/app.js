@@ -1542,50 +1542,54 @@ function load(){
 					nsfw = true;
 				}
 			}
+
+			let attachments = "[]";
+				
+			if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
+				attachments = atob(attachmentValueField.val());
+			}
 			
-			if(text.length > 0 && text.length <= limit){
-				let attachments = "[]";
-				
-				if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
-					attachments = atob(attachmentValueField.val());
-				}
-				
-				if(currentMode == "TEXT" || (currentMode == "VIDEO" && videoURL == null) || currentMode == "LINK"){
-					postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-					handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
-				} else if(currentMode == "VIDEO"){
-					$.ajax({
-						url: "/scripts/validateVideoURL",
-						data: {
-							csrf_token: token,
-							videoURL: videoURL
-						},
-						method: "POST",
-						
-						success: function(json){
-							if(json.hasOwnProperty("status")){
-								if(json.status == "valid"){
-									postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-									handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
+			if(text.length <= limit){
+				if(text.length > 0 || videoURL != null || JSON.parse(attachments).length > 0){
+					if(currentMode == "TEXT" || (currentMode == "VIDEO" && videoURL == null) || currentMode == "LINK"){
+						postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
+						handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
+					} else if(currentMode == "VIDEO"){
+						$.ajax({
+							url: "/scripts/validateVideoURL",
+							data: {
+								csrf_token: token,
+								videoURL: videoURL
+							},
+							method: "POST",
+							
+							success: function(json){
+								if(json.hasOwnProperty("status")){
+									if(json.status == "valid"){
+										postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
+										handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
+									} else {
+										console.error("Invalid video URL");
+									}
 								} else {
-									console.error("Invalid video URL");
+									console.error(json);
 								}
-							} else {
-								console.error(json);
+							},
+							
+							error: function(xhr,status,error){
+								console.log(xhr);
+								console.log(status);
+								console.log(error);
 							}
-						},
-						
-						error: function(xhr,status,error){
-							console.log(xhr);
-							console.log(status);
-							console.log(error);
-						}
-					});
+						});
+					} else {
+						console.error("Invalid mode");
+					}
 				} else {
-					console.error("Invalid mode");
+					console.error("Post is empty");
 				}
 			} else {
-				console.error("Post text too long or too short!");
+				console.error("Post text too long");
 			}
 		}
 	});
