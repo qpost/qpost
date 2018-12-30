@@ -57,10 +57,18 @@ if($num > 0){
 	if(count($feedEntries) > 0){
 		echo '<ul class="list-group feedContainer mt-2">';
 
+		$adcount = 10;
+
 		for($i = 0; $i < count($feedEntries); $i++){
 			$entry = $feedEntries[$i];
 			
 			echo $entry->toListHTML();
+
+			$adcount--;
+			if($adcount == 0){
+				echo Util::renderAd(Util::AD_TYPE_LEADERBOARD,true,["my-3"]);
+				$adcount = 10;
+			}
 		}
 
 		echo '</ul>';

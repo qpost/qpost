@@ -7,6 +7,83 @@ function isValidURL(str) {
 	return regexp.test(str);
 }
 
+//// ads start
+
+function adbanner_leaderboard(center,classes){
+	let s = "";
+
+	let classesString = "";
+	classes.forEach(clazz => {
+		classesString = classesString.concat(clazz + " ");
+	});
+
+	classesString = classesString.trim();
+
+	if(center === true) s = s.concat("<center>");
+
+	s = s.concat('<div class="' + classesString + '">');
+
+	s = s.concat('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6156128043207415" data-ad-slot="1055807482" data-ad-format="auto"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>');
+
+	s = s.concat('</div>');
+
+	if(center === true) s = s.concat("</center>");
+
+	return s;
+}
+
+function adbanner_block(center,classes){
+	let s = "";
+
+	let classesString = "";
+	classes.forEach(clazz => {
+		classesString = classesString.concat(clazz + " ");
+	});
+
+	classesString = classesString.trim();
+
+	if(center === true) s = s.concat("<center>");
+
+	s = s.concat('<div class="' + classesString + '">');
+
+	s = s.concat('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px" data-ad-client="ca-pub-6156128043207415" data-ad-slot="1788401303"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>');
+
+	s = s.concat('</div>');
+
+	if(center === true) s = s.concat("</center>");
+
+	return s;
+}
+
+function adbanner_horizontal(center,classes){
+	return adbanner_leaderboard(center,classes);
+}
+
+function adbanner_vertical(center,classes){
+	let s = "";
+
+	let classesString = "";
+	classes.forEach(clazz => {
+		classesString = classesString.concat(clazz + " ");
+	});
+
+	classesString = classesString.trim();
+
+	if(center === true) s = s.concat("<center>");
+
+	s = s.concat('<div class="' + classesString + '">');
+
+	s = s.concat('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px" data-ad-client="ca-pub-6156128043207415" data-ad-slot="1788401303"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>');
+
+	s = s.concat('</div>');
+
+	if(center === true) s = s.concat("</center>");
+
+	return s;
+}
+
+/// ads end
+
 function resetDeleteModal(){
 	$("#deleteModal").html(
 		'<div class="modal-dialog" role="document">' +
@@ -679,6 +756,7 @@ function loadOldHomeFeed(){
 			
 			if(json.hasOwnProperty("result")){
 				let newHtml = "";
+				let adcount = 10;
 				
 				if(json.result.length > 0){
 					let i;
@@ -692,6 +770,12 @@ function loadOldHomeFeed(){
 						}
 						
 						newHtml = newHtml.concat(post.listHtml);
+
+						adcount--;
+						if(adcount == 0){
+							newHtml = newHtml.concat(adbanner_leaderboard(true,["my-3"]));
+							adcount = 10;
+						}
 					}
 					
 					if($(".feedEntry").length){
@@ -1458,50 +1542,54 @@ function load(){
 					nsfw = true;
 				}
 			}
+
+			let attachments = "[]";
+				
+			if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
+				attachments = atob(attachmentValueField.val());
+			}
 			
-			if(text.length > 0 && text.length <= limit){
-				let attachments = "[]";
-				
-				if(currentMode == "TEXT" && attachmentValueField.length && attachmentValueField.val() != ""){
-					attachments = atob(attachmentValueField.val());
-				}
-				
-				if(currentMode == "TEXT" || (currentMode == "VIDEO" && videoURL == null) || currentMode == "LINK"){
-					postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-					handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
-				} else if(currentMode == "VIDEO"){
-					$.ajax({
-						url: "/scripts/validateVideoURL",
-						data: {
-							csrf_token: token,
-							videoURL: videoURL
-						},
-						method: "POST",
-						
-						success: function(json){
-							if(json.hasOwnProperty("status")){
-								if(json.status == "valid"){
-									postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
-									handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
+			if(text.length <= limit){
+				if(text.length > 0 || videoURL != null || JSON.parse(attachments).length > 0){
+					if(currentMode == "TEXT" || (currentMode == "VIDEO" && videoURL == null) || currentMode == "LINK"){
+						postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
+						handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
+					} else if(currentMode == "VIDEO"){
+						$.ajax({
+							url: "/scripts/validateVideoURL",
+							data: {
+								csrf_token: token,
+								videoURL: videoURL
+							},
+							method: "POST",
+							
+							success: function(json){
+								if(json.hasOwnProperty("status")){
+									if(json.status == "valid"){
+										postBox.html('<div class="card-body text-center"><i class="fas fa-spinner fa-pulse"></i></div>');
+										handleButtonClick(postBox,postField,postCharacterCounter,linkURL,videoURL,isReply,text,replyTo,token,oldHtml,attachments,nsfw);
+									} else {
+										console.error("Invalid video URL");
+									}
 								} else {
-									console.error("Invalid video URL");
+									console.error(json);
 								}
-							} else {
-								console.error(json);
+							},
+							
+							error: function(xhr,status,error){
+								console.log(xhr);
+								console.log(status);
+								console.log(error);
 							}
-						},
-						
-						error: function(xhr,status,error){
-							console.log(xhr);
-							console.log(status);
-							console.log(error);
-						}
-					});
+						});
+					} else {
+						console.error("Invalid mode");
+					}
 				} else {
-					console.error("Invalid mode");
+					console.error("Post is empty");
 				}
 			} else {
-				console.error("Post text too long or too short!");
+				console.error("Post text too long");
 			}
 		}
 	});
