@@ -720,6 +720,8 @@ function loadOldHomeFeed(){
 }
 
 function loadBasic(){
+	console.log("load basic");
+
 	$('[data-toggle="tooltip"]').tooltip({
 		trigger: "hover"
 	});
@@ -754,9 +756,9 @@ function loadBasic(){
 		endDate: new Date(new Date().setFullYear(new Date().getFullYear() - 13))
 	});
 	
-	/*$(".convertEmoji").html(function(){
+	$(".convertEmoji").html(function(){
 		return twemoji.parse($(this).html());
-	}).removeClass("convertEmoji");*/
+	}).removeClass("convertEmoji");
 }
 
 $(document).ready(function(){
@@ -1718,6 +1720,28 @@ function load(){
 		e.stopPropagation();
 	});
 	
+	document.onpaste = function(event){
+		if(event.target.classList.contains("postField")){
+			const target = $(event.target);
+
+			const select = target.parent().parent().find(".dropzone-previews");
+			const previews = select && select.length ? select[0] : null;
+
+			const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+
+			for(index in items){
+				const item = items[index];
+
+				if(item.kind === "file"){
+					const blob = item.getAsFile();
+
+					if(dz && $(dz.previewsContainer).length && $(dz.previewsContainer)[0] == previews){ // verify it's being pasted in the proper textarea
+						dz.addFile(blob);
+					}
+				}
+			}
+		}
+	}
 	
 	$(document).on("change keyup keydown paste",".postField",function(e){
 		if((e.ctrlKey || e.metaKey) && (e.keyCode == 13 || e.keyCode == 10)){
