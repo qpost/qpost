@@ -118,6 +118,7 @@ $user = Util::getCurrentUser();
 							let newHtml = "";
 							
 							let a = true;
+							let adcount = 10;
 							
 							json.result.forEach(post => {
 								let postId = post.id;
@@ -128,6 +129,12 @@ $user = Util::getCurrentUser();
 								}
 								
 								newHtml = newHtml.concat(post.listHtml);
+								
+								adcount--;
+								if(adcount == 0){
+									newHtml = newHtml.concat(adbanner_leaderboard(true,["my-3"]));
+									adcount = 10;
+								}
 							});
 
 							HOME_FEED_FIRST_POST = json.result[json.result.length-1].id;

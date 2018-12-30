@@ -7,6 +7,83 @@ function isValidURL(str) {
 	return regexp.test(str);
 }
 
+//// ads start
+
+function adbanner_leaderboard(center,classes){
+	let s = "";
+
+	let classesString = "";
+	classes.forEach(clazz => {
+		classesString = classesString.concat(clazz + " ");
+	});
+
+	classesString = classesString.trim();
+
+	if(center === true) s = s.concat("<center>");
+
+	s = s.concat('<div class="' + classesString + '">');
+
+	s = s.concat('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6156128043207415" data-ad-slot="1055807482" data-ad-format="auto"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>');
+
+	s = s.concat('</div>');
+
+	if(center === true) s = s.concat("</center>");
+
+	return s;
+}
+
+function adbanner_block(center,classes){
+	let s = "";
+
+	let classesString = "";
+	classes.forEach(clazz => {
+		classesString = classesString.concat(clazz + " ");
+	});
+
+	classesString = classesString.trim();
+
+	if(center === true) s = s.concat("<center>");
+
+	s = s.concat('<div class="' + classesString + '">');
+
+	s = s.concat('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px" data-ad-client="ca-pub-6156128043207415" data-ad-slot="1788401303"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>');
+
+	s = s.concat('</div>');
+
+	if(center === true) s = s.concat("</center>");
+
+	return s;
+}
+
+function adbanner_horizontal(center,classes){
+	return adbanner_leaderboard(center,classes);
+}
+
+function adbanner_vertical(center,classes){
+	let s = "";
+
+	let classesString = "";
+	classes.forEach(clazz => {
+		classesString = classesString.concat(clazz + " ");
+	});
+
+	classesString = classesString.trim();
+
+	if(center === true) s = s.concat("<center>");
+
+	s = s.concat('<div class="' + classesString + '">');
+
+	s = s.concat('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px" data-ad-client="ca-pub-6156128043207415" data-ad-slot="1788401303"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>');
+
+	s = s.concat('</div>');
+
+	if(center === true) s = s.concat("</center>");
+
+	return s;
+}
+
+/// ads end
+
 function resetDeleteModal(){
 	$("#deleteModal").html(
 		'<div class="modal-dialog" role="document">' +
@@ -679,6 +756,7 @@ function loadOldHomeFeed(){
 			
 			if(json.hasOwnProperty("result")){
 				let newHtml = "";
+				let adcount = 10;
 				
 				if(json.result.length > 0){
 					let i;
@@ -692,6 +770,12 @@ function loadOldHomeFeed(){
 						}
 						
 						newHtml = newHtml.concat(post.listHtml);
+
+						adcount--;
+						if(adcount == 0){
+							newHtml = newHtml.concat(adbanner_leaderboard(true,["my-3"]));
+							adcount = 10;
+						}
 					}
 					
 					if($(".feedEntry").length){
