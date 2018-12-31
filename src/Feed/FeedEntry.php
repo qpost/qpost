@@ -708,11 +708,11 @@ class FeedEntry {
 
                 $s .= '<div class="px-4">';
                 $s .= '<div class="row">';
-                if(!is_null($this->getText())) $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
+                $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             }
 
 			$s .= Util::getPostActionButtons($this);
-			if(!is_null($this->getText())) $s .= '</div>';
+			$s .= '</div>';
             $s .= '</div>';
             $s .= '</div>';
             if($noBorder == false) $s .= '</li>';
@@ -817,11 +817,11 @@ class FeedEntry {
 
                 $s .= '<div class="px-4">';
                 $s .= '<div class="row">';
-                if(!is_null($sharedPost->getText())) $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
+                $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             }
 
 			$s .= Util::getPostActionButtons($sharedPost);
-			if(!is_null($sharedPost->getText())) $s .= '</div>';
+			$s .= '</div>';
             $s .= '</div>';
             $s .= '</div>';
             if($noBorder == false) $s .= '</li>';
