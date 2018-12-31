@@ -685,9 +685,11 @@ class FeedEntry {
 
             $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             
-            $s .= '<p class="mb-0 convertEmoji' . ($this->nsfw ? ' hiddenNSFW d-none' : '') . '" style="word-wrap: break-word;">';
-            $s .= Util::convertPost($this->getText());
-            $s .= '</p>';
+            if(!is_null($this->getText())){
+                $s .= '<p class="mb-0 convertEmoji' . ($this->nsfw ? ' hiddenNSFW d-none' : '') . '" style="word-wrap: break-word;">';
+                $s .= Util::convertPost($this->getText());
+                $s .= '</p>';
+            }
 
             if($hideAttachments == false && count($this->attachments) > 0){
                 $s .= '</div>';
@@ -792,9 +794,11 @@ class FeedEntry {
                 }
             }
 
-			$s .= '<p class="mb-0 convertEmoji' . ($sharedPost->isNSFW() ? ' hiddenNSFW d-none' : '') . '" style="word-wrap: break-word;">';
-			$s .= Util::convertPost($sharedPost->getText());
-			$s .= '</p>';
+            if(!is_null($sharedPost->getText())){
+                $s .= '<p class="mb-0 convertEmoji' . ($sharedPost->isNSFW() ? ' hiddenNSFW d-none' : '') . '" style="word-wrap: break-word;">';
+                $s .= Util::convertPost($sharedPost->getText());
+                $s .= '</p>';
+            }
 
 			if($hideAttachments == false && count($sharedPost->attachments) > 0){
 				$s .= '</div>';
