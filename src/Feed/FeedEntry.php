@@ -683,7 +683,7 @@ class FeedEntry {
                 $s .= '<div class="row">';
             }
 
-            $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
+            if(!is_null($this->getText())) $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             
             if(!is_null($this->getText())){
                 $s .= '<p class="mb-0 convertEmoji' . ($this->nsfw ? ' hiddenNSFW d-none' : '') . '" style="word-wrap: break-word;">';
@@ -692,7 +692,7 @@ class FeedEntry {
             }
 
             if($hideAttachments == false && count($this->attachments) > 0){
-                $s .= '</div>';
+                if(!is_null($this->getText())) $s .= '</div>';
                 $s .= '</div>';
                 $s .= '</div>';
 
@@ -708,11 +708,11 @@ class FeedEntry {
 
                 $s .= '<div class="px-4">';
                 $s .= '<div class="row">';
-                $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
+                if(!is_null($this->getText())) $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             }
 
 			$s .= Util::getPostActionButtons($this);
-			$s .= '</div>';
+			if(!is_null($this->getText())) $s .= '</div>';
             $s .= '</div>';
             $s .= '</div>';
             if($noBorder == false) $s .= '</li>';
@@ -781,7 +781,7 @@ class FeedEntry {
                 $s .= '<div class="row">';
             }
 
-            $s .= '<div class="float-left ml-1" style="width: 100%">';
+            if(!is_null($sharedPost->getText())) $s .= '<div class="float-left ml-1" style="width: 100%">';
             
             $parent = $sharedPost->getPost();
             if(!is_null($parent)){
@@ -801,7 +801,7 @@ class FeedEntry {
             }
 
 			if($hideAttachments == false && count($sharedPost->attachments) > 0){
-				$s .= '</div>';
+				if(!is_null($sharedPost->getText())) $s .= '</div>';
                 $s .= '</div>';
                 $s .= '</div>';
 
@@ -817,11 +817,11 @@ class FeedEntry {
 
                 $s .= '<div class="px-4">';
                 $s .= '<div class="row">';
-                $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
+                if(!is_null($sharedPost->getText())) $s .= '<div class="float-left ml-1 my-2" style="width: 100%">';
             }
 
 			$s .= Util::getPostActionButtons($sharedPost);
-			$s .= '</div>';
+			if(!is_null($sharedPost->getText())) $s .= '</div>';
             $s .= '</div>';
             $s .= '</div>';
             if($noBorder == false) $s .= '</li>';
