@@ -17,6 +17,10 @@ body,html {
 	text-decoration: none !important;
 }
 
+.hwt-backdrop {
+    right: -100px !important;
+}
+
 .postField {
 	height: 100px;
 	resize: none !important;
