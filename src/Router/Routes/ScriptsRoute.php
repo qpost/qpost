@@ -717,7 +717,9 @@ $app->post("/scripts/createPost",function(){
 
 				$mysqli = Database::Instance()->get();
 
-				if(strlen($text) <= POST_CHARACTER_LIMIT){
+				if(strlen($text) <= Util::getCharacterLimit()){
+					if(Util::isEmpty($text)) $text = null;
+
 					if(count($mentioned) < 15){
 						$userId = $user->getId();
 						$sessionId = session_id();

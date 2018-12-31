@@ -1264,7 +1264,7 @@ function load(){
 		$(".postField").highlightWithinTextarea({
 			highlight: (input) => {
 				if(input.length > POST_CHARACTER_LIMIT){
-					return [POST_CHARACTER_LIMIT+1,input.length];
+					return [POST_CHARACTER_LIMIT,input.length];
 				} else {
 					return false;
 				}
