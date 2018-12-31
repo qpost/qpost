@@ -227,12 +227,8 @@ $currentUser = Util::getCurrentUser();
 						</div>
 					</div>
 				</div>
-				<?php } ?>
 
-				<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
-				<div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
-				<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
-
+				<?php if(isset($user)){ ?>
 				<div class="modal fade" id="blockModal" aria-labelledby="blockModalLabel" aria-hidden="true" tabindex="-1" role="dialog">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
@@ -260,6 +256,13 @@ $currentUser = Util::getCurrentUser();
 						</div>
 					</div>
 				</div>
+				<?php } ?>
+				
+				<?php } ?>
+
+				<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+				<div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+				<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 				<span class="dz-message"></span>
 				
