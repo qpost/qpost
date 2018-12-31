@@ -1544,7 +1544,7 @@ class Util {
 		$box .= '<button type="button" class="btn btn-primary btn-sm float-right mb-0 mt-2 postButton">Post</button>';
 
 		$box .= '<div class="mb-0 mt-3 mr-3 text-right float-right small postCharacterCounter">';
-		$box .= POST_CHARACTER_LIMIT . ' characters left';
+		$box .= self::getCharacterLimit() . ' characters left';
 		$box .= '</div>';
 
 		$box .= '</div>';
@@ -1609,7 +1609,7 @@ class Util {
 		$box .= '<button type="button" class="btn btn-primary float-right mb-0 mt-2 postButton">Post</button>';
 
 		$box .= '<div class="mb-0 mt-3 mr-3 text-right float-right postCharacterCounter" style="font-size: 15px">';
-		$box .= POST_CHARACTER_LIMIT;
+		$box .= self::getCharacterLimit();
 		$box .= '</div>';
 
 		$box .= '</div>';
@@ -1617,6 +1617,18 @@ class Util {
 		$box .= '</div>';
 
 		return $box;
+	}
+
+	/**
+	 * Gets the character limit for a post for the current user
+	 * 
+	 * @access public
+	 * @return int
+	 */
+	public static function getCharacterLimit(){
+		$user = self::getCurrentUser();
+
+		return !is_null($user) && $user->isVerified() ? VERIFIED_POST_CHARACTER_LIMIT : POST_CHARACTER_LIMIT;
 	}
 
 	// https://stackoverflow.com/a/40582472

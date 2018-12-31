@@ -32,6 +32,7 @@ define("TIMEZONE","");
 define("FOLLOW_LIMIT","");
 
 define("POST_CHARACTER_LIMIT","");
+define("VERIFIED_POST_CHARACTER_LIMIT","");
 
 define("MAX_PARENT_DEPTH","");
 
