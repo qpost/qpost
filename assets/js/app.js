@@ -283,11 +283,6 @@ function showMediaModal(mediaId,postId){
 					content +
 					
 					'</div>' +
-					'<div class="modal-footer d-block">' +
-					'<div class="px-3">' +
-					post.limitedHtml +
-					'</div>' +
-					'</div>' +
 					'</div>' +
 					'</div>'
 				);
