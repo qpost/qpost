@@ -79,8 +79,6 @@ $user = Util::getCurrentUser();
 						</div>
 					</div>
 				</form>
-
-				<?= Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-3"]) ?>
 			</div>
 		</div>
 
@@ -267,8 +265,6 @@ $user = Util::getCurrentUser();
 						</a>
 					</div>
 				</div>
-
-				<?= Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-3"]) ?>
 			</div>
 		</div>
 	</div>

@@ -110,10 +110,16 @@ $app->post("/scripts/toggleFavorite",function(){
 
 			if($user->hasFavorited($post->getId())){
 				$user->unfavorite($post->getId());
-				return json_encode(["status" => "Favorite removed"]);
+
+				$post = FeedEntry::getEntryById($_POST["post"]);
+
+				return json_encode(["status" => "Favorite removed","replies" => $post->getReplies(),"shares" => $post->getShares(),"favorites" => $post->getFavorites()]);
 			} else {
 				$user->favorite($post->getId());
-				return json_encode(["status" => "Favorite added"]);
+
+				$post = FeedEntry::getEntryById($_POST["post"]);
+
+				return json_encode(["status" => "Favorite added","replies" => $post->getReplies(),"shares" => $post->getShares(),"favorites" => $post->getFavorites()]);
 			}
 		} else {
 			return json_encode(["error" => "Not logged in"]);
@@ -140,13 +146,19 @@ $app->post("/scripts/toggleShare",function(){
 			if($user->hasShared($post->getId())){
 				if($post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC){
 					$user->unshare($post->getId());
-					return json_encode(["status" => "Share removed"]);
+
+					$post = FeedEntry::getEntryById($_POST["post"]);
+
+					return json_encode(["status" => "Share removed","replies" => $post->getReplies(),"shares" => $post->getShares(),"favorites" => $post->getFavorites()]);
 				} else {
 					return json_encode(["error" => "Invalid privacy level"]);
 				}
 			} else {
 				$user->share($post->getId());
-				return json_encode(["status" => "Share added"]);
+
+				$post = FeedEntry::getEntryById($_POST["post"]);
+
+				return json_encode(["status" => "Share added","replies" => $post->getReplies(),"shares" => $post->getShares(),"favorites" => $post->getFavorites()]);
 			}
 		} else {
 			return json_encode(["error" => "Not logged in"]);
@@ -409,7 +421,7 @@ $app->post("/scripts/postInfo",function(){
 
 					$jsonData["followButton"] = $followButton;
 					$jsonData["replies"] = $replyData;
-					$jsonData["postForm"] = Util::renderCreatePostForm(["replyForm","my-2"],false);
+					$jsonData["postForm"] = '<div class="pt-1">' . Util::renderCreatePostForm(["replyForm","my-2"],false) . '</div>';
 
 					return json_encode($jsonData);
 				} else {
