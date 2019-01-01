@@ -1292,9 +1292,10 @@ class Util {
 			$post = FeedEntry::getEntryById($post);
 		
 		$s = "";
+		$id = rand(0,getrandmax());
 
 		if($post->getReplies() > 0 || $post->getShares() > 0 || $post->getFavorites() > 0){
-			$s .= '<div class="countContainer mt-3 mb-5 small text-muted">';
+			$s .= '<div id="countContainer' . $id . '" class="mt-3 mb-5 small text-muted">';
 
 			if($post->getReplies() > 0){
 				$s .= '<div class="float-left mr-3">';
@@ -1303,13 +1304,13 @@ class Util {
 			}
 
 			if($post->getShares() > 0){
-				$s .= '<div class="float-left mr-3" data-post-id="' . $post->getId() . '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">';
+				$s .= '<div data-container-id="' . $id . '" class="float-left mr-3 shareCount" data-post-id="' . $post->getId() . '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">';
 				$s .= '<i class="fas fa-share-alt"></i> ' . $post->getShares() . ' share' . ($post->getShares() != 1 ? "s" : "");
 				$s .= '</div>';
 			}
 
 			if($post->getFavorites() > 0){
-				$s .= '<div class="float-left mr-3" data-post-id="' . $post->getId() . '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">';
+				$s .= '<div data-container-id="' . $id . '" class="float-left mr-3 favoriteCount" data-post-id="' . $post->getId() . '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">';
 				$s .= '<i class="fas fa-star"></i> ' . $post->getFavorites() . ' favorite' . ($post->getFavorites() != 1 ? "s" : "");
 				$s .= '</div>';
 			}
@@ -1355,15 +1356,15 @@ class Util {
 
 				// V2
 				$s .= '<div class="row text-center" style="font-size: 19px">';
-				$s .= '<div class="col-4 replyButton">';
+				$s .= '<div data-container-id="' . $id . '" class="col-4 replyButton">';
 				$s .= '<a class="nav-link" href="#" style="color: ' . $gray . '"><i class="fas fa-share"></i> Reply</a>';
 				$s .= '</div>';
 
-				$s .= '<div class="col-4 ignoreParentClick' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' shareButton"' : '" data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
+				$s .= '<div data-container-id="' . $id . '" class="col-4 ignoreParentClick' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' shareButton"' : '" data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
 				$s .= '<a ' . ($currentUser->hasShared($post->getId()) ? 'style="color: #007bff" ' : 'style="color: ' . $gray . '" ') . 'class="nav-link" href="#"><i class="fas fa-share-alt"></i> Share</a>';
 				$s .= '</div>';
 
-				$s .= '<div class="col-4 favoriteButton ignoreParentClick" data-post-id="' . $post->getId() . '">';
+				$s .= '<div data-container-id="' . $id . '" class="col-4 favoriteButton ignoreParentClick" data-post-id="' . $post->getId() . '">';
 				$s .= '<a class="nav-link"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . ' href="#"><i class="fas fa-star"></i> Favorite</a>';
 				$s .= '</div>';
 				$s .= '</div>';
