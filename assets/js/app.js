@@ -1701,9 +1701,9 @@ function load(){
 		let postId = $(this).attr("data-post-id");
 		let containerId = $(this).attr("data-container-id");
 		
-		let favoritedHtml = '<a class="nav-link" style="color: gold" href="#"><i class="fas fa-star"></i> Favorite</a>';
-		let unfavoritedHtml = '<a class="nav-link" style="color: ' + GRAYVAR +  '" href="#"><i class="fas fa-star"></i> Favorite</a>';
-		let loadingHtml = '<a class="nav-link" style="color: ' + GRAYVAR + '" href="#"><i class="fas fa-spinner fa-pulse"></i></a>';
+		let favoritedHtml = '<a class="nav-link" style="color: gold !important" href="#"><i class="fas fa-star"></i> Favorite</a>';
+		let unfavoritedHtml = '<a class="nav-link" style="color: ' + GRAYVAR +  ' !important" href="#"><i class="fas fa-star"></i> Favorite</a>';
+		let loadingHtml = '<a class="nav-link" style="color: ' + GRAYVAR + ' !important" href="#"><i class="fas fa-spinner fa-pulse"></i></a>';
 		
 		let pointer = $(this);
 		

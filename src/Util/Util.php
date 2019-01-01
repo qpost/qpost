@@ -1357,15 +1357,15 @@ class Util {
 				// V2
 				$s .= '<div class="row text-center" style="font-size: 19px">';
 				$s .= '<div data-container-id="' . $id . '" class="col-4 replyButton">';
-				$s .= '<a class="nav-link" href="#" style="color: ' . $gray . '"><i class="fas fa-share"></i> Reply</a>';
+				$s .= '<a class="nav-link" href="#" style="color: ' . $gray . ' !important"><i class="fas fa-share"></i> Reply</a>';
 				$s .= '</div>';
 
 				$s .= '<div data-container-id="' . $id . '" class="col-4 ignoreParentClick' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' shareButton"' : '" data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
-				$s .= '<a ' . ($currentUser->hasShared($post->getId()) ? 'style="color: #007bff" ' : 'style="color: ' . $gray . '" ') . 'class="nav-link" href="#"><i class="fas fa-share-alt"></i> Share</a>';
+				$s .= '<a ' . ($currentUser->hasShared($post->getId()) ? 'style="color: #007bff !important" ' : 'style="color: ' . $gray . ' !important" ') . 'class="nav-link" href="#"><i class="fas fa-share-alt"></i> Share</a>';
 				$s .= '</div>';
 
 				$s .= '<div data-container-id="' . $id . '" class="col-4 favoriteButton ignoreParentClick" data-post-id="' . $post->getId() . '">';
-				$s .= '<a class="nav-link"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . ' href="#"><i class="fas fa-star"></i> Favorite</a>';
+				$s .= '<a class="nav-link"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold !important"' : ' style="color: ' . $gray . ' !important"') . ' href="#"><i class="fas fa-star"></i> Favorite</a>';
 				$s .= '</div>';
 				$s .= '</div>';
 			}
