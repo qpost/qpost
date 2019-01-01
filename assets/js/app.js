@@ -1696,9 +1696,9 @@ function load(){
 		
 		let postId = $(this).attr("data-post-id");
 		
-		let favoritedHtml = '<i class="fas fa-star" style="color: gold"></i>';
-		let unfavoritedHtml = '<i class="fas fa-star" style="color: gray"></i>';
-		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
+		let favoritedHtml = '<a class="nav-link" style="color: gold" href="#"><i class="fas fa-star"></i> Favorite</a>';
+		let unfavoritedHtml = '<a class="nav-link" style="color: ' + GRAYVAR +  '" href="#"><i class="fas fa-star"></i> Favorite</a>';
+		let loadingHtml = '<a class="nav-link" style="color: ' + GRAYVAR + '" href="#"><i class="fas fa-spinner fa-pulse"></i></a>';
 		
 		let pointer = $(this);
 		
@@ -1717,18 +1717,42 @@ function load(){
 					let json = result;
 					
 					if(json.hasOwnProperty("status")){
-						let countDisplay = pointer.parent().find(".favoriteCount");
-						let count = parseInt(countDisplay.html().trim());
+						let countHtml = "";
+
+						if(json.replies > 0){
+							countHtml = countHtml.concat('<div class="float-left mr-3">');
+							countHtml = countHtml.concat('<i class="fas fa-share"></i> ' + json.replies + ' repl' + (json.replies != 1 ? "ies" : "y"));
+							countHtml = countHtml.concat('</div>');
+						}
+
+						if(json.shares > 0){
+							countHtml = countHtml.concat('<div class="float-left mr-3" data-post-id="' + postId + '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">');
+							countHtml = countHtml.concat('<i class="fas fa-share-alt"></i> ' + json.shares + ' share' + (json.shares != 1 ? "s" : ""));
+							countHtml = countHtml.concat('</div>');
+						}
+
+						if(json.favorites > 0){
+							countHtml = countHtml.concat('<div class="float-left mr-3" data-post-id="' + postId + '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">');
+							countHtml = countHtml.concat('<i class="fas fa-star"></i> ' + json.favorites + ' favorite' + (json.favorites != 1 ? "s" : ""));
+							countHtml = countHtml.concat('</div>');
+						}
+
+						let countContainer = pointer.parent().parent().find(".countContainer");
+
+						if(countHtml != ""){
+							if(!countContainer.length){
+								pointer.parent().before('<div class="countContainer mt-3 mb-5 small text-muted"></div>');
+								countContainer = pointer.parent().parent().find(".countContainer");
+							}
+
+							countContainer.html(countHtml);
+						} else if(countContainer.length && countHtml == ""){
+							countContainer.remove();
+						}
 						
 						if(json.status == "Favorite added"){
-							count++;
-							countDisplay.html(count);
-							
 							pointer.html(favoritedHtml);
 						} else {
-							count--;
-							countDisplay.html(count);
-							
 							pointer.html(unfavoritedHtml);
 						}
 					} else {
@@ -1750,9 +1774,9 @@ function load(){
 		
 		let postId = $(this).attr("data-post-id");
 		
-		let sharedHtml = '<i class="fas fa-share-alt text-blue"></i>';
-		let unsharedHtml = '<i class="fas fa-share-alt" style="color: gray"></i>';
-		let loadingHtml = '<i class="fas fa-spinner fa-pulse"></i>';
+		let sharedHtml = '<a class="nav-link text-blue" href="#"><i class="fas fa-share-alt"></i> Share</a>';
+		let unsharedHtml = '<a class="nav-link" style="color: ' + GRAYVAR + '" href="#"><i class="fas fa-share-alt"></i> Share</a>';
+		let loadingHtml = '<a class="nav-link" style="color: ' + GRAYVAR + '" href="#"><i class="fas fa-spinner fa-pulse"></i></a>';
 		
 		let pointer = $(this);
 		
@@ -1771,18 +1795,42 @@ function load(){
 					let json = result;
 					
 					if(json.hasOwnProperty("status")){
-						let countDisplay = pointer.parent().find(".shareCount");
-						let count = parseInt(countDisplay.html().trim());
+						let countHtml = "";
+
+						if(json.replies > 0){
+							countHtml = countHtml.concat('<div class="float-left mr-3">');
+							countHtml = countHtml.concat('<i class="fas fa-share"></i> ' + json.replies + ' repl' + (json.replies != 1 ? "ies" : "y"));
+							countHtml = countHtml.concat('</div>');
+						}
+
+						if(json.shares > 0){
+							countHtml = countHtml.concat('<div class="float-left mr-3" data-post-id="' + postId + '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">');
+							countHtml = countHtml.concat('<i class="fas fa-share-alt"></i> ' + json.shares + ' share' + (json.shares != 1 ? "s" : ""));
+							countHtml = countHtml.concat('</div>');
+						}
+
+						if(json.favorites > 0){
+							countHtml = countHtml.concat('<div class="float-left mr-3" data-post-id="' + postId + '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">');
+							countHtml = countHtml.concat('<i class="fas fa-star"></i> ' + json.favorites + ' favorite' + (json.favorites != 1 ? "s" : ""));
+							countHtml = countHtml.concat('</div>');
+						}
+
+						let countContainer = pointer.parent().parent().find(".countContainer");
+
+						if(countHtml != ""){
+							if(!countContainer.length){
+								pointer.parent().before('<div class="countContainer mt-3 mb-5 small text-muted"></div>');
+								countContainer = pointer.parent().parent().find(".countContainer");
+							}
+
+							countContainer.html(countHtml);
+						} else if(countContainer.length && countHtml == ""){
+							countContainer.remove();
+						}
 						
 						if(json.status == "Share added"){
-							count++;
-							countDisplay.html(count);
-							
 							pointer.html(sharedHtml);
 						} else {
-							count--;
-							countDisplay.html(count);
-							
 							pointer.html(unsharedHtml);
 						}
 					} else {

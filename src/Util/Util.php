@@ -1291,46 +1291,86 @@ class Util {
 		if(!is_object($post))
 			$post = FeedEntry::getEntryById($post);
 		
-		$postActionButtons = "";
+		$s = "";
+
+		if($post->getReplies() > 0 || $post->getShares() > 0 || $post->getFavorites() > 0){
+			$s .= '<div class="countContainer mt-3 mb-5 small text-muted">';
+
+			if($post->getReplies() > 0){
+				$s .= '<div class="float-left mr-3">';
+				$s .= '<i class="fas fa-share"></i> ' . $post->getReplies() . ' repl' . ($post->getReplies() != 1 ? "ies" : "y");
+				$s .= '</div>';
+			}
+
+			if($post->getShares() > 0){
+				$s .= '<div class="float-left mr-3" data-post-id="' . $post->getId() . '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">';
+				$s .= '<i class="fas fa-share-alt"></i> ' . $post->getShares() . ' share' . ($post->getShares() != 1 ? "s" : "");
+				$s .= '</div>';
+			}
+
+			if($post->getFavorites() > 0){
+				$s .= '<div class="float-left mr-3" data-post-id="' . $post->getId() . '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">';
+				$s .= '<i class="fas fa-star"></i> ' . $post->getFavorites() . ' favorite' . ($post->getFavorites() != 1 ? "s" : "");
+				$s .= '</div>';
+			}
+			
+			$s .= '</div>';
+		}
 
 		if(Util::isLoggedIn()){
 			$currentUser = Util::getCurrentUser();
-			if(is_null($currentUser)) return "";
+			if(!is_null($currentUser)){
+				$gray = self::isUsingNightMode() ? "#9b9b9b" : "gray";
 
-			$gray = self::isUsingNightMode() ? "#9b9b9b" : "gray";
+				// V1
+				/*$s .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
+				$s .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
+				$s .= '<i class="fas fa-share" style="color: ' . $gray . '"></i>';
+				$s .= '</span><span class="replyCount mx-2" style="color: ' . $gray . ' !important">';
+				$s .= self::formatNumberShort($post->getReplies());
+				$s .= '</span>';
+				$s .= '<span' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
+				$s .= '<i class="fas fa-share-alt"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '></i>';
+				$s .= '</span>';
 
-			$postActionButtons .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
-			$postActionButtons .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
-			$postActionButtons .= '<i class="fas fa-share" style="color: ' . $gray . '"></i>';
-			$postActionButtons .= '</span><span class="replyCount mx-2" style="color: ' . $gray . ' !important">';
-			$postActionButtons .= self::formatNumberShort($post->getReplies());
-			$postActionButtons .= '</span>';
-			$postActionButtons .= '<span' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' class="shareButton" data-toggle="tooltip" title="Share"' : ' data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
-			$postActionButtons .= '<i class="fas fa-share-alt"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '></i>';
-			$postActionButtons .= '</span>';
+				$s .= '<span ' . ($post->getShares() > 0 ? 'data-post-id="' . $post->getId() . '" data-toggle="tooltip" data-html="true" title="Loading..." ' : "") . 'class="shareCount ml-2 mr-2"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '>';
+				$s .= self::formatNumberShort($post->getShares());
+				$s .= '</span>';
 
-			$postActionButtons .= '<span ' . ($post->getShares() > 0 ? 'data-post-id="' . $post->getId() . '" data-toggle="tooltip" data-html="true" title="Loading..." ' : "") . 'class="shareCount ml-2 mr-2"' . ($currentUser->hasShared($post->getId()) ? ' style="color: #007bff"' : ' style="color: ' . $gray . '"') . '>';
-			$postActionButtons .= self::formatNumberShort($post->getShares());
-			$postActionButtons .= '</span>';
+				$s .= '<span class="favoriteButton" data-toggle="tooltip" title="Favorite" data-post-id="' . $post->getId() . '">';
+				$s .= '<i class="fas fa-star"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '></i>';
+				$s .= '</span>';
 
-			$postActionButtons .= '<span class="favoriteButton" data-toggle="tooltip" title="Favorite" data-post-id="' . $post->getId() . '">';
-			$postActionButtons .= '<i class="fas fa-star"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '></i>';
-			$postActionButtons .= '</span>';
+				$s .= '<span ' . ($post->getFavorites() > 0 ? 'data-post-id="' . $post->getId() . '" data-toggle="tooltip" data-html="true" title="Loading..." ' : "") . 'class="favoriteCount ml-2 mr-4"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '>';
+				$s .= self::formatNumberShort($post->getFavorites());
+				$s .= '</span>';
 
-			$postActionButtons .= '<span ' . ($post->getFavorites() > 0 ? 'data-post-id="' . $post->getId() . '" data-toggle="tooltip" data-html="true" title="Loading..." ' : "") . 'class="favoriteCount ml-2 mr-4"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . '>';
-			$postActionButtons .= self::formatNumberShort($post->getFavorites());
-			$postActionButtons .= '</span>';
+				if($currentUser->getId() == $post->getUserId()){
+					$s .= '<span class="deleteButton ml-2" data-post-id="' . $post->getId() . '" data-toggle="tooltip" title="Delete">';
+					$s .= '<i class="fas fa-trash-alt"></i>';
+					$s .= '</span>';
+				}
 
-			if($currentUser->getId() == $post->getUserId()){
-				$postActionButtons .= '<span class="deleteButton ml-2" data-post-id="' . $post->getId() . '" data-toggle="tooltip" title="Delete">';
-				$postActionButtons .= '<i class="fas fa-trash-alt"></i>';
-				$postActionButtons .= '</span>';
+				$s .= '</div>';*/
+
+				// V2
+				$s .= '<div class="row text-center" style="font-size: 19px">';
+				$s .= '<div class="col-4 replyButton">';
+				$s .= '<a class="nav-link" href="#" style="color: ' . $gray . '"><i class="fas fa-share"></i> Reply</a>';
+				$s .= '</div>';
+
+				$s .= '<div class="col-4 ignoreParentClick' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' shareButton"' : '" data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
+				$s .= '<a ' . ($currentUser->hasShared($post->getId()) ? 'style="color: #007bff" ' : 'style="color: ' . $gray . '" ') . 'class="nav-link" href="#"><i class="fas fa-share-alt"></i> Share</a>';
+				$s .= '</div>';
+
+				$s .= '<div class="col-4 favoriteButton ignoreParentClick" data-post-id="' . $post->getId() . '">';
+				$s .= '<a class="nav-link"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold"' : ' style="color: ' . $gray . '"') . ' href="#"><i class="fas fa-star"></i> Favorite</a>';
+				$s .= '</div>';
+				$s .= '</div>';
 			}
-
-			$postActionButtons .= '</div>';
 		}
 
-		return $postActionButtons;
+		return $s;
 	}
 
 	/**
