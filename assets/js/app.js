@@ -2,6 +2,10 @@ function updateTooltip(indicator,newTooltip){
 	$(indicator).attr("title",newTooltip).tooltip("_fixTitle").tooltip("show");
 }
 
+function latetooltip(){
+	$(".latetooltip").tooltip().removeClass("latetooltip");
+}
+
 function isValidURL(str) {
 	let regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 	return regexp.test(str);
@@ -1695,14 +1699,15 @@ function load(){
 		e.preventDefault();
 		
 		let postId = $(this).attr("data-post-id");
+		let containerId = $(this).attr("data-container-id");
 		
-		let favoritedHtml = '<a class="nav-link" style="color: gold" href="#"><i class="fas fa-star"></i> Favorite</a>';
-		let unfavoritedHtml = '<a class="nav-link" style="color: ' + GRAYVAR +  '" href="#"><i class="fas fa-star"></i> Favorite</a>';
-		let loadingHtml = '<a class="nav-link" style="color: ' + GRAYVAR + '" href="#"><i class="fas fa-spinner fa-pulse"></i></a>';
+		let favoritedHtml = '<a class="nav-link" style="color: gold !important" href="#"><i class="fas fa-star"></i> Favorite</a>';
+		let unfavoritedHtml = '<a class="nav-link" style="color: ' + GRAYVAR +  ' !important" href="#"><i class="fas fa-star"></i> Favorite</a>';
+		let loadingHtml = '<a class="nav-link" style="color: ' + GRAYVAR + ' !important" href="#"><i class="fas fa-spinner fa-pulse"></i></a>';
 		
 		let pointer = $(this);
 		
-		if(typeof postId !== "undefined"){
+		if(typeof postId !== "undefined" && typeof containerId !== "undefined"){
 			pointer.html(loadingHtml);
 			
 			$.ajax({
@@ -1726,26 +1731,27 @@ function load(){
 						}
 
 						if(json.shares > 0){
-							countHtml = countHtml.concat('<div class="float-left mr-3" data-post-id="' + postId + '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">');
+							countHtml = countHtml.concat('<div class="shareCount latetooltip float-left mr-3" data-post-id="' + postId + '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">');
 							countHtml = countHtml.concat('<i class="fas fa-share-alt"></i> ' + json.shares + ' share' + (json.shares != 1 ? "s" : ""));
 							countHtml = countHtml.concat('</div>');
 						}
 
 						if(json.favorites > 0){
-							countHtml = countHtml.concat('<div class="float-left mr-3" data-post-id="' + postId + '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">');
+							countHtml = countHtml.concat('<div class="favoriteCount latetooltip float-left mr-3" data-post-id="' + postId + '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">');
 							countHtml = countHtml.concat('<i class="fas fa-star"></i> ' + json.favorites + ' favorite' + (json.favorites != 1 ? "s" : ""));
 							countHtml = countHtml.concat('</div>');
 						}
 
-						let countContainer = pointer.parent().parent().find(".countContainer");
+						let countContainer = pointer.parent().parent().find("#countContainer" + containerId);
 
 						if(countHtml != ""){
 							if(!countContainer.length){
-								pointer.parent().before('<div class="countContainer mt-3 mb-5 small text-muted"></div>');
-								countContainer = pointer.parent().parent().find(".countContainer");
+								pointer.parent().before('<div id="countContainer' + containerId + '" class="mt-3 mb-5 small text-muted"></div>');
+								countContainer = pointer.parent().parent().find("#countContainer" + containerId);
 							}
 
 							countContainer.html(countHtml);
+							latetooltip();
 						} else if(countContainer.length && countHtml == ""){
 							countContainer.remove();
 						}
@@ -1773,6 +1779,7 @@ function load(){
 		e.preventDefault();
 		
 		let postId = $(this).attr("data-post-id");
+		let containerId = $(this).attr("data-container-id");
 		
 		let sharedHtml = '<a class="nav-link text-blue" href="#"><i class="fas fa-share-alt"></i> Share</a>';
 		let unsharedHtml = '<a class="nav-link" style="color: ' + GRAYVAR + '" href="#"><i class="fas fa-share-alt"></i> Share</a>';
@@ -1780,7 +1787,7 @@ function load(){
 		
 		let pointer = $(this);
 		
-		if(typeof postId !== "undefined"){
+		if(typeof postId !== "undefined" && typeof containerId !== "undefined"){
 			pointer.html(loadingHtml);
 			
 			$.ajax({
@@ -1804,23 +1811,23 @@ function load(){
 						}
 
 						if(json.shares > 0){
-							countHtml = countHtml.concat('<div class="float-left mr-3" data-post-id="' + postId + '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">');
+							countHtml = countHtml.concat('<div class="shareCount latetooltip float-left mr-3" data-post-id="' + postId + '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">');
 							countHtml = countHtml.concat('<i class="fas fa-share-alt"></i> ' + json.shares + ' share' + (json.shares != 1 ? "s" : ""));
 							countHtml = countHtml.concat('</div>');
 						}
 
 						if(json.favorites > 0){
-							countHtml = countHtml.concat('<div class="float-left mr-3" data-post-id="' + postId + '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">');
+							countHtml = countHtml.concat('<div class="favoriteCount latetooltip float-left mr-3" data-post-id="' + postId + '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">');
 							countHtml = countHtml.concat('<i class="fas fa-star"></i> ' + json.favorites + ' favorite' + (json.favorites != 1 ? "s" : ""));
 							countHtml = countHtml.concat('</div>');
 						}
 
-						let countContainer = pointer.parent().parent().find(".countContainer");
+						let countContainer = pointer.parent().parent().find("#countContainer" + containerId);
 
 						if(countHtml != ""){
 							if(!countContainer.length){
-								pointer.parent().before('<div class="countContainer mt-3 mb-5 small text-muted"></div>');
-								countContainer = pointer.parent().parent().find(".countContainer");
+								pointer.parent().before('<div id="countContainer' + containerId + '" class="mt-3 mb-5 small text-muted"></div>');
+								countContainer = pointer.parent().parent().find("#countContainer" + containerId);
 							}
 
 							countContainer.html(countHtml);

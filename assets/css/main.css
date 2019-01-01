@@ -18,7 +18,7 @@ body,html {
 }
 
 .hwt-backdrop {
-    right: -100px !important;
+	right: -100px !important;
 }
 
 .postField {
@@ -35,137 +35,132 @@ img.emoji {
 	width: 1em;
 	margin: 0 .05em 0 .1em;
 	vertical-align: -0.1em;
- }
+}
 
- .favoriteButton,.shareButton,.replyButton,.deleteButton {
-	 cursor: pointer;
-	 font-size: 19px;
- }
+.favoriteButton,.shareButton,.replyButton,.deleteButton {
+	cursor: pointer;
+	font-size: 19px;
+}
 
- .favoriteCount,.shareCount,.replyCount {
-	 font-size: 16px;
-	 font-weight: bold;
- }
+.replyButton>i,
+.deleteButton>i {
+	color: gray;
+}
 
- .replyButton>i,
- .deleteButton>i {
-	 color: gray;
- }
-
- .favoriteButton>i:hover {
+.favoriteButton>i:hover {
 	color: gold !important;
- }
+}
 
- .shareButton>i:hover,
- .replyButton>i:hover {
+.shareButton>i:hover,
+.replyButton>i:hover {
 	color: #007bff !important;
- }
+}
 
- .deleteButton>i:hover {
-	 color: red !important;
- }
+.deleteButton>i:hover {
+	color: red !important;
+}
 
- .favoriteButton>i:hover,.shareButton>i:hover,.replyButton>i:hover,.deleteButton>i:hover,
- .favoriteButton>i,.shareButton>i,.replyButton>i,.deleteButton>i {
+.favoriteButton>i:hover,.shareButton>i:hover,.replyButton>i:hover,.deleteButton>i:hover,
+.favoriteButton>i,.shareButton>i,.replyButton>i,.deleteButton>i {
 	-webkit-transition: color 200ms linear;
-    -ms-transition: color 200ms linear;
-    transition: color 200ms linear;
- }
+	-ms-transition: color 200ms linear;
+	transition: color 200ms linear;
+}
 
- .statusTrigger {
+.statusTrigger {
 	cursor: pointer;
 	-webkit-transition: background-color 200ms linear;
-    -ms-transition: background-color 200ms linear;
-    transition: background-color 200ms linear;
- }
+	-ms-transition: background-color 200ms linear;
+	transition: background-color 200ms linear;
+}
 
- .statusTrigger:hover {
+.statusTrigger:hover {
 	background-color: rgb(228, 228, 228);
 	-webkit-transition: background-color 200ms linear;
-    -ms-transition: background-color 200ms linear;
-    transition: background-color 200ms linear;
- }
+	-ms-transition: background-color 200ms linear;
+	transition: background-color 200ms linear;
+}
 
- .custom-select {
+.custom-select {
 	height: auto !important;
 	padding: .6rem .8rem !important;
 	border: 2px solid #ced4da !important;
 	transition: none !important;
- }
+}
 
- .notificationPermissionAlert {
+.notificationPermissionAlert {
 	background: #D6EAFF;
 	border: #9FCCFC 3px solid;
 	height: 55px;
- }
+}
 
- i.addElementIcon {
-	 font-size: 27px;
-	 margin-right: 5px;
-	 float: left;
- }
+i.addElementIcon {
+	font-size: 27px;
+	margin-right: 5px;
+	float: left;
+}
 
- .addElementGroup {
-	 height: 29px;
- }
+.addElementGroup {
+	height: 29px;
+}
 
- .addElementText {
-	 float: left;
-	 margin-top: 3px;
- }
+.addElementText {
+	float: left;
+	margin-top: 3px;
+}
 
- .addElementGroupContainer {
+.addElementGroupContainer {
 	margin-bottom: 7px;
- }
+}
 
- .addElementGroupContainer:last-of-type {
-	 margin-bottom: 0px;
- }
+.addElementGroupContainer:last-of-type {
+	margin-bottom: 0px;
+}
 
- .legacyCard {
-	 margin-top: 70px;
- }
+.legacyCard {
+	margin-top: 70px;
+}
 
- #instantclick-bar {
-	 background: white;
- }
+#instantclick-bar {
+	background: white;
+}
 
- #accountDropdown:after {
-	 display: none;
- }
+#accountDropdown:after {
+	display: none;
+}
 
- .homeFeedLoadMore {
+.homeFeedLoadMore {
 	cursor: pointer;
 	background: #9FCCFC;
 	border-color: #007bff !important;
- }
+}
 
- .followsYouBadge {
-	 color: #8e8f91 !important;
-	 background-color: #F8F9FA !important;
- }
+.followsYouBadge {
+	color: #8e8f91 !important;
+	background-color: #F8F9FA !important;
+}
 
- .hwt-container {
+.hwt-container {
 	border-top: 1px solid #ced4da;
 	border-bottom: 1px solid #ced4da;
 	padding: 10px;
- }
+}
 
- .hwt-content {
-	 padding: 10px;
- }
+.hwt-content {
+	padding: 10px;
+}
 
- .postField,
+.postField,
 .postField:focus {
 	border: none !important;
 	box-shadow: none !important;
- }
+}
 
- .hwt-content mark {
-	 background-color: #FF4F4F;
- }
+.hwt-content mark {
+	background-color: #FF4F4F;
+}
 
- .btn.focus, .btn:focus {
+.btn.focus, .btn:focus {
 	box-shadow: none !important;
 }
 
