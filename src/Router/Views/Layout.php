@@ -346,7 +346,7 @@ $currentUser = Util::getCurrentUser();
 								<div class="d-lg-none">
 									<div class="row">
 										<div class="col-4">
-											<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" style="max-width: 128px"/></center>
+											<center><img class="rounded border-primary mb-2 border border-primary w-100" src="<?= $user->getAvatarURL(); ?>" style="max-width: 128px"/></center>
 										</div>
 
 										<div class="col-8">
