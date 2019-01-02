@@ -346,7 +346,7 @@ $currentUser = Util::getCurrentUser();
 								<div class="d-lg-none">
 									<div class="row">
 										<div class="col-4">
-											<center><img class="rounded border-primary mb-2 border border-primary" src="<?= $user->getAvatarURL(); ?>" style="max-width: 128px"/></center>
+											<center><img class="rounded border-primary mb-2 border border-primary w-100" src="<?= $user->getAvatarURL(); ?>" style="max-width: 128px"/></center>
 										</div>
 
 										<div class="col-8">
@@ -394,7 +394,6 @@ $currentUser = Util::getCurrentUser();
 								</div>
 								<?php
 
-									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-3","d-none","d-lg-block"]);
 									echo Util::renderAd(Util::AD_TYPE_LEADERBOARD,true,["mt-3","d-lg-none"]);
 
 								?>
@@ -466,8 +465,6 @@ $currentUser = Util::getCurrentUser();
 											<?php
 										}
 									}
-
-									echo Util::renderAd(Util::AD_TYPE_VERTICAL,true,["mt-1"]);
 
 								?>
 							</div>

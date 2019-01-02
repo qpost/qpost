@@ -12,7 +12,7 @@ use Phpfastcache\Config\Config;
  * @link https://gigadrivegroup.com/dev/technologies
  */
 class CacheHandler {
-	public const OBJECT_CACHE_TIME = 5*60;
+	public const OBJECT_CACHE_TIME = 10;
 
 	/**
 	 * Gets the stash caching pool object
