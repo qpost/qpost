@@ -720,6 +720,7 @@ class FeedEntry {
             return $s;
         } else if($this->getType() == "NEW_FOLLOWING"){
             $u2 = $this->getFollowing();
+			if (is_null($u2)) return "";
 				
             if($noBorder == false) $s .= '<li class="list-group-item px-2 py-2" data-entry-id="' . $this->getId() . '">';
             
