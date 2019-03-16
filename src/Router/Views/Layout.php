@@ -103,6 +103,14 @@ $currentUser = Util::getCurrentUser();
 			"assets:js/jquery.highlight-within-textarea.js"]); ?>
 
 		<script>var CSRF_TOKEN = "<?= Util::sanatizeHTMLAttribute(CSRF_TOKEN) ?>";var POST_CHARACTER_LIMIT = <?= Util::getCharacterLimit() ?>;<?= Util::isLoggedIn() && !is_null($currentUser) ? 'var CURRENT_USER = ' . $currentUser->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";var CURRENT_STATUS_MODAL = 0;var GRAYVAR = "<?= Util::isUsingNightMode() ? "#9b9b9b" : "gray" ?>";</script><?php unset($_SESSION["profileLoadPost"]); ?>
+
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({
+				google_ad_client: "ca-pub-6156128043207415",
+				enable_page_level_ads: true
+			});
+		</script>
 	</head>
 	<body>
 		<nav id="mainNav" class="navbar navbar-expand-lg navbar-dark bg-<?= Util::isUsingNightMode() ? "dark" : "primary" ?> fixed-top">
