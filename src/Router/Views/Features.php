@@ -11,7 +11,7 @@
 				<div class="col-lg-6">
 					<p class="featureParagraph">
 						Microblogging is the center of qpost.<br/><br/>
-						Share your thoughts in 140 characters or reply to others.
+						Share your thoughts in 300 characters or reply to others.
 					</p>
 				</div>
 
