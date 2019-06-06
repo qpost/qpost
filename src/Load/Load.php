@@ -11,11 +11,7 @@ ini_set("max_execution_time", 300);
 
 session_start();
 
-if(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["HTTP_HOST"])[0] == "localhost" || explode(":",$_SERVER["HTTP_HOST"])[0] == "127.0.0.1")){
-	require_once __DIR__ . "/../../../twitter-config.php";
-} else {
-	require_once __DIR__ . "/../../config.php";
-}
+require_once __DIR__ . "/../../config.php";
 
 require_once __DIR__ . "/../../vendor/autoload.php";
 
