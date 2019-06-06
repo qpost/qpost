@@ -7,5 +7,10 @@
         "riimu/kit-csrf": "^2.4",
         "tedivm/stash": "^0.14.2",
         "dereuromark/media-embed": "^0.4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
     }
 }

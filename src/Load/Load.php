@@ -12,25 +12,7 @@ ini_set("max_execution_time", 300);
 session_start();
 
 require_once __DIR__ . "/../../config.php";
-
 require_once __DIR__ . "/../../vendor/autoload.php";
-
-require_once __DIR__ . "/../Account/User.php";
-require_once __DIR__ . "/../Account/Suspension.php";
-require_once __DIR__ . "/../Account/IPInformation.php";
-require_once __DIR__ . "/../Account/Token.php";
-require_once __DIR__ . "/../Account/PrivacyLevel.php";
-require_once __DIR__ . "/../Cache/CacheHandler.php";
-require_once __DIR__ . "/../Shutdown/Shutdown.php";
-require_once __DIR__ . "/../Database/Database.php";
-require_once __DIR__ . "/../Feed/CountSample/CountSample.php";
-require_once __DIR__ . "/../Feed/CountSample/FavoriteSample.php";
-require_once __DIR__ . "/../Feed/CountSample/ShareSample.php";
-require_once __DIR__ . "/../Feed/FeedEntry.php";
-require_once __DIR__ . "/../Mail/Templates/autoload.php";
-require_once __DIR__ . "/../Util/Util.php";
-require_once __DIR__ . "/../Lime/App.php";
-require_once __DIR__ . "/../Media/MediaFile.php";
 
 //\CacheHandler::clearCache();
 
