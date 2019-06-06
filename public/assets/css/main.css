@@ -1,0 +1,169 @@
+body,html {
+	background: #FAFAFA;
+}
+
+.wrapper {
+	/*background: #FFF;*/
+}
+
+.pageSubtitle {
+	background: #78B0EC;
+	padding: 10px 30px;
+	font-weight: bold;
+	color: #FFF;
+}
+
+.clearUnderline {
+	text-decoration: none !important;
+}
+
+.hwt-backdrop {
+	right: -100px !important;
+}
+
+.postField {
+	height: 100px;
+	resize: none !important;
+}
+
+.replyForm {
+	margin-top: 60px !important;
+}
+
+img.emoji {
+	height: 1em;
+	width: 1em;
+	margin: 0 .05em 0 .1em;
+	vertical-align: -0.1em;
+}
+
+.favoriteButton,.shareButton,.replyButton,.deleteButton {
+	cursor: pointer;
+	font-size: 19px;
+}
+
+.replyButton>i,
+.deleteButton>i {
+	color: gray;
+}
+
+.favoriteButton>i:hover {
+	color: gold !important;
+}
+
+.shareButton>i:hover,
+.replyButton>i:hover {
+	color: #007bff !important;
+}
+
+.deleteButton>i:hover {
+	color: red !important;
+}
+
+.favoriteButton>i:hover,.shareButton>i:hover,.replyButton>i:hover,.deleteButton>i:hover,
+.favoriteButton>i,.shareButton>i,.replyButton>i,.deleteButton>i {
+	-webkit-transition: color 200ms linear;
+	-ms-transition: color 200ms linear;
+	transition: color 200ms linear;
+}
+
+.statusTrigger {
+	cursor: pointer;
+	-webkit-transition: background-color 200ms linear;
+	-ms-transition: background-color 200ms linear;
+	transition: background-color 200ms linear;
+}
+
+.statusTrigger:hover {
+	background-color: rgb(228, 228, 228);
+	-webkit-transition: background-color 200ms linear;
+	-ms-transition: background-color 200ms linear;
+	transition: background-color 200ms linear;
+}
+
+.custom-select {
+	height: auto !important;
+	padding: .6rem .8rem !important;
+	border: 2px solid #ced4da !important;
+	transition: none !important;
+}
+
+.notificationPermissionAlert {
+	background: #D6EAFF;
+	border: #9FCCFC 3px solid;
+	height: 55px;
+}
+
+i.addElementIcon {
+	font-size: 27px;
+	margin-right: 5px;
+	float: left;
+}
+
+.addElementGroup {
+	height: 29px;
+}
+
+.addElementText {
+	float: left;
+	margin-top: 3px;
+}
+
+.addElementGroupContainer {
+	margin-bottom: 7px;
+}
+
+.addElementGroupContainer:last-of-type {
+	margin-bottom: 0px;
+}
+
+.legacyCard {
+	margin-top: 70px;
+}
+
+#instantclick-bar {
+	background: white;
+}
+
+#accountDropdown:after {
+	display: none;
+}
+
+.homeFeedLoadMore {
+	cursor: pointer;
+	background: #9FCCFC;
+	border-color: #007bff !important;
+}
+
+.followsYouBadge {
+	color: #8e8f91 !important;
+	background-color: #F8F9FA !important;
+}
+
+.hwt-container {
+	border-top: 1px solid #ced4da;
+	border-bottom: 1px solid #ced4da;
+	padding: 10px;
+}
+
+.hwt-content {
+	padding: 10px;
+}
+
+.postField,
+.postField:focus {
+	border: none !important;
+	box-shadow: none !important;
+}
+
+.hwt-content mark {
+	background-color: #FF4F4F;
+}
+
+.btn.focus, .btn:focus {
+	box-shadow: none !important;
+}
+
+.text-blue {
+	color: #007bff !important;
+}

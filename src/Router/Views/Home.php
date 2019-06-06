@@ -157,7 +157,7 @@ if(isset($_POST["email"]) && isset($_POST["displayName"]) && isset($_POST["usern
 		</div>
 
 		<div class="col-lg-8">
-			<img src="/assets/img/responsivedemo.png" class="mt-5" style="width: 100%"/>
+			<img src="/public/assets/img/responsivedemo.png" class="mt-5" style="width: 100%"/>
 		</div>
 	</div>
 </div>

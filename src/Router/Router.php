@@ -1,22 +1,26 @@
 <?php
 
+use Riimu\Kit\CSRF\CSRFHandler;
+use Riimu\Kit\CSRF\InvalidCSRFTokenException;
+
 $app = new Lime\App();
 $app["config.begin_point"] = microtime();
 $app["config.site"] = array(
     "name" => SITE_NAME
 );
 
-$app->path("assets",__DIR__ . "/../../assets");
+$app->path("assets", "assets/");
 $app->path("routes",__DIR__ . "/Routes");
 $app->path("views",__DIR__ . "/Views");
+$app->path("public", __DIR__ . "/../../public");
 
-$csrf = new \Riimu\Kit\CSRF\CSRFHandler();
+$csrf = new CSRFHandler();
 
 // dont do CSRF check on API requests
 if(!(substr($app->route,0,5) === "/api/")){
 	try {
 		$csrf->validateRequest(true);
-	} catch(\Riimu\Kit\CSRF\InvalidCSRFTokenException $e){
+	} catch (InvalidCSRFTokenException $e) {
 		header("HTTP/1.0 400 Bad Request");
 		exit("400 Bad Request");
 	}
@@ -66,5 +70,16 @@ $app->on("after",function() {
 		}
 	}
 });
+
+$path = currentRoute();
+$filePath = $app->path("public:" . $path);
+if ($path !== "/" && file_exists($filePath)) {
+	$app->bind($path, function () {
+		global $path;
+		global $filePath;
+		$this->response->mime = pathinfo($path, PATHINFO_EXTENSION);
+		return file_get_contents($filePath);
+	});
+}
 
 $app->run();

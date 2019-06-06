@@ -4,8 +4,8 @@
 
 date_default_timezone_set("UTC");
 
-ini_set("session.cookie_lifetime",(60*60*24)*3);
-ini_set("session.gc_maxlifetime",(60*60*24)*3);
+ini_set("session.cookie_lifetime", (60 * 60 * 24) * 3);
+ini_set("session.gc_maxlifetime", (60 * 60 * 24) * 3);
 
 ini_set("max_execution_time", 300);
 
@@ -18,7 +18,7 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 
 /**
  * Alias for i18n::getTranslatedMessage()
- * 
+ *
  * @param string $phrase
  * @param arrray $variables
  * @return string
@@ -28,10 +28,14 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 }*/
 
 Util::cleanupTempFolder();
-if(Util::isLoggedIn()){
+if (Util::isLoggedIn()) {
 	$token = Token::getTokenById($_COOKIE["sesstoken"]);
 
-	if(!is_null($token)){
+	if (!is_null($token)) {
 		$token->renew();
 	}
+}
+
+function currentRoute() {
+	return isset($_SERVER["PATH_INFO"]) && trim($_SERVER["PATH_INFO"]) != "" ? $_SERVER["PATH_INFO"] : strtok($_SERVER["REQUEST_URI"], "?");
 }
