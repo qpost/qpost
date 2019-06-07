@@ -114,7 +114,7 @@ if(isset($_POST["email"]) && isset($_POST["displayName"]) && isset($_POST["usern
 		<div class="col-lg-4">
 			<div class="card">
 				<div class="homeLeftBox">
-					<img src="/android-chrome-384x384.png" class="rounded" height="90"/>
+					<img src="/public/android-chrome-384x384.png" class="rounded" height="90"/>
 
 					<h3>qpost</h3>
 
