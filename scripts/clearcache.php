@@ -1,10 +1,7 @@
 <?php
 
-if((isset($_SERVER["DOCUMENT_ROOT"]) && !empty($_SERVER["DOCUMENT_ROOT"])) || (isset($_SERVER["HTTP_HOST"]) && !empty($_SERVER["HTTP_HOST"]))){
-	echo "This script may only be run from the command line!";
-	exit();
-}
+require __DIR__ . "/_bootstrap.php";
 
-require_once "../src/Load/Load.php";
-
-\CacheHandler::clearCache();
+println("Clearing the cache...");
+CacheHandler::clearCache();
+println("Done.");
