@@ -20,8 +20,18 @@
 }
 
 .postField {
-	height: 100px;
 	resize: none !important;
+	height: 150px !important;
+	max-height: 60px !important;
+	transition: max-height .3s ease-in-out;
+	-moz-transition: max-height .3s ease-in-out;
+	-webkit-transition: max-height .3s ease-in-out;
+	-o-transition: max-height .3s ease-in-out;
+	-ms-transition: max-height .3s ease-in-out;
+
+	&.active {
+		max-height: 120px !important;
+	}
 }
 
 .postField,

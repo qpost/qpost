@@ -30,6 +30,7 @@ import FavoriteCount from "./Post/FavoriteCount";
 import FollowButton from "./FollowButton";
 import HomeFeed from "./HomeFeed";
 import Base from "./Base";
+import PostField from "./PostForm/PostField";
 
 export default class Component {
 	public static deleteModal: DeleteModal;
@@ -51,6 +52,7 @@ export default class Component {
 		Highlight.init();
 		LinkButton.init();
 		PostButton.init();
+		PostField.init();
 		TextButton.init();
 		ToggleNSFW.init();
 		VideoButton.init();
