@@ -1,0 +1,72 @@
+/*!
+ * Copyright (C) 2019 Gigadrive Group - All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.replyForm {
+	margin-top: 60px !important;
+}
+
+.postField {
+	height: 100px;
+	resize: none !important;
+}
+
+.postField,
+.postField:focus {
+	border: none !important;
+	box-shadow: none !important;
+}
+
+i.addElementIcon {
+	font-size: 27px;
+	margin-right: 5px;
+	float: left;
+}
+
+.addElementGroup {
+	height: 29px;
+}
+
+.addElementText {
+	float: left;
+	margin-top: 3px;
+}
+
+.addElementGroupContainer {
+	margin-bottom: 7px;
+}
+
+.addElementGroupContainer:last-of-type {
+	margin-bottom: 0px;
+}
+
+.hwt-container {
+	border-top: 1px solid #ced4da;
+	border-bottom: 1px solid #ced4da;
+	padding: 10px;
+}
+
+.hwt-content {
+	padding: 10px;
+}
+
+.hwt-backdrop {
+	right: -100px !important;
+}
+
+.hwt-content mark {
+	background-color: #FF4F4F;
+}

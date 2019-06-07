@@ -1,0 +1,39 @@
+/*!
+ * Copyright (C) 2019 Gigadrive Group - All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.custom-select {
+	height: auto !important;
+	padding: .6rem .8rem !important;
+	border: 2px solid #ced4da !important;
+	transition: none !important;
+}
+
+.btn.focus, .btn:focus {
+	box-shadow: none !important;
+}
+
+.datepicker-panel > ul > li:hover,
+.datepicker-panel > ul[data-view="week"] > li:hover {
+	background-color: #0D0D0D;
+}
+
+.form-control:disabled {
+	border: 1px solid #222222;
+	background-color: #535353;
+	color: #d1d1d1 !important;
+	box-shadow: none;
+}

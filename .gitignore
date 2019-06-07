@@ -3,3 +3,5 @@ vendor/
 tmp/*
 .idea
 config.php
+node_modules
+public/build

@@ -31,7 +31,7 @@ $showNoEntriesInfo = false;
 
 if(isset($_SESSION["profileLoadPost"])){
 	if(!isset($preventStatusModal) || $preventStatusModal != false){
-		echo '<script>setTimeout(function(){showStatusModal(' . $_SESSION["profileLoadPost"] . ');},500);</script>';
+		echo '<script>setTimeout(function(){window["showStatusModal"](' . $_SESSION["profileLoadPost"] . ')},500);</script>';
 	}
 }
 

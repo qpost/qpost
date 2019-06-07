@@ -255,7 +255,7 @@ class MediaFile {
 		$s = "";
 		
 		if($this->type == "IMAGE"){
-			$s .= '<img src="' . $this->getThumbnailURL() . '" width="100" height="100" class="rounded border border-primary bg-dark ignoreParentClick mr-2"' . (!is_null($postId) ? ' style="cursor: pointer" onclick="showMediaModal(\'' . $this->id . '\',' . $postId . ');"' : "") . '/>';
+			$s .= '<img src="' . $this->getThumbnailURL() . '" width="100" height="100" class="rounded border border-primary bg-dark ignoreParentClick mr-2 mediaModalTrigger"' . (!is_null($postId) ? ' style="cursor: pointer" data-media-id="' . $this->id . '" data-post-id="' . $postId . '"' : "") . '/>';
 		} else if($this->type == "VIDEO"){
 			$s .= Util::getVideoEmbedCodeFromURL($this->url);
 		} else if($this->type == "LINK"){
@@ -302,7 +302,7 @@ class MediaFile {
      * @access public
      */
     public function saveToCache(){
-        CacheHandler::setToCache("media_id_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
-        CacheHandler::setToCache("media_sha256_" . $this->sha256,$this,\CacheHandler::OBJECT_CACHE_TIME);
+		CacheHandler::setToCache("media_id_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
+		CacheHandler::setToCache("media_sha256_" . $this->sha256, $this, CacheHandler::OBJECT_CACHE_TIME);
     }
 }

@@ -1,0 +1,24 @@
+/*!
+ * Copyright (c) 2019 Gigadrive Group - All rights reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited.
+ * Proprietary and confidential.
+ * https://gigadrivegroup.com/dev/technologies
+ */
+
+$grid-breakpoints: (
+		xs: 0,
+		sm: 676px,
+		md: 868px,
+		lg: 1092px,
+		xl: 1500px
+);
+
+$container-max-widths: (
+		sm: 620px,
+		md: 820px,
+		lg: 1060px,
+		xl: 1440px
+);
+
+$basePath: "/";
+$flag-icon-css-path: "../../node_modules/flag-icon-css/flags";

@@ -122,7 +122,7 @@ $user = Util::getCurrentUser();
 								let postId = post.id;
 								
 								if(a == true){
-									HOME_FEED_LAST_POST = postId;
+									window["HOME_FEED_LAST_POST"] = postId;
 									a = false;
 								}
 								
@@ -130,7 +130,7 @@ $user = Util::getCurrentUser();
 								
 								adcount--;
 								if(adcount == 0){
-									newHtml = newHtml.concat(adbanner_leaderboard(true,["my-3"]));
+									newHtml = newHtml.concat(window["adbanner_leaderboard"](true, ["my-3"]));
 									adcount = 10;
 								}
 							});
@@ -141,7 +141,7 @@ $user = Util::getCurrentUser();
 							$(".homeFeedLoadSpinner").remove();
 							$(".homeFeedLoadMore").removeClass("d-none");
 
-							loadBasic();
+							window["loadBasic"]();
 						} else {
 							console.log(result);
 						}
@@ -159,7 +159,8 @@ $user = Util::getCurrentUser();
 
 			<ul class="list-group feedContainer mt-2"></ul>
 
-			<div class="d-none card homeFeedLoadMore px-3 py-3 text-center my-2" style="cursor: pointer; background: #9FCCFC" onclick="loadOldHomeFeed();">
+			<div class="d-none card homeFeedLoadMore px-3 py-3 text-center my-2"
+				 style="cursor: pointer; background: #9FCCFC">
 				Click to load more
 			</div>
 		</div>
