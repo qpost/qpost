@@ -1,5 +1,7 @@
 <?php
 
+define("DEBUG", false);
+
 define("SITE_NAME","");
 
 define("MYSQL_HOST","");

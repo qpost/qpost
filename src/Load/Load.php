@@ -2,6 +2,8 @@
 
 # Loads all library files
 
+require_once __DIR__ . "/../exception_handler.php";
+
 date_default_timezone_set("UTC");
 
 ini_set("session.cookie_lifetime", (60 * 60 * 24) * 3);

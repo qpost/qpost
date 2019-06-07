@@ -71,6 +71,8 @@ $app->on("after",function() {
 	}
 });
 
+throw new Exception("test");
+
 $path = currentRoute();
 $filePath = $app->path("public:" . $path);
 if ($path !== "/" && file_exists($filePath)) {
