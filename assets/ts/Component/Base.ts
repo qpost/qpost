@@ -3,9 +3,14 @@ import $ from "jquery";
 export default class Base {
 	private static bound = false;
 
+	private static taskRunning: boolean = false;
+
 	public static init(): void {
+		Base.startTask();
+
 		if (!this.bound) {
-			window["loadBasic"] = this.init;
+			console.log(3);
+			window["loadBasic"] = Base.init;
 			this.bound = true;
 		}
 
@@ -46,5 +51,19 @@ export default class Base {
 		$(".convertEmoji").html(function () {
 			return window["twemoji"].parse($(this).html());
 		}).removeClass("convertEmoji");
+	}
+
+	private static startTask(): void {
+		if (!Base.taskRunning) {
+			Base.taskRunning = true;
+
+			Base.task();
+		}
+	}
+
+	private static task(): void {
+		Base.init();
+
+		setTimeout(Base.task, 500);
 	}
 }
