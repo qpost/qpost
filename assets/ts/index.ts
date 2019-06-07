@@ -14,6 +14,8 @@ window["jQuery"] = $;
 
 (() => {
 	Base.init();
+	$(document).on("ready", Base.init);
+	setTimeout(Base.init, 500);
 
 	// initialize component
 	Component.init();
