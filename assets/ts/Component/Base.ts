@@ -1,4 +1,5 @@
 import $ from "jquery";
+import NightMode from "./NightMode";
 
 export default class Base {
 	private static bound = false;
@@ -9,7 +10,6 @@ export default class Base {
 		Base.startTask();
 
 		if (!this.bound) {
-			console.log(3);
 			window["loadBasic"] = Base.init;
 			this.bound = true;
 		}
@@ -51,6 +51,8 @@ export default class Base {
 		$(".convertEmoji").html(function () {
 			return window["twemoji"].parse($(this).html());
 		}).removeClass("convertEmoji");
+
+		NightMode.init();
 	}
 
 	private static startTask(): void {

@@ -116,7 +116,7 @@ $currentUser = Util::getCurrentUser();
 </head>
 <body>
 <nav id="mainNav"
-	 class="navbar navbar-expand-lg navbar-dark bg-<?= Util::isUsingNightMode() ? "dark" : "primary" ?> fixed-top">
+	 class="navbar navbar-expand-lg navbar-dark fixed-top">
 	<div class="container-fluid container">
 		<div class="navbar-header">
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation"
@@ -195,8 +195,8 @@ $currentUser = Util::getCurrentUser();
 
 							<div class="dropdown-divider"></div>
 
-							<a href="/nightmode" class="dropdown-item" data-no-instant>
-								<?= Util::isUsingNightMode() ? "Disable night mode" : "Enable night mode" ?>
+							<a href="#" class="dropdown-item nightModeToggle" data-no-instant>
+								Toggle night mode
 							</a>
 						</div>
 					</li>
