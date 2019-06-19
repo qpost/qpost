@@ -1598,8 +1598,6 @@ class Util {
 		// V2
 		//
 
-		$linkColor = self::isUsingNightMode() ? "light" : "primary";
-
 		$box .= '<div class="postBox card card-sm card-social-post' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
 
 		if($includeExtraOptions){
@@ -1607,9 +1605,9 @@ class Util {
 
 			$box .= '<ul class="list-inline m-0" class="listPostActions">';
 
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="postFormTextButton clearUnderline btn btn-link text-' . $linkColor . '"><i class="fas fa-font"></i></button></li>';
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormVideoButton clearUnderline btn btn-link text-' . $linkColor . '"><i class="fas fa-video"></i></button></li>';
-			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="d-none postFormLinkButton clearUnderline btn btn-link text-' . $linkColor . '"><i class="fas fa-link"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="postFormTextButton clearUnderline btn btn-link text-mainColor"><i class="fas fa-font"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormVideoButton clearUnderline btn btn-link text-mainColor"><i class="fas fa-video"></i></button></li>';
+			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="d-none postFormLinkButton clearUnderline btn btn-link text-mainColor"><i class="fas fa-link"></i></button></li>';
 
 			$box .= '</ul>';
 
@@ -1642,7 +1640,7 @@ class Util {
 			$box .= '<div class="dropzone-previews row ml-2"></div>';
 
 			$box .= '<div class="float-left mt-2">';
-			$box .= '<button type="button" class="btn btn-link text-' . $linkColor . ' mb-0 addPhoto" data-toggle="tooltip" title="Add photo"><i class="fas fa-images"></i></button>';
+			$box .= '<button type="button" class="btn btn-link text-mainColor mb-0 addPhoto" data-toggle="tooltip" title="Add photo"><i class="fas fa-images"></i></button>';
 			//$box .= '<button id="emojiPicker' . $formId . '" type="button" class="btn btn-link mb-0 emojiPicker" data-toggle="tooltip" title="Add emoji"><i class="fas fa-' . $faces[rand(0,count($faces)-1)] . '"></i></button>';
 			$box .= '<button type="button" class="btn btn-link text-success mb-0 toggleNSFW" data-toggle="tooltip" title="NSFW: off"><i class="fas fa-exclamation-triangle"></i></button>';
 			$box .= '</div>';
