@@ -22,13 +22,19 @@
 	transition: none !important;
 }
 
-.btn.focus, .btn:focus {
-	box-shadow: none !important;
+.btn {
+	&.focus, &:focus {
+		box-shadow: none !important;
+	}
 }
 
-.datepicker-panel > ul > li:hover,
-.datepicker-panel > ul[data-view="week"] > li:hover {
-	background-color: #0D0D0D;
+.datepicker-panel {
+	> ul {
+		> li:hover,
+		&[date-view="week"] > li:hover {
+			background-color: #0D0D0D;
+		}
+	}
 }
 
 .form-control:disabled {

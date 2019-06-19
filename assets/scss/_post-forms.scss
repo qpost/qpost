@@ -32,12 +32,11 @@
 	&.active {
 		max-height: 120px !important;
 	}
-}
 
-.postField,
-.postField:focus {
-	border: none !important;
-	box-shadow: none !important;
+	&, &:focus {
+		border: none !important;
+		box-shadow: none !important;
+	}
 }
 
 i.addElementIcon {

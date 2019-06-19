@@ -21,13 +21,13 @@
 	-webkit-transition: background-color 200ms linear;
 	-ms-transition: background-color 200ms linear;
 	transition: background-color 200ms linear;
-}
 
-.statusTrigger:hover {
-	background-color: rgb(228, 228, 228);
-	-webkit-transition: background-color 200ms linear;
-	-ms-transition: background-color 200ms linear;
-	transition: background-color 200ms linear;
+	&:hover {
+		background-color: rgb(228, 228, 228);
+		-webkit-transition: background-color 200ms linear;
+		-ms-transition: background-color 200ms linear;
+		transition: background-color 200ms linear;
+	}
 }
 
 // post interaction buttons
