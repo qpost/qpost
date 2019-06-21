@@ -86,7 +86,7 @@ class Util {
 		$mail->SMTPAuth = true;
 		$mail->Username = MAIL_USER;
 		$mail->Password = MAIL_PASSWORD;
-		$mail->setFrom(MAIL_USER,is_null($fromName) ? "Gigadrive Group" : $fromName);
+		$mail->setFrom(MAIL_SEND_AS,is_null($fromName) ? "Gigadrive Group" : $fromName);
 		$mail->addAddress($to,is_null($toName) ? $to : $toName);
 		$mail->Subject = $subject;
 		$mail->msgHTML($contentHTML);
