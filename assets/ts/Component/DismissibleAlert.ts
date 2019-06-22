@@ -9,10 +9,12 @@ export default class DismissibleAlert {
 		$(".alert-dismissible[id^='" + idPrefix + "'] button.close").on("click", (e: ClickEvent) => {
 			let id = $(e.currentTarget).closest(".alert").attr("id");
 
+			console.log(id);
+
 			if (id) {
 				id = id.substr(idPrefix.length);
 
-				Util.setCookie("registeredalert" + id, "closed", 10);
+				Util.setCookie("registeredAlert" + id, "closed", 30);
 			}
 		});
 	}

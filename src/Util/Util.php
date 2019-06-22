@@ -241,9 +241,10 @@ class Util {
 		if($dismissible == false){
 			return '<div id="registeredalert' . $id . '" class="alert alert-' . $type . '">' . $text . '</div>';
 		} else if($saveDismiss == false || ($saveDismiss == true && !isset($_COOKIE[$cookieName]))){
-			$d = $saveDismiss == true ? ' onClick="saveDismiss(\'' . $id . '\');"' : "";
-			return '<div id="registeredalert' . $id . '" class="text-left alert alert-dismissible alert-' . $type . '"><button id="registeredalertclose' . $id . '" type="button" class="close" data-dismiss="alert"' . $d . '>&times;</button>' . $text . '</div>';
+			return '<div id="registeredalert' . $id . '" class="text-left alert alert-dismissible alert-' . $type . '"><button id="registeredalertclose' . $id . '" type="button" class="close" data-dismiss="alert">&times;</button>' . $text . '</div>';
 		}
+
+		return "";
 	}
 
 	/**

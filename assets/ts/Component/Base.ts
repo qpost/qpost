@@ -1,5 +1,6 @@
 import $ from "jquery";
 import NightMode from "./NightMode";
+import DismissibleAlert from "./DismissibleAlert";
 
 export default class Base {
 	private static bound = false;
@@ -53,6 +54,7 @@ export default class Base {
 		}).removeClass("convertEmoji");
 
 		NightMode.init();
+		DismissibleAlert.init();
 	}
 
 	private static startTask(): void {

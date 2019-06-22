@@ -1,4 +1,3 @@
-import DismissibleAlert from "./DismissibleAlert";
 import DeleteModal from "./DataModal/DeleteModal";
 import MediaModal from "./DataModal/MediaModal";
 import StatusModal from "./DataModal/StatusModal";
@@ -60,7 +59,6 @@ export default class Component {
 		AdSense.init();
 		Base.init();
 		BirthdayBox.init();
-		DismissibleAlert.init();
 		FilterLink.init();
 		FollowButton.init();
 		HomeFeed.init();
