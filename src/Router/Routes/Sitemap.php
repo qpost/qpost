@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Cache\CacheHandler;
+
 $app->bind("/sitemap",function(){
     $this->response->mime = "xml";
 
@@ -38,9 +40,9 @@ $app->bind("/sitemap-content",function(){
     $n = "sitemapString" . (isset($_GET["rand"]) ? "_" . $_GET["rand"] : "");
 
     $d = "";
-    
-    if(\CacheHandler::existsInCache($n)){
-        $d = \CacheHandler::getFromCache($n);
+
+	if (CacheHandler::existsInCache($n)) {
+		$d = CacheHandler::getFromCache($n);
     } else {
         $mysqli = Database::Instance()->get();
 
@@ -76,7 +78,7 @@ $app->bind("/sitemap-content",function(){
         }
         $stmt->close();
 
-        \CacheHandler::setToCache($n,$d,20*60);
+		CacheHandler::setToCache($n, $d, 20 * 60);
     }
 
     $s .= $d;

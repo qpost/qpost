@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Util\Util;
+
 $app->get("/search",function(){
 	return $this->render("views:Search.php with views:Layout.php",[
 		"title" => "Search" . (isset($_GET["query"]) && !Util::isEmpty(trim($_GET["query"])) ? ": \"" . Util::sanatizeString($_GET["query"]) . "\"" : ""),

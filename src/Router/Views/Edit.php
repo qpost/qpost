@@ -1,5 +1,8 @@
 <?php
 
+use Gumlet\ImageResize;
+use qpost\Util\Util;
+
 $user = Util::getCurrentUser();
 
 $errorMsg = null;
@@ -103,8 +106,8 @@ if(isset($_POST["displayName"]) && isset($_POST["bio"]) && isset($_POST["feature
 													$size = 300;
 	
 													$tmpFile = __DIR__ . "/../../../tmp/" . rand(1,10000) . ".jpg";
-	
-													$image = new \Gumlet\ImageResize($file["tmp_name"]);
+
+													$image = new ImageResize($file["tmp_name"]);
 													$image->crop($size,$size);
 													$image->save($tmpFile);
 													

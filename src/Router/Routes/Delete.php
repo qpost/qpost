@@ -1,5 +1,8 @@
 <?php
 
+use qpost\Account\Token;
+use qpost\Util\Util;
+
 $app->bind("/delete",function(){
     if(Util::isLoggedIn()){
         $user = Util::getCurrentUser();

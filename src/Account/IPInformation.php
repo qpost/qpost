@@ -1,6 +1,9 @@
 <?php
 
-namespace Gigadrive\Account;
+namespace qpost\Account;
+
+use qpost\Cache\CacheHandler;
+use qpost\Database\Database;
 
 /**
  * Represents information about an IP address
@@ -23,16 +26,16 @@ class IPInformation {
 			return null;
 
 		$n = "ipInformation_" . $ip;
-		
-		if(\CacheHandler::existsInCache($n)){
-			return \CacheHandler::getFromCache($n);
+
+		if (CacheHandler::existsInCache($n)) {
+			return CacheHandler::getFromCache($n);
 		} else {
 			$info = new IPInformation($ip);
 			
 			if($info->exists){
 				return $info;
 			} else {
-				\CacheHandler::setToCache($n,null,30*60);
+				CacheHandler::setToCache($n, null, 30 * 60);
 				return null;
 			}
 		}
@@ -75,7 +78,7 @@ class IPInformation {
 	 * @param string $ip
 	 */
 	public function __construct($ip){
-		$mysqli = \Database::Instance()->get();
+		$mysqli = Database::Instance()->get();
 		$this->ip = $ip;
 
 		$stmt = $mysqli->prepare("SELECT * FROM `db_297066_12`.`gigadrive_ipinfo` WHERE `ip` = ?");
@@ -137,7 +140,7 @@ class IPInformation {
 				$this->data = $data;
 				$jsonData = json_encode($this->data);
 
-				$mysqli = \Database::Instance()->get();
+				$mysqli = Database::Instance()->get();
 
 				$stmt = $mysqli->prepare("UPDATE `db_297066_12`.`gigadrive_ipinfo` SET `data` = ? WHERE `ip` = ?");
 				$stmt->bind_param("ss",$jsonData,$this->ip);
@@ -179,7 +182,7 @@ class IPInformation {
 	 * @return double The result on a scale between 0.00 and 1.00
 	 */
 	public function getVPNCheckResult($update = true){
-		$mysqli = \Database::Instance()->get();
+		$mysqli = Database::Instance()->get();
 
 		if(is_null($this->vpnCheckResult)){
 			$vpnData = json_decode(file_get_contents("http://check.getipintel.net/check.php?ip=" . $this->ip . "&contact=support@gigadrivegroup.com&format=json&flags=f"),true);
@@ -207,6 +210,6 @@ class IPInformation {
 	 */
 	public function saveToCache(){
 		$n = "ipInformation_" . $this->ip;
-		\CacheHandler::setToCache($n,$this,\CacheHandler::OBJECT_CACHE_TIME);
+		CacheHandler::setToCache($n, $this, CacheHandler::OBJECT_CACHE_TIME);
 	}
 }

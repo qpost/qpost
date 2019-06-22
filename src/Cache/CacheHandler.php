@@ -1,7 +1,9 @@
 <?php
 
-use Phpfastcache\CacheManager;
-use Phpfastcache\Config\Config;
+namespace qpost\Cache;
+
+use Stash\Driver\FileSystem;
+use Stash\Pool;
 
 /**
  * Utility methods to use with caching
@@ -18,13 +20,13 @@ class CacheHandler {
 	 * Gets the stash caching pool object
 	 * 
 	 * @access public
-	 * @return Stash\Pool
+	 * @return Pool
 	 */
 	public static function Manager(){
 		static $InstanceCache = null;
 		if($InstanceCache == null){
-			$driver = new Stash\Driver\FileSystem([]);
-			$InstanceCache = new Stash\Pool($driver);
+			$driver = new FileSystem([]);
+			$InstanceCache = new Pool($driver);
 		}
 	
 		return $InstanceCache;

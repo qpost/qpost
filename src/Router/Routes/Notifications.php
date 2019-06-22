@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Util\Util;
+
 $app->bind("/notifications/:page",function($params){
 	$user = Util::getCurrentUser();
 	if(!Util::isLoggedIn()) return $this->reroute("/login");

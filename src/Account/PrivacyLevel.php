@@ -1,8 +1,10 @@
 <?php
 
+namespace qpost\Account;
+
 /**
  * Represents a privacy level an account can have
- * 
+ *
  * @package Account
  * @author Gigadrive (support@gigadrivegroup.com)
  * @copyright 2016-2018 Gigadrive

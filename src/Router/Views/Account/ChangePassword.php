@@ -1,5 +1,8 @@
 <?php
 
+use qpost\Database\Database;
+use qpost\Util\Util;
+
 $user = Util::getCurrentUser();
 
 $successMsg = null;

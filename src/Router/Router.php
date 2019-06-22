@@ -1,5 +1,6 @@
 <?php
 
+use qpost\Util\Util;
 use Riimu\Kit\CSRF\CSRFHandler;
 use Riimu\Kit\CSRF\InvalidCSRFTokenException;
 
@@ -36,29 +37,28 @@ if(Util::isLoggedIn()){
 	}
 }
 
-require $app->path("routes:Home.php");
-require $app->path("routes:Notifications.php");
-require $app->path("routes:Status.php");
-require $app->path("routes:Out.php");
-require $app->path("routes:Login.php");
-require $app->path("routes:Logout.php");
-require $app->path("routes:Profile.php");
-require $app->path("routes:Account.php");
-require $app->path("routes:Messages.php");
-require $app->path("routes:Requests.php");
-require $app->path("routes:Edit.php");
-require $app->path("routes:Search.php");
-require $app->path("routes:Features.php");
-require $app->path("routes:Discover.php");
-require $app->path("routes:ScriptsRoute.php");
-require $app->path("routes:Sitemap.php");
-require $app->path("routes:NightMode.php");
-require $app->path("routes:Register.php");
-require $app->path("routes:Delete.php");
+require_once $app->path("routes:Home.php");
+require_once $app->path("routes:Notifications.php");
+require_once $app->path("routes:Status.php");
+require_once $app->path("routes:Out.php");
+require_once $app->path("routes:Login.php");
+require_once $app->path("routes:Logout.php");
+require_once $app->path("routes:Profile.php");
+require_once $app->path("routes:Account.php");
+require_once $app->path("routes:Messages.php");
+require_once $app->path("routes:Requests.php");
+require_once $app->path("routes:Edit.php");
+require_once $app->path("routes:Search.php");
+require_once $app->path("routes:Features.php");
+require_once $app->path("routes:Discover.php");
+require_once $app->path("routes:ScriptsRoute.php");
+require_once $app->path("routes:Sitemap.php");
+require_once $app->path("routes:Register.php");
+require_once $app->path("routes:Delete.php");
 
-require $app->path("routes:Cronjobs/DeleteStaleAccounts.php");
+require_once $app->path("routes:Cronjobs/DeleteStaleAccounts.php");
 
-require $app->path("routes:API/autoload.php");
+require_once $app->path("routes:API/autoload.php");
 
 $app->on("after",function() {
 	if(!(substr($this->route,0,5) === "/api/")){

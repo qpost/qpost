@@ -1,5 +1,9 @@
 <?php
 
+use qpost\Account\Token;
+use qpost\Account\User;
+use qpost\Util\Util;
+
 $app->bind("/api/user/info",function(){
 	if(api_method_check($this,"GET")){
 		$header = Util::getAuthorizationHeader();

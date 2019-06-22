@@ -1,6 +1,9 @@
 <?php
 
-use Gigadrive\Account\IPInformation;
+use qpost\Account\IPInformation;
+use qpost\Account\Token;
+use qpost\Database\Database;
+use qpost\Util\Util;
 
 $mysqli = Database::Instance()->get();
 

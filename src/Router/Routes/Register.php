@@ -1,6 +1,10 @@
 <?php
 
-use \Gigadrive\MailTemplates\MailTemplates;
+use Gigadrive\MailTemplates\MailTemplates;
+use qpost\Account\Token;
+use qpost\Account\User;
+use qpost\Database\Database;
+use qpost\Util\Util;
 
 $app->bind("/register",function(){
     if(!Util::isLoggedIn()){

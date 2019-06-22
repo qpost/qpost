@@ -1,5 +1,9 @@
 <?php
 
+use qpost\Account\User;
+use qpost\Database\Database;
+use qpost\Util\Util;
+
 $user = Util::getCurrentUser();
 
 ?><div class="legacyCardBody">

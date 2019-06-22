@@ -1,8 +1,14 @@
 <?php
 
+namespace qpost\Account;
+
+use qpost\Cache\CacheHandler;
+use qpost\Database\Database;
+use qpost\Util\Util;
+
 /**
  * Represents a token to be used with the API for a user
- * 
+ *
  * @package Account
  * @author Gigadrive (support@gigadrivegroup.com)
  * @copyright 2016-2018 Gigadrive
@@ -11,7 +17,7 @@
 class Token {
 	/**
 	 * Returns a token by it's id
-	 * 
+	 *
 	 * @access public
 	 * @param string $id
 	 * @return Token
@@ -31,7 +37,7 @@ class Token {
 
 	/**
 	 * Returns a new token object generated for a user
-	 * 
+	 *
 	 * @access public
 	 * @param int|User $user
 	 * @param string $userAgent
@@ -58,7 +64,7 @@ class Token {
 
 	/**
 	 * Returns a string that can be used as an ID for a token
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -74,7 +80,7 @@ class Token {
 
 	/**
 	 * Returns whether a token ID is free to use
-	 * 
+	 *
 	 * @access public
 	 * @param string $id
 	 * @return bool
@@ -91,6 +97,8 @@ class Token {
 			$result = $stmt->get_result();
 
 			if($result->num_rows){
+				$row = $result->fetch_assoc();
+
 				if($row["count"] > 0){
 					$b = false;
 				}
@@ -153,10 +161,10 @@ class Token {
 	 * @var bool $exists
 	 */
 	private $exists = false;
-	
+
 	/**
 	 * Returns the ID of the token
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -166,7 +174,7 @@ class Token {
 
 	/**
 	 * Returns the ID of the token user
-	 * 
+	 *
 	 * @access public
 	 * @return int
 	 */
@@ -176,7 +184,7 @@ class Token {
 
 	/**
 	 * Returns the object of the token user
-	 * 
+	 *
 	 * @access public
 	 * @return User
 	 */
@@ -186,7 +194,7 @@ class Token {
 
 	/**
 	 * Returns the last IP that the token was used from
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -196,17 +204,17 @@ class Token {
 
 	/**
 	 * Returns information of the last IP that the token was used from
-	 * 
+	 *
 	 * @access public
-	 * @return Gigadrive\Account\IPInformation
+	 * @return IPInformation
 	 */
 	public function getIPInformation(){
-		return Gigadrive\Account\IPInformation::getInformationFromIP($this->lastIP);
+		return IPInformation::getInformationFromIP($this->lastIP);
 	}
 
 	/**
 	 * Returns the last user agent this token was used with
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -216,7 +224,7 @@ class Token {
 
 	/**
 	 * Returns the time this token was created
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -226,7 +234,7 @@ class Token {
 
 	/**
 	 * Returns the time the token was last used
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -236,7 +244,7 @@ class Token {
 
 	/**
 	 * Returns the time this token will expire
-	 * 
+	 *
 	 * @access public
 	 * @return string
 	 */
@@ -246,7 +254,7 @@ class Token {
 
 	/**
 	 * Returns whether the token has expired
-	 * 
+	 *
 	 * @access public
 	 * @return bool
 	 */
@@ -256,7 +264,7 @@ class Token {
 
 	/**
 	 * Renews the token expiry date
-	 * 
+	 *
 	 * @access public
 	 */
 	public function renew(){
@@ -274,7 +282,7 @@ class Token {
 
 	/**
 	 * Expires the token
-	 * 
+	 *
 	 * @access public
 	 */
 	public function expire(){
@@ -292,16 +300,16 @@ class Token {
 
 	/**
 	 * Saves the token data to the cache
-	 * 
+	 *
 	 * @access public
 	 */
 	public function saveToCache(){
-		CacheHandler::setToCache("apiToken_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
+		CacheHandler::setToCache("apiToken_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
 	}
 
 	/**
 	 * Removes the token data from the cache
-	 * 
+	 *
 	 * @access public
 	 */
 	public function removeFromCache(){
@@ -310,7 +318,7 @@ class Token {
 
 	/**
 	 * Reloads the token data
-	 * 
+	 *
 	 * @access public
 	 */
 	public function reload(){

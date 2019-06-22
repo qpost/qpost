@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Util\Util;
+
 $app->bind("/out",function(){
 	if(isset($_GET["link"])){
 		if(filter_var($_GET["link"],FILTER_VALIDATE_URL)){

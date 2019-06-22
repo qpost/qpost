@@ -1,5 +1,11 @@
 <?php
 
+use qpost\Account\User;
+use qpost\Cache\CacheHandler;
+use qpost\Database\Database;
+use qpost\Feed\FeedEntry;
+use qpost\Util\Util;
+
 $user = Util::getCurrentUser();
 $num = 0;
 $n = "totalNotifications_" . $user->getId();

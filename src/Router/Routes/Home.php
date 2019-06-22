@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Util\Util;
+
 $app->bind("/",function(){
 	if(!Util::isLoggedIn()){
 		return $this->render("views:Home.php with views:HomeLayout.php");

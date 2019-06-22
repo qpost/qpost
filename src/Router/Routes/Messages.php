@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Util\Util;
+
 $app->bind("/messages",function(){
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
 

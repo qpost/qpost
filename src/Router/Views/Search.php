@@ -1,3 +1,11 @@
+<?php
+
+use qpost\Account\User;
+use qpost\Cache\CacheHandler;
+use qpost\Database\Database;
+use qpost\Feed\FeedEntry;
+
+?>
 <div class="legacyCardBody">
 	<div class="row">
 		<div class="col-lg-8 offset-lg-2">

@@ -1,6 +1,17 @@
 <?php
 
-use Gigadrive\Account\IPInformation;
+namespace qpost\Util;
+
+use JasonGrimes\Paginator;
+use MediaEmbed\MediaEmbed;
+use PHPMailer;
+use qpost\Account\IPInformation;
+use qpost\Account\PrivacyLevel;
+use qpost\Account\Token;
+use qpost\Account\User;
+use qpost\Database\Database;
+use qpost\Feed\FeedEntry;
+use qpost\Media\MediaFile;
 
 define("DEVELOPER_MODE",(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["HTTP_HOST"])[0] == "localhost" || explode(":",$_SERVER["HTTP_HOST"])[0] == "127.0.0.1")));
 define("DEFAULT_TWITTER_IMAGE","https://qpost.gigadrivegroup.com/android-chrome-192x192.png");
@@ -518,7 +529,7 @@ class Util {
 	 * 
 	 * @access public
      * @param int $length The maximum length of the string (the actual length will be something between this number and the half of it)
-     * @return array
+	 * @return string
      */
 	public static function getRandomString($length = 16) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -861,10 +872,10 @@ class Util {
 	 * @param int $itemsPerPage
 	 * @param int $total
 	 * @param string $urlPattern
-	 * @return JasonGrimes\Paginator
+	 * @return string
 	 */
 	public static function paginate($page,$itemsPerPage,$total,$urlPattern){
-		$paginator = new JasonGrimes\Paginator($total,$itemsPerPage,$page,$urlPattern);
+		$paginator = new Paginator($total, $itemsPerPage, $page, $urlPattern);
 
 		$p = "";
 
@@ -941,6 +952,7 @@ class Util {
 	 * @param bool $defaultToEdit If true, an "Edit Profile" button will be returned if $user is the currently logged in user
 	 * @param array $classes The CSS classes to be added to the button
 	 * @param bool $showBlocked If true, a "Blocked" button will be returned if the $user is blocked by the currently logged in user
+	 * @return string
 	 */
 	public static function followButton($user,$defaultToEdit = false,$classes = null,$showBlocked = true){
 		if(is_object($user))
@@ -1002,7 +1014,7 @@ class Util {
 	 * Returns an array of data used in a JSON API for a post
 	 * 
 	 * @access public
-	 * @param int $postId
+	 * @param int|FeedEntry $postId
 	 * @param int $parentDepth
 	 * @return array
 	 */
@@ -1038,7 +1050,7 @@ class Util {
 	 * Returns an array of data used in a JSON API for a media file
 	 * 
 	 * @access public
-	 * @param string $mediaId
+	 * @param string|MediaFile $mediaId
 	 * @param int $postId
 	 * @return array
 	 */
@@ -1060,7 +1072,7 @@ class Util {
 	 * Returns an array of data used in a JSON API for a user
 	 * 
 	 * @access public
-	 * @param int $userId
+	 * @param int|User $userId
 	 * @return array
 	 */
 	public static function userJsonData($userId){
@@ -1085,6 +1097,7 @@ class Util {
 	 * Converts links in a string to HTML links
 	 * 
 	 * @access public
+	 * @param string $string
 	 * @return string
 	 */
 	public static function convertLinks($string){
@@ -1095,6 +1108,7 @@ class Util {
 	 * Converts hashtags in a string to HTML links
 	 * 
 	 * @access public
+	 * @param string $string
 	 * @return string
 	 */
 	public static function convertHashtags($string){
@@ -1105,6 +1119,7 @@ class Util {
 	 * Converts mentions in a string to HTML links
 	 * 
 	 * @access public
+	 * @param string $string
 	 * @return string
 	 */
 	public static function convertMentions($string){
@@ -1123,6 +1138,7 @@ class Util {
 	 * Converts URLs, hashtags, mentions and line breaks in a post text to HTML links
 	 * 
 	 * @access public
+	 * @param string $string
 	 * @return string
 	 */
 	public static function convertPost($string){
@@ -1176,7 +1192,7 @@ class Util {
 	 * @return string
 	 */
 	public static function stripUnneededInfoFromVideoURL($url){
-		$mediaEmbed = new MediaEmbed\MediaEmbed();
+		$mediaEmbed = new MediaEmbed();
 
 		$mediaObject = $mediaEmbed->parseUrl($url);
 		if($mediaObject){
@@ -1204,7 +1220,7 @@ class Util {
 	 * @return string
 	 */
 	public static function getVideoEmbedCodeFromURL($url){
-		$mediaEmbed = new MediaEmbed\MediaEmbed();
+		$mediaEmbed = new MediaEmbed();
 
 		$mediaObject = $mediaEmbed->parseUrl($url);
 		if($mediaObject){
@@ -1479,6 +1495,7 @@ class Util {
 	 * @param int $replyTo The id of the post that is being replied to, null if it's a standalone post
 	 * @param string[] $classes An array of css classes attached to the box
 	 * @param bool $includeExtraOptions Whether or not to include extra options and tabs for media sharing etc.
+	 * @return string
 	 */
 	public static function renderCreatePostForm($classes = null,$includeExtraOptions = true){
 		if(!self::isLoggedIn() || is_null(self::getCurrentUser()))
@@ -1570,7 +1587,7 @@ class Util {
 		if($includeExtraOptions){
 			$box .= '<div class="p-0">';
 
-			$box .= '<ul class="list-inline m-0" class="listPostActions">';
+			$box .= '<ul class="list-inline m-0 listPostActions">';
 
 			$box .= '<li class="list-inline-item"><button style="font-size: 24px" disabled type="button" class="postFormTextButton clearUnderline btn btn-link text-mainColor"><i class="fas fa-font"></i></button></li>';
 			$box .= '<li class="list-inline-item"><button style="font-size: 24px" type="button" class="postFormVideoButton clearUnderline btn btn-link text-mainColor"><i class="fas fa-video"></i></button></li>';

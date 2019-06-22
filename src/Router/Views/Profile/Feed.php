@@ -1,5 +1,10 @@
 <?php
 
+use qpost\Cache\CacheHandler;
+use qpost\Database\Database;
+use qpost\Feed\FeedEntry;
+use qpost\Util\Util;
+
 $mysqli = Database::Instance()->get();
 $itemsPerPage = 40;
 

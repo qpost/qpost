@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Util\Util;
+
 $user = Util::getCurrentUser();
 
 ?>

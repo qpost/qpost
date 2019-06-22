@@ -1,5 +1,14 @@
 <?php
 
+use Gumlet\ImageResize;
+use qpost\Account\PrivacyLevel;
+use qpost\Account\User;
+use qpost\Cache\CacheHandler;
+use qpost\Database\Database;
+use qpost\Feed\FeedEntry;
+use qpost\Media\MediaFile;
+use qpost\Util\Util;
+
 $app->post("/scripts/toggleFollow",function(){
 	$this->response->mime ="json";
 	
@@ -571,10 +580,10 @@ $app->bind("/mediaThumbnail", function($params){
 
 			$this->response->mime = "jpg";
 
-			if(\CacheHandler::existsInCache($n)){
-				$imageString = base64_decode(\CacheHandler::getFromCache($n));
+			if (CacheHandler::existsInCache($n)) {
+				$imageString = base64_decode(CacheHandler::getFromCache($n));
 
-				$image = \Gumlet\ImageResize::createFromString($imageString);
+				$image = ImageResize::createFromString($imageString);
 
 				if(!is_null($image)){
 					return $image->output(IMAGETYPE_JPEG,100);
@@ -592,7 +601,7 @@ $app->bind("/mediaThumbnail", function($params){
 						list($width,$height) = $size;
 
 						if($width > -1 && $height > -1){
-							$image = \Gumlet\ImageResize::createFromString($imageString);
+							$image = ImageResize::createFromString($imageString);
 							
 							if(!is_null($image)){
 								/*$source = imagecreatefromstring($imageString);
@@ -603,10 +612,10 @@ $app->bind("/mediaThumbnail", function($params){
 								$image->resizeToBestFit(800,450,true);
 	
 								$imageString = $image->getImageAsString();
-	
-								\CacheHandler::setToCache($n,base64_encode($imageString),20*60);
 
-								$image = \Gumlet\ImageResize::createFromString(base64_decode(\CacheHandler::getFromCache($n)));
+								CacheHandler::setToCache($n, base64_encode($imageString), 20 * 60);
+
+								$image = ImageResize::createFromString(base64_decode(CacheHandler::getFromCache($n)));
 	
 								return $image->output(IMAGETYPE_JPEG,100);
 							} else {

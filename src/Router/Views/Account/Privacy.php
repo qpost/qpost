@@ -1,5 +1,9 @@
 <?php
 
+use qpost\Account\PrivacyLevel;
+use qpost\Database\Database;
+use qpost\Util\Util;
+
 $user = Util::getCurrentUser();
 $uID = $user->getId();
 

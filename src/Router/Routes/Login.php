@@ -1,6 +1,9 @@
 <?php
 
-use Gigadrive\MailTemplates\MailTemplates;
+use qpost\Account\Token;
+use qpost\Account\User;
+use qpost\Database\Database;
+use qpost\Util\Util;
 
 $app->bind("/login",function(){
 	if(DEVELOPER_MODE !== null && DEVELOPER_MODE == true && isset($_GET["id"])){

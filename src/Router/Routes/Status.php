@@ -1,5 +1,8 @@
 <?php
 
+use qpost\Feed\FeedEntry;
+use qpost\Util\Util;
+
 $app->bind("/status/:id",function($params){
     $id = $params["id"];
 

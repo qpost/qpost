@@ -1,5 +1,9 @@
 <?php
 
+use qpost\Account\PrivacyLevel;
+use qpost\Account\User;
+use qpost\Util\Util;
+
 $app->bind("/:query/following",function($params){
 	$query = $params["query"];
 	$page = 1;

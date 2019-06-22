@@ -1,5 +1,9 @@
 <?php
 
+use qpost\Account\Token;
+use qpost\Account\User;
+use qpost\Util\Util;
+
 $app->bind("/api/token/request",function(){
 	if(api_method_check($this,"POST")){
 		$requestData = api_request_data($this);

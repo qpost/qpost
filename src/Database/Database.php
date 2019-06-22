@@ -1,8 +1,12 @@
 <?php
 
+namespace qpost\Database;
+
+use mysqli;
+
 /**
  * Class Database
- * 
+ *
  * @description Utility methods to connect to MySQL
  * @package Database
  * @author Gigadrive (support@gigadrivegroup.com)
@@ -30,7 +34,7 @@ class Database {
 
 	/**
 	 * Gets the current Database class instance
-	 * 
+	 *
 	 * @access public
 	 * @return Database
 	 */
@@ -45,7 +49,7 @@ class Database {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @access protected
 	 * @param string $host The mysql host
 	 * @param string $user The mysql user
@@ -80,7 +84,7 @@ class Database {
 
 	/**
 	 * Destructor
-	 * 
+	 *
 	 * @access protected
 	 */
 	public function __destruct(){
@@ -89,7 +93,7 @@ class Database {
 
 	/**
 	 * Returns the mysqli object
-	 * 
+	 *
 	 * @return mysqli
 	 */
 	public function get(){
@@ -98,7 +102,7 @@ class Database {
 
 	/**
 	 * Returns whether there is currently a connection
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function connected(){
@@ -163,7 +167,7 @@ class Database {
 
 	/**
 	 * Shuts the mysql connection down
-	 * 
+	 *
 	 * @return bool Could the connection be shut down?
 	 */
 	public function shutdown(){

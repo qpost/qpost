@@ -1,5 +1,10 @@
 <?php
 
+use qpost\Account\Token;
+use qpost\Util\Util;
+
+//use qpost\Cache\CacheHandler
+
 # Loads all library files
 
 require_once __DIR__ . "/../exception_handler.php";
@@ -16,7 +21,7 @@ session_start();
 require_once __DIR__ . "/../../config.php";
 require_once __DIR__ . "/../../vendor/autoload.php";
 
-//\CacheHandler::clearCache();
+//CacheHandler::clearCache();
 
 /**
  * Alias for i18n::getTranslatedMessage()

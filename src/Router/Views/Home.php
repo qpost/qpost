@@ -1,6 +1,9 @@
 <?php
 
 use Gigadrive\MailTemplates\MailTemplates;
+use qpost\Account\User;
+use qpost\Database\Database;
+use qpost\Util\Util;
 
 $errorMsg = null;
 $successMsg = null;

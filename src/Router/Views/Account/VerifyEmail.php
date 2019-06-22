@@ -1,5 +1,9 @@
 <?php
 
+use qpost\Account\User;
+use qpost\Database\Database;
+use qpost\Util\Util;
+
 $successMsg = null;
 $errorMsg = null;
 

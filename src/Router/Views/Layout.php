@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Account\User;use qpost\Util\Util;
+
 if (isset($title) && !Util::isEmpty($title)) {
 	$title = $title . " - " . $app["config.site"]["name"];
 } else {

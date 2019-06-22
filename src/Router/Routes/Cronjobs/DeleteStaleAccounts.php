@@ -1,5 +1,7 @@
 <?php
 
+use qpost\Database\Database;
+
 $app->get("/cronjobs/deleteStaleAccounts",function(){
     if(isset($_GET["secret"]) && $_GET["secret"] == CRONJOB_SECRET){
         $this->response->mime = "json";

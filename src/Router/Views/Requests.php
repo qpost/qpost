@@ -1,3 +1,11 @@
+<?php
+
+use qpost\Account\PrivacyLevel;
+use qpost\Account\User;
+use qpost\Database\Database;
+use qpost\Util\Util;
+
+?>
 <div class="legacyCardBody">
     <?php
 

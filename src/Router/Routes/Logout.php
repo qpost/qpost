@@ -1,5 +1,8 @@
 <?php
 
+use qpost\Account\Token;
+use qpost\Util\Util;
+
 $app->bind("/logout",function(){
 	unset($_SESSION["id"]);
 
