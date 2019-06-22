@@ -19,6 +19,7 @@ html.nightMode, html.nightMode > body {
 	background: #474747;
 	color: #FFF;
 
+	@import "alerts";
 	@import "base";
 	@import "buttons";
 	@import "cards";
@@ -28,6 +29,7 @@ html.nightMode, html.nightMode > body {
 	@import "list-group";
 	@import "modals";
 	@import "navigation";
+	@import "notifications";
 	@import "pagination";
 	@import "pagination";
 	@import "post-forms";

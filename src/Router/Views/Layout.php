@@ -84,16 +84,9 @@ $currentUser = Util::getCurrentUser();
 		"assets:css/datepicker.min.css",
 		"assets:css/jquery.highlight-within-textarea.css"]); ?>
 
-	<?php
-
-	if (Util::isUsingNightMode())
-		echo $app->style("assets:css/nightmode.css");
-
-	?>
-
 	<?= $app->script([
 		"assets:js/dropzone.js",
-		"build/bundle.js",
+		"/build/bundle.js",
 		"https://www.google.com/recaptcha/api.js",
 		"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
 		"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
@@ -103,8 +96,7 @@ $currentUser = Util::getCurrentUser();
 		var POST_CHARACTER_LIMIT = <?= Util::getCharacterLimit() ?>;
 			<?= Util::isLoggedIn() && !is_null($currentUser) ? 'var CURRENT_USER = ' . $currentUser->getId() . ';' : ""; ?>var restoreUrl = "<?= isset($_SESSION["profileLoadPost"]) ? "/" . FeedEntry::getEntryById($_SESSION["profileLoadPost"])->getUser()->getUsername() : "" ?>";
 		var restoreTitle = "<?= isset($_SESSION["profileLoadPost"]) ? $originalTitle : "" ?>";
-		var CURRENT_STATUS_MODAL = 0;
-		var GRAYVAR = "<?= Util::isUsingNightMode() ? "#9b9b9b" : "gray" ?>";</script><?php unset($_SESSION["profileLoadPost"]); ?>
+		var CURRENT_STATUS_MODAL = 0;</script><?php unset($_SESSION["profileLoadPost"]); ?>
 
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script>
@@ -289,7 +281,7 @@ $currentUser = Util::getCurrentUser();
 		<div class="preview-template d-none">
 			<div class="dz-preview dz-file-preview well mt-2 mr-2 float-left" id="dz-preview-template">
 				<div style="width: 100px; height: 100px; background-size: cover;" data-dz-thumbnail
-					 class="rounded border border-primary bg-dark"></div>
+					 class="rounded border border-mainColor bg-dark"></div>
 				<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
 				<div class="dz-success-mark"><span></span></div>
 				<div class="dz-error-mark"><span></span></div>
@@ -322,7 +314,7 @@ $currentUser = Util::getCurrentUser();
 						<div class="col col-xl-3 col-lg-4 mb-3">
 							<div class="sticky-top" style="top: 70px">
 								<div class="d-none d-lg-block">
-									<center><img class="rounded border-primary mb-2 border border-primary"
+									<center><img class="rounded border-mainColor mb-2 border"
 												 src="<?= $user->getAvatarURL(); ?>" width="200" height="200"/></center>
 									<h4 class="mb-0 convertEmoji"
 										style="word-wrap: break-word;"><?= $user->getDisplayName() . $user->renderCheckMark(); ?></h4>
@@ -372,7 +364,7 @@ $currentUser = Util::getCurrentUser();
 								<div class="d-lg-none">
 									<div class="row">
 										<div class="col-4">
-											<center><img class="rounded border-primary mb-2 border border-primary w-100"
+											<center><img class="rounded border-mainColor mb-2 border w-100"
 														 src="<?= $user->getAvatarURL(); ?>" style="max-width: 128px"/>
 											</center>
 										</div>

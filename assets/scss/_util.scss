@@ -26,3 +26,15 @@
 .text-mainColor {
 	color: $primary;
 }
+
+.border-mainColor {
+	border-color: $primary !important;
+}
+
+.bg-monochrome {
+	background-color: $light;
+}
+
+.text-qp-gray {
+	color: gray !important;
+}

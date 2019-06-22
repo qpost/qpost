@@ -153,7 +153,7 @@ class User {
 	* @return bool
 	*/
 	public static function isCached($id){
-		return \CacheHandler::existsInCache("user_id_" . $id);
+		return CacheHandler::existsInCache("user_id_" . $id);
 	}
 	
 	/**
@@ -198,8 +198,8 @@ class User {
 
 		$n = "gigadriveTokenFromCode_" . $code . "_" . Util::getIP();
 
-		if(\CacheHandler::existsInCache($n)){
-			return \CacheHandler::getFromCache($n);
+		if (CacheHandler::existsInCache($n)) {
+			return CacheHandler::getFromCache($n);
 		} else {
 			$url = "https://gigadrivegroup.com/api/v3/token?secret=" . GIGADRIVE_API_SECRET . "&code=" . urlencode($_GET["code"]);
 			$j = @json_decode(@file_get_contents($url),true);
@@ -207,7 +207,7 @@ class User {
 			if(isset($j["success"]) && !Util::isEmpty($j["success"]) && isset($j["token"]) && !Util::isEmpty($j["token"])){
 				$token = $j["token"];
 
-				\CacheHandler::setToCache($n,$token,30*60);
+				CacheHandler::setToCache($n, $token, 30 * 60);
 
 				return $token;
 			}
@@ -515,7 +515,7 @@ class User {
 	* @return string
 	*/
 	public function renderCheckMark(){
-		return $this->verified ? '<span class="ml-1 small" data-placement="right" data-toggle="tooltip" data-html="true" title="<b>Verified account</b><br/>This account has has been confirmed as an authentic page for this public figure, media company or brand"><i class="fas fa-check-circle"' . (Util::isUsingNightMode() ? "" : ' style="color: #007bff"') . '></i></span>' : "";
+		return $this->verified ? '<span class="ml-1 small" data-placement="right" data-toggle="tooltip" data-html="true" title="<b>Verified account</b><br/>This account has has been confirmed as an authentic page for this public figure, media company or brand"><i class="fas fa-check-circle text-mainColor"></i></span>' : "";
 	}
 	
 	/**
@@ -943,7 +943,7 @@ class User {
 					$stmt = $mysqli->prepare("INSERT INTO `favorites` (`user`,`post`) VALUES(?,?);");
 					$stmt->bind_param("ii",$this->id,$postId);
 					if($stmt->execute()){
-						\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,true,5*60);
+						CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId, true, 5 * 60);
 						
 						if(!is_null($post))
 						$post->reloadFavorites();
@@ -977,7 +977,7 @@ class User {
 			$stmt = $mysqli->prepare("DELETE FROM `favorites` WHERE `user` = ? AND `post` = ?");
 			$stmt->bind_param("ii",$this->id,$postId);
 			if($stmt->execute()){
-				\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,false,5*60);
+				CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId, false, 5 * 60);
 				
 				$feedEntry = FeedEntry::getEntryById($postId);
 				if(!is_null($feedEntry)){
@@ -997,8 +997,8 @@ class User {
 	* @return bool
 	*/
 	public function hasFavorited($postId){
-		if(\CacheHandler::existsInCache("favoriteStatus_" . $this->id . "_" . $postId)){
-			return \CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
+		if (CacheHandler::existsInCache("favoriteStatus_" . $this->id . "_" . $postId)) {
+			return CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
 		} else {
 			$mysqli = Database::Instance()->get();
 			
@@ -1011,15 +1011,15 @@ class User {
 					$row = $result->fetch_assoc();
 					
 					if($row["count"] > 0){
-						\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,true,5*60);
+						CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId, true, 5 * 60);
 					} else {
-						\CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId,false,5*60);
+						CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId, false, 5 * 60);
 					}
 				}
 			}
 			$stmt->close();
-			
-			return \CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
+
+			return CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
 		}
 	}
 	
@@ -1078,7 +1078,7 @@ class User {
 			$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`post`,`sessionId`,`type`) VALUES(?,?,?,'SHARE');");
 			$stmt->bind_param("iis",$this->id,$postId,$sessionId);
 			if($stmt->execute()){
-				\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,true,5*60);
+				CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId, true, 5 * 60);
 				
 				$feedEntry = FeedEntry::getEntryById($postId);
 				if(!is_null($feedEntry))
@@ -1111,7 +1111,7 @@ class User {
 			$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `user` = ? AND `type` = 'SHARE' AND `post` = ?");
 			$stmt->bind_param("ii",$this->id,$postId);
 			if($stmt->execute()){
-				\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,false,5*60);
+				CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId, false, 5 * 60);
 				
 				$feedEntry = FeedEntry::getEntryById($postId);
 				if(!is_null($feedEntry)){
@@ -1130,8 +1130,8 @@ class User {
 	* @param int $postId
 	*/
 	public function hasShared($postId){
-		if(\CacheHandler::existsInCache("shareStatus_" . $this->id . "_" . $postId)){
-			return \CacheHandler::getFromCache("shareStatus_" . $this->id . "_" . $postId);
+		if (CacheHandler::existsInCache("shareStatus_" . $this->id . "_" . $postId)) {
+			return CacheHandler::getFromCache("shareStatus_" . $this->id . "_" . $postId);
 		} else {
 			$mysqli = Database::Instance()->get();
 			
@@ -1144,15 +1144,15 @@ class User {
 					$row = $result->fetch_assoc();
 					
 					if($row["count"] > 0){
-						\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,true,5*60);
+						CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId, true, 5 * 60);
 					} else {
-						\CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId,false,5*60);
+						CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId, false, 5 * 60);
 					}
 				}
 			}
 			$stmt->close();
-			
-			return \CacheHandler::getFromCache("shareStatus_" . $this->id . "_" . $postId);
+
+			return CacheHandler::getFromCache("shareStatus_" . $this->id . "_" . $postId);
 		}
 	}
 	
@@ -2067,7 +2067,7 @@ class User {
 	 * @access public
 	 */
 	public function deleteAccount(){
-		$mysqli = \Database::Instance()->get();
+		$mysqli = Database::Instance()->get();
 
 		$this->removeFromCache();
 
@@ -2138,9 +2138,9 @@ class User {
 	* @access public
 	*/
 	public function saveToCache(){
-		\CacheHandler::setToCache("user_id_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
-		\CacheHandler::setToCache("user_name_" . strtolower($this->username),$this,\CacheHandler::OBJECT_CACHE_TIME);
-		\CacheHandler::setToCache("user_gigadriveId_" . $this->gigadriveId,$this,\CacheHandler::OBJECT_CACHE_TIME);
+		CacheHandler::setToCache("user_id_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
+		CacheHandler::setToCache("user_name_" . strtolower($this->username), $this, CacheHandler::OBJECT_CACHE_TIME);
+		CacheHandler::setToCache("user_gigadriveId_" . $this->gigadriveId, $this, CacheHandler::OBJECT_CACHE_TIME);
 	}
 	
 	/**
@@ -2149,8 +2149,8 @@ class User {
 	* @access public
 	*/
 	public function removeFromCache(){
-		\CacheHandler::deleteFromCache("user_id_" . $this->id);
-		\CacheHandler::deleteFromCache("user_name_" . strtolower($this->username));
-		\CacheHandler::deleteFromCache("user_gigadriveId_" . $this->gigadriveId);
+		CacheHandler::deleteFromCache("user_id_" . $this->id);
+		CacheHandler::deleteFromCache("user_name_" . strtolower($this->username));
+		CacheHandler::deleteFromCache("user_gigadriveId_" . $this->gigadriveId);
 	}
 }

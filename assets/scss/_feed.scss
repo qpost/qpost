@@ -28,6 +28,12 @@
 		-ms-transition: background-color 200ms linear;
 		transition: background-color 200ms linear;
 	}
+
+	.nav-link {
+		&.inactive {
+			color: gray;
+		}
+	}
 }
 
 // post interaction buttons

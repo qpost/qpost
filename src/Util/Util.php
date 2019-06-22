@@ -234,37 +234,6 @@ class Util {
 			return '<div id="registeredalert' . $id . '" class="text-left alert alert-dismissible alert-' . $type . '"><button id="registeredalertclose' . $id . '" type="button" class="close" data-dismiss="alert"' . $d . '>&times;</button>' . $text . '</div>';
 		}
 	}
-	
-	/**
-     * Modifies the user's cookies to toggle nightmode on or off
-	 * 
-	 * @access public
-     */
-	public static function toggleNightMode(){
-		if(Util::isUsingNightMode()){
-			self::unsetCookie("nightMode");
-		} else {
-			self::setCookie("nightMode","yes",180);
-		}
-	}
-	
-	/**
-     * Gets whether the user is currently using the nightmode
-	 * 
-	 * @access public
-	 * @return bool
-     */
-	public static function isUsingNightMode(){
-		if(isset($_COOKIE["nightMode"])){
-			if($_COOKIE["nightMode"] == "yes"){
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
 
 	/**
 	 * Sets a cookie for a specific amount of days to the user's browser
@@ -1324,8 +1293,6 @@ class Util {
 		if(Util::isLoggedIn()){
 			$currentUser = Util::getCurrentUser();
 			if(!is_null($currentUser)){
-				$gray = self::isUsingNightMode() ? "#9b9b9b" : "gray";
-
 				// V1
 				/*$s .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
 				$s .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
@@ -1360,15 +1327,15 @@ class Util {
 				// V2
 				$s .= '<div class="row text-center" style="font-size: 19px">';
 				$s .= '<div data-container-id="' . $id . '" class="col-4 replyButton">';
-				$s .= '<a class="nav-link" href="#" style="color: ' . $gray . ' !important"><i class="fas fa-share"></i> Reply</a>';
+				$s .= '<a class="nav-link text-qp-gray" href="#"><i class="fas fa-share"></i> Reply</a>';
 				$s .= '</div>';
 
 				$s .= '<div data-container-id="' . $id . '" class="col-4 ignoreParentClick' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' shareButton"' : '" data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
-				$s .= '<a ' . ($currentUser->hasShared($post->getId()) ? 'style="color: #007bff !important" ' : 'style="color: ' . $gray . ' !important" ') . 'class="nav-link" href="#"><i class="fas fa-share-alt"></i> Share</a>';
+				$s .= '<a ' . ($currentUser->hasShared($post->getId()) ? 'style="color: #007bff !important" ' : "") . 'class="nav-link' . (!$currentUser->hasShared($post->getId()) ? " text-qp-gray" : "") . '" href="#"><i class="fas fa-share-alt"></i> Share</a>';
 				$s .= '</div>';
 
 				$s .= '<div data-container-id="' . $id . '" class="col-4 favoriteButton ignoreParentClick" data-post-id="' . $post->getId() . '">';
-				$s .= '<a class="nav-link"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold !important"' : ' style="color: ' . $gray . ' !important"') . ' href="#"><i class="fas fa-star"></i> Favorite</a>';
+				$s .= '<a class="nav-link' . (!$currentUser->hasFavorited($post->getId()) ? " text-qp-gray" : "") . '"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold !important"' : "") . ' href="#"><i class="fas fa-star"></i> Favorite</a>';
 				$s .= '</div>';
 				$s .= '</div>';
 			}
@@ -1396,10 +1363,10 @@ class Util {
 					$mediaFile = $mediaFiles[0];
 
 					if($mediaFile->getType() == "IMAGE"){
-						$s .= '<div class="border border-primary bg-dark ignoreParentClick mediaModalTrigger" style="background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '>
+						$s .= '<div class="border border-mainColor bg-dark ignoreParentClick mediaModalTrigger" style="background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '>
 						<img src="' . $mediaFile->getURL() . '" style="max-height: 500px; width: 100%; height: 100%; visibility: hidden;"/>
 						</div>';
-						//$s .= '<div class="rounded border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
+						//$s .= '<div class="rounded border border-mainColor bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
 					} else if($mediaFile->getType() == "VIDEO"){
 						$s .= self::getVideoEmbedCodeFromURL($mediaFile->getURL());
 					} else if($mediaFile->getType() == "LINK"){
@@ -1416,11 +1383,11 @@ class Util {
 							$d = $i == 2 ? " border-left-0" : "";
 
 							$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
-							//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-							/*$s .= '<div class="border border-primary' . $d . ' bg-dark ignoreParentClick mr-2" style="background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '>';
+							//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-mainColor bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+							/*$s .= '<div class="border border-mainColor' . $d . ' bg-dark ignoreParentClick mr-2" style="background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '>';
 							$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" style="max-height: 500px; width: 100%; height: 100%; visibility: hidden;"/>';
 							$s .= '</div>';*/
-							$s .= '<div class="border border-primary' . $d . ' bg-dark ignoreParentClick mediaModalTrigger" style="max-height: 500px; height: 100%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
+							$s .= '<div class="border border-mainColor' . $d . ' bg-dark ignoreParentClick mediaModalTrigger" style="max-height: 500px; height: 100%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 							$s .= '</div>';
 
 							$i++;
@@ -1436,16 +1403,16 @@ class Util {
 						if($mediaFile->getType() == "IMAGE"){
 							if($i == 1){
 								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
-								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-								$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
+								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-mainColor bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+								$s .= '<div class="border border-mainColor bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 								$s .= '</div>';
 							} else if($i == 2){
 								$s .= '<div class="d-inline-block" style="width: 50%; height: 100%;">';
-								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary border-left-0 border-bottom-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
+								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-mainColor border-left-0 border-bottom-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+								$s .= '<div class="border border-mainColor border-left-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 							} else if($i == 3){
-								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
-								$s .= '<div class="border border-primary border-left-0 boder-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
+								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-mainColor border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
+								$s .= '<div class="border border-mainColor border-left-0 boder-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 								$s .= '</div>';
 							}
 
@@ -1462,15 +1429,15 @@ class Util {
 						if($mediaFile->getType() == "IMAGE"){
 							if($i == 1){
 								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
-								$s .= '<div class="border border-primary bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
+								$s .= '<div class="border border-mainColor bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 							} else if($i == 2){
-								$s .= '<div class="border border-primary border-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
+								$s .= '<div class="border border-mainColor border-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 								$s .= '</div>';
 							} else if($i == 3){
 								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
-								$s .= '<div class="border border-primary border-left-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
+								$s .= '<div class="border border-mainColor border-left-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 							} else if($i == 4){
-								$s .= '<div class="border border-primary border-left-0 border-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
+								$s .= '<div class="border border-mainColor border-left-0 border-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 								$s .= '</div>';
 							}
 

@@ -19,8 +19,8 @@ class FeedEntry {
     public static function getEntryById($id){
         $n = "feedEntry_" . $id;
 
-        if(\CacheHandler::existsInCache($n)){
-            return \CacheHandler::getFromCache($n);
+		if (CacheHandler::existsInCache($n)) {
+			return CacheHandler::getFromCache($n);
         } else {
             $entry = new self($id);
             $entry->reload();
@@ -41,7 +41,7 @@ class FeedEntry {
      * @return bool
      */
     public static function isCached($id){
-        return \CacheHandler::existsInCache("feedEntry_" . $id);
+		return CacheHandler::existsInCache("feedEntry_" . $id);
     }
 
     /**
@@ -674,7 +674,7 @@ class FeedEntry {
                 $s .= '</div>';
                 $s .= '</div>';
 
-                $s .= '<div class="nsfwInfo ignoreParentClick bg-' . (Util::isUsingNightMode() ? "dark" : "light") . ' text-' . (Util::isUsingNightMode() ? "white" : "muted") . ' text-center py-4">';
+				$s .= '<div class="nsfwInfo ignoreParentClick bg-monochrome text-' . (Util::isUsingNightMode() ? "white" : "muted") . ' text-center py-4">';
                 $s .= '<div style="font-size: 26px;"><i class="fas fa-exclamation-triangle"></i></div>';
                 $s .= 'This post was marked as NSFW. Click to show.';
                 $s .= '</div>';
@@ -773,7 +773,7 @@ class FeedEntry {
                 $s .= '</div>';
                 $s .= '</div>';
 
-                $s .= '<div class="nsfwInfo ignoreParentClick bg-' . (Util::isUsingNightMode() ? "dark" : "light") . ' text-' . (Util::isUsingNightMode() ? "white" : "muted") . ' text-center py-4">';
+				$s .= '<div class="nsfwInfo ignoreParentClick bg-monochrome text-' . (Util::isUsingNightMode() ? "white" : "muted") . ' text-center py-4">';
                 $s .= '<div style="font-size: 26px;"><i class="fas fa-exclamation-triangle"></i></div>';
                 $s .= 'This post was marked as NSFW. Click to show.';
                 $s .= '</div>';
@@ -834,10 +834,10 @@ class FeedEntry {
     }
 
     public function saveToCache(){
-        \CacheHandler::setToCache("feedEntry_" . $this->id,$this,\CacheHandler::OBJECT_CACHE_TIME);
+		CacheHandler::setToCache("feedEntry_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
     }
 
     public function removeFromCache(){
-        \CacheHandler::deleteFromCache("feedEntry_" . $this->id);
+		CacheHandler::deleteFromCache("feedEntry_" . $this->id);
     }
 }
