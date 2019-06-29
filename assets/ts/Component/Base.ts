@@ -1,6 +1,7 @@
 import $ from "jquery";
 import NightMode from "./NightMode";
 import DismissibleAlert from "./DismissibleAlert";
+import NotificationAlert from "./NotificationAlert";
 
 export default class Base {
 	private static bound = false;
@@ -44,6 +45,7 @@ export default class Base {
 		});
 
 		NightMode.init();
+		NotificationAlert.init();
 
 		$(".datepicker").datepicker();
 

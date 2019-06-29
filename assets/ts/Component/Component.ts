@@ -1,7 +1,6 @@
 import DeleteModal from "./DataModal/DeleteModal";
 import MediaModal from "./DataModal/MediaModal";
 import StatusModal from "./DataModal/StatusModal";
-import NotificationAlert from "./NotificationAlert";
 import AdSense from "./AdSense";
 import ToggleNSFW from "./PostForm/ToggleNSFW";
 import AddPhoto from "./PostForm/AddPhoto";
@@ -65,7 +64,6 @@ export default class Component {
 		ImageUpload.init();
 		LateTooltip.init();
 		LayeredModals.init();
-		NotificationAlert.init();
 		Notifications.init();
 		Utility.init();
 
