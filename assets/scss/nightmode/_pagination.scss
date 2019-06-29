@@ -15,23 +15,31 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.page-link {
-	color: #dddddd;
-	background-color: #3f3f3f;
-	border-color: #222222 !important;
-}
+$defaultBackgroundColor: #3f3f3f;
+$hoverBackgroundColor: #2b2b2b;
 
-.page-item.disabled .page-link {
-	background-color: #3f3f3f !important;
-}
+.pagination {
+	.page-item {
+		&.disabled {
+			.page-link {
+				background-color: $defaultBackgroundColor !important;
+			}
+		}
 
-.page-item.active .page-link,
-.page-item.disabled .page-link {
-	color: #FFF !important;
-}
+		&.active {
+			.page-link {
+				background-color: $hoverBackgroundColor !important;
+			}
+		}
 
-.page-link:hover {
-	color: #dddddd;
-	background-color: #2b2b2b;
-	border-color: #222222 !important;
+		.page-link {
+			color: #FFF !important;
+			background-color: $defaultBackgroundColor;
+			border-color: #222222 !important;
+
+			&:hover {
+				background-color: $hoverBackgroundColor !important;
+			}
+		}
+	}
 }
