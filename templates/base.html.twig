@@ -1,0 +1,81 @@
+{% extends "emptyBase.html.twig" %}
+
+{% block body %}
+	{% include "parts/navigation.html.twig" %}
+
+	<div class="container navMargin">
+		<div class="legacyCard">
+			{% if currentUser is defined and currentUser %}
+				{% include "parts/notificationPermissionAlert.html.twig" %}
+
+				{% if user is defined and user %}
+					{% include "parts/modal/block.html.twig" with {
+						"user": user
+					} %}
+				{% endif %}
+			{% endif %}
+
+			{% include "parts/modal/status.html.twig" %}
+			{% include "parts/modal/media.html.twig" %}
+			{% include "parts/modal/delete.html.twig" %}
+
+			{% include "parts/dropzoneTemplate.html.twig" %}
+
+			<div class="wrapper">
+				<div class="legacyCardBody">
+					{% block leaderboard %}{% endblock %}
+
+					{% set _leftSidebar = block("leftSidebar") %}
+					{% set _rightSidebar = block("rightSidebar") %}
+
+					{# 0 = NO SIDEBAR; 1 = BOTH SIDEBARS; 2 = LEFT SIDEBAR; 3 = RIGHT SIDEBAR #}
+					{% set layoutMode = _leftSidebar is not empty and _rightSidebar is not empty ? 1 : _leftSidebar is not empty and _rightSidebar is empty ? 2 : _leftSidebar is empty and _rightSidebar is not empty ? 3 : 0 %}
+					{% set hasLeftSidebar = layoutMode == 1 or layoutMode == 2 %}
+					{% set hasRightSidebar = layoutMode == 1 or layoutMode == 3 %}
+
+					<div class="row">
+						{% if hasLeftSidebar %}
+							<div class="col-lg-4 col-xl-3 d-none d-lg-block">
+								{% block leftSidebar %}{% endblock %}
+							</div>
+						{% endif %}
+
+						<div class="col-lg-{{ layoutMode == 0 ? 12 : 8 }} col-xl-{{ layoutMode == 0 ? 12 : layoutMode == 1 ? 6 : 9 }}">
+							{% block content %}{% endblock %}
+						</div>
+
+						{% if hasRightSidebar %}
+							<div class="col-xl-3 d-none d-xl-block">
+								{% block rightSidebar %}{% endblock %}
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% block footer %}
+			<hr class="mt-2"/>
+
+			<footer class="small text-muted my-2">
+				&copy; Copyright {{ "now"|date("Y") }} Gigadrive Group - All rights reserved.
+
+				<div class="float-right">
+					<a href="https://gigadrivegroup.com/legal/contact" target="_blank">Contact Info</a>
+
+					&bull;
+
+					<a href="https://gigadrivegroup.com/legal/terms-of-service" target="_blank">Terms of Service</a>
+
+					&bull;
+
+					<a href="https://gigadrivegroup.com/legal/privacy" target="_blank">Privacy Policy</a>
+
+					&bull;
+
+					<a href="https://gigadrivegroup.com/legal/disclaimer" target="_blank">Disclaimer</a>
+				</div>
+			</footer>
+		{% endblock %}
+	</div>
+{% endblock %}

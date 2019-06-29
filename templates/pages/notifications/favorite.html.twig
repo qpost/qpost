@@ -1,0 +1,15 @@
+{% set post = notification is defined and notification ? getEntryById(notification.post) %}
+{% set u = getUserById(notification.follower) %}
+
+{% if u %}
+	<div class="small text-muted">
+		<i class="fas fa-star" style="color:gold"></i> <a href="/{{ u.username }}"
+														  class="clearUnderline ignoreParentClick convertEmoji"><img
+					src="{{ u.avatarUrl }}" width="16" height="16"/> {{ u.displayName~u.renderCheckMark }}</a> favorited
+		your post &bull; {{ timeago(notification.time) }}
+	</div>
+
+	<hr/>
+
+	{{ post.toListHTML|raw }}
+{% endif %}

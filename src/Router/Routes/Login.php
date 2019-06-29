@@ -87,7 +87,7 @@ $app->bind("/login",function(){
 				}
 			}
 
-			return $this->render("views:Login.php with views:Layout.php",[
+			return twig_render("pages/login.html.twig", [
 				"title" => "Log in",
 				"errorMsg" => $errorMsg
 			]);

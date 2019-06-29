@@ -1,0 +1,23 @@
+{% extends "pages/profile/base.html.twig" %}
+
+{% block content %}
+	{{ parent() }}
+
+	{% if currentUser is defined and currentUser and user.id == currentUser.id %}
+		{{ renderCreatePostForm(["my-2"]) }}
+	{% endif %}
+
+	{% if posts is defined and posts|length > 0 %}
+		<ul class="list-group feedContainer mt-2">
+			{% for post in posts %}
+				{{ post.toListHTML|raw }}
+			{% endfor %}
+		</ul>
+
+		{{ paginate(currentPage,40,num,"/"~user.username~"/(:num)") }}
+	{% else %}
+		<div class="mt-2">
+			{{ createAlert("noEntries","<b>There's nothing here yet!</b><br/>@"~user.username~" has not posted anything yet!","info") }}
+		</div>
+	{% endif %}
+{% endblock %}

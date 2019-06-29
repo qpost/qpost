@@ -43,6 +43,8 @@ export default class Base {
 			})
 		});
 
+		NightMode.init();
+
 		$(".datepicker").datepicker();
 
 		$(".birthdayDatepicker").datepicker({
@@ -53,7 +55,6 @@ export default class Base {
 			return window["twemoji"].parse($(this).html());
 		}).removeClass("convertEmoji");
 
-		NightMode.init();
 		DismissibleAlert.init();
 	}
 

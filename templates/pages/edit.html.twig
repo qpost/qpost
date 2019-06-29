@@ -1,0 +1,135 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	{% if errorMsg is defined and errorMsg %}
+		{{ createAlert("errorMsg",errorMsg,"danger",true) }}
+	{% endif %}
+
+	{% if successMsg is defined and successMsg %}
+		{{ createAlert("successMsg",successMsg,"success",true) }}
+	{% endif %}
+
+	<form action="/edit" method="post" enctype="multipart/form-data">
+		{{ insertCSRF() }}
+
+		<fieldset>
+			<div class="form-group row">
+				<label for="displayName" class="control-label col-sm-2 col-form-label">Display name</label>
+
+				<div class="col-sm-10 input-group mb-3">
+					<input class="form-control" type="text" name="displayName" id="displayName" min="1" max="25"
+						   value="{{ _POST["displayName"] is defined and _POST["displayName"] ? sanatizeHTMLAttribute(_POST["displayName"]) : currentUser.displayName }}"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="username" class="control-label col-sm-2 col-form-label">Username</label>
+
+				<div class="col-sm-10 input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">@</span>
+					</div>
+					<input class="form-control disabled" type="text" min="3" max="16" name="username" id="username"
+						   value="{{ _POST["username"] is defined and _POST["username"] ? sanatizeHTMLAttribute(_POST["username"]) : currentUser.username }}"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<div class="col-sm-10 input-group mb-3 offset-sm-2 small">
+					<div class="w-100">You can only change your username every 30 days!</div>
+
+					{% if currentUser.gigadriveLinked %}
+						<div class="w-100">
+							This will <u>not</u> affect your username on <a href="https://gigadrivegroup.com/account"
+																			target="_blank" class="ml-1">gigadrivegroup.com</a>.
+						</div>
+					{% endif %}
+
+					{% if currentUser.verified %}
+						<div class="w-100">
+							Changing your username will result in losing your verified status.
+						</div>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="bio" class="control-label col-sm-2 col-form-label">Bio</label>
+
+				<div class="col-sm-10 input-group mb-3">
+					<textarea class="form-control" name="bio" id="bio" style="resize: none !important;"
+							  max="400">
+						{{ _POST["bio"] is defined and _POST["bio"] ? sanatizeString(_POST["bio"]) : currentUser.bio }}
+					</textarea>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="birthday" class="control-label col-sm-2 col-form-label">Birthday</label>
+
+				<div class="col-sm-10 input-group mb-3">
+					<input type="text" class="form-control birthdayDatepicker" name="birthday" id="birthday"
+						   value="{{ _POST["birthday"] is defined and _POST["birthday"] ? sanatizeHTMLAttribute(_POST["birthday"]) : currentUser.birthday|date("m/d/Y") }}"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="control-label col-sm-2 col-form-label">Profile Picture</label>
+
+				<div class="col-sm-10 mb-3 text-center">
+					<div class="mt-3">
+						<img src="{{ currentUser.avatarUrl }}" width="300" height="300" class="rounded"/>
+
+						<div class="custom-file mt-2">
+							<input type="file" class="custom-file-input" id="customFile" name="file">
+							<label class="custom-file-label text-left" for="customFile">Choose file</label>
+						</div>
+
+						<small>
+							Allowed file types: .jpg, .png, .gif | Max size: 1 MB<br/>
+							Optimal resolution: 300x300 pixels<br/>
+						</small>
+
+						<button type="submit" name="deleteProfilePicture" class="btn btn-danger btn-sm mt-2">
+							Remove my profile picture
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="featuredBoxTitle" class="control-label col-sm-2 col-form-label">Featured Box Title</label>
+
+				<div class="col-sm-10 input-group mb-3">
+					<input class="form-control" type="text" name="featuredBoxTitle" id="featuredBoxTitle" max="25"
+						   value="{{ _POST["featuredBoxTitle"] is defined and _POST["featuredBoxTitle"] ? sanatizeHTMLAttribute(_POST["featuredBoxTitle"]) : currentUser.featuredBoxTitle }}"
+						   placeholder="Featured"/>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="featuredBoxUser1" class="control-label col-sm-2 col-form-label">Featured Box Users</label>
+
+				<div class="col-sm-10 mb-3">
+					{% for i in 1..featuredBoxLimit %}
+						<div class="input-group mb-2">
+							<div class="input-group-prepend">
+								<span class="input-group-text">@</span>
+							</div>
+
+							<input class="form-control" type="text" name="featuredBoxUser{{ i }}"
+								   id="featuredBoxUser{{ i }}"
+								   value="{{ _POST["featuredBoxUser"~i] is defined and _POST["featuredBoxUser"~i] ? sanatizeHTMLAttribute(_POST["featuredBoxUser"~i]) : (currentUser.featuredBoxContent|length >= i ? getUserById(currentUser.featuredBoxContent[i-1].username) : "") }}"
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<div class="col-sm-10 input-group mb-3 offset-sm-2">
+					<button type="submit" name="submit" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}

@@ -13,7 +13,7 @@ $app->bind("/out",function(){
 				$host = Util::sanatizeString($host);
 				$link = Util::sanatizeString($link);
 
-				return $this->render("views:Out.php with views:Layout.php",[
+				return twig_render("pages/out.html.twig", [
 					"title" => "You are now headed to a different website",
 					"link" => $link,
 					"host" => $host

@@ -1,0 +1,177 @@
+{% extends "base.html.twig" %}
+
+{% block leaderboard %}
+	{% if currentUser is defined and currentUser and currentUser.hasBlocked(user) %}
+		{{ createAlert("blocking",'<b>You blocked @'~user.username~'</b><br/>@'~user.username~' won\'t be able to view your profile or posts.',"danger") }}
+	{% endif %}
+{% endblock %}
+
+{% block leftSidebar %}
+	<div class="sticky-top" style="top: 70px">
+		<div class="d-none d-lg-block">
+			<center><img class="rounded border-mainColor mb-2 border"
+						 src="{{ user.avatarUrl }}" width="200" height="200"/></center>
+			<h4 class="mb-0 convertEmoji"
+				style="word-wrap: break-word;">{{ user.displayName~user.renderCheckMark|raw }}</h4>
+			<span class="text-muted"
+				  style="font-size: 16px">@{{ user.username }}</span> {% if currentUser is defined and currentUser and user.isFollowing(currentUser) %}
+				<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>{% endif %}
+
+			{% if user.bio %}
+				<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">
+					{{ convertPost(user.bio) }}
+				</p>
+			{% endif %}
+
+			<p class="my-2 text-muted">
+				<i class="fas fa-globe"></i><span
+						style="margin-left: 5px">Joined {{ user.time|date("F Y") }}</span>
+				{% if user.birthday %}
+					<br/>
+					<i class="fas fa-birthday-cake"></i>
+					<span style="margin-left: 7px">{{ user.birthday|date("F jS Y") }}</span>
+				{% endif %}
+			</p>
+
+			{{ followButton(user,true,["btn-block","mt-2"],false) }}
+
+			{% if currentUser is defined and currentUser and currentUser.id != user.id %}
+				{% if currentUser.hasBlocked(user) %}
+					<form action="/{{ user.username }}" method="post">
+						{{ insertCSRF() }}
+						<input type="hidden" name="action" value="unblock"/>
+
+						<button type="submit" class="btn btn-light btn-block mt-2">
+							Unblock
+						</button>
+					</form>
+				{% else %}
+					<button type="button" class="btn btn-light btn-block mt-2" data-toggle="modal"
+							data-target="#blockModal">
+						Block
+					</button>
+				{% endif %}
+			{% endif %}
+		</div>
+
+		<div class="d-lg-none">
+			<div class="row">
+				<div class="col-4">
+					<center>
+						<img class="rounded border-mainColor mb-2 border w-100" src="{{ user.avatarUrl }}"
+							 style="max-width: 128px"/>
+					</center>
+				</div>
+
+				<div class="col-8">
+					<h4 class="mb-0 convertEmoji"
+						style="word-wrap: break-word;">{{ user.displayName~user.renderCheckMark|raw }}</h4>
+					<span class="text-muted"
+						  style="font-size: 16px">@{{ user.username }}</span> {% if currentUser is defined and currentUser and user.isFollowing(currentUser) %}
+						<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>{% endif %}
+
+					{% if user.bio %}
+						<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">
+							{{ convertPost(user.bio) }}
+						</p>
+					{% endif %}
+				</div>
+			</div>
+
+			<p class="my-2 text-muted">
+				<i class="fas fa-globe"></i><span
+						style="margin-left: 5px">Joined {{ user.time|date("F Y") }}</span>
+				{% if user.birthday %}
+					<i class="fas fa-birthday-cake ml-3"></i><span
+						style="margin-left: 7px">{{ user.birthday|date("F jS Y") }}</span>
+				{% endif %}
+			</p>
+
+			{{ followButton(user,true,[],false) }}
+
+			{% if currentUser is defined and currentUser and currentUser.id != user.id %}
+				{% if currentUser.hasBlocked(user) %}
+					<form action="/{{ user.username }}" method="post">
+						{{ insertCSRF() }}
+						<input type="hidden" name="action" value="unblock"/>
+
+						<button type="submit" class="btn btn-light">
+							Unblock
+						</button>
+					</form>
+				{% else %}
+					<button type="button" class="btn btn-light" data-toggle="modal"
+							data-target="#blockModal">
+						Block
+					</button>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block rightSidebar %}
+	<div class="sticky-top" style="top: 70px">
+		{% set followersYouFollow = user.followersYouFollow %}
+		{% if followersYouFollow is defined and followersYouFollow and followersYouFollow|length > 0 %}
+			<div class="mb-3">
+				<i class="far fa-user text-muted"></i> {{ followersYouFollow|length }}
+				follower{{ followersYouFollow|length > 1 ? "s" }} you know
+			</div>
+
+			{% for follower in followersYouFollow|slice(0,min(followersYouFollow|length,24)) %}
+				<div class="d-inline-block mr-1 mb-2">
+					<a href="/{{ follower.username }}" class="clearUnderline">
+						<img src="{{ follower.avatarUrl }}" class="rounded border border-mainColor" width="56"
+							 height="56" data-toggle="tooltip"
+							 title="{{ follower.displayName }} (@{{ follower.username }})"/>
+					</a>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+		{% set featuredBoxContent = user.featuredBoxContent %}
+		{% if featuredBoxContent and featuredBoxContent|length > 0 %}
+			{% set boxTitle = user.featuredBoxTitle|default("Featured") %}
+			<h5 class="mt-2 mb-0 convertEmoji" style="word-wrap: break-word;">
+				{{ boxTitle }}
+			</h5>
+
+			{% for uid in featuredBoxContent %}
+				{% set featuredUser = getUserById(uid) %}
+
+				{% if featuredUser is defined and featuredUser %}
+					<div class="my-2">
+						<a href="/{{ featuredUser.username }}" class="clearUnderline">
+							<div class="card">
+								<div class="px-2 py-2">
+									<img src="{{ featuredUser.avatarUrl }}" width="48" height="48"
+										 class="float-left rounded mr-2"/>
+
+									<div class="float-left">
+										<b class="float-left"
+										   style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 150px !important;">{{ featuredUser.displayName~featuredUser.renderCheckMark|raw }}</b>
+										<div class="small text-muted">
+											@{{ featuredUser.username }}
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+					</div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block content %}
+	<nav class="nav nav-pills nav-justified">
+		<a class="nav-item nav-link{{ profileTab is defined and profileTab == "FEED" ? " active" }}"
+		   href="/{{ user.username }}">Feed ({{ formatNumberShort(user.posts) }})</a>
+		<a class="nav-item nav-link{{ profileTab is defined and profileTab == "FOLLOWING" ? " active" }}"
+		   href="/{{ user.username }}/following">Following ({{ formatNumberShort(user.following) }})</a>
+		<a class="nav-item nav-link{{ profileTab is defined and profileTab == "FOLLOWERS" ? " active" }}"
+		   href="/{{ user.username }}/followers">Followers ({{ formatNumberShort(user.followers) }})</a>
+	</nav>
+{% endblock %}

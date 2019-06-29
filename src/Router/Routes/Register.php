@@ -140,7 +140,7 @@ $app->bind("/register",function(){
 								}
 							}
 
-							return $this->render("views:Register.php with views:Layout.php",[
+							return twig_render("pages/register.html.twig", [
 								"title" => "Register",
 								"id" => $id,
 								"username" => $username,

@@ -5,7 +5,7 @@ if (!(php_sapi_name() === 'cli')) {
 	exit(1);
 }
 
-require __DIR__ . "/../src/Load/Load.php";
+require __DIR__ . "/../src/bootstrap.php";
 
 function println($line) {
 	echo $line . PHP_EOL;

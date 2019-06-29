@@ -16,10 +16,13 @@
  */
 
 .homeBase {
-	background: url("/img/homebg.png") no-repeat bottom left;
-	height: 100%;
-	background-attachment: fixed;
+	background: url("/assets/img/homebg.png") no-repeat bottom left;
+	min-height: 100%;
 	background-size: cover;
+
+	@include media-breakpoint-down(md) {
+		padding-bottom: 20px;
+	}
 
 	@include media-breakpoint-up(md) {
 		background-position: right 120px;
@@ -47,37 +50,42 @@
 		font-weight: bold;
 	}
 
-	.homeRegisterBox {
-		@extend .text-primary, .card, .shadow, .mt-5;
-		font-weight: bold;
-		font-size: 24px;
-		padding: 30px 45px;
+	.homeRegisterBoxContainer {
+		@extend .row;
 
-		@include media-breakpoint-up(md) {
-			margin-top: 140px !important;
+		@include media-breakpoint-down(sm) {
+			padding: 0 20px;
 		}
 
-		.hline {
-			img {
-				@extend .ml-2;
+		.homeRegisterBox {
+			@extend .text-primary, .card, .shadow, .mt-5, .col-12, .col-lg-5, .offset-lg-7;
+			padding: 30px 45px;
 
-				height: 1em;
+			.hline {
+				font-weight: bold;
+				font-size: 24px;
+
+				img {
+					@extend .ml-2;
+
+					height: 1em;
+				}
 			}
-		}
 
-		form {
-			@include media-breakpoint-up(sm) {
-				float: right;
+			form {
+				@include media-breakpoint-up(sm) {
+					float: right;
+				}
 			}
-		}
 
-		@include media-breakpoint-only(xs) {
-			text-align: center;
+			@include media-breakpoint-only(xs) {
+				text-align: center;
 
-			button {
-				margin-top: 10px;
-				display: block;
-				width: 100%;
+				button {
+					margin-top: 10px;
+					display: block;
+					width: 100%;
+				}
 			}
 		}
 	}

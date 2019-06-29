@@ -129,14 +129,14 @@ class Util {
 
 		return null;
 	}
-	
+
 	/**
-     * Returns HTML Code that is converted to "x minutes ago" format via timeago.js
-	 * 
+	 * Returns HTML Code that is converted to "x minutes ago" format via timeago.js
+	 *
 	 * @access public
-     * @param string $timestamp
-     * @return string
-     */
+	 * @param string $timestamp
+	 * @return string
+	 */
 	public static function timeago($timestamp){
 		$str = strtotime($timestamp);
 
@@ -164,20 +164,6 @@ class Util {
 		}
 
 		return $input;
-	}
-
-	/**
-     * Returns HTML code to use in a form for CSRF attack prevention
-	 * 
-	 * @access public
-     * @return string
-     */
-	public static function insertCSRFToken(){
-		if(null !== CSRF_TOKEN){
-			return '<input type="hidden" name="csrf_token" value="' . self::sanatizeHTMLAttribute(CSRF_TOKEN) . '"/>';
-		}
-
-		return "";
 	}
 
 	/**

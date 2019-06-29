@@ -16,10 +16,10 @@ $app->bind("/delete",function(){
 
             return $this->reroute("/?msg=accountDeleted");
         } else {
-            return $this->render("views:Account/Delete.php with views:Layout.php",[
-                "title" => "Delete your account",
-                "nav" => NAV_ACCOUNT
-            ]);
+			return twig_render("pages/account/delete.html.twig", [
+				"title" => "Delete your account",
+				"nav" => NAV_ACCOUNT
+			]);
         }
 	} else {
 		return $this->reroute("/");

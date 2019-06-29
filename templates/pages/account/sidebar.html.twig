@@ -1,0 +1,34 @@
+<ul class="nav nav-pills flex-column">
+	<li class="nav-item">
+		<a class="nav-link{{ navPoint is defined and navPoint == "HOME" ? " active" }}" href="/account">
+			Account
+		</a>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link{{ navPoint is defined and navPoint == "PRIVACY" ? " active" }}" href="/account/privacy">
+			Privacy
+		</a>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link{{ navPoint is defined and navPoint == "SESSIONS" ? " active" }}" href="/account/sessions">
+			Active sessions
+		</a>
+	</li>
+
+	{% if currentUser.gigadriveLinked == false %}
+		<li class="nav-item">
+			<a class="nav-link{{ navPoint is defined and navPoint == "CHANGE_PASSWORD" ? " active" }}"
+			   href="/account/change-password">
+				Change password
+			</a>
+		</li>
+	{% endif %}
+
+	<li class="nav-item">
+		<a class="nav-link{{ navPoint is defined and navPoint == "LOGOUT" ? " active" }}" href="/logout">
+			Logout
+		</a>
+	</li>
+</ul>

@@ -7,10 +7,13 @@
         "riimu/kit-csrf": "^2.4",
         "tedivm/stash": "^0.14.2",
         "dereuromark/media-embed": "^0.4.2",
-        "php": ">= 7.2.0"
+		"php": ">= 7.2.0",
+		"twig/twig": "^2.11",
+		"twig/extensions": "^1.5"
     },
     "autoload": {
         "psr-4": {
+			"qpost\\": "src/",
             "": "src/"
         }
     }

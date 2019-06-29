@@ -12,5 +12,5 @@ if (DEBUG === true) {
 	ini_set("display_startup_errors", 0);
 }
 
-require_once "../src/Load/Load.php";
+require_once "../src/bootstrap.php";
 require_once "../src/Router/Router.php";

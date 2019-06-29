@@ -1,0 +1,71 @@
+{% extends "base.html.twig" %}
+
+{% block leftSidebar %}
+	{% include "pages/account/sidebar.html.twig" with {
+		"navPoint": "SESSIONS"
+	} %}
+{% endblock %}
+
+{% block content %}
+	{% if successMsg is defined and successMsg %}
+		{{ createAlert("successMsg",successMsg,"success") }}
+	{% endif %}
+
+	{% if errorMsg is defined and errorMsg %}
+		{{ createAlert("errorMsg",errorMsg,"error") }}
+	{% endif %}
+	<div class="card">
+		<table class="my-0 table">
+			<thead>
+			<tr>
+				<th>&nbsp;</th>
+				<th>Browser &amp; Platform</th>
+				<th>Location</th>
+				<th>Last access</th>
+				<th>&nbsp;</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			{% if sessions is defined and sessions|length > 0 %}
+				{% for session in sessions %}
+					<tr{{ session.current ? ' class="bg-dark text-white"' }}>
+						<td style="text-align: center; font-size: 36px;"><i class="{{ session.icon }}"></i></td>
+						<td>
+							{{ session.platform }}
+							{{ session.current ? "(current)" }}
+							<br/>
+							{{ session.browser }}
+							{{ session.browserVersion }}
+						</td>
+						<td>
+							{% if ipInfo is defined and ipinfo and ipInfo.data is defined and ipInfo.data and ipInfo.data.city is defined and ipInfo.data.city and ipInfo.data.country_name is defined and ipInfo.data.country_name %}
+								<span data-toggle="tooltip" title="IP: {{ session.ipInfo.ip }}">
+									{{ fixUmlaut(ipInfo.data.city) }}, {{ session.ipInfo.data.country_name }}
+								</span>
+							{% else %}
+								<span data-toggle="tooltip" title="IP: {{ session.token.ip }}">
+									N/A
+								</span>
+							{% endif %}
+						</td>
+						<td>{{ timeago(session.token.getLastAccessTime) }}</td>
+						<td>
+							{% if session.current %}
+								&nbsp;
+							{% else %}
+								<form action="/account/sessions" method="post">
+									{{ insertCSRF() }}
+									<input type="hidden" name="action" value="logOutSession"/>
+									<input type="hidden" name="sesstoken" value="{{ session.token.id }}"/>
+									<button type="submit" class="btn btn-sm btn-block btn-danger mt-2">Log out</button>
+								</form>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

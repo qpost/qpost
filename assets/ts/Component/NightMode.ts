@@ -3,6 +3,10 @@ import $ from "jquery";
 
 export default class NightMode {
 	public static init(): void {
+		if (window["FORCE_DISABLE_NIGHTMODE"]) {
+			return;
+		}
+
 		// load night mode
 		NightMode.setActive(NightMode.isActive());
 
