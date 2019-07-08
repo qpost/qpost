@@ -16,7 +16,8 @@
 		"ramsey/uuid": "^3.8",
 		"ext-curl": "^7.2",
 		"ext-mysqli": "^7.2",
-		"beberlei/doctrineextensions": "^1.2"
+		"beberlei/doctrineextensions": "^1.2",
+		"cboden/ratchet": "^0.4.1"
     },
     "autoload": {
         "psr-4": {
