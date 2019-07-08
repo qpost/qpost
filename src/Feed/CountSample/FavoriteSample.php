@@ -5,6 +5,7 @@ namespace qpost\Feed\CountSample;
 use qpost\Account\User;
 use qpost\Database\Database;
 use qpost\Feed\FeedEntry;
+use qpost\Feed\FeedEntryType;
 
 /**
  * Represents a count sample used to display a sample of users that favorited a feed entry
@@ -25,7 +26,7 @@ class FavoriteSample extends CountSample {
 		if(!is_null($feedEntry)){
 			$this->users = [];
 
-			if($feedEntry->getFavorites() > 0 && $feedEntry->getType() === FEED_ENTRY_TYPE_POST){
+			if ($feedEntry->getFavorites() > 0 && $feedEntry->getType() === FeedEntryType::POST) {
 				$mysqli = Database::Instance()->get();
 
 				$feedEntryId = $feedEntry->getId();

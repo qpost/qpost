@@ -2,8 +2,8 @@
 
 namespace qpost\Account;
 
-use qpost\Cache\CacheHandler;
-use qpost\Database\Database;
+use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents a suspension of an account
@@ -12,157 +12,59 @@ use qpost\Database\Database;
  * @author Gigadrive (support@gigadrivegroup.com)
  * @copyright 2016-2018 Gigadrive
  * @link https://gigadrivegroup.com/dev/technologies
+ *
+ * @ORM\Entity
  */
 class Suspension {
 	/**
-	 * Returns a suspension found by it's id
-	 *
-	 * @access public
-	 * @param int $id
-	 * @return Suspension
-	 */
-	public static function getSuspensionById($id){
-		$n = "suspension_id_" . $id;
-
-		if (CacheHandler::existsInCache($n)) {
-			return CacheHandler::getFromCache($n);
-		} else {
-			$suspension = new Suspension($id);
-			$suspension->reload();
-
-			if($suspension->exists == true){
-				return $suspension;
-			} else {
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * Returns an active suspension found by it's user
-	 *
-	 * @access public
-	 * @param int $user
-	 * @return Suspension
-	 */
-	public static function getSuspensionByUser($user){
-		$n = "suspension_user_" . $user;
-
-		if (CacheHandler::existsInCache($n)) {
-			return CacheHandler::getFromCache($n);
-		} else {
-			$id = null;
-
-			$mysqli = Database::Instance()->get();
-			$stmt = $mysqli->prepare("SELECT `id` FROM `suspensions` WHERE `target` = ? AND `active` = 1");
-			$stmt->bind_param("i",$user);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					$id = $row["id"];
-				}
-			}
-			$stmt->close();
-
-			return !is_null($id) ? self::getSuspensionById($id) : null;
-		}
-	}
-
-	/**
 	 * @access private
 	 * @var int $id
+	 *
+	 * @ORM\Id
+	 * @ORM\GeneratedValue
+	 * @ORM\Column(type="integer")
 	 */
 	private $id;
 
 	/**
 	 * @access private
-	 * @var int $target
+	 * @var User $target
+	 *
+	 * @ORM\OneToOne(targetEntity="User")
 	 */
 	private $target;
 
 	/**
 	 * @access private
-	 * @var string $reason
+	 * @var string|null $reason
+	 *
+	 * @ORM\Column(type="text",nullable=true)
 	 */
 	private $reason;
 
 	/**
 	 * @access private
-	 * @var int $staff
+	 * @var User $staff
+	 *
+	 * @ORM\OneToOne(targetEntity="User")
 	 */
 	private $staff;
 
 	/**
 	 * @access private
 	 * @var bool $active
+	 *
+	 * @ORM\Column(type="boolean")
 	 */
 	private $active;
 
 	/**
 	 * @access private
-	 * @var string $time
+	 * @var DateTime $time
+	 *
+	 * @ORM\Column(type="datetime")
 	 */
 	private $time;
-
-	/**
-	 * @access private
-	 * @var bool $exists
-	 */
-	private $exists = false;
-
-	/**
-	 * Constructor
-	 *
-	 * @access public
-	 * @param int $id
-	 */
-	protected function __construct($id){
-		$this->id = $id;
-	}
-
-	/**
-	 * Reloads the suspension data
-	 *
-	 * @access public
-	 */
-	public function reload(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT * FROM `suspensions` WHERE `id` = ?");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->id = $row["id"];
-				$this->target = $row["target"];
-				$this->reason = $row["reason"];
-				$this->staff = $row["staff"];
-				$this->active = $row["active"];
-				$this->time = $row["time"];
-
-				$this->exists = true;
-
-				$this->saveToCache();
-			}
-		}
-		$stmt->close();
-	}
-
-	/**
-	 * Saves the suspension data to the cache
-	 *
-	 * @access public
-	 */
-	public function saveToCache(){
-		CacheHandler::setToCache("suspension_id_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
-		if ($this->active == true) CacheHandler::setToCache("suspension_user_" . $this->target, $this, CacheHandler::OBJECT_CACHE_TIME);
-	}
 
 	/**
 	 * Returns the ID of this suspension
@@ -170,18 +72,17 @@ class Suspension {
 	 * @access public
 	 * @return int
 	 */
-	public function getId(){
+	public function getId(): int {
 		return $this->id;
 	}
 
 	/**
-	 * Returns the ID of this suspension's target
-	 *
-	 * @access public
-	 * @return int
+	 * @param int $id
+	 * @return Suspension
 	 */
-	public function getTargetId(){
-		return $this->target;
+	public function setId(int $id): self {
+		$this->id = $id;
+		return $this;
 	}
 
 	/**
@@ -190,28 +91,36 @@ class Suspension {
 	 * @access public
 	 * @return User
 	 */
-	public function getTarget(){
-		return User::getUserById($this->target);
+	public function getTarget(): User {
+		return $this->target;
+	}
+
+	/**
+	 * @param User $target
+	 * @return Suspension
+	 */
+	public function setTarget(User $target): self {
+		$this->target = $target;
+		return $this;
 	}
 
 	/**
 	 * Returns the reason of this suspension
 	 *
 	 * @access public
-	 * @return string
+	 * @return string|null
 	 */
-	public function getReason(){
+	public function getReason(): ?string {
 		return $this->reason;
 	}
 
 	/**
-	 * Returns the ID of this suspension's staff member
-	 *
-	 * @access public
-	 * @return int
+	 * @param string|null $reason
+	 * @return Suspension
 	 */
-	public function getStaffId(){
-		return $this->staff;
+	public function setReason(?string $reason): self {
+		$this->reason = $reason;
+		return $this;
 	}
 
 	/**
@@ -220,8 +129,17 @@ class Suspension {
 	 * @access public
 	 * @return User
 	 */
-	public function getStaff(){
-		return !is_null($this->staff) ? User::getUserById($this->staff) : null;
+	public function getStaff(): User {
+		return $this->staff;
+	}
+
+	/**
+	 * @param User $staff
+	 * @return Suspension
+	 */
+	public function setStaff(User $staff): self {
+		$this->staff = $staff;
+		return $this;
 	}
 
 	/**
@@ -230,17 +148,35 @@ class Suspension {
 	 * @access public
 	 * @return bool
 	 */
-	public function isActive(){
+	public function isActive(): bool {
 		return $this->active;
+	}
+
+	/**
+	 * @param bool $active
+	 * @return Suspension
+	 */
+	public function setActive(bool $active): self {
+		$this->active = $active;
+		return $this;
 	}
 
 	/**
 	 * Returns the timestamp of when this suspension was created
 	 *
 	 * @access public
-	 * @return string
+	 * @return DateTime
 	 */
-	public function getTime(){
+	public function getTime(): DateTime {
 		return $this->time;
+	}
+
+	/**
+	 * @param DateTime $time
+	 * @return Suspension
+	 */
+	public function setTime(DateTime $time): self {
+		$this->time = $time;
+		return $this;
 	}
 }

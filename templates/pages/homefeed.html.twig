@@ -1,4 +1,5 @@
 {% extends "base.html.twig" %}
+{% import "macro.html.twig" as macro %}
 
 {% block leftSidebar %}
 	<div class="homeFeedSidebar sticky-top" style="top: 70px">
@@ -13,7 +14,7 @@
 						<a href="/{{ currentUser.username }}" class="clearUnderline float-left">
 							<div class="font-weight-bold"
 								 style="max-width: 70px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">
-								{{ currentUser.displayName }}{{ currentUser.renderCheckMark }}
+								{{ currentUser.displayName }}{{ macro.verifiedBadge(currentUser) }}
 							</div>
 
 							<div class="text-muted small"
@@ -36,7 +37,7 @@
 							</div>
 
 							<div class="font-weight-bold text-uppercase float-right">
-								{{ formatNumberShort(currentUser.posts) }}
+								{{ formatNumberShort(currentUser.postCount) }}
 							</div>
 						</div>
 					</a>
@@ -48,7 +49,7 @@
 							</div>
 
 							<div class="font-weight-bold text-uppercase float-right">
-								{{ formatNumberShort(currentUser.following) }}
+								{{ formatNumberShort(currentUser.followingCount) }}
 							</div>
 						</div>
 					</a>
@@ -60,7 +61,7 @@
 							</div>
 
 							<div class="font-weight-bold text-uppercase float-right">
-								{{ formatNumberShort(currentUser.followers) }}
+								{{ formatNumberShort(currentUser.followerCount) }}
 							</div>
 						</div>
 					</a>
@@ -111,28 +112,33 @@
 					let a = true;
 					let adcount = 10;
 
-					json.result.forEach(post => {
-						let postId = post.id;
+					if (json.result.length > 0) {
+						json.result.forEach(post => {
+							let postId = post.id;
 
-						if (a == true) {
-							window["HOME_FEED_LAST_POST"] = postId;
-							a = false;
-						}
+							if (a == true) {
+								window["HOME_FEED_LAST_POST"] = postId;
+								a = false;
+							}
 
-						newHtml = newHtml.concat(post.listHtml);
+							newHtml = newHtml.concat(post.listHtml);
 
-						adcount--;
-						if (adcount == 0) {
-							newHtml = newHtml.concat(window["adbanner_leaderboard"](true, ["my-3"]));
-							adcount = 10;
-						}
-					});
+							adcount--;
+							if (adcount == 0) {
+								newHtml = newHtml.concat(window["adbanner_leaderboard"](true, ["my-3"]));
+								adcount = 10;
+							}
+						});
 
-					HOME_FEED_FIRST_POST = json.result[json.result.length - 1].id;
+						HOME_FEED_FIRST_POST = json.result[json.result.length - 1].id;
+
+						$(".homeFeedLoadMore").removeClass("d-none");
+					} else {
+						newHtml = '<div class="alert alert-info">Your home feed is currently empty.</div>';
+					}
 
 					$(".feedContainer").html(newHtml);
 					$(".homeFeedLoadSpinner").remove();
-					$(".homeFeedLoadMore").removeClass("d-none");
 
 					window["loadBasic"]();
 				} else {
@@ -146,6 +152,7 @@
 				console.log(error);
 
 				$(".feedContainer").html('<div class="alert alert-danger" role="alert">Failed to load home feed.</div>');
+				$(".homeFeedLoadSpinner").remove();
 			}
 		});
 	</script>
@@ -174,23 +181,21 @@
 
 				<div class="tab-content" id="users-tablist-content">
 					{% for suggestedUser in suggestedUsers %}
-						{% set mutuals = suggestedUser.mutuals %}
-						{% set u = suggestedUser.user %}
-
 						<div class="px-2 py-1 my-1" style="height: 70px">
-							<a href="/{{ u.username }}" class="clearUnderline float-left">
-								<img src="{{ u.avatarUrl }}" width="64" height="64" class="rounded"/>
+							<a href="/{{ suggestedUser.username }}" class="clearUnderline float-left">
+								<img src="{{ suggestedUser.avatarUrl }}" width="64" height="64" class="rounded"/>
 							</a>
 
 							<div class="ml-2 float-left">
-								<a href="/{{ u.username }}" class="clearUnderline" data-user-id="{{ u.id }}">
+								<a href="/{{ suggestedUser.username }}" class="clearUnderline"
+								   data-user-id="{{ suggestedUser.id }}">
 									<div class="text-muted small float-left mt-1"
 										 style="max-width: 160px; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">
-										@{{ u.username }}{{ u.renderCheckMark }}</div>
+										@{{ suggestedUser.username }}{{ macro.verifiedBadge(suggestedUser) }}</div>
 									<br/>
 								</a>
 
-								{{ followButton(u,true,["mt-0","btn-sm","ignoreParentClick"]) }}
+								{{ followButton(suggestedUser,true,["mt-0","btn-sm","ignoreParentClick"]) }}
 							</div>
 						</div>
 					{% endfor %}

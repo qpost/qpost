@@ -62,6 +62,8 @@ export default class HomeFeed {
 						}
 					} else {
 						console.log(result);
+
+						$(".homeFeedLoadMore").html('<b>Oops!</b><br/>An error occurred.');
 					}
 				},
 
@@ -69,6 +71,8 @@ export default class HomeFeed {
 					console.log(xhr);
 					console.log(status);
 					console.log(error);
+
+					$(".homeFeedLoadMore").html('<b>Oops!</b><br/>An error occurred.');
 				}
 			});
 		});

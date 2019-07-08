@@ -2,89 +2,45 @@
 
 namespace qpost\Util;
 
+use Exception;
 use JasonGrimes\Paginator;
 use MediaEmbed\MediaEmbed;
 use PHPMailer;
+use qpost\Account\Follower;
+use qpost\Account\FollowRequest;
 use qpost\Account\IPInformation;
 use qpost\Account\PrivacyLevel;
 use qpost\Account\Token;
 use qpost\Account\User;
-use qpost\Database\Database;
+use qpost\Block\Block;
+use qpost\Database\EntityManager;
+use qpost\Feed\Favorite;
 use qpost\Feed\FeedEntry;
+use qpost\Feed\Share;
 use qpost\Media\MediaFile;
-
-define("DEVELOPER_MODE",(isset($_SERVER["HTTP_HOST"]) && (explode(":",$_SERVER["HTTP_HOST"])[0] == "localhost" || explode(":",$_SERVER["HTTP_HOST"])[0] == "127.0.0.1")));
-define("DEFAULT_TWITTER_IMAGE","https://qpost.gigadrivegroup.com/android-chrome-192x192.png");
-
-define("NAV_HOME","NAV_HOME");
-define("NAV_PROFILE","NAV_PROFILE");
-define("NAV_NOTIFICATIONS","NAV_NOTIFICATIONS");
-define("NAV_MESSAGES","NAV_MESSAGES");
-define("NAV_ACCOUNT","NAV_ACCOUNT");
-
-define("ACCOUNT_NAV_HOME","ACCOUNT_NAV_HOME");
-define("ACCOUNT_NAV_PRIVACY","ACCOUNT_NAV_PRIVACY");
-define("ACCOUNT_NAV_SESSIONS","ACCOUNT_NAV_SESSIONS");
-define("ACCOUNT_NAV_CHANGE_PASSWORD","ACCOUNT_NAV_CHANGE_PASSWORD");
-define("ACCOUNT_NAV_LOGOUT","ACCOUNT_NAV_LOGOUT");
-
-define("ALERT_TYPE_INFO","info");
-define("ALERT_TYPE_WARNING","warning");
-define("ALERT_TYPE_DANGER","danger");
-define("ALERT_TYPE_SUCCESS","success");
-define("ALERT_TYPE_SECONDARY","secondary");
-define("ALERT_TYPE_LIGHT","light");
-define("ALERT_TYPE_PRIMARY","primary");
-
-define("PROFILE_TAB_FEED","PROFILE_TAB_FEED");
-define("PROFILE_TAB_FOLLOWING","PROFILE_TAB_FOLLOWING");
-define("PROFILE_TAB_FOLLOWERS","PROFILE_TAB_FOLLOWERS");
-
-define("FEED_ENTRY_TYPE_POST","POST");
-define("FEED_ENTRY_TYPE_NEW_FOLLOWING","NEW_FOLLOWING");
-define("FEED_ENTRY_SHARE","SHARE");
-
-define("NOTIFICATION_TYPE_NEW_FOLLOWER","NEW_FOLLOWER");
-define("NOTIFICATION_TYPE_MENTION","MENTION");
-define("NOTIFICATION_TYPE_FAVORITE","FAVORITE");
-define("NOTIFICATION_TYPE_SHARE","SHARE");
-define("NOTIFICATION_TYPE_REPLY","REPLY");
-
-if(DEVELOPER_MODE == true){
-	error_reporting(E_ALL);
-	ini_set("display_errors",1);
-	ini_set("display_startup_errors",1);
-} else {
-	error_reporting(E_ERROR);
-}
 
 /**
  * Utility functions
- * 
+ *
  * @package Util
  * @author Gigadrive (support@gigadrivegroup.com)
  * @copyright 2016-2018 Gigadrive
  * @link https://gigadrivegroup.com/dev/technologies
  */
 class Util {
-	public const AD_TYPE_LEADERBOARD = "AD_TYPE_LEADERBOARD";
-	public const AD_TYPE_HORIZONTAL = "AD_TYPE_LEADERBOARD";
-	public const AD_TYPE_BLOCK = "AD_TYPE_BLOCK";
-	public const AD_TYPE_VERTICAL = "AD_TYPE_VERTICAL";
-
 	/**
-     * Send an email via SMTP.
-	 * 
+	 * Send an email via SMTP.
+	 *
 	 * @access public
-     * @param string $to The email address of the recipient
+	 * @param string $to The email address of the recipient
 	 * @param string $subject The subject of the email
 	 * @param string $contentHTML The content of the email with HTML code
 	 * @param string $contentAlt The content of the email without HTML code
 	 * @param string $toName The name of the recipient, uses $to when null
 	 * @param string $fromName The name of the sender, uses "Gigadrive Group" when null
-     * @return bool Returns true if the email was sent successfully
-     */
-	public static function sendMail($to,$subject,$contentHTML,$contentAlt,$toName = null,$fromName = null){
+	 * @return bool Returns true if the email was sent successfully
+	 */
+	public static function sendMail($to, $subject, $contentHTML, $contentAlt, $toName = null, $fromName = null): bool {
 		$mail = new PHPMailer;
 		$mail->CharSet = "UTF-8";
 		$mail->Encoding = "base64";
@@ -97,12 +53,12 @@ class Util {
 		$mail->SMTPAuth = true;
 		$mail->Username = MAIL_USER;
 		$mail->Password = MAIL_PASSWORD;
-		$mail->setFrom(MAIL_USER,is_null($fromName) ? "Gigadrive Group" : $fromName);
+		$mail->setFrom(MAIL_SEND_AS, is_null($fromName) ? "Gigadrive Group" : $fromName);
 		$mail->addAddress($to,is_null($toName) ? $to : $toName);
 		$mail->Subject = $subject;
 		$mail->msgHTML($contentHTML);
 		$mail->AltBody = $contentAlt;
-		
+
 		if(!$mail->send()){
 			return false;
 		} else {
@@ -112,47 +68,45 @@ class Util {
 
 	/**
 	 * Returns the user object for the currently logged in user
-	 * 
+	 *
 	 * @access public
 	 * @return User
 	 */
-	public static function getCurrentUser(){
-		if(isset($_COOKIE["sesstoken"]) && !Util::isEmpty($_COOKIE["sesstoken"])){
-			$token = Token::getTokenById($_COOKIE["sesstoken"]);
-
-			if(!is_null($token)){
-				if($token->isExpired() == false){
-					return $token->getUser();
-				}
-			}
+	public static function getCurrentUser(): ?User {
+		$token = self::getCurrentToken();
+		if ($token) {
+			return $token->getUser();
 		}
 
 		return null;
 	}
 
 	/**
-	 * Returns HTML Code that is converted to "x minutes ago" format via timeago.js
-	 *
-	 * @access public
-	 * @param string $timestamp
-	 * @return string
+	 * @return Token|null
 	 */
-	public static function timeago($timestamp){
-		$str = strtotime($timestamp);
+	public static function getCurrentToken(): ?Token {
+		if (isset($_COOKIE["sesstoken"]) && !Util::isEmpty($_COOKIE["sesstoken"])) {
+			/**
+			 * @var Token $token
+			 */
+			$token = EntityManager::instance()->getRepository(Token::class)->findOneBy([
+				"id" => $_COOKIE["sesstoken"]
+			]);
 
-		$timestamp = date("Y",$str) . "-" . date("m",$str) . "-" . date("d",$str) . "T" . date("H",$str) . ":" . date("i",$str) . ":" . date("s",$str) . "Z";
+			return $token;
+		}
 
-		return '<time class="timeago" datetime="' . $timestamp . '" title="' . date("d",$str) . "." . date("m",$str) . "." . date("Y",$str) . " " . date("H",$str) . ":" . date("i",$str) . ":" . date("s",$str) . ' UTC">' . $timestamp . '</time>';
+		return null;
 	}
 
 	/**
-     * Converts ae, oe and ue to their german umlaut equivalents
-	 * 
+	 * Converts ae, oe and ue to their german umlaut equivalents
+	 *
 	 * @access public
-     * @param string $input
-     * @return string
-     */
-	public static function fixUmlaut($input){
+	 * @param string $input
+	 * @return string
+	 */
+	public static function fixUmlaut($input): string {
 		$a = [
 			"ae" => "ä",
 			"oe" => "ö",
@@ -167,61 +121,17 @@ class Util {
 	}
 
 	/**
-     * Returns HTML code to use for an advertisment banner
-	 * 
+	 * Returns HTML code for a bootstrap alert
+	 *
 	 * @access public
-     * @param string $type Use AD_TYPE_* constants
-	 * @param bool $center If true, the returned HTML code will be wrapped in a <center> element
-	 * @param string[] $classes An array of css classes to be added
-     * @return string
-     */
-	public static function renderAd($type,$center = false,$classes = null){
-		if($type == Util::AD_TYPE_LEADERBOARD){
-			/*return ($center == true ? "<center>" : "") . '<div class="' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? implode(" ",$classes) : "") . '"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-			<ins class="adsbygoogle"
-				style="display:block"
-				data-ad-client="ca-pub-6156128043207415"
-				data-ad-slot="1055807482"
-				data-ad-format="auto"></ins>
-			<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script></div>' . ($center == true ? "</center>" : "");*/
-			return '<div class="advertisment leaderboard"></div>';
-		} else if($type == Util::AD_TYPE_VERTICAL){
-			/*return ($center == true ? "<center>" : "") . '<div class="' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? implode(" ",$classes) : "") . '"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-			<ins class="adsbygoogle"
-				 style="display:inline-block;width:120px;height:600px"
-				 data-ad-client="ca-pub-6156128043207415"
-				 data-ad-slot="1788401303"></ins>
-			<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script></div>' . ($center == true ? "</center>" : "");*/
-			return '<div class="advertisment vertical"></div>';
-		} else if($type == Util::AD_TYPE_BLOCK){
-			/*return ($center == true ? "<center>" : "") . '<div class="' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? implode(" ",$classes) : "") . '"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-			<ins class="adsbygoogle"
-				style="display:inline-block;width:336px;height:280px"
-				data-ad-client="ca-pub-6156128043207415"
-				data-ad-slot="7069637483"></ins>
-			<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script></div>' . ($center == true ? "</center>" : "");*/
-			return '<div class="advertisment block"></div>';
-		}
-	}
-
-	/**
-     * Returns HTML code for a bootstrap alert
-	 * 
-	 * @access public
-     * @param string $id A string that identifies this alert, mainly used for saving dismissal
+	 * @param string $id A string that identifies this alert, mainly used for saving dismissal
 	 * @param string $text The text displayed in this alert (may contain HTML)
 	 * @param string $type Use ALERT_TYPE_* constants
 	 * @param bool $dismissible If true, an icon will be displayed to dismiss this alert
 	 * @param bool $saveDismiss If true, a cookie will be set on dismissal and this alert won't be shown again
-     * @return string HTML code for the alert
-     */
-	public static function createAlert($id,$text,$type = ALERT_TYPE_INFO,$dismissible = FALSE,$saveDismiss = FALSE){
+	 * @return string HTML code for the alert
+	 */
+	public static function createAlert($id, $text, $type = "info", $dismissible = FALSE, $saveDismiss = FALSE): string {
 		$cookieName = "registeredAlert" . $id;
 
 		if($dismissible == false){
@@ -235,33 +145,35 @@ class Util {
 
 	/**
 	 * Sets a cookie for a specific amount of days to the user's browser
-	 * 
+	 *
 	 * @access public
 	 * @param string $name The cookie name
 	 * @param string $value The cookie value
 	 * @param int $days The time in days the cookie will last for
+	 * @return bool
 	 */
-	public static function setCookie($name,$value,$days){
-		setcookie($name,$value,time()+(60*60*24)*$days);
+	public static function setCookie($name, $value, $days): bool {
+		return setcookie($name, $value, time() + (60 * 60 * 24) * $days);
 	}
 
 	/**
 	 * Removes a cookie from the user's browser
-	 * 
+	 *
 	 * @access public
 	 * @param string $name The cookie name
+	 * @return bool
 	 */
-	public static function unsetCookie($name){
-		setcookie($name,"",time()-3600);
+	public static function unsetCookie($name): bool {
+		return setcookie($name, "", time() - 3600);
 	}
-	
+
 	/**
-     * Gets an array of country code -> country name equivalents
-	 * 
+	 * Gets an array of country code -> country name equivalents
+	 *
 	 * @access public
-     * @return array
-     */
-	public static function getCountryCodeArray(){
+	 * @return array
+	 */
+	public static function getCountryCodeArray(): array {
 		return array(
 			'AF' => 'Afghanistan',
 			'AX' => 'Aland Islands',
@@ -510,31 +422,32 @@ class Util {
 			'ZW' => 'Zimbabwe',
 		);
 	}
-	
+
 	/**
-     * Returns a random string of characters
-	 * 
+	 * Returns a random string of characters
+	 *
 	 * @access public
-     * @param int $length The maximum length of the string (the actual length will be something between this number and the half of it)
+	 * @param int $length The maximum length of the string (the actual length will be something between this number and the half of it)
 	 * @return string
-     */
-	public static function getRandomString($length = 16) {
-		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	 */
+	public static function getRandomString($length = 16): string {
+		$characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		$charactersLength = strlen($characters);
-		$randomString = '';
+		$randomString = "";
 		for ($i = 0; $i < rand($length/2,$length); $i++) {
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		}
+
 		return $randomString;
 	}
-	
+
 	/**
-     * Generates a UUID
-	 * 
+	 * Generates a UUID
+	 *
 	 * @access public
-     * @return string
-     */
-	public static function gen_uuid() {
+	 * @return string
+	 */
+	public static function gen_uuid(): string {
 		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
 			mt_rand( 0, 0xffff ),
@@ -545,101 +458,24 @@ class Util {
 	}
 
 	/**
-     * Gets whether the user is currently logged in.
-	 * 
+	 * Gets whether the user is currently logged in.
+	 *
 	 * @access public
-     * @return bool
-     */
-	public static function isLoggedIn(){
+	 * @return bool
+	 */
+	public static function isLoggedIn(): bool {
 		return !is_null(self::getCurrentUser());
 	}
 
 	/**
-	 * Returns whether an email is available
-	 * 
+	 * Gets the current user's IP address
+	 *
 	 * @access public
-	 * @param string $email
-	 * @return bool
+	 * @return string|null The IP address (might be an IPv6 address)
 	 */
-	public static function isEmailAvailable($email){
-		$b = true;
+	public static function getIP(): ?string {
+		$ip = null;
 
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `users` WHERE `email` = ?");
-		$stmt->bind_param("s",$email);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				if($row["count"] > 0){
-					$b = false;
-				} else {
-					$b = true;
-				}
-			}
-		}
-		$stmt->close();
-
-		return $b;
-	}
-
-	/**
-	 * Returns whether an username is available
-	 * 
-	 * @access public
-	 * @param string $username
-	 * @param Lime\App $app
-	 * @return bool
-	 */
-	public static function isUsernameAvailable($username,$app = null){
-		$b = true;
-
-		$lowerName = strtolower($username);
-
-		if(!is_null($app)){
-			foreach($app->routes as $route => $closure){
-				$lowerRoute = strtolower($route);
-
-				if($lowerRoute == $lowerName) return false;
-				if(strlen($lowerRoute) > 1 && substr(1,strlen($lowerRoute)) == $lowerName) return false;
-				if(str_replace("/","",str_replace(":","",$lowerRoute)) == $lowerName) return false;
-			}
-		}
-
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `users` WHERE `username` = ?");
-		$stmt->bind_param("s",$username);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				if($row["count"] > 0){
-					$b = false;
-				} else {
-					$b = true;
-				}
-			}
-		}
-		$stmt->close();
-
-		return $b;
-	}
-
-	/**
-     * Gets the current user's IP address
-	 * 
-	 * @access public
-     * @return string The IP address (might be an IPv6 address)
-     */
-	public static function getIP(){
-		$ip = "undefined";
-		
 		if (isset($_SERVER['HTTP_CLIENT_IP']) && !Util::isEmpty($_SERVER['HTTP_CLIENT_IP'])) {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
 		} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !Util::isEmpty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -647,16 +483,16 @@ class Util {
 		} else if(isset($_SERVER['REMOTE_ADDR'])) {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
-		
+
 		return $ip;
 	}
 
 	/**
-     * Removes outdated files and folders from the tmp folder (this check is being done automatically, there is no need to call this function!)
-	 * 
+	 * Removes outdated files and folders from the tmp folder (this check is being done automatically, there is no need to call this function!)
+	 *
 	 * @access public
-     */
-	public static function cleanupTempFolder(){
+	 */
+	public static function cleanupTempFolder(): void {
 		$files = glob($_SERVER["DOCUMENT_ROOT"] . "/tmp/*");
 		$now = time();
 
@@ -671,14 +507,14 @@ class Util {
 
 	/**
 	 * Gets whether a string starts with another
-	 * 
+	 *
 	 * @access public
 	 * @param string $string The string in subject
 	 * @param string $start The string to be checked whether it is the start of $string
 	 * @param bool $ignoreCase If true, the case of the strings won't affect the result
 	 * @return bool
 	 */
-	public static function startsWith($string,$start,$ignoreCase = false){
+	public static function startsWith($string, $start, $ignoreCase = false): bool {
 		if(strlen($start) <= strlen($string)){
 			if($ignoreCase == true){
 				return substr($string,0,strlen($start)) == $start;
@@ -691,13 +527,13 @@ class Util {
 	}
 
 	/**
-     * Stores a file on the Gigadrive CDN to use in the future and returns the full final URL (null if the upload fails)
-	 * 
+	 * Stores a file on the Gigadrive CDN to use in the future and returns the full final URL (null if the upload fails)
+	 *
 	 * @access public
 	 * @param string $file The path of the file to be uploaded
-     * @return string|null
-     */
-	public static function storeFileOnCDN($file){
+	 * @return string|array|null
+	 */
+	public static function storeFileOnCDN($file) {
 		try {
 			$curl = curl_init();
 			curl_setopt_array($curl,array(
@@ -709,7 +545,7 @@ class Util {
 				),
 				CURLOPT_RETURNTRANSFER => 1
 			));
-	
+
 			$result = curl_exec($curl);
 
 			if($result === false){
@@ -722,7 +558,7 @@ class Util {
 			if(isset($fileData["success"]) && isset($fileData["file"]) && isset($fileData["file"]["url"])){
 				return ["result" => $result, "url" => $fileData["file"]["url"]];
 			}
-	
+
 			return null;
 		} catch(Exception $e){
 			return ["error" => $e->getMessage()];
@@ -730,25 +566,25 @@ class Util {
 	}
 
 	/**
-     * Checks whether a string contains another string
-	 * 
+	 * Checks whether a string contains another string
+	 *
 	 * @access public
-     * @param string $string The full string
+	 * @param string $string The full string
 	 * @param string $check The substring to be checked
 	 * @return bool
-     */
-	public static function contains($string,$check){
+	 */
+	public static function contains($string, $check): bool {
 		return strpos($string,$check) !== false;
 	}
 
 	/**
 	 * Returns wheter a string or array is empty
-	 * 
+	 *
 	 * @access public
 	 * @param string|array $var
 	 * @return bool
 	 */
-	public static function isEmpty($var){
+	public static function isEmpty($var): bool {
 		if(is_array($var)){
 			return count($var) == 0;
 		} else if(is_string($var)){
@@ -759,15 +595,15 @@ class Util {
 	}
 
 	/**
-     * Limits a string to a specific length and adds "..." to the end if needed
-	 * 
+	 * Limits a string to a specific length and adds "..." to the end if needed
+	 *
 	 * @access public
-     * @param string $string
+	 * @param string $string
 	 * @param int $length
 	 * @param bool $addDots
-     * @return string
-     */
-	public static function limitString($string,$length,$addDots = false){
+	 * @return string
+	 */
+	public static function limitString($string, $length, $addDots = false): string {
 		if(strlen($string) > $length)
 			$string = substr($string,0,($addDots ? $length-3 : $length)) . ($addDots ? "..." : "");
 
@@ -776,55 +612,56 @@ class Util {
 
 	/**
 	 * Returns HTML code for a verified badge
-	 * 
+	 *
 	 * @access public
 	 * @param int $size The size of the badge in px (possible values are 16, 20, 24, 32, 48, 64, 128, 256 and 512)
 	 * @return string
 	 */
-	public static function getVerifiedBadge($size = 16){
+	public static function getVerifiedBadge($size = 16): string {
 		return '<img src="/assets/img/verified/' . $size . '.png"/>';
 	}
 
 	/**
 	 * Returns a sanatized string that avoids prepending or traling spaces and XSS attacks
-	 * 
+	 *
 	 * @access public
 	 * @param string $string The string to sanatize
 	 * @return string
 	 */
-	public static function sanatizeString($string){
+	public static function sanatizeString($string): string {
 		return trim(htmlentities($string));
 	}
 
 	/**
 	 * Opposite of sanatizeString()
-	 * 
+	 *
 	 * @access public
 	 * @param string $string
 	 * @return string
 	 */
-	public static function desanatizeString($string){
+	public static function desanatizeString($string): string {
 		return html_entity_decode($string);
 	}
 
 	/**
 	 * Returns a sanatzied string to use in HTML attributes (avoids problems with quotations)
-	 * 
+	 *
 	 * @access public
 	 * @param string $string The string to sanatize
 	 * @return string
 	 */
-	public static function sanatizeHTMLAttribute($string){
+	public static function sanatizeHTMLAttribute($string): string {
 		return trim(htmlspecialchars($string, ENT_QUOTES | ENT_HTML5, "UTF-8"));
 	}
 
 	/**
 	 * Returns whether a string is valid json
-	 * 
+	 *
 	 * @access public
+	 * @param string $string
 	 * @return bool
 	 */
-	public static function isValidJSON($string){
+	public static function isValidJSON($string): bool {
 		if(Util::isEmpty($string)) return false;
 		if(!self::startsWith($string,"{") && !self::startsWith($string,"[")) return false;
 
@@ -834,12 +671,12 @@ class Util {
 
 	/**
 	 * Converts \n characters to <br/>
-	 * 
+	 *
 	 * @access public
 	 * @param string $string
 	 * @return string
 	 */
-	public static function convertLineBreaksToHTML($string){
+	public static function convertLineBreaksToHTML($string): string {
 		return preg_replace("/(<br {0,}\/{0,1}>(\\r|\\n){0,}){2,}/","<br class=\"reduced\" />",nl2br($string));
 		/*$s = trim(str_replace("\n","<br/>",$string));
 
@@ -853,7 +690,7 @@ class Util {
 
 	/**
 	 * Returns code for a paginator
-	 * 
+	 *
 	 * @access public
 	 * @param int $page
 	 * @param int $itemsPerPage
@@ -861,13 +698,13 @@ class Util {
 	 * @param string $urlPattern
 	 * @return string
 	 */
-	public static function paginate($page,$itemsPerPage,$total,$urlPattern){
+	public static function paginate($page, $itemsPerPage, $total, $urlPattern): string {
 		$paginator = new Paginator($total, $itemsPerPage, $page, $urlPattern);
 
 		$p = "";
 
 		if ($paginator->getNumPages() > 1){
-			
+
 			$p .= '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center mt-3">';
 
 			if ($paginator->getPrevUrl())
@@ -887,21 +724,21 @@ class Util {
 			$p .= '</nav>';
 
 		}
-	
+
 		return $p;
 	}
 
 	/**
 	 * Returns the index of a variable in an array
-	 * 
+	 *
 	 * @access public
 	 * @param array $array
 	 * @param mixed $var
 	 * @return int Returns -1 if the variable could not be found in the array
 	 */
-	public static function indexOf($array,$var){
+	public static function indexOf($array, $var): int {
 		if(count($array) > 0 && in_array($var,$array)){
-			for($i = 0; $i < count($array); $i++) { 
+			for($i = 0; $i < count($array); $i++) {
 				if(isset($array[$i]) && $array[$i] == $var){
 					return $i;
 				}
@@ -913,13 +750,13 @@ class Util {
 
 	/**
 	 * Removes an entry from an array and returns the new array
-	 * 
+	 *
 	 * @access public
 	 * @param array $array
 	 * @param mixed $var
 	 * @return array
 	 */
-	public static function removeFromArray($array,$var){
+	public static function removeFromArray($array, $var): array {
 		$i = self::indexOf($array,$var);
 
 		while($i != -1){
@@ -933,63 +770,62 @@ class Util {
 
 	/**
 	 * Returns HTML code for a follow button
-	 * 
+	 *
 	 * @access public
-	 * @param int|User $user The user to follow
+	 * @param User $user The user to follow
 	 * @param bool $defaultToEdit If true, an "Edit Profile" button will be returned if $user is the currently logged in user
 	 * @param array $classes The CSS classes to be added to the button
 	 * @param bool $showBlocked If true, a "Blocked" button will be returned if the $user is blocked by the currently logged in user
 	 * @return string
 	 */
-	public static function followButton($user,$defaultToEdit = false,$classes = null,$showBlocked = true){
-		if(is_object($user))
-			$user = $user->getId();
-
+	public static function followButton(User $user, $defaultToEdit = false, $classes = null, $showBlocked = true): string {
 		$classString = !is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "";
 
 		if(self::isLoggedIn()){
 			$currentUser = Util::getCurrentUser();
 
-			if($currentUser->hasBlocked($user)){
+			if (Block::hasBlocked($currentUser, $user)) {
 				if($showBlocked){
 					return '<button type="button" class="btn btn-danger' . $classString . '">Blocked</button>';
 				}
 			} else {
-				if($defaultToEdit && $currentUser->getId() == $user){
+				if ($defaultToEdit && $currentUser->getId() == $user->getId()) {
 					return '<a href="/edit" class="btn btn-light' . $classString . '">Edit profile</a>';
-				} else if($currentUser->getId() != $user){
-					if(User::getUserById($user)->getPrivacyLevel() == PrivacyLevel::PUBLIC){
-						if($currentUser->isFollowing($user)){
-							return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '">Unfollow</button>';
+				} else if ($currentUser->getId() != $user->getId()) {
+					if ($user->getPrivacyLevel() == PrivacyLevel::PUBLIC) {
+						if (Follower::isFollowing($currentUser, $user)) {
+							return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user->getId() . '">Unfollow</button>';
 						} else {
-							return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '">Follow</button>';
+							return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user->getId() . '">Follow</button>';
 						}
-					} else if(User::getUserById($user)->getPrivacyLevel() == PrivacyLevel::PRIVATE){
-						if($currentUser->isFollowing($user)){
-							return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user . '">Unfollow</button>';
+					} else if ($user->getPrivacyLevel() == PrivacyLevel::PRIVATE) {
+						if (Follower::isFollowing($currentUser, $user)) {
+							return '<button type="button" class="unfollowButton btn btn-danger' . $classString . '" data-user-id="' . $user->getId() . '">Unfollow</button>';
 						} else {
-							if($currentUser->hasSentFollowRequest($user)){
-								return '<button type="button" class="pendingButton btn btn-warning' . $classString . '" data-user-id="' . $user . '">Pending</button>';
+							if (FollowRequest::hasSentFollowRequest($currentUser, $user)) {
+								return '<button type="button" class="pendingButton btn btn-warning' . $classString . '" data-user-id="' . $user->getId() . '">Pending</button>';
 							} else {
-								return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user . '">Follow</button>';
+								return '<button type="button" class="followButton btn btn-primary' . $classString . '" data-user-id="' . $user->getId() . '">Follow</button>';
 							}
 						}
-					} else if(User::getUserById($user)->getPrivacyLevel() == PrivacyLevel::CLOSED){
+					} else if ($user->getPrivacyLevel() == PrivacyLevel::CLOSED) {
 						return "";
 					}
 				}
 			}
 		}
+
+		return "";
 	}
 
 	/**
 	 * Returns a link that shows a warning for $link, returns $link if the host of the link is equal to HTTP_HOST
-	 * 
+	 *
 	 * @access public
 	 * @param string $link
 	 * @return string
 	 */
-	public static function linkWarning($link){
+	public static function linkWarning($link): string {
 		if(isset($_SERVER["HTTP_HOST"]) && $_SERVER["HTTP_HOST"] != parse_url($link,PHP_URL_HOST)){
 			return "/out?link=" . urlencode($link);
 		} else {
@@ -999,34 +835,37 @@ class Util {
 
 	/**
 	 * Returns an array of data used in a JSON API for a post
-	 * 
+	 *
 	 * @access public
-	 * @param int|FeedEntry $postId
+	 * @param FeedEntry|null $post
 	 * @param int $parentDepth
 	 * @return array
 	 */
-	public static function postJsonData($postId,$parentDepth = 0){
-		if(is_object($postId)) $postId = $postId->getId();
-		$post = !is_null($postId) ? FeedEntry::getEntryById($postId) : null;
+	public static function postJsonData(?FeedEntry $post, $parentDepth = 0): ?array {
 		if(!is_null($post)){
 			$attachments = [];
+			$mediaFiles = [];
 
-			foreach($post->getAttachments() as $attachmentId)
-				array_push($attachments,self::mediaJsonData($attachmentId,$postId));
+			foreach ($post->getAttachments() as $attachment) {
+				$mediaFile = $attachment->getMediaFile();
+
+				array_push($attachments, self::mediaJsonData($mediaFile));
+				array_push($mediaFiles, $mediaFile);
+			}
 
 			return [
 				"id" => $post->getId(),
 				"user" => self::userJsonData($post->getUser()),
 				"text" => Util::convertPost($post->getText()),
 				"textUnfiltered" => Util::sanatizeString($post->getText()),
-				"time" => Util::timeago($post->getTime()),
-				"shares" => $post->getShares(),
-				"favorites" => $post->getFavorites(),
+				"time" => $post->getTime()->format("Y-m-d H:i:s"),
+				"shares" => $post->getShareCount(),
+				"favorites" => $post->getFavoriteCount(),
 				"attachments" => $attachments,
 				"postActionButtons" => self::getPostActionButtons($post),
 				"listHtml" => $post->toListHTML(),
-				"attachmentHtml" => Util::renderAttachmentEmbeds($post->getAttachmentObjects(),$postId),
-				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPostId()) ? self::postJsonData($post->getPostId(),$parentDepth+1) : null)
+				"attachmentHtml" => Util::renderAttachmentEmbeds($mediaFiles, $post->getId()),
+				"parent" => ($parentDepth <= MAX_PARENT_DEPTH && !is_null($post->getPost()) ? self::postJsonData($post->getPost(), $parentDepth + 1) : null)
 			];
 		} else {
 			return null;
@@ -1035,15 +874,12 @@ class Util {
 
 	/**
 	 * Returns an array of data used in a JSON API for a media file
-	 * 
+	 *
 	 * @access public
-	 * @param string|MediaFile $mediaId
-	 * @param int $postId
+	 * @param MediaFile $mediaFile
 	 * @return array
 	 */
-	public static function mediaJsonData($mediaId,$postId = null){
-		if(is_object($mediaId)) $mediaId = $mediaId->getId();
-		$mediaFile = !is_null($mediaId) ? MediaFile::getMediaFileFromID($mediaId) : null;
+	public static function mediaJsonData(MediaFile $mediaFile): array {
 		if(!is_null($mediaFile)){
 			return [
 				"id" => $mediaFile->getId(),
@@ -1057,14 +893,12 @@ class Util {
 
 	/**
 	 * Returns an array of data used in a JSON API for a user
-	 * 
+	 *
 	 * @access public
-	 * @param int|User $userId
+	 * @param User $user
 	 * @return array
 	 */
-	public static function userJsonData($userId){
-		if(is_object($userId)) $userId = $userId->getId();
-		$user = !is_null($userId) ? User::getUserById($userId) : null;
+	public static function userJsonData(User $user): array {
 		if(!is_null($user)){
 			return [
 				"id" => $user->getId(),
@@ -1073,7 +907,7 @@ class Util {
 				"avatar" => $user->getAvatarURL(),
 				"bio" => $user->getBio(),
 				"verified" => $user->isVerified(),
-				"verifiedIcon" => $user->renderCheckMark()
+				"verifiedIcon" => "" # TODO
 			];
 		} else {
 			return null;
@@ -1082,34 +916,34 @@ class Util {
 
 	/**
 	 * Converts links in a string to HTML links
-	 * 
+	 *
 	 * @access public
 	 * @param string $string
 	 * @return string
 	 */
-	public static function convertLinks($string){
+	public static function convertLinks($string): string {
 		return preg_replace("!(\s|^)((https?://|www\.)+[a-z0-9_./?=&-]+)!i", " <a href=\"$2\" class=\"filterLink ignoreParentClick\">$2</a> ",$string);
 	}
 
 	/**
 	 * Converts hashtags in a string to HTML links
-	 * 
+	 *
 	 * @access public
 	 * @param string $string
 	 * @return string
 	 */
-	public static function convertHashtags($string){
+	public static function convertHashtags($string): string {
 		return str_replace("/#","/", preg_replace("/(?:^|\s)#(\w+)/", " <a href=\"/search?query=" . urlencode("#") . "$1\" class=\"ignoreParentClick\">#$1</a>", $string));
 	}
 
 	/**
 	 * Converts mentions in a string to HTML links
-	 * 
+	 *
 	 * @access public
 	 * @param string $string
 	 * @return string
 	 */
-	public static function convertMentions($string){
+	public static function convertMentions($string): string {
 		//return preg_replace("/@(\w+)/i", "<a href=\"/$1\" class=\"ignoreParentClick\">$0</a>", $string);
 
 		$mentions = self::getUsersMentioned($string);
@@ -1123,23 +957,23 @@ class Util {
 
 	/**
 	 * Converts URLs, hashtags, mentions and line breaks in a post text to HTML links
-	 * 
+	 *
 	 * @access public
 	 * @param string $string
 	 * @return string
 	 */
-	public static function convertPost($string){
+	public static function convertPost($string): string {
 		return trim(self::convertLinks(self::convertHashtags(self::convertMentions(self::convertLineBreaksToHTML(self::sanatizeString($string))))));
 	}
 
 	/**
 	 * Returns an array of users mentioned in a post
-	 * 
+	 *
 	 * @access public
 	 * @param string $string
 	 * @return User[]
 	 */
-	public static function getUsersMentioned($string){
+	public static function getUsersMentioned($string): array {
 		$a = [];
 		$ids = [];
 
@@ -1147,7 +981,10 @@ class Util {
 			if(self::startsWith($s,"@") && strlen($s) >= 2){
 				$name = substr($s,1,strlen($s));
 
-				$u = User::getUserByUsername($name);
+				$u = EntityManager::instance()->getRepository(User::class)->findOneBy([
+					"username" => $name
+				]);
+
 				if(!is_null($u)){
 					if(!in_array($u->getId(),$ids)){
 						array_push($a,$u);
@@ -1162,23 +999,23 @@ class Util {
 
 	/**
 	 * Returns a string that fixes exploits like a zero-width space
-	 * 
+	 *
 	 * @access public
 	 * @param string $string
 	 * @return string
 	 */
-	public static function fixString($string){
+	public static function fixString($string): string {
 		return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/','',str_replace("\xE2\x80\x8B","",str_replace("\xE2\x80\xAE","",$string)));
 	}
 
 	/**
 	 * Returns a video URL stripped off of it's unneeded parameters and info
-	 * 
+	 *
 	 * @access public
 	 * @param string $url
 	 * @return string
 	 */
-	public static function stripUnneededInfoFromVideoURL($url){
+	public static function stripUnneededInfoFromVideoURL($url): string {
 		$mediaEmbed = new MediaEmbed();
 
 		$mediaObject = $mediaEmbed->parseUrl($url);
@@ -1201,12 +1038,12 @@ class Util {
 
 	/**
 	 * Returns HTML code to use for embedding a video
-	 * 
+	 *
 	 * @access public
 	 * @param string $url
 	 * @return string
 	 */
-	public static function getVideoEmbedCodeFromURL($url){
+	public static function getVideoEmbedCodeFromURL($url): string {
 		$mediaEmbed = new MediaEmbed();
 
 		$mediaObject = $mediaEmbed->parseUrl($url);
@@ -1246,50 +1083,51 @@ class Util {
 
 	/**
 	 * Returns whether or not a string is a valid, embeddable video URL
-	 * 
+	 *
 	 * @access public
 	 * @param string $url
 	 * @return bool
 	 */
-	public static function isValidVideoURL($url){
+	public static function isValidVideoURL($url): bool {
 		return filter_var($url,FILTER_VALIDATE_URL) && !is_null(self::getVideoEmbedCodeFromURL($url));
 	}
 
 	/**<div class="col-md-4 px-1 py-1">
 	 * Returns HTML for a post's postActionButtons
-	 * 
+	 *
 	 * @access public
-	 * @param int|FeedEntry $post
+	 * @param FeedEntry $post
 	 * @return string
 	 */
-	public static function getPostActionButtons($post){
-		if(!is_object($post))
-			$post = FeedEntry::getEntryById($post);
-		
+	public static function getPostActionButtons(FeedEntry $post): string {
 		$s = "";
 		$id = rand(0,getrandmax());
 
-		if($post->getReplies() > 0 || $post->getShares() > 0 || $post->getFavorites() > 0){
+		$replies = $post->getReplyCount();
+		$shares = $post->getShareCount();
+		$favorites = $post->getFavoriteCount();
+
+		if ($replies > 0 || $shares > 0 || $favorites > 0) {
 			$s .= '<div id="countContainer' . $id . '" class="mt-3 mb-5 small text-muted">';
 
-			if($post->getReplies() > 0){
+			if ($replies > 0) {
 				$s .= '<div class="float-left mr-3">';
-				$s .= '<i class="fas fa-share"></i> ' . $post->getReplies() . ' repl' . ($post->getReplies() != 1 ? "ies" : "y");
+				$s .= '<i class="fas fa-share"></i> ' . $replies . ' repl' . ($replies != 1 ? "ies" : "y");
 				$s .= '</div>';
 			}
 
-			if($post->getShares() > 0){
+			if ($shares > 0) {
 				$s .= '<div data-container-id="' . $id . '" class="float-left mr-3 shareCount" data-post-id="' . $post->getId() . '" data-type="shares" data-toggle="tooltip" data-html="true" title="Loading...">';
-				$s .= '<i class="fas fa-share-alt"></i> ' . $post->getShares() . ' share' . ($post->getShares() != 1 ? "s" : "");
+				$s .= '<i class="fas fa-share-alt"></i> ' . $shares . ' share' . ($shares != 1 ? "s" : "");
 				$s .= '</div>';
 			}
 
-			if($post->getFavorites() > 0){
+			if ($favorites > 0) {
 				$s .= '<div data-container-id="' . $id . '" class="float-left mr-3 favoriteCount" data-post-id="' . $post->getId() . '" data-type="favorites" data-toggle="tooltip" data-html="true" title="Loading...">';
-				$s .= '<i class="fas fa-star"></i> ' . $post->getFavorites() . ' favorite' . ($post->getFavorites() != 1 ? "s" : "");
+				$s .= '<i class="fas fa-star"></i> ' . $favorites . ' favorite' . ($favorites != 1 ? "s" : "");
 				$s .= '</div>';
 			}
-			
+
 			$s .= '</div>';
 		}
 
@@ -1327,6 +1165,9 @@ class Util {
 
 				$s .= '</div>';*/
 
+				$shared = Share::hasShared($currentUser, $post);
+				$favorited = Favorite::hasFavorited($currentUser, $post);
+
 				// V2
 				$s .= '<div class="row text-center" style="font-size: 19px">';
 				$s .= '<div data-container-id="' . $id . '" class="col-4 replyButton">';
@@ -1334,11 +1175,11 @@ class Util {
 				$s .= '</div>';
 
 				$s .= '<div data-container-id="' . $id . '" class="col-4 ignoreParentClick' . ($currentUser->getId() != $post->getUser()->getId() && $post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC ? ' shareButton"' : '" data-toggle="tooltip" title="You can not share this post" style="opacity: 0.3"') . ' data-post-id="' . $post->getId() . '">';
-				$s .= '<a ' . ($currentUser->hasShared($post->getId()) ? 'style="color: #007bff !important" ' : "") . 'class="nav-link' . (!$currentUser->hasShared($post->getId()) ? " text-qp-gray" : "") . '" href="#"><i class="fas fa-share-alt"></i> Share</a>';
+				$s .= '<a ' . ($shared ? 'style="color: #007bff !important" ' : "") . 'class="nav-link' . (!$shared ? " text-qp-gray" : "") . '" href="#"><i class="fas fa-share-alt"></i> Share</a>';
 				$s .= '</div>';
 
 				$s .= '<div data-container-id="' . $id . '" class="col-4 favoriteButton ignoreParentClick" data-post-id="' . $post->getId() . '">';
-				$s .= '<a class="nav-link' . (!$currentUser->hasFavorited($post->getId()) ? " text-qp-gray" : "") . '"' . ($currentUser->hasFavorited($post->getId()) ? ' style="color: gold !important"' : "") . ' href="#"><i class="fas fa-star"></i> Favorite</a>';
+				$s .= '<a class="nav-link' . (!$favorited ? " text-qp-gray" : "") . '"' . ($favorited ? ' style="color: gold !important"' : "") . ' href="#"><i class="fas fa-star"></i> Favorite</a>';
 				$s .= '</div>';
 				$s .= '</div>';
 			}
@@ -1349,13 +1190,13 @@ class Util {
 
 	/**
 	 * Returns html code of embeds for media files
-	 * 
+	 *
 	 * @access public
 	 * @param MediaFile[]|MediaFile $mediaFiles
 	 * @param int $postId
 	 * @return string
 	 */
-	public static function renderAttachmentEmbeds($mediaFiles, $postId = null){
+	public static function renderAttachmentEmbeds($mediaFiles, $postId = null): string {
 		if(is_array($mediaFiles)){
 			$s = "";
 
@@ -1419,7 +1260,7 @@ class Util {
 								$s .= '</div>';
 							}
 
-							$i++;	
+							$i++;
 						}
 					}
 
@@ -1444,7 +1285,7 @@ class Util {
 								$s .= '</div>';
 							}
 
-							$i++;	
+							$i++;
 						}
 					}
 
@@ -1460,14 +1301,14 @@ class Util {
 
 	/**
 	 * Formats a number to a short format (e.g. 4823 to 4.8K)
-	 * 
+	 *
 	 * @access public
 	 * @param int $number The number to be formatted
 	 * @return string The formatted number
 	 */
-	public static function formatNumberShort($number){
+	public static function formatNumberShort(int $number): string {
 		if($number <= 999){
-			return $number;
+			return $number . "";
 		} else if($number >= 1000 && $number <= 999999){
 			return round(($number/1000),1) . "K";
 		} else {
@@ -1477,14 +1318,14 @@ class Util {
 
 	/**
 	 * Returns HTML code for a post form with specific parameters
-	 * 
+	 *
 	 * @access public
 	 * @param int $replyTo The id of the post that is being replied to, null if it's a standalone post
 	 * @param string[] $classes An array of css classes attached to the box
 	 * @param bool $includeExtraOptions Whether or not to include extra options and tabs for media sharing etc.
 	 * @return string
 	 */
-	public static function renderCreatePostForm($classes = null,$includeExtraOptions = true){
+	public static function renderCreatePostForm($classes = null, $includeExtraOptions = true): string {
 		if(!self::isLoggedIn() || is_null(self::getCurrentUser()))
 			return "";
 
@@ -1634,11 +1475,11 @@ class Util {
 
 	/**
 	 * Gets the character limit for a post for the current user
-	 * 
+	 *
 	 * @access public
 	 * @return int
 	 */
-	public static function getCharacterLimit(){
+	public static function getCharacterLimit(): int {
 		$user = self::getCurrentUser();
 
 		return !is_null($user) && $user->isVerified() ? VERIFIED_POST_CHARACTER_LIMIT : POST_CHARACTER_LIMIT;
@@ -1648,29 +1489,30 @@ class Util {
 
 	/**
 	 * Gets the Authorization header sent in the request
-	 * 
+	 *
 	 * @access public
 	 * @return string|null Null if there is no Authorization header
 	 */
-	public static function getAuthorizationHeader(){
-        $headers = null;
-        if (isset($_SERVER['Authorization'])) {
-            $headers = trim($_SERVER["Authorization"]);
-        } else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
-            $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
-        } elseif (function_exists('apache_request_headers')) {
-            $requestHeaders = apache_request_headers();
-            // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
-            $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
-			
+	public static function getAuthorizationHeader(): string {
+		$headers = null;
+		if (isset($_SERVER['Authorization'])) {
+			$headers = trim($_SERVER["Authorization"]);
+		} else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+			$headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+		} elseif (function_exists('apache_request_headers')) {
+			$requestHeaders = apache_request_headers();
+			// Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
+			$requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
+
 			if (isset($requestHeaders['Authorization'])) {
-                $headers = trim($requestHeaders['Authorization']);
-            }
-        }
-        return $headers;
-    }
+				$headers = trim($requestHeaders['Authorization']);
+			}
+		}
+		return $headers;
+	}
 }
-$ipinfo = IPInformation::getInformationFromIP(Util::getIP());
+
+IPInformation::getInformationFromIP(Util::getIP());
 /*if($ipinfo !== null && (isset($_SERVER["PATH_INFO"]) ? $_SERVER["PATH_INFO"] : strtok($_SERVER["REQUEST_URI"],'?')) !== "/banned/vpn"){
 	if(((double)($ipinfo->getVPNCheckResult())) >= 0.90){
 		header("Location: /banned/vpn");

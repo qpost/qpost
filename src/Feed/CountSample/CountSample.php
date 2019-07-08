@@ -2,6 +2,8 @@
 
 namespace qpost\Feed\CountSample;
 
+use qpost\Account\User;
+
 /**
  * Represents a count sample used to display a sample of users that shared or favorited a feed entry
  *

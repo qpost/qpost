@@ -1,12 +1,14 @@
 <?php
 
-use qpost\Account\Token;
+namespace qpost\Router;
+
+use qpost\Navigation\NavPoint;
 use qpost\Util\Util;
 
-$app->bind("/delete",function(){
+create_route("/delete", function () {
     if(Util::isLoggedIn()){
         $user = Util::getCurrentUser();
-        $token = Token::getTokenById($_COOKIE["sesstoken"]);
+		$token = Util::getCurrentToken();
 
         if(isset($_POST["confirmation"]) && $_POST["confirmation"] == "true" && !is_null($user) && !is_null($token)){
             $token->expire();
@@ -18,7 +20,7 @@ $app->bind("/delete",function(){
         } else {
 			return twig_render("pages/account/delete.html.twig", [
 				"title" => "Delete your account",
-				"nav" => NAV_ACCOUNT
+				"nav" => NavPoint::ACCOUNT
 			]);
         }
 	} else {

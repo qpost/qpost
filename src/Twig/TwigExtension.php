@@ -2,9 +2,10 @@
 
 namespace qpost\Twig;
 
+use DateTime;
+use qpost\Account\Follower;
 use qpost\Account\PrivacyLevel;
 use qpost\Account\User;
-use qpost\Feed\FeedEntry;
 use qpost\Util\Util;
 use Twig\Extension\AbstractExtension;
 use Twig\Markup;
@@ -77,7 +78,7 @@ class TwigExtension extends AbstractExtension {
 				return Util::formatNumberShort($number);
 			}),
 
-			new TwigFunction("createAlert", function ($id, $text, $type = ALERT_TYPE_INFO, $dismissible = FALSE, $saveDismiss = FALSE) {
+			new TwigFunction("createAlert", function ($id, $text, $type = "info", $dismissible = FALSE, $saveDismiss = FALSE) {
 				return new Markup(Util::createAlert($id, $text, $type, $dismissible, $saveDismiss), "UTF-8");
 			}),
 
@@ -86,19 +87,16 @@ class TwigExtension extends AbstractExtension {
 			}),
 
 			new TwigFunction("maySeeBio", function (User $u) {
-				return ($u->getPrivacyLevel() == PrivacyLevel::PUBLIC || (Util::isLoggedIn() && $u->isFollower(Util::getCurrentUser()->getId()))) && (!is_null($u->getBio()));
-			}),
-
-			new TwigFunction("getUserById", function ($id) {
-				return User::getUserById($id);
-			}),
-
-			new TwigFunction("getEntryById", function ($id) {
-				return FeedEntry::getEntryById($id);
+				return ($u->getPrivacyLevel() == PrivacyLevel::PUBLIC || (Util::isLoggedIn() && Follower::isFollowing(Util::getCurrentUser(), $u))) && (!is_null($u->getBio()));
 			}),
 
 			new TwigFunction("timeago", function ($timestamp) {
-				$str = strtotime($timestamp);
+				$str = null;
+				if ($timestamp instanceof DateTime) {
+					$str = $timestamp->getTimestamp();
+				} else {
+					$str = is_string($timestamp) ? strtotime($timestamp) : $timestamp;
+				}
 
 				$timestamp = date("Y", $str) . "-" . date("m", $str) . "-" . date("d", $str) . "T" . date("H", $str) . ":" . date("i", $str) . ":" . date("s", $str) . "Z";
 

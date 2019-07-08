@@ -1,13 +1,14 @@
 <?php
 
-use qpost\Account\Token;
+namespace qpost\Router;
+
 use qpost\Util\Util;
 
-$app->bind("/logout",function(){
+create_route("/logout", function () {
 	unset($_SESSION["id"]);
 
 	if(Util::isLoggedIn()){
-		$token = Token::getTokenById($_COOKIE["sesstoken"]);
+		$token = Util::getCurrentToken();
 	
 		if(!is_null($token)){
 			$token->expire();

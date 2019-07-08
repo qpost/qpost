@@ -1,5 +1,7 @@
-{% extends "searchBase.html.twig" %}
+{% extends "pages/search/searchBase.html.twig" %}
 
 {% block searchResults %}
-	asd
+	{% for result in results %}
+		{{ result.toListHTML|raw }}
+	{% endfor %}
 {% endblock %}

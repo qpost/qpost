@@ -2,11 +2,13 @@
 
 namespace qpost\Feed;
 
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use qpost\Account\User;
-use qpost\Cache\CacheHandler;
-use qpost\Database\Database;
-use qpost\Feed\CountSample\FavoriteSample;
-use qpost\Feed\CountSample\ShareSample;
+use qpost\Database\EntityManager;
+use qpost\Media\Attachment;
 use qpost\Media\MediaFile;
 use qpost\Util\Util;
 
@@ -17,190 +19,94 @@ use qpost\Util\Util;
  * @author Gigadrive (support@gigadrivegroup.com)
  * @copyright 2016-2018 Gigadrive
  * @link https://gigadrivegroup.com/dev/technologies
+ *
+ * @ORM\Entity
  */
 class FeedEntry {
 	/**
-	 * Returns a feed entry object fetched by the ID of the entry
-	 *
-	 * @access public
-	 * @param int $id
-	 * @return FeedEntry
-	 */
-	public static function getEntryById($id){
-		$n = "feedEntry_" . $id;
-
-		if (CacheHandler::existsInCache($n)) {
-			return CacheHandler::getFromCache($n);
-		} else {
-			$entry = new self($id);
-			$entry->reload();
-
-			if($entry->exists()){
-				return $entry;
-			} else {
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * Returns whether a feed entry is cached by ID
-	 *
-	 * @access public
-	 * @param int $id
-	 * @return bool
-	 */
-	public static function isCached($id){
-		return CacheHandler::existsInCache("feedEntry_" . $id);
-	}
-
-	/**
 	 * @access private
 	 * @var int $id
+	 *
+	 * @ORM\Id
+	 * @ORM\GeneratedValue
+	 * @ORM\Column(type="integer")
 	 */
 	private $id;
 
 	/**
 	 * @access private
-	 * @var int $user
+	 * @var User $user
+	 *
+	 * @ORM\ManyToOne(targetEntity="qpost\Account\User")
 	 */
 	private $user;
 
 	/**
 	 * @access private
-	 * @var string $text
+	 * @var string|null $text
+	 *
+	 * @ORM\Column(type="text",nullable=true)
 	 */
 	private $text;
 
 	/**
 	 * @access private
-	 * @var int $following
+	 * @var User|null $following
+	 *
+	 * @ORM\ManyToOne(targetEntity="qpost\Account\User")
 	 */
 	private $following;
 
 	/**
 	 * @access private
-	 * @var int $post
+	 * @var FeedEntry|null $post
+	 *
+	 * @ORM\ManyToOne(targetEntity="FeedEntry")
 	 */
 	private $post;
 
 	/**
 	 * @access private
 	 * @var string $sessionId
+	 *
+	 * @ORM\Column(type="string", length=200)
 	 */
 	private $sessionId;
 
 	/**
 	 * @access private
 	 * @var string $type
+	 *
+	 * @ORM\Column(type="string", length=16)
 	 */
 	private $type;
 
 	/**
 	 * @access private
 	 * @var bool $nsfw
+	 *
+	 * @ORM\Column(type="boolean")
 	 */
 	private $nsfw;
 
 	/**
 	 * @access private
-	 * @var string $time
+	 * @var DateTime $time
+	 *
+	 * @ORM\Column(type="datetime")
 	 */
 	private $time;
 
 	/**
 	 * @access private
-	 * @var bool $exists
-	 */
-	private $exists;
-
-	/**
-	 * @access private
-	 * @var int $replies
-	 */
-	private $replies;
-
-	/**
-	 * @access private
-	 * @var int[]|null
-	 */
-	private $replyArray;
-
-	/**
-	 * @access private
-	 * @var int $shares
-	 */
-	private $shares;
-
-	/**
-	 * @access private
-	 * @var ShareSample|null $shareSample
-	 */
-	private $shareSample;
-
-	/**
-	 * @access private
-	 * @var int $favorites
-	 */
-	private $favorites;
-
-	/**
-	 * @access private
-	 * @var FavoriteSample|null $favoriteSample
-	 */
-	private $favoriteSample;
-
-	/**
-	 * @access private
-	 * @var int[] $attachments
+	 * @var MediaFile[] $attachments
+	 *
+	 * @ORM\OneToMany(targetEntity="qpost\Media\Attachment", mappedBy="post")
 	 */
 	private $attachments;
 
-	/**
-	 * Constructor
-	 *
-	 * @access protected
-	 * @param int $id
-	 */
-	protected function __construct($id){
-		$this->id = $id;
-	}
-
-	/**
-	 * Reloads data from the database
-	 *
-	 * @access public
-	 */
-	public function reload(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT * FROM `feed` WHERE `id` = ?");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->id = $row["id"];
-				$this->user = $row["user"];
-				$this->text = $row["text"];
-				$this->following = $row["following"];
-				$this->post = $row["post"];
-				$this->sessionId = $row["sessionId"];
-				$this->type = $row["type"];
-				$this->nsfw = $row["nsfw"];
-				$this->replies = $row["count.replies"];
-				$this->shares = $row["count.shares"];
-				$this->favorites = $row["count.favorites"];
-				$this->attachments = is_null($row["attachments"]) ? [] : json_decode($row["attachments"],true);
-				$this->time = $row["time"];
-				$this->exists = true;
-
-				$this->saveToCache();
-			}
-		}
-		$stmt->close();
+	public function __construct() {
+		$this->attachments = new ArrayCollection();
 	}
 
 	/**
@@ -209,18 +115,17 @@ class FeedEntry {
 	 * @access public
 	 * @return int
 	 */
-	public function getId(){
+	public function getId(): int {
 		return $this->id;
 	}
 
 	/**
-	 * Returns the ID of the user that created the feed entry
-	 *
-	 * @access public
-	 * @return int
+	 * @param int $id
+	 * @return FeedEntry
 	 */
-	public function getUserId(){
-		return $this->user;
+	public function setId(int $id): self {
+		$this->id = $id;
+		return $this;
 	}
 
 	/**
@@ -229,28 +134,36 @@ class FeedEntry {
 	 * @access public
 	 * @return User
 	 */
-	public function getUser(){
-		return User::getUserById($this->user);
+	public function getUser(): User {
+		return $this->user;
+	}
+
+	/**
+	 * @param User $user
+	 * @return FeedEntry
+	 */
+	public function setUser(User $user): self {
+		$this->user = $user;
+		return $this;
 	}
 
 	/**
 	 * Returns the text of the feed entry, null if no text is available
 	 *
 	 * @access public
-	 * @return string
+	 * @return string|null
 	 */
-	public function getText(){
+	public function getText(): ?string {
 		return $this->text;
 	}
 
 	/**
-	 * Returns the ID of the user that was followed (context of the feed entry), returns null if not available
-	 *
-	 * @access public
-	 * @return int
+	 * @param string|null $text
+	 * @return FeedEntry
 	 */
-	public function getFollowingId(){
-		return $this->following;
+	public function setText(?string $text): self {
+		$this->text = $text;
+		return $this;
 	}
 
 	/**
@@ -259,28 +172,36 @@ class FeedEntry {
 	 * @access public
 	 * @return User
 	 */
-	public function getFollowing(){
-		return !is_null($this->following) ? User::getUserById($this->following) : null;
+	public function getFollowing(): ?User {
+		return $this->following;
 	}
 
 	/**
-	 * Returns the ID of the post that was shared/replied to (context of the feed entry), returns null if not available
-	 *
-	 * @access public
-	 * @return int
+	 * @param User|null $following
+	 * @return FeedEntry
 	 */
-	public function getPostId(){
-		return $this->post;
+	public function setFollowing(?User $following): self {
+		$this->following = $following;
+		return $this;
 	}
 
 	/**
 	 * Returns the feed entry object of the post that was shared/replied to (context of the feed entry), returns null if not available
 	 *
 	 * @access public
+	 * @return FeedEntry|null
+	 */
+	public function getPost(): ?FeedEntry {
+		return $this->post;
+	}
+
+	/**
+	 * @param FeedEntry|null $post
 	 * @return FeedEntry
 	 */
-	public function getPost(){
-		return !is_null($this->post) ? self::getEntryById($this->post) : null;
+	public function setPost(?FeedEntry $post): self {
+		$this->post = $post;
+		return $this;
 	}
 
 	/**
@@ -289,8 +210,17 @@ class FeedEntry {
 	 * @access public
 	 * @return string
 	 */
-	public function getSessionId(){
+	public function getSessionId(): string {
 		return $this->sessionId;
+	}
+
+	/**
+	 * @param string $sessionId
+	 * @return FeedEntry
+	 */
+	public function setSessionId(string $sessionId): self {
+		$this->sessionId = $sessionId;
+		return $this;
 	}
 
 	/**
@@ -299,8 +229,17 @@ class FeedEntry {
 	 * @access public
 	 * @return string
 	 */
-	public function getType(){
+	public function getType(): string {
 		return $this->type;
+	}
+
+	/**
+	 * @param string $type
+	 * @return FeedEntry
+	 */
+	public function setType(string $type): self {
+		$this->type = $type;
+		return $this;
 	}
 
 	/**
@@ -309,262 +248,102 @@ class FeedEntry {
 	 * @access public
 	 * @return bool
 	 */
-	public function isNSFW(){
+	public function isNSFW(): bool {
 		return $this->nsfw;
+	}
+
+	/**
+	 * @param bool $nsfw
+	 * @return FeedEntry
+	 */
+	public function setNSFW(bool $nsfw): self {
+		$this->nsfw = $nsfw;
+		return $this;
 	}
 
 	/**
 	 * Returns an array of the IDs of the attachments
 	 *
 	 * @access public
-	 * @return int[]
+	 * @return Collection|Attachment[]
 	 */
-	public function getAttachments(){
+	public function getAttachments(): Collection {
 		return $this->attachments;
 	}
 
 	/**
-	 * Returns an array of the MediaFile objects of the attachments
-	 *
-	 * @access public
-	 * @return MediaFile[]
+	 * @param Attachment $attachment
+	 * @return FeedEntry
 	 */
-	public function getAttachmentObjects(){
-		$array = [];
-
-		foreach($this->attachments as $a){
-			$m = MediaFile::getMediaFileFromID($a);
-
-			if(!is_null($m))
-				array_push($array,$m);
+	public function addAttachment(Attachment $attachment): self {
+		if (!$this->attachments->contains($attachment)) {
+			$this->attachments[] = $attachment;
+			$attachment->setPost($this);
 		}
 
-		return $array;
+		return $this;
+	}
+
+	/**
+	 * @param Attachment $attachment
+	 * @return FeedEntry
+	 */
+	public function removeAttachment(Attachment $attachment): self {
+		if ($this->attachments->contains($attachment)) {
+			$this->attachments->removeElement($attachment);
+
+			EntityManager::instance()->remove($attachment);
+		}
+
+		return $this;
 	}
 
 	/**
 	 * Returns the timestamp of when the feed entry was created
 	 *
 	 * @access public
-	 * @return string
+	 * @return DateTime
 	 */
-	public function getTime(){
+	public function getTime(): DateTime {
 		return $this->time;
 	}
 
-	public function exists(){
-		return $this->exists;
+	/**
+	 * @param DateTime $time
+	 * @return FeedEntry
+	 */
+	public function setTime(DateTime $time): self {
+		$this->time = $time;
+		return $this;
 	}
 
 	/**
-	 * Returns how often the feed entry was replied to
-	 *
-	 * @access public
 	 * @return int
 	 */
-	public function getReplies(){
-		return $this->replies;
+	public function getReplyCount(): int {
+		return EntityManager::instance()->getRepository(FeedEntry::class)->count([
+			"post" => $this,
+			"type" => FeedEntryType::POST
+		]);
 	}
 
 	/**
-	 * Returns objects of the replies of this feed entry in chronological order, if available
-	 *
-	 * @access public
-	 * @param int $limit The limit of how many replies should be loaded
-	 * @return FeedEntry[]|null Returns null if the replies could not be loaded
-	 */
-	public function getReplyArray($limit = 10){
-		if(is_null($this->replyArray) && $this->type == FEED_ENTRY_TYPE_POST && $this->getReplies() > 0){
-			$mysqli = Database::Instance()->get();
-
-			$postId = $this->id;
-			$uid = $this->user;
-
-			$stmt = $mysqli->prepare("SELECT f.id AS feedEntryId,u.id AS userId FROM `feed` AS f INNER JOIN `users` AS u ON f.user = u.id WHERE f.`post` = ? AND f.`type` = 'POST' ORDER BY u.`id` = ?,f.`time` DESC");
-			$stmt->bind_param("ii",$postId,$uid);
-			if($stmt->execute()){
-				$this->replyArray = [];
-
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					while($row = $result->fetch_assoc()){
-						$f = FeedEntry::getEntryById($row["feedEntryId"]);
-						$u = User::getUserById($row["userId"]);
-
-						if(is_null($f) || is_null($u)) continue;
-
-						array_push($this->replyArray,$row["feedEntryId"]);
-					}
-
-					$this->saveToCache();
-				}
-			}
-			$stmt->close();
-		}
-
-		if(!is_null($this->replyArray)){
-			$a = [];
-			foreach ($this->replyArray as $id) {
-				$f = self::getEntryById($id);
-
-				if(!is_null($f)){
-					array_push($a,$f);
-				}
-			}
-
-			return $a;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Reloads the reply count
-	 *
-	 * @access public
-	 */
-	public function reloadReplies(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE `post` = ? AND `type` = 'POST'");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->replies = $row["count"];
-				$this->replyArray = null;
-
-				$this->saveToCache();
-			}
-		}
-		$stmt->close();
-
-		$stmt = $mysqli->prepare("UPDATE `feed` SET `count.replies` = ? WHERE `id` = ?");
-		$stmt->bind_param("ii",$this->replies,$this->id);
-		$stmt->execute();
-		$stmt->close();
-	}
-
-	/**
-	 * Returns how often the feed entry was shared
-	 *
-	 * @access public
 	 * @return int
 	 */
-	public function getShares(){
-		return $this->shares;
+	public function getShareCount(): int {
+		return EntityManager::instance()->getRepository(FeedEntry::class)->count([
+			"post" => $this,
+			"type" => FeedEntryType::SHARE
+		]);
 	}
 
 	/**
-	 * Reloads the share count
-	 *
-	 * @access public
-	 */
-	public function reloadShares(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE `post` = ? AND `type` = 'SHARE'");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->shares = $row["count"];
-				$this->shareSample = null;
-
-				$this->saveToCache();
-			}
-		}
-		$stmt->close();
-
-		$stmt = $mysqli->prepare("UPDATE `feed` SET `count.shares` = ? WHERE `id` = ?");
-		$stmt->bind_param("ii",$this->shares,$this->id);
-		$stmt->execute();
-		$stmt->close();
-	}
-
-	/**
-	 * Returns a sample of users that shared this post, null if the sample could not be loaded or the feed entry is not a post.
-	 *
-	 * @access public
-	 * @return ShareSample|null
-	 */
-	public function getShareSample(){
-		if($this->type === FEED_ENTRY_TYPE_POST && is_null($this->shareSample)){
-			$shareSample = new ShareSample($this);
-
-			if(!is_null($shareSample->getUsers())){
-				$this->shareSample = $shareSample;
-				$this->saveToCache();
-			}
-		}
-
-		return $this->shareSample;
-	}
-
-	/**
-	 * Returns how often the feed entry was favorized
-	 *
-	 * @access public
 	 * @return int
 	 */
-	public function getFavorites(){
-		return $this->favorites;
-	}
-
-	/**
-	 * Reloads the favorite count
-	 *
-	 * @access public
-	 */
-	public function reloadFavorites(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `favorites` WHERE `post` = ?");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->favorites = $row["count"];
-				$this->favoriteSample = null;
-
-				$this->saveToCache();
-			}
-		}
-		$stmt->close();
-
-		$stmt = $mysqli->prepare("UPDATE `feed` SET `count.favorites` = ? WHERE `id` = ?");
-		$stmt->bind_param("ii",$this->favorites,$this->id);
-		$stmt->execute();
-		$stmt->close();
-	}
-
-	/**
-	 * Returns a sample of users that shared this post, null if the sample could not be loaded or the feed entry is not a post.
-	 *
-	 * @access public
-	 * @return FavoriteSample|null
-	 */
-	public function getFavoriteSample(){
-		if($this->type === FEED_ENTRY_TYPE_POST && is_null($this->favoriteSample)){
-			$favoriteSample = new FavoriteSample($this);
-
-			if(!is_null($favoriteSample->getUsers())){
-				$this->favoriteSample = $favoriteSample;
-				$this->saveToCache();
-			}
-		}
-
-		return $this->favoriteSample;
+	public function getFavoriteCount(): int {
+		return EntityManager::instance()->getRepository(Favorite::class)->count([
+			"post" => $this
+		]);
 	}
 
 	/**
@@ -573,31 +352,43 @@ class FeedEntry {
 	 * @access public
 	 */
 	public function delete(){
-		$mysqli = Database::Instance()->get();
+		$entityManager = EntityManager::instance();
 
-		$this->removeFromCache();
+		/**
+		 * @var FeedEntry[] $shares
+		 */
+		$shares = $entityManager->getRepository(FeedEntry::class)->findBy([
+			"post" => $this
+		]);
 
-		$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `id` = ? OR (`post` = ? AND `type` = 'SHARE')");
-		$stmt->bind_param("ii",$this->id,$this->id);
-		$stmt->execute();
-		$stmt->close();
-
-		$stmt = $mysqli->prepare("DELETE FROM `notifications` WHERE `post` = ?");
-		$stmt->bind_param("i",$this->id);
-		$stmt->execute();
-		$stmt->close();
-
-		$stmt = $mysqli->prepare("DELETE FROM `favorites` WHERE `post` = ?");
-		$stmt->bind_param("i",$this->id);
-		$stmt->execute();
-		$stmt->close();
-
-		$parent = $this->getPost();
-		if(!is_null($parent) && $this->type == "POST"){
-			$this->getPost()->reloadReplies();
+		foreach ($shares as $share) {
+			$entityManager->remove($share);
 		}
 
-		if($this->type == "POST") $this->getUser()->reloadPostsCount();
+		/**
+		 * @var Notification[] $notifications
+		 */
+		$notifications = $entityManager->getRepository(Notification::class)->findBy([
+			"post" => $this
+		]);
+
+		foreach ($notifications as $notification) {
+			$entityManager->remove($notification);
+		}
+
+		/**
+		 * @var Favorite[] $favorites
+		 */
+		$favorites = $entityManager->getRepository(Favorite::class)->findBy([
+			"post" => $this
+		]);
+
+		foreach ($favorites as $favorite) {
+			$entityManager->remove($favorite);
+		}
+
+		$entityManager->remove($this);
+		$entityManager->flush();
 	}
 
 	/**
@@ -608,36 +399,6 @@ class FeedEntry {
 	 */
 	public function mayView(){
 		return $this->getUser()->mayView() && (!is_null($this->getPost()) ? $this->getPost()->getUser()->mayView() : true);
-	}
-
-	/**
-	 * Returns this object as json object to be used in the API
-	 *
-	 * @access public
-	 * @param bool $encode If true, will return a json string, else an associative array
-	 * @return string|array
-	 */
-	public function toAPIJson($encode = true){
-		$ar = [];
-		foreach($this->getAttachmentObjects() as $at){
-			array_push($ar,$at->toAPIJson());
-		}
-
-		$a = [
-			"id" => $this->id,
-			"user" => !is_null($this->getUser()) ? $this->getUser()->toAPIJson() : null,
-			"text" => $this->text,
-			"referencedUser" => !is_null($this->getFollowing()) ? $this->getFollowing()->toAPIJson() : null,
-			"referencedPost" => !is_null($this->getPost()) ? $this->getPost()->toAPIJson() : null,
-			"type" => $this->type,
-			"replies" => $this->replies,
-			"shares" => $this->shares,
-			"favorites" => $this->favorites,
-			"attachments" => $ar,
-			"time" => $this->time
-		];
-
-		return $encode == true ? json_encode($a) : $a;
 	}
 
 	/**
@@ -656,7 +417,7 @@ class FeedEntry {
 
 		$s = "";
 
-		if($this->getType() == "POST"){
+		if ($this->getType() == FeedEntryType::POST) {
 			if($noBorder == false) $s .= '<li class="list-group-item px-0 py-0 feedEntry statusTrigger" data-status-render="' . $this->getId() . '" data-entry-id="' . $this->getId() . '">';
 			$s .= '<div class="px-4 py-2">';
 			$s .= '<div class="row">';
@@ -666,7 +427,7 @@ class FeedEntry {
 			$s .= '</a>';
 			$s .= '<p class="float-left ml-1 mb-0">';
 			$s .= '<a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">';
-			$s .= '<span class="font-weight-bold convertEmoji">' . $user->getDisplayName() . $user->renderCheckMark() . '</span>';
+			$s .= '<span class="font-weight-bold convertEmoji">' . $user->getDisplayName() . 'checkmark' . '</span>';
 			$s .= '</a>';
 
 			$s .= '<span class="text-muted font-weight-normal"> @' . $user->getUsername() . ' </span>';
@@ -674,7 +435,7 @@ class FeedEntry {
 			$s .= '<br/>';
 
 			$s .= '<span class="small text-muted"><i class="far fa-clock"></i> ';
-			$s .= Util::timeago($this->getTime());
+			$s .= $this->getTime()->format("YYYY-mm-dd HH:ii:ss"); # TODO
 			$s .= '</span>';
 
 			$s .= '</p>';
@@ -684,7 +445,7 @@ class FeedEntry {
 				$s .= '</div>';
 				$s .= '</div>';
 
-				$s .= '<div class="nsfwInfo ignoreParentClick bg-monochrome text-' . (Util::isUsingNightMode() ? "white" : "muted") . ' text-center py-4">';
+				$s .= '<div class="nsfwInfo ignoreParentClick bg-monochrome text-qp-gray text-center py-4">';
 				$s .= '<div style="font-size: 26px;"><i class="fas fa-exclamation-triangle"></i></div>';
 				$s .= 'This post was marked as NSFW. Click to show.';
 				$s .= '</div>';
@@ -710,7 +471,12 @@ class FeedEntry {
 					$s .= '<div class="hiddenNSFW d-none">';
 				}
 
-				$s .= Util::renderAttachmentEmbeds($this->getAttachmentObjects(),$this->id);
+				$attachments = [];
+				foreach ($this->getAttachments() as $attachment) {
+					array_push($attachments, $attachment->getMediaFile());
+				}
+
+				$s .= Util::renderAttachmentEmbeds($attachments, $this->id);
 
 				if($this->nsfw){
 					$s .= '</div>';
@@ -728,13 +494,13 @@ class FeedEntry {
 			if($noBorder == false) $s .= '</li>';
 
 			return $s;
-		} else if($this->getType() == "NEW_FOLLOWING"){
+		} else if ($this->getType() == FeedEntryType::NEW_FOLLOWING) {
 			$u2 = $this->getFollowing();
 			if (is_null($u2)) return "";
 
 			if($noBorder == false) $s .= '<li class="list-group-item px-2 py-2" data-entry-id="' . $this->getId() . '">';
 
-			if(Util::isLoggedIn() && Util::getCurrentUser()->getId() == $this->getUserId()){
+			if (Util::isLoggedIn() && Util::getCurrentUser()->getId() == $this->getUser()->getId()) {
 				$s .= '<div class="float-right">';
 				$s .= '<span class="deleteButton ml-2" data-post-id="' . $this->getId() . '" data-toggle="tooltip" title="Delete">';
 				$s .= '<i class="fas fa-trash-alt"></i>';
@@ -742,11 +508,11 @@ class FeedEntry {
 				$s .= '</div>';
 			}
 
-			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline convertEmoji">' . $user->getDisplayName() . $user->renderCheckMark() . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline convertEmoji">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . Util::timeago($this->getTime()) . '</span>';
+			$s .= '<i class="fas fa-user-plus text-info"></i> <b><a href="/' . $user->getUsername() . '" class="clearUnderline convertEmoji">' . $user->getDisplayName() . "CHECKMARK" . '</a></b> is now following <a href="/' . $u2->getUsername() . '" class="clearUnderline convertEmoji">' . $u2->getDisplayName() . '</a> &bull; <span class="text-muted">' . $this->getTime()->format("y-m-d H:i:s") . '</span>';
 			if($noBorder == false) $s .= '</li>';
 
 			return $s;
-		} else if($this->getType() == "SHARE"){
+		} else if ($this->getType() == FeedEntryType::SHARE) {
 			$sharedPost = $this->getPost();
 			$sharedUser = $sharedPost->getUser();
 
@@ -756,7 +522,7 @@ class FeedEntry {
 			if($noBorder == false) $s .= '<li class="list-group-item px-0 py-0 feedEntry statusTrigger" data-status-render="' . $sharedPost->getId() . '" data-entry-id="' . $this->getId() . '">';
 			$s .= '<div class="px-4 py-2">';
 			$s .= '<div class="small text-muted">';
-			$s .= '<i class="fas fa-share-alt text-blue"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . $user->renderCheckMark() . '</a> &bull; ' . Util::timeago($this->getTime());
+			$s .= '<i class="fas fa-share-alt text-blue"></i> Shared by <a href="/' . $user->getUsername() . '" class="clearUnderline ignoreParentClick">' . $user->getDisplayName() . "CHECKMARK" . '</a> &bull; ' . $this->getTime()->format("YYYY-mm-dd HH:ii:ss");
 			$s .= '</div>';
 			$s .= '<div class="row">';
 			$s .= '<div class="float-left">';
@@ -765,7 +531,7 @@ class FeedEntry {
 			$s .= '</a>';
 			$s .= '<p class="float-left ml-1 mb-0">';
 			$s .= '<a href="/' . $sharedUser->getUsername() . '" class="clearUnderline ignoreParentClick">';
-			$s .= '<span class="font-weight-bold convertEmoji">' . $sharedUser->getDisplayName() . $sharedUser->renderCheckMark() . '</span>';
+			$s .= '<span class="font-weight-bold convertEmoji">' . $sharedUser->getDisplayName() . "CHECKMARK" . '</span>';
 			$s .= '</a>';
 
 			$s .= '<span class="text-muted font-weight-normal"> @' . $sharedUser->getUsername() . ' </span>';
@@ -773,7 +539,7 @@ class FeedEntry {
 			$s .= '<br/>';
 
 			$s .= '<span class="small text-muted"><i class="far fa-clock"></i> ';
-			$s .= Util::timeago($sharedPost->getTime());
+			$s .= $sharedPost->getTime()->format("YYYY-mm-dd HH:ii:ss");
 			$s .= '</span>';
 
 			$s .= '</p>';
@@ -783,7 +549,7 @@ class FeedEntry {
 				$s .= '</div>';
 				$s .= '</div>';
 
-				$s .= '<div class="nsfwInfo ignoreParentClick bg-monochrome text-' . (Util::isUsingNightMode() ? "white" : "muted") . ' text-center py-4">';
+				$s .= '<div class="nsfwInfo ignoreParentClick bg-monochrome text-qp-gray text-center py-4">';
 				$s .= '<div style="font-size: 26px;"><i class="fas fa-exclamation-triangle"></i></div>';
 				$s .= 'This post was marked as NSFW. Click to show.';
 				$s .= '</div>';
@@ -820,7 +586,12 @@ class FeedEntry {
 					$s .= '<div class="hiddenNSFW d-none">';
 				}
 
-				$s .= Util::renderAttachmentEmbeds($sharedPost->getAttachmentObjects(),$this->id);
+				$attachments = [];
+				foreach ($sharedPost->getAttachments() as $attachment) {
+					array_push($attachments, $attachment->getMediaFile());
+				}
+
+				$s .= Util::renderAttachmentEmbeds($attachments, $this->id);
 
 				if($sharedPost->isNSFW()){
 					$s .= '</div>';
@@ -841,13 +612,5 @@ class FeedEntry {
 		}
 
 		return "";
-	}
-
-	public function saveToCache(){
-		CacheHandler::setToCache("feedEntry_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
-	}
-
-	public function removeFromCache(){
-		CacheHandler::deleteFromCache("feedEntry_" . $this->id);
 	}
 }

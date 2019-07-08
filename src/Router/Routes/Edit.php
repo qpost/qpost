@@ -1,11 +1,15 @@
 <?php
 
+namespace qpost\Router;
+
+use DateTime;
 use Gumlet\ImageResize;
 use qpost\Account\User;
-use qpost\Database\Database;
+use qpost\Database\EntityManager;
+use qpost\Navigation\NavPoint;
 use qpost\Util\Util;
 
-$app->bind("/edit", function () {
+create_route("/edit", function () {
 	if(Util::isLoggedIn()){
 		$user = Util::getCurrentUser();
 
@@ -27,20 +31,23 @@ $app->bind("/edit", function () {
 						if (Util::isEmpty($featuredBoxTitle) || strlen($featuredBoxTitle) <= 25) {
 							if (!Util::contains($displayName, "☑️") && !Util::contains($displayName, "✔️") && !Util::contains($displayName, "✅") && !Util::contains($displayName, "🗹") && !Util::contains($displayName, "🗸")) {
 								$boxUsers = [];
+								$entityManager = EntityManager::instance();
 
 								for ($i = 1; $i <= $featuredBoxLimit; $i++) {
 									if (isset($_POST["featuredBoxUser" . $i])) {
 										$c = $_POST["featuredBoxUser" . $i];
 
 										if (!Util::isEmpty($c)) {
-											$linkedUser = User::getUserByUsername($c);
+											$linkedUser = $entityManager->getRepository(User::class)->findOneBy([
+												"username" => $c
+											]);
 
 											if (is_null($linkedUser)) {
 												$errorMsg = "The user @" . Util::sanatizeString($c) . " does not exist.";
-											} else if ($linkedUser->getId() == Util::getCurrentUser()->getId()) {
+											} else if ($linkedUser->getId() == $user->getId()) {
 												$errorMsg = "You can't link yourself in your Featured box.";
 											} else {
-												array_push($boxUsers, $linkedUser->getId());
+												array_push($boxUsers, $linkedUser);
 											}
 										}
 									}
@@ -58,7 +65,7 @@ $app->bind("/edit", function () {
 												if (strlen($username) >= 3) {
 													if (strlen($username) <= 16) {
 														if (ctype_alnum($username)) {
-															if (Util::isUsernameAvailable($username)) {
+															if (User::isUsernameAvailable($username)) {
 																$usernameChange = true;
 																$verified = false;
 															} else {
@@ -86,6 +93,7 @@ $app->bind("/edit", function () {
 
 								$avatarUrl = $user->getAvatarURL();
 
+								// Handle avatar upload
 								if (count($_FILES) > 0) {
 									$validFiles = 0;
 									foreach ($_FILES as $file) {
@@ -150,7 +158,6 @@ $app->bind("/edit", function () {
 
 									$displayName = Util::sanatizeString($displayName);
 									$bio = Util::sanatizeString($bio);
-									$userId = $user->getId();
 
 									$birthdayTime = strtotime($birthday);
 									$birthday = null;
@@ -167,21 +174,34 @@ $app->bind("/edit", function () {
 										if (Util::isEmpty($bio))
 											$bio = null;
 
-										$boxUsersSerialized = is_null($boxUsers) ? null : json_encode($boxUsers);
+										$user->setDisplayName($displayName)
+											->setUsername($username)
+											->setAvatarURL($avatarUrl)
+											->setBio($bio)
+											->setFeaturedBoxTitle($featuredBoxTitle)
+											->setVerified($verified)
+											->setBirthday(new DateTime($birthday));
 
-										$mysqli = Database::Instance()->get();
-										$stmt = $mysqli->prepare("UPDATE `users` SET `displayName` = ?, `username` = ?, `avatar` = ?, `bio` = ?, `featuredBox.title` = ?, `featuredBox.content` = ?, `birthday` = ?, `verified` = ? WHERE `id` = ?");
-										$stmt->bind_param("sssssssii", $displayName, $username, $avatarUrl, $bio, $featuredBoxTitle, $boxUsersSerialized, $birthday, $verified, $userId);
-										if ($stmt->execute()) {
-											if ($usernameChange)
-												$user->updateLastUsernameChange();
+										if (!is_null($boxUsers)) {
+											foreach ($boxUsers as $boxUser) {
+												$user->addFeaturedBoxContent($boxUser);
+											}
 
-											$successMsg = "Your changes have been saved.";
-											$user->reload();
-										} else {
-											$errorMsg = "An error occurred. (" . $stmt->error . ")";
+											foreach ($user->getFeaturedBoxContent() as $boxUser) {
+												if (!in_array($boxUser, $boxUsers)) {
+													$user->removeFeaturedBoxContent($boxUser);
+												}
+											}
 										}
-										$stmt->close();
+
+										if ($usernameChange) {
+											$user->setLastUsernameChange(new DateTime("now"));
+										}
+
+										$entityManager->persist($user);
+										$entityManager->flush();
+
+										$successMsg = "Your changes have been saved.";
 									}
 								}
 							} else {
@@ -200,13 +220,19 @@ $app->bind("/edit", function () {
 				$errorMsg = "Please enter a display name.";
 			}
 		} else if (isset($_POST["deleteProfilePicture"])) {
-			$user->resetAvatar();
-			$successMsg = "Your profile picture has been removed." . ($user->isGigadriveLinked() ? "<br/>Please note that this does not affect your linked Gigadrive account." : "");
+			$entityManager = EntityManager::instance();
+
+			$user->setAvatarURL(null);
+
+			$entityManager->persist($user);
+			$entityManager->flush();
+
+			$successMsg = "Your profile picture has been removed." . (!is_null($user->getGigadriveData()) ? "<br/>Please note that this does not affect your linked Gigadrive account." : "");
 		}
 
 		return twig_render("pages/edit.html.twig", [
 			"title" => "Edit your profile",
-			"nav" => NAV_PROFILE,
+			"nav" => NavPoint::PROFILE,
 			"errorMsg" => $errorMsg,
 			"successMsg" => $successMsg,
 			"featuredBoxLimit" => $featuredBoxLimit

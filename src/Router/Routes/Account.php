@@ -1,22 +1,28 @@
 <?php
 
+namespace qpost\Router;
+
+use DateTime;
+use Doctrine\DBAL\Types\Type;
 use qpost\Account\IPInformation;
 use qpost\Account\PrivacyLevel;
 use qpost\Account\Token;
 use qpost\Account\User;
 use qpost\Database\Database;
+use qpost\Database\EntityManager;
+use qpost\Navigation\NavPoint;
 use qpost\Util\Util;
 
-$app->bind("/account",function(){
+create_route("/account", function () {
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
 
 	return twig_render("pages/account/index.html.twig", [
 		"title" => "Account",
-		"nav" => NAV_ACCOUNT
+		"nav" => NavPoint::ACCOUNT
 	]);
 });
 
-$app->bind("/account/privacy",function(){
+create_route("/account/privacy", function () {
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
 
 	$user = Util::getCurrentUser();
@@ -34,13 +40,11 @@ $app->bind("/account/privacy",function(){
 			$stmt->bind_param("si", $privacyLevel, $uID);
 
 			if ($stmt->execute()) {
-				if ($user->getOpenFollowRequests() > 0 && $privacyLevel == PrivacyLevel::PUBLIC) {
+				if ($user->getOpenRequestsCount() > 0 && $privacyLevel == PrivacyLevel::PUBLIC) {
 					$s = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `following` = ?");
 					$s->bind_param("i", $uID);
 					$s->execute();
 					$s->close();
-
-					$user->reloadOpenFollowRequests();
 				}
 
 				$successMsg = "Your changes have been saved.";
@@ -55,16 +59,17 @@ $app->bind("/account/privacy",function(){
 
 	return twig_render("pages/account/privacy.html.twig", [
 		"title" => "Privacy",
-		"nav" => NAV_ACCOUNT,
+		"nav" => NavPoint::ACCOUNT,
 		"errorMsg" => $errorMsg,
 		"successMsg" => $successMsg
 	]);
 });
 
-$app->bind("/account/sessions",function(){
+create_route("/account/sessions", function () {
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
 
-	$mysqli = Database::Instance()->get();
+	$entityManager = EntityManager::instance();
+	$user = Util::getCurrentUser();
 
 	$errorMsg = null;
 	$successMsg = null;
@@ -74,9 +79,12 @@ $app->bind("/account/sessions",function(){
 
 		if ($action == "logOutSession") {
 			if (isset($_POST["sesstoken"]) && !Util::isEmpty($_POST["sesstoken"])) {
-				$token = Token::getTokenById($_POST["sesstoken"]);
+				/**
+				 * @var Token $token
+				 */
+				$token = $entityManager->getRepository(Token::class)->findOneBy(["id" => $_POST["sesstoken"]]);
 
-				if (!is_null($token) && $token->getUserId() == Util::getCurrentUser()->getId()) {
+				if (!is_null($token) && $token->getUser()->getId() == $user->getId()) {
 					$token->expire();
 					$successMsg = "The session has been killed.";
 				}
@@ -86,69 +94,69 @@ $app->bind("/account/sessions",function(){
 
 	$sessions = [];
 
-	$uID = Util::getCurrentUser()->getId();
+	/**
+	 * @var Token[] $tokens
+	 */
+	$tokens = $entityManager->getRepository(Token::class)->createQueryBuilder("t")
+		->where("t.expiry > :today")
+		->setParameter("today", new DateTime("now"), Type::DATETIME)
+		->andWhere("t.user = :user")
+		->setParameter("user", $user)
+		->orderBy("t.lastAccessTime", "DESC")
+		->getQuery()
+		->getResult();
 
-	$stmt = $mysqli->prepare("SELECT `id` FROM `tokens` WHERE `expiry` > NOW() AND `user` = ? ORDER BY `lastAccessTime` DESC");
-	$stmt->bind_param("i", $uID);
-	if ($stmt->execute()) {
-		$result = $stmt->get_result();
-		if ($result->num_rows) {
-			while ($row = $result->fetch_assoc()) {
-				$token = Token::getTokenById($row["id"]);
-				if (is_null($token)) continue;
+	foreach ($tokens as $token) {
+		$userAgent = parse_user_agent($token->getUserAgent());
+		$platform = $userAgent["platform"];
+		$browser = $userAgent["browser"];
+		$browserVersion = $userAgent["version"];
 
-				$userAgent = parse_user_agent($token->getUserAgent());
-				$platform = $userAgent["platform"];
-				$browser = $userAgent["browser"];
-				$browserVersion = $userAgent["version"];
+		$icon = "fas fa-globe";
+		if (strpos($platform, "Xbox") !== false) $icon = "fab fa-xbox";
+		if (strpos($platform, "PlayStation") !== false) $icon = "fab fa-playstation";
+		if (strpos($platform, "Macintosh") !== false) $icon = "fab fa-apple";
+		if (strpos($platform, "iPhone") !== false) $icon = "fab fa-apple";
+		if (strpos($platform, "iPad") !== false) $icon = "fab fa-apple";
+		if (strpos($platform, "iPod") !== false) $icon = "fab fa-apple";
+		if (strpos($browser, "Android") !== false) $icon = "fab fa-android";
+		if (strpos($browser, "BlackBerry") !== false) $icon = "fab fa-blackberry";
+		if (strpos($browser, "Kindle") !== false) $icon = "fab fa-amazon";
+		if (strpos($browser, "Firefox") !== false) $icon = "fab fa-firefox";
+		if (strpos($browser, "Safari") !== false) $icon = "fab fa-safari";
+		if (strpos($browser, "Internet Explorer") !== false) $icon = "fab fa-internet-explorer";
+		if (strpos($browser, "Chrome") !== false) $icon = "fab fa-chrome";
+		if (strpos($browser, "Opera") !== false) $icon = "fab fa-opera";
+		if (strpos($browser, "Edge") !== false) $icon = "fab fa-edge";
 
-				$icon = "fas fa-globe";
-				if (strpos($platform, "Xbox") !== false) $icon = "fab fa-xbox";
-				if (strpos($platform, "PlayStation") !== false) $icon = "fab fa-playstation";
-				if (strpos($platform, "Macintosh") !== false) $icon = "fab fa-apple";
-				if (strpos($platform, "iPhone") !== false) $icon = "fab fa-apple";
-				if (strpos($platform, "iPad") !== false) $icon = "fab fa-apple";
-				if (strpos($platform, "iPod") !== false) $icon = "fab fa-apple";
-				if (strpos($browser, "Android") !== false) $icon = "fab fa-android";
-				if (strpos($browser, "BlackBerry") !== false) $icon = "fab fa-blackberry";
-				if (strpos($browser, "Kindle") !== false) $icon = "fab fa-amazon";
-				if (strpos($browser, "Firefox") !== false) $icon = "fab fa-firefox";
-				if (strpos($browser, "Safari") !== false) $icon = "fab fa-safari";
-				if (strpos($browser, "Internet Explorer") !== false) $icon = "fab fa-internet-explorer";
-				if (strpos($browser, "Chrome") !== false) $icon = "fab fa-chrome";
-				if (strpos($browser, "Opera") !== false) $icon = "fab fa-opera";
-				if (strpos($browser, "Edge") !== false) $icon = "fab fa-edge";
+		$ipInfo = IPInformation::getInformationFromIP($token->getIP());
 
-				$ipInfo = IPInformation::getInformationFromIP($token->getIP());
-
-				$sessions[] = [
-					"platform" => $platform,
-					"browser" => $browser,
-					"browserVersion" => $browserVersion,
-					"icon" => $icon,
-					"token" => $token,
-					"ipInfo" => $ipInfo,
-					"current" => $_COOKIE["sesstoken"] == $token->getId()
-				];
-			}
-		}
+		$sessions[] = [
+			"platform" => $platform,
+			"browser" => $browser,
+			"browserVersion" => $browserVersion,
+			"icon" => $icon,
+			"token" => $token,
+			"ipInfo" => $ipInfo,
+			"current" => $_COOKIE["sesstoken"] == $token->getId()
+		];
 	}
-	$stmt->close();
 
 	return twig_render("pages/account/sessions.html.twig", [
 		"title" => "Active sessions",
-		"nav" => NAV_ACCOUNT,
+		"nav" => NavPoint::ACCOUNT,
 		"errorMsg" => $errorMsg,
 		"successMsg" => $successMsg,
 		"sessions" => $sessions
 	]);
 });
 
-$app->bind("/account/change-password",function(){
+create_route("/account/change-password", function () {
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
-	if(Util::getCurrentUser()->isGigadriveLinked()) return $this->reroute("/account");
 
 	$user = Util::getCurrentUser();
+
+	if (!is_null($user->getGigadriveData())) return $this->reroute("/account");
 
 	$successMsg = null;
 	$errorMsg = null;
@@ -163,18 +171,14 @@ $app->bind("/account/change-password",function(){
 				if ($newPassword == $newPassword2) {
 					$newHash = password_hash($newPassword, PASSWORD_BCRYPT);
 
-					$mysqli = Database::Instance()->get();
-					$userId = $user->getId();
+					$entityManager = EntityManager::instance();
 
-					$stmt = $mysqli->prepare("UPDATE `users` SET `password` = ? WHERE `id` = ?");
-					$stmt->bind_param("si", $newHash, $userId);
-					if ($stmt->execute()) {
-						$user->reload();
-						$successMsg = "Your password has been changed.";
-					} else {
-						$errorMsg = "An error occurred. " . $stmt->error;
-					}
-					$stmt->close();
+					$user->setPassword($newHash);
+
+					$entityManager->persist($user);
+					$entityManager->flush();
+
+					$successMsg = "Your password has been changed.";
 				} else {
 					$errorMsg = "The new passwords do not match.";
 				}
@@ -188,34 +192,32 @@ $app->bind("/account/change-password",function(){
 
 	return twig_render("pages/account/changePassword.html.twig", [
 		"title" => "Change your password",
-		"nav" => NAV_ACCOUNT,
+		"nav" => NavPoint::ACCOUNT,
 		"errorMsg" => $errorMsg,
 		"successMsg" => $successMsg
 	]);
 });
 
-$app->bind("/account/verify-email",function(){
+create_route("/account/verify-email", function () {
 	$successMsg = null;
 	$errorMsg = null;
 
 	if (isset($_GET["account"]) && isset($_GET["verificationtoken"])) {
-		$user = User::getUserById($_GET["account"]);
+		$entityManager = EntityManager::instance();
+
+		/**
+		 * @var User $user
+		 */
+		$user = $entityManager->getRepository(User::class)->findOneBy(["id" => $_GET["account"]]);
 
 		if (!is_null($user)) {
 			if ($user->isEmailActivated() == false && $user->getEmailActivationToken() == $_GET["verificationtoken"]) {
-				$mysqli = Database::Instance()->get();
+				$user->setEmailActivated(true);
 
-				$userID = $user->getId();
+				$entityManager->persist($user);
+				$entityManager->flush();
 
-				$stmt = $mysqli->prepare("UPDATE `users` SET `emailActivated` = 1 WHERE `id` = ?");
-				$stmt->bind_param("i", $userID);
-				if ($stmt->execute()) {
-					$user->reload();
-					$successMsg = "Your email has been activated. You can now log in.";
-				} else {
-					$errorMsg = "An error occurred. " . $stmt->error;
-				}
-				$stmt->close();
+				$successMsg = "Your email has been activated. You can now log in.";
 			} else {
 				$errorMsg = "An error occurred.";
 			}

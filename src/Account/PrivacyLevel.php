@@ -28,4 +28,12 @@ class PrivacyLevel {
 	 * @var string CLOSED Privacy level for closed accounts, only visible for self
 	 */
 	public const CLOSED = "CLOSED";
+
+	/**
+	 * @param string $privacyLevel
+	 * @return bool
+	 */
+	public static function isValid(string $privacyLevel): bool {
+		return $privacyLevel === self::PUBLIC || $privacyLevel == self::PRIVATE || $privacyLevel == self::CLOSED;
+	}
 }

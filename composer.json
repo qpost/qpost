@@ -9,11 +9,19 @@
         "dereuromark/media-embed": "^0.4.2",
 		"php": ">= 7.2.0",
 		"twig/twig": "^2.11",
-		"twig/extensions": "^1.5"
+		"twig/extensions": "^1.5",
+		"doctrine/orm": "^2.6",
+		"doctrine/annotations": "^1.6",
+		"ext-json": "^1.6",
+		"ramsey/uuid": "^3.8",
+		"ext-curl": "^7.2",
+		"ext-mysqli": "^7.2",
+		"beberlei/doctrineextensions": "^1.2"
     },
     "autoload": {
         "psr-4": {
 			"qpost\\": "src/",
+			"Gigadrive\\": "src/Mail/",
             "": "src/"
         }
     }

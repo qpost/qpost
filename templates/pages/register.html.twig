@@ -18,10 +18,10 @@
 						{{ insertCSRF() }}
 
 						<input type="text" class="form-control mb-2" name="email"
-							   placeholder="Email address"{{ email is defined ? ' value="'~sanatizeHTMLAttribute(email)~'"' }}/>
+							   placeholder="Email address"{{ email is defined ? (' value="'~sanatizeHTMLAttribute(email)~'"')|raw }}/>
 
 						<input type="text" class="form-control mb-2" name="username"
-							   placeholder="Username"{{ username is defined ? ' value="'~sanatizeHTMLAttribute(username)~'"' }}/>
+							   placeholder="Username"{{ username is defined ? (' value="'~sanatizeHTMLAttribute(username)~'"')|raw }}/>
 
 						<input type="submit" class="btn btn-block btn-primary" value="Create account"/>
 					</form>

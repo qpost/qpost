@@ -1,4 +1,4 @@
-{% set post = notification is defined and notification ? getEntryById(notification.post) %}
+{% set post = notification is defined and notification ? notification.post %}
 {% set u = post is defined and post ? post.user %}
 
 {% if u %}

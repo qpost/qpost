@@ -17,7 +17,7 @@
 		</a>
 	</li>
 
-	{% if currentUser.gigadriveLinked == false %}
+	{% if not currentUser.gigadriveData %}
 		<li class="nav-item">
 			<a class="nav-link{{ navPoint is defined and navPoint == "CHANGE_PASSWORD" ? " active" }}"
 			   href="/account/change-password">

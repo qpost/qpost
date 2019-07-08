@@ -2,165 +2,69 @@
 
 namespace qpost\Media;
 
+use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 use qpost\Account\User;
-use qpost\Cache\CacheHandler;
-use qpost\Database\Database;
 use qpost\Util\Util;
 
+/**
+ * Class MediaFile
+ * @package qpost\Media
+ *
+ * @ORM\Entity
+ */
 class MediaFile {
-	/**
-	 * Returns a media file object associated with an ID
-	 *
-	 * @access public
-	 * @param int $id
-	 * @return MediaFile
-	 */
-	public static function getMediaFileFromID($id){
-		$n = "media_id_" . $id;
-
-		if(CacheHandler::existsInCache($n)){
-			return CacheHandler::getFromCache($n);
-		} else {
-			$media = new self($id);
-			$media->reload();
-
-			if($media->exists == true){
-				return $media;
-			} else {
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * Returns a media file object associated with a SHA256 hash
-	 *
-	 * @access public
-	 * @param string $sha
-	 * @return MediaFile
-	 */
-	public static function getMediaFileFromSHA($sha){
-		$n = "media_sha256_" . $sha;
-
-		if(CacheHandler::existsInCache($n)){
-			return CacheHandler::getFromCache($n);
-		} else {
-			$media = null;
-
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("SELECT `id` FROM `media` WHERE `sha256` = ?");
-			$stmt->bind_param("s",$sha);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					$media = self::getMediaFileFromID($row["id"]);
-				}
-			}
-			$stmt->close();
-
-			return $media;
-		}
-	}
-
-	/**
-	 * Returns whether an ID has already been used for a media object
-	 *
-	 * @access public
-	 * @param string $id
-	 * @return bool
-	 */
-	public static function isIDAvailable($id){
-		$b = true;
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `media` WHERE `id` = ?");
-		$stmt->bind_param("s",$id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				if($row["count"] > 0)
-					$b = false;
-			}
-		}
-		$stmt->close();
-
-		return $b;
-	}
-
-	/**
-	 * Returns a new, unused ID for a media object
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public static function generateNewID(){
-		$id = null;
-
-		while(is_null($id) || !self::isIDAvailable($id)){
-			$id = Util::getRandomString(128);
-		}
-
-		return $id;
-	}
-
 	/**
 	 * @access private
 	 * @var string $id
+	 *
+	 * @ORM\Id()
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="qpost\Database\UniqueIdGenerator")
+	 * @ORM\Column(type="string")
 	 */
 	private $id;
 
 	/**
 	 * @access private
 	 * @var string $sha256
+	 *
+	 * @ORM\Column(type="string", unique=true)
 	 */
 	private $sha256;
 
 	/**
 	 * @access private
 	 * @var string $url
+	 *
+	 * @ORM\Column(type="string")
 	 */
 	private $url;
 
 	/**
 	 * @access private
-	 * @var int $originalUploader
+	 * @var User|null $originalUploader
+	 *
+	 * @ORM\OneToOne(targetEntity="User")
+	 * @ORM\Column(nullable=true)
 	 */
 	private $originalUploader;
 
 	/**
 	 * @access private
 	 * @var string $type
+	 *
+	 * @ORM\Column(type="string")
 	 */
 	private $type;
 
 	/**
 	 * @access private
-	 * @var string $time
+	 * @var DateTime $time
+	 *
+	 * @ORM\Column(type="datetime")
 	 */
 	private $time;
-
-	/**
-	 * @access private
-	 * @var bool $exists
-	 */
-	private $exists;
-
-	/**
-	 * Constructor
-	 *
-	 * @access protected
-	 * @param int $id
-	 */
-	protected function __construct($id){
-		$this->id = $id;
-	}
 
 	/**
 	 * Returns the media object's id
@@ -168,8 +72,17 @@ class MediaFile {
 	 * @access public
 	 * @return string
 	 */
-	public function getId(){
+	public function getId(): string {
 		return $this->id;
+	}
+
+	/**
+	 * @param string $id
+	 * @return MediaFile
+	 */
+	public function setId(string $id): self {
+		$this->id = $id;
+		return $this;
 	}
 
 	/**
@@ -178,8 +91,17 @@ class MediaFile {
 	 * @access public
 	 * @return string
 	 */
-	public function getSHA256(){
+	public function getSHA256(): string {
 		return $this->sha256;
+	}
+
+	/**
+	 * @param string $sha256
+	 * @return MediaFile
+	 */
+	public function setSHA256(string $sha256): self {
+		$this->sha256 = $sha256;
+		return $this;
 	}
 
 	/**
@@ -188,38 +110,36 @@ class MediaFile {
 	 * @access public
 	 * @return string
 	 */
-	public function getURL(){
+	public function getURL(): string {
 		return $this->url;
 	}
 
 	/**
-	 * Returns the URL of the thumbnail image
-	 *
-	 * @access public
-	 * @return string
+	 * @param string $url
+	 * @return MediaFile
 	 */
-	public function getThumbnailURL(){
-		return "/mediaThumbnail?id=" . urlencode($this->id);
-	}
-
-	/**
-	 * Returns the id of the original uploader
-	 *
-	 * @access public
-	 * @return int
-	 */
-	public function getOriginalUploaderId(){
-		return $this->originalUploader;
+	public function setURL(string $url): self {
+		$this->url = $url;
+		return $this;
 	}
 
 	/**
 	 * Returns the user object of the original uploader, null if not available
 	 *
 	 * @access public
-	 * @return User
+	 * @return User|null
 	 */
-	public function getOriginalUploader(){
-		return !is_null($this->originalUploader) ? User::getUserById($this->originalUploader) : null;
+	public function getOriginalUploader(): ?User {
+		return $this->originalUploader;
+	}
+
+	/**
+	 * @param User|null $originalUploader
+	 * @return MediaFile
+	 */
+	public function setOriginalUploader(?User $originalUploader): self {
+		$this->originalUploader = $originalUploader;
+		return $this;
 	}
 
 	/**
@@ -230,6 +150,15 @@ class MediaFile {
 	 */
 	public function getType(){
 		return $this->type;
+	}
+
+	/**
+	 * @param string $type
+	 * @return MediaFile
+	 */
+	public function setType(string $type): self {
+		$this->type = $type;
+		return $this;
 	}
 
 	/**
@@ -270,46 +199,5 @@ class MediaFile {
 		}
 
 		return $s;
-	}
-
-	/**
-	 * Reloads data from the database
-	 *
-	 * @access public
-	 */
-	public function reload(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT * FROM `media` WHERE `id` = ?");
-		$stmt->bind_param("s",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->id = $row["id"];
-				$this->sha256 = $row["sha256"];
-				$this->url = $row["url"];
-				$this->originalUploader = $row["originalUploader"];
-				$this->type = $row["type"];
-				$this->time = $row["time"];
-
-				$this->exists = true;
-
-				$this->saveToCache();
-			}
-		}
-		$stmt->close();
-	}
-
-	/**
-	 * Saves the media object to the cache
-	 *
-	 * @access public
-	 */
-	public function saveToCache(){
-		CacheHandler::setToCache("media_id_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
-		CacheHandler::setToCache("media_sha256_" . $this->sha256, $this, CacheHandler::OBJECT_CACHE_TIME);
 	}
 }

@@ -1,10 +1,15 @@
 <?php
 
+namespace qpost\Router\API\Token;
+
 use qpost\Account\Token;
 use qpost\Account\User;
 use qpost\Util\Util;
+use function qpost\Router\API\api_method_check;
+use function qpost\Router\API\api_request_data;
+use function qpost\Router\create_route;
 
-$app->bind("/api/token/verify",function(){
+create_route("/api/token/verify", function () {
 	if(api_method_check($this,"POST")){
 		$header = Util::getAuthorizationHeader();
 		$requestData = api_request_data($this);

@@ -4,7 +4,9 @@ import Util from "../Util";
 export default class BirthdayBox {
 	public static init(): void {
 		let birthdayBox = $(".birthdayContainer");
-		if (birthdayBox.length > 0) {
+		if (!birthdayBox.hasClass("init") && birthdayBox.length > 0) {
+			birthdayBox.addClass("init");
+
 			let now = new Date();
 			let dateString = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
 

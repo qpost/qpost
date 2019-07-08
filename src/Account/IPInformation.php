@@ -4,6 +4,7 @@ namespace qpost\Account;
 
 use qpost\Cache\CacheHandler;
 use qpost\Database\Database;
+use qpost\Util\Util;
 
 /**
  * Represents information about an IP address
@@ -22,7 +23,7 @@ class IPInformation {
 	 * @return IPInformation
 	 */
 	public static function getInformationFromIP($ip){
-		if($ip == "127.0.0.1" || $ip == "localhost" || explode(":",$ip)[0] == "127.0.0.1" || explode(":",$ip)[0] == "localhost")
+		if (is_null($ip) || Util::isEmpty($ip) || $ip == "127.0.0.1" || $ip == "localhost" || explode(":", $ip)[0] == "127.0.0.1" || explode(":", $ip)[0] == "localhost")
 			return null;
 
 		$n = "ipInformation_" . $ip;

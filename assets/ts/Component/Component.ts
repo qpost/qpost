@@ -6,7 +6,6 @@ import ToggleNSFW from "./PostForm/ToggleNSFW";
 import AddPhoto from "./PostForm/AddPhoto";
 import ImageUpload from "./ImageUpload";
 import LayeredModals from "./LayeredModals";
-import BirthdayBox from "./BirthdayBox";
 import TextButton from "./PostForm/TextButton";
 import NSFWInfo from "./Post/NSFWInfo";
 import StatusTrigger from "./Post/StatusTrigger";
@@ -57,7 +56,6 @@ export default class Component {
 
 		AdSense.init();
 		Base.init();
-		BirthdayBox.init();
 		FilterLink.init();
 		FollowButton.init();
 		HomeFeed.init();

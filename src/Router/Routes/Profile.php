@@ -1,20 +1,32 @@
 <?php
 
+namespace qpost\Router;
+
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\QueryBuilder;
 use Lime\App;
+use qpost\Account\Follower;
 use qpost\Account\PrivacyLevel;
 use qpost\Account\ProfileViewStatus;
 use qpost\Account\User;
-use qpost\Cache\CacheHandler;
-use qpost\Database\Database;
+use qpost\Block\Block;
+use qpost\Database\EntityManager;
 use qpost\Feed\FeedEntry;
+use qpost\Feed\FeedEntryType;
+use qpost\Navigation\NavPoint;
 use qpost\Util\Util;
 
 function find_user($query): ?User {
 	if (!Util::isEmpty($query)) {
-		$user = User::getUserByUsername($query);
-		if (is_null($user) && is_numeric($query)) $user = @User::getUserById((int)$query);
+		$user = EntityManager::instance()->getRepository(User::class)->findOneBy([
+			"username" => $query
+		]);
 
-		return $user;
+		# TODO: Also check for IDs
+
+		if ($user instanceof User) {
+			return $user;
+		}
 	}
 
 	return null;
@@ -31,7 +43,7 @@ function profile_view_status(User $user): int {
 		return ProfileViewStatus::EMAIL_NOT_ACTIVATED;
 	}
 
-	if (Util::isLoggedIn() && $currentUser->isBlocked($user)) {
+	if (Util::isLoggedIn() && Block::hasBlocked($user, $currentUser)) {
 		return ProfileViewStatus::BLOCKED;
 	}
 
@@ -55,32 +67,22 @@ function profile_handle_redirect(App $app, User $user): bool {
 	return true;
 }
 
+function profile_fetch_feed_query(User $user): QueryBuilder {
+	return EntityManager::instance()->getRepository(FeedEntry::class)->createQueryBuilder("f")
+		->where("(f.post is null and f.type = :post) or (f.post is not null and f.type = :share) or (f.type = :newFollowing)")
+		->setParameter("post", FeedEntryType::POST, Type::STRING)
+		->setParameter("share", FeedEntryType::SHARE, Type::STRING)
+		->setParameter("newFollowing", FeedEntryType::NEW_FOLLOWING, Type::STRING)
+		->andWhere("f.user = :user")
+		->setParameter("user", $user)
+		->orderBy("f.time", "DESC");
+}
+
 function profile_fetch_feed_num(User $user): int {
-	$mysqli = Database::Instance()->get();
-	$num = 0;
-	$uID = $user->getId();
-	$n = "profile_feed_num_" . $uID;
-
-	if (CacheHandler::existsInCache($n)) {
-		$num = CacheHandler::getFromCache($n);
-	} else {
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE ((`post` IS NULL AND `type` = 'POST') OR (`type` != 'POST')) AND `user` = ?");
-		$stmt->bind_param("i", $uID);
-		if ($stmt->execute()) {
-			$result = $stmt->get_result();
-
-			if ($result->num_rows) {
-				$row = $result->fetch_assoc();
-
-				$num = $row["count"];
-
-				CacheHandler::setToCache($n, $num, 2 * 60);
-			}
-		}
-		$stmt->close();
-	}
-
-	return $num;
+	return profile_fetch_feed_query($user)
+		->select("count(f.id)")
+		->getQuery()
+		->getResult()[0][1];
 }
 
 /**
@@ -89,27 +91,20 @@ function profile_fetch_feed_num(User $user): int {
  * @return FeedEntry[]
  */
 function profile_fetch_feed(User $user, int $currentPage) {
-	$mysqli = Database::Instance()->get();
 	$itemsPerPage = 40;
-
-	$uID = $user->getId();
 	$num = profile_fetch_feed_num($user);
 
+	/**
+	 * @var FeedEntry[] $feedEntries
+	 */
 	$feedEntries = [];
 
 	if ($num > 0) {
-		$stmt = $mysqli->prepare("SELECT `id` FROM `feed` WHERE ((`post` IS NULL AND `type` = 'POST') OR (`type` != 'POST')) AND `user` = ? ORDER BY `time` DESC LIMIT " . (($currentPage - 1) * $itemsPerPage) . " , " . $itemsPerPage);
-		$stmt->bind_param("i", $uID);
-		if ($stmt->execute()) {
-			$result = $stmt->get_result();
-
-			if ($result->num_rows) {
-				while ($row = $result->fetch_assoc()) {
-					array_push($feedEntries, FeedEntry::getEntryById($row["id"]));
-				}
-			}
-		}
-		$stmt->close();
+		$feedEntries = profile_fetch_feed_query($user)
+			->setFirstResult(($currentPage - 1) * $itemsPerPage)
+			->setMaxResults($itemsPerPage)
+			->getQuery()
+			->getResult();
 	}
 
 	return $feedEntries;
@@ -121,35 +116,30 @@ function profile_fetch_feed(User $user, int $currentPage) {
  * @return User[]
  */
 function profile_fetch_followers(User $user, int $currentPage) {
-	$mysqli = Database::Instance()->get();
+	$entityManager = EntityManager::instance();
 	$itemsPerPage = 40;
 
-	$num = $user->getFollowers();
-	$uID = $user->getId();
+	$num = $user->getFollowerCount();
 
 	$users = [];
 
 	if ($num > 0) {
 		$users = [];
 
-		$stmt = $mysqli->prepare("SELECT u.`id` FROM `follows` AS f INNER JOIN `users` AS u ON f.`follower` = u.`id` WHERE f.`following` = ? ORDER BY f.`time` DESC LIMIT " . (($currentPage - 1) * $itemsPerPage) . " , " . $itemsPerPage);
-		$stmt->bind_param("i", $uID);
-		if ($stmt->execute()) {
-			$result = $stmt->get_result();
+		/**
+		 * @var Follower[] $followers
+		 */
+		$followers = $entityManager->getRepository(Follower::class)->createQueryBuilder("f")
+			->where("f.to = :user")
+			->setParameter("user", $user)
+			->setFirstResult(($currentPage - 1) * $itemsPerPage)
+			->setMaxResults($itemsPerPage)
+			->getQuery()
+			->getResult();
 
-			if ($result->num_rows) {
-				while ($row = $result->fetch_assoc()) {
-					$u = User::getUserById($row["id"]);
-
-					$user->cacheFollower($u->getId());
-
-					if (!$u->mayView()) continue;
-
-					array_push($users, $u);
-				}
-			}
+		foreach ($followers as $follower) {
+			array_push($users, $follower->getFrom());
 		}
-		$stmt->close();
 	}
 
 	return $users;
@@ -161,41 +151,42 @@ function profile_fetch_followers(User $user, int $currentPage) {
  * @return User[]
  */
 function profile_fetch_following(User $user, int $currentPage) {
-	$mysqli = Database::Instance()->get();
+	$entityManager = EntityManager::instance();
 	$itemsPerPage = 40;
 
-	$num = $user->getFollowers();
-	$uID = $user->getId();
+	$num = $user->getFollowingCount();
 
 	$users = [];
 
 	if ($num > 0) {
 		$users = [];
 
-		$stmt = $mysqli->prepare("SELECT u.`id` FROM `follows` AS f INNER JOIN `users` AS u ON f.`following` = u.`id` WHERE f.`follower` = ? ORDER BY f.`time` DESC LIMIT " . (($currentPage - 1) * $itemsPerPage) . " , " . $itemsPerPage);
-		$stmt->bind_param("i", $uID);
-		if ($stmt->execute()) {
-			$result = $stmt->get_result();
+		/**
+		 * @var Follower[] $followers
+		 */
+		$followers = $entityManager->getRepository(Follower::class)->createQueryBuilder("f")
+			->where("f.from = :user")
+			->setParameter("user", $user)
+			->setFirstResult(($currentPage - 1) * $itemsPerPage)
+			->setMaxResults($itemsPerPage)
+			->getQuery()
+			->getResult();
 
-			if ($result->num_rows) {
-				while ($row = $result->fetch_assoc()) {
-					$u = User::getUserById($row["id"]);
-
-					$u->cacheFollower($uID);
-
-					if (!$u->mayView()) continue;
-
-					array_push($users, $u);
-				}
-			}
+		foreach ($followers as $follower) {
+			array_push($users, $follower->getTo());
 		}
-		$stmt->close();
 	}
 
 	return $users;
 }
 
-$app->bind("/:query/following",function($params){
+function profile_follows_you(User $user): bool {
+	$currentUser = Util::getCurrentUser();
+
+	return !is_null($currentUser) && Follower::isFollowing($user, $currentUser);
+}
+
+create_route("/:query/following", function ($params) {
 	$query = $params["query"];
 	$page = 1;
 	$user = find_user($query);
@@ -208,20 +199,21 @@ $app->bind("/:query/following",function($params){
 		if (profile_handle_redirect($this, $user)) {
 			return twig_render("pages/profile/following.html.twig", [
 				"title" => "People followed by " . $user->getUsername(),
-				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
+				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NavPoint::PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
 				"profileTab" => "FOLLOWING",
 				"currentPage" => $page,
 				"description" => $user->getBio(),
-				"users" => profile_fetch_following($user, $page)
+				"users" => profile_fetch_following($user, $page),
+				"followsYou" => profile_follows_you($user)
 			]);
 		}
 	}
 });
 
-$app->bind("/:query/following/:page",function($params){
+create_route("/:query/following/:page", function ($params) {
 	$query = $params["query"];
 	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
 	$user = find_user($query);
@@ -234,20 +226,21 @@ $app->bind("/:query/following/:page",function($params){
 		if (profile_handle_redirect($this, $user)) {
 			return twig_render("pages/profile/following.html.twig", [
 				"title" => "People followed by " . $user->getUsername(),
-				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
+				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NavPoint::PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
 				"profileTab" => "FOLLOWING",
 				"currentPage" => $page,
 				"description" => $user->getBio(),
-				"users" => profile_fetch_following($user, $page)
+				"users" => profile_fetch_following($user, $page),
+				"followsYou" => profile_follows_you($user)
 			]);
 		}
 	}
 });
 
-$app->bind("/:query/followers",function($params){
+create_route("/:query/followers", function ($params) {
 	$query = $params["query"];
 	$page = 1;
 	$user = find_user($query);
@@ -260,20 +253,21 @@ $app->bind("/:query/followers",function($params){
 		if (profile_handle_redirect($this, $user)) {
 			return twig_render("pages/profile/followers.html.twig", [
 				"title" => "People following " . $user->getUsername(),
-				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
+				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NavPoint::PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
 				"profileTab" => "FOLLOWERS",
 				"currentPage" => $page,
 				"description" => $user->getBio(),
-				"users" => profile_fetch_followers($user, $page)
+				"users" => profile_fetch_followers($user, $page),
+				"followsYou" => profile_follows_you($user)
 			]);
 		}
 	}
 });
 
-$app->bind("/:query/followers/:page",function($params){
+create_route("/:query/followers/:page", function ($params) {
 	$query = $params["query"];
 	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
 	$user = find_user($query);
@@ -286,20 +280,21 @@ $app->bind("/:query/followers/:page",function($params){
 		if (profile_handle_redirect($this, $user)) {
 			return twig_render("pages/profile/followers.html.twig", [
 				"title" => "People following " . $user->getUsername(),
-				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
+				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NavPoint::PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
 				"profileTab" => "FOLLOWERS",
 				"currentPage" => $page,
 				"description" => $user->getBio(),
-				"users" => profile_fetch_followers($user, $page)
+				"users" => profile_fetch_followers($user, $page),
+				"followsYou" => profile_follows_you($user)
 			]);
 		}
 	}
 });
 
-$app->bind("/:query",function($params){
+create_route("/:query", function ($params) {
 	$query = $params["query"];
 	$page = 1;
 	$user = find_user($query);
@@ -340,7 +335,7 @@ $app->bind("/:query",function($params){
 				default:
 					return twig_render("pages/profile/feed.html.twig", [
 						"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
-						"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
+						"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NavPoint::PROFILE : null,
 						"user" => $user,
 						"socialImage" => $user->getAvatarURL(),
 						"showProfile" => true,
@@ -348,14 +343,15 @@ $app->bind("/:query",function($params){
 						"currentPage" => $page,
 						"description" => $user->getBio(),
 						"posts" => profile_fetch_feed($user, $page),
-						"num" => profile_fetch_feed_num($user)
+						"num" => profile_fetch_feed_num($user),
+						"followsYou" => profile_follows_you($user)
 					]);
 			}
 		}
 	}
 });
 
-$app->bind("/:query/:page",function($params){
+create_route("/:query/:page", function ($params) {
 	$query = $params["query"];
 	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
 	$user = find_user($query);
@@ -368,7 +364,7 @@ $app->bind("/:query/:page",function($params){
 		if (profile_handle_redirect($this, $user)) {
 			return twig_render("pages/profile/feed.html.twig", [
 				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
-				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NAV_PROFILE : null,
+				"nav" => Util::isLoggedIn() && $user->getId() == Util::getCurrentUser()->getId() ? NavPoint::PROFILE : null,
 				"user" => $user,
 				"socialImage" => $user->getAvatarURL(),
 				"showProfile" => true,
@@ -376,7 +372,8 @@ $app->bind("/:query/:page",function($params){
 				"currentPage" => $page,
 				"description" => $user->getBio(),
 				"posts" => profile_fetch_feed($user, $page),
-				"num" => profile_fetch_feed_num($user)
+				"num" => profile_fetch_feed_num($user),
+				"followsYou" => profile_follows_you($user)
 			]);
 		}
 	}

@@ -4,15 +4,6 @@ namespace qpost\Database;
 
 use mysqli;
 
-/**
- * Class Database
- *
- * @description Utility methods to connect to MySQL
- * @package Database
- * @author Gigadrive (support@gigadrivegroup.com)
- * @copyright 2016-2018 Gigadrive
- * @link https://gigadrivegroup.com/dev/technologies
- */
 class Database {
 	/**
 	 * @access private

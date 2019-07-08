@@ -2,9 +2,10 @@
 
 namespace qpost\Account;
 
-use qpost\Cache\CacheHandler;
-use qpost\Database\Database;
-use qpost\Util\Util;
+use DateInterval;
+use DateTime;
+use Doctrine\ORM\Mapping as ORM;
+use qpost\Database\EntityManager;
 
 /**
  * Represents a token to be used with the API for a user
@@ -13,154 +14,95 @@ use qpost\Util\Util;
  * @author Gigadrive (support@gigadrivegroup.com)
  * @copyright 2016-2018 Gigadrive
  * @link https://gigadrivegroup.com/dev/technologies
+ *
+ * @ORM\Entity
  */
 class Token {
 	/**
-	 * Returns a token by it's id
-	 *
-	 * @access public
-	 * @param string $id
-	 * @return Token
-	 */
-	public static function getTokenById($id){
-		$n = "apiToken_" . $id;
-
-		if(CacheHandler::existsInCache($n)){
-			return CacheHandler::getFromCache($n);
-		} else {
-			$token = new Token($id);
-			$token->reload();
-
-			return $token->exists == true ? $token : null;
-		}
-	}
-
-	/**
-	 * Returns a new token object generated for a user
-	 *
-	 * @access public
-	 * @param int|User $user
+	 * @param User $user
 	 * @param string $userAgent
 	 * @param string $ip
 	 * @return Token
 	 */
-	public static function createToken($user,$userAgent,$ip){
-		if(is_object($user)) $user = $user->getId();
+	public static function createToken(User $user, string $userAgent, string $ip): Token {
+		$entityManager = EntityManager::instance();
 
-		$token = null;
-		$id = self::generateId();
+		$token = new Token();
 
-		$mysqli = Database::Instance()->get();
+		$expiry = new DateTime("now");
+		$expiry->add(DateInterval::createFromDateString("6 month"));
 
-		$stmt = $mysqli->prepare("INSERT INTO `tokens` (`id`,`user`,`lastIP`,`userAgent`,`expiry`) VALUES(?,?,?,?,DATE_ADD(NOW(), INTERVAL 6 MONTH));");
-		$stmt->bind_param("siss",$id,$user,$ip,$userAgent);
-		if($stmt->execute()){
-			$token = self::getTokenById($id);
-		}
-		$stmt->close();
+		$token->setUser($user)
+			->setUserAgent($userAgent)
+			->setIP($ip)
+			->setLastAccessTime(new DateTime("now"))
+			->setExpiryTime($expiry)
+			->setTime(new DateTime("now"));
+
+		$entityManager->persist($token);
+		$entityManager->flush();
 
 		return $token;
 	}
 
 	/**
-	 * Returns a string that can be used as an ID for a token
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public static function generateId(){
-		$id = null;
-
-		while($id == null || self::isIdUnused($id) == false){
-			$id = Util::getRandomString(128);
-		}
-
-		return $id;
-	}
-
-	/**
-	 * Returns whether a token ID is free to use
-	 *
-	 * @access public
-	 * @param string $id
-	 * @return bool
-	 */
-	public static function isIdUnused($id){
-		$b = true;
-
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `tokens` WHERE `id` = ?");
-		$stmt->bind_param("s",$id);
-
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				if($row["count"] > 0){
-					$b = false;
-				}
-			}
-		}
-
-		$stmt->close();
-
-		return $b;
-	}
-
-	protected function __construct($id){
-		$this->id = $id;
-	}
-
-	/**
 	 * @access private
 	 * @var string $id
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="string", length=128)
+	 * @ORM\GeneratedValue(strategy="CUSTOM")
+	 * @ORM\CustomIdGenerator(class="qpost\Database\UniqueIdGenerator")
 	 */
 	private $id;
 
 	/**
 	 * @access private
-	 * @var int $user
+	 * @var User $user
+	 *
+	 * @ORM\ManyToOne(targetEntity="User")
 	 */
 	private $user;
 
 	/**
 	 * @access private
 	 * @var string $lastIP
+	 *
+	 * @ORM\Column(type="string", length=255)
 	 */
 	private $lastIP;
 
 	/**
 	 * @access private
 	 * @var string $userAgent;
+	 *
+	 * @ORM\Column(type="text")
 	 */
 	private $userAgent;
 
 	/**
 	 * @access private
-	 * @var string $time
+	 * @var DateTime $time
+	 *
+	 * @ORM\Column(type="datetime")
 	 */
 	private $time;
 
 	/**
 	 * @access private
-	 * @var string $lastAccessTime
+	 * @var DateTime $lastAccessTime
+	 *
+	 * @ORM\Column(type="datetime")
 	 */
 	private $lastAccessTime;
 
 	/**
 	 * @access private
-	 * @var string $expiry
+	 * @var DateTime $expiry
+	 *
+	 * @ORM\Column(type="datetime")
 	 */
 	private $expiry;
-
-	/**
-	 * @access private
-	 * @var bool $exists
-	 */
-	private $exists = false;
 
 	/**
 	 * Returns the ID of the token
@@ -168,18 +110,17 @@ class Token {
 	 * @access public
 	 * @return string
 	 */
-	public function getId(){
+	public function getId(): string {
 		return $this->id;
 	}
 
 	/**
-	 * Returns the ID of the token user
-	 *
-	 * @access public
-	 * @return int
+	 * @param string $id
+	 * @return Token
 	 */
-	public function getUserId(){
-		return $this->user;
+	public function setId(string $id): self {
+		$this->id = $id;
+		return $this;
 	}
 
 	/**
@@ -188,8 +129,17 @@ class Token {
 	 * @access public
 	 * @return User
 	 */
-	public function getUser(){
-		return User::getUserById($this->user);
+	public function getUser(): User {
+		return $this->user;
+	}
+
+	/**
+	 * @param User $user
+	 * @return Token
+	 */
+	public function setUser(User $user): self {
+		$this->user = $user;
+		return $this;
 	}
 
 	/**
@@ -198,17 +148,26 @@ class Token {
 	 * @access public
 	 * @return string
 	 */
-	public function getIP(){
+	public function getIP(): string {
 		return $this->lastIP;
+	}
+
+	/**
+	 * @param string $ip
+	 * @return Token
+	 */
+	public function setIP(string $ip): self {
+		$this->lastIP = $ip;
+		return $this;
 	}
 
 	/**
 	 * Returns information of the last IP that the token was used from
 	 *
 	 * @access public
-	 * @return IPInformation
+	 * @return IPInformation|null
 	 */
-	public function getIPInformation(){
+	public function getIPInformation(): ?IPInformation {
 		return IPInformation::getInformationFromIP($this->lastIP);
 	}
 
@@ -218,38 +177,74 @@ class Token {
 	 * @access public
 	 * @return string
 	 */
-	public function getUserAgent(){
+	public function getUserAgent(): string {
 		return $this->userAgent;
+	}
+
+	/**
+	 * @param string $userAgent
+	 * @return Token
+	 */
+	public function setUserAgent(string $userAgent): self {
+		$this->userAgent = $userAgent;
+		return $this;
 	}
 
 	/**
 	 * Returns the time this token was created
 	 *
 	 * @access public
-	 * @return string
+	 * @return DateTime
 	 */
-	public function getTime(){
+	public function getTime(): DateTime {
 		return $this->time;
+	}
+
+	/**
+	 * @param DateTime $time
+	 * @return Token
+	 */
+	public function setTime(DateTime $time): self {
+		$this->time = $time;
+		return $this;
 	}
 
 	/**
 	 * Returns the time the token was last used
 	 *
 	 * @access public
-	 * @return string
+	 * @return DateTime|null
 	 */
-	public function getLastAccessTime(){
+	public function getLastAccessTime(): ?DateTime {
 		return $this->lastAccessTime;
+	}
+
+	/**
+	 * @param DateTime|null $lastAccessTime
+	 * @return Token
+	 */
+	public function setLastAccessTime(?DateTime $lastAccessTime): self {
+		$this->lastAccessTime = $lastAccessTime;
+		return $this;
 	}
 
 	/**
 	 * Returns the time this token will expire
 	 *
 	 * @access public
-	 * @return string
+	 * @return DateTime
 	 */
-	public function getExpiryTime(){
+	public function getExpiryTime(): DateTime {
 		return $this->expiry;
+	}
+
+	/**
+	 * @param DateTime $expiryTime
+	 * @return DateTime
+	 */
+	public function setExpiryTime(DateTime $expiryTime): self {
+		$this->expiry = $expiryTime;
+		return $this;
 	}
 
 	/**
@@ -259,7 +254,7 @@ class Token {
 	 * @return bool
 	 */
 	public function isExpired(){
-		return !is_null($this->expiry) && strtotime($this->expiry) <= time();
+		return !is_null($this->expiry) && $this->expiry <= new DateTime("now");
 	}
 
 	/**
@@ -269,14 +264,10 @@ class Token {
 	 */
 	public function renew(){
 		if(!$this->isExpired()){
-			$mysqli = Database::Instance()->get();
+			$this->lastAccessTime = new DateTime("now");
 
-			$stmt = $mysqli->prepare("UPDATE `tokens` SET `expiry` = DATE_ADD(NOW(), INTERVAL 6 MONTH), `lastAccessTime` = CURRENT_TIMESTAMP WHERE `id` = ?");
-			$stmt->bind_param("s",$this->id);
-			if($stmt->execute()){
-				$this->reload();
-			}
-			$stmt->close();
+			$this->expiry = new DateTime("now");
+			$this->expiry->add(DateInterval::createFromDateString("6 month"));
 		}
 	}
 
@@ -287,70 +278,11 @@ class Token {
 	 */
 	public function expire(){
 		if(!$this->isExpired()){
-			$mysqli = Database::Instance()->get();
+			$this->expiry = new DateTime("now");
 
-			$stmt = $mysqli->prepare("UPDATE `tokens` SET `expiry` = CURRENT_TIMESTAMP WHERE `id` = ?");
-			$stmt->bind_param("s",$this->id);
-			if($stmt->execute()){
-				$this->reload();
-			}
-			$stmt->close();
+			$entityManager = EntityManager::instance();
+			$entityManager->persist($this);
+			$entityManager->flush();
 		}
-	}
-
-	/**
-	 * Saves the token data to the cache
-	 *
-	 * @access public
-	 */
-	public function saveToCache(){
-		CacheHandler::setToCache("apiToken_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
-	}
-
-	/**
-	 * Removes the token data from the cache
-	 *
-	 * @access public
-	 */
-	public function removeFromCache(){
-		CacheHandler::deleteFromCache("apiToken_" . $this->id);
-	}
-
-	/**
-	 * Reloads the token data
-	 *
-	 * @access public
-	 */
-	public function reload(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT * FROM `tokens` WHERE `id` = ?");
-		$stmt->bind_param("s",$this->id);
-
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->id = $row["id"];
-				$this->user = $row["user"];
-				$this->lastIP = $row["lastIP"];
-				$this->userAgent = $row["userAgent"];
-				$this->time = $row["time"];
-				$this->lastAccessTime = $row["lastAccessTime"];
-				$this->expiry = $row["expiry"];
-
-				$this->exists = true;
-
-				$this->saveToCache();
-			} else {
-				$this->removeFromCache();
-			}
-		} else {
-			$this->removeFromCache();
-		}
-
-		$stmt->close();
 	}
 }

@@ -1,5 +1,5 @@
-{% set post = notification is defined and notification ? getEntryById(notification.post) %}
-{% set u = getUserById(notification.follower) %}
+{% set post = notification is defined and notification ? notification.post %}
+{% set u = notification.follower %}
 
 {% if u %}
 	<div class="small text-muted">

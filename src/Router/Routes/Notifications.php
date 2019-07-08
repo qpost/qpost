@@ -1,85 +1,68 @@
 <?php
 
-use qpost\Cache\CacheHandler;
-use qpost\Database\Database;
+namespace qpost\Router;
+
+use Doctrine\Common\Collections\Criteria;
+use qpost\Database\EntityManager;
+use qpost\Feed\Notification;
+use qpost\Navigation\NavPoint;
 use qpost\Util\Util;
 
-$app->bind("/notifications/:page",function($params){
+create_route("/notifications/:page", function ($params) {
 	if(!Util::isLoggedIn()) return $this->reroute("/login");
 
 	$user = Util::getCurrentUser();
 	if (is_null($user)) return $this->reroute("/login");
 
 	$page = is_numeric($params["page"]) && (int)$params["page"] > 0 ? (int)$params["page"] : 1;
-	$num = 0;
-	$n = "totalNotifications_" . $user->getId();
-	$mysqli = Database::Instance()->get();
+	$entityManager = EntityManager::instance();
 	$uID = $user->getId();
 	$itemsPerPage = 30;
 
-	if (CacheHandler::existsInCache($n)) {
-		$num = CacheHandler::getFromCache($n);
-	} else {
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `notifications` WHERE `user` = ?");
-		$stmt->bind_param("i", $uID);
-		if ($stmt->execute()) {
-			$result = $stmt->get_result();
+	$num = $entityManager->getRepository(Notification::class)->count([
+		"user" => $user
+	]);
 
-			if ($result->num_rows) {
-				$row = $result->fetch_assoc();
-
-				$num = $row["count"];
-
-				CacheHandler::setToCache($n, $num, 2 * 60);
-			}
-		}
-		$stmt->close();
-	}
-
+	/**
+	 * @var Notification[] $notifications
+	 */
 	$notifications = [];
 
 	if ($num > 0) {
-		$markAsRead = [];
+		$criteria = Criteria::create();
+		$expr = Criteria::expr();
 
-		$stmt = $mysqli->prepare("SELECT * FROM `notifications` WHERE `user` = ? ORDER BY `time` DESC LIMIT " . (($page - 1) * $itemsPerPage) . " , " . $itemsPerPage);
-		$stmt->bind_param("i", $uID);
-		if ($stmt->execute()) {
-			$result = $stmt->get_result();
+		$notifications = $entityManager->getRepository(Notification::class)->matching(
+			$criteria->where($expr->eq("user", $user))
+				->setFirstResult(($page - 1) * $itemsPerPage)
+				->setMaxResults($itemsPerPage)
+		);
+	}
 
-			if ($result->num_rows) {
-				while ($row = $result->fetch_assoc()) {
-					if ($row["seen"] == false) {
-						array_push($markAsRead, $row["id"]);
-					}
+	$notifs = $user->getUnreadNotifications();
 
-					array_push($notifications, $row);
-				}
-			}
-		}
-		$stmt->close();
+	$output = twig_render("pages/notifications/page.html.twig", [
+		"title" => "Notifications (" . $notifs . ")",
+		"nav" => NavPoint::NOTIFICATIONS,
+		"page" => $page,
+		"notifications" => $notifications,
+		"currentPage" => $page,
+		"itemsPerPage" => $itemsPerPage,
+		"num" => $num
+	]);
 
-		if (count($markAsRead) > 0) {
-			$user->markNotificationsAsRead($markAsRead);
+	foreach ($notifications as $notification) {
+		if (!$notification->isSeen()) {
+			$notification->setSeen(true);
+			$entityManager->persist($notification);
 		}
 	}
 
-	if(!is_null($user)){
-		$notifs = $user->getUnreadNotifications();
+	$entityManager->flush();
 
-		return twig_render("pages/notifications/page.html.twig", [
-			"title" => "Notifications (" . $notifs . ")",
-			"nav" => NAV_NOTIFICATIONS,
-			"page" => $page,
-			"notifications" => $notifications,
-			"currentPage" => $page,
-			"itemsPerPage" => $itemsPerPage,
-			"num" => $num
-		]);
-	}
-
-	return $this->reroute("/");
+	return $output;
 });
 
-$app->bind("/notifications",function(){
+create_route("/notifications", function () {
 	return $this->reroute("/notifications/1");
 });

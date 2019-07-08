@@ -11,9 +11,11 @@ define("MYSQL_PASSWORD","");
 define("MYSQL_DATABASE","");
 
 define("DEFAULT_DESCRIPTION","");
+define("DEFAULT_TWITTER_IMAGE", "");
 
 define("MAIL_HOST","");
 define("MAIL_USER","");
+define("MAIL_SEND_AS", "");
 define("MAIL_PASSWORD","");
 define("MAIL_SECURITY","");
 define("MAIL_PORT","");

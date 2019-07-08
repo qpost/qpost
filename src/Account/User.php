@@ -2,477 +2,236 @@
 
 namespace qpost\Account;
 
-use qpost\Cache\CacheHandler;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping as ORM;
+use qpost\Block\Block;
 use qpost\Database\Database;
+use qpost\Database\EntityManager;
 use qpost\Feed\FeedEntry;
+use qpost\Feed\Notification;
 use qpost\Util\Util;
 
 /**
-* Represents a user
-* 
-* @package Account
-* @author Gigadrive (support@gigadrivegroup.com)
-* @copyright 2016-2018 Gigadrive
-* @link https://gigadrivegroup.com/dev/technologies
-*/
+ * Represents a user
+ *
+ * @package Account
+ * @author Gigadrive (support@gigadrivegroup.com)
+ * @copyright 2016-2018 Gigadrive
+ * @link https://gigadrivegroup.com/dev/technologies
+ *
+ * @ORM\Entity
+ */
 class User {
 	/**
-	 * Gets a user object by the user's ID
-	 *
-	 * @access public
-	 * @param int $id
-	 * @return User
-	 */
-	public static function getUserById($id){
-		$n = "user_id_" . $id;
-
-		if(CacheHandler::existsInCache($n)){
-			return CacheHandler::getFromCache($n);
-		} else {
-			$user = new User($id);
-			$user->reload();
-
-			if($user->exists == true){
-				return $user;
-			} else {
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * Gets a user object by the user's gigadrive ID
-	 *
-	 * @access public
-	 * @param int $id
-	 * @return User
-	 */
-	public static function getUserByGigadriveId($gigadriveId){
-		$n = "user_gigadriveId_" . $gigadriveId;
-
-		if(CacheHandler::existsInCache($n)){
-			return CacheHandler::getFromCache($n);
-		} else {
-			$id = null;
-
-			$mysqli = Database::Instance()->get();
-			$stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE `gigadriveId` = ?");
-			$stmt->bind_param("i",$gigadriveId);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					$id = $row["id"];
-				}
-			}
-			$stmt->close();
-
-			if(!is_null($id)){
-				return self::getUserById($id);
-			} else {
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * Gets a user object by the user's email
-	 *
-	 * @access public
-	 * @param string $email
-	 * @return User
-	 */
-	public static function getUserByEmail($email){
-		$id = null;
-
-		$mysqli = Database::Instance()->get();
-		$stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE `email` = ?");
-		$stmt->bind_param("s",$email);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$id = $row["id"];
-			}
-		}
-		$stmt->close();
-
-		if(!is_null($id)){
-			return self::getUserById($id);
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Gets a user object by the user's username
-	 *
-	 * @access public
 	 * @param string $username
-	 * @return User
-	 */
-	public static function getUserByUsername($username){
-		$n = "user_name_" . strtolower($username);
-
-		if(CacheHandler::existsInCache($n)){
-			return CacheHandler::getFromCache($n);
-		} else {
-			$id = null;
-
-			$mysqli = Database::Instance()->get();
-			$stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE `username` = ?");
-			$stmt->bind_param("s",$username);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					$id = $row["id"];
-				}
-			}
-			$stmt->close();
-
-			if(!is_null($id)){
-				$user = new User($id);
-				$user->reload();
-
-				if($user->exists == true){
-					return $user;
-				} else {
-					return null;
-				}
-			} else {
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * Returns whether a user object is cached by ID
-	 *
-	 * @access public
-	 * @param int $id
 	 * @return bool
 	 */
-	public static function isCached($id){
-		return CacheHandler::existsInCache("user_id_" . $id);
+	public static function isUsernameAvailable(string $username): bool {
+		return EntityManager::instance()->getRepository(User::class)->createQueryBuilder("u")
+				->select("count(u.id)")
+				->where("upper(u.username) = upper(:username)")
+				->setParameter("username", $username, Type::STRING)
+				->getQuery()
+				->getResult()[0][1] == 0;
 	}
 
 	/**
-	 * Updates a Gigadrive user's data in the database
-	 *
-	 * @access public
-	 * @param int $id
-	 * @param string $username
-	 * @param string $avatar
 	 * @param string $email
-	 * @param string $token
-	 * @param string $registerDate
-	 * @return User
+	 * @return bool
 	 */
-	public static function registerUser($id,$username,$avatar,$email,$token,$registerDate){
-		$mysqli = Database::Instance()->get();
-		$user = self::getUserByGigadriveId($id);
-
-		if($user == null){
-			$stmt = $mysqli->prepare("INSERT IGNORE INTO `users` (`gigadriveId`,`displayName`,`username`,`email`,`avatar`,`token`,`gigadriveJoinDate`,`emailActivated`) VALUES(?,?,?,?,?,?,?,1);");
-			$stmt->bind_param("issssss",$id,$username,$username,$email,$avatar,$token,$registerDate);
-			$stmt->execute();
-			$stmt->close();
-
-			self::getUserById($id)->removeFromCache();
-
-			$user = self::getUserByGigadriveId($id);
-		}
-
-		return $user;
+	public static function isEmailAvailable(string $email): bool {
+		return EntityManager::instance()->getRepository(User::class)->createQueryBuilder("u")
+				->select("count(u.id)")
+				->where("upper(u.email) = upper(:email)")
+				->setParameter("email", $email, Type::STRING)
+				->getQuery()
+				->getResult()[0][1] == 0;
 	}
 
 	/**
-	 * Gets a Gigadrive API token from the passed code
-	 *
-	 * @access public
-	 * @param string $code
-	 * @return string|null
+	 * @param mixed $query
+	 * @return User|null
 	 */
-	public static function getGigadriveTokenFromCode($code){
-		if(Util::isEmpty($code)) return null;
+	public static function getUser($query): ?User {
+		$entityManager = EntityManager::instance();
 
-		$n = "gigadriveTokenFromCode_" . $code . "_" . Util::getIP();
-
-		if (CacheHandler::existsInCache($n)) {
-			return CacheHandler::getFromCache($n);
-		} else {
-			$url = "https://gigadrivegroup.com/api/v3/token?secret=" . GIGADRIVE_API_SECRET . "&code=" . urlencode($_GET["code"]);
-			$j = @json_decode(@file_get_contents($url),true);
-
-			if(isset($j["success"]) && !Util::isEmpty($j["success"]) && isset($j["token"]) && !Util::isEmpty($j["token"])){
-				$token = $j["token"];
-
-				CacheHandler::setToCache($n, $token, 30 * 60);
-
-				return $token;
-			}
-		}
-
-		return null;
+		return $entityManager->getRepository(User::class)->createQueryBuilder("u")
+			->where("upper(u.username) = upper(:query)")
+			->setParameter("query", $query, Type::STRING)
+			->getQuery()
+			->execute();
 	}
 
 	/**
 	 * @access private
 	 * @var int $id
+	 *
+	 * @ORM\Id
+	 * @ORM\Column(type="integer")
+	 * @ORM\GeneratedValue
 	 */
 	private $id;
 
 	/**
 	 * @access private
-	 * @var int $gigadriveId
-	 */
-	private $gigadriveId;
-
-	/**
-	 * @access private
 	 * @var string $displayName
+	 *
+	 * @ORM\Column(type="string", length=25)
 	 */
 	private $displayName;
 
 	/**
 	 * @access private
 	 * @var string $username
+	 *
+	 * @ORM\Column(type="string", unique=true, length=16)
 	 */
 	private $username;
 
 	/**
 	 * @access private
 	 * @var string $password
+	 *
+	 * @ORM\Column(type="string", length=60, nullable=true)
 	 */
 	private $password;
 
 	/**
 	 * @access private
 	 * @var string $email
+	 *
+	 * @ORM\Column(type="string", unique=true, length=50)
 	 */
 	private $email;
 
 	/**
 	 * @access private
 	 * @var string $avatar
+	 *
+	 * @ORM\Column(type="string", nullable=true, length=255)
 	 */
 	private $avatar;
 
 	/**
 	 * @access private
 	 * @var string $bio
+	 *
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	private $bio;
 
 	/**
 	 * @access private
-	 * @var string $token
-	 */
-	private $token;
-
-	/**
-	 * @access private
-	 * @var string $birthday
+	 * @var DateTime $birthday
+	 *
+	 * @ORM\Column(type="date", nullable=true)
 	 */
 	private $birthday;
 
 	/**
 	 * @access private
 	 * @var string $privacyLevel
+	 *
+	 * @ORM\Column(type="string")
 	 */
-	private $privacyLevel;
+	private $privacyLevel = PrivacyLevel::PUBLIC;
 
 	/**
 	 * @access private
 	 * @var string $featuredBoxTitle
+	 *
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	private $featuredBoxTitle;
 
 	/**
 	 * @access private
-	 * @var int[] $featuredBoxContent
+	 * @var User[] $featuredBoxContent
+	 *
+	 * @ORM\ManyToMany(targetEntity="User", mappedBy="featuringUsers")
 	 */
 	private $featuredBoxContent;
 
 	/**
-	 * @access private
-	 * @var string $lastGigadriveUpdate
+	 * @var User[] $featuringUsers
+	 *
+	 * @ORM\ManyToMany(targetEntity="User", inversedBy="featuredBoxContent")
+	 * @ORM\JoinTable(name="featuredBoxes", joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+	 *                                        inverseJoinColumns={@ORM\JoinColumn(name="featured_user_id", referencedColumnName="id")})
 	 */
-	private $lastGigadriveUpdate;
+	private $featuringUsers;
 
 	/**
 	 * @access private
-	 * @var string $gigadriveJoinDate
-	 */
-	private $gigadriveJoinDate;
-
-	/**
-	 * @access private
-	 * @var string $time
+	 * @var DateTime $time
+	 *
+	 * @ORM\Column(type="datetime")
 	 */
 	private $time;
 
 	/**
 	 * @access private
-	 * @var bool $emailActivated;
+	 * @var bool $emailActivated
+	 *
+	 * @ORM\Column(type="boolean")
 	 */
-	private $emailActivated;
+	private $emailActivated = false;
 
 	/**
 	 * @access private
 	 * @var string $emailActivationToken
+	 *
+	 * @ORM\Column(type="string", nullable=true, length=7)
 	 */
 	private $emailActivationToken;
 
 	/**
 	 * @access private
 	 * @var bool $verified
+	 *
+	 * @ORM\Column(type="boolean")
 	 */
-	private $verified;
+	private $verified = false;
 
 	/**
 	 * @access private
-	 * @var string $lastUsernameChange
+	 * @var DateTime|null $lastUsernameChange
+	 *
+	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	private $lastUsernameChange;
 
 	/**
 	 * @access private
-	 * @var bool $exists
+	 * @var UserGigadriveData|null $gigadriveData
+	 *
+	 * @ORM\OneToOne(targetEntity="UserGigadriveData")
 	 */
-	private $exists;
+	private $gigadriveData;
 
 	/**
-	 * @access private
-	 * @var int $feedEntries
-	 */
-	private $feedEntries;
-
-	/**
-	 * @access private
-	 * @var int $posts
-	 */
-	private $posts;
-
-	/**
-	 * @access private
-	 * @var int $followers
-	 */
-	private $followers;
-
-	/**
-	 * @access private
-	 * @var int $following
+	 * @var
+	 *
+	 * @ORM\OneToMany(targetEntity="Follower", mappedBy="from")
 	 */
 	private $following;
 
 	/**
-	 * @access public
-	 * @var array $cachedFollowers
-	 */
-	public $cachedFollowers = [];
-
-	/**
-	 * @access public
-	 * @var array $cachedBlocks
-	 */
-	public $cachedBlocks = [];
-
-	/**
-	 * @access private
-	 * @var int $unreadMessages
-	 */
-	private $unreadMessages;
-
-	/**
-	 * @access private
-	 * @var int $favorites
-	 */
-	private $favorites;
-
-	/**
-	 * @access private
-	 * @var array $followingArray
-	 */
-	private $followingArray;
-
-	/**
-	 * @access private
-	 * @var int $followRequests
-	 */
-	private $followRequests;
-
-	/**
-	 * Constructor
+	 * @var
 	 *
-	 * @access private
-	 * @param int $id
+	 * @ORM\OneToMany(targetEntity="Follower", mappedBy="to")
 	 */
-	protected function __construct($id){
-		$this->id = $id;
-	}
+	private $followers;
 
-	/**
-	 * Reloads the user's data
-	 *
-	 * @access public
-	 */
-	public function reload(){
-		$mysqli = Database::Instance()->get();
-
-		$this->removeFromCache();
-
-		$stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id` = ?");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->id = $row["id"];
-				$this->gigadriveId = $row["gigadriveId"];
-				$this->displayName = $row["displayName"];
-				$this->username = $row["username"];
-				$this->password = $row["password"];
-				$this->email = $row["email"];
-				$this->avatar = $row["avatar"];
-				$this->bio = $row["bio"];
-				$this->token = $row["token"];
-				$this->birthday = $row["birthday"];
-				$this->privacyLevel = $row["privacy.level"];
-				$this->featuredBoxTitle = $row["featuredBox.title"];
-				$this->featuredBoxContent = is_null($row["featuredBox.content"]) ? [] : json_decode($row["featuredBox.content"],true);
-				$this->lastGigadriveUpdate = $row["lastGigadriveUpdate"];
-				$this->gigadriveJoinDate = $row["gigadriveJoinDate"];
-				$this->time = $row["time"];
-				$this->emailActivated = $row["emailActivated"];
-				$this->emailActivationToken = $row["emailActivationToken"];
-				$this->lastUsernameChange = $row["lastUsernameChange"];
-				$this->verified = $row["verified"] ? true : false;
-
-				$this->exists = true;
-
-				if(!is_null($this->feedEntries))
-					$this->reloadFeedEntriesCount();
-
-				if(!is_null($this->following))
-					$this->reloadFollowingCount();
-
-				if(!is_null($this->followers))
-					$this->reloadFollowerCount();
-			}
-
-			$this->saveToCache();
-		}
-		$stmt->close();
+	public function __construct() {
+		$this->featuredBoxContent = new ArrayCollection();
+		$this->featuringUsers = new ArrayCollection();
+		$this->following = new ArrayCollection();
+		$this->followers = new ArrayCollection();
 	}
 
 	/**
@@ -481,48 +240,17 @@ class User {
 	 * @access public
 	 * @return int
 	 */
-	public function getId(){
+	public function getId(): int {
 		return $this->id;
 	}
 
 	/**
-	 * Returns the user's gigadrive ID
-	 *
-	 * @access public
-	 * @return int
+	 * @param int $id
+	 * @return User
 	 */
-	public function getGigadriveId(){
-		return $this->gigadriveId;
-	}
-
-	/**
-	 * Returns whether this account was created with the "Sign in with Gigadrive" button
-	 *
-	 * @access public
-	 * @return bool
-	 */
-	public function isGigadriveLinked(){
-		return !is_null($this->gigadriveId) && !is_null($this->token);
-	}
-
-	/**
-	 * Returns whether the user is verified
-	 *
-	 * @access public
-	 * @return bool
-	 */
-	public function isVerified(){
-		return $this->verified;
-	}
-
-	/**
-	 * Returns HTML code for check icon for verified users
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function renderCheckMark(){
-		return $this->verified ? '<span class="ml-1 small" data-placement="right" data-toggle="tooltip" data-html="true" title="<b>Verified account</b><br/>This account has has been confirmed as an authentic page for this public figure, media company or brand"><i class="fas fa-check-circle text-mainColor"></i></span>' : "";
+	public function setId(int $id): self {
+		$this->id = $id;
+		return $this;
 	}
 
 	/**
@@ -531,8 +259,17 @@ class User {
 	 * @access public
 	 * @return string
 	 */
-	public function getDisplayName(){
+	public function getDisplayName(): string {
 		return Util::fixString($this->displayName);
+	}
+
+	/**
+	 * @param string $displayName
+	 * @return User
+	 */
+	public function setDisplayName(string $displayName): self {
+		$this->displayName = $displayName;
+		return $this;
 	}
 
 	/**
@@ -541,8 +278,17 @@ class User {
 	 * @access public
 	 * @return string
 	 */
-	public function getUsername(){
+	public function getUsername(): string {
 		return $this->username;
+	}
+
+	/**
+	 * @param string $username
+	 * @return User
+	 */
+	public function setUsername(string $username): self {
+		$this->username = $username;
+		return $this;
 	}
 
 	/**
@@ -551,8 +297,17 @@ class User {
 	 * @access public
 	 * @return string
 	 */
-	public function getPassword(){
+	public function getPassword(): string {
 		return $this->password;
+	}
+
+	/**
+	 * @param string $password
+	 * @return User
+	 */
+	public function setPassword(string $password): self {
+		$this->password = $password;
+		return $this;
 	}
 
 	/**
@@ -561,8 +316,17 @@ class User {
 	 * @access public
 	 * @return string
 	 */
-	public function getEmail(){
+	public function getEmail(): string {
 		return $this->email;
+	}
+
+	/**
+	 * @param string $email
+	 * @return User
+	 */
+	public function setEmail(string $email): self {
+		$this->email = $email;
+		return $this;
 	}
 
 	/**
@@ -571,25 +335,17 @@ class User {
 	 * @access public
 	 * @return string
 	 */
-	public function getAvatarURL(){
-		return is_null($this->avatar) ? sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL,"defaultAvatar.png") : $this->avatar;
+	public function getAvatarURL(): string {
+		return is_null($this->avatar) ? sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL, "defaultAvatar.png") : $this->avatar;
 	}
 
 	/**
-	 * Resets the user's avatar
-	 *
-	 * @access public
+	 * @param string|null $avatar
+	 * @return User
 	 */
-	public function resetAvatar(){
-		$this->avatar = null;
-
-		$mysqli = Database::Instance()->get();
-		$stmt = $mysqli->prepare("UPDATE `users` SET `avatar` = NULL WHERE `id` = ?");
-		$stmt->bind_param("i",$this->id);
-		$stmt->execute();
-		$stmt->close();
-
-		$this->saveToCache();
+	public function setAvatarURL(?string $avatar): self {
+		$this->avatar = $avatar;
+		return $this;
 	}
 
 	/**
@@ -598,28 +354,36 @@ class User {
 	 * @access public
 	 * @return string
 	 */
-	public function getBio(){
+	public function getBio(): ?string {
 		return $this->bio;
 	}
 
 	/**
-	 * Returns the Gigadrive API token
-	 *
-	 * @access public
-	 * @return string
+	 * @param string|null $bio
+	 * @return User
 	 */
-	public function getToken(){
-		return $this->token;
+	public function setBio(?string $bio): self {
+		$this->bio = $bio;
+		return $this;
 	}
 
 	/**
 	 * Returns the user's birthday
 	 *
 	 * @access public
-	 * @return string
+	 * @return DateTime|null
 	 */
-	public function getBirthday(){
+	public function getBirthday(): ?DateTime {
 		return $this->birthday;
+	}
+
+	/**
+	 * @param DateTime|null $birthday
+	 * @return User
+	 */
+	public function setBirthday(?DateTime $birthday): self {
+		$this->birthday = $birthday;
+		return $this;
 	}
 
 	/**
@@ -628,64 +392,105 @@ class User {
 	 * @access public
 	 * @return string
 	 */
-	public function getPrivacyLevel(){
+	public function getPrivacyLevel(): string {
 		return $this->privacyLevel;
 	}
 
 	/**
-	 * Returns the timestamp of the last time the user's data was updated with the Gigadrive API
-	 *
-	 * @access public
-	 * @return string
+	 * @param string $privacyLevel
+	 * @return User
 	 */
-	public function getLastGigadriveUpdate(){
-		return $this->lastGigadriveUpdate;
-	}
-
-	/**
-	 * Returns the timestamp of when the Gigadrive account was created
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function getGigadriveRegistrationDate(){
-		return $this->gigadriveJoinDate;
-	}
-
-	/**
-	 * Updates the last gigadrive update date to right now
-	 *
-	 * @access public
-	 */
-	public function updateLastGigadriveUpdate(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("UPDATE `users` SET `lastGigadriveUpdate` = CURRENT_TIMESTAMP WHERE `id` = ?");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$s = $mysqli->prepare("SELECT `lastGigadriveUpdate` FROM `users` WHERE `id` = ?");
-			$s->bind_param("i",$this->id);
-			if($s->execute()){
-				$result = $s->get_result();
-
-				if($result->num_rows){
-					$this->lastGigadriveUpdate = $result->fetch_assoc()["lastGigadriveUpdate"];
-					$this->saveToCache();
-				}
-			}
-			$s->close();
+	public function setPrivacyLevel(string $privacyLevel): self {
+		if (PrivacyLevel::isValid($privacyLevel)) {
+			$this->privacyLevel = $privacyLevel;
 		}
-		$stmt->close();
+
+		return $this;
+	}
+
+	/**
+	 * Returns the title of the user's Featured box
+	 *
+	 * @access public
+	 * @return string|null
+	 */
+	public function getFeaturedBoxTitle(): ?string {
+		return $this->featuredBoxTitle;
+	}
+
+	/**
+	 * @param string|null $featuredBoxTitle
+	 * @return User
+	 */
+	public function setFeaturedBoxTitle(?string $featuredBoxTitle): self {
+		$this->featuredBoxTitle = $featuredBoxTitle;
+		return $this;
+	}
+
+	/**
+	 * Returns an array of user IDs that are featured in the user's Featured box
+	 *
+	 * @access public
+	 * @return Collection|User[]
+	 */
+	public function getFeaturedBoxContent(): Collection {
+		return $this->featuredBoxContent;
+	}
+
+	/**
+	 * @param User $user
+	 * @return User
+	 */
+	public function addFeaturedBoxContent(User $user): self {
+		if (!$this->featuredBoxContent->contains($user)) {
+			$this->featuredBoxContent[] = $user;
+			$user->featuringUsers[] = $this;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param User $user
+	 * @return User
+	 */
+	public function removeFeaturedBoxContent(User $user): self {
+		if ($this->featuredBoxContent->contains($user)) {
+			$this->featuredBoxContent->removeElement($user);
+
+			if ($user->featuringUsers->contains($this)) {
+				$user->featuringUsers->removeElement($this);
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @access public
+	 * @return Collection|User[]
+	 */
+	public function getFeaturingUsers(): Collection {
+		return $this->featuringUsers;
 	}
 
 	/**
 	 * Returns the registration time for the user
 	 *
 	 * @access public
-	 * @return string
+	 * @return DateTime
 	 */
-	public function getTime(){
+	public function getTime(): DateTime {
 		return $this->time;
+	}
+
+	/**
+	 * @param DateTime $time
+	 * @return User
+	 */
+	public function setTime(DateTime $time): self {
+		$this->time = $time;
+		return $this;
 	}
 
 	/**
@@ -694,8 +499,17 @@ class User {
 	 * @access public
 	 * @return bool
 	 */
-	public function isEmailActivated(){
+	public function isEmailActivated(): bool {
 		return $this->emailActivated;
+	}
+
+	/**
+	 * @param bool $emailActivated
+	 * @return User
+	 */
+	public function setEmailActivated(bool $emailActivated): self {
+		$this->emailActivated = $emailActivated;
+		return $this;
 	}
 
 	/**
@@ -704,937 +518,171 @@ class User {
 	 * @access public
 	 * @return string
 	 */
-	public function getEmailActivationToken(){
+	public function getEmailActivationToken(): string {
 		return $this->emailActivationToken;
+	}
+
+	/**
+	 * Returns whether the user is verified
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public function isVerified(): bool {
+		return $this->verified;
+	}
+
+	/**
+	 * @param bool $verified
+	 * @return User
+	 */
+	public function setVerified(bool $verified): self {
+		$this->verified = $verified;
+		return $this;
+	}
+
+	/**
+	 * @param string $emailActivationToken
+	 * @return User
+	 */
+	public function setEmailActivationToken(string $emailActivationToken): self {
+		$this->emailActivationToken = $emailActivationToken;
+		return $this;
 	}
 
 	/**
 	 * Returns the timestamp of the last username change
 	 *
 	 * @access public
-	 * @return string
+	 * @return DateTime|null
 	 */
-	public function getLastUsernameChange(){
+	public function getLastUsernameChange(): ?DateTime {
 		return $this->lastUsernameChange;
 	}
 
 	/**
-	 * Updates the user's last username change
-	 *
-	 * @access public
-	 * @return string
+	 * @param DateTime|null $lastUsernameChange
+	 * @return User
 	 */
-	public function updateLastUsernameChange(){
-		$date = date("Y-m-d H:i:s");
-
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("UPDATE `users` SET `lastUsernameChange` = ? WHERE `id` = ?");
-		$stmt->bind_param("si",$date,$this->id);
-		if($stmt->execute()){
-			$this->lastUsernameChange = $date;
-			$this->saveToCache();
-		}
-		$stmt->close();
+	public function setLastUsernameChange(?DateTime $lastUsernameChange): self {
+		$this->lastUsernameChange = $lastUsernameChange;
+		return $this;
 	}
 
 	/**
-	 * Returns the currently active suspension of the user, if available
-	 *
-	 * @access public
-	 * @return Suspension
+	 * @return UserGigadriveData|null
 	 */
-	public function getActiveSuspension(){
-		return Suspension::getSuspensionByUser($this->id);
+	public function getGigadriveData(): ?UserGigadriveData {
+		return $this->gigadriveData;
 	}
 
 	/**
-	 * Returns whether the user is currently suspended
-	 *
-	 * @access public
-	 * @return bool;
+	 * @param UserGigadriveData $gigadriveData
+	 * @return User
 	 */
-	public function isSuspended(){
-		return !is_null($this->getActiveSuspension());
+	public function setGigadriveData(UserGigadriveData $gigadriveData): self {
+		$this->gigadriveData = $gigadriveData;
+		return $this;
 	}
 
 	/**
-	 * Gets the user's feed entries count
-	 *
-	 * @access public
+	 * @return bool
+	 */
+	public function isSuspended(): bool {
+		return EntityManager::instance()->getRepository(Suspension::class)->count([
+				"target" => $this,
+				"active" => true
+			]) > 0;
+	}
+
+	/**
 	 * @return int
 	 */
-	public function getFeedEntries(){
-		if(is_null($this->feedEntries)){
-			$mysqli = Database::Instance()->get();
+	public function getPostCount(): int {
+		$expr = Criteria::expr();
+		$criteria = Criteria::create();
 
-			$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `feed` WHERE `user` = ?");
-			$stmt->bind_param("i",$this->id);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-					$this->feedEntries = $row["count"];
-
-					$this->saveToCache();
-				}
-			}
-			$stmt->close();
-		}
-
-		return $this->feedEntries;
+		return EntityManager::instance()->getRepository(FeedEntry::class)->matching(
+			$criteria->where($expr->eq("user", $this))
+				->andWhere($expr->eq("type", "POST"))
+				->andWhere($expr->isNull("post"))
+		)->count();
 	}
 
 	/**
-	 * Gets the user's posts count
-	 *
-	 * @access public
 	 * @return int
 	 */
-	public function getPosts(){
-		if(is_null($this->posts)){
-			$mysqli = Database::Instance()->get();
+	public function getReplyCount(): int {
+		$expr = Criteria::expr();
+		$criteria = Criteria::create();
 
-			$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `feed` WHERE `user` = ? AND (`type` = 'POST' OR `type` = 'SHARE')");
-			$stmt->bind_param("i",$this->id);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-					$this->posts = $row["count"];
-
-					$this->saveToCache();
-				}
-			}
-			$stmt->close();
-		}
-
-		return $this->posts;
+		return EntityManager::instance()->getRepository(FeedEntry::class)->matching(
+			$criteria->where($expr->eq("user", $this))
+				->andWhere($expr->eq("type", "POST"))
+				->andWhere($expr->neq("post", null))
+		)->count();
 	}
 
 	/**
-	 * Gets the user's followers count
-	 *
-	 * @access public
 	 * @return int
 	 */
-	public function getFollowers(){
-		if(is_null($this->followers)){
-			$mysqli = Database::Instance()->get();
+	public function getShareCount(): int {
+		$expr = Criteria::expr();
+		$criteria = Criteria::create();
 
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `following` = ?");
-			$stmt->bind_param("i",$this->id);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-					$this->followers = $row["count"];
-
-					$this->saveToCache();
-				}
-			}
-			$stmt->close();
-		}
-
-		return $this->followers;
+		return EntityManager::instance()->getRepository(FeedEntry::class)->matching(
+			$criteria->where($expr->eq("user", $this))
+				->andWhere($expr->eq("type", "SHARE"))
+				->andWhere($expr->neq("post", null))
+		)->count();
 	}
 
 	/**
-	 * Gets the user's following count
-	 *
-	 * @access public
 	 * @return int
 	 */
-	public function getFollowing(){
-		if(is_null($this->following)){
-			$mysqli = Database::Instance()->get();
+	public function getFollowingPostCount(): int {
+		$expr = Criteria::expr();
+		$criteria = Criteria::create();
 
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `follower` = ?");
-			$stmt->bind_param("i",$this->id);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-					$this->following = $row["count"];
-
-					$this->saveToCache();
-				}
-			}
-			$stmt->close();
-		}
-
-		return $this->following;
+		return EntityManager::instance()->getRepository(FeedEntry::class)->matching(
+			$criteria->where($expr->eq("user", $this))
+				->andWhere($expr->eq("type", "NEW_FOLLOWING"))
+				->andWhere($expr->neq("following", null))
+		)->count();
 	}
 
 	/**
-	 * Returns the title of the user's Featured box
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function getFeaturedBoxTitle(){
-		return $this->featuredBoxTitle;
-	}
-
-	/**
-	 * Returns an array of user IDs that are featured in the user's Featured box
-	 *
-	 * @access public
-	 * @return int[]
-	 */
-	public function getFeaturedBoxContent(){
-		return $this->featuredBoxContent;
-	}
-
-	/**
-	 * Gets the user's favorites count
-	 *
-	 * @access public
 	 * @return int
 	 */
-	public function getFavorites(){
-		if(is_null($this->favorites)){
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `favorites` WHERE `user` = ?");
-			$stmt->bind_param("i",$this->id);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					$this->favorites = $row["count"];
-
-					$this->saveToCache();
-				}
-			}
-			$stmt->close();
-		}
-
-		return $this->favorites;
+	public function getTotalPostCount(): int {
+		return $this->getPostCount() + $this->getReplyCount() + $this->getShareCount() + $this->getFollowingPostCount();
 	}
 
 	/**
-	 * Reloads the favorites count
-	 *
-	 * @access public
+	 * @return int
 	 */
-	public function reloadFavoritesCount(){
-		$this->favorites = null;
-		$this->getFavorites();
+	public function getFollowingCount(): int {
+		return EntityManager::instance()->getRepository(Follower::class)->count([
+			"from" => $this
+		]);
 	}
 
 	/**
-	 * Adds a specific post to the user's favorites
-	 *
-	 * @access public
-	 * @param int $postId
+	 * @return int
 	 */
-	public function favorite($postId){
-		if(!$this->hasFavorited($postId)){
-			$post = FeedEntry::getEntryById($postId);
-
-			if(!is_null($post) && $post->getType() == FEED_ENTRY_TYPE_POST){
-				if(!$this->isBlocked($post->getUserId())){
-					if(($this->id != $post->getUserId()) && (($post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC && !$this->isFollowing($post->getUserId())) || ($post->getUser()->getPrivacyLevel() == PrivacyLevel::CLOSED))){
-						return;
-					}
-
-					$mysqli = Database::Instance()->get();
-
-					$stmt = $mysqli->prepare("INSERT INTO `favorites` (`user`,`post`) VALUES(?,?);");
-					$stmt->bind_param("ii",$this->id,$postId);
-					if($stmt->execute()){
-						CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId, true, 5 * 60);
-
-						if(!is_null($post))
-							$post->reloadFavorites();
-
-						if($post->getUser()->getId() != $this->id && $post->getUser()->canPostNotification(NOTIFICATION_TYPE_FAVORITE,$this->id,$postId)){
-							$puid = $post->getUser()->getId();
-							$pid = $post->getId();
-
-							$s = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`,`post`) VALUES(?,'FAVORITE',?,?);");
-							$s->bind_param("iii",$puid,$this->id,$pid);
-							$s->execute();
-							$s->close();
-						}
-					}
-					$stmt->close();
-				}
-			}
-		}
+	public function getFollowerCount(): int {
+		return EntityManager::instance()->getRepository(Follower::class)->count([
+			"to" => $this
+		]);
 	}
 
 	/**
-	 * Removes a specific post from the user's favorites
-	 *
-	 * @access public
-	 * @param int $postId
+	 * @return int
 	 */
-	public function unfavorite($postId){
-		if($this->hasFavorited($postId)){
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("DELETE FROM `favorites` WHERE `user` = ? AND `post` = ?");
-			$stmt->bind_param("ii",$this->id,$postId);
-			if($stmt->execute()){
-				CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId, false, 5 * 60);
-
-				$feedEntry = FeedEntry::getEntryById($postId);
-				if(!is_null($feedEntry)){
-					$feedEntry->reloadFavorites();
-					$feedEntry->getUser()->removeNotification("FAVORITE",$this->id,$postId);
-				}
-			}
-			$stmt->close();
-		}
-	}
-
-	/**
-	 * Returns whether the user has marked a specific post as their favorite
-	 *
-	 * @access public
-	 * @param int $postId
-	 * @return bool
-	 */
-	public function hasFavorited($postId){
-		if (CacheHandler::existsInCache("favoriteStatus_" . $this->id . "_" . $postId)) {
-			return CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
-		} else {
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `favorites` WHERE `user` = ? AND `post` = ?");
-			$stmt->bind_param("ii",$this->id,$postId);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					if($row["count"] > 0){
-						CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId, true, 5 * 60);
-					} else {
-						CacheHandler::setToCache("favoriteStatus_" . $this->id . "_" . $postId, false, 5 * 60);
-					}
-				}
-			}
-			$stmt->close();
-
-			return CacheHandler::getFromCache("favoriteStatus_" . $this->id . "_" . $postId);
-		}
-	}
-
-	/**
-	 * Removes notification matching specified parameters
-	 *
-	 * @access public
-	 * @param string $type
-	 * @param int $follower
-	 * @param int $post
-	 */
-	public function removeNotification($type,$follower,$post){
-		$mysqli = Database::Instance()->get();
-		$follower = is_null($follower) ? "IS NULL" : "= '" . $mysqli->real_escape_string($follower) . "'";
-		$post = is_null($post) ? "IS NULL" : "= '" . $mysqli->real_escape_string($post) . "'";
-
-		$stmt = $mysqli->prepare("DELETE FROM `notifications` WHERE `type` = ? AND `follower` " . $follower . " AND `post` " . $post . " AND `user` = ?");
-		$stmt->bind_param("si",$type,$this->id);
-		$stmt->execute();
-		$stmt->close();
-	}
-
-	/**
-	 * Removes notification matching specified parameters
-	 *
-	 * @access public
-	 * @param string $type
-	 * @param int $following
-	 * @param int $post
-	 */
-	public function removeFeedEntry($type,$following,$post){
-		$mysqli = Database::Instance()->get();
-		$following = is_null($following) ? "IS NULL" : "= '" . $mysqli->real_escape_string($following) . "'";
-		$post = is_null($post) ? "IS NULL" : "= '" . $mysqli->real_escape_string($post) . "'";
-
-		$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `type` = ? AND `following` " . $following . " AND `post` " . $post . " AND `user` = ?");
-		$stmt->bind_param("si",$type,$this->id);
-		$stmt->execute();
-		$stmt->close();
-
-		$this->reloadFeedEntriesCount();
-		$this->reloadPostsCount();
-	}
-
-	/**
-	 * Shares a post with the own profile and news feed
-	 *
-	 * @access public
-	 * @param int $postId
-	 */
-	public function share($postId){
-		if(!$this->hasShared($postId)){
-			$mysqli = Database::Instance()->get();
-			$sessionId = session_id();
-
-			$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`post`,`sessionId`,`type`) VALUES(?,?,?,'SHARE');");
-			$stmt->bind_param("iis",$this->id,$postId,$sessionId);
-			if($stmt->execute()){
-				CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId, true, 5 * 60);
-
-				$feedEntry = FeedEntry::getEntryById($postId);
-				if(!is_null($feedEntry))
-					$feedEntry->reloadShares();
-
-				if($feedEntry->getUser()->getId() != $this->id && $feedEntry->getUser()->canPostNotification(NOTIFICATION_TYPE_SHARE,$this->id,$postId)){
-					$puid = $feedEntry->getUser()->getId();
-					$pid = $feedEntry->getId();
-
-					$s = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`,`post`) VALUES(?,'SHARE',?,?);");
-					$s->bind_param("iii",$puid,$this->id,$pid);
-					$s->execute();
-					$s->close();
-				}
-			}
-			$stmt->close();
-		}
-	}
-
-	/**
-	 * Removes a share made on a post
-	 *
-	 * @access public
-	 * @param int $postId
-	 */
-	public function unshare($postId){
-		if($this->hasShared($postId)){
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `user` = ? AND `type` = 'SHARE' AND `post` = ?");
-			$stmt->bind_param("ii",$this->id,$postId);
-			if($stmt->execute()){
-				CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId, false, 5 * 60);
-
-				$feedEntry = FeedEntry::getEntryById($postId);
-				if(!is_null($feedEntry)){
-					$feedEntry->reloadShares();
-					$feedEntry->getUser()->removeNotification("SHARE",$this->id,$postId);
-				}
-			}
-			$stmt->close();
-		}
-	}
-
-	/**
-	 * Returns whether the user has shared a post
-	 *
-	 * @access public
-	 * @param int $postId
-	 */
-	public function hasShared($postId){
-		if (CacheHandler::existsInCache("shareStatus_" . $this->id . "_" . $postId)) {
-			return CacheHandler::getFromCache("shareStatus_" . $this->id . "_" . $postId);
-		} else {
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `feed` WHERE `user` = ? AND `type` = 'SHARE' AND `post` = ?");
-			$stmt->bind_param("ii",$this->id,$postId);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					if($row["count"] > 0){
-						CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId, true, 5 * 60);
-					} else {
-						CacheHandler::setToCache("shareStatus_" . $this->id . "_" . $postId, false, 5 * 60);
-					}
-				}
-			}
-			$stmt->close();
-
-			return CacheHandler::getFromCache("shareStatus_" . $this->id . "_" . $postId);
-		}
-	}
-
-	/**
-	 * Reloads the feed entries count
-	 *
-	 * @access public
-	 */
-	public function reloadFeedEntriesCount(){
-		$this->feedEntries = null;
-		$this->getFeedEntries();
-	}
-
-	/**
-	 * Reloads the posts count
-	 *
-	 * @access public
-	 */
-	public function reloadPostsCount(){
-		$this->posts = null;
-		$this->getPosts();
-	}
-
-	/**
-	 * Reloads the following count
-	 *
-	 * @access public
-	 */
-	public function reloadFollowingCount(){
-		$this->following = null;
-		$this->getFollowing();
-	}
-
-	/**
-	 * Reloads the follower count
-	 *
-	 * @access public
-	 */
-	public function reloadFollowerCount(){
-		$this->followers = null;
-		$this->getFollowers();
-	}
-
-	/**
-	 * Returns whether or not the user followers $user
-	 *
-	 * @access public
-	 * @param int|User $user The user object or ID
-	 * @return bool
-	 */
-	public function isFollowing($user){
-		if(is_object($user))
-			$user = $user->getId();
-
-		if($user == $this->id) return false;
-
-		if(in_array($this->id,User::getUserById($user)->cachedFollowers)){
-			return true;
-		} else {
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `follower` = ? AND `following` = ?");
-			$stmt->bind_param("ii",$this->id,$user);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					if($row["count"] > 0){
-						User::getUserById($user)->cacheFollower($this->id);
-						$this->saveToCache();
-					}
-				}
-			}
-			$stmt->close();
-
-			return in_array($this->id,User::getUserById($user)->cachedFollowers);
-		}
-	}
-
-	/**
-	 * Returns whether or not the user has sent a follow request to $user
-	 *
-	 * @access public
-	 * @param int|User $user
-	 * @return bool
-	 */
-	public function hasSentFollowRequest($user){
-		$userId = is_object($user) ? $user->getId() : $user;
-
-		$b = false;
-
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follow_requests` WHERE `follower` = ? AND `following` = ?");
-		$stmt->bind_param("ii",$this->id,$userId);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				if($row["count"] > 0)
-					$b = true;
-			}
-		}
-		$stmt->close();
-
-		return $b;
-	}
-
-	/**
-	 * Returns the amount of open follow requests the user has
-	 */
-	public function getOpenFollowRequests(){
-		if($this->getPrivacyLevel() == PrivacyLevel::PRIVATE){
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follow_requests` WHERE `following` = ?");
-			$stmt->bind_param("i",$this->id);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					$this->followRequests = $row["count"];
-					$this->saveToCache();
-				}
-			}
-			$stmt->close();
-
-			return $this->followRequests;
-		} else {
-			return 0;
-		}
-	}
-
-	/**
-	 * Reloads the amount of open follow requests the user has
-	 *
-	 * @access public
-	 */
-	public function reloadOpenFollowRequests(){
-		if($this->getPrivacyLevel() == PrivacyLevel::PRIVATE){
-			$this->followRequests = null;
-			$this->getOpenFollowRequests();
-		}
-	}
-
-	/**
-	 * Returns whether or not the user has received a follow request from $user
-	 *
-	 * @access public
-	 * @param int|User $user
-	 * @return bool
-	 */
-	public function hasReceivedFollowRequest($user){
-		if(is_object($user)){
-			return $user->hasSentFollowRequest($this);
-		} else {
-			return self::getUserById($user)->hasSentFollowRequest($this);
-		}
-	}
-
-	/**
-	 * Returns whether or not the user has blocked $user
-	 *
-	 * @access public
-	 * @param int|User $user The user object or ID
-	 * @return bool
-	 */
-	public function hasBlocked($user){
-		if(is_object($user))
-			$user = $user->getId();
-
-		if($user == $this->id) return false;
-
-		if(in_array($user,$this->cachedBlocks)){
-			return true;
-		} else {
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `blocks` WHERE `user` = ? AND `target` = ?");
-			$stmt->bind_param("ii",$this->id,$user);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-
-					if($row["count"] > 0){
-						array_push($this->cachedBlocks,$user);
-						$this->saveToCache();
-					}
-				}
-			}
-			$stmt->close();
-
-			return in_array($user,$this->cachedBlocks);
-		}
-	}
-
-	/**
-	 * Returns whether the user was blocked by $user
-	 *
-	 * @access public
-	 * @param int|User The user object or ID
-	 * @return bool
-	 */
-	public function isBlocked($user){
-		if(!is_object($user))
-			$user = self::getUserById($user);
-
-		return !Is_null($user) ? $user->hasBlocked($this) : false;
-	}
-
-	/**
-	 * Returns whether or not the user is followed by $user
-	 *
-	 * @access public
-	 * @param int|User $user The user object or ID
-	 * @return bool
-	 */
-	public function isFollower($user){
-		return is_object($user) ? $user->isFollowing($this) : self::getUserById($user)->isFollowing($this);
-		/*if(!is_object($user))
-		$user = self::getUserById($user);
-		
-		if(in_array($this->id,$user->cachedFollowers)){
-			return true;
-		} else {
-			$mysqli = Database::Instance()->get();
-			
-			$uID = $user->getId();
-			
-			$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `follows` WHERE `follower` = ? AND `following` = ?");
-			$stmt->bind_param("ii",$uID,$this->id);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-				
-				if($result->num_rows){
-					$row = $result->fetch_assoc();
-					
-					if($row["count"] > 0){
-						array_push($user->cachedFollowers,$this->getId());
-						$user->saveToCache();
-					}
-				}
-			}
-			$stmt->close();
-			
-			return in_array($this->id,$user->cachedFollowers);
-		}*/
-	}
-
-	/**
-	 * Adds a user ID to the follower cache
-	 *
-	 * @access public
-	 * @param int $user
-	 */
-	public function cacheFollower($user){
-		if(!in_array($user,$this->cachedFollowers))
-			array_push($this->cachedFollowers,$user);
-
-		$this->saveToCache();
-	}
-
-	/**
-	 * Removes a user ID to the follower cache
-	 *
-	 * @access public
-	 * @param int $user
-	 */
-	public function uncacheFollower($user){
-		if(in_array($user,$this->cachedFollowers))
-			$this->cachedFollowers = Util::removeFromArray($this->cachedFollowers,$user);
-
-		$this->saveToCache();
-	}
-
-	/**
-	 * Follows a user
-	 *
-	 * @access public
-	 * @param int|User $user
-	 */
-	public function follow($user){
-		if($this->getFollowers() >= FOLLOW_LIMIT) return;
-
-		if(is_object($user))
-			$user = $user->getId();
-
-		if(!$this->isFollowing($user)){
-			$mysqli = Database::Instance()->get();
-
-			$u = self::getUserById($user);
-			if(!is_null($u)){
-				if($u->getPrivacyLevel() == PrivacyLevel::CLOSED){
-					return;
-				} else if($u->getPrivacyLevel() == PrivacyLevel::PRIVATE){
-					if(!$this->hasSentFollowRequest($user)){
-						$stmt = $mysqli->prepare("INSERT INTO `follow_requests` (`follower`,`following`) VALUES(?,?);");
-						$stmt->bind_param("ii",$this->id,$user);
-						$stmt->execute();
-						$stmt->close();
-
-						self::getUserById($user)->reloadOpenFollowRequests();
-
-						return;
-					} else {
-						$stmt = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `follower` = ? AND `following` = ?");
-						$stmt->bind_param("ii",$this->id,$user);
-						$stmt->execute();
-						$stmt->close();
-
-						self::getUserById($user)->reloadOpenFollowRequests();
-					}
-				}
-			}
-
-			$b = false;
-
-			$stmt = $mysqli->prepare("INSERT INTO `follows` (`follower`,`following`) VALUES(?,?);");
-			$stmt->bind_param("ii",$this->id,$user);
-			if($stmt->execute()){
-				if(!is_null($u)){
-					$u->cacheFollower($this->id);
-					$u->reloadFollowerCount();
-					$this->reloadFollowingCount();
-
-					$b = true;
-				}
-			}
-			$stmt->close();
-
-			if($b){
-				$sID = session_id();
-
-				if($this->canPostFeedEntry(FEED_ENTRY_TYPE_NEW_FOLLOWING,$user)){
-					$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`following`,`type`,`sessionId`) VALUES(?,?,'NEW_FOLLOWING',?);");
-					$stmt->bind_param("iis",$this->id,$user,$sID);
-					$stmt->execute();
-					$stmt->close();
-				}
-
-				if(self::getUserById($user)->canPostNotification(NOTIFICATION_TYPE_NEW_FOLLOWER,$this->id,null)){
-					$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`follower`) VALUES(?,'NEW_FOLLOWER',?);");
-					$stmt->bind_param("ii",$user,$this->id);
-					$stmt->execute();
-					$stmt->close();
-				}
-			}
-
-			$this->followingArray = null;
-			$this->saveToCache();
-		}
-	}
-
-	/**
-	 * Unfollows a user
-	 *
-	 * @access public
-	 * @param int|User $user
-	 */
-	public function unfollow($user){
-		if(is_object($user))
-			$user = $user->getId();
-
-		if($this->isFollowing($user)){
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("DELETE FROM `follows` WHERE `follower` = ? AND `following` = ?");
-			$stmt->bind_param("ii",$this->id,$user);
-			if($stmt->execute()){
-				$u = self::getUserById($user);
-				if(!is_null($u)){
-					$u->uncacheFollower($this->id);
-					$u->reloadFollowerCount();
-					$u->removeNotification("NEW_FOLLOWER",$this->id,null);
-					$this->removeFeedEntry("NEW_FOLLOWING",$u->getId(),null);
-					$this->reloadFollowingCount();
-				}
-			}
-			$stmt->close();
-		}
-	}
-
-	/**
-	 * Blocks a user
-	 *
-	 * @access public
-	 * @param int|User $user
-	 */
-	public function block($user){
-		if(is_object($user))
-			$user = $user->getId();
-
-		if($user == $this->id) return;
-
-		if(!$this->hasBlocked($user)){
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("INSERT INTO `blocks` (`user`,`target`) VALUES(?,?);");
-			$stmt->bind_param("ii",$this->id,$user);
-			if($stmt->execute()){
-				array_push($this->cachedBlocks,$user);
-				$this->saveToCache();
-			}
-			$stmt->close();
-
-			if($this->isFollowing($user))
-				$this->unfollow($user);
-
-			if(self::getUserById($user)->isFollowing($this))
-				self::getUserById($user)->unfollow($this);
-		}
-	}
-
-	/**
-	 * Unblocks a user
-	 *
-	 * @access public
-	 * @param int|User $user
-	 */
-	public function unblock($user){
-		if(is_object($user))
-			$user = $user->getId();
-
-		if($user == $this->id) return;
-
-		if($this->hasBlocked($user)){
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("DELETE FROM `blocks` WHERE `user` = ? AND `target` = ?");
-			$stmt->bind_param("ii",$this->id,$user);
-			if($stmt->execute()){
-				$this->cachedBlocks = Util::removeFromArray($this->cachedBlocks,$user);
-				$this->saveToCache();
-			}
-			$stmt->close();
-		}
-	}
-
-	/**
-	 * Returns an array with the IDs of all users that are followed by this one
-	 *
-	 * @access public
-	 * @return array
-	 */
-	public function getFollowingAsArray(){
-		if(is_null($this->followingArray)){
-			$this->followingArray = [];
-
-			$mysqli = Database::Instance()->get();
-
-			$stmt = $mysqli->prepare("SELECT `following` FROM `follows` WHERE `follower` = ?");
-			$stmt->bind_param("i",$this->id);
-			if($stmt->execute()){
-				$result = $stmt->get_result();
-
-				if($result->num_rows){
-					while($row = $result->fetch_assoc()){
-						array_push($this->followingArray,$row["following"]);
-					}
-				}
-			}
-			$stmt->close();
-
-			$this->saveToCache();
-		}
-
-		return $this->followingArray;
+	public function getOpenRequestsCount(): int {
+		return EntityManager::instance()->getRepository(FollowRequest::class)->count([
+			"to" => $this
+		]);
 	}
 
 	/**
@@ -1646,7 +694,7 @@ class User {
 	 * @param bool $includeFeaturedBox If true, the featured box will be included
 	 * @return string|array
 	 */
-	public function toAPIJson($view,$encode = true,$includeFeaturedBox = true){
+	public function toAPIJson($view, $encode = true, $includeFeaturedBox = true) {
 		$a = [
 			"id" => $this->id,
 			"displayName" => $this->displayName,
@@ -1668,13 +716,13 @@ class User {
 			"followedStatus" => $this->isFollowing($view) ? 1 : ($this->hasSentFollowRequest($view) ? 2 : 0),
 		];
 
-		if($includeFeaturedBox){
+		if ($includeFeaturedBox) {
 			$featuredBox = [];
-			foreach($this->featuredBoxContent as $uID){
+			foreach ($this->featuredBoxContent as $uID) {
 				$u = User::getUserById($uID);
-				if(is_null($u)) continue;
+				if (is_null($u)) continue;
 
-				array_push($featuredBox,$u->toAPIJson($view,false,false));
+				array_push($featuredBox, $u->toAPIJson($view, false, false));
 			}
 
 			$a["featuredBox"] = [
@@ -1687,136 +735,13 @@ class User {
 	}
 
 	/**
-	 * Returns true if a feed entry may be posted with the given parameters
-	 *
-	 * @access public
-	 * @param string $type
-	 * @param int $following
-	 * @return bool
-	 */
-	public function canPostFeedEntry($type,$following){
-		$b = true;
-
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `feed` WHERE `user` = ? AND `type` = ? AND `following` = ? AND `time` > (NOW() - INTERVAL 4 DAY)");
-		$stmt->bind_param("isi",$this->id,$type,$following);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				if($row["count"] > 0){
-					$b = false;
-				} else {
-					$s = $mysqli->prepare("SELECT `type`,`following` FROM `feed` WHERE `user` = ? ORDER BY `time` DESC LIMIT 10");
-					$s->bind_param("i",$this->id);
-					if($s->execute()){
-						$result = $s->get_result();
-
-						if($result->num_rows){
-							while($row = $result->fetch_assoc()){
-								if($row["type"] == $type && $row["following"] == $following){
-									$b = false;
-									break;
-								}
-							}
-						}
-					}
-					$s->close();
-				}
-			}
-		}
-		$stmt->close();
-
-		return $b;
-	}
-
-	/**
-	 * Returns true if a notification may be posted with the given parameters
-	 *
-	 * @access public
-	 * @param string $type
-	 * @param int $follower
-	 * @param int $post
-	 * @return bool
-	 */
-	public function canPostNotification($type,$follower,$post){
-		$b = true;
-
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(`id`) AS `count` FROM `notifications` WHERE `user` = ? AND `type` = ? AND `follower` = ? AND `post` " . (is_null($post) ? " IS NULL" : "= " . $post) . " AND `time` > (NOW() - INTERVAL 4 DAY)");
-		$stmt->bind_param("isi",$this->id,$type,$follower);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				if($row["count"] > 0){
-					$b = false;
-				} else {
-					$s = $mysqli->prepare("SELECT `type`,`follower`,`post` FROM `notifications` WHERE `user` = ? ORDER BY `time` DESC LIMIT 10");
-					$s->bind_param("i",$this->id);
-					if($s->execute()){
-						$result = $s->get_result();
-
-						if($result->num_rows){
-							while($row = $result->fetch_assoc()){
-								if($row["type"] == $type && $row["follower"] == $follower && $row["post"] == $post){
-									$b = false;
-									break;
-								}
-							}
-						}
-					}
-					$s->close();
-				}
-			}
-		}
-		$stmt->close();
-
-		return $b;
-	}
-
-	/**
 	 * Returns the number of unread messages the user has
 	 *
 	 * @access public
 	 * @return int
 	 */
-	public function getUnreadMessages(){
-		if(is_null($this->unreadMessages)){
-			$this->reloadUnreadMessages();
-		}
-
-		return $this->unreadMessages;
-	}
-
-	/**
-	 * Updates the number of unread messages the user has
-	 *
-	 * @access public
-	 */
-	public function reloadUnreadMessages(){
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `messages` WHERE `receiver` = ? AND `is_read` = 0");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$this->unreadMessages = $row["count"];
-
-				$this->saveToCache();
-			}
-		}
-		$stmt->close();
+	public function getUnreadMessages() {
+		return 0;
 	}
 
 	/**
@@ -1825,51 +750,11 @@ class User {
 	 * @access public
 	 * @return int
 	 */
-	public function getUnreadNotifications(){
-		$unreadNotifications = 0;
-
-		$mysqli = Database::Instance()->get();
-
-		$stmt = $mysqli->prepare("SELECT COUNT(*) AS `count` FROM `notifications` WHERE `user` = ? AND `seen` = 0");
-		$stmt->bind_param("i",$this->id);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-
-			if($result->num_rows){
-				$row = $result->fetch_assoc();
-
-				$unreadNotifications = $row["count"];
-
-				$this->saveToCache();
-			}
-		}
-		$stmt->close();
-
-		return $unreadNotifications;
-	}
-
-	/**
-	 * Marks all unread notifications as read
-	 *
-	 * @param int[] $ids IDs of the notifications to mark as read
-	 * @access public
-	 */
-	public function markNotificationsAsRead($ids = []){
-		$mysqli = Database::Instance()->get();
-
-		if(is_null($ids) || count($ids) == 0){
-			$stmt = $mysqli->prepare("UPDATE `notifications` SET `seen` = 1 WHERE `user` = ? AND `seen` = 0");
-			$stmt->bind_param("i",$this->id);
-			$stmt->execute();
-			$stmt->close();
-		} else {
-			$i = implode(",",$ids);
-
-			$stmt = $mysqli->prepare("UPDATE `notifications` SET `seen` = 1 WHERE `user` = ? AND `seen` = 0 AND `id` IN ($i)");
-			$stmt->bind_param("i",$this->id);
-			$stmt->execute();
-			$stmt->close();
-		}
+	public function getUnreadNotifications() {
+		return EntityManager::instance()->getRepository(Notification::class)->count([
+			"user" => $this,
+			"seen" => false
+		]);
 	}
 
 	/**
@@ -1878,43 +763,34 @@ class User {
 	 * @access public
 	 * @return bool
 	 */
-	public function mayView(){
-		if($this->isSuspended()){
+	public function mayView() {
+		$user = Util::getCurrentUser();
+		if (Util::isLoggedIn() && $this->getId() === $user->getId()) {
+			return true;
+		}
+
+		if ($this->isSuspended()) {
 			return false;
 		} else {
-			if($this->getPrivacyLevel() == PrivacyLevel::PUBLIC){
-				if(Util::isLoggedIn()){
-					$user = Util::getCurrentUser();
-
-					if(!is_null($user)){
-						if($user->hasBlocked($this) || $user->isBlocked($this)){
-							return false;
-						}
-					}
+			if (!is_null($user)) {
+				if (Block::hasBlocked($user, $this) || Block::hasBlocked($this, $user)) {
+					return false;
 				}
+			}
 
+			if ($this->getPrivacyLevel() == PrivacyLevel::PUBLIC) {
 				return true;
-			} else if($this->getPrivacyLevel() == PrivacyLevel::PRIVATE){
-				if(Util::isLoggedIn()){
-					$user = Util::getCurrentUser();
-
-					if(!is_null($user)){
-						if($user->hasBlocked($this) || $user->isBlocked($this)){
-							return false;
-						}
-
-						if(!$user->isFollowing($this)){
-							return false;
-						}
-
-						return true;
+			} else if ($this->getPrivacyLevel() == PrivacyLevel::PRIVATE) {
+				if (!is_null($user)) {
+					if (!Follower::isFollowing($user, $this)) {
+						return false;
 					}
-				}
-			} else if($this->getPrivacyLevel() == PrivacyLevel::CLOSED){
-				if(Util::isLoggedIn()){
-					$user = Util::getCurrentUser();
 
-					if(!is_null($user)){
+					return true;
+				}
+			} else if ($this->getPrivacyLevel() == PrivacyLevel::CLOSED) {
+				if (Util::isLoggedIn()) {
+					if (!is_null($user)) {
 						return $user->getId() == $this->getId();
 					}
 				}
@@ -1928,144 +804,34 @@ class User {
 	 * Returns an array of user objects that follow the user and are followed by the current user
 	 *
 	 * @access public
+	 * @param User $user
 	 * @return User[]
 	 */
-	public function followersYouFollow($user = null){
-		if(is_null($user) && Util::isLoggedIn() && !is_null(Util::getCurrentUser())) $user = Util::getCurrentUser();
+	public function followersYouFollow(User $user = null): array {
+		if (is_null($user) && Util::isLoggedIn() && !is_null(Util::getCurrentUser())) $user = Util::getCurrentUser();
 
-		if(!is_null($user)){
-			$n = "followersYouFollow_" . $user->getId() . "_" . $this->id;
+		if (!is_null($user)) {
+			$entityManager = EntityManager::instance();
 
-			if(CacheHandler::existsInCache($n)){
-				return CacheHandler::getFromCache($n);
-			} else {
-				$mysqli = Database::Instance()->get();
+			/**
+			 * @var User[] $users
+			 */
+			$users = $entityManager->getRepository(User::class)->createQueryBuilder("u")
+				->where("exists (select 1 from qpost\Account\Follower f where f.to = :to and f.from = :from)")
+				->setParameter("to", $this)
+				->setParameter("from", $user)
+				->andWhere("exists (select 1 from qpost\Account\Follower f2 where f2.to = :to and f2.from = :from)")
+				->setParameter("to", $user)
+				->setParameter("from", $this)
+				->getQuery()
+				->getResult();
 
-				$thisID = $this->id;
-				$uID = $user->getId();
+			shuffle($users);
 
-				$a = [];
-
-				$stmt = $mysqli->prepare("SELECT `id` FROM `users` AS u WHERE EXISTS (SELECT 1 FROM follows f WHERE f.following = ? AND f.follower = u.id) AND EXISTS (SELECT 1 FROM follows f WHERE f.following = u.id AND f.follower = ?) ORDER BY RAND()");
-				$stmt->bind_param("ii",$thisID,$uID);
-				if($stmt->execute()){
-					$result = $stmt->get_result();
-
-					if($result->num_rows){
-						while($row = $result->fetch_assoc()){
-							array_push($a,User::getUserById($row["id"]));
-						}
-
-						CacheHandler::setToCache($n,$a,3*60);
-					}
-				}
-				$stmt->close();
-
-				return $a;
-			}
+			return $users;
 		}
 
 		return [];
-	}
-
-	/**
-	 * Returns HTML code to use in an user list
-	 *
-	 * @access public
-	 * @return string
-	 */
-	public function renderForUserList(){
-		if(!$this->mayView()) return "";
-
-		$s = "";
-
-		// V1
-		/*$s .= '<div class="col-md-4 px-1 py-1">';
-		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 327px">';
-		$s .= '<div class="px-2 py-2 text-center">';
-		$s .= '<a href="/' . $this->username . '" class="clearUnderline"><img src="' . $this->getAvatarURL() . '" width="60" height="60" class="rounded mb-1"/>';
-		
-		$s .= '<h5 class="mb-0 convertEmoji">' . $this->getDisplayName() . '</a></h5>';
-		$s .= '<p class="text-muted my-0" style="font-size: 16px">@' . $this->username . '</p>';
-		
-		if(Util::isLoggedIn()){
-			$s .= '</div>';
-			
-			$s .= '<div class="text-center px-2 py-2" style="background: #212529">';
-			$s .= Util::followButton($this->id,true,["btn-block"]);
-			$s .= '</div>';
-			
-			$s .= '<div class="px-2 py-2 text-center">';
-		}
-		
-		$s .= !is_null($this->bio) ? '<p class="mb-0 mt-2 convertEmoji">' . Util::convertPost($this->bio) . '</p>' : "";
-		$s .= '</div>';
-		$s .= '</div>';
-		$s .= '</div>';*/
-
-		// V2
-		/*$s .= '<div class="col-md-4 px-1 py-1">';
-		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 100%; min-height: 200px;">';
-		$s .= '<div class="px-4 pt-2">';
-		$s .= '<div class="row">';
-		$s .= '<div class="float-left">';
-		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
-		$s .= '<img class="rounded mx-1 my-1" src="' . $this->getAvatarURL() . '" width="40" height="40"/>';
-		$s .= '</a>';
-		$s .= '</div>';
-		
-		$s .= '<div class="float-left ml-1">';
-		$s .= '<p class="mb-0" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 200px !important;">';
-		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
-		$s .= '<span class="font-weight-bold convertEmoji">' . $this->getDisplayName() . $this->renderCheckMark() . '</span>';
-		$s .= '</a>';
-		$s .= '<div class="text-muted font-weight-normal" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important; width: 200px !important;"> @' . $this->getUsername() . ' </div>';
-		$s .= '</p>';
-		$s .= '</div>';
-		$s .= '</div>';
-		if(Util::isLoggedIn()){
-			$s .= '</div>';
-			
-			$s .= '<div class="text-center px-2 py-2" style="background: #212529">';
-			$s .= Util::followButton($this->id,true,["btn-block"]);
-			$s .= '</div>';
-			
-			$s .= '<div class="px-4 py-2 text-center">';
-		}
-		$s .= !is_null($this->bio) ? '<p class="mb-0 mt-1 convertEmoji">' . Util::convertPost($this->bio) . '</p>' : "<em>No bio set.</em>";
-		$s .= '</div>';
-		$s .= '</div>';
-		$s .= '</div>';*/
-
-		// V3
-		$s .= '<div class="col-md-4 px-1 py-1">';
-		$s .= '<div class="card userCard" data-user-id="' . $this->id . '" style="height: 100%; min-height: 200px;">';
-		$s .= '<div class="px-1 text-center">';
-		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
-		$s .= '<img class="rounded mx-1 my-1" src="' . $this->getAvatarURL() . '" width="40" height="40"/>';
-		$s .= '</a>';
-
-		$s .= '<p class="mb-0" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;">';
-		$s .= '<a href="/' . $this->getUsername() . '" class="clearUnderline ignoreParentClick">';
-		$s .= '<span class="font-weight-bold convertEmoji">' . $this->getDisplayName() . $this->renderCheckMark() . '</span>';
-		$s .= '</a>';
-		$s .= '<div class="text-muted font-weight-normal" style="overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; word-wrap: normal !important;"> @' . $this->getUsername() . ' </div>';
-		$s .= '</p>';
-		if(Util::isLoggedIn()){
-			$s .= '</div>';
-
-			$s .= '<div class="text-center px-2 py-2" style="background: #212529">';
-			$s .= Util::followButton($this->id,true,["btn-block"]);
-			$s .= '</div>';
-
-			$s .= '<div class="px-4 py-2 text-center">';
-		}
-		$s .= !is_null($this->bio) ? '<p class="mb-0 mt-1 convertEmoji">' . Util::convertPost($this->bio) . '</p>' : "<em>No bio set.</em>";
-		$s .= '</div>';
-		$s .= '</div>';
-		$s .= '</div>';
-
-		return $s;
 	}
 
 	/**
@@ -2073,91 +839,67 @@ class User {
 	 *
 	 * @access public
 	 */
-	public function deleteAccount(){
+	public function deleteAccount(): void {
 		$mysqli = Database::Instance()->get();
-
-		$this->removeFromCache();
 
 		// remove user data
 		$stmt = $mysqli->prepare("DELETE FROM `users` WHERE `id` = ?");
-		$stmt->bind_param("i",$this->id);
+		$stmt->bind_param("i", $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all session tokens
 		$stmt = $mysqli->prepare("DELETE FROM `tokens` WHERE `user` = ?");
-		$stmt->bind_param("i",$this->id);
+		$stmt->bind_param("i", $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all suspensions
 		$stmt = $mysqli->prepare("DELETE FROM `suspensions` WHERE `target` = ?");
-		$stmt->bind_param("i",$this->id);
+		$stmt->bind_param("i", $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all notifications
 		$stmt = $mysqli->prepare("DELETE FROM `notifications` WHERE `user` = ? OR `follower` = ?");
-		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->bind_param("i", $this->id, $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all messages
 		$stmt = $mysqli->prepare("DELETE FROM `messages` WHERE `sender` = ? OR `receiver` = ?");
-		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->bind_param("i", $this->id, $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all follower requests
 		$stmt = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `follower` = ? OR `following` = ?");
-		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->bind_param("i", $this->id, $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all followers and followings
 		$stmt = $mysqli->prepare("DELETE FROM `follows` WHERE `follower` = ? OR `following` = ?");
-		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->bind_param("i", $this->id, $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all feed entries
 		$stmt = $mysqli->prepare("DELETE FROM `feed` WHERE `user` = ? OR `following` = ?");
-		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->bind_param("i", $this->id, $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all favorites
 		$stmt = $mysqli->prepare("DELETE FROM `favorites` WHERE `user` = ?");
-		$stmt->bind_param("i",$this->id);
+		$stmt->bind_param("i", $this->id);
 		$stmt->execute();
 		$stmt->close();
 
 		// remove all blocks
 		$stmt = $mysqli->prepare("DELETE FROM `blocks` WHERE `user` = ? OR `target` = ?");
-		$stmt->bind_param("i",$this->id,$this->id);
+		$stmt->bind_param("i", $this->id, $this->id);
 		$stmt->execute();
 		$stmt->close();
-	}
-
-	/**
-	 * Saves the user object to the cache
-	 *
-	 * @access public
-	 */
-	public function saveToCache(){
-		CacheHandler::setToCache("user_id_" . $this->id, $this, CacheHandler::OBJECT_CACHE_TIME);
-		CacheHandler::setToCache("user_name_" . strtolower($this->username), $this, CacheHandler::OBJECT_CACHE_TIME);
-		CacheHandler::setToCache("user_gigadriveId_" . $this->gigadriveId, $this, CacheHandler::OBJECT_CACHE_TIME);
-	}
-
-	/**
-	 * Removes the user object from the cache
-	 *
-	 * @access public
-	 */
-	public function removeFromCache(){
-		CacheHandler::deleteFromCache("user_id_" . $this->id);
-		CacheHandler::deleteFromCache("user_name_" . strtolower($this->username));
-		CacheHandler::deleteFromCache("user_gigadriveId_" . $this->gigadriveId);
 	}
 }

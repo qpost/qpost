@@ -14,8 +14,8 @@
 			<h4 class="mb-0 convertEmoji"
 				style="word-wrap: break-word;">{{ user.displayName~user.renderCheckMark|raw }}</h4>
 			<span class="text-muted"
-				  style="font-size: 16px">@{{ user.username }}</span> {% if currentUser is defined and currentUser and user.isFollowing(currentUser) %}
-				<span class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>{% endif %}
+				  style="font-size: 16px">@{{ user.username }}</span> {% if followsYou %}<span
+					class="text-uppercase small followsYouBadge px-1 py-1">follows you</span>{% endif %}
 
 			{% if user.bio %}
 				<p class="mb-0 mt-2 convertEmoji" style="word-wrap: break-word;">
@@ -137,9 +137,7 @@
 				{{ boxTitle }}
 			</h5>
 
-			{% for uid in featuredBoxContent %}
-				{% set featuredUser = getUserById(uid) %}
-
+			{% for featuredUser in featuredBoxContent %}
 				{% if featuredUser is defined and featuredUser %}
 					<div class="my-2">
 						<a href="/{{ featuredUser.username }}" class="clearUnderline">
@@ -168,10 +166,10 @@
 {% block content %}
 	<nav class="nav nav-pills nav-justified">
 		<a class="nav-item nav-link{{ profileTab is defined and profileTab == "FEED" ? " active" }}"
-		   href="/{{ user.username }}">Feed ({{ formatNumberShort(user.posts) }})</a>
+		   href="/{{ user.username }}">Feed ({{ formatNumberShort(user.totalPostCount) }})</a>
 		<a class="nav-item nav-link{{ profileTab is defined and profileTab == "FOLLOWING" ? " active" }}"
-		   href="/{{ user.username }}/following">Following ({{ formatNumberShort(user.following) }})</a>
+		   href="/{{ user.username }}/following">Following ({{ formatNumberShort(user.followingCount) }})</a>
 		<a class="nav-item nav-link{{ profileTab is defined and profileTab == "FOLLOWERS" ? " active" }}"
-		   href="/{{ user.username }}/followers">Followers ({{ formatNumberShort(user.followers) }})</a>
+		   href="/{{ user.username }}/followers">Followers ({{ formatNumberShort(user.followerCount) }})</a>
 	</nav>
 {% endblock %}

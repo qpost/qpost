@@ -1,4 +1,4 @@
-{% set u2 = getUserById(notification.follower) %}
+{% set u2 = notification.follower %}
 
 {% if u2 %}
 	<div class="my-1{{ notification.seen == false ? " unseenFollowerNotification" }}" style="border-color: #CCC;">

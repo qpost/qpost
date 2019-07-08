@@ -1,66 +1,82 @@
 <?php
 
+namespace qpost\Router;
+
+use DateTime;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\QueryBuilder;
 use Gumlet\ImageResize;
+use qpost\Account\Follower;
+use qpost\Account\FollowRequest;
 use qpost\Account\PrivacyLevel;
 use qpost\Account\User;
+use qpost\Block\Block;
 use qpost\Cache\CacheHandler;
 use qpost\Database\Database;
+use qpost\Database\EntityManager;
+use qpost\Feed\Favorite;
 use qpost\Feed\FeedEntry;
+use qpost\Feed\FeedEntryType;
+use qpost\Feed\Notification;
+use qpost\Feed\NotificationType;
+use qpost\Feed\Share;
+use qpost\Media\Attachment;
 use qpost\Media\MediaFile;
 use qpost\Util\Util;
 
-$app->post("/scripts/toggleFollow",function(){
+create_route_post("/scripts/toggleFollow", function () {
 	$this->response->mime ="json";
-	
+
 	if(isset($_POST["user"])){
 		if(Util::isLoggedIn()){
-			$user = Util::getCurrentUser();
-			$toFollow = User::getUserById($_POST["user"]);
-			$mysqli = Database::Instance()->get();
+			$entityManager = EntityManager::instance();
 
-			if($user->getFollowers() < FOLLOW_LIMIT){
+			$user = Util::getCurrentUser();
+			/**
+			 * @var User $toFollow
+			 */
+			$toFollow = $entityManager->getRepository(User::class)->findOneBy(["id" => $_POST["user"]]);
+
+			if ($user->getFollowingCount() < FOLLOW_LIMIT) {
 				if(!is_null($user) && !is_null($toFollow)){
 					if($user->getId() != $toFollow->getId()){
 						$followStatus = -1;
 
 						if($toFollow->getPrivacyLevel() == PrivacyLevel::PUBLIC){
-							if($user->isFollowing($toFollow)){
-								$user->unfollow($toFollow);
+							if (Follower::isFollowing($user, $toFollow)) {
+								Follower::unfollow($user, $toFollow);
 								$followStatus = 0;
 							} else {
-								$user->follow($toFollow);
+								Follower::follow($user, $toFollow);
 								$followStatus = 1;
 							}
 						} else if($toFollow->getPrivacyLevel() == PrivacyLevel::PRIVATE){
-							$u1 = $user->getId();
-							$u2 = $toFollow->getId();
-
-							if($user->isFollowing($toFollow)){
-								$user->unfollow($toFollow);
+							if (Follower::isFollowing($user, $toFollow)) {
+								Follower::unfollow($user, $toFollow);
 								$followStatus = 0;
 							} else {
-								if(!$user->hasSentFollowRequest($toFollow)){
-									$stmt = $mysqli->prepare("INSERT INTO `follow_requests` (`follower`,`following`) VALUES(?,?);");
-									$stmt->bind_param("ii",$u1,$u2);
-									$stmt->execute();
-									$stmt->close();
+								if (!!FollowRequest::hasSentFollowRequest($user, $toFollow)) {
+									$request = new FollowRequest();
+									$entityManager->persist($request->setFrom($user)->setTo($toFollow)->setTime(new DateTime("now")));
 
-									$toFollow->reloadOpenFollowRequests();
-	
 									$followStatus = 2;
 								} else {
-									$stmt = $mysqli->prepare("DELETE FROM `follow_requests` WHERE `follower` = ? AND `following` = ?");
-									$stmt->bind_param("ii",$u1,$u2);
-									$stmt->execute();
-									$stmt->close();
+									$request = $entityManager->getRepository(FollowRequest::class)->findOneBy([
+										"from" => $user,
+										"to" => $toFollow
+									]);
 
-									$toFollow->reloadOpenFollowRequests();
-	
+									if ($request) {
+										$entityManager->remove($request);
+									}
+
 									$followStatus = 0;
 								}
 							}
 						}
-		
+
+						$entityManager->flush();
+
 						return json_encode(["followStatus" => $followStatus]);
 					} else {
 						return json_encode(["error" => "Can't follow self"]);
@@ -79,19 +95,22 @@ $app->post("/scripts/toggleFollow",function(){
 	}
 });
 
-$app->post("/scripts/deletePost",function(){
+create_route_post("/scripts/deletePost", function () {
 	$this->response->mime = "json";
 
 	if(isset($_POST["post"])){
 		if(Util::isLoggedIn()){
 			$user = Util::getCurrentUser();
 
-			$post = FeedEntry::getEntryById($_POST["post"]);
+			/**
+			 * @var FeedEntry $post
+			 */
+			$post = EntityManager::instance()->getRepository(FeedEntry::class)->findBy(["id" => $_POST["post"]]);
 
 			if(is_null($post))
 				return json_encode(["error" => "Unknown post"]);
 
-			if($post->getUserId() == $user->getId() && ($post->getType() == "POST" || $post->getType() == "NEW_FOLLOWING")){
+			if ($post->getUser()->getId() == $user->getId() && ($post->getType() == FeedEntryType::POST || $post->getType() == FeedEntryType::NEW_FOLLOWING)) {
 				$post->delete();
 
 				return json_encode(["status" => "done"]);
@@ -106,29 +125,43 @@ $app->post("/scripts/deletePost",function(){
 	}
 });
 
-$app->post("/scripts/toggleFavorite",function(){
+create_route_post("/scripts/toggleFavorite", function () {
 	$this->response->mime = "json";
-	
+
 	if(isset($_POST["post"])){
 		if(Util::isLoggedIn()){
 			$user = Util::getCurrentUser();
-			$post = FeedEntry::getEntryById($_POST["post"]);
+
+			/**
+			 * @var FeedEntry $post
+			 */
+			$post = EntityManager::instance()->getRepository(FeedEntry::class)->findOneBy(["id" => $_POST["post"]]);
 
 			if(is_null($post))
 				return json_encode(["error" => "Unknown post"]);
 
-			if($user->hasFavorited($post->getId())){
-				$user->unfavorite($post->getId());
-
-				$post = FeedEntry::getEntryById($_POST["post"]);
-
-				return json_encode(["status" => "Favorite removed","replies" => $post->getReplies(),"shares" => $post->getShares(),"favorites" => $post->getFavorites()]);
+			if (Favorite::hasFavorited($user, $post)) {
+				if (Favorite::unfavorite($user, $post)) {
+					return json_encode([
+						"status" => "Favorite removed",
+						"replies" => $post->getReplyCount(),
+						"shares" => $post->getShareCount(),
+						"favorites" => $post->getFavoriteCount()
+					]);
+				} else {
+					return json_encode(["error" => "An error occurred"]);
+				}
 			} else {
-				$user->favorite($post->getId());
-
-				$post = FeedEntry::getEntryById($_POST["post"]);
-
-				return json_encode(["status" => "Favorite added","replies" => $post->getReplies(),"shares" => $post->getShares(),"favorites" => $post->getFavorites()]);
+				if (Favorite::favorite($user, $post)) {
+					return json_encode([
+						"status" => "Favorite added",
+						"replies" => $post->getReplyCount(),
+						"shares" => $post->getShareCount(),
+						"favorites" => $post->getFavoriteCount()
+					]);
+				} else {
+					return json_encode(["error" => "An error occurred"]);
+				}
 			}
 		} else {
 			return json_encode(["error" => "Not logged in"]);
@@ -138,36 +171,46 @@ $app->post("/scripts/toggleFavorite",function(){
 	}
 });
 
-$app->post("/scripts/toggleShare",function(){
+create_route_post("/scripts/toggleShare", function () {
 	$this->response->mime ="json";
-	
+
 	if(isset($_POST["post"])){
 		if(Util::isLoggedIn()){
 			$user = Util::getCurrentUser();
-			$post = FeedEntry::getEntryById($_POST["post"]);
+
+			/**
+			 * @var FeedEntry $post
+			 */
+			$post = EntityManager::instance()->getRepository(FeedEntry::class)->findOneBy(["id" => $_POST["post"]]);
 
 			if(is_null($post))
 				return json_encode(["error" => "Unknown post"]);
 
-			if($post->getUserId() == $user->getId())
+			if ($post->getUser()->getId() == $user->getId())
 				return json_encode(["error" => "Cant share own post"]);
 
-			if($user->hasShared($post->getId())){
+			if (Share::hasShared($user, $post)) {
 				if($post->getUser()->getPrivacyLevel() == PrivacyLevel::PUBLIC){
-					$user->unshare($post->getId());
+					Share::unshare($user, $post);
 
-					$post = FeedEntry::getEntryById($_POST["post"]);
-
-					return json_encode(["status" => "Share removed","replies" => $post->getReplies(),"shares" => $post->getShares(),"favorites" => $post->getFavorites()]);
+					return json_encode([
+						"status" => "Share removed",
+						"replies" => $post->getReplyCount(),
+						"shares" => $post->getShareCount(),
+						"favorites" => $post->getFavoriteCount()
+					]);
 				} else {
 					return json_encode(["error" => "Invalid privacy level"]);
 				}
 			} else {
-				$user->share($post->getId());
+				Share::share($user, $post);
 
-				$post = FeedEntry::getEntryById($_POST["post"]);
-
-				return json_encode(["status" => "Share added","replies" => $post->getReplies(),"shares" => $post->getShares(),"favorites" => $post->getFavorites()]);
+				return json_encode([
+					"status" => "Share added",
+					"replies" => $post->getReplyCount(),
+					"shares" => $post->getShareCount(),
+					"favorites" => $post->getFavoriteCount()
+				]);
 			}
 		} else {
 			return json_encode(["error" => "Not logged in"]);
@@ -177,73 +220,82 @@ $app->post("/scripts/toggleShare",function(){
 	}
 });
 
-$app->get("/scripts/desktopNotifications",function(){
+create_route_get("/scripts/desktopNotifications", function () {
 	$this->response->mime = "json";
 
 	if(Util::isLoggedIn()){
 		$currentUser = Util::getCurrentUser();
-		$mysqli = Database::Instance()->get();
-		$uid = $currentUser->getId();
+		$entityManager = EntityManager::instance();
 
 		$notifications = [];
 
-		$stmt = $mysqli->prepare("SELECT * FROM `notifications` WHERE `user` = ? AND `notified` = 0");
-		$stmt->bind_param("i",$uid);
-		if($stmt->execute()){
-			$result = $stmt->get_result();
-			if($result->num_rows){
-				while($row = $result->fetch_assoc()){
-					array_push($notifications,[
-						"id" => $row["id"],
-						"user" => Util::userJsonData($row["user"]),
-						"type" => $row["type"],
-						"follower" => Util::userJsonData($row["follower"]),
-						"post" => Util::postJsonData($row["post"]),
-						"time" => $row["time"]
-					]);
-				}
-			}
+		/**
+		 * @var Notification[] $foundNotifications
+		 */
+		$foundNotifications = $entityManager->getRepository(Notification::class)->findBy([
+			"user" => $currentUser,
+			"notified" => false
+		]);
+
+		foreach ($foundNotifications as $notification) {
+			array_push($notifications, [
+				"id" => $notification->getId(),
+				"user" => Util::userJsonData($notification->getUser()),
+				"type" => $notification->getType(),
+				"follower" => Util::userJsonData($notification->getFollower()),
+				"post" => Util::postJsonData($notification->getPost()),
+				"time" => $notification->getTime()
+			]);
+
+			$notification->setNotified(true);
+			$entityManager->persist($notification);
 		}
-		$stmt->close();
 
-		$stmt = $mysqli->prepare("UPDATE `notifications` SET `notified` = 1 WHERE `user` = ? AND `notified` = 0");
-		$stmt->bind_param("i",$uid);
-		$stmt->execute();
-		$stmt->close();
+		$entityManager->flush();
 
-		return json_encode(["notifications" => $notifications,"unreadCount" => Util::getCurrentUser()->getUnreadNotifications()]);
+		return json_encode([
+			"notifications" => $notifications,
+			"unreadCount" => Util::getCurrentUser()->getUnreadNotifications()
+		]);
 	} else {
 		return json_encode(["error" => "Not logged in"]);
 	}
 });
 
-$app->post("/scripts/validateVideoURL",function(){
+create_route_post("/scripts/validateVideoURL", function () {
 	$this->response->mime = "json";
 
 	if(Util::isLoggedIn()){
-		$currentUser = Util::getCurrentUser();
-
 		if(isset($_POST["videoURL"])){
 			return json_encode(["status" => Util::isValidVideoURL($_POST["videoURL"]) ? "valid" : "invalid"]);
 		} else {
 			return json_encode(["error" => "Bad request"]);
 		}
 	} else {
-		return json_encode(["error" => "Not logged in"]);	
+		return json_encode(["error" => "Not logged in"]);
 	}
 });
 
-$app->post("/scripts/extendHomeFeed",function(){
+function home_feed_query(User $currentUser): QueryBuilder {
+	return EntityManager::instance()->getRepository(FeedEntry::class)->createQueryBuilder("f")
+		->innerJoin("f.user", "u")
+		->where("u.privacyLevel != :closed")
+		->setParameter("closed", PrivacyLevel::CLOSED, Type::STRING)
+		->andWhere("f.post is null")
+		->andWhere("f.type = :post or f.type = :share")
+		->setParameter("post", FeedEntryType::POST, Type::STRING)
+		->setParameter("share", FeedEntryType::SHARE, Type::STRING)
+		->andWhere("exists (select 1 from qpost\Account\Follower ff where ff.to = :to) or f.user = :to")
+		->setParameter("to", $currentUser)
+		->orderBy("f.time", "DESC")
+		->setMaxResults(30);
+}
+
+create_route_post("/scripts/extendHomeFeed", function () {
 	$this->response->mime = "json";
 
 	if(Util::isLoggedIn()){
 		$currentUser = Util::getCurrentUser();
-		$mysqli = Database::Instance()->get();
-
-		$a = $currentUser->getFollowingAsArray();
-		array_push($a,$currentUser->getId());
-
-		$i = $mysqli->real_escape_string(implode(",",$a));
 
 		if(isset($_POST["mode"])){
 			if($_POST["mode"] == "loadOld"){
@@ -251,20 +303,18 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$firstPost = (int)$_POST["firstPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID` FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` < ? ORDER BY f.`time` DESC LIMIT 30");
-					$stmt->bind_param("i",$firstPost);
-					if($stmt->execute()){
-						$result = $stmt->get_result();
+					/**
+					 * @var FeedEntry[] $feedEntries
+					 */
+					$feedEntries = home_feed_query($currentUser)
+						->andWhere("f.id < :id")
+						->setParameter("id", $firstPost, Type::INTEGER)
+						->getQuery()
+						->getResult();
 
-						if($result->num_rows){
-							while($row = $result->fetch_assoc()){
-								$entry = FeedEntry::getEntryById($row["postID"]);
-
-								array_push($posts,Util::postJsonData($entry));
-							}
-						}
+					foreach ($feedEntries as $feedEntry) {
+						array_push($posts, Util::postJsonData($feedEntry));
 					}
-					$stmt->close();
 
 					return json_encode(["result" => $posts]);
 				} else {
@@ -275,20 +325,18 @@ $app->post("/scripts/extendHomeFeed",function(){
 					$posts = [];
 					$lastPost = (int)$_POST["lastPost"];
 
-					$stmt = $mysqli->prepare("SELECT f.`id` AS `postID` FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' AND f.`id` > ? ORDER BY f.`time` DESC LIMIT 30");
-					$stmt->bind_param("i",$lastPost);
-					if($stmt->execute()){
-						$result = $stmt->get_result();
+					/**
+					 * @var FeedEntry[] $feedEntries
+					 */
+					$feedEntries = home_feed_query($currentUser)
+						->andWhere("f.id > :id")
+						->setParameter("id", $lastPost, Type::INTEGER)
+						->getQuery()
+						->getResult();
 
-						if($result->num_rows){
-							while($row = $result->fetch_assoc()){
-								$entry = FeedEntry::getEntryById($row["postID"]);
-
-								array_push($posts,Util::postJsonData($entry));
-							}
-						}
+					foreach ($feedEntries as $feedEntry) {
+						array_push($posts, Util::postJsonData($feedEntry));
 					}
-					$stmt->close();
 
 					return json_encode(["result" => $posts]);
 				} else {
@@ -297,19 +345,16 @@ $app->post("/scripts/extendHomeFeed",function(){
 			} else if($_POST["mode"] == "loadFirst"){
 				$posts = [];
 
-				$stmt = $mysqli->prepare("SELECT f.`id` AS `postID` FROM `feed` AS f INNER JOIN `users` AS u ON f.`user` = u.`id` WHERE f.`post` IS NULL AND (f.`type` = 'POST' OR f.`type` = 'SHARE') AND f.`user` IN ($i) AND u.`privacy.level` != 'CLOSED' ORDER BY f.`time` DESC LIMIT 30");
-				if($stmt->execute()){
-					$result = $stmt->get_result();
+				/**
+				 * @var FeedEntry[] $feedEntries
+				 */
+				$feedEntries = home_feed_query($currentUser)
+					->getQuery()
+					->getResult();
 
-					if($result->num_rows){
-						while($row = $result->fetch_assoc()){
-							$entry = FeedEntry::getEntryById($row["postID"]);
-
-							array_push($posts,Util::postJsonData($entry));
-						}
-					}
+				foreach ($feedEntries as $feedEntry) {
+					array_push($posts, Util::postJsonData($feedEntry));
 				}
-				$stmt->close();
 
 				return json_encode(["result" => $posts]);
 			} else {
@@ -323,7 +368,7 @@ $app->post("/scripts/extendHomeFeed",function(){
 	}
 });
 
-$app->post("/scripts/mediaUpload",function(){
+create_route_post("/scripts/mediaUpload", function () {
 	$this->response->mime = "json";
 
 	if(Util::isLoggedIn()){
@@ -331,16 +376,16 @@ $app->post("/scripts/mediaUpload",function(){
 
 		if(!Util::isEmpty($_FILES)){
 			if(is_array($_FILES) && count($_FILES) > 0){
-				$mysqli = Database::Instance()->get();
+				$entityManager = EntityManager::instance();
 				$mediaIDs = [];
 
 				foreach($_FILES as $file){
 					$tmpName = $file["tmp_name"];
 					$fileName = $file["name"];
-	
+
 					if(is_uploaded_file($tmpName)){
 						$ext = strtolower(pathinfo($fileName,PATHINFO_EXTENSION));
-	
+
 						if($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif"){
 							if(@getimagesize($tmpName) === false){
 								continue;
@@ -350,34 +395,31 @@ $app->post("/scripts/mediaUpload",function(){
 						}
 
 						$sha256 = hash("sha256",file_get_contents($tmpName));
-						$mediaFile = MediaFile::getMediaFileFromSHA($sha256);
+
+						/**
+						 * @var MediaFile $mediaFile
+						 */
+						$mediaFile = $entityManager->getRepository(MediaFile::class)->findOneBy(["sha256" => $sha256]);
+
 						if(!is_null($mediaFile)){
 							array_push($mediaIDs,$mediaFile->getId());
 							continue;
 						}
-
-						$mediaID = MediaFile::generateNewID();
 
 						$cdnResult = Util::storeFileOnCDN($tmpName);
 						if(!is_null($cdnResult)){
 							if(isset($cdnResult["url"])){
 								$url = $cdnResult["url"];
 
-								$originalUploader = $user->getId();
+								$mediaFile = new MediaFile();
 
-								$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`) VALUES(?,?,?,?);");
-								$stmt->bind_param("sssi",$mediaID,$sha256,$url,$originalUploader);
-								if($stmt->execute()){
-									$mediaFile = MediaFile::getMediaFileFromID($mediaID);
+								$mediaFile->setSHA256($sha256)
+									->setURL($url)
+									->setOriginalUploader($user);
 
-									array_push($mediaIDs,$mediaID);
-								} else {
-									$a = json_encode(["error" => "Database error: " . $stmt->error]);
-									$stmt->close();
-									return $a;
-								}
+								$entityManager->persist($mediaFile);
 
-								$stmt->close();
+								array_push($mediaIDs, $mediaFile->getId());
 							} else {
 								return json_encode(["error" => $cdnResult["error"]]);
 							}
@@ -401,12 +443,18 @@ $app->post("/scripts/mediaUpload",function(){
 	}
 });
 
-$app->post("/scripts/postInfo",function(){
+create_route_post("/scripts/postInfo", function () {
 	$this->response->mime = "json";
 
 	if(isset($_POST["postId"])){
+		$entityManager = EntityManager::instance();
+
 		$postId = $_POST["postId"];
-		$post = FeedEntry::getEntryById($postId);
+
+		/**
+		 * @var FeedEntry $post
+		 */
+		$post = $entityManager->getRepository(FeedEntry::class)->findOneBy(["id" => $postId]);
 
 		if(!is_null($post)){
 			$user = $post->getUser();
@@ -418,10 +466,18 @@ $app->post("/scripts/postInfo",function(){
 					if(is_null($followButton))
 						$followButton = "";
 
-					$jsonData = Util::postJsonData($postId,0);
+					$jsonData = Util::postJsonData($post, 0);
 
 					$replyData = [];
-					$replies = $post->getReplyArray();
+
+					/**
+					 * @var FeedEntry[] $replies
+					 */
+					$replies = $entityManager->getRepository(FeedEntry::class)->findBy([
+						"post" => $post,
+						"type" => FeedEntryType::POST
+					]);
+
 					if(!is_null($replies)){
 						foreach ($replies as $reply){
 							array_push($replyData,Util::postJsonData($reply,0));
@@ -447,7 +503,7 @@ $app->post("/scripts/postInfo",function(){
 	}
 });
 
-$app->post("/scripts/loadBirthdays",function(){
+create_route_post("/scripts/loadBirthdays", function () {
 	$this->response->mime = "json";
 
 	if(isset($_POST["dateString"])){
@@ -456,42 +512,31 @@ $app->post("/scripts/loadBirthdays",function(){
 		if(strlen($dateString) == strlen("2018-01-01")){
 			if(Util::isLoggedIn()){
 				$user = Util::getCurrentUser();
-	
+
 				if(!is_null($user)){
 					$birthdayUsers = [];
-					$n = "birthdayUsers_" . $user->getId();
-	
-					if(CacheHandler::existsInCache($n)){
-						$birthdayUsers = CacheHandler::getFromCache($n);
-					} else {
-						$followingArray = $user->getFollowingAsArray();
-	
-						if(count($followingArray) > 0){
-							$mysqli = Database::Instance()->get();
-	
-							$i = $mysqli->real_escape_string(implode(",",$user->getFollowingAsArray()));
-	
-							$stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE `id` IN ($i) AND `birthday` IS NOT NULL AND DATE_FORMAT(`birthday`,'%m-%d') = DATE_FORMAT(?,'%m-%d')");
-							$stmt->bind_param("s",$dateString);
-							if($stmt->execute()){
-								$result = $stmt->get_result();
+					$entityManager = EntityManager::instance();
 
-								if($result->num_rows){
-									while($row = $result->fetch_assoc()){
-										array_push($birthdayUsers,User::getUserById($row["id"]));
-									}
-								}
-							}
-							$stmt->close();
+					/**
+					 * @var User[] $users
+					 */
+					$users = $entityManager->getRepository(User::class)->createQueryBuilder("u")
+						->where("exists (select 1 from qpost\Account\Follower f where f.to = :to)")
+						->setParameter("to", $user)
+						->andWhere("u.birthday is not null")
+						->andWhere("DATE_FORMAT(u.birthday,'%m-%d') = DATE_FORMAT(:birthday,'%m-%d')")
+						->setParameter("birthday", $user->getBirthday(), Type::STRING)
+						->getQuery()
+						->getResult();
 
-							CacheHandler::setToCache($n,$birthdayUsers,5*60);
-						}
+					foreach ($users as $u) {
+						array_push($birthdayUsers, $u);
 					}
-	
+
 					$html = "";
-	
+
 					if(count($birthdayUsers) > 0){
-						$html .= '<div class="card mb-3">';
+						$html .= '<div class="card my-3">';
 
 						$html .= '<div class="card-header">Today\'s birthdays</div>';
 
@@ -514,7 +559,7 @@ $app->post("/scripts/loadBirthdays",function(){
 
 						$html .= '</div>';
 					}
-	
+
 					return json_encode(["results" => count($birthdayUsers),"html" => $html]);
 				} else {
 					return json_encode(["error" => "Not logged in"]);
@@ -530,18 +575,27 @@ $app->post("/scripts/loadBirthdays",function(){
 	}
 });
 
-$app->post("/scripts/mediaInfo",function(){
+create_route_post("/scripts/mediaInfo", function () {
 	$this->response->mime = "json";
 
 	if(isset($_POST["postId"]) && isset($_POST["mediaId"])){
+		$entityManager = EntityManager::instance();
+
 		$postId = $_POST["postId"];
-		$post = FeedEntry::getEntryById($postId);
+
+		/**
+		 * @var FeedEntry $post
+		 */
+		$post = $entityManager->getRepository(FeedEntry::class)->findOneBy(["id" => $postId]);
 
 		if(!is_null($post)){
 			$user = $post->getUser();
 
 			if(!is_null($user)){
-				$mediaFile = MediaFile::getMediaFileFromID($_POST["mediaId"]);
+				/**
+				 * @var MediaFile $mediaFile
+				 */
+				$mediaFile = $entityManager->getRepository(MediaFile::class)->findOneBy(["id" => $_POST["mediaId"]]);
 
 				if(!is_null($mediaFile)){
 					$followButton = Util::followButton($user,false,["float-right"]);
@@ -568,10 +622,15 @@ $app->post("/scripts/mediaInfo",function(){
 	}
 });
 
-$app->bind("/mediaThumbnail", function($params){
+create_route("/mediaThumbnail", function () {
 	$id = isset($_GET["id"]) ? $_GET["id"] : null;
 	if(!is_null($id) && !Util::isEmpty($id)){
-		$mediaFile = MediaFile::getMediaFileFromID($id);
+		$entityManager = EntityManager::instance();
+
+		/**
+		 * @var MediaFile $mediaFile
+		 */
+		$mediaFile = $entityManager->getRepository(MediaFile::class)->findOneBy(["id" => $id]);
 
 		if($mediaFile != null){
 			$url = $mediaFile->getURL();
@@ -586,7 +645,8 @@ $app->bind("/mediaThumbnail", function($params){
 				$image = ImageResize::createFromString($imageString);
 
 				if(!is_null($image)){
-					return $image->output(IMAGETYPE_JPEG,100);
+					$image->output(IMAGETYPE_JPEG, 100);
+					return "";
 				} else {
 					return $this->reroute("/");
 				}
@@ -602,7 +662,7 @@ $app->bind("/mediaThumbnail", function($params){
 
 						if($width > -1 && $height > -1){
 							$image = ImageResize::createFromString($imageString);
-							
+
 							if(!is_null($image)){
 								/*$source = imagecreatefromstring($imageString);
 
@@ -610,14 +670,15 @@ $app->bind("/mediaThumbnail", function($params){
 								imagecopyresampled($virtualImage,$source,0,0,0,0,100,100,$width,$height);*/
 
 								$image->resizeToBestFit(800,450,true);
-	
+
 								$imageString = $image->getImageAsString();
 
 								CacheHandler::setToCache($n, base64_encode($imageString), 20 * 60);
 
 								$image = ImageResize::createFromString(base64_decode(CacheHandler::getFromCache($n)));
-	
-								return $image->output(IMAGETYPE_JPEG,100);
+
+								$image->output(IMAGETYPE_JPEG, 100);
+								return "";
 							} else {
 								return $this->reroute("/");
 							}
@@ -639,15 +700,19 @@ $app->bind("/mediaThumbnail", function($params){
 	}
 });
 
-$app->post("/scripts/favoriteSample",function(){
+create_route_post("/scripts/favoriteSample", function () {
 	$this->response->mime = "json";
 
 	if(isset($_POST["post"])){
+		$entityManager = EntityManager::instance();
 		$postId = $_POST["post"];
 
-		$post = FeedEntry::getEntryById($postId);
+		/**
+		 * @var FeedEntry $post
+		 */
+		$post = $entityManager->getRepository(FeedEntry::class)->findOneBy(["id" => $postId]);
 		if(!is_null($post)){
-			if($post->getType() == FEED_ENTRY_TYPE_POST){
+			if ($post->getType() == FeedEntryType::POST) {
 				if($post->mayView()){
 					$favoriteSample = $post->getFavoriteSample();
 
@@ -683,15 +748,20 @@ $app->post("/scripts/favoriteSample",function(){
 	}
 });
 
-$app->post("/scripts/shareSample",function(){
+create_route_post("/scripts/shareSample", function () {
 	$this->response->mime = "json";
 
 	if(isset($_POST["post"])){
+		$entityManager = EntityManager::instance();
 		$postId = $_POST["post"];
 
-		$post = FeedEntry::getEntryById($postId);
+		/**
+		 * @var FeedEntry $post
+		 */
+		$post = $entityManager->getRepository(FeedEntry::class)->findOneBy(["id" => $postId]);
+
 		if(!is_null($post)){
-			if($post->getType() == FEED_ENTRY_TYPE_POST){
+			if ($post->getType() == FeedEntryType::POST) {
 				if($post->mayView()){
 					$shareSample = $post->getShareSample();
 
@@ -724,13 +794,13 @@ $app->post("/scripts/shareSample",function(){
 	}
 });
 
-$app->post("/scripts/createPost",function(){
+create_route_post("/scripts/createPost", function () {
 	$this->response->mime = "json";
-	
+
 	if(isset($_POST["text"])){
 		if(Util::isLoggedIn()){
 			$user = Util::getCurrentUser();
-			
+
 			if(!$user->isSuspended()){
 				$text = trim(Util::fixString($_POST["text"]));
 
@@ -742,175 +812,188 @@ $app->post("/scripts/createPost",function(){
 					if(Util::isEmpty($text)) $text = null;
 
 					if(count($mentioned) < 15){
-						$userId = $user->getId();
-						$sessionId = session_id();
-						$type = FEED_ENTRY_TYPE_POST;
+						$entityManager = EntityManager::instance();
+
+						$sessionId = Util::getCurrentToken()->getId();
+						$type = FeedEntryType::POST;
 
 						$postId = null;
 
-						$parent = isset($_POST["replyTo"]) ? $_POST["replyTo"] : null;
+						/**
+						 * @var FeedEntry $parent
+						 */
+						$parent = isset($_POST["replyTo"]) ? $entityManager->getRepository(FeedEntry::class)->findOneBy(["id" => $_POST["replyTo"]]) : null;
 
-						if(!is_null($parent) && !is_null(FeedEntry::getEntryById($parent))){
-							$parentCreator = FeedEntry::getEntryById($parent)->getUser();
-							if($parentCreator->getPrivacyLevel() == PrivacyLevel::CLOSED && $parentCreator->getId() != $userId) return json_encode(["error" => "Parent owner is closed"]);
-							if($parentCreator->getPrivacyLevel() == PrivacyLevel::PRIVATE && !$parentCreator->isFollower($userId)) return json_encode(["error" => "Parent owner is private and not followed"]);
-							if($parentCreator->hasBlocked($userId)) return json_encode(["error" => "Parent has blocked"]);
+						if (!is_null($parent)) {
+							$parentCreator = $parent->getUser();
+							if ($parentCreator->getPrivacyLevel() == PrivacyLevel::CLOSED && $parentCreator->getId() != $user->getId()) return json_encode(["error" => "Parent owner is closed"]);
+							if ($parentCreator->getPrivacyLevel() == PrivacyLevel::PRIVATE && !Follower::isFollowing($user, $parentCreator)) return json_encode(["error" => "Parent owner is private and not followed"]);
+							if (Block::hasBlocked($parentCreator, $user)) return json_encode(["error" => "Parent has blocked"]);
 						}
 
-						if($parent == 0) $parent = null;
-
+						/**
+						 * @var bool $nsfw
+						 */
 						$nsfw = isset($_POST["nsfw"]) && $_POST["nsfw"] == "true";
 
 						$furtherProccess = true;
 
-						$attachments = null;
+						/**
+						 * @var MediaFile[] $mediaFiles
+						 */
+						$mediaFiles = [];
+
 						if(isset($_POST["attachments"]) && !Util::isEmpty($_POST["attachments"])){
-							if(Util::isValidJSON($_POST["attachments"]) && is_array(json_decode($_POST["attachments"],true))){
+							if (Util::isValidJSON($_POST["attachments"])) {
 								$attachments = json_decode($_POST["attachments"],true);
 
-								foreach($attachments as $attachment){
-									if(is_string($attachment)){
-										$mediaFile = MediaFile::getMediaFileFromID($attachment);
+								if (is_array($attachments)) {
+									foreach ($attachments as $attachment) {
+										if (is_string($attachment)) {
+											/**
+											 * @var MediaFile $mediaFile
+											 */
+											$mediaFile = $entityManager->getRepository(MediaFile::class)->findOneBy(["id" => $attachment]);
 
-										if(is_null($mediaFile)){
+											if (is_null($mediaFile)) {
+												return json_encode(["error" => "Invalid attachment ID " . $attachment]);
+											} else {
+												array_push($mediaFiles, $mediaFile);
+											}
+										} else {
 											return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
 										}
-									} else {
-										return json_encode(["error" => "Invalid attachment ID " . $_POST["attachments"]]);
-									}
 
-									$furtherProccess = false;
+										$furtherProccess = false;
+									}
 								}
 							}
 						}
-						
+
 						if($furtherProccess){
 							if(isset($_POST["videoURL"]) && !is_null($_POST["videoURL"])){
 								$videoURL = trim($_POST["videoURL"]);
-		
+
 								if(!Util::isEmpty($videoURL)){
 									if(Util::isValidVideoURL($videoURL)){
 										$videoURL = Util::stripUnneededInfoFromVideoURL($videoURL);
 										$sha = hash("sha256",$videoURL);
-		
-										$mediaFile = MediaFile::getMediaFileFromSHA($sha);
+
+										/**
+										 * @var MediaFile $mediaFile
+										 */
+										$mediaFile = $entityManager->getRepository(MediaFile::class)->findOneBy(["sha256" => $sha]);
+
 										if(is_null($mediaFile)){
-											$mediaID = MediaFile::generateNewID();
-		
-											$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,'VIDEO');");
-											$stmt->bind_param("sssi",$mediaID,$sha,$videoURL,$userId);
-											if($stmt->execute()){
-												$mediaFile = MediaFile::getMediaFileFromID($mediaID);
-											} else {
-												$a = json_encode(["error" => "Database error: " . $stmt->error]);
-												$stmt->close();
-												return $a;
-											}
-		
-											$stmt->close();
+											$mediaFile = new MediaFile();
+
+											$mediaFile->setType("VIDEO")
+												->setOriginalUploader($user)
+												->setURL($videoURL)
+												->setSHA256($sha);
+
+											$entityManager->persist($mediaFile);
 										}
-		
+
 										if(!is_null($mediaFile)){
-											if(is_null($attachments)) $attachments = [];
-		
-											array_push($attachments,$mediaFile->getId());
+											array_push($mediaFiles, $mediaFile);
 										}
 									}
 								}
 							} else if(isset($_POST["linkURL"]) && !is_null($_POST["linkURL"])){
 								$linkURL = trim($_POST["linkURL"]);
-		
+
 								if(!Util::isEmpty($linkURL)){
 									if(filter_var($linkURL,FILTER_VALIDATE_URL)){
 										$sha = hash("sha256",$linkURL);
-		
-										$mediaFile = MediaFile::getMediaFileFromSHA($sha);
+
+										/**
+										 * @var MediaFile $mediaFile
+										 */
+										$mediaFile = $entityManager->getRepository(MediaFile::class)->findOneBy(["sha256" => $sha]);
+
 										if(is_null($mediaFile)){
-											$mediaID = MediaFile::generateNewID();
-		
 											$type = Util::isValidVideoURL($linkURL) ? "VIDEO" : "LINK";
-		
-											$stmt = $mysqli->prepare("INSERT INTO `media` (`id`,`sha256`,`url`,`originalUploader`,`type`) VALUES(?,?,?,?,?);");
-											$stmt->bind_param("sssis",$mediaID,$sha,$linkURL,$userId,$type);
-											if($stmt->execute()){
-												$mediaFile = MediaFile::getMediaFileFromID($mediaID);
-											} else {
-												$a = json_encode(["error" => "Database error: " . $stmt->error]);
-												$stmt->close();
-												return $a;
-											}
-		
-											$stmt->close();
+
+											$mediaFile = new MediaFile();
+
+											$mediaFile->setType($type)
+												->setOriginalUploader($user)
+												->setURL($linkURL)
+												->setSHA256($sha);
+
+											$entityManager->persist($mediaFile);
 										}
-		
+
 										if(!is_null($mediaFile)){
-											if(is_null($attachments)) $attachments = [];
-		
-											array_push($attachments,$mediaFile->getId());
+											array_push($mediaFiles, $mediaFile);
 										}
 									}
 								}
 							}
 						}
 
-						$attachmentsString = is_null($attachments) ? "[]" : json_encode($attachments);
+						$feedEntry = new FeedEntry();
 
-						$mysqli = Database::Instance()->get();
-						$stmt = $mysqli->prepare("INSERT INTO `feed` (`user`,`text`,`following`,`sessionId`,`type`,`post`,`attachments`,`nsfw`) VALUES(?,?,NULL,?,?,?,?,?);");
-						$stmt->bind_param("isssisi", $userId,$text,$sessionId,$type,$parent,$attachmentsString,$nsfw);
-						if($stmt->execute()){
-							$postId = $stmt->insert_id;
+						$feedEntry->setUser($user)
+							->setText($text)
+							->setSessionId($sessionId)
+							->setType($type)
+							->setPost($parent)
+							->setNSFW($nsfw)
+							->setTime(new DateTime("now"));
+
+						foreach ($mediaFiles as $mediaFile) {
+							$attachment = new Attachment();
+
+							$attachment->setPost($feedEntry)
+								->setMediaFile($mediaFile);
+
+							$entityManager->persist($attachment);
+							$feedEntry->addAttachment($attachment);
 						}
-						$stmt->close();
 
-						if(!is_null($postId)){
-							$postData = FeedEntry::getEntryById($postId);
-							$post = Util::postJsonData($postData,0);
+						$entityManager->persist($feedEntry);
 
-							if(!is_null($parent)){
-								$parentData = FeedEntry::getEntryById($parent);
+						$entityManager->flush();
 
-								if(!is_null($parentData)){
-									$parentData->reloadReplies();
+						$post = Util::postJsonData($feedEntry, 0);
 
-									if($parentData->getUserId() != $userId){
-										if($parentData->getUser()->canPostNotification(NOTIFICATION_TYPE_REPLY,null,$postId)){
-											$uid = $parentData->getUserId();
+						if (!is_null($parent)) {
+							if ($parent->getUser()->getId() != $user->getId()) {
+								$notification = new Notification();
 
-											$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'REPLY',?);");
-											$stmt->bind_param("ii",$uid,$postId);
-											$stmt->execute();
-											$stmt->close();
-										}
-									}
+								$notification->setUser($parent->getUser())
+									->setType(NotificationType::REPLY)
+									->setPost($feedEntry)
+									->setTime(new DateTime("now"));
+
+								$entityManager->persist($notification);
+							}
+						}
+
+						if (count($mentioned) > 0) {
+							foreach ($mentioned as $u) {
+								if ($u->getId() === $user->getId()) continue;
+
+								if (!Block::hasBlocked($u, $user)) {
+									$notification = new Notification();
+
+									$notification->setUser($u)
+										->setType(NotificationType::MENTION)
+										->setPost($feedEntry)
+										->setTime(new DateTime("now"));
+
+									$entityManager->persist($notification);
 								}
 							}
-
-							if(count($mentioned) > 0){
-								foreach($mentioned as $u){
-									$uid = $u->getId();
-									if($uid == $userId) continue;
-
-									if(!$user->isBlocked($u)){
-										if($u->canPostNotification(NOTIFICATION_TYPE_MENTION,null,$postId)){
-											$stmt = $mysqli->prepare("INSERT INTO `notifications` (`user`,`type`,`post`) VALUES(?,'MENTION',?);");
-											$stmt->bind_param("ii",$uid,$postId);
-											$stmt->execute();
-											$stmt->close();
-										}
-									}
-								}
-							}
-
-							$postActionButtons = Util::getPostActionButtons($postData);
-
-							$user->reloadFeedEntriesCount();
-							$user->reloadPostsCount();
-
-							return json_encode(["post" => $post,"postActionButtons" => $postActionButtons]);
-						} else {
-							return json_encode(["error" => "Empty post id"]);
 						}
+
+						$postActionButtons = Util::getPostActionButtons($feedEntry);
+
+						$entityManager->flush();
+
+						return json_encode(["post" => $post, "postActionButtons" => $postActionButtons]);
 					} else {
 						return json_encode(["error" => "Too many mentions"]);
 					}
