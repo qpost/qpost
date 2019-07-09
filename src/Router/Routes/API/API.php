@@ -6,6 +6,9 @@ use Lime\App;
 use qpost\Account\Token;
 use qpost\Database\EntityManager;
 use qpost\Util\Util;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Sets all required headers for an API respones (mime type, CORS, etc.)
@@ -115,15 +118,38 @@ function api_request_data(App $app): array {
 	}
 }
 
+$serializer = new Serializer([new GetSetMethodNormalizer()], ["json" => new JsonEncoder()]);
+
 /**
  * @param $object
  * @return array
  */
 function api_prepare_object($object): array {
-	$string = json_encode($object);
+	global $serializer;
+
+	$string = $serializer->serialize($object, "json");
 	$array = json_decode($string, true);
 
-	// TODO: Filter sensitive data
+	/**
+	 * @var string[] $sensitiveFieldNames
+	 */
+	$sensitiveFieldNames = [
+		"emailActivated",
+		"emailActivationToken",
+		"password",
+		"lastUsernameChange",
+		"gigadriveData",
+		"openRequestsCount",
+		"unreadMessages",
+		"unreadNotifications",
+		"email"
+	];
+
+	foreach ($sensitiveFieldNames as $fieldName) {
+		if (array_key_exists($fieldName, $array)) {
+			unset($array[$fieldName]);
+		}
+	}
 
 	return $array;
 }
