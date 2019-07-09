@@ -18,7 +18,7 @@ create_route("/api/token/verify", function () {
 
 				return json_encode(["status" => "Token valid", "user" => api_prepare_object($user)]);
 			} else {
-				return json_encode(["status" => "Token expired"]);
+				return json_encode(["error" => "Token expired"]);
 			}
 		} else {
 			return json_encode(["error" => "User suspended"]);
