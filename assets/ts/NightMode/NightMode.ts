@@ -33,4 +33,8 @@ export default class NightMode {
 	public static toggle(): void {
 		this.setActive(!this.isActive());
 	}
+
+	public static spinnerColor(): string {
+		return this.isActive() ? "light" : "primary";
+	}
 }
