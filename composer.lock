@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-	"content-hash": "e0ffcd58f36cdebcac462e4fab02e4a1",
+	"content-hash": "a7e98fa7c80e4a8865ba92664475f53b",
     "packages": [
         {
 			"name": "beberlei/doctrineextensions",
@@ -1654,6 +1654,158 @@
 			"time": "2018-07-02T15:55:56+00:00"
 		},
 		{
+			"name": "phpdocumentor/reflection-common",
+			"version": "1.0.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/phpDocumentor/ReflectionCommon.git",
+				"reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
+				"reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.5"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^4.6"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.0.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"phpDocumentor\\Reflection\\": [
+						"src"
+					]
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Jaap van Otterdijk",
+					"email": "opensource@ijaap.nl"
+				}
+			],
+			"description": "Common reflection classes used by phpdocumentor to reflect the code structure",
+			"homepage": "http://www.phpdoc.org",
+			"keywords": [
+				"FQSEN",
+				"phpDocumentor",
+				"phpdoc",
+				"reflection",
+				"static analysis"
+			],
+			"time": "2017-09-11T18:02:19+00:00"
+		},
+		{
+			"name": "phpdocumentor/reflection-docblock",
+			"version": "4.3.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
+				"reference": "bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c",
+				"reference": "bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.0",
+				"phpdocumentor/reflection-common": "^1.0.0",
+				"phpdocumentor/type-resolver": "^0.4.0",
+				"webmozart/assert": "^1.0"
+			},
+			"require-dev": {
+				"doctrine/instantiator": "~1.0.5",
+				"mockery/mockery": "^1.0",
+				"phpunit/phpunit": "^6.4"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "4.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"phpDocumentor\\Reflection\\": [
+						"src/"
+					]
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Mike van Riel",
+					"email": "me@mikevanriel.com"
+				}
+			],
+			"description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
+			"time": "2019-04-30T17:48:53+00:00"
+		},
+		{
+			"name": "phpdocumentor/type-resolver",
+			"version": "0.4.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/phpDocumentor/TypeResolver.git",
+				"reference": "9c977708995954784726e25d0cd1dddf4e65b0f7"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/9c977708995954784726e25d0cd1dddf4e65b0f7",
+				"reference": "9c977708995954784726e25d0cd1dddf4e65b0f7",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^5.5 || ^7.0",
+				"phpdocumentor/reflection-common": "^1.0"
+			},
+			"require-dev": {
+				"mockery/mockery": "^0.9.4",
+				"phpunit/phpunit": "^5.2||^4.8.24"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.0.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"phpDocumentor\\Reflection\\": [
+						"src/"
+					]
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Mike van Riel",
+					"email": "me@mikevanriel.com"
+				}
+			],
+			"time": "2017-07-14T14:27:02+00:00"
+		},
+		{
             "name": "phpmailer/phpmailer",
             "version": "v5.2.27",
             "source": {
@@ -2537,6 +2689,96 @@
 			"time": "2019-06-13T11:03:18+00:00"
 		},
 		{
+			"name": "symfony/doctrine-bridge",
+			"version": "v4.3.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/doctrine-bridge.git",
+				"reference": "7142fd113adec343188e63e058bfbb4d3909a730"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/doctrine-bridge/zipball/7142fd113adec343188e63e058bfbb4d3909a730",
+				"reference": "7142fd113adec343188e63e058bfbb4d3909a730",
+				"shasum": ""
+			},
+			"require": {
+				"doctrine/event-manager": "~1.0",
+				"doctrine/persistence": "~1.0",
+				"php": "^7.1.3",
+				"symfony/polyfill-ctype": "~1.8",
+				"symfony/polyfill-mbstring": "~1.0",
+				"symfony/service-contracts": "^1.1"
+			},
+			"conflict": {
+				"phpunit/phpunit": "<4.8.35|<5.4.3,>=5.0",
+				"symfony/dependency-injection": "<3.4",
+				"symfony/form": "<4.3",
+				"symfony/messenger": "<4.3"
+			},
+			"require-dev": {
+				"doctrine/annotations": "~1.0",
+				"doctrine/cache": "~1.6",
+				"doctrine/collections": "~1.0",
+				"doctrine/data-fixtures": "1.0.*",
+				"doctrine/dbal": "~2.4",
+				"doctrine/orm": "^2.4.5",
+				"doctrine/reflection": "~1.0",
+				"symfony/config": "^4.2",
+				"symfony/dependency-injection": "~3.4|~4.0",
+				"symfony/expression-language": "~3.4|~4.0",
+				"symfony/form": "~4.3",
+				"symfony/http-kernel": "~3.4|~4.0",
+				"symfony/messenger": "~4.3",
+				"symfony/property-access": "~3.4|~4.0",
+				"symfony/property-info": "~3.4|~4.0",
+				"symfony/proxy-manager-bridge": "~3.4|~4.0",
+				"symfony/security-core": "~3.4|~4.0",
+				"symfony/stopwatch": "~3.4|~4.0",
+				"symfony/translation": "~3.4|~4.0",
+				"symfony/validator": "~3.4|~4.0"
+			},
+			"suggest": {
+				"doctrine/data-fixtures": "",
+				"doctrine/dbal": "",
+				"doctrine/orm": "",
+				"symfony/form": "",
+				"symfony/property-info": "",
+				"symfony/validator": ""
+			},
+			"type": "symfony-bridge",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "4.3-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Symfony\\Bridge\\Doctrine\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Fabien Potencier",
+					"email": "fabien@symfony.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony Doctrine Bridge",
+			"homepage": "https://symfony.com",
+			"time": "2019-06-26T06:50:02+00:00"
+		},
+		{
 			"name": "symfony/http-foundation",
 			"version": "v4.3.2",
 			"source": {
@@ -2590,6 +2832,64 @@
 			"description": "Symfony HttpFoundation Component",
 			"homepage": "https://symfony.com",
 			"time": "2019-06-26T09:25:00+00:00"
+		},
+		{
+			"name": "symfony/inflector",
+			"version": "v4.3.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/inflector.git",
+				"reference": "889dc28cb6350ddb302fe9b8c796e4e6eb836856"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/inflector/zipball/889dc28cb6350ddb302fe9b8c796e4e6eb836856",
+				"reference": "889dc28cb6350ddb302fe9b8c796e4e6eb836856",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.1.3",
+				"symfony/polyfill-ctype": "~1.8"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "4.3-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Symfony\\Component\\Inflector\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Bernhard Schussek",
+					"email": "bschussek@gmail.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony Inflector Component",
+			"homepage": "https://symfony.com",
+			"keywords": [
+				"inflection",
+				"pluralize",
+				"singularize",
+				"string",
+				"symfony",
+				"words"
+			],
+			"time": "2019-05-30T09:28:08+00:00"
 		},
 		{
 			"name": "symfony/mime",
@@ -2943,6 +3243,82 @@
 			"time": "2019-02-06T07:57:58+00:00"
 		},
 		{
+			"name": "symfony/property-info",
+			"version": "v4.3.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/property-info.git",
+				"reference": "5ce4d9d9c8a5dc84a3e0f793d75ef9b56e4c5f65"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/property-info/zipball/5ce4d9d9c8a5dc84a3e0f793d75ef9b56e4c5f65",
+				"reference": "5ce4d9d9c8a5dc84a3e0f793d75ef9b56e4c5f65",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.1.3",
+				"symfony/inflector": "~3.4|~4.0"
+			},
+			"conflict": {
+				"phpdocumentor/reflection-docblock": "<3.0||>=3.2.0,<3.2.2",
+				"phpdocumentor/type-resolver": "<0.3.0",
+				"symfony/dependency-injection": "<3.4"
+			},
+			"require-dev": {
+				"doctrine/annotations": "~1.0",
+				"phpdocumentor/reflection-docblock": "^3.0|^4.0",
+				"symfony/cache": "~3.4|~4.0",
+				"symfony/dependency-injection": "~3.4|~4.0",
+				"symfony/serializer": "~3.4|~4.0"
+			},
+			"suggest": {
+				"phpdocumentor/reflection-docblock": "To use the PHPDoc",
+				"psr/cache-implementation": "To cache results",
+				"symfony/doctrine-bridge": "To use Doctrine metadata",
+				"symfony/serializer": "To use Serializer metadata"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "4.3-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Symfony\\Component\\PropertyInfo\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Kévin Dunglas",
+					"email": "dunglas@gmail.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony Property Info Component",
+			"homepage": "https://symfony.com",
+			"keywords": [
+				"doctrine",
+				"phpdoc",
+				"property",
+				"symfony",
+				"type",
+				"validator"
+			],
+			"time": "2019-06-25T09:08:34+00:00"
+		},
+		{
 			"name": "symfony/routing",
 			"version": "v4.3.2",
 			"source": {
@@ -3017,6 +3393,86 @@
 				"url"
 			],
 			"time": "2019-06-26T13:54:39+00:00"
+		},
+		{
+			"name": "symfony/serializer",
+			"version": "v4.3.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/serializer.git",
+				"reference": "bbf3b52653dae353259c1761cbb6f8f056dff03e"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/serializer/zipball/bbf3b52653dae353259c1761cbb6f8f056dff03e",
+				"reference": "bbf3b52653dae353259c1761cbb6f8f056dff03e",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.1.3",
+				"symfony/polyfill-ctype": "~1.8"
+			},
+			"conflict": {
+				"phpdocumentor/type-resolver": "<0.2.1",
+				"symfony/dependency-injection": "<3.4",
+				"symfony/property-access": "<3.4",
+				"symfony/property-info": "<3.4",
+				"symfony/yaml": "<3.4"
+			},
+			"require-dev": {
+				"doctrine/annotations": "~1.0",
+				"doctrine/cache": "~1.0",
+				"phpdocumentor/reflection-docblock": "^3.0|^4.0",
+				"symfony/cache": "~3.4|~4.0",
+				"symfony/config": "~3.4|~4.0",
+				"symfony/dependency-injection": "~3.4|~4.0",
+				"symfony/http-foundation": "~3.4|~4.0",
+				"symfony/property-access": "~3.4|~4.0",
+				"symfony/property-info": "^3.4.13|~4.0",
+				"symfony/validator": "~3.4|~4.0",
+				"symfony/yaml": "~3.4|~4.0"
+			},
+			"suggest": {
+				"doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
+				"doctrine/cache": "For using the default cached annotation reader and metadata cache.",
+				"psr/cache-implementation": "For using the metadata cache.",
+				"symfony/config": "For using the XML mapping loader.",
+				"symfony/http-foundation": "For using a MIME type guesser within the DataUriNormalizer.",
+				"symfony/property-access": "For using the ObjectNormalizer.",
+				"symfony/property-info": "To deserialize relations.",
+				"symfony/yaml": "For using the default YAML mapping loader."
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "4.3-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Symfony\\Component\\Serializer\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Fabien Potencier",
+					"email": "fabien@symfony.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony Serializer Component",
+			"homepage": "https://symfony.com",
+			"time": "2019-06-17T17:37:00+00:00"
 		},
 		{
 			"name": "symfony/service-contracts",
@@ -3307,6 +3763,57 @@
 				"templating"
 			],
 			"time": "2019-06-18T15:37:11+00:00"
+		},
+		{
+			"name": "webmozart/assert",
+			"version": "1.4.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/webmozart/assert.git",
+				"reference": "83e253c8e0be5b0257b881e1827274667c5c17a9"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/webmozart/assert/zipball/83e253c8e0be5b0257b881e1827274667c5c17a9",
+				"reference": "83e253c8e0be5b0257b881e1827274667c5c17a9",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^5.3.3 || ^7.0",
+				"symfony/polyfill-ctype": "^1.8"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^4.6",
+				"sebastian/version": "^1.0.1"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.3-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Webmozart\\Assert\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Bernhard Schussek",
+					"email": "bschussek@gmail.com"
+				}
+			],
+			"description": "Assertions to validate method input/output with nice error messages.",
+			"keywords": [
+				"assert",
+				"check",
+				"validate"
+			],
+			"time": "2018-12-25T11:19:39+00:00"
 		},
 		{
 			"name": "zendframework/zend-code",

@@ -17,7 +17,11 @@
 		"ext-curl": "^7.2",
 		"ext-mysqli": "^7.2",
 		"beberlei/doctrineextensions": "^1.2",
-		"cboden/ratchet": "^0.4.1"
+		"cboden/ratchet": "^0.4.1",
+		"symfony/serializer": "^4.3",
+		"symfony/property-info": "^4.3",
+		"symfony/doctrine-bridge": "^4.3",
+		"phpdocumentor/reflection-docblock": "^4.3"
     },
     "autoload": {
         "psr-4": {
