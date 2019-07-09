@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import NightMode from "./NightMode/NightMode";
 import LoadingScreen from "./Component/LoadingScreen";
 import API from "./API/API";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -37,7 +38,21 @@ export default class App extends Component<any, any> {
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.validatedLogin === true) {
-			return <div>asd</div>
+			return (
+				<Router>
+					<div className={"h-100"}>
+						{/* SCROLL TO TOP ON ROUTE CHANGE */}
+						<Route component={() => {
+							window.scrollTo(0, 0);
+							return null;
+						}}/>
+
+						<Switch>
+
+						</Switch>
+					</div>
+				</Router>
+			);
 		} else if (this.state.error !== null) {
 			return <div>{this.state.error}</div>; // TODO
 		} else {
