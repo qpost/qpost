@@ -13,7 +13,6 @@
 		"moduleResolution": "node",
 		"rootDir": "assets",
 		"jsx": "react",
-		"jsxFactory": "JSX.createElement",
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,

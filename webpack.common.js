@@ -10,7 +10,8 @@ const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const optimizeCss = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
-	entry: "./assets/ts/index.ts",
+	entry: "./assets/ts/index.tsx",
+	context: resolve("./"),
 	devtool: false,
 	module: {
 		rules: [

@@ -3,6 +3,9 @@
 namespace qpost\Router\API;
 
 use Lime\App;
+use qpost\Account\Token;
+use qpost\Database\EntityManager;
+use qpost\Util\Util;
 
 /**
  * Sets all required headers for an API respones (mime type, CORS, etc.)
@@ -25,9 +28,10 @@ function api_headers(App $app): void {
  *
  * @param App $app
  * @param string $method The prefered method
+ * @param bool $authCheck Whether or not to validate the Token and cancel the request if it is invalid
  * @return bool True or false, depending on the used method
  */
-function api_method_check(App $app, string $method): bool {
+function api_method_check(App $app, string $method, bool $authCheck = true): bool {
 	if (isset($_SERVER["REQUEST_METHOD"])) {
 		$usedMethod = $_SERVER["REQUEST_METHOD"];
 
@@ -44,12 +48,48 @@ function api_method_check(App $app, string $method): bool {
 
 			return false;
 		} else {
-			$app->response->status = "200";
-			return true;
+			if ($authCheck) {
+				$token = api_get_token();
+
+				if (!is_null($token)) {
+					return true;
+				}
+
+				$app->response->status = "401";
+				$app->response->body = json_encode(["error" => "Invalid token"]);
+				return false;
+			} else {
+				$app->response->status = "200";
+				return true;
+			}
 		}
 	}
 
 	return false;
+}
+
+/**
+ * @return Token|null
+ */
+function api_get_token(): ?Token {
+	$header = Util::getAuthorizationHeader();
+
+	if (!is_null($header) && !Util::isEmpty($header) && Util::startsWith($header, "Token ")) {
+		$entityManager = EntityManager::instance();
+
+		/**
+		 * @var Token $token
+		 */
+		$token = $entityManager->getRepository(Token::class)->findOneBy(["id" => substr($header, strlen("Token "))]);
+
+		if (!is_null($token)) {
+			if (!$token->isExpired()) {
+				return $token;
+			}
+		}
+	}
+
+	return null;
 }
 
 /**
@@ -73,4 +113,17 @@ function api_request_data(App $app): array {
 			return $json;
 		}
 	}
+}
+
+/**
+ * @param $object
+ * @return array
+ */
+function api_prepare_object($object): array {
+	$string = json_encode($object);
+	$array = json_decode($string, true);
+
+	// TODO: Filter sensitive data
+
+	return $array;
 }

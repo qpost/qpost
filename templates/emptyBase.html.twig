@@ -70,17 +70,6 @@
 		{% endif %}
 	</script>
 
-	{% for url in [
-		"/assets/js/dropzone.js",
-		"/build/bundle.js",
-		"https://www.google.com/recaptcha/api.js",
-		"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
-		"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
-		"/assets/js/jquery.highlight-within-textarea.js"
-	] %}
-		<script type="text/javascript" src="{{ url }}"></script>
-	{% endfor %}
-
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script>
 		(adsbygoogle = window.adsbygoogle || []).push({
@@ -92,5 +81,16 @@
 
 <body class="{% block additionalBodyClasses %}{% endblock %}">
 {% block body %}{% endblock %}
+
+{# "/assets/js/jquery.highlight-within-textarea.js" #}
+{% for url in [
+	"/assets/js/dropzone.js",
+	"/build/bundle.js",
+	"https://www.google.com/recaptcha/api.js",
+	"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
+	"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
+] %}
+	<script type="text/javascript" src="{{ url }}"></script>
+{% endfor %}
 </body>
 </html>
