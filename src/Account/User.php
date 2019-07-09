@@ -763,8 +763,11 @@ class User {
 	 * @access public
 	 * @return bool
 	 */
-	public function mayView() {
-		$user = Util::getCurrentUser();
+	public function mayView($user = null) {
+		if (is_null($user)) {
+			$user = Util::getCurrentUser();
+		}
+
 		if (Util::isLoggedIn() && $this->getId() === $user->getId()) {
 			return true;
 		}
