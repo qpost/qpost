@@ -94,7 +94,7 @@ class User {
 
 	/**
 	 * @access private
-	 * @var string $password
+	 * @var string|null $password
 	 *
 	 * @ORM\Column(type="string", length=60, nullable=true)
 	 */
@@ -295,9 +295,9 @@ class User {
 	 * Returns the user's password hash
 	 *
 	 * @access public
-	 * @return string
+	 * @return string|null
 	 */
-	public function getPassword(): string {
+	public function getPassword(): ?string {
 		return $this->password;
 	}
 
