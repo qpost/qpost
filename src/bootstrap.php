@@ -105,3 +105,7 @@ function twig_render(string $fileName, array $variables = []): string {
 
 	return $twig->render($fileName, array_merge($twigGlobals, $variables));
 }
+
+function react(): string {
+	return twig_render("react.html.twig");
+}

@@ -39,6 +39,22 @@ function create_route_get($path, $callable) {
 	$app->get($path, $callable);
 }
 
+function dir_contents($dir, &$results = array()) {
+	$files = scandir($dir);
+
+	foreach ($files as $key => $value) {
+		$path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+		if (!is_dir($path)) {
+			$results[] = $path;
+		} else if ($value != "." && $value != "..") {
+			dir_contents($path, $results);
+			$results[] = $path;
+		}
+	}
+
+	return $results;
+}
+
 if (!(php_sapi_name() === 'cli')) {
 	$app = new App();
 	$app["config.begin_point"] = microtime();
@@ -84,16 +100,16 @@ if (!(php_sapi_name() === 'cli')) {
 	}
 
 	# Autoload all routes
-	foreach (array_merge(glob(__DIR__ . "/Routes/**/*.php"), glob(__DIR__ . "/Routes/*.php")) as $path) {
-		require_once $path;
+	foreach (dir_contents(__DIR__ . "/Routes/") as $path) {
+		if (Util::endsWith($path, ".php", true)) {
+			require_once $path;
+		}
 	}
 
 	$app->on("after", function () {
 		if (!(substr($this->route, 0, 5) === "/api/")) {
 			if ($this->response->status == "404") {
-				$this->response->body = twig_render("pages/error/404.html.twig", [
-					"title" => "Error 404: Page not found"
-				]);
+				$this->response->body = react();
 			}
 		}
 	});

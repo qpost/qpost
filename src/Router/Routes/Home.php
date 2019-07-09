@@ -3,7 +3,6 @@
 namespace qpost\Router;
 
 use DateTime;
-use Doctrine\DBAL\Types\Type;
 use Gigadrive\MailTemplates\MailTemplates;
 use qpost\Account\User;
 use qpost\Database\EntityManager;
@@ -108,70 +107,6 @@ create_route("/", function () {
 			"successMsg" => $successMsg
 		]);
 	} else {
-		$user = Util::getCurrentUser();
-
-		// query is a combination of https://stackoverflow.com/a/12915720 and https://stackoverflow.com/a/24165699
-
-		/**
-		 * @var User[] $suggestedUsers
-		 */
-		$suggestedUsers = EntityManager::instance()->getRepository(User::class)->createQueryBuilder("u")
-			->innerJoin("u.followers", "t")
-			->innerJoin("t.from", "their_friends")
-			->innerJoin("their_friends.followers", "m")
-			->innerJoin("m.from", "me")
-			->where("u.id != :id")
-			->setParameter("id", $user->getId(), Type::INTEGER)
-			->andWhere("u.emailActivated = :activated")
-			->setParameter("activated", true, Type::BOOLEAN)
-			->andWhere("me.id = :id")
-			->setParameter("id", $user->getId(), Type::INTEGER)
-			->andWhere("their_friends.id != :id")
-			->setParameter("id", $user->getId(), Type::INTEGER)
-			->andWhere("not exists (select 1 from qpost\Account\Follower f where f.from = :id and f.to = t.to)")
-			->setParameter("id", $user->getId(), Type::INTEGER)
-			->groupBy("me.id, t.to")
-			->setMaxResults(10)
-			->getQuery()
-			->getResult();
-
-		for ($i = 0; $i < count($suggestedUsers); $i++) {
-			$user = $suggestedUsers[$i];
-
-			if (!$user->mayView()) {
-				unset($suggestedUsers[$i]);
-			}
-		}
-		// TODO
-		/*$stmt = $mysqli->prepare("SELECT COUNT(*)       AS mutuals, u.`id` FROM users      AS me INNER JOIN follows    AS my_friends ON my_friends.follower = me.id INNER JOIN follows    AS their_friends ON their_friends.follower = my_friends.following INNER JOIN  users 	   AS u ON u.id = their_friends.following WHERE u.emailActivated = 1 AND me.id = ? AND their_friends.following != ? AND NOT EXISTS (SELECT 1 FROM follows fu3 WHERE fu3.follower = ? AND fu3.following = their_friends.following) GROUP BY me.id, their_friends.following ORDER BY RAND() LIMIT 10");
-		$stmt->bind_param("iii", $currentUser, $currentUser, $currentUser);
-		if ($stmt->execute()) {
-			$result = $stmt->get_result();
-
-			if ($result->num_rows) {
-				while ($row = $result->fetch_assoc()) {
-					if ($i == 5) break;
-
-					$u = User::getUserById($row["id"]);
-
-					if (!$u->mayView()) continue;
-
-					$mutuals = $row["mutuals"];
-
-					array_push($suggestedUsers, [
-						"user" => $u,
-						"mutuals" => $mutuals
-					]);
-
-					$i++;
-				}
-			}
-		}
-		$stmt->close();*/
-
-		return twig_render("pages/homefeed.html.twig", [
-			"suggestedUsers" => $suggestedUsers,
-			"openRequests" => $user->getOpenRequestsCount()
-		]);
+		return react();
 	}
 });

@@ -54,12 +54,12 @@ class Util {
 		$mail->Username = MAIL_USER;
 		$mail->Password = MAIL_PASSWORD;
 		$mail->setFrom(MAIL_SEND_AS, is_null($fromName) ? "Gigadrive Group" : $fromName);
-		$mail->addAddress($to,is_null($toName) ? $to : $toName);
+		$mail->addAddress($to, is_null($toName) ? $to : $toName);
 		$mail->Subject = $subject;
 		$mail->msgHTML($contentHTML);
 		$mail->AltBody = $contentAlt;
 
-		if(!$mail->send()){
+		if (!$mail->send()) {
 			return false;
 		} else {
 			return true;
@@ -113,8 +113,8 @@ class Util {
 			"ue" => "ü"
 		];
 
-		foreach($a as $b => $c){
-			$input = str_replace($b,$c,$input);
+		foreach ($a as $b => $c) {
+			$input = str_replace($b, $c, $input);
 		}
 
 		return $input;
@@ -134,9 +134,9 @@ class Util {
 	public static function createAlert($id, $text, $type = "info", $dismissible = FALSE, $saveDismiss = FALSE): string {
 		$cookieName = "registeredAlert" . $id;
 
-		if($dismissible == false){
+		if ($dismissible == false) {
 			return '<div id="registeredalert' . $id . '" class="alert alert-' . $type . '">' . $text . '</div>';
-		} else if($saveDismiss == false || ($saveDismiss == true && !isset($_COOKIE[$cookieName]))){
+		} else if ($saveDismiss == false || ($saveDismiss == true && !isset($_COOKIE[$cookieName]))) {
 			return '<div id="registeredalert' . $id . '" class="text-left alert alert-dismissible alert-' . $type . '"><button id="registeredalertclose' . $id . '" type="button" class="close" data-dismiss="alert">&times;</button>' . $text . '</div>';
 		}
 
@@ -434,7 +434,7 @@ class Util {
 		$characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		$charactersLength = strlen($characters);
 		$randomString = "";
-		for ($i = 0; $i < rand($length/2,$length); $i++) {
+		for ($i = 0; $i < rand($length / 2, $length); $i++) {
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		}
 
@@ -448,12 +448,12 @@ class Util {
 	 * @return string
 	 */
 	public static function gen_uuid(): string {
-		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-			mt_rand( 0, 0xffff ),
-			mt_rand( 0, 0x0fff ) | 0x4000,
-			mt_rand( 0, 0x3fff ) | 0x8000,
-			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+		return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+			mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+			mt_rand(0, 0xffff),
+			mt_rand(0, 0x0fff) | 0x4000,
+			mt_rand(0, 0x3fff) | 0x8000,
+			mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
 		);
 	}
 
@@ -480,7 +480,7 @@ class Util {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
 		} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !Util::isEmpty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} else if(isset($_SERVER['REMOTE_ADDR'])) {
+		} else if (isset($_SERVER['REMOTE_ADDR'])) {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 
@@ -496,9 +496,9 @@ class Util {
 		$files = glob($_SERVER["DOCUMENT_ROOT"] . "/tmp/*");
 		$now = time();
 
-		foreach($files as $file){
-			if(is_file($file) && basename($file) != ".keep"){
-				if($now - filemtime($file) >= 60*60*24){
+		foreach ($files as $file) {
+			if (is_file($file) && basename($file) != ".keep") {
+				if ($now - filemtime($file) >= 60 * 60 * 24) {
 					unlink($file);
 				}
 			}
@@ -515,15 +515,33 @@ class Util {
 	 * @return bool
 	 */
 	public static function startsWith($string, $start, $ignoreCase = false): bool {
-		if(strlen($start) <= strlen($string)){
-			if($ignoreCase == true){
-				return substr($string,0,strlen($start)) == $start;
+		if (strlen($start) <= strlen($string)) {
+			if ($ignoreCase == true) {
+				return substr($string, 0, strlen($start)) == $start;
 			} else {
-				return strtolower(substr($string,0,strlen($start))) == strtolower($start);
+				return strtolower(substr($string, 0, strlen($start))) == strtolower($start);
 			}
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Gets whether a string ends with another
+	 *
+	 * @access public
+	 * @param string $string The string in subject
+	 * @param string $end The string to be checked whether it is the end of $string
+	 * @param bool $ignoreCase If true, the case of the strings won't affect the result
+	 * @return bool
+	 */
+	public static function endsWith($string, $end, $ignoreCase = false): bool {
+		$length = strlen($end);
+		if ($length == 0) {
+			return true;
+		}
+
+		return $ignoreCase ? (strtolower(substr($string, -$length)) === strtolower($end)) : (substr($string, -$length) === $end);
 	}
 
 	/**
@@ -536,7 +554,7 @@ class Util {
 	public static function storeFileOnCDN($file) {
 		try {
 			$curl = curl_init();
-			curl_setopt_array($curl,array(
+			curl_setopt_array($curl, array(
 				CURLOPT_URL => "https://gigadrivegroup.com/api/v3/file",
 				CURLOPT_POST => 1,
 				CURLOPT_POSTFIELDS => array(
@@ -548,19 +566,19 @@ class Util {
 
 			$result = curl_exec($curl);
 
-			if($result === false){
-				throw new Exception(curl_error($curl),curl_errno($curl));
+			if ($result === false) {
+				throw new Exception(curl_error($curl), curl_errno($curl));
 			}
 
 			curl_close($curl);
 
-			$fileData = json_decode($result,true);
-			if(isset($fileData["success"]) && isset($fileData["file"]) && isset($fileData["file"]["url"])){
+			$fileData = json_decode($result, true);
+			if (isset($fileData["success"]) && isset($fileData["file"]) && isset($fileData["file"]["url"])) {
 				return ["result" => $result, "url" => $fileData["file"]["url"]];
 			}
 
 			return null;
-		} catch(Exception $e){
+		} catch (Exception $e) {
 			return ["error" => $e->getMessage()];
 		}
 	}
@@ -574,7 +592,7 @@ class Util {
 	 * @return bool
 	 */
 	public static function contains($string, $check): bool {
-		return strpos($string,$check) !== false;
+		return strpos($string, $check) !== false;
 	}
 
 	/**
@@ -585,10 +603,10 @@ class Util {
 	 * @return bool
 	 */
 	public static function isEmpty($var): bool {
-		if(is_array($var)){
+		if (is_array($var)) {
 			return count($var) == 0;
-		} else if(is_string($var)){
-			return $var == "" || trim($var) == "" || str_replace(" ","",str_replace(" ","",$var)) == "" || strlen($var) == 0;
+		} else if (is_string($var)) {
+			return $var == "" || trim($var) == "" || str_replace(" ", "", str_replace(" ", "", $var)) == "" || strlen($var) == 0;
 		} else {
 			return is_null($var) || empty($var);
 		}
@@ -604,8 +622,8 @@ class Util {
 	 * @return string
 	 */
 	public static function limitString($string, $length, $addDots = false): string {
-		if(strlen($string) > $length)
-			$string = substr($string,0,($addDots ? $length-3 : $length)) . ($addDots ? "..." : "");
+		if (strlen($string) > $length)
+			$string = substr($string, 0, ($addDots ? $length - 3 : $length)) . ($addDots ? "..." : "");
 
 		return $string;
 	}
@@ -662,8 +680,8 @@ class Util {
 	 * @return bool
 	 */
 	public static function isValidJSON($string): bool {
-		if(Util::isEmpty($string)) return false;
-		if(!self::startsWith($string,"{") && !self::startsWith($string,"[")) return false;
+		if (Util::isEmpty($string)) return false;
+		if (!self::startsWith($string, "{") && !self::startsWith($string, "[")) return false;
 
 		@json_decode($string);
 		return (json_last_error() == JSON_ERROR_NONE);
@@ -677,7 +695,7 @@ class Util {
 	 * @return string
 	 */
 	public static function convertLineBreaksToHTML($string): string {
-		return preg_replace("/(<br {0,}\/{0,1}>(\\r|\\n){0,}){2,}/","<br class=\"reduced\" />",nl2br($string));
+		return preg_replace("/(<br {0,}\/{0,1}>(\\r|\\n){0,}){2,}/", "<br class=\"reduced\" />", nl2br($string));
 		/*$s = trim(str_replace("\n","<br/>",$string));
 
 		// TODO: Fix line breaking spamming
@@ -703,15 +721,15 @@ class Util {
 
 		$p = "";
 
-		if ($paginator->getNumPages() > 1){
+		if ($paginator->getNumPages() > 1) {
 
 			$p .= '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center mt-3">';
 
 			if ($paginator->getPrevUrl())
 				$p .= '<li class="page-item"><a class="page-link" href="' . $paginator->getPrevUrl() . '">&laquo; Previous</a></li>';
 
-			foreach ($paginator->getPages() as $page){
-				if($page["url"]){
+			foreach ($paginator->getPages() as $page) {
+				if ($page["url"]) {
 					$p .= '<li class="page-item' . ($page["isCurrent"] ? " active" : "") . '"><a class="page-link" href="' . $page["url"] . '">' . $page["num"] . '</a></li>';
 				} else {
 					$p .= '<li class="page-item disabled"><a class="page-link" href="#">' . $page["num"] . '</a></li>';
@@ -737,9 +755,9 @@ class Util {
 	 * @return int Returns -1 if the variable could not be found in the array
 	 */
 	public static function indexOf($array, $var): int {
-		if(count($array) > 0 && in_array($var,$array)){
-			for($i = 0; $i < count($array); $i++) {
-				if(isset($array[$i]) && $array[$i] == $var){
+		if (count($array) > 0 && in_array($var, $array)) {
+			for ($i = 0; $i < count($array); $i++) {
+				if (isset($array[$i]) && $array[$i] == $var) {
 					return $i;
 				}
 			}
@@ -757,12 +775,12 @@ class Util {
 	 * @return array
 	 */
 	public static function removeFromArray($array, $var): array {
-		$i = self::indexOf($array,$var);
+		$i = self::indexOf($array, $var);
 
-		while($i != -1){
+		while ($i != -1) {
 			unset($array[$i]);
 
-			$i = self::indexOf($array,$var);
+			$i = self::indexOf($array, $var);
 		}
 
 		return $array;
@@ -779,13 +797,13 @@ class Util {
 	 * @return string
 	 */
 	public static function followButton(User $user, $defaultToEdit = false, $classes = null, $showBlocked = true): string {
-		$classString = !is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "";
+		$classString = !is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ", $classes) : "";
 
-		if(self::isLoggedIn()){
+		if (self::isLoggedIn()) {
 			$currentUser = Util::getCurrentUser();
 
 			if (Block::hasBlocked($currentUser, $user)) {
-				if($showBlocked){
+				if ($showBlocked) {
 					return '<button type="button" class="btn btn-danger' . $classString . '">Blocked</button>';
 				}
 			} else {
@@ -826,7 +844,7 @@ class Util {
 	 * @return string
 	 */
 	public static function linkWarning($link): string {
-		if(isset($_SERVER["HTTP_HOST"]) && $_SERVER["HTTP_HOST"] != parse_url($link,PHP_URL_HOST)){
+		if (isset($_SERVER["HTTP_HOST"]) && $_SERVER["HTTP_HOST"] != parse_url($link, PHP_URL_HOST)) {
 			return "/out?link=" . urlencode($link);
 		} else {
 			return $link;
@@ -842,7 +860,7 @@ class Util {
 	 * @return array
 	 */
 	public static function postJsonData(?FeedEntry $post, $parentDepth = 0): ?array {
-		if(!is_null($post)){
+		if (!is_null($post)) {
 			$attachments = [];
 			$mediaFiles = [];
 
@@ -880,7 +898,7 @@ class Util {
 	 * @return array
 	 */
 	public static function mediaJsonData(MediaFile $mediaFile): array {
-		if(!is_null($mediaFile)){
+		if (!is_null($mediaFile)) {
 			return [
 				"id" => $mediaFile->getId(),
 				"sha256" => $mediaFile->getSHA256(),
@@ -899,7 +917,7 @@ class Util {
 	 * @return array
 	 */
 	public static function userJsonData(User $user): array {
-		if(!is_null($user)){
+		if (!is_null($user)) {
 			return [
 				"id" => $user->getId(),
 				"displayName" => $user->getDisplayName(),
@@ -922,7 +940,7 @@ class Util {
 	 * @return string
 	 */
 	public static function convertLinks($string): string {
-		return preg_replace("!(\s|^)((https?://|www\.)+[a-z0-9_./?=&-]+)!i", " <a href=\"$2\" class=\"filterLink ignoreParentClick\">$2</a> ",$string);
+		return preg_replace("!(\s|^)((https?://|www\.)+[a-z0-9_./?=&-]+)!i", " <a href=\"$2\" class=\"filterLink ignoreParentClick\">$2</a> ", $string);
 	}
 
 	/**
@@ -933,7 +951,7 @@ class Util {
 	 * @return string
 	 */
 	public static function convertHashtags($string): string {
-		return str_replace("/#","/", preg_replace("/(?:^|\s)#(\w+)/", " <a href=\"/search?query=" . urlencode("#") . "$1\" class=\"ignoreParentClick\">#$1</a>", $string));
+		return str_replace("/#", "/", preg_replace("/(?:^|\s)#(\w+)/", " <a href=\"/search?query=" . urlencode("#") . "$1\" class=\"ignoreParentClick\">#$1</a>", $string));
 	}
 
 	/**
@@ -948,8 +966,8 @@ class Util {
 
 		$mentions = self::getUsersMentioned($string);
 
-		foreach($mentions as $u){
-			if($u->mayView()) $string = str_ireplace("@" . $u->getUsername(),'<a href="/' . $u->getUsername() . '" class="ignoreParentClick" data-no-instant>@' . $u->getUsername() . '</a>',$string);
+		foreach ($mentions as $u) {
+			if ($u->mayView()) $string = str_ireplace("@" . $u->getUsername(), '<a href="/' . $u->getUsername() . '" class="ignoreParentClick" data-no-instant>@' . $u->getUsername() . '</a>', $string);
 		}
 
 		return $string;
@@ -977,18 +995,18 @@ class Util {
 		$a = [];
 		$ids = [];
 
-		foreach(explode(" ",$string) as $s){
-			if(self::startsWith($s,"@") && strlen($s) >= 2){
-				$name = substr($s,1,strlen($s));
+		foreach (explode(" ", $string) as $s) {
+			if (self::startsWith($s, "@") && strlen($s) >= 2) {
+				$name = substr($s, 1, strlen($s));
 
 				$u = EntityManager::instance()->getRepository(User::class)->findOneBy([
 					"username" => $name
 				]);
 
-				if(!is_null($u)){
-					if(!in_array($u->getId(),$ids)){
-						array_push($a,$u);
-						array_push($ids,$u->getId());
+				if (!is_null($u)) {
+					if (!in_array($u->getId(), $ids)) {
+						array_push($a, $u);
+						array_push($ids, $u->getId());
 					}
 				}
 			}
@@ -1005,7 +1023,7 @@ class Util {
 	 * @return string
 	 */
 	public static function fixString($string): string {
-		return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/','',str_replace("\xE2\x80\x8B","",str_replace("\xE2\x80\xAE","",$string)));
+		return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', str_replace("\xE2\x80\x8B", "", str_replace("\xE2\x80\xAE", "", $string)));
 	}
 
 	/**
@@ -1019,11 +1037,11 @@ class Util {
 		$mediaEmbed = new MediaEmbed();
 
 		$mediaObject = $mediaEmbed->parseUrl($url);
-		if($mediaObject){
-			if(isset($mediaObject->stub()["match"])){
+		if ($mediaObject) {
+			if (isset($mediaObject->stub()["match"])) {
 				$match = $mediaObject->stub()["match"];
 
-				if(isset($match[0])){
+				if (isset($match[0])) {
 					return $match[0];
 				} else {
 					return $url;
@@ -1047,10 +1065,10 @@ class Util {
 		$mediaEmbed = new MediaEmbed();
 
 		$mediaObject = $mediaEmbed->parseUrl($url);
-		if($mediaObject){
-			$mediaObject->setAttribute("class","embed-responsive-item");
+		if ($mediaObject) {
+			$mediaObject->setAttribute("class", "embed-responsive-item");
 
-			return sprintf('<div class="embed-responsive embed-responsive-16by9">%s</div>',$mediaObject->getEmbedCode());
+			return sprintf('<div class="embed-responsive embed-responsive-16by9">%s</div>', $mediaObject->getEmbedCode());
 		} else {
 			return null;
 		}
@@ -1089,7 +1107,7 @@ class Util {
 	 * @return bool
 	 */
 	public static function isValidVideoURL($url): bool {
-		return filter_var($url,FILTER_VALIDATE_URL) && !is_null(self::getVideoEmbedCodeFromURL($url));
+		return filter_var($url, FILTER_VALIDATE_URL) && !is_null(self::getVideoEmbedCodeFromURL($url));
 	}
 
 	/**<div class="col-md-4 px-1 py-1">
@@ -1101,7 +1119,7 @@ class Util {
 	 */
 	public static function getPostActionButtons(FeedEntry $post): string {
 		$s = "";
-		$id = rand(0,getrandmax());
+		$id = rand(0, getrandmax());
 
 		$replies = $post->getReplyCount();
 		$shares = $post->getShareCount();
@@ -1131,9 +1149,9 @@ class Util {
 			$s .= '</div>';
 		}
 
-		if(Util::isLoggedIn()){
+		if (Util::isLoggedIn()) {
 			$currentUser = Util::getCurrentUser();
-			if(!is_null($currentUser)){
+			if (!is_null($currentUser)) {
 				// V1
 				/*$s .= '<div class="mt-1 postActionButtons ignoreParentClick float-left">';
 				$s .= '<span class="replyButton" data-toggle="tooltip" title="Reply" data-reply-id="' . $post->getId() . '">';
@@ -1197,33 +1215,33 @@ class Util {
 	 * @return string
 	 */
 	public static function renderAttachmentEmbeds($mediaFiles, $postId = null): string {
-		if(is_array($mediaFiles)){
+		if (is_array($mediaFiles)) {
 			$s = "";
 
-			if(count($mediaFiles) > 0){
-				if(count($mediaFiles) == 1){
+			if (count($mediaFiles) > 0) {
+				if (count($mediaFiles) == 1) {
 					$s .= '<div>';
 
 					$mediaFile = $mediaFiles[0];
 
-					if($mediaFile->getType() == "IMAGE"){
+					if ($mediaFile->getType() == "IMAGE") {
 						$s .= '<div class="border border-mainColor bg-dark ignoreParentClick mediaModalTrigger" style="background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '>
 						<img src="' . $mediaFile->getURL() . '" style="max-height: 500px; width: 100%; height: 100%; visibility: hidden;"/>
 						</div>';
 						//$s .= '<div class="rounded border border-mainColor bg-dark ignoreParentClick mr-2" style="width: 100%; background-image: url(\'' . $mediaFile->getThumbnailURL() . '\'); background-size: cover;' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '></div>';
-					} else if($mediaFile->getType() == "VIDEO"){
+					} else if ($mediaFile->getType() == "VIDEO") {
 						$s .= self::getVideoEmbedCodeFromURL($mediaFile->getURL());
-					} else if($mediaFile->getType() == "LINK"){
+					} else if ($mediaFile->getType() == "LINK") {
 						// TODO
 					}
 
 					$s .= '</div>';
-				} else if(count($mediaFiles) == 2){
+				} else if (count($mediaFiles) == 2) {
 					$s .= '<div style="height: 537px;">';
 
 					$i = 1;
-					foreach($mediaFiles as $mediaFile){
-						if($mediaFile->getType() == "IMAGE"){
+					foreach ($mediaFiles as $mediaFile) {
+						if ($mediaFile->getType() == "IMAGE") {
 							$d = $i == 2 ? " border-left-0" : "";
 
 							$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
@@ -1239,22 +1257,22 @@ class Util {
 					}
 
 					$s .= '</div>';
-				} else if(count($mediaFiles) == 3){
+				} else if (count($mediaFiles) == 3) {
 					$s .= '<div style="height: 537px;">';
 
 					$i = 1;
-					foreach($mediaFiles as $mediaFile){
-						if($mediaFile->getType() == "IMAGE"){
-							if($i == 1){
+					foreach ($mediaFiles as $mediaFile) {
+						if ($mediaFile->getType() == "IMAGE") {
+							if ($i == 1) {
 								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
 								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-mainColor bg-dark ignoreParentClick mr-2" style="width: 100%; height: 100%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
 								$s .= '<div class="border border-mainColor bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 100%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 								$s .= '</div>';
-							} else if($i == 2){
+							} else if ($i == 2) {
 								$s .= '<div class="d-inline-block" style="width: 50%; height: 100%;">';
 								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-mainColor border-left-0 border-bottom-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
 								$s .= '<div class="border border-mainColor border-left-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
-							} else if($i == 3){
+							} else if ($i == 3) {
 								//$s .= '<img src="' . $mediaFile->getThumbnailURL() . '" class="border border-mainColor border-left-0 bg-dark ignoreParentClick mr-2" style="width: 100%; height: 50%; ' . (!is_null($postId) ? ' cursor: pointer;" onclick="showMediaModal(\'' . $mediaFile->getId() . '\',' . $postId . ');"' : "\"") . '/>';
 								$s .= '<div class="border border-mainColor border-left-0 boder-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 537px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 								$s .= '</div>';
@@ -1265,22 +1283,22 @@ class Util {
 					}
 
 					$s .= '</div>';
-				} else if(count($mediaFiles) == 4){
+				} else if (count($mediaFiles) == 4) {
 					$s .= '<div style="height: 537px;">';
 
 					$i = 1;
-					foreach($mediaFiles as $mediaFile){
-						if($mediaFile->getType() == "IMAGE"){
-							if($i == 1){
+					foreach ($mediaFiles as $mediaFile) {
+						if ($mediaFile->getType() == "IMAGE") {
+							if ($i == 1) {
 								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
 								$s .= '<div class="border border-mainColor bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
-							} else if($i == 2){
+							} else if ($i == 2) {
 								$s .= '<div class="border border-mainColor border-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 								$s .= '</div>';
-							} else if($i == 3){
+							} else if ($i == 3) {
 								$s .= '<div class="d-inline-block" style="width: 50%; position: relative; height: 100%;">';
 								$s .= '<div class="border border-mainColor border-left-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
-							} else if($i == 4){
+							} else if ($i == 4) {
 								$s .= '<div class="border border-mainColor border-left-0 border-top-0 bg-dark ignoreParentClick mr-2 mediaModalTrigger" style="max-height: 500px; width: 100%; height: 50%; background-image: url(\'' . $mediaFile->getURL() . '\'); background-size: cover; ' . (!is_null($postId) ? ' cursor: pointer;" data-media-id="' . $mediaFile->getId() . '" data-post-id="' . $postId . '"' : "\"") . '></div>';
 								$s .= '</div>';
 							}
@@ -1307,12 +1325,12 @@ class Util {
 	 * @return string The formatted number
 	 */
 	public static function formatNumberShort(int $number): string {
-		if($number <= 999){
+		if ($number <= 999) {
 			return $number . "";
-		} else if($number >= 1000 && $number <= 999999){
-			return round(($number/1000),1) . "K";
+		} else if ($number >= 1000 && $number <= 999999) {
+			return round(($number / 1000), 1) . "K";
 		} else {
-			return round(($number/1000000),1) . "M";
+			return round(($number / 1000000), 1) . "M";
 		}
 	}
 
@@ -1326,14 +1344,14 @@ class Util {
 	 * @return string
 	 */
 	public static function renderCreatePostForm($classes = null, $includeExtraOptions = true): string {
-		if(!self::isLoggedIn() || is_null(self::getCurrentUser()))
+		if (!self::isLoggedIn() || is_null(self::getCurrentUser()))
 			return "";
 
-		$isReply = !is_null($classes) && is_array($classes) && count($classes) > 0 && in_array("replyForm",$classes);
+		$isReply = !is_null($classes) && is_array($classes) && count($classes) > 0 && in_array("replyForm", $classes);
 
 		$placeholder = !$isReply ? "Post something for your followers!" : "Post your reply";
 
-		$formId = rand(1,getrandmax());
+		$formId = rand(1, getrandmax());
 
 		/*$popoverHtml = "";
 
@@ -1410,9 +1428,9 @@ class Util {
 		// V2
 		//
 
-		$box .= '<div class="postBox card card-sm card-social-post' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ",$classes) : "") . '">';
+		$box .= '<div class="postBox card card-sm card-social-post' . (!is_null($classes) && is_array($classes) && count($classes) > 0 ? " " . implode(" ", $classes) : "") . '">';
 
-		if($includeExtraOptions){
+		if ($includeExtraOptions) {
 			$box .= '<div class="p-0">';
 
 			$box .= '<ul class="list-inline m-0 listPostActions">';
@@ -1428,7 +1446,7 @@ class Util {
 
 		$box .= '<textarea id="postField' . $formId . '" class="rounded-0 form-control postField" placeholder="' . $placeholder . '"></textarea>';
 
-		if($includeExtraOptions){
+		if ($includeExtraOptions) {
 			$box .= '<div class="row videoURL my-3 mx-2 d-none">';
 			$box .= '<b class="ml-3">Embed video</b>';
 			$box .= '<div class="col-12">';
@@ -1446,8 +1464,8 @@ class Util {
 
 		$box .= '<div class="pb-2 px-2 d-block">';
 
-		if($includeExtraOptions){
-			$faces = ["tired","suprise","smile-wink","smile-beam","sad-tear","sad-cry","meh-rolling-eyes","meh-blank","meh","grin-wink","grin-stars","grin-squint-tears","grin-squint","grin-hearts","grin-beam-sweat","grin-beam","grin-alt","grin","smile","laugh-wink","laugh-squint","laugh-beam","laugh","kiss-wink-heart","kiss-beam","kiss","grin-tongue-wink","grin-tongue-squint","grin-tongue","grin-tears","grimace","frown-open","flushed","angry","dizzy"];
+		if ($includeExtraOptions) {
+			$faces = ["tired", "suprise", "smile-wink", "smile-beam", "sad-tear", "sad-cry", "meh-rolling-eyes", "meh-blank", "meh", "grin-wink", "grin-stars", "grin-squint-tears", "grin-squint", "grin-hearts", "grin-beam-sweat", "grin-beam", "grin-alt", "grin", "smile", "laugh-wink", "laugh-squint", "laugh-beam", "laugh", "kiss-wink-heart", "kiss-beam", "kiss", "grin-tongue-wink", "grin-tongue-squint", "grin-tongue", "grin-tears", "grimace", "frown-open", "flushed", "angry", "dizzy"];
 
 			$box .= '<div class="dropzone-previews row ml-2"></div>';
 
