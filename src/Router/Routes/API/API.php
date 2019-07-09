@@ -142,7 +142,10 @@ function api_prepare_object($object): array {
 		"openRequestsCount",
 		"unreadMessages",
 		"unreadNotifications",
-		"email"
+		"email",
+		"featuredBoxTitle",
+		"featuredBoxContent",
+		"featuringUsers"
 	];
 
 	foreach ($sensitiveFieldNames as $fieldName) {
