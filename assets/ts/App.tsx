@@ -7,6 +7,8 @@ import BaseObject from "./Serialization/BaseObject";
 import Auth from "./Auth/Auth";
 import User from "./Entity/Account/User";
 import Header from "./Parts/Header";
+import Home from "./Pages/Home/Home";
+import HomeFeed from "./Pages/Home/HomeFeed";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -56,7 +58,16 @@ export default class App extends Component<any, any> {
 						<Header/>
 
 						<Switch>
-
+							<div className="container navMargin">
+								<div className="legacyCard">
+									<div className="wrapper">
+										<div className="legacyCardBody">
+											{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
+												<Route path={"/"} exact component={Home}/>}
+										</div>
+									</div>
+								</div>
+							</div>
 						</Switch>
 					</div>
 				</Router>
