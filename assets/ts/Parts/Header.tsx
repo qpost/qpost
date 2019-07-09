@@ -13,6 +13,8 @@ export default class Header extends Component<any, any> {
 			return null;
 		}
 
+		const logo = <img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>;
+
 		return <nav id="mainNav"
 					className={"navbar navbar-expand-lg navbar-dark fixed-top " + (NightMode.isActive() ? "bg-dark" : "bg-primary")}>
 			<div className="container-fluid container">
@@ -23,9 +25,15 @@ export default class Header extends Component<any, any> {
 						<span className="navbar-toggler-icon"/>
 					</button>
 
-					<a className="navbar-brand" href="/">
-						<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
-					</a>
+					{Auth.isLoggedIn() ? (
+						<Link className="navbar-brand" to="/">
+							{logo}
+						</Link>
+					) : (
+						<a className="navbar-brand" href="/">
+							{logo}
+						</a>
+					)}
 				</div>
 
 				<div className="collapse navbar-collapse" id="main-navigation">
