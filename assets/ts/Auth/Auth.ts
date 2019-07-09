@@ -1,6 +1,17 @@
 import Cookies from "js-cookie";
+import User from "../Entity/Account/User";
 
 export default class Auth {
+	private static currentUser?: User;
+
+	public static getCurrentUser(): User | undefined {
+		return this.currentUser;
+	}
+
+	public static setCurrentUser(user?: User): void {
+		this.currentUser = user;
+	}
+
 	public static isLoggedIn(): boolean {
 		return !!this.getToken();
 	}
@@ -17,5 +28,12 @@ export default class Auth {
 		} else {
 			Cookies.remove("sesstoken");
 		}
+	}
+
+	public static logout(): void {
+		this.setToken(undefined);
+		this.setCurrentUser(undefined);
+
+		window.location.href = "/";
 	}
 }

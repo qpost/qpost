@@ -1,4 +1,3 @@
-import ClickEvent = JQuery.ClickEvent;
 import $ from "jquery";
 
 export default class NightMode {
@@ -9,12 +8,6 @@ export default class NightMode {
 
 		// load night mode
 		NightMode.setActive(NightMode.isActive());
-
-		$(".nightModeToggle").off("click touchend").on("click touchend", (e: ClickEvent) => {
-			e.preventDefault();
-
-			NightMode.toggle();
-		});
 	}
 
 	public static setActive(active: boolean): void {

@@ -3,6 +3,10 @@ import NightMode from "./NightMode/NightMode";
 import LoadingScreen from "./Component/LoadingScreen";
 import API from "./API/API";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import BaseObject from "./Serialization/BaseObject";
+import Auth from "./Auth/Auth";
+import User from "./Entity/Account/User";
+import Header from "./Parts/Header";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -20,7 +24,9 @@ export default class App extends Component<any, any> {
 
 	componentDidMount(): void {
 		API.handleRequest("/token/verify", "POST", {}, (data => {
-			if (data.status && data.status === "Token valid") {
+			if (data.status && data.status === "Token valid" && data.user) {
+				Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
+
 				this.setState({
 					validatedLogin: true
 				})
@@ -46,6 +52,8 @@ export default class App extends Component<any, any> {
 							window.scrollTo(0, 0);
 							return null;
 						}}/>
+
+						<Header/>
 
 						<Switch>
 
