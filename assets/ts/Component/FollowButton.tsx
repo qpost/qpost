@@ -2,22 +2,40 @@ import React, {Component} from "react";
 import User from "../Entity/Account/User";
 import FollowStatus from "../Util/FollowStatus";
 import Auth from "../Auth/Auth";
+import {Redirect} from "react-router-dom";
 
 export default class FollowButton extends Component<{
 	target: User,
 	className?: string
-}, any> {
+}, {
+	redirectToEditPage: boolean
+}> {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			redirectToEditPage: false
+		};
 	}
 
 	click = (e) => {
 		e.preventDefault();
 
-		// TODO: Add actual action
+		const currentUser = Auth.getCurrentUser();
+		if (currentUser && currentUser.getId() === this.props.target.getId()) {
+			this.setState({
+				redirectToEditPage: true
+			});
+		} else {
+			// TODO
+		}
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		if (this.state.redirectToEditPage) {
+			return <Redirect to={"/edit"}/>
+		}
+
 		let color: string = "";
 		let text: string = "";
 
