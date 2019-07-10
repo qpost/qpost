@@ -18,6 +18,8 @@ export default class User {
 	private totalPostCount: number;
 	private followingCount: number;
 	private followerCount: number;
+	private followStatus: number;
+	private followsYou: boolean;
 
 	public getId(): number {
 		return this.id;
@@ -85,5 +87,13 @@ export default class User {
 
 	public getFollowerCount(): number {
 		return this.followerCount;
+	}
+
+	public getFollowStatus(): number {
+		return this.followStatus;
+	}
+
+	public isFollowingYou(): boolean {
+		return this.followsYou;
 	}
 }

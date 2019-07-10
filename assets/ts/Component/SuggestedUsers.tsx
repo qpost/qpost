@@ -5,6 +5,7 @@ import API from "../API/API";
 import BaseObject from "../Serialization/BaseObject";
 import {Spinner} from "reactstrap";
 import NightMode from "../NightMode/NightMode";
+import FollowButton from "./FollowButton";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -65,8 +66,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 									<br/>
 								</Link>
 
-								{/*{{followButton(suggestedUser,true, ["mt-0", "btn-sm", "ignoreParentClick"])}}*/}
-								{/*TODO: Add follow button*/}
+								<FollowButton target={suggestedUser} className={"mt-0 btn-sm"}/>
 							</div>
 						</div>
 					})}

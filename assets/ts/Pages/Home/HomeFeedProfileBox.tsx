@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Auth from "../../Auth/Auth";
 import {Link} from "react-router-dom";
+import FollowButton from "../../Component/FollowButton";
 
 export default class HomeFeedProfileBox extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -46,8 +47,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 						</Link>
 					</div>
 
-					{/*{{followButton(currentUser,true, ["float-right", "mt-2", "btn-sm"],false)}}*/}
-					{/* TODO: Add follow button	*/}
+					<FollowButton target={currentUser} className={"float-right mt-2 btn-sm"}/>
 				</div>
 
 				<hr className="mb-2 mt-3"/>
