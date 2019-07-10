@@ -6,6 +6,7 @@ import BaseObject from "../Serialization/BaseObject";
 import {Spinner} from "reactstrap";
 import NightMode from "../NightMode/NightMode";
 import FollowButton from "./FollowButton";
+import VerifiedBadge from "./VerifiedBadge";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -61,7 +62,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 											 whiteSpace: "nowrap",
 											 wordWrap: "normal"
 										 }}>
-										@{suggestedUser.getUsername()}{/* TODO: Add verified badge */}
+										@{suggestedUser.getUsername()}<VerifiedBadge target={suggestedUser}/>
 									</div>
 									<br/>
 								</Link>

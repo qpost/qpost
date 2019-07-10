@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Auth from "../../Auth/Auth";
 import {Link} from "react-router-dom";
 import FollowButton from "../../Component/FollowButton";
+import VerifiedBadge from "../../Component/VerifiedBadge";
 
 export default class HomeFeedProfileBox extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -30,7 +31,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 									wordWrap: "normal",
 									marginTop: "-5px"
 								}}>
-								{currentUser.getDisplayName()}{/*TODO: Add verified badge*/}
+								{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/>
 							</div>
 
 							<div className="text-muted small"
