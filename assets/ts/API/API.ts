@@ -45,6 +45,8 @@ export default class API {
 					}
 				}
 			}).catch(error => {
+				console.error(error);
+
 				if (errorCallback) {
 					errorCallback("An error occurred.");
 				}

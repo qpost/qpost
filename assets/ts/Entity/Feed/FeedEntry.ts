@@ -1,19 +1,43 @@
 import User from "../Account/User";
 import SerializedDateTime from "../../Serialization/Date/SerializedDateTime";
+import {JsonObject, JsonProperty} from "json2typescript";
 
+@JsonObject("FeedEntry")
 export default class FeedEntry {
-	private id: number;
-	private user: User;
-	private text?: string;
-	private following?: User;
-	private post?: FeedEntry;
-	private type: string;
-	private nSFW: boolean;
+	@JsonProperty("id", Number)
+	private id: number = undefined;
+
+	@JsonProperty("user", User)
+	private user: User = undefined;
+
+	@JsonProperty("text", String, true)
+	private text?: string = undefined;
+
+	@JsonProperty("following", User, true)
+	private following?: User = undefined;
+
+	@JsonProperty("post", FeedEntry, true)
+	private post?: FeedEntry = undefined;
+
+	@JsonProperty("type", String)
+	private type: string = undefined;
+
+	@JsonProperty("nSFW", Boolean)
+	private nSFW: boolean = undefined;
+
 	//private attachments; TODO
-	private time: SerializedDateTime;
-	private replyCount: number;
-	private shareCount: number;
-	private favoriteCount: number;
+
+	@JsonProperty("time", SerializedDateTime)
+	private time: SerializedDateTime = undefined;
+
+	@JsonProperty("replyCount", Number)
+	private replyCount: number = undefined;
+
+	@JsonProperty("shareCount", Number)
+	private shareCount: number = undefined;
+
+	@JsonProperty("favoriteCount", Number)
+	private favoriteCount: number = undefined;
 
 	public getId(): number {
 		return this.id;

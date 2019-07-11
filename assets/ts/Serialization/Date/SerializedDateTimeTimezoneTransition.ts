@@ -1,9 +1,21 @@
+import {JsonObject, JsonProperty} from "json2typescript";
+
+@JsonObject("SerializedDateTimeTimezoneTransition")
 export default class SerializedDateTimeTimezoneTransition {
-	private ts: number;
-	private time: string;
-	private offset: number;
-	private isdst: boolean;
-	private abbr: string;
+	@JsonProperty("ts", Number)
+	private ts: number = undefined;
+
+	@JsonProperty("time", String)
+	private time: string = undefined;
+
+	@JsonProperty("offset", Number)
+	private offset: number = undefined;
+
+	@JsonProperty("isdst", Boolean)
+	private isdst: boolean = undefined;
+
+	@JsonProperty("abbr", String)
+	private abbr: string = undefined;
 
 	public getTimestamp(): number {
 		return this.ts;

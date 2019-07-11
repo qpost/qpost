@@ -26,18 +26,13 @@ export default class FeedEntryList extends Component<{
 		const parameters = {};
 
 		API.handleRequest("/feed", "GET", parameters, data => {
-			if (data.results) {
-				let entries: FeedEntry[] = [];
+			let entries: FeedEntry[] = [];
 
-				data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
+			data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
 
-				this.setState({entries});
-			} else {
-				this.setState({
-					error: "An error occurred."
-				});
-			}
+			this.setState({entries});
 		}, error => {
+			console.log(error);
 			this.setState({error});
 		});
 	}

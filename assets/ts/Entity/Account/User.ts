@@ -1,25 +1,64 @@
 import SerializedDateTime from "../../Serialization/Date/SerializedDateTime";
+import {JsonObject, JsonProperty} from "json2typescript";
 
+@JsonObject("User")
 export default class User {
-	private id: number;
-	private displayName: string;
-	private username: string;
-	private avatarURL: string;
-	private bio?: string;
-	private birthday?: SerializedDateTime;
-	private privacyLevel: string;
-	private time: SerializedDateTime;
-	private verified: boolean;
-	private suspended: boolean;
-	private postCount: number;
-	private replyCount: number;
-	private shareCount: number;
-	private followingPostCount: number;
-	private totalPostCount: number;
-	private followingCount: number;
-	private followerCount: number;
-	private followStatus: number;
-	private followsYou: boolean;
+	@JsonProperty("id", Number)
+	private id: number = undefined;
+
+	@JsonProperty("displayName", String)
+	private displayName: string = undefined;
+
+	@JsonProperty("username", String)
+	private username: string = undefined;
+
+	@JsonProperty("avatarURL", String)
+	private avatarURL: string = undefined;
+
+	@JsonProperty("bio", String, true)
+	private bio?: string = undefined;
+
+	@JsonProperty("birthday", SerializedDateTime, true)
+	private birthday?: SerializedDateTime = undefined;
+
+	@JsonProperty("privacyLevel", String)
+	private privacyLevel: string = undefined;
+
+	@JsonProperty("time", SerializedDateTime)
+	private time: SerializedDateTime = undefined;
+
+	@JsonProperty("verified", Boolean)
+	private verified: boolean = undefined;
+
+	@JsonProperty("suspended", Boolean)
+	private suspended: boolean = undefined;
+
+	@JsonProperty("postCount", Number)
+	private postCount: number = undefined;
+
+	@JsonProperty("replyCount", Number)
+	private replyCount: number = undefined;
+
+	@JsonProperty("shareCount", Number)
+	private shareCount: number = undefined;
+
+	@JsonProperty("followingPostCount", Number)
+	private followingPostCount: number = undefined;
+
+	@JsonProperty("totalPostCount", Number)
+	private totalPostCount: number = undefined;
+
+	@JsonProperty("followingCount", Number)
+	private followingCount: number = undefined;
+
+	@JsonProperty("followerCount", Number)
+	private followerCount: number = undefined;
+
+	@JsonProperty("followStatus", Number)
+	private followStatus: number = undefined;
+
+	@JsonProperty("followsYou", Boolean)
+	private followsYou: boolean = undefined;
 
 	public getId(): number {
 		return this.id;

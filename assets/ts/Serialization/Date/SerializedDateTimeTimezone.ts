@@ -1,10 +1,17 @@
 import SerializedDateTimeTimezoneTransition from "./SerializedDateTimeTimezoneTransition";
 import SerializedDateTimeTimezoneLocation from "./SerializedDateTimeTimezoneLocation";
+import {JsonObject, JsonProperty} from "json2typescript";
 
+@JsonObject("SerializedDateTimeTimezone")
 export default class SerializedDateTimeTimezone {
-	private name: string;
-	private transitions: SerializedDateTimeTimezoneTransition[];
-	private location: SerializedDateTimeTimezoneLocation;
+	@JsonProperty("name", String)
+	private name: string = undefined;
+
+	@JsonProperty("transitions", [SerializedDateTimeTimezoneTransition])
+	private transitions: SerializedDateTimeTimezoneTransition[] = undefined;
+
+	@JsonProperty("location", SerializedDateTimeTimezoneLocation)
+	private location: SerializedDateTimeTimezoneLocation = undefined;
 
 	public getName(): string {
 		return this.name;
