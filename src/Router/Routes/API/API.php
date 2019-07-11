@@ -3,11 +3,7 @@
 namespace qpost\Router\API;
 
 use Lime\App;
-use qpost\Account\Follower;
-use qpost\Account\FollowRequest;
-use qpost\Account\FollowStatus;
 use qpost\Account\Token;
-use qpost\Account\User;
 use qpost\Database\EntityManager;
 use qpost\Util\Util;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -134,23 +130,22 @@ function api_prepare_object($object): array {
 	$string = $serializer->serialize($object, "json");
 	$array = json_decode($string, true);
 
-	$token = api_get_token();
+	$isObject = Util::startsWith($string, "{");
 
-	if ($object instanceof User) {
-		// Add follow status
-
-		$followStatus = FollowStatus::NOT_FOLLOWING;
-		$followsYou = false;
-
-		if ($token) {
-			$followStatus = Follower::isFollowing($token->getUser(), $object) ? FollowStatus::FOLLOWING : FollowRequest::hasSentFollowRequest($token->getUser(), $object) ? FollowStatus::PENDING : FollowStatus::NOT_FOLLOWING;
-			$followsYou = $object->getId() === $token->getUser()->getId() || Follower::isFollowing($object, $token->getUser());
+	if ($isObject) {
+		foreach ($array as $key => $value) {
+			if (is_array($array[$key])) {
+				$array[$key] = api_remove_sensitive_fields($array[$key]);
+			}
 		}
-
-		$array["followStatus"] = $followStatus;
-		$array["followsYou"] = $followsYou;
 	}
 
+	$array = api_remove_sensitive_fields($array);
+
+	return $array;
+}
+
+function api_remove_sensitive_fields(array $array): array {
 	/**
 	 * @var string[] $sensitiveFieldNames
 	 */

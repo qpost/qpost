@@ -70,6 +70,7 @@ create_route_get("/api/feed", function () {
 
 					return json_encode(["results" => $results]);
 				} else {
+					$this->response->status = "400";
 					return json_encode(["error" => "'max' has to be an integer."]);
 				}
 			} else {
@@ -124,9 +125,11 @@ create_route_get("/api/feed", function () {
 
 					return json_encode(["results" => $results]);
 				} else {
+					$this->response->status = "400";
 					return json_encode(["error" => "'max' has to be an integer."]);
 				}
 			} else {
+				$this->response->status = "404";
 				return json_encode(["error" => "The requested user could not be found."]);
 			}
 		} else if (!isset($requestData["max"]) && isset($requestData["user"])) {
@@ -150,6 +153,7 @@ create_route_get("/api/feed", function () {
 
 				return json_encode(["results" => $results]);
 			} else {
+				$this->response->status = "404";
 				return json_encode(["error" => "The requested user could not be found."]);
 			}
 		} else {

@@ -62,8 +62,10 @@ class User {
 		return $entityManager->getRepository(User::class)->createQueryBuilder("u")
 			->where("upper(u.username) = upper(:query)")
 			->setParameter("query", $query, Type::STRING)
+			->orWhere("u.id = :query")
+			->setParameter("query", $query, Type::INTEGER)
 			->getQuery()
-			->execute();
+			->getResult()[0];
 	}
 
 	/**

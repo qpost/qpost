@@ -54,12 +54,6 @@ export default class User {
 	@JsonProperty("followerCount", Number)
 	private followerCount: number = undefined;
 
-	@JsonProperty("followStatus", Number)
-	private followStatus: number = undefined;
-
-	@JsonProperty("followsYou", Boolean)
-	private followsYou: boolean = undefined;
-
 	public getId(): number {
 		return this.id;
 	}
@@ -126,13 +120,5 @@ export default class User {
 
 	public getFollowerCount(): number {
 		return this.followerCount;
-	}
-
-	public getFollowStatus(): number {
-		return this.followStatus;
-	}
-
-	public isFollowingYou(): boolean {
-		return this.followsYou;
 	}
 }
