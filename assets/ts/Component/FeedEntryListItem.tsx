@@ -5,6 +5,7 @@ import {Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import User from "../Entity/Account/User";
 import VerifiedBadge from "./VerifiedBadge";
+import SerializedDateTimeTimeago from "../Serialization/Date/SerializedDateTimeTimeago";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry
@@ -51,7 +52,8 @@ export default class FeedEntryListItem extends Component<{
 									<br/>
 
 									<span className={"small text-muted"}>
-										<i className={"far fa-clock"}/> {entry.getTime().getTimestamp()} {/* TODO: Add timeago */}
+										<i className={"far fa-clock"}/> <SerializedDateTimeTimeago
+										time={entry.getTime()}/>
 									</span>
 								</p>
 							</div>
