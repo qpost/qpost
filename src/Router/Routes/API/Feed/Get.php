@@ -64,6 +64,7 @@ create_route_get("/api/feed", function () {
 						->getResult();
 
 					foreach ($feedEntries as $feedEntry) {
+						if (!is_null($currentUser) && !$feedEntry->mayView($currentUser)) continue;
 						array_push($results, api_prepare_object($feedEntry));
 					}
 
@@ -89,6 +90,7 @@ create_route_get("/api/feed", function () {
 					->getResult();
 
 				foreach ($feedEntries as $feedEntry) {
+					if (!is_null($currentUser) && !$feedEntry->mayView($currentUser)) continue;
 					array_push($results, api_prepare_object($feedEntry));
 				}
 
@@ -116,6 +118,7 @@ create_route_get("/api/feed", function () {
 						->getResult();
 
 					foreach ($feedEntries as $feedEntry) {
+						if (!is_null($currentUser) && !$feedEntry->mayView($currentUser)) continue;
 						array_push($results, api_prepare_object($feedEntry));
 					}
 
@@ -141,6 +144,7 @@ create_route_get("/api/feed", function () {
 					->getResult();
 
 				foreach ($feedEntries as $feedEntry) {
+					if (!is_null($currentUser) && !$feedEntry->mayView($currentUser)) continue;
 					array_push($results, api_prepare_object($feedEntry));
 				}
 

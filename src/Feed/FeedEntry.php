@@ -397,8 +397,8 @@ class FeedEntry {
 	 * @access public
 	 * @return bool
 	 */
-	public function mayView(){
-		return $this->getUser()->mayView() && (!is_null($this->getPost()) ? $this->getPost()->getUser()->mayView() : true);
+	public function mayView(User $user = null) {
+		return $this->getUser()->mayView($user) && (!is_null($this->getPost()) ? $this->getPost()->getUser()->mayView($user) : true);
 	}
 
 	/**
