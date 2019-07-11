@@ -11,6 +11,7 @@ use qpost\Database\EntityManager;
 use qpost\Media\Attachment;
 use qpost\Media\MediaFile;
 use qpost\Util\Util;
+use function qpost\Router\API\api_get_token;
 
 /**
  * Represents a feed entry
@@ -344,6 +345,32 @@ class FeedEntry {
 		return EntityManager::instance()->getRepository(Favorite::class)->count([
 			"post" => $this
 		]);
+	}
+
+	/**
+	 * @return bool|null
+	 */
+	public function isShared(): bool {
+		$token = api_get_token();
+
+		if ($token->getUser()) {
+			return Share::hasShared($token->getUser(), $this);
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return bool|null
+	 */
+	public function isFavorited(): bool {
+		$token = api_get_token();
+
+		if ($token->getUser()) {
+			return Favorite::hasFavorited($token->getUser(), $this);
+		}
+
+		return false;
 	}
 
 	/**

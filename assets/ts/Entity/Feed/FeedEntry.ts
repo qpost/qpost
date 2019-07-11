@@ -39,6 +39,12 @@ export default class FeedEntry {
 	@JsonProperty("favoriteCount", Number)
 	private favoriteCount: number = undefined;
 
+	@JsonProperty("shared", Boolean)
+	private shared: boolean = undefined;
+
+	@JsonProperty("favorited", Boolean)
+	private favorited: boolean = undefined;
+
 	public getId(): number {
 		return this.id;
 	}
@@ -81,5 +87,13 @@ export default class FeedEntry {
 
 	public getFavoriteCount(): number {
 		return this.favoriteCount;
+	}
+
+	public isShared(): boolean {
+		return this.shared;
+	}
+
+	public isFavorited(): boolean {
+		return this.favorited;
 	}
 }
