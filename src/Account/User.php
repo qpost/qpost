@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use qpost\Block\Block;
 use qpost\Database\Database;
 use qpost\Database\EntityManager;
@@ -99,6 +100,7 @@ class User {
 	 * @var string|null $password
 	 *
 	 * @ORM\Column(type="string", length=60, nullable=true)
+	 * @Serializer\Exclude()
 	 */
 	private $password;
 
@@ -107,6 +109,7 @@ class User {
 	 * @var string $email
 	 *
 	 * @ORM\Column(type="string", unique=true, length=50)
+	 * @Serializer\Exclude()
 	 */
 	private $email;
 
@@ -115,6 +118,8 @@ class User {
 	 * @var string $avatar
 	 *
 	 * @ORM\Column(type="string", nullable=true, length=255)
+	 *
+	 * @Serializer\Exclude()
 	 */
 	private $avatar;
 
@@ -147,6 +152,7 @@ class User {
 	 * @var string $featuredBoxTitle
 	 *
 	 * @ORM\Column(type="text", nullable=true)
+	 * @Serializer\Exclude()
 	 */
 	private $featuredBoxTitle;
 
@@ -155,6 +161,7 @@ class User {
 	 * @var User[] $featuredBoxContent
 	 *
 	 * @ORM\ManyToMany(targetEntity="User", mappedBy="featuringUsers")
+	 * @Serializer\Exclude()
 	 */
 	private $featuredBoxContent;
 
@@ -164,6 +171,7 @@ class User {
 	 * @ORM\ManyToMany(targetEntity="User", inversedBy="featuredBoxContent")
 	 * @ORM\JoinTable(name="featuredBoxes", joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
 	 *                                        inverseJoinColumns={@ORM\JoinColumn(name="featured_user_id", referencedColumnName="id")})
+	 * @Serializer\Exclude()
 	 */
 	private $featuringUsers;
 
@@ -180,6 +188,7 @@ class User {
 	 * @var bool $emailActivated
 	 *
 	 * @ORM\Column(type="boolean")
+	 * @Serializer\Exclude()
 	 */
 	private $emailActivated = false;
 
@@ -188,6 +197,7 @@ class User {
 	 * @var string $emailActivationToken
 	 *
 	 * @ORM\Column(type="string", nullable=true, length=7)
+	 * @Serializer\Exclude()
 	 */
 	private $emailActivationToken;
 
@@ -204,6 +214,7 @@ class User {
 	 * @var DateTime|null $lastUsernameChange
 	 *
 	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Serializer\Exclude()
 	 */
 	private $lastUsernameChange;
 
@@ -212,6 +223,7 @@ class User {
 	 * @var UserGigadriveData|null $gigadriveData
 	 *
 	 * @ORM\OneToOne(targetEntity="UserGigadriveData")
+	 * @Serializer\Exclude()
 	 */
 	private $gigadriveData;
 
@@ -219,6 +231,7 @@ class User {
 	 * @var
 	 *
 	 * @ORM\OneToMany(targetEntity="Follower", mappedBy="from")
+	 * @Serializer\Exclude()
 	 */
 	private $following;
 
@@ -226,6 +239,7 @@ class User {
 	 * @var
 	 *
 	 * @ORM\OneToMany(targetEntity="Follower", mappedBy="to")
+	 * @Serializer\Exclude()
 	 */
 	private $followers;
 
@@ -336,6 +350,8 @@ class User {
 	 *
 	 * @access public
 	 * @return string
+	 *
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getAvatarURL(): string {
 		return is_null($this->avatar) ? sprintf(GIGADRIVE_CDN_UPLOAD_FINAL_URL, "defaultAvatar.png") : $this->avatar;
@@ -589,6 +605,8 @@ class User {
 
 	/**
 	 * @return bool
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("suspended")
 	 */
 	public function isSuspended(): bool {
 		return EntityManager::instance()->getRepository(Suspension::class)->count([
@@ -599,6 +617,7 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getPostCount(): int {
 		$expr = Criteria::expr();
@@ -613,6 +632,7 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getReplyCount(): int {
 		$expr = Criteria::expr();
@@ -627,6 +647,7 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getShareCount(): int {
 		$expr = Criteria::expr();
@@ -641,6 +662,7 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getFollowingPostCount(): int {
 		$expr = Criteria::expr();
@@ -655,6 +677,7 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getTotalPostCount(): int {
 		return $this->getPostCount() + $this->getReplyCount() + $this->getShareCount() + $this->getFollowingPostCount();
@@ -662,6 +685,7 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getFollowingCount(): int {
 		return EntityManager::instance()->getRepository(Follower::class)->count([
@@ -671,6 +695,7 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getFollowerCount(): int {
 		return EntityManager::instance()->getRepository(Follower::class)->count([
@@ -680,60 +705,12 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getOpenRequestsCount(): int {
 		return EntityManager::instance()->getRepository(FollowRequest::class)->count([
 			"to" => $this
 		]);
-	}
-
-	/**
-	 * Returns this object as json object to be used in the API
-	 *
-	 * @access public
-	 * @param User $view User to use as "current"
-	 * @param bool $encode If true, will return a json string, else an associative array
-	 * @param bool $includeFeaturedBox If true, the featured box will be included
-	 * @return string|array
-	 */
-	public function toAPIJson($view, $encode = true, $includeFeaturedBox = true) {
-		$a = [
-			"id" => $this->id,
-			"displayName" => $this->displayName,
-			"username" => $this->username,
-			"bio" => $this->bio,
-			"avatar" => $this->getAvatarURL(),
-			"verified" => $this->verified,
-			"birthday" => $this->birthday,
-			"privacyLevel" => $this->privacyLevel,
-			"joinDate" => $this->time,
-			"gigadriveJoinDate" => $this->gigadriveJoinDate,
-			"suspended" => $this->isSuspended() ? true : false,
-			"emailActivated" => $this->emailActivated ? true : false,
-			"posts" => $this->getPosts(),
-			"feedEntries" => $this->getFeedEntries(),
-			"following" => $this->getFollowing(),
-			"followers" => $this->getFollowers(),
-			"followStatus" => $view->isFollowing($this) ? 1 : ($view->hasSentFollowRequest($this) ? 2 : 0),
-			"followedStatus" => $this->isFollowing($view) ? 1 : ($this->hasSentFollowRequest($view) ? 2 : 0),
-		];
-
-		if ($includeFeaturedBox) {
-			$featuredBox = [];
-			foreach ($this->featuredBoxContent as $uID) {
-				$u = User::getUserById($uID);
-				if (is_null($u)) continue;
-
-				array_push($featuredBox, $u->toAPIJson($view, false, false));
-			}
-
-			$a["featuredBox"] = [
-				"title" => !is_null($this->featuredBoxTitle) ? $this->featuredBoxTitle : "Featured",
-				"content" => $featuredBox
-			];
-		}
-
-		return $encode == true ? json_encode($a) : $a;
 	}
 
 	/**

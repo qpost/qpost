@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use qpost\Account\User;
 use qpost\Feed\FeedEntry;
 
@@ -48,6 +49,8 @@ class MediaFile {
 	 * @var User|null $originalUploader
 	 *
 	 * @ORM\ManyToOne(targetEntity="qpost\Account\User")
+	 *
+	 * @Serializer\Exclude()
 	 */
 	private $originalUploader;
 
@@ -72,6 +75,8 @@ class MediaFile {
 	 * @var FeedEntry[] $posts
 	 *
 	 * @ORM\ManyToMany(targetEntity="qpost\Feed\FeedEntry", mappedBy="attachments", cascade={"persist"})
+	 *
+	 * @Serializer\Exclude()
 	 */
 	private $posts;
 

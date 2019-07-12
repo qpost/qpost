@@ -2,13 +2,14 @@
 
 namespace qpost\Router\API;
 
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
+use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerBuilder;
 use Lime\App;
 use qpost\Account\Token;
 use qpost\Database\EntityManager;
 use qpost\Util\Util;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Sets all required headers for an API respones (mime type, CORS, etc.)
@@ -118,7 +119,15 @@ function api_request_data(App $app): array {
 	}
 }
 
-$serializer = new Serializer([new GetSetMethodNormalizer()], ["json" => new JsonEncoder()]);
+$serializer = SerializerBuilder::create()
+	->setDebug(DEBUG)
+	->setCacheDir(sys_get_temp_dir())
+	->setPropertyNamingStrategy(
+		new SerializedNameAnnotationStrategy(
+			new IdenticalPropertyNamingStrategy()
+		)
+	)
+	->build();
 
 /**
  * @param $object
@@ -127,49 +136,11 @@ $serializer = new Serializer([new GetSetMethodNormalizer()], ["json" => new Json
 function api_prepare_object($object): array {
 	global $serializer;
 
-	$string = $serializer->serialize($object, "json");
+	$context = new SerializationContext();
+	$context->setSerializeNull(true);
+
+	$string = $serializer->serialize($object, "json", $context);
 	$array = json_decode($string, true);
-
-	$isObject = Util::startsWith($string, "{");
-
-	if ($isObject) {
-		foreach ($array as $key => $value) {
-			if (is_array($array[$key])) {
-				$array[$key] = api_remove_sensitive_fields($array[$key]);
-			}
-		}
-	}
-
-	$array = api_remove_sensitive_fields($array);
-
-	return $array;
-}
-
-function api_remove_sensitive_fields(array $array): array {
-	/**
-	 * @var string[] $sensitiveFieldNames
-	 */
-	$sensitiveFieldNames = [
-		"emailActivated",
-		"emailActivationToken",
-		"password",
-		"lastUsernameChange",
-		"gigadriveData",
-		"openRequestsCount",
-		"unreadMessages",
-		"unreadNotifications",
-		"email",
-		"featuredBoxTitle",
-		"featuredBoxContent",
-		"featuringUsers",
-		"originalUploader"
-	];
-
-	foreach ($sensitiveFieldNames as $fieldName) {
-		if (array_key_exists($fieldName, $array)) {
-			unset($array[$fieldName]);
-		}
-	}
 
 	return $array;
 }

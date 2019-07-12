@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use qpost\Account\User;
 use qpost\Database\EntityManager;
 use qpost\Media\MediaFile;
@@ -317,6 +318,7 @@ class FeedEntry {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getReplyCount(): int {
 		return EntityManager::instance()->getRepository(FeedEntry::class)->count([
@@ -327,6 +329,7 @@ class FeedEntry {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getShareCount(): int {
 		return EntityManager::instance()->getRepository(FeedEntry::class)->count([
@@ -337,6 +340,7 @@ class FeedEntry {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
 	 */
 	public function getFavoriteCount(): int {
 		return EntityManager::instance()->getRepository(Favorite::class)->count([
@@ -346,6 +350,8 @@ class FeedEntry {
 
 	/**
 	 * @return bool|null
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("shared")
 	 */
 	public function isShared(): bool {
 		$token = api_get_token();
@@ -359,6 +365,8 @@ class FeedEntry {
 
 	/**
 	 * @return bool|null
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("favorited")
 	 */
 	public function isFavorited(): bool {
 		$token = api_get_token();

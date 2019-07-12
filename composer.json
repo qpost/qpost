@@ -21,7 +21,8 @@
 		"symfony/serializer": "^4.3",
 		"symfony/property-info": "^4.3",
 		"symfony/doctrine-bridge": "^4.3",
-		"phpdocumentor/reflection-docblock": "^4.3"
+		"phpdocumentor/reflection-docblock": "^4.3",
+		"jms/serializer": "^3.1"
     },
     "autoload": {
         "psr-4": {
