@@ -1,4 +1,3 @@
-import SerializedDateTime from "../../Serialization/Date/SerializedDateTime";
 import {JsonObject, JsonProperty} from "json2typescript";
 
 @JsonObject("MediaFile")
@@ -15,8 +14,8 @@ export default class MediaFile {
 	@JsonProperty("type", String)
 	private type: string = undefined;
 
-	@JsonProperty("time", SerializedDateTime)
-	private time: SerializedDateTime = undefined;
+	@JsonProperty("time", String)
+	private time: string = undefined;
 
 	public getId(): string {
 		return this.id;
@@ -34,7 +33,7 @@ export default class MediaFile {
 		return this.type;
 	}
 
-	public getTime(): SerializedDateTime {
+	public getTime(): string {
 		return this.time;
 	}
 }

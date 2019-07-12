@@ -5,8 +5,8 @@ import FeedEntry from "../../Entity/Feed/FeedEntry";
 import User from "../../Entity/Account/User";
 import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import VerifiedBadge from "../VerifiedBadge";
-import SerializedDateTimeTimeago from "../../Serialization/Date/SerializedDateTimeTimeago";
 import FeedEntryActionButtons from "./Buttons/FeedEntryActionButtons";
+import TimeAgo from "react-timeago";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry
@@ -53,7 +53,7 @@ export default class FeedEntryListItem extends Component<{
 									<br/>
 
 									<span className={"small text-muted"}>
-										<i className={"far fa-clock"}/> <SerializedDateTimeTimeago
+										<i className={"far fa-clock"}/> <TimeAgo
 										time={entry.getTime()}/>
 									</span>
 								</p>

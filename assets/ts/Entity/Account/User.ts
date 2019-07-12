@@ -1,4 +1,3 @@
-import SerializedDateTime from "../../Serialization/Date/SerializedDateTime";
 import {JsonObject, JsonProperty} from "json2typescript";
 
 @JsonObject("User")
@@ -18,14 +17,14 @@ export default class User {
 	@JsonProperty("bio", String, true)
 	private bio?: string = undefined;
 
-	@JsonProperty("birthday", SerializedDateTime, true)
-	private birthday?: SerializedDateTime = undefined;
+	@JsonProperty("birthday", String, true)
+	private birthday?: string = undefined;
 
 	@JsonProperty("privacyLevel", String)
 	private privacyLevel: string = undefined;
 
-	@JsonProperty("time", SerializedDateTime)
-	private time: SerializedDateTime = undefined;
+	@JsonProperty("time", String)
+	private time: string = undefined;
 
 	@JsonProperty("verified", Boolean)
 	private verified: boolean = undefined;
@@ -74,7 +73,7 @@ export default class User {
 		return this.bio;
 	}
 
-	public getBirthday(): SerializedDateTime | undefined {
+	public getBirthday(): string | undefined {
 		return this.birthday;
 	}
 
@@ -82,7 +81,7 @@ export default class User {
 		return this.privacyLevel;
 	}
 
-	public getTime(): SerializedDateTime | undefined {
+	public getTime(): string | undefined {
 		return this.time;
 	}
 

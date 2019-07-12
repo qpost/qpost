@@ -1,5 +1,4 @@
 import User from "../Account/User";
-import SerializedDateTime from "../../Serialization/Date/SerializedDateTime";
 import {JsonObject, JsonProperty} from "json2typescript";
 
 @JsonObject("FeedEntry")
@@ -27,8 +26,8 @@ export default class FeedEntry {
 
 	//private attachments; TODO
 
-	@JsonProperty("time", SerializedDateTime)
-	private time: SerializedDateTime = undefined;
+	@JsonProperty("time", String)
+	private time: string = undefined;
 
 	@JsonProperty("replyCount", Number)
 	private replyCount: number = undefined;
@@ -73,7 +72,7 @@ export default class FeedEntry {
 		return this.nSFW;
 	}
 
-	public getTime(): SerializedDateTime {
+	public getTime(): string {
 		return this.time;
 	}
 
