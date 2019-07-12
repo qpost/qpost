@@ -22,7 +22,7 @@ export default class FeedEntry {
 	private type: string = undefined;
 
 	@JsonProperty("nSFW", Boolean)
-	private nSFW: boolean = undefined;
+	private nsfw: boolean = undefined;
 
 	//private attachments; TODO
 
@@ -69,7 +69,7 @@ export default class FeedEntry {
 	}
 
 	public isNSFW(): boolean {
-		return this.nSFW;
+		return this.nsfw;
 	}
 
 	public getTime(): string {
