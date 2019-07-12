@@ -1,0 +1,46 @@
+@mixin feedButton($color) {
+	font-size: 18px;
+	color: gray;
+
+	i, .number {
+		transition: color .3s ease-in-out;
+		-moz-transition: color .3s ease-in-out;
+		-webkit-transition: color .3s ease-in-out;
+		-o-transition: color .3s ease-in-out;
+		-ms-transition: color .3s ease-in-out;
+	}
+
+	&.active, &:hover {
+		i, .number {
+			color: $color;
+		}
+	}
+
+	&:not(.active) {
+		transition: text-shadow .3s ease-in-out;
+		-moz-transition: text-shadow .3s ease-in-out;
+		-webkit-transition: text-shadow .3s ease-in-out;
+		-o-transition: text-shadow .3s ease-in-out;
+		-ms-transition: text-shadow .3s ease-in-out;
+
+		&:hover {
+			text-shadow: 0 0 8px $color;
+		}
+	}
+
+	.number {
+		margin-left: 10px;
+	}
+}
+
+.replyButton {
+	@include feedButton($info);
+}
+
+.shareButton {
+	@include feedButton($primary);
+}
+
+.favoriteButton {
+	@include feedButton($warning);
+}

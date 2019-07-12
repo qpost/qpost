@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import FeedEntry from "../Entity/Feed/FeedEntry";
-import FeedEntryType from "../Entity/Feed/FeedEntryType";
 import {Row} from "reactstrap";
 import {Link} from "react-router-dom";
-import User from "../Entity/Account/User";
-import VerifiedBadge from "./VerifiedBadge";
-import SerializedDateTimeTimeago from "../Serialization/Date/SerializedDateTimeTimeago";
+import FeedEntry from "../../Entity/Feed/FeedEntry";
+import User from "../../Entity/Account/User";
+import FeedEntryType from "../../Entity/Feed/FeedEntryType";
+import VerifiedBadge from "../VerifiedBadge";
+import SerializedDateTimeTimeago from "../../Serialization/Date/SerializedDateTimeTimeago";
+import FeedEntryActionButtons from "./Buttons/FeedEntryActionButtons";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry
@@ -58,7 +59,13 @@ export default class FeedEntryListItem extends Component<{
 								</p>
 							</div>
 
+							{entry.getText() !== null ? <div className="float-left ml-1 my-2 w-100">
+								<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
+									{entry.getText()}
+								</p>
+							</div> : ""}
 
+							<FeedEntryActionButtons entry={entry}/>
 						</Row>
 					</div>
 				</li>;

@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
-import FeedEntry from "../Entity/Feed/FeedEntry";
-import API from "../API/API";
 import {Alert, Spinner} from "reactstrap";
-import NightMode from "../NightMode/NightMode";
-import BaseObject from "../Serialization/BaseObject";
 import FeedEntryListItem from "./FeedEntryListItem";
+import FeedEntry from "../../Entity/Feed/FeedEntry";
+import User from "../../Entity/Account/User";
+import API from "../../API/API";
+import BaseObject from "../../Serialization/BaseObject";
+import NightMode from "../../NightMode/NightMode";
 
 export default class FeedEntryList extends Component<{
 	user?: User
