@@ -1528,6 +1528,18 @@ class Util {
 		}
 		return $headers;
 	}
+
+	/**
+	 * Checks whether an array is associative.
+	 * Source: https://stackoverflow.com/a/173479/4117923
+	 *
+	 * @param array $arr
+	 * @return bool
+	 */
+	public static function isAssociativeArray(array $arr): bool {
+		if (array() === $arr) return false;
+		return array_keys($arr) !== range(0, count($arr) - 1);
+	}
 }
 
 IPInformation::getInformationFromIP(Util::getIP());

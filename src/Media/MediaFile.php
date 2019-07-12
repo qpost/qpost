@@ -3,9 +3,11 @@
 namespace qpost\Media;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use qpost\Account\User;
-use qpost\Util\Util;
+use qpost\Feed\FeedEntry;
 
 /**
  * Class MediaFile
@@ -45,8 +47,7 @@ class MediaFile {
 	 * @access private
 	 * @var User|null $originalUploader
 	 *
-	 * @ORM\OneToOne(targetEntity="User")
-	 * @ORM\Column(nullable=true)
+	 * @ORM\ManyToOne(targetEntity="qpost\Account\User")
 	 */
 	private $originalUploader;
 
@@ -65,6 +66,18 @@ class MediaFile {
 	 * @ORM\Column(type="datetime")
 	 */
 	private $time;
+
+	/**
+	 * @access private
+	 * @var FeedEntry[] $posts
+	 *
+	 * @ORM\ManyToMany(targetEntity="qpost\Feed\FeedEntry", mappedBy="attachments", cascade={"persist"})
+	 */
+	private $posts;
+
+	public function __construct() {
+		$this->posts = new ArrayCollection();
+	}
 
 	/**
 	 * Returns the media object's id
@@ -162,42 +175,52 @@ class MediaFile {
 	}
 
 	/**
-	 * Returns this object as json object to be used in the API
-	 *
-	 * @access public
-	 * @param bool $encode If true, will return a json string, else an associative array
-	 * @return string|array
+	 * @return DateTime
 	 */
-	public function toAPIJson($encode = true){
-		$a = [
-			"id" => $this->id,
-			"sha256" => $this->sha256,
-			"url" => $this->url,
-			"type" => $this->type,
-			"time" => $this->time
-		];
-
-		return $encode == true ? json_encode($a) : $a;
+	public function getTime(): DateTime {
+		return $this->time;
 	}
 
 	/**
-	 * Returns HTML code to display a clickable thumbnail
+	 * @param DateTime $time
+	 * @return MediaFile
+	 */
+	public function setTime(DateTime $time): self {
+		$this->time = $time;
+		return $this;
+	}
+
+	/**
+	 * Returns an array of the IDs of the attachments
 	 *
 	 * @access public
-	 * @param int $postId The id of the post to use for the media modal, if null the thumbnail won't be clickable
-	 * @return string
+	 * @return Collection|FeedEntry[]
 	 */
-	public function toThumbnailHTML($postId = null){
-		$s = "";
+	/*public function getPosts(): Collection {
+		return $this->posts;
+	}*/
 
-		if($this->type == "IMAGE"){
-			$s .= '<img src="' . $this->getThumbnailURL() . '" width="100" height="100" class="rounded border border-mainColor bg-dark ignoreParentClick mr-2 mediaModalTrigger"' . (!is_null($postId) ? ' style="cursor: pointer" data-media-id="' . $this->id . '" data-post-id="' . $postId . '"' : "") . '/>';
-		} else if($this->type == "VIDEO"){
-			$s .= Util::getVideoEmbedCodeFromURL($this->url);
-		} else if($this->type == "LINK"){
-			// TODO
+	/**
+	 * @param FeedEntry $entry
+	 * @return MediaFile
+	 */
+	public function addPost(FeedEntry $entry): self {
+		if (!$this->posts->contains($entry)) {
+			$this->posts[] = $entry;
 		}
 
-		return $s;
+		return $this;
+	}
+
+	/**
+	 * @param FeedEntry $entry
+	 * @return MediaFile
+	 */
+	public function removePost(FeedEntry $entry): self {
+		if ($this->posts->contains($entry)) {
+			$this->posts->removeElement($entry);
+		}
+
+		return $this;
 	}
 }

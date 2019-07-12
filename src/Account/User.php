@@ -65,7 +65,7 @@ class User {
 			->orWhere("u.id = :query")
 			->setParameter("query", $query, Type::INTEGER)
 			->getQuery()
-			->getResult()[0];
+			->getOneOrNullResult();
 	}
 
 	/**

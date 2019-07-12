@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use qpost\Account\User;
 use qpost\Database\EntityManager;
-use qpost\Media\Attachment;
 use qpost\Media\MediaFile;
 use qpost\Util\Util;
 use function qpost\Router\API\api_get_token;
@@ -102,7 +101,8 @@ class FeedEntry {
 	 * @access private
 	 * @var MediaFile[] $attachments
 	 *
-	 * @ORM\OneToMany(targetEntity="qpost\Media\Attachment", mappedBy="post")
+	 * @ORM\ManyToMany(targetEntity="qpost\Media\MediaFile", inversedBy="posts", cascade={"persist"})
+	 * @ORM\JoinTable()
 	 */
 	private $attachments;
 
@@ -266,34 +266,31 @@ class FeedEntry {
 	 * Returns an array of the IDs of the attachments
 	 *
 	 * @access public
-	 * @return Collection|Attachment[]
+	 * @return Collection|MediaFile[]
 	 */
 	public function getAttachments(): Collection {
 		return $this->attachments;
 	}
 
 	/**
-	 * @param Attachment $attachment
+	 * @param MediaFile $attachment
 	 * @return FeedEntry
 	 */
-	public function addAttachment(Attachment $attachment): self {
+	public function addAttachment(MediaFile $attachment): self {
 		if (!$this->attachments->contains($attachment)) {
 			$this->attachments[] = $attachment;
-			$attachment->setPost($this);
 		}
 
 		return $this;
 	}
 
 	/**
-	 * @param Attachment $attachment
+	 * @param MediaFile $attachment
 	 * @return FeedEntry
 	 */
-	public function removeAttachment(Attachment $attachment): self {
+	public function removeAttachment(MediaFile $attachment): self {
 		if ($this->attachments->contains($attachment)) {
 			$this->attachments->removeElement($attachment);
-
-			EntityManager::instance()->remove($attachment);
 		}
 
 		return $this;
@@ -353,7 +350,7 @@ class FeedEntry {
 	public function isShared(): bool {
 		$token = api_get_token();
 
-		if ($token->getUser()) {
+		if (!is_null($token) && $token->getUser()) {
 			return Share::hasShared($token->getUser(), $this);
 		}
 
@@ -366,7 +363,7 @@ class FeedEntry {
 	public function isFavorited(): bool {
 		$token = api_get_token();
 
-		if ($token->getUser()) {
+		if (!is_null($token) && $token->getUser()) {
 			return Favorite::hasFavorited($token->getUser(), $this);
 		}
 
