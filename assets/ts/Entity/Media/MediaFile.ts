@@ -21,7 +21,7 @@ export default class MediaFile {
 		return this.id;
 	}
 
-	public getSHA265(): string {
+	public getSHA256(): string {
 		return this.sha256;
 	}
 
