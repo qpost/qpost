@@ -3,6 +3,7 @@ import Auth from "../../Auth/Auth";
 import {Link} from "react-router-dom";
 import FollowButton from "../../Component/FollowButton";
 import VerifiedBadge from "../../Component/VerifiedBadge";
+import {formatNumberShort} from "../../Util/Format";
 
 export default class HomeFeedProfileBox extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -61,7 +62,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 							</div>
 
 							<div className="font-weight-bold text-uppercase float-right">
-								{currentUser.getPostCount()} {/* TODO: Add formatNumberShort implementation */}
+								{formatNumberShort(currentUser.getPostCount())}
 							</div>
 						</div>
 					</Link>
@@ -73,7 +74,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 							</div>
 
 							<div className="font-weight-bold text-uppercase float-right">
-								{currentUser.getFollowingCount()} {/* TODO: Add formatNumberShort implementation */}
+								{formatNumberShort(currentUser.getFollowingCount())}
 							</div>
 						</div>
 					</Link>
@@ -85,7 +86,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 							</div>
 
 							<div className="font-weight-bold text-uppercase float-right">
-								{currentUser.getFollowerCount()} {/* TODO: Add formatNumberShort implementation */}
+								{formatNumberShort(currentUser.getFollowerCount() * 10000)}
 							</div>
 						</div>
 					</Link>
