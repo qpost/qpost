@@ -86,7 +86,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 							</div>
 
 							<div className="font-weight-bold text-uppercase float-right">
-								{formatNumberShort(currentUser.getFollowerCount() * 10000)}
+								{formatNumberShort(currentUser.getFollowerCount())}
 							</div>
 						</div>
 					</Link>
