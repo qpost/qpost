@@ -6,7 +6,7 @@ import User from "../../Entity/Account/User";
 import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryActionButtons from "./Buttons/FeedEntryActionButtons";
-import TimeAgo from "react-timeago";
+import TimeAgo from "../TimeAgo";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry
