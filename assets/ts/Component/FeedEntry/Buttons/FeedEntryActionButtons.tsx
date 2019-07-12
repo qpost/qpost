@@ -4,6 +4,7 @@ import ReplyButton from "./ReplyButton";
 import ShareButton from "./ShareButton";
 import FavoriteButton from "./FavoriteButton";
 import {Row} from "reactstrap";
+import DeleteButton from "./DeleteButton";
 
 export default class FeedEntryActionButtons extends Component<{
 	entry: FeedEntry
@@ -24,6 +25,8 @@ export default class FeedEntryActionButtons extends Component<{
 				<ShareButton entry={entry}/>
 
 				<FavoriteButton entry={entry}/>
+
+				<DeleteButton entry={entry}/>
 			</Row>
 		</div>;
 	}

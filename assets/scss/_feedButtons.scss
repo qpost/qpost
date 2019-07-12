@@ -50,3 +50,7 @@
 .favoriteButton {
 	@include feedButton($warning);
 }
+
+.deleteButton {
+	@include feedButton($danger);
+}
