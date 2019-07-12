@@ -161,7 +161,8 @@ function api_remove_sensitive_fields(array $array): array {
 		"email",
 		"featuredBoxTitle",
 		"featuredBoxContent",
-		"featuringUsers"
+		"featuringUsers",
+		"originalUploader"
 	];
 
 	foreach ($sensitiveFieldNames as $fieldName) {
