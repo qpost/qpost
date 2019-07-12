@@ -1,5 +1,6 @@
 import User from "../Account/User";
 import {JsonObject, JsonProperty} from "json2typescript";
+import MediaFile from "../Media/MediaFile";
 
 @JsonObject("FeedEntry")
 export default class FeedEntry {
@@ -24,7 +25,8 @@ export default class FeedEntry {
 	@JsonProperty("nSFW", Boolean)
 	private nsfw: boolean = undefined;
 
-	//private attachments; TODO
+	@JsonProperty("attachments", [MediaFile])
+	private attachments: MediaFile[] = undefined;
 
 	@JsonProperty("time", String)
 	private time: string = undefined;
@@ -70,6 +72,10 @@ export default class FeedEntry {
 
 	public isNSFW(): boolean {
 		return this.nsfw;
+	}
+
+	public getAttachments(): MediaFile[] {
+		return this.attachments;
 	}
 
 	public getTime(): string {
