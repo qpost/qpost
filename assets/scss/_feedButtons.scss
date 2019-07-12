@@ -16,7 +16,13 @@
 		}
 	}
 
-	&:not(.active) {
+	&.inactive {
+		i, .number {
+			color: darken(gray, 10%);
+		}
+	}
+
+	&:not(.active):not(.inactive) {
 		transition: text-shadow .3s ease-in-out;
 		-moz-transition: text-shadow .3s ease-in-out;
 		-webkit-transition: text-shadow .3s ease-in-out;
