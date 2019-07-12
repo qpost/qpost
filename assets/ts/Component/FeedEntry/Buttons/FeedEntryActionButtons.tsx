@@ -3,7 +3,6 @@ import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import ReplyButton from "./ReplyButton";
 import ShareButton from "./ShareButton";
 import FavoriteButton from "./FavoriteButton";
-import {Row} from "reactstrap";
 import DeleteButton from "./DeleteButton";
 
 export default class FeedEntryActionButtons extends Component<{
@@ -19,7 +18,7 @@ export default class FeedEntryActionButtons extends Component<{
 		return <div className={"d-block w-100"}>
 			<hr/>
 
-			<Row style={{marginBottom: ".5rem"}}>
+			<div className={"feedEntryButtonHolder"}>
 				<ReplyButton entry={entry}/>
 
 				<ShareButton entry={entry}/>
@@ -27,7 +26,7 @@ export default class FeedEntryActionButtons extends Component<{
 				<FavoriteButton entry={entry}/>
 
 				<DeleteButton entry={entry}/>
-			</Row>
+			</div>
 		</div>;
 	}
 }

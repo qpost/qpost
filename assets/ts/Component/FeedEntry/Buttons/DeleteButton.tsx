@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import FeedEntry from "../../../Entity/Feed/FeedEntry";
-import {Col} from "reactstrap";
 import Auth from "../../../Auth/Auth";
 
 export default class DeleteButton extends Component<{
@@ -28,11 +27,9 @@ export default class DeleteButton extends Component<{
 			return "";
 		}
 
-		return <Col className={"text-center"}>
-			<div className={"d-inline-block deleteButton" + (this.state.favorited ? " active" : "")}
-				 onClick={(e) => this.click(e)}>
-				<i className={"fas fa-trash-alt"}/>
-			</div>
-		</Col>;
+		return <div className={"d-inline-block deleteButton" + (this.state.favorited ? " active" : "")}
+					onClick={(e) => this.click(e)}>
+			<i className={"fas fa-trash-alt"}/>
+		</div>;
 	}
 }

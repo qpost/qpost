@@ -1,6 +1,39 @@
+@mixin feedButtonMargin($margin) {
+	margin-right: $margin;
+
+	&:first-child {
+		margin-left: $margin;
+	}
+}
+
 @mixin feedButton($color) {
 	font-size: 18px;
 	color: gray;
+	text-align: center;
+
+	@include media-breakpoint-between(sm, md) {
+		@include make-col-ready();
+		@include make-col(3);
+	}
+
+	@include media-breakpoint-up(lg) {
+		@include make-col-ready();
+		-ms-flex-preferred-size: 0;
+		flex-basis: 0;
+		-ms-flex-positive: 1;
+		flex-grow: 1;
+		max-width: 100%;
+	}
+
+	/*@include media-breakpoint-between(sm,md){
+		@include feedButtonMargin(25px);
+	}*/
+
+	@include media-breakpoint-down(xs) {
+		font-size: 16px;
+
+		@include feedButtonMargin(20px);
+	}
 
 	i, .number {
 		transition: color .3s ease-in-out;
@@ -39,18 +72,26 @@
 	}
 }
 
-.replyButton {
-	@include feedButton($info);
-}
+.feedEntryButtonHolder {
+	margin-bottom: .5rem;
 
-.shareButton {
-	@include feedButton($primary);
-}
+	@include media-breakpoint-up(lg) {
+		@include make-row();
+	}
 
-.favoriteButton {
-	@include feedButton($warning);
-}
+	.replyButton {
+		@include feedButton($info);
+	}
 
-.deleteButton {
-	@include feedButton($danger);
+	.shareButton {
+		@include feedButton($primary);
+	}
+
+	.favoriteButton {
+		@include feedButton($warning);
+	}
+
+	.deleteButton {
+		@include feedButton($danger);
+	}
 }
