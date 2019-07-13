@@ -25,6 +25,7 @@ export default class App extends Component<any, any> {
 	}
 
 	componentDidMount(): void {
+		// TODO: Pre-load home page data and pass it to the HomeFeed component
 		API.handleRequest("/token/verify", "POST", {}, (data => {
 			if (data.status && data.status === "Token valid" && data.user) {
 				Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
