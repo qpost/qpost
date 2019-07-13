@@ -9,3 +9,10 @@
 - [composer](https://getcomposer.org)
 - [node.js](https://nodejs.org)
 - [npm](https://www.npmjs.com/)
+
+## Donations
+
+In order to keep qpost running we rely on donations. Any bit helps!
+
+[![Patreon](https://i.imgur.com/uA0sqOs.png)](https://patreon.com/Zeryther)
+[![Ko-fi](https://i.imgur.com/8quFPiK.png)](https://ko-fi.com/Zeryther)
