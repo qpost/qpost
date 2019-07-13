@@ -7,6 +7,7 @@ import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryActionButtons from "./Buttons/FeedEntryActionButtons";
 import TimeAgo from "../TimeAgo";
+import FeedEntryListItemAttachments from "./FeedEntryListItemAttachments";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry
@@ -64,6 +65,8 @@ export default class FeedEntryListItem extends Component<{
 									{entry.getText()}
 								</p>
 							</div> : ""}
+
+							<FeedEntryListItemAttachments entry={entry}/>
 
 							<FeedEntryActionButtons entry={entry}/>
 						</Row>
