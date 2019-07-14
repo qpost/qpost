@@ -108,32 +108,31 @@ class Header extends Component<any, {
 				</Menu.Item>
 			</Menu>
 		</Sider>,
-			<Layout key={1}>
-				<Header
-					className={this.state.mobileMenu ? "d-none" : ""}
-					hasSider={true}
-					style={{
-						position: "fixed",
-						zIndex: 1,
-						width: "100%",
-						top: 0
-					}}>
-					<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
+			<Header
+				key={1}
+				className={this.state.mobileMenu ? "d-none" : ""}
+				hasSider={true}
+				style={{
+					position: "fixed",
+					zIndex: 1,
+					width: "100%",
+					top: 0
+				}}>
+				<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
 
-					<Menu
-						theme={NightMode.isActive() ? "dark" : "light"}
-						mode={"horizontal"}
-						selectable={false}
-						style={{
-							lineHeight: "64px",
-							float: "right"
-						}}>
-						<Menu.Item key={0}>Nav 1</Menu.Item>
-						<Menu.Item key={1}>Nav 2</Menu.Item>
-						<Menu.Item key={3}>Nav 3</Menu.Item>
-					</Menu>
-				</Header>
-			</Layout>]
+				<Menu
+					theme={NightMode.isActive() ? "dark" : "light"}
+					mode={"horizontal"}
+					selectable={false}
+					style={{
+						lineHeight: "64px",
+						float: "right"
+					}}>
+					<Menu.Item key={0}>Nav 1</Menu.Item>
+					<Menu.Item key={1}>Nav 2</Menu.Item>
+					<Menu.Item key={3}>Nav 3</Menu.Item>
+				</Menu>
+			</Header>]
 	}
 }
 

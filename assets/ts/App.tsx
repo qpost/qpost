@@ -60,7 +60,7 @@ export default class App extends Component<any, any> {
 						<Layout>
 							<Header/>
 
-							<Layout.Content className="navMargin">
+							<Layout.Content className="navMargin mainContent">
 								<Switch>
 									<div className="legacyCard">
 										<div className="wrapper">
