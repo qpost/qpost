@@ -15,6 +15,31 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+.ant-layout-header, .ant-menu {
+	background-color: $primary !important;
+
+	.ant-menu-item-active a {
+		text-decoration: none !important;
+	}
+
+	&, & a {
+		&a:hover {
+			color: #FFF !important;
+			text-decoration: none !important;
+		}
+
+		color: #FFF !important;
+	}
+
+	.ant-menu-submenu-title {
+		color: #FFF !important;
+	}
+
+	li {
+		border-bottom: none !important;
+	}
+}
+
 #accountDropdown:after {
 	display: none;
 }
