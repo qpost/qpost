@@ -9,6 +9,7 @@ import User from "./Entity/Account/User";
 import Header from "./Parts/Header";
 import Home from "./Pages/Home/Home";
 import HomeFeed from "./Pages/Home/HomeFeed";
+import {Layout} from "antd";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -56,20 +57,22 @@ export default class App extends Component<any, any> {
 							return null;
 						}}/>
 
-						<Header/>
+						<Layout>
+							<Header/>
 
-						<Switch>
-							<div className="container navMargin">
-								<div className="legacyCard">
-									<div className="wrapper">
-										<div className="legacyCardBody">
-											{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
-												<Route path={"/"} exact component={Home}/>}
+							<Layout.Content className="navMargin">
+								<Switch>
+									<div className="legacyCard">
+										<div className="wrapper">
+											<div className="legacyCardBody">
+												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
+													<Route path={"/"} exact component={Home}/>}
+											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-						</Switch>
+								</Switch>
+							</Layout.Content>
+						</Layout>
 					</div>
 				</Router>
 			);
