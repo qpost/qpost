@@ -5,7 +5,6 @@ import NightMode from "../NightMode/NightMode";
 import Logo from "../../img/navlogo.png";
 import {Avatar, Button, Drawer, Layout, Menu} from "antd";
 import windowSize from "react-window-size";
-import SubMenu from "antd/es/menu/SubMenu";
 
 class Header extends Component<any, {
 	mobileMenu: boolean
@@ -24,10 +23,7 @@ class Header extends Component<any, {
 				<Link to={"/"} className={"clearUnderline"}>
 					<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
 				</Link>
-			</Menu.Item>,
-			<SubMenu key={1} title="SubMenu">
-				<Menu.Item>SubMenuItem</Menu.Item>
-			</SubMenu>
+			</Menu.Item>
 		];
 	};
 
