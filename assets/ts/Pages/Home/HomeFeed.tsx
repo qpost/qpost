@@ -17,7 +17,7 @@ export default class HomeFeed extends Component<any, any> {
 					</div>
 				</LeftSidebar>
 
-				<PageContent>
+				<PageContent leftSidebar rightSidebar>
 					<FeedEntryList/>
 				</PageContent>
 
