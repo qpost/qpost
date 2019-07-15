@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Layout, Menu} from "antd";
+import {Badge, Layout, Menu} from "antd";
 import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
 
@@ -41,15 +41,19 @@ export default class MobileNavigation extends Component<{
 					</Menu.Item>
 
 					<Menu.Item key={2}>
-						<Link to={"/notifications"}>
-							<i className={"fas fa-bell"}/>
-						</Link>
+						<Badge count={10}>
+							<Link to={"/notifications"}>
+								<i className={"fas fa-bell"}/>
+							</Link>
+						</Badge>
 					</Menu.Item>
 
 					<Menu.Item key={3}>
-						<Link to={"/messages"}>
-							<i className={"fas fa-envelope"}/>
-						</Link>
+						<Badge count={10}>
+							<Link to={"/messages"}>
+								<i className={"fas fa-envelope"}/>
+							</Link>
+						</Badge>
 					</Menu.Item>
 				</Menu>
 			</div>
