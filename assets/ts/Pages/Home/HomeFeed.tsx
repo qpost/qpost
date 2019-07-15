@@ -12,9 +12,7 @@ export default class HomeFeed extends Component<any, any> {
 		return (
 			<ContentBase>
 				<LeftSidebar>
-					<div className="homeFeedSidebar sticky-top" style={{top: "70px"}}>
-						<HomeFeedProfileBox/>
-					</div>
+					<HomeFeedProfileBox/>
 				</LeftSidebar>
 
 				<PageContent leftSidebar rightSidebar>
@@ -22,10 +20,8 @@ export default class HomeFeed extends Component<any, any> {
 				</PageContent>
 
 				<RightSidebar>
-					<div className="homeFeedSidebar sticky-top" style={{top: "70px"}}>
-						<SuggestedUsers/>
-						asd
-					</div>
+					<SuggestedUsers/>
+					asd
 				</RightSidebar>
 			</ContentBase>
 		)
