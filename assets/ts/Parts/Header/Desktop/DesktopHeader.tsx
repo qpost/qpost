@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Logo from "../../../../img/navlogo.png";
 import {Layout, Menu} from "antd";
 import NightMode from "../../../NightMode/NightMode";
+import {Link} from "react-router-dom";
 
 export default class DesktopHeader extends Component<{
 	mobile: boolean,
@@ -18,7 +19,10 @@ export default class DesktopHeader extends Component<{
 				top: 0,
 				display: this.props.mobile ? "none" : "block"
 			}}>
-			<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
+
+			<Link to={"/"} className={"clearUnderline"}>
+				<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
+			</Link>
 
 			<Menu
 				theme={NightMode.isActive() ? "dark" : "light"}
