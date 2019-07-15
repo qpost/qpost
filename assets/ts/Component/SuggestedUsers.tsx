@@ -3,10 +3,9 @@ import {Link} from "react-router-dom";
 import User from "../Entity/Account/User";
 import API from "../API/API";
 import BaseObject from "../Serialization/BaseObject";
-import {Spinner} from "reactstrap";
-import NightMode from "../NightMode/NightMode";
 import FollowButton from "./FollowButton";
 import VerifiedBadge from "./VerifiedBadge";
+import {Spin} from "antd";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -35,7 +34,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.loading) {
 			return <div className={"text-center my-3"}>
-				<Spinner type={"grow"} color={NightMode.spinnerColor()} size={"lg"}/>
+				<Spin size={"large"}/>
 			</div>
 		} else if (this.state.results.length > 0) {
 			return <div className="card">
