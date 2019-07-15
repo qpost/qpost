@@ -5,7 +5,7 @@ import BaseObject from "../../Serialization/BaseObject";
 import ContentBase from "../../Component/Layout/ContentBase";
 import PageContent from "../../Component/Layout/PageContent";
 import RightSidebar from "../../Component/Layout/RightSidebar";
-import {Card, Skeleton} from "antd";
+import {Alert, Card, Skeleton} from "antd";
 import User from "../../Entity/Account/User";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../Component/VerifiedBadge";
@@ -29,7 +29,7 @@ export default class Status extends Component<any, {
 	componentDidMount(): void {
 		const id = this.props.match.params.id;
 
-		if (id) {
+		if (!id) {
 			API.handleRequest("/status", "GET", {id: id}, (data) => {
 				if (data.result) {
 					const feedEntry = BaseObject.convertObject(FeedEntry, data.result);
@@ -100,7 +100,12 @@ export default class Status extends Component<any, {
 						</div>
 					</Card>
 				) : this.state.error !== null ? (
-					<div>error</div>
+					<Alert
+						message="Error"
+						description={this.state.error}
+						type="error"
+						showIcon
+					/>
 				) : (
 					<Card className={"statusPageBox"}>
 						<Skeleton loading active avatar={{
