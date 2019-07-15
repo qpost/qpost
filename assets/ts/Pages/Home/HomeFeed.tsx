@@ -25,7 +25,6 @@ export default class HomeFeed extends Component<any, any> {
 				<RightSidebar>
 					<SidebarStickyContent>
 						<SuggestedUsers/>
-						asd
 					</SidebarStickyContent>
 				</RightSidebar>
 			</ContentBase>
