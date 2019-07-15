@@ -2,6 +2,7 @@
 
 namespace qpost\Router\API;
 
+use Closure;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\SerializationContext;
@@ -11,6 +12,62 @@ use qpost\Account\Token;
 use qpost\Database\EntityManager;
 use qpost\Util\Util;
 
+$routes = [];
+
+/**
+ * @return APIRoute[]
+ */
+function registered_api_routes(): array {
+	global $routes;
+
+	return $routes;
+}
+
+/**
+ * @param APIRoute $route
+ */
+function api_register_route(APIRoute $route): void {
+	global $routes;
+
+	if (!api_find_route($route->getPath()) === null) {
+		$routes = Util::removeFromArray($routes, $route);
+	}
+
+	$routes[] = $route;
+}
+
+/**
+ * @param string $path
+ * @return APIRoute|null
+ */
+function api_find_route(string $path): ?APIRoute {
+	foreach (registered_api_routes() as $route) {
+		if (Util::startsWith($path, "/api", true)) $path = substr($path, strlen("/api"));
+
+		if (strtolower($path) === strtolower($route->getPath())) {
+			return $route;
+		}
+	}
+
+	return null;
+}
+
+/**
+ * @param string $method
+ * @param string $path
+ * @param Closure $closure
+ */
+function api_create_route(string $method, string $path, Closure $closure): void {
+	if (Util::startsWith($path, "/api", true)) $path = substr($path, strlen("/api"));
+
+	$apiRoute = api_find_route($path);
+	if (is_null($apiRoute)) $apiRoute = new APIRoute($path);
+
+	$apiRoute->registerClosure($method, $closure);
+
+	api_register_route($apiRoute);
+}
+
 /**
  * Sets all required headers for an API respones (mime type, CORS, etc.)
  *
@@ -18,57 +75,31 @@ use qpost\Util\Util;
  * @return void
  */
 function api_headers(App $app): void {
+	$apiRoute = api_find_route(currentRoute());
+
 	// mime type json
 	$app->response->mime = "json";
 
 	// CORS
 	$app->response->headers[] = "Access-Control-Allow-Origin: *";
-	$app->response->headers[] = "Access-Control-Allow-Methods: GET,POST,OPTIONS,DELETE,PUT,PATCH";
 	$app->response->headers[] = "Access-Control-Allow-Headers: Authorization,Content-Type,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control";
+
+	if (!is_null($apiRoute)) {
+		$app->response->headers[] = "Access-Control-Allow-Methods: " . $apiRoute->allowedMethodsString();
+	} else {
+		$app->response->headers[] = "Access-Control-Allow-Methods: GET,POST,OPTIONS,DELETE,PUT,PATCH";
+	}
 }
 
-/**
- * Validates that the proper HTTP method was used
- *
- * @param App $app
- * @param string $method The prefered method
- * @param bool $authCheck Whether or not to validate the Token and cancel the request if it is invalid
- * @return bool True or false, depending on the used method
- */
-function api_method_check(App $app, string $method, bool $authCheck = true): bool {
-	if (isset($_SERVER["REQUEST_METHOD"])) {
-		$usedMethod = $_SERVER["REQUEST_METHOD"];
+function api_auth_check(App $app): bool {
+	$token = api_get_token();
 
-		api_headers($app);
-
-		if ($usedMethod === "OPTIONS") {
-			$app->response->status = "204";
-			return false;
-		}
-
-		if ($usedMethod !== $method) {
-			$app->response->status = "405";
-			$app->response->headers[] = "Allow: " . $method . ", OPTIONS";
-
-			return false;
-		} else {
-			if ($authCheck) {
-				$token = api_get_token();
-
-				if (!is_null($token)) {
-					return true;
-				}
-
-				$app->response->status = "401";
-				$app->response->body = json_encode(["error" => "Invalid token"]);
-				return false;
-			} else {
-				$app->response->status = "200";
-				return true;
-			}
-		}
+	if (!is_null($token)) {
+		return true;
 	}
 
+	$app->response->status = "401";
+	$app->response->body = json_encode(["error" => "Invalid token"]);
 	return false;
 }
 

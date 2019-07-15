@@ -9,11 +9,11 @@ use qpost\Account\User;
 use qpost\Database\EntityManager;
 use qpost\Feed\FeedEntry;
 use qpost\Feed\FeedEntryType;
+use qpost\Util\Method;
+use function qpost\Router\API\api_create_route;
 use function qpost\Router\API\api_get_token;
-use function qpost\Router\API\api_method_check;
 use function qpost\Router\API\api_prepare_object;
 use function qpost\Router\API\api_request_data;
-use function qpost\Router\create_route_get;
 
 function home_feed_query(User $currentUser): QueryBuilder {
 	return EntityManager::instance()->getRepository(FeedEntry::class)->createQueryBuilder("f")
@@ -42,51 +42,23 @@ function profile_feed_query(User $user): QueryBuilder {
 		->setMaxResults(30);
 }
 
-create_route_get("/api/feed", function () {
-	if (api_method_check($this, "GET", false)) {
-		$token = api_get_token();
-		$currentUser = !is_null($token) ? $token->getUser() : null;
-		$requestData = api_request_data($this);
+api_create_route(Method::GET, "/feed", function () {
+	$token = api_get_token();
+	$currentUser = !is_null($token) ? $token->getUser() : null;
+	$requestData = api_request_data($this);
 
-		if (isset($requestData["max"]) && !isset($requestData["user"])) {
-			// Load older posts on home feed
-			if (!is_null($currentUser)) {
-				if (is_numeric($requestData["max"])) {
-					$results = [];
-
-					/**
-					 * @var FeedEntry[] $feedEntries
-					 */
-					$feedEntries = home_feed_query($currentUser)
-						->andWhere("f.id < :id")
-						->setParameter("id", $requestData["max"], Type::INTEGER)
-						->getQuery()
-						->getResult();
-
-					foreach ($feedEntries as $feedEntry) {
-						if (!is_null($currentUser) && !$feedEntry->mayView($currentUser)) continue;
-						array_push($results, api_prepare_object($feedEntry));
-					}
-
-					return json_encode(["results" => $results]);
-				} else {
-					$this->response->status = "400";
-					return json_encode(["error" => "'max' has to be an integer."]);
-				}
-			} else {
-				// Return error if there is no user as we need it to get the home feed entries
-				$this->response->status = "401";
-				return json_encode(["error" => "Invalid token"]);
-			}
-		} else if (!isset($requestData["max"]) && !isset($requestData["user"])) {
-			// Load first posts on home feed
-			if (!is_null($currentUser)) {
+	if (isset($requestData["max"]) && !isset($requestData["user"])) {
+		// Load older posts on home feed
+		if (!is_null($currentUser)) {
+			if (is_numeric($requestData["max"])) {
 				$results = [];
 
 				/**
 				 * @var FeedEntry[] $feedEntries
 				 */
 				$feedEntries = home_feed_query($currentUser)
+					->andWhere("f.id < :id")
+					->setParameter("id", $requestData["max"], Type::INTEGER)
 					->getQuery()
 					->getResult();
 
@@ -97,52 +69,51 @@ create_route_get("/api/feed", function () {
 
 				return json_encode(["results" => $results]);
 			} else {
-				// Return error if there is no user as we need it to get the home feed entries
-				$this->response->status = "401";
-				return json_encode(["error" => "Invalid token"]);
+				$this->response->status = "400";
+				return json_encode(["error" => "'max' has to be an integer."]);
 			}
-		} else if (isset($requestData["max"]) && isset($requestData["user"])) {
-			// Load older posts on profile page
-			$user = User::getUser($requestData["user"]);
+		} else {
+			// Return error if there is no user as we need it to get the home feed entries
+			$this->response->status = "401";
+			return json_encode(["error" => "Invalid token"]);
+		}
+	} else if (!isset($requestData["max"]) && !isset($requestData["user"])) {
+		// Load first posts on home feed
+		if (!is_null($currentUser)) {
+			$results = [];
 
-			if (!is_null($user) && $user->mayView($currentUser)) {
-				if (is_numeric($requestData["max"])) {
-					$results = [];
+			/**
+			 * @var FeedEntry[] $feedEntries
+			 */
+			$feedEntries = home_feed_query($currentUser)
+				->getQuery()
+				->getResult();
 
-					/**
-					 * @var FeedEntry[] $feedEntries
-					 */
-					$feedEntries = profile_feed_query($user)
-						->andWhere("f.id < :id")
-						->setParameter("id", $requestData["max"], Type::INTEGER)
-						->getQuery()
-						->getResult();
-
-					foreach ($feedEntries as $feedEntry) {
-						if (!is_null($currentUser) && !$feedEntry->mayView($currentUser)) continue;
-						array_push($results, api_prepare_object($feedEntry));
-					}
-
-					return json_encode(["results" => $results]);
-				} else {
-					$this->response->status = "400";
-					return json_encode(["error" => "'max' has to be an integer."]);
-				}
-			} else {
-				$this->response->status = "404";
-				return json_encode(["error" => "The requested user could not be found."]);
+			foreach ($feedEntries as $feedEntry) {
+				if (!is_null($currentUser) && !$feedEntry->mayView($currentUser)) continue;
+				array_push($results, api_prepare_object($feedEntry));
 			}
-		} else if (!isset($requestData["max"]) && isset($requestData["user"])) {
-			// Load first posts on profile page
-			$user = User::getUser($requestData["user"]);
 
-			if (!is_null($user) && $user->mayView($currentUser)) {
+			return json_encode(["results" => $results]);
+		} else {
+			// Return error if there is no user as we need it to get the home feed entries
+			$this->response->status = "401";
+			return json_encode(["error" => "Invalid token"]);
+		}
+	} else if (isset($requestData["max"]) && isset($requestData["user"])) {
+		// Load older posts on profile page
+		$user = User::getUser($requestData["user"]);
+
+		if (!is_null($user) && $user->mayView($currentUser)) {
+			if (is_numeric($requestData["max"])) {
 				$results = [];
 
 				/**
 				 * @var FeedEntry[] $feedEntries
 				 */
 				$feedEntries = profile_feed_query($user)
+					->andWhere("f.id < :id")
+					->setParameter("id", $requestData["max"], Type::INTEGER)
 					->getQuery()
 					->getResult();
 
@@ -153,14 +124,39 @@ create_route_get("/api/feed", function () {
 
 				return json_encode(["results" => $results]);
 			} else {
-				$this->response->status = "404";
-				return json_encode(["error" => "The requested user could not be found."]);
+				$this->response->status = "400";
+				return json_encode(["error" => "'max' has to be an integer."]);
 			}
 		} else {
-			$this->response->status = "400";
-			return json_encode(["error" => "Bad request"]);
+			$this->response->status = "404";
+			return json_encode(["error" => "The requested user could not be found."]);
+		}
+	} else if (!isset($requestData["max"]) && isset($requestData["user"])) {
+		// Load first posts on profile page
+		$user = User::getUser($requestData["user"]);
+
+		if (!is_null($user) && $user->mayView($currentUser)) {
+			$results = [];
+
+			/**
+			 * @var FeedEntry[] $feedEntries
+			 */
+			$feedEntries = profile_feed_query($user)
+				->getQuery()
+				->getResult();
+
+			foreach ($feedEntries as $feedEntry) {
+				if (!is_null($currentUser) && !$feedEntry->mayView($currentUser)) continue;
+				array_push($results, api_prepare_object($feedEntry));
+			}
+
+			return json_encode(["results" => $results]);
+		} else {
+			$this->response->status = "404";
+			return json_encode(["error" => "The requested user could not be found."]);
 		}
 	} else {
-		return "";
+		$this->response->status = "400";
+		return json_encode(["error" => "Bad request"]);
 	}
 });

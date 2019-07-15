@@ -8,13 +8,14 @@ use qpost\Account\FollowStatus;
 use qpost\Account\PrivacyLevel;
 use qpost\Account\User;
 use qpost\Database\EntityManager;
-use function qpost\Router\API\api_method_check;
+use qpost\Util\Method;
+use function qpost\Router\API\api_auth_check;
+use function qpost\Router\API\api_create_route;
 use function qpost\Router\API\api_prepare_object;
 use function qpost\Router\API\api_request_data;
-use function qpost\Router\create_route_get;
 
-create_route_get("/api/follow", function () {
-	if (api_method_check($this, "GET")) {
+api_create_route(Method::GET, "/follow", function () {
+	if (api_auth_check($this)) {
 		$requestData = api_request_data($this);
 
 		if (isset($requestData["from"])) {

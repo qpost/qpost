@@ -2,13 +2,14 @@
 
 namespace qpost\Router\API\Token;
 
+use qpost\Util\Method;
+use function qpost\Router\API\api_auth_check;
+use function qpost\Router\API\api_create_route;
 use function qpost\Router\API\api_get_token;
-use function qpost\Router\API\api_method_check;
 use function qpost\Router\API\api_prepare_object;
-use function qpost\Router\create_route;
 
-create_route("/api/token/verify", function () {
-	if(api_method_check($this,"POST")){
+api_create_route(Method::POST, "/token/verify", function () {
+	if (api_auth_check($this)) {
 		$token = api_get_token();
 		$user = $token->getUser();
 

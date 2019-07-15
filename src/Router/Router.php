@@ -8,6 +8,9 @@ use qpost\Database\EntityManager;
 use qpost\Util\Util;
 use Riimu\Kit\CSRF\CSRFHandler;
 use Riimu\Kit\CSRF\InvalidCSRFTokenException;
+use function qpost\Router\API\api_find_route;
+use function qpost\Router\API\api_headers;
+use function qpost\Router\API\registered_api_routes;
 
 function create_route($path, $callable) {
 	if (php_sapi_name() === 'cli') {
@@ -104,6 +107,40 @@ if (!(php_sapi_name() === 'cli')) {
 		if (Util::endsWith($path, ".php", true)) {
 			require_once $path;
 		}
+	}
+
+	foreach (registered_api_routes() as $route) {
+		$app->bind("/api" . $route->getPath(), function () {
+			$route = api_find_route(currentRoute());
+
+			if (is_null($route)) {
+				return false;
+			}
+
+			if (isset($_SERVER["REQUEST_METHOD"])) {
+				$usedMethod = $_SERVER["REQUEST_METHOD"];
+
+				api_headers($this);
+
+				if ($usedMethod === "OPTIONS") {
+					$this->response->status = "204";
+					return false;
+				}
+
+				$closure = $route->getClosure($usedMethod);
+				if (is_null($closure)) {
+					$this->response->status = "405";
+					$this->response->headers[] = "Allow: " . $route->allowedMethodsString();
+
+					return json_encode(["error" => "Method Not Allowed"]);
+				} else {
+					$this->response->status = "200";
+					$output = $closure->call($this);
+
+					return $output;
+				}
+			}
+		});
 	}
 
 	$app->on("after", function () {

@@ -1,14 +1,18 @@
 <?php
 
-namespace qpost\Router\API;
+namespace qpost\Router\API\SuggestedUsers;
 
 use Doctrine\DBAL\Types\Type;
 use qpost\Account\User;
 use qpost\Database\EntityManager;
-use function qpost\Router\create_route;
+use qpost\Util\Method;
+use function qpost\Router\API\api_auth_check;
+use function qpost\Router\API\api_create_route;
+use function qpost\Router\API\api_get_token;
+use function qpost\Router\API\api_prepare_object;
 
-create_route("/api/suggestedUsers", function () {
-	if (api_method_check($this, "GET", true)) {
+api_create_route(Method::GET, "/suggestedUsers", function () {
+	if (api_auth_check($this)) {
 		$token = api_get_token();
 		$currentUser = $token->getUser();
 
