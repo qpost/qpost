@@ -33,7 +33,6 @@ export default class FeedEntryListItem extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const entry: FeedEntry = this.props.entry;
 		const user: User = entry.getUser();
-		console.log(entry, user);
 
 		if (this.state.redirect) {
 			return <Redirect to={"/status/" + entry.getId()}/>;
