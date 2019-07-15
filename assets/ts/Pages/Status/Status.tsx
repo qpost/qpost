@@ -5,7 +5,7 @@ import BaseObject from "../../Serialization/BaseObject";
 import ContentBase from "../../Component/Layout/ContentBase";
 import PageContent from "../../Component/Layout/PageContent";
 import RightSidebar from "../../Component/Layout/RightSidebar";
-import {Card} from "antd";
+import {Card, Skeleton} from "antd";
 import User from "../../Entity/Account/User";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../Component/VerifiedBadge";
@@ -46,6 +46,10 @@ export default class Status extends Component<any, {
 				this.setState({
 					error
 				});
+			});
+		} else {
+			this.setState({
+				error: "An error occurred."
 			});
 		}
 	}
@@ -98,7 +102,15 @@ export default class Status extends Component<any, {
 				) : this.state.error !== null ? (
 					<div>error</div>
 				) : (
-					<div>loading</div>
+					<Card className={"statusPageBox"}>
+						<Skeleton loading active avatar={{
+							size: "large",
+							shape: "square"
+						}}
+								  paragraph={{
+									  rows: 4
+								  }}/>
+					</Card>
 				)}
 			</PageContent>
 
