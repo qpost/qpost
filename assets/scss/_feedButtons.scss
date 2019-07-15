@@ -44,6 +44,8 @@
 	}
 
 	&.active, &:hover {
+		cursor: pointer;
+
 		i, .number {
 			color: $color;
 		}
