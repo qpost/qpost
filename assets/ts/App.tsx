@@ -10,6 +10,7 @@ import Header from "./Parts/Header";
 import Home from "./Pages/Home/Home";
 import HomeFeed from "./Pages/Home/HomeFeed";
 import {Layout} from "antd";
+import MobileChecker from "./Util/Mobile/MobileChecker";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -51,6 +52,8 @@ export default class App extends Component<any, any> {
 			return (
 				<Router>
 					<div className={"h-100"}>
+						<MobileChecker/>
+
 						{/* SCROLL TO TOP ON ROUTE CHANGE */}
 						<Route component={() => {
 							window.scrollTo(0, 0);

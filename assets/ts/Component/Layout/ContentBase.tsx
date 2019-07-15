@@ -1,12 +1,14 @@
 import React, {Component} from "react";
-import {Col} from "antd";
+import {Row} from "antd";
 
-export default class RightSidebar extends Component<any, any> {
+export default class ContentBase extends Component<any, any> {
+	constructor(props) {
+		super(props);
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return (
-			<Col xl={3} className={"d-none d-xl-block"}>
-				{this.props.children}
-			</Col>
-		)
+		return <Row gutter={12}>
+			{this.props.children}
+		</Row>
 	}
 }
