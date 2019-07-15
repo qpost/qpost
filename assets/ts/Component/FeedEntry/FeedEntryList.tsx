@@ -40,7 +40,7 @@ export default class FeedEntryList extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.entries !== null) {
 			if (this.state.entries.length > 0) {
-				return <ul className={"list-group feedContainer mt-2"}>
+				return <ul className={"list-group feedContainer"}>
 					{this.state.entries.map((entry, i) => {
 						return <FeedEntryListItem key={i} entry={entry}/>
 					})}
@@ -56,7 +56,7 @@ export default class FeedEntryList extends Component<{
 				rows.push(<LoadingFeedEntryListItem key={i}/>);
 			}
 
-			return <ul className={"list-group feedContainer mt-2"}>
+			return <ul className={"list-group feedContainer"}>
 				{rows.map((item, i) => {
 					return item;
 				})}
