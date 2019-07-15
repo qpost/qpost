@@ -56,7 +56,7 @@ export default class FeedEntryListItem extends Component<{
 
 								<p className={"float-left ml-1 mb-0"}>
 									<Link to={"/" + user.getUsername()} className={"clearUnderline"}>
-										<span className={"font-weight-bold convertEmoji"}>
+										<span className={"font-weight-bold convertEmoji mr-2"}>
 											{user.getDisplayName()}<VerifiedBadge target={user}/>
 										</span>
 									</Link>
