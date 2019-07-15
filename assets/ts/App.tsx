@@ -60,7 +60,7 @@ export default class App extends Component<any, any> {
 							return null;
 						}}/>
 
-						<Layout>
+						<Layout className={"h-100"}>
 							<Header/>
 
 							<Layout.Content className="navMargin mainContent">
