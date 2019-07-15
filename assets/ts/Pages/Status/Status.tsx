@@ -30,7 +30,7 @@ export default class Status extends Component<any, {
 	componentDidMount(): void {
 		const id = this.props.match.params.id;
 
-		if (!id) {
+		if (id) {
 			API.handleRequest("/status", "GET", {id: id}, (data) => {
 				if (data.result) {
 					const feedEntry = BaseObject.convertObject(FeedEntry, data.result);
