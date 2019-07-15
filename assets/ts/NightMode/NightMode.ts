@@ -32,6 +32,7 @@ export default class NightMode {
 
 	public static toggle(): void {
 		this.setActive(!this.isActive());
+		window.location.reload();
 	}
 
 	public static spinnerColor(): string {
