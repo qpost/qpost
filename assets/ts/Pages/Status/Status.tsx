@@ -12,6 +12,7 @@ import VerifiedBadge from "../../Component/VerifiedBadge";
 import FollowButton from "../../Component/FollowButton";
 import FeedEntryListItemAttachments from "../../Component/FeedEntry/FeedEntryListItemAttachments";
 import FeedEntryActionButtons from "../../Component/FeedEntry/Buttons/FeedEntryActionButtons";
+import SuggestedUsers from "../../Component/SuggestedUsers";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -120,7 +121,7 @@ export default class Status extends Component<any, {
 			</PageContent>
 
 			<RightSidebar>
-				right
+				<SuggestedUsers/>
 			</RightSidebar>
 		</ContentBase>;
 	}
