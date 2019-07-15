@@ -4,11 +4,13 @@ import FollowStatus from "../Util/FollowStatus";
 import Auth from "../Auth/Auth";
 import {Redirect} from "react-router-dom";
 import API from "../API/API";
+import {Button, Spin} from "antd";
 
 export default class FollowButton extends Component<{
 	target: User,
 	className?: string,
-	followStatus?: number
+	followStatus?: number,
+	size?: "small" | "large" | "default"
 }, {
 	redirectToEditPage: boolean,
 	loading: boolean,
@@ -19,7 +21,7 @@ export default class FollowButton extends Component<{
 
 		this.state = {
 			redirectToEditPage: false,
-			loading: true,
+			loading: !this.props.followStatus,
 			followStatus: null
 		};
 	}
@@ -32,7 +34,9 @@ export default class FollowButton extends Component<{
 				redirectToEditPage: true
 			});
 		} else {
-			// TODO
+			if (!this.state.loading) {
+				// TODO
+			}
 		}
 	};
 
@@ -44,27 +48,32 @@ export default class FollowButton extends Component<{
 				if (!this.isCurrentUser()) {
 					API.handleRequest("/follow", "GET", {
 						from: Auth.getCurrentUser().getId(),
-						to: this.props.target.getId()
+						to: this.props.target.getId(),
+						loading: false
 					}, data => {
 						if (data.status) {
 							this.setState({
-								followStatus: data.status
+								followStatus: data.status,
+								loading: false
 							});
 						} else {
 							this.setState({
-								followStatus: FollowStatus.FOLLOWING
+								followStatus: FollowStatus.FOLLOWING,
+								loading: false
 							});
 						}
 					}, error => {
 						this.setState({
-							followStatus: FollowStatus.NOT_FOLLOWING
+							followStatus: FollowStatus.NOT_FOLLOWING,
+							loading: false
 						});
 					})
 				}
 			} else {
 				// Default to not following if user is not logged in
 				this.setState({
-					followStatus: FollowStatus.NOT_FOLLOWING
+					followStatus: FollowStatus.NOT_FOLLOWING,
+					loading: false
 				});
 			}
 		}
@@ -102,9 +111,17 @@ export default class FollowButton extends Component<{
 			}
 		}
 
-		return <button type={"button"}
+		return <Button
+			className={"followButton" + (!this.state.loading ? " btn-" + color : "") + (this.props.className ? " " + this.props.className : "")}
+			size={this.props.size || "default"}
+			type={!this.state.loading && !this.isCurrentUser() && color === "primary" ? "primary" : "default"}
+			onClick={(e) => this.click(e)} shape={"round"}>
+			{!this.state.loading || this.isCurrentUser() ? text : <Spin size={"small"}/>}
+		</Button>;
+
+		/*return <button type={"button"}
 					   className={"btn btn-" + color + (this.props.className ? " " + this.props.className : "")}
-					   onClick={(e) => this.click(e)}>{text}</button>
+					   onClick={(e) => this.click(e)}>{text}</button>*/
 	}
 
 	private isCurrentUser(): boolean {

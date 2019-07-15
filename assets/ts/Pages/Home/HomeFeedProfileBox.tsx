@@ -49,7 +49,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 						</Link>
 					</div>
 
-					<FollowButton target={currentUser} className={"float-right mt-2 btn-sm"}/>
+					<FollowButton target={currentUser} className={"float-right mt-2"} size={"small"}/>
 				</div>
 
 				<hr className="mb-2 mt-3"/>
