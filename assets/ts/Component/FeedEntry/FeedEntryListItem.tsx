@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Row} from "reactstrap";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
 import User from "../../Entity/Account/User";
 import FeedEntryType from "../../Entity/Feed/FeedEntryType";
@@ -12,26 +12,41 @@ import FeedEntryListItemAttachments from "./FeedEntryListItemAttachments";
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry
 }, {
-	nsfwWarningActive: boolean
+	nsfwWarningActive: boolean,
+	redirect: boolean
 }> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			nsfwWarningActive: this.props.entry.isNSFW()
+			nsfwWarningActive: this.props.entry.isNSFW(),
+			redirect: false
 		};
 	}
+
+	redirect = () => {
+		this.setState({
+			redirect: true
+		});
+	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const entry: FeedEntry = this.props.entry;
 		const user: User = entry.getUser();
 		console.log(entry, user);
 
+		if (this.state.redirect) {
+			return <Redirect to={"/status/" + entry.getId()}/>;
+		}
+
 		// TODO: Add NSFW warning
 		// TODO: Add attachments
 		switch (entry.getType()) {
 			case FeedEntryType.POST:
-				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"}>
+				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} onClick={(e) => {
+					e.preventDefault();
+					this.redirect();
+				}}>
 					<div className={"px-4 py-2"}>
 						<Row>
 							<div className={"float-left"}>
