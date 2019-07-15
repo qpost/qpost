@@ -11,6 +11,7 @@ import Home from "./Pages/Home/Home";
 import HomeFeed from "./Pages/Home/HomeFeed";
 import {Layout} from "antd";
 import MobileChecker from "./Util/Mobile/MobileChecker";
+import Status from "./Pages/Status/Status";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -70,6 +71,8 @@ export default class App extends Component<any, any> {
 											<div className="legacyCardBody">
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
 													<Route path={"/"} exact component={Home}/>}
+
+												<Route path={"/status/:id"} component={Status}/>
 											</div>
 										</div>
 									</div>

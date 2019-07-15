@@ -1,14 +1,11 @@
 import React, {Component} from "react";
 import {Col} from "antd";
-import SidebarStickyContent from "./SidebarStickyContent";
 
 export default class LeftSidebar extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return (
 			<Col lg={8} xl={6} className={"d-none d-lg-block"}>
-				<SidebarStickyContent>
-					{this.props.children}
-				</SidebarStickyContent>
+				{this.props.children}
 			</Col>
 		)
 	}

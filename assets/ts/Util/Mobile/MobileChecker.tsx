@@ -1,13 +1,15 @@
 import React, {Component} from "react";
-import windowSize from "react-window-size";
+import WindowSizeListener from "react-window-size-listener";
 import Mobile from "./Mobile";
 
 class MobileChecker extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		Mobile.setMobile(this.props.windowWidth <= 768);
+		Mobile.setMobile(window.innerWidth <= 768);
 
-		return "";
+		return <WindowSizeListener onResize={windowSize => {
+			Mobile.setMobile(windowSize.windowWidth <= 768);
+		}}/>;
 	}
 }
 
-export default windowSize(MobileChecker);
+export default MobileChecker;

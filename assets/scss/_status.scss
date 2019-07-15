@@ -1,0 +1,43 @@
+.statusPageBox {
+	$width: calc(100% - 190px);
+	$margin: 30px;
+
+	.nameContainer {
+		width: $width;
+
+		.displayName {
+			width: 100%;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+
+			a {
+				font-weight: bold;
+				font-size: 18px;
+				color: #000;
+			}
+		}
+
+		.username {
+			width: 100%;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			margin-top: -4px;
+
+			a {
+				@extend .text-muted;
+			}
+		}
+	}
+
+	.text {
+		margin-top: $margin;
+		color: #000;
+		font-size: 19px;
+	}
+
+	.attachments, .actionButtons {
+		margin-top: $margin;
+	}
+}
