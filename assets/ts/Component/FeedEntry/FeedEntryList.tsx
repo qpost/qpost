@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import {Alert, Spinner} from "reactstrap";
+import {Alert} from "reactstrap";
 import FeedEntryListItem from "./FeedEntryListItem";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
 import User from "../../Entity/Account/User";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
-import NightMode from "../../NightMode/NightMode";
+import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
 
 export default class FeedEntryList extends Component<{
 	user?: User
@@ -51,9 +51,19 @@ export default class FeedEntryList extends Component<{
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;
 		} else {
-			return <div className={"text-center my-3"}>
+			const rows = [];
+			for (let i = 0; i < 20; i++) {
+				rows.push(<LoadingFeedEntryListItem key={i}/>);
+			}
+
+			return <ul className={"list-group feedContainer mt-2"}>
+				{rows.map((item, i) => {
+					return item;
+				})}
+			</ul>;
+			/*return <div className={"text-center my-3"}>
 				<Spinner type={"grow"} color={NightMode.spinnerColor()} size={"lg"}/>
-			</div>
+			</div>*/
 		}
 	}
 }
