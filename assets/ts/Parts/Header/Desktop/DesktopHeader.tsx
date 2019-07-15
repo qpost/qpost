@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Logo from "../../../../img/navlogo.png";
-import {Layout, Menu} from "antd";
+import {Badge, Layout, Menu} from "antd";
 import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
 import Auth from "../../../Auth/Auth";
@@ -48,15 +48,19 @@ export default class DesktopHeader extends Component<{
 				</Menu.Item>
 
 				<Menu.Item key={2}>
-					<Link to={"/notifications"} className={"clearUnderline"}>
-						notifications
-					</Link>
+					<Badge count={10}>
+						<Link to={"/notifications"} className={"clearUnderline"}>
+							notifications
+						</Link>
+					</Badge>
 				</Menu.Item>
 
 				<Menu.Item key={3}>
-					<Link to={"/messages"} className={"clearUnderline"}>
-						messages
-					</Link>
+					<Badge count={10}>
+						<Link to={"/messages"} className={"clearUnderline"}>
+							messages
+						</Link>
+					</Badge>
 				</Menu.Item>
 			</Menu>
 		</Layout.Header>;
