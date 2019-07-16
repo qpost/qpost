@@ -1,8 +1,7 @@
 .followButton {
-	border: none !important;
-
 	&[data-follow-status="1"] {
 		// UNFOLLOW BUTTON
+		border: none !important;
 
 		background-color: $danger;
 		color: #FFF;
@@ -14,6 +13,7 @@
 
 	&[data-follow-status="2"] {
 		// PENDING BUTTON
+		border: none !important;
 
 		background-color: $warning;
 		color: #000;
