@@ -29,7 +29,7 @@ api_create_route(Method::POST, "/follow", function () {
 				 */
 				$to = $entityManager->getRepository(User::class)->findOneBy(["id" => $requestData["to"]]);
 
-				if (!is_null($to) && !$to->getPrivacyLevel() === PrivacyLevel::CLOSED) {
+				if (!is_null($to) && $to->getPrivacyLevel() !== PrivacyLevel::CLOSED) {
 					if (!Follower::isFollowing($currentUser, $to)) {
 						if ($to->getPrivacyLevel() === PrivacyLevel::PUBLIC) {
 							if (Follower::follow($currentUser, $to)) {
