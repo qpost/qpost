@@ -6,6 +6,7 @@ import User from "../../Entity/Account/User";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
+import {Empty} from "antd";
 
 export default class FeedEntryList extends Component<{
 	user?: User
@@ -46,7 +47,7 @@ export default class FeedEntryList extends Component<{
 					})}
 				</ul>;
 			} else {
-				return <Alert color={"info"}>There is nothing here.</Alert>;
+				return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;
