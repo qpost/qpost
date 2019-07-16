@@ -7,6 +7,7 @@ import SuggestedUsers from "../../Component/SuggestedUsers";
 import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import ContentBase from "../../Component/Layout/ContentBase";
 import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
+import DummyPostForm from "../../Component/PostForm/DummyPostForm";
 
 export default class HomeFeed extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -19,6 +20,8 @@ export default class HomeFeed extends Component<any, any> {
 				</LeftSidebar>
 
 				<PageContent leftSidebar rightSidebar>
+					<DummyPostForm/>
+
 					<FeedEntryList/>
 				</PageContent>
 

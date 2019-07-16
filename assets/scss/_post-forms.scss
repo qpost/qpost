@@ -15,6 +15,33 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+.dummyPostForm {
+	$size: 36px;
+
+	@extend .clearfix;
+
+	&, * {
+		cursor: pointer !important;
+	}
+
+	img.avatar {
+		@extend .rounded;
+		width: $size;
+		height: $size;
+		float: left;
+	}
+
+	.fakeTextBox {
+		@extend .rounded;
+
+		height: $size;
+		line-height: calc(#{$size} - 1px);
+		float: left;
+		margin-left: 15px;
+		width: calc(100% - #{$size} - 20px);
+	}
+}
+
 .replyForm {
 	margin-top: 60px !important;
 }
