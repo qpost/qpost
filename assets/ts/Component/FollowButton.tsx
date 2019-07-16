@@ -72,8 +72,7 @@ export default class FollowButton extends Component<{
 				if (!this.isCurrentUser()) {
 					API.handleRequest("/follow", "GET", {
 						from: Auth.getCurrentUser().getId(),
-						to: this.props.target.getId(),
-						loading: false
+						to: this.props.target.getId()
 					}, data => {
 						if (data.status) {
 							this.setState({
