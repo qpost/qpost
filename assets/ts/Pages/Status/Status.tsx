@@ -13,6 +13,8 @@ import FollowButton from "../../Component/FollowButton";
 import FeedEntryListItemAttachments from "../../Component/FeedEntry/FeedEntryListItemAttachments";
 import FeedEntryActionButtons from "../../Component/FeedEntry/Buttons/FeedEntryActionButtons";
 import SuggestedUsers from "../../Component/SuggestedUsers";
+import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
+import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -121,7 +123,11 @@ export default class Status extends Component<any, {
 			</PageContent>
 
 			<RightSidebar>
-				<SuggestedUsers/>
+				<SidebarStickyContent>
+					<SuggestedUsers/>
+
+					<SidebarFooter/>
+				</SidebarStickyContent>
 			</RightSidebar>
 		</ContentBase>;
 	}
