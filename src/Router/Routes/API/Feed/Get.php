@@ -27,7 +27,8 @@ function home_feed_query(User $currentUser): QueryBuilder {
 		->andWhere("exists (select 1 from qpost\Account\Follower ff where ff.to = :to) or f.user = :to")
 		->setParameter("to", $currentUser)
 		->orderBy("f.time", "DESC")
-		->setMaxResults(30);
+		->setMaxResults(30)
+		->setCacheable(false);
 }
 
 function profile_feed_query(User $user): QueryBuilder {
@@ -39,7 +40,8 @@ function profile_feed_query(User $user): QueryBuilder {
 		->andWhere("f.user = :user")
 		->setParameter("user", $user)
 		->orderBy("f.time", "DESC")
-		->setMaxResults(30);
+		->setMaxResults(30)
+		->setCacheable(false);
 }
 
 api_create_route(Method::GET, "/feed", function () {
