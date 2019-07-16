@@ -27,7 +27,7 @@ api_create_route(Method::DELETE, "/follow", function () {
 				/**
 				 * @var User $to
 				 */
-				$to = $entityManager->getRepository(User::class)->findOneBy(["to" => $requestData["to"]]);
+				$to = $entityManager->getRepository(User::class)->findOneBy(["id" => $requestData["to"]]);
 
 				if (!is_null($to) && $to->getPrivacyLevel() !== PrivacyLevel::CLOSED) {
 					if ($to->getPrivacyLevel() === PrivacyLevel::PUBLIC) {
