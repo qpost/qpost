@@ -46,11 +46,16 @@ export default class FollowButton extends Component<{
 				});
 
 				API.handleRequest("/follow", method, {to: this.props.target.getId()}, data => {
-					if (data.status) {
+					if (data.hasOwnProperty("status")) {
 						this.setState({
-							followStatus: data.result
+							followStatus: data.status,
+							loading: false
 						});
 					} else {
+						this.setState({
+							loading: false
+						});
+
 						message.error("An error occurred.");
 					}
 				}, error => {
