@@ -4,7 +4,8 @@ import FollowStatus from "../Util/FollowStatus";
 import Auth from "../Auth/Auth";
 import {Redirect} from "react-router-dom";
 import API from "../API/API";
-import {Button, Spin} from "antd";
+import {Button, message, Spin} from "antd";
+import {Method} from "axios";
 
 export default class FollowButton extends Component<{
 	target: User,
@@ -14,7 +15,8 @@ export default class FollowButton extends Component<{
 }, {
 	redirectToEditPage: boolean,
 	loading: boolean,
-	followStatus: number | null
+	followStatus: number | null,
+	error: string | null
 }> {
 	constructor(props) {
 		super(props);
@@ -22,7 +24,8 @@ export default class FollowButton extends Component<{
 		this.state = {
 			redirectToEditPage: false,
 			loading: !this.props.followStatus,
-			followStatus: null
+			followStatus: null,
+			error: null
 		};
 	}
 
@@ -35,7 +38,28 @@ export default class FollowButton extends Component<{
 			});
 		} else {
 			if (!this.state.loading) {
-				// TODO
+				const followStatus: number = this.followStatus();
+				let method: Method = followStatus === FollowStatus.FOLLOWING || followStatus === FollowStatus.PENDING ? "DELETE" : "POST";
+
+				this.setState({
+					loading: true
+				});
+
+				API.handleRequest("/follow", method, {to: this.props.target.getId()}, data => {
+					if (data.result) {
+						this.setState({
+							followStatus: data.result
+						});
+					} else {
+						message.error("An error occurred.");
+					}
+				}, error => {
+					message.error(error);
+
+					this.setState({
+						loading: false
+					});
+				});
 			}
 		}
 	};
@@ -79,6 +103,14 @@ export default class FollowButton extends Component<{
 		}
 	}
 
+	followStatus: () => number = () => {
+		return this.state.followStatus || this.props.followStatus;
+	};
+
+	firstLoad: () => boolean = () => {
+		return !this.props.followStatus && this.state.loading;
+	};
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.redirectToEditPage) {
 			return <Redirect to={"/edit"}/>
@@ -91,9 +123,7 @@ export default class FollowButton extends Component<{
 			color = "light";
 			text = "Edit profile";
 		} else {
-			const followStatus: number = this.state.followStatus || this.props.followStatus;
-
-			switch (followStatus) {
+			switch (this.followStatus()) {
 				case FollowStatus.FOLLOWING:
 					color = "danger";
 					text = "Unfollow";
@@ -116,7 +146,7 @@ export default class FollowButton extends Component<{
 			size={this.props.size || "default"}
 			type={!this.state.loading && !this.isCurrentUser() && color === "primary" ? "primary" : "default"}
 			onClick={(e) => this.click(e)} shape={"round"}>
-			{!this.state.loading || this.isCurrentUser() ? text : <Spin size={"small"}/>}
+			{(!this.state.loading && !this.firstLoad()) || this.isCurrentUser() ? text : <Spin size={"small"}/>}
 		</Button>;
 
 		/*return <button type={"button"}
