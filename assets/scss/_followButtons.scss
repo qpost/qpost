@@ -1,0 +1,25 @@
+.followButton {
+	border: none !important;
+
+	&[data-follow-status="1"] {
+		// UNFOLLOW BUTTON
+
+		background-color: $danger;
+		color: #FFF;
+
+		&:hover, &:focus {
+			background-color: darken($danger, 10%);
+		}
+	}
+
+	&[data-follow-status="2"] {
+		// PENDING BUTTON
+
+		background-color: $warning;
+		color: #000;
+
+		&:hover, &:focus {
+			background-color: darken($warning, 10%);
+		}
+	}
+}

@@ -120,35 +120,31 @@ export default class FollowButton extends Component<{
 			return <Redirect to={"/edit"}/>
 		}
 
-		let color: string = "";
 		let text: string = "";
 
 		if (this.isCurrentUser()) {
-			color = "light";
 			text = "Edit profile";
 		} else {
 			switch (this.followStatus()) {
 				case FollowStatus.FOLLOWING:
-					color = "danger";
 					text = "Unfollow";
 					break;
 
 				case FollowStatus.PENDING:
-					color = "warning";
 					text = "Pending";
 					break;
 
 				default:
-					color = "primary";
 					text = "Follow";
 					break;
 			}
 		}
 
 		return <Button
-			className={"followButton" + (!this.state.loading ? " btn-" + color : "") + (this.props.className ? " " + this.props.className : "")}
+			className={"followButton" + (this.props.className ? " " + this.props.className : "")}
 			size={this.props.size || "default"}
-			type={!this.state.loading && !this.isCurrentUser() && color === "primary" ? "primary" : "default"}
+			type={!this.state.loading && !this.isCurrentUser() && text === "Follow" ? "primary" : "default"}
+			data-follow-status={!this.state.loading ? (this.props.followStatus ? this.props.followStatus : this.state.followStatus ? this.state.followStatus : -1) : -1}
 			onClick={(e) => this.click(e)} shape={"round"}>
 			{(!this.state.loading && !this.firstLoad()) || this.isCurrentUser() ? text : <Spin size={"small"}/>}
 		</Button>;
