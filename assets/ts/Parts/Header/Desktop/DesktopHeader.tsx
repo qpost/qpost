@@ -4,6 +4,7 @@ import {Badge, Layout, Menu} from "antd";
 import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
 import Auth from "../../../Auth/Auth";
+import SubMenu from "antd/es/menu/SubMenu";
 
 export default class DesktopHeader extends Component<{
 	mobile: boolean,
@@ -62,6 +63,41 @@ export default class DesktopHeader extends Component<{
 						</Link>
 					</Badge>
 				</Menu.Item>
+
+				<SubMenu title={<Link to={"/" + currentUser.getUsername()} className={"clearUnderline"}>
+					<img src={currentUser.getAvatarURL()} width={24} height={24} alt={currentUser.getUsername()}
+						 className={"rounded"}/>
+				</Link>}>
+					<Menu.Item>
+						<Link to={"/edit"} className={"clearUnderline"}>
+							Edit profile
+						</Link>
+					</Menu.Item>
+
+					<Menu.Item>
+						<Link to={"/account"} className={"clearUnderline"}>
+							Settings and privacy
+						</Link>
+					</Menu.Item>
+
+					<Menu.Item>
+						<a href={"/logout"} className={"clearUnderline"} onClick={(e) => {
+							e.preventDefault();
+							Auth.logout();
+						}}>
+							Log out
+						</a>
+					</Menu.Item>
+
+					<Menu.Item>
+						<a href={"/nightmode"} className={"clearUnderline"} onClick={(e) => {
+							e.preventDefault();
+							NightMode.toggle();
+						}}>
+							Toggle night mode
+						</a>
+					</Menu.Item>
+				</SubMenu>
 			</Menu>
 		</Layout.Header>;
 	}
