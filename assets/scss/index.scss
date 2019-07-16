@@ -1,5 +1,7 @@
 @import "variables";
 @import "~bootstrap/scss/bootstrap";
+@import "util/index";
+
 @import "~flag-icon-css/sass/flag-icon";
 @import "nightmode/index";
 @import "alerts";
@@ -16,4 +18,3 @@
 @import "post-forms";
 @import "profile";
 @import "status";
-@import "util/index";

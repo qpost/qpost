@@ -30,7 +30,7 @@ body, html {
 .navMargin {
 	margin-top: 58px;
 
-	@media only screen and (min-width: 768px) {
+	@include desktopOnly() {
 		margin-top: 70px !important;
 	}
 }
