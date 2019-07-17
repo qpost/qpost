@@ -53,6 +53,10 @@ export default class PostForm extends Component<{
 		// TODO
 	};
 
+	change = (e) => {
+
+	};
+
 	content = () => {
 		return <div className={"postForm"}>
 			<div className={"clearfix"}>
@@ -66,7 +70,7 @@ export default class PostForm extends Component<{
 			</div>
 			<hr/>
 			<Input.TextArea rows={3} style={{resize: "none"}} id={"postFormTextarea"}
-							placeholder={"Post something for your followers!"}/>
+							placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}/>
 
 			<div className={"clearfix bottom"}>
 				<div className={"actionButtons"}>

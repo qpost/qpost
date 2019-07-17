@@ -49,19 +49,15 @@ export default class DesktopHeader extends Component<{
 				</Menu.Item>
 
 				<Menu.Item key={2}>
-					<Badge count={10}>
-						<Link to={"/notifications"} className={"clearUnderline"}>
-							notifications
-						</Link>
-					</Badge>
+					<Link to={"/notifications"} className={"clearUnderline"}>
+						notifications <Badge count={10} className={"ml-2"}/>
+					</Link>
 				</Menu.Item>
 
 				<Menu.Item key={3}>
-					<Badge count={10}>
-						<Link to={"/messages"} className={"clearUnderline"}>
-							messages
-						</Link>
-					</Badge>
+					<Link to={"/messages"} className={"clearUnderline"}>
+						messages <Badge count={10} className={"ml-2"}/>
+					</Link>
 				</Menu.Item>
 
 				<SubMenu title={<Link to={"/" + currentUser.getUsername()} className={"clearUnderline"}>
