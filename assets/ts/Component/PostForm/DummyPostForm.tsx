@@ -31,7 +31,6 @@ export default class DummyPostForm extends Component<any, {
 		this.setState({
 			formOpen: false
 		});
-		console.log("close", this);
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

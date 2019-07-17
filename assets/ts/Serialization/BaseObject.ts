@@ -10,12 +10,7 @@ export default class BaseObject {
 			object = JSON.parse(object);
 		}
 
-		const deserialized: T = this.getJsonConverter().deserializeObject(object, type);
-
-		console.log(deserialized);
-
-		return deserialized;
-		//return Serialization.toInstance(new type(), object);
+		return this.getJsonConverter().deserializeObject(object, type);
 	}
 
 	private static getJsonConverter(): JsonConvert {

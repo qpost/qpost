@@ -34,7 +34,6 @@ export default class FeedEntryList extends Component<{
 
 			this.setState({entries});
 		}, error => {
-			console.log(error);
 			this.setState({error});
 		});
 	}
