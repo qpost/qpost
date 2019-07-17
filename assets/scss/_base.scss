@@ -19,6 +19,10 @@ body, html {
 	background: #F0F2F5;
 }
 
+body.disableScroll {
+	overflow: hidden;
+}
+
 #root {
 	> div {
 		> section.ant-layout {

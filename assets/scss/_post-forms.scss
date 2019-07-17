@@ -42,6 +42,37 @@
 	}
 }
 
+.postFormBackdrop {
+	position: fixed;
+	z-index: 1000;
+	height: 100%;
+	width: 100%;
+	background-color: #FFF;
+	top: 0;
+	left: 0;
+	padding: 20px 20px;
+}
+
+.postForm {
+	.bottom {
+		margin-top: 20px;
+
+		.actionButtons {
+			float: left;
+
+			.actionButton {
+				font-size: 20px;
+				margin-right: 10px;
+			}
+		}
+
+		.characterCount {
+			float: right;
+			line-height: 32px;
+		}
+	}
+}
+
 .replyForm {
 	margin-top: 60px !important;
 }
