@@ -1,5 +1,10 @@
 import React, {Component} from "react";
-import {Avatar, Layout, Menu} from "antd";
+import Avatar from "antd/es/avatar";
+import "antd/es/avatar/style";
+import Layout from "antd/es/layout";
+import "antd/es/layout/style";
+import Menu from "antd/es/menu";
+import "antd/es/menu/style";
 import NightMode from "../../../NightMode/NightMode";
 import Auth from "../../../Auth/Auth";
 import User from "../../../Entity/Account/User";

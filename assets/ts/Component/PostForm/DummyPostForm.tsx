@@ -1,6 +1,11 @@
 import React, {Component} from "react";
 import Auth from "../../Auth/Auth";
-import {Button, Card, Input} from "antd";
+import Input from "antd/es/input";
+import "antd/es/input/style";
+import Button from "antd/es/button";
+import "antd/es/button/style";
+import Card from "antd/es/card";
+import "antd/es/card/style";
 import PostForm from "./PostForm";
 
 export default class DummyPostForm extends Component<any, {

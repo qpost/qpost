@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {Affix} from "antd";
+import Affix from "antd/es/affix";
+import "antd/es/affix/style";
 
 export default class SidebarStickyContent extends Component<any, any> {
 	constructor(props) {

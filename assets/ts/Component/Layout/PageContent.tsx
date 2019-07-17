@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {Col} from "antd";
+import Col from "antd/es/col";
+import "antd/es/col/style";
 
 export default class PageContent extends Component<{
 	leftSidebar?: boolean,

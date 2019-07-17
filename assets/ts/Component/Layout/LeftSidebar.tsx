@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {Col} from "antd";
+import Col from "antd/es/col";
+import "antd/es/col/style";
 
 export default class LeftSidebar extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

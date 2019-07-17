@@ -1,6 +1,13 @@
 import React, {Component} from "react";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
-import {Button, Input, Modal, Tooltip} from "antd";
+import Tooltip from "antd/es/tooltip";
+import "antd/es/tooltip/style";
+import Button from "antd/es/button";
+import "antd/es/button/style";
+import Input from "antd/es/input";
+import "antd/es/input/style";
+import Modal from "antd/es/modal";
+import "antd/es/modal/style";
 import WindowSizeListener from "react-window-size-listener";
 import DummyPostForm from "./DummyPostForm";
 import $ from "jquery";

@@ -9,7 +9,8 @@ import User from "./Entity/Account/User";
 import Header from "./Parts/Header";
 import Home from "./Pages/Home/Home";
 import HomeFeed from "./Pages/Home/HomeFeed";
-import {Layout} from "antd";
+import Layout from "antd/es/layout";
+import "antd/es/layout/style";
 import MobileChecker from "./Util/Mobile/MobileChecker";
 import Status from "./Pages/Status/Status";
 

@@ -6,7 +6,8 @@ import User from "../../Entity/Account/User";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
-import {Empty} from "antd";
+import Empty from "antd/es/empty";
+import "antd/es/empty/style";
 
 export default class FeedEntryList extends Component<{
 	user?: User

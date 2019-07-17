@@ -4,7 +4,12 @@ import FollowStatus from "../Util/FollowStatus";
 import Auth from "../Auth/Auth";
 import {Redirect} from "react-router-dom";
 import API from "../API/API";
-import {Button, message, Spin} from "antd";
+import message from "antd/es/message";
+import "antd/es/message/style";
+import Spin from "antd/es/spin";
+import "antd/es/spin/style";
+import Button from "antd/es/button";
+import "antd/es/button/style";
 import {Method} from "axios";
 
 export default class FollowButton extends Component<{

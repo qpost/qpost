@@ -5,7 +5,8 @@ import API from "../API/API";
 import BaseObject from "../Serialization/BaseObject";
 import FollowButton from "./FollowButton";
 import VerifiedBadge from "./VerifiedBadge";
-import {Spin} from "antd";
+import Spin from "antd/es/spin";
+import "antd/es/spin/style";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {

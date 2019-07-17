@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {Row} from "antd";
+import Row from "antd/es/row";
+import "antd/es/row/style";
 
 export default class ContentBase extends Component<any, any> {
 	constructor(props) {

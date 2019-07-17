@@ -1,5 +1,8 @@
 import React, {Component} from "react";
-import {Button, Layout} from "antd";
+import Layout from "antd/es/layout";
+import "antd/es/layout/style";
+import Button from "antd/es/button";
+import "antd/es/button/style";
 import Logo from "../../../../img/navlogo.png";
 import {Link} from "react-router-dom";
 

@@ -1,5 +1,10 @@
 import React, {Component} from "react";
-import {Badge, Layout, Menu} from "antd";
+import Menu from "antd/es/menu";
+import "antd/es/menu/style";
+import Badge from "antd/es/badge";
+import "antd/es/badge/style";
+import Layout from "antd/es/layout";
+import "antd/es/layout/style";
 import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
 
