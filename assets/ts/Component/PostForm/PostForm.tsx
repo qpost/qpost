@@ -37,13 +37,15 @@ export default class PostForm extends Component<{
 	visible: boolean,
 	parent: DummyPostForm
 }, {
-	mobile: boolean
+	mobile: boolean,
+	message: string | null
 }> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			mobile: window.innerWidth <= 768
+			mobile: window.innerWidth <= 768,
+			message: null
 		};
 	}
 
@@ -80,10 +82,16 @@ export default class PostForm extends Component<{
 	};
 
 	change = (e) => {
+		const value = e.target.value.length > 0 ? e.target.value : null;
 
+		this.setState({
+			message: value
+		});
 	};
 
 	content = () => {
+		const used: number = this.state.message === null ? 0 : this.state.message.length;
+
 		return <div className={"postForm"}>
 			<div className={"clearfix"}>
 				<Button type={"link"} onClick={this.close} className={"float-left"} style={{fontSize: "20px"}}>
@@ -96,7 +104,8 @@ export default class PostForm extends Component<{
 			</div>
 			<hr/>
 			<Input.TextArea rows={3} style={{resize: "none"}} id={"postFormTextarea"}
-							placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}/>
+							placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
+							value={this.state.message}/>
 
 			<div className={"clearfix bottom"}>
 				<div className={"actionButtons"}>
@@ -108,7 +117,7 @@ export default class PostForm extends Component<{
 				</div>
 
 				<div className={"characterCount"}>
-					300
+					{300 - used}
 				</div>
 			</div>
 		</div>;
