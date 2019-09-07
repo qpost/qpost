@@ -154,6 +154,7 @@ export default class PostForm extends Component<{
 
 		if (!(type === "image/jpeg" || type === "image/png" || type === "image/gif")) {
 			AntMessage.error("Invalid file type.");
+			return false;
 		}
 
 		if (!(size / 1024 / 1024 < 1)) {
