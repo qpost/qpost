@@ -40,10 +40,10 @@ api_create_route(Method::GET, "/follow", function () {
 			if (is_numeric($requestData["from"])) {
 				if (isset($requestData["to"])) {
 					if (is_numeric($requestData["to"])) {
-						$from = User::getUser($requestData["from"]);
+						$from = User::getUserByID($requestData["from"]);
 
 						if (!is_null($from)) {
-							$to = User::getUser($requestData["to"]);
+							$to = User::getUserByID($requestData["to"]);
 
 							if (!is_null($to)) {
 								$entityManager = EntityManager::instance();

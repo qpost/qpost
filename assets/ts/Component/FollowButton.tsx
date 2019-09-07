@@ -35,7 +35,8 @@ export default class FollowButton extends Component<{
 	target: User,
 	className?: string,
 	followStatus?: number,
-	size?: "small" | "large" | "default"
+	size?: "small" | "large" | "default",
+	block?: boolean
 }, {
 	redirectToEditPage: boolean,
 	loading: boolean,
@@ -169,6 +170,7 @@ export default class FollowButton extends Component<{
 			size={this.props.size || "default"}
 			type={!this.state.loading && !this.isCurrentUser() && text === "Follow" ? "primary" : "default"}
 			data-follow-status={!this.state.loading ? (this.props.followStatus ? this.props.followStatus : this.state.followStatus ? this.state.followStatus : -1) : -1}
+			block={this.props.block}
 			onClick={(e) => this.click(e)} shape={"round"}>
 			{(!this.state.loading && !this.firstLoad()) || this.isCurrentUser() ? text : <Spin size={"small"}/>}
 		</Button>;

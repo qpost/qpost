@@ -47,7 +47,9 @@ export default class FeedEntryList extends Component<{
 
 	componentDidMount(): void {
 		FeedEntryList.instance = this;
-		const parameters = {};
+		const parameters = this.props.user ? {
+			user: this.props.user.getId()
+		} : {};
 
 		API.handleRequest("/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = this.state.entries || [];

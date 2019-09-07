@@ -26,6 +26,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\NonUniqueResultException;
 use JMS\Serializer\Annotation as Serializer;
 use qpost\Block\Block;
 use qpost\Database\Database;
@@ -72,8 +73,9 @@ class User {
 	}
 
 	/**
-	 * @param mixed $query
+	 * @param $query
 	 * @return User|null
+	 * @throws NonUniqueResultException
 	 */
 	public static function getUser($query): ?User {
 		$entityManager = EntityManager::instance();
@@ -83,6 +85,36 @@ class User {
 			->setParameter("query", $query, Type::STRING)
 			->orWhere("u.id = :query")
 			->setParameter("query", $query, Type::INTEGER)
+			->getQuery()
+			->getOneOrNullResult();
+	}
+
+	/**
+	 * @param string $username
+	 * @return User|null
+	 * @throws NonUniqueResultException
+	 */
+	public static function getUserByUsername(string $username): ?User {
+		$entityManager = EntityManager::instance();
+
+		return $entityManager->getRepository(User::class)->createQueryBuilder("u")
+			->where("upper(u.username) = upper(:username)")
+			->setParameter("username", $username, Type::STRING)
+			->getQuery()
+			->getOneOrNullResult();
+	}
+
+	/**
+	 * @param int $id
+	 * @return User|null
+	 * @throws NonUniqueResultException
+	 */
+	public static function getUserByID(int $id): ?User {
+		$entityManager = EntityManager::instance();
+
+		return $entityManager->getRepository(User::class)->createQueryBuilder("u")
+			->where("u.id = :id")
+			->setParameter("id", $id, Type::INTEGER)
 			->getQuery()
 			->getOneOrNullResult();
 	}

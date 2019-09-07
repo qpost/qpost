@@ -122,7 +122,7 @@ api_create_route(Method::GET, "/feed", function () {
 		}
 	} else if (isset($requestData["max"]) && isset($requestData["user"])) {
 		// Load older posts on profile page
-		$user = User::getUser($requestData["user"]);
+		$user = User::getUserByID($requestData["user"]);
 
 		if (!is_null($user) && $user->mayView($currentUser)) {
 			if (is_numeric($requestData["max"])) {
@@ -153,7 +153,7 @@ api_create_route(Method::GET, "/feed", function () {
 		}
 	} else if (!isset($requestData["max"]) && isset($requestData["user"])) {
 		// Load first posts on profile page
-		$user = User::getUser($requestData["user"]);
+		$user = User::getUserByID($requestData["user"]);
 
 		if (!is_null($user) && $user->mayView($currentUser)) {
 			$results = [];

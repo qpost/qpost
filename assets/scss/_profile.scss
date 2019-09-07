@@ -17,7 +17,22 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.followsYouBadge {
-	color: #8e8f91 !important;
-	background-color: #F8F9FA !important;
+.profile {
+	.mainAvatar {
+		@extend .rounded, .mb-2;
+		$size: 256px;
+
+		border: 1px solid $primary;
+		width: $size;
+		height: $size;
+	}
+
+	.usernameDisplay {
+		@extend .text-muted;
+	}
+
+	.followsYouBadge {
+		color: #8e8f91 !important;
+		background-color: #F8F9FA !important;
+	}
 }

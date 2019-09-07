@@ -32,6 +32,7 @@ import Layout from "antd/es/layout";
 import "antd/es/layout/style";
 import MobileChecker from "./Util/Mobile/MobileChecker";
 import Status from "./Pages/Status/Status";
+import Profile from "./Pages/Profile/Profile";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -93,6 +94,7 @@ export default class App extends Component<any, any> {
 													<Route path={"/"} exact component={Home}/>}
 
 												<Route path={"/status/:id"} component={Status}/>
+												<Route path={"/:username"} component={Profile}/>
 											</div>
 										</div>
 									</div>
