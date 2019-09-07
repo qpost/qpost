@@ -511,7 +511,7 @@ class Util {
 	 * @access public
 	 */
 	public static function cleanupTempFolder(): void {
-		$files = glob($_SERVER["DOCUMENT_ROOT"] . "/tmp/*");
+		$files = glob(__DIR__ . "/../../tmp/*");
 		$now = time();
 
 		foreach ($files as $file) {

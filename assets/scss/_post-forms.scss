@@ -56,6 +56,31 @@
 }
 
 .postForm {
+	.thumbnailHolder {
+		@extend .row, .ml-1;
+
+		.thumbnail {
+			@extend .mt-2, .mr-2;
+			float: left;
+
+			.deleteButton {
+				float: right;
+				margin-left: -50px;
+				z-index: 99999;
+				position: relative;
+			}
+
+			.thumbnailImage {
+				@extend .rounded;
+				border: 1px solid $primary;
+				background-color: $dark;
+				width: 100px;
+				height: 100px;
+				background-size: cover;
+			}
+		}
+	}
+
 	.bottom {
 		margin-top: 20px;
 

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,21 +17,10 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.followButton {
-	&[data-follow-status="1"] {
-		// UNFOLLOW BUTTON
-		@include dangerButton();
-	}
-
-	&[data-follow-status="2"] {
-		// PENDING BUTTON
-		border: none !important;
-
-		background-color: $warning;
-		color: #000;
-
-		&:hover, &:focus {
-			background-color: darken($warning, 10%);
-		}
-	}
+export default class PostFormUploadItem {
+	public uid: string;
+	public dataURL: string;
+	public base64: string;
+	public type: string;
+	public size: number;
 }

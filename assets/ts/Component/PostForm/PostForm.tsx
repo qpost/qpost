@@ -34,7 +34,9 @@ import $ from "jquery";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import FeedEntryList from "../FeedEntry/FeedEntryList";
+import Upload, {RcFile, UploadChangeParam} from "antd/es/upload";
 import Spin from "antd/es/spin";
+import PostFormUploadItem from "./PostFormUploadItem";
 
 export default class PostForm extends Component<{
 	onClose?: () => void,
@@ -44,7 +46,8 @@ export default class PostForm extends Component<{
 }, {
 	mobile: boolean,
 	message: string | null,
-	posting: boolean
+	posting: boolean,
+	photos: PostFormUploadItem[]
 }> {
 	constructor(props) {
 		super(props);
@@ -52,12 +55,13 @@ export default class PostForm extends Component<{
 		this.state = {
 			mobile: window.innerWidth <= 768,
 			message: null,
-			posting: false
+			posting: false,
+			photos: []
 		};
 	}
 
 	readyToPost(): boolean {
-		return this.state.posting === false && this.state.message != null && this.state.message.length >= 1 && this.state.message.length <= 300;
+		return this.state.posting === false && ((this.state.message != null && this.state.message.length >= 1 && this.state.message.length <= 300) || (this.state.photos.length > 0));
 	}
 
 	isReply: () => boolean = () => {
@@ -80,6 +84,14 @@ export default class PostForm extends Component<{
 		}
 	};
 
+	reset = () => {
+		this.setState({
+			posting: false,
+			message: null,
+			photos: []
+		});
+	};
+
 	send = (e) => {
 		e.preventDefault();
 
@@ -90,8 +102,16 @@ export default class PostForm extends Component<{
 				posting: true
 			});
 
+			const attachments: string[] = [];
+			this.state.photos.forEach(photo => {
+				const base64 = photo.base64;
+
+				if (base64) attachments.push(base64);
+			});
+
 			API.handleRequest("/post", "POST", {
-				message
+				message,
+				attachments
 			}, data => {
 				if (data.hasOwnProperty("post")) {
 					const post: FeedEntry = BaseObject.convertObject(FeedEntry, data["post"]);
@@ -104,23 +124,20 @@ export default class PostForm extends Component<{
 					}
 
 					this.close();
-					this.setState({
-						posting: false,
-						message: null
-					});
+					this.reset();
 				} else {
 					AntMessage.error("An error occurred.");
+					this.setState({
+						posting: false
+					});
 				}
 			}, error => {
 				AntMessage.error(error);
+				this.setState({
+					posting: false
+				});
 			});
 		}
-	};
-
-	addPhoto = (e) => {
-		e.preventDefault();
-
-		// TODO
 	};
 
 	change = (e) => {
@@ -129,6 +146,45 @@ export default class PostForm extends Component<{
 		this.setState({
 			message: value
 		});
+	};
+
+	beforeUpload = (file: RcFile, FileList: RcFile[]) => {
+		const size: number = file.size;
+		const type: string = file.type;
+
+		if (!(type === "image/jpeg" || type === "image/png" || type === "image/gif")) {
+			AntMessage.error("Invalid file type.");
+		}
+
+		if (!(size / 1024 / 1024 < 1)) {
+			AntMessage.error("Images must be smaller than 1MB.");
+			return false;
+		}
+
+		const item: PostFormUploadItem = new PostFormUploadItem();
+		item.uid = file.uid;
+		item.size = size;
+		item.type = type;
+
+		const reader = new FileReader();
+		reader.addEventListener("load", () => {
+			const result: string = typeof reader.result === "string" ? reader.result : null;
+			if (result) {
+				item.dataURL = result;
+				item.base64 = item.dataURL.replace(/^data:image\/(png|jpg|jpeg|gif);base64,/, "");
+
+				const photos: PostFormUploadItem[] = this.state.photos;
+				photos.push(item);
+
+				this.setState({photos});
+			}
+		});
+		reader.readAsDataURL(file);
+
+		return false;
+	};
+
+	uploadChange = (info: UploadChangeParam) => {
 	};
 
 	content = () => {
@@ -152,12 +208,45 @@ export default class PostForm extends Component<{
 								placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
 								value={this.state.message}/>
 
+				{this.state.photos.length > 0 ? <div className={"thumbnailHolder"}>
+					{this.state.photos.map((photo: PostFormUploadItem) => {
+						return <div className={"thumbnail"} key={photo.uid}>
+							<Button type={"primary"} size={"small"} className={"deleteButton customDangerButton"}
+									onClick={(e) => {
+										e.preventDefault();
+
+										const photos: PostFormUploadItem[] = this.state.photos;
+										photos.splice(photos.indexOf(photo), 1);
+
+										this.setState({photos});
+									}}>
+								<i className={"fas fa-trash-alt"}/>
+							</Button>
+
+							<div className={"thumbnailImage"}
+								 style={{backgroundImage: "url('" + photo.dataURL + "')"}}/>
+						</div>;
+					})}
+				</div> : ""}
+
 				<div className={"clearfix bottom"}>
 					<div className={"actionButtons"}>
 						<Tooltip placement={"top"} title={"Add photos"}>
-							<Button type={"link"} onClick={this.addPhoto} className={"actionButton"}>
-								<i className="fas fa-images"/>
-							</Button>
+							<Upload
+								name={"image-upload"}
+								listType={"picture-card"}
+								className={"uploader"}
+								showUploadList={false}
+								action={"https://qpo.st"}
+								beforeUpload={this.beforeUpload}
+								onChange={this.uploadChange}
+								disabled={this.state.photos.length >= 4}
+							>
+								<Button type={"link"} className={"actionButton"}
+										disabled={this.state.photos.length >= 4}>
+									<i className="fas fa-images"/>
+								</Button>
+							</Upload>
 						</Tooltip>
 					</div>
 
