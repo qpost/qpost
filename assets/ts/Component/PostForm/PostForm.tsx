@@ -104,6 +104,10 @@ export default class PostForm extends Component<{
 					}
 
 					this.close();
+					this.setState({
+						posting: false,
+						message: null
+					});
 				} else {
 					AntMessage.error("An error occurred.");
 				}
