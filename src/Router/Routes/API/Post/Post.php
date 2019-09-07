@@ -158,7 +158,7 @@ api_create_route(Method::POST, "/post", function () {
 			}
 		} else {
 			$this->response->status = "400";
-			return json_encode(["error" => "'to' is required."]);
+			return json_encode(["error" => "'message' is required."]);
 		}
 	} else {
 		return "";
