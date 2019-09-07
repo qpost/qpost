@@ -96,7 +96,7 @@ export default class PostForm extends Component<{
 		e.preventDefault();
 
 		if (this.readyToPost()) {
-			const message: string = this.state.message;
+			const message: string = this.state.message || "";
 
 			this.setState({
 				posting: true
