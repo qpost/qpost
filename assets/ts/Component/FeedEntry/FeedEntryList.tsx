@@ -50,7 +50,7 @@ export default class FeedEntryList extends Component<{
 		const parameters = {};
 
 		API.handleRequest("/feed", "GET", parameters, data => {
-			let entries: FeedEntry[] = [];
+			let entries: FeedEntry[] = this.state.entries || [];
 
 			data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
 
@@ -65,7 +65,7 @@ export default class FeedEntryList extends Component<{
 	}
 
 	public prependEntry(feedEntry: FeedEntry): void {
-		const entries = this.state.entries;
+		const entries: FeedEntry[] = this.state.entries || [];
 
 		entries.unshift(feedEntry);
 
