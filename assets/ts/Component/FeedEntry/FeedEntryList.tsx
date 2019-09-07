@@ -34,6 +34,8 @@ export default class FeedEntryList extends Component<{
 	entries: FeedEntry[] | null,
 	error: string | null
 }> {
+	public static instance: FeedEntryList | null = null;
+
 	constructor(props) {
 		super(props);
 
@@ -44,6 +46,7 @@ export default class FeedEntryList extends Component<{
 	}
 
 	componentDidMount(): void {
+		FeedEntryList.instance = this;
 		const parameters = {};
 
 		API.handleRequest("/feed", "GET", parameters, data => {
@@ -55,6 +58,18 @@ export default class FeedEntryList extends Component<{
 		}, error => {
 			this.setState({error});
 		});
+	}
+
+	componentWillUnmount(): void {
+		FeedEntryList.instance = null;
+	}
+
+	public prependEntry(feedEntry: FeedEntry): void {
+		const entries = this.state.entries;
+
+		entries.unshift(feedEntry);
+
+		this.setState({entries});
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
