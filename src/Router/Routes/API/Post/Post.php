@@ -66,18 +66,23 @@ api_create_route(Method::POST, "/post", function () {
 					$attachments = [];
 					if (isset($requestData["attachments"])) {
 						if (is_array($requestData["attachments"])) {
-							foreach ($requestData["attachments"] as $attachment) {
-								if (is_string($attachment)) {
-									if (@base64_decode($attachment)) {
-										$attachments[] = $attachment;
+							if (count($requestData["attachments"]) <= 4) {
+								foreach ($requestData["attachments"] as $attachment) {
+									if (is_string($attachment)) {
+										if (@base64_decode($attachment)) {
+											$attachments[] = $attachment;
+										} else {
+											$this->response->status = "400";
+											return json_encode(["error" => "'attachments' has to be an array of base64 strings."]);
+										}
 									} else {
 										$this->response->status = "400";
 										return json_encode(["error" => "'attachments' has to be an array of base64 strings."]);
 									}
-								} else {
-									$this->response->status = "400";
-									return json_encode(["error" => "'attachments' has to be an array of base64 strings."]);
 								}
+							} else {
+								$this->response->status = "400";
+								return json_encode(["error" => "You may not upload more than 4 attachments at once."]);
 							}
 						} else {
 							$this->response->status = "400";
