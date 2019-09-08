@@ -113,12 +113,6 @@ api_create_route(Method::POST, "/post", function () {
 							continue;
 						}
 
-						// Check if file is smaller than 1MB
-						$fileSize = @filesize($path);
-						if (!($fileSize) || (!($fileSize / 1024 / 1024) < 1)) {
-							continue;
-						}
-
 						$sha256 = hash("sha256", $file);
 
 						/**
@@ -129,6 +123,12 @@ api_create_route(Method::POST, "/post", function () {
 						]);
 
 						if (!$mediaFile) {
+							// Check if file is smaller than 1MB
+							$fileSize = @filesize($path);
+							if (!($fileSize) || !(($fileSize / 1024 / 1024) < 1)) {
+								continue;
+							}
+
 							$cdnResult = Util::storeFileOnCDN($path);
 							if (!is_null($cdnResult)) {
 								if (isset($cdnResult["url"])) {
