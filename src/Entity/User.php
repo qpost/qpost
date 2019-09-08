@@ -30,6 +30,7 @@ use qpost\Constants\PrivacyLevel;
  * Represents a user.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\UserRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"display_name"}),@ORM\Index(columns={"email"}),@ORM\Index(columns={"birthday"}),@ORM\Index(columns={"privacy_level"}),@ORM\Index(columns={"verified"})})
  */
 class User {
 	/**

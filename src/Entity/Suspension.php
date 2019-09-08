@@ -27,6 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents the data of a suspension of a user.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\SuspensionRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"active"})})
  */
 class Suspension {
 	/**

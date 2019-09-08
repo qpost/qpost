@@ -28,6 +28,7 @@ use qpost\Constants\NotificationType;
  * Represents the data of a notification.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\NotificationRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"seen"}),@ORM\Index(columns={"notified"})})
  */
 class Notification {
 	/**

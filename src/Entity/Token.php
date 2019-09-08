@@ -29,6 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents the data of an authorization token for a user.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\TokenRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"expiry"})})
  */
 class Token {
 	/**

@@ -20,12 +20,14 @@
 
 namespace qpost\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents the Gigadrive account data of a user.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\UserGigadriveDataRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"token"})})
  */
 class UserGigadriveData {
 	/**
@@ -36,7 +38,7 @@ class UserGigadriveData {
 	private $id;
 
 	/**
-	 * @ORM\Column(type="integer")
+	 * @ORM\Column(type="integer", unique=true)
 	 */
 	private $accountId;
 

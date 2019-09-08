@@ -30,6 +30,7 @@ use qpost\Constants\MediaFileType;
  * Represents the data of a file that was uploaded as an attachment.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\MediaFileRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"type"})})
  */
 class MediaFile {
 	/**
@@ -41,12 +42,12 @@ class MediaFile {
 	private $id;
 
 	/**
-	 * @ORM\Column(type="string", length=255)
+	 * @ORM\Column(type="string", length=255, unique=true)
 	 */
 	private $sha256;
 
 	/**
-	 * @ORM\Column(type="string", length=255)
+	 * @ORM\Column(type="string", length=255, unique=true)
 	 */
 	private $url;
 

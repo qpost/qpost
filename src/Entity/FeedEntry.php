@@ -31,6 +31,10 @@ use qpost\Constants\FeedEntryType;
  * @see FeedEntryType
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\FeedEntryRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(columns={"type"}),
+ *     @ORM\Index(columns={"nsfw"})
+ * })
  */
 class FeedEntry {
 	/**
