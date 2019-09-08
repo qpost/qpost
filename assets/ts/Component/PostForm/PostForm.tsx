@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) $today.year-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -243,6 +243,7 @@ export default class PostForm extends Component<{
 							beforeUpload={this.beforeUpload}
 							onChange={this.uploadChange}
 							disabled={this.state.photos.length >= 4}
+							multiple={true}
 						>
 							<Tooltip placement={"top"} title={"Add photos"}>
 								<Button type={"link"} className={"actionButton"}
