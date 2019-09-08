@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) $today.year-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -30,6 +30,7 @@ use qpost\Util\Util;
 use function base64_decode;
 use function file_exists;
 use function file_put_contents;
+use function filesize;
 use function getimagesize;
 use function getrandmax;
 use function hash;
@@ -109,6 +110,12 @@ api_create_route(Method::POST, "/post", function () {
 						file_put_contents($path, $file);
 
 						if (!(@getimagesize($path))) {
+							continue;
+						}
+
+						// Check if file is smaller than 1MB
+						$fileSize = @filesize($path);
+						if (!($fileSize) || (!($fileSize / 1024 / 1024) < 1)) {
 							continue;
 						}
 
