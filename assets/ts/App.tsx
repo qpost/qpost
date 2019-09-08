@@ -93,8 +93,8 @@ export default class App extends Component<any, any> {
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
 													<Route path={"/"} exact component={Home}/>}
 
-												<Route path={"/status/:id"} component={Status}/>
-												<Route path={"/:username"} component={Profile}/>
+												<Route path={"/status/:id"} exact component={Status}/>
+												<Route path={"/:username"} exact component={Profile}/>
 											</div>
 										</div>
 									</div>
