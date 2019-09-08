@@ -1,0 +1,375 @@
+<?php
+/**
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+namespace qpost\Entity;
+
+use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use qpost\Constants\FeedEntryType;
+
+/**
+ * Represents the data of a created feed entry (post, share, new follower, ...)
+ * @see FeedEntryType
+ *
+ * @ORM\Entity(repositoryClass="qpost\Repository\FeedEntryRepository")
+ */
+class FeedEntry {
+	/**
+	 * @ORM\Id()
+	 * @ORM\GeneratedValue()
+	 * @ORM\Column(type="integer")
+	 */
+	private $id;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="feedEntries")
+	 * @ORM\JoinColumn(nullable=false)
+	 */
+	private $user;
+
+	/**
+	 * @ORM\Column(type="text", nullable=true)
+	 */
+	private $text;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User")
+	 */
+	private $referencedUser;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", inversedBy="children")
+	 */
+	private $parent;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="parent")
+	 */
+	private $children;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="feedEntries")
+	 */
+	private $token;
+
+	/**
+	 * @ORM\Column(type="string", length=32)
+	 */
+	private $type;
+
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $nsfw;
+
+	/**
+	 * @ORM\Column(type="datetime")
+	 */
+	private $time;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true)
+	 */
+	private $favorites;
+
+	/**
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\MediaFile", inversedBy="feedEntries")
+	 */
+	private $attachments;
+
+	public function __construct() {
+		$this->children = new ArrayCollection();
+		$this->favorites = new ArrayCollection();
+		$this->attachments = new ArrayCollection();
+	}
+
+	/**
+	 * The id of this feed entry object.
+	 *
+	 * @return int|null
+	 */
+	public function getId(): ?int {
+		return $this->id;
+	}
+
+	/**
+	 * The user that created this feed entry object.
+	 *
+	 * @return User|null
+	 */
+	public function getUser(): ?User {
+		return $this->user;
+	}
+
+	/**
+	 * @param User|null $user
+	 * @return FeedEntry
+	 */
+	public function setUser(?User $user): self {
+		$this->user = $user;
+
+		return $this;
+	}
+
+	/**
+	 * The text of this feed entry object.
+	 *
+	 * @return string|null
+	 */
+	public function getText(): ?string {
+		return $this->text;
+	}
+
+	/**
+	 * @param string|null $text
+	 * @return FeedEntry
+	 */
+	public function setText(?string $text): self {
+		$this->text = $text;
+
+		return $this;
+	}
+
+	/**
+	 * The user that was referenced in this feed entry.
+	 *
+	 * @return User|null
+	 */
+	public function getReferencedUser(): ?User {
+		return $this->referencedUser;
+	}
+
+	/**
+	 * @param User|null $referencedUser
+	 * @return FeedEntry
+	 */
+	public function setReferencedUser(?User $referencedUser): self {
+		$this->referencedUser = $referencedUser;
+
+		return $this;
+	}
+
+	/**
+	 * The children of this feed entry.
+	 *
+	 * @return Collection|self[]
+	 */
+	public function getChildren(): Collection {
+		return $this->children;
+	}
+
+	/**
+	 * @param FeedEntry $child
+	 * @return FeedEntry
+	 */
+	public function addChild(FeedEntry $child): self {
+		if (!$this->children->contains($child)) {
+			$this->children[] = $child;
+			$child->setParent($this);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param FeedEntry $child
+	 * @return FeedEntry
+	 */
+	public function removeChild(FeedEntry $child): self {
+		if ($this->children->contains($child)) {
+			$this->children->removeElement($child);
+			// set the owning side to null (unless already changed)
+			if ($child->getParent() === $this) {
+				$child->setParent(null);
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * The parent of this feed entry.
+	 *
+	 * @return FeedEntry|null
+	 */
+	public function getParent(): ?self {
+		return $this->parent;
+	}
+
+	/**
+	 * @param self|null $parent
+	 * @return FeedEntry
+	 */
+	public function setParent(?self $parent): self {
+		$this->parent = $parent;
+
+		return $this;
+	}
+
+	/**
+	 * The token that was used to create this feed entry.
+	 *
+	 * @return Token|null
+	 */
+	public function getToken(): ?Token {
+		return $this->token;
+	}
+
+	/**
+	 * @param Token|null $token
+	 * @return FeedEntry
+	 */
+	public function setToken(?Token $token): self {
+		$this->token = $token;
+
+		return $this;
+	}
+
+	/**
+	 * The type of this feed entry.
+	 * @return string|null
+	 * @see FeedEntryType
+	 *
+	 */
+	public function getType(): ?string {
+		return $this->type;
+	}
+
+	/**
+	 * @param string $type
+	 * @return FeedEntry
+	 */
+	public function setType(string $type): self {
+		$this->type = $type;
+
+		return $this;
+	}
+
+	/**
+	 * Whether this feed entry was marked as not-safe-for-work.
+	 *
+	 * @return bool|null
+	 */
+	public function isNSFW(): ?bool {
+		return $this->nsfw;
+	}
+
+	/**
+	 * @param bool $nsfw
+	 * @return FeedEntry
+	 */
+	public function setNSFW(bool $nsfw): self {
+		$this->nsfw = $nsfw;
+
+		return $this;
+	}
+
+	/**
+	 * The time of when this feed entry object was created.
+	 *
+	 * @return DateTimeInterface|null
+	 */
+	public function getTime(): ?DateTimeInterface {
+		return $this->time;
+	}
+
+	/**
+	 * @param DateTimeInterface $time
+	 * @return FeedEntry
+	 */
+	public function setTime(DateTimeInterface $time): self {
+		$this->time = $time;
+
+		return $this;
+	}
+
+	/**
+	 * The favorites of this feed entry.
+	 *
+	 * @return Collection|Favorite[]
+	 */
+	public function getFavorites(): Collection {
+		return $this->favorites;
+	}
+
+	/**
+	 * @param Favorite $favorite
+	 * @return FeedEntry
+	 */
+	public function addFavorite(Favorite $favorite): self {
+		if (!$this->favorites->contains($favorite)) {
+			$this->favorites[] = $favorite;
+			$favorite->setFeedEntry($this);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param Favorite $favorite
+	 * @return FeedEntry
+	 */
+	public function removeFavorite(Favorite $favorite): self {
+		if ($this->favorites->contains($favorite)) {
+			$this->favorites->removeElement($favorite);
+			// set the owning side to null (unless already changed)
+			if ($favorite->getFeedEntry() === $this) {
+				$favorite->setFeedEntry(null);
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * The attachments of this feed entry.
+	 *
+	 * @return Collection|MediaFile[]
+	 */
+	public function getAttachments(): Collection {
+		return $this->attachments;
+	}
+
+	/**
+	 * @param MediaFile $attachment
+	 * @return FeedEntry
+	 */
+	public function addAttachment(MediaFile $attachment): self {
+		if (!$this->attachments->contains($attachment)) {
+			$this->attachments[] = $attachment;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param MediaFile $attachment
+	 * @return FeedEntry
+	 */
+	public function removeAttachment(MediaFile $attachment): self {
+		if ($this->attachments->contains($attachment)) {
+			$this->attachments->removeElement($attachment);
+		}
+
+		return $this;
+	}
+}
