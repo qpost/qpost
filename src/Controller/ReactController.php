@@ -20,15 +20,30 @@
 
 namespace qpost\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use qpost\Service\AuthorizationService;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ReactController extends AbstractController {
 	/**
 	 * @Route("/{reactRouting}", defaults={"reactRouting": null})
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return Response
 	 */
-	public function index() {
-		return $this->render("react.html.twig", Twig::param());
+	public function index(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if ($authService->isAuthorized()) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			// TODO: Show landing page
+			return $this->render("react.html.twig", Twig::param());
+		}
 	}
 }
