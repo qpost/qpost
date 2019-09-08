@@ -123,9 +123,9 @@ api_create_route(Method::POST, "/post", function () {
 						]);
 
 						if (!$mediaFile) {
-							// Check if file is smaller than 1MB
+							// Check if file is smaller than 2MB
 							$fileSize = @filesize($path);
-							if (!($fileSize) || !(($fileSize / 1024 / 1024) < 1)) {
+							if (!($fileSize) || !(($fileSize / 1024 / 1024) < 2)) {
 								continue;
 							}
 

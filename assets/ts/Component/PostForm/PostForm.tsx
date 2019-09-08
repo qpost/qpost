@@ -116,7 +116,7 @@ export default class PostForm extends Component<{
 				attachments
 			}, data => {
 				if (data.hasOwnProperty("post")) {
-					const post: FeedEntry = BaseObject.convertObject(FeedEntry, data["post"]);
+					const post: FeedEntry = BaseObject.convertObject(FeedEntry, data.post);
 					const entryList: FeedEntryList | null = FeedEntryList.instance;
 
 					AntMessage.success("Your post has been sent.");
@@ -159,8 +159,8 @@ export default class PostForm extends Component<{
 			return false;
 		}
 
-		if (!(size / 1024 / 1024 < 1)) {
-			AntMessage.error("Images must be smaller than 1MB.");
+		if (!(size / 1024 / 1024 < 2)) {
+			AntMessage.error("Images must be smaller than 2MB.");
 			return false;
 		}
 
