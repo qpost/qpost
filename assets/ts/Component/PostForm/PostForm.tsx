@@ -106,7 +106,9 @@ export default class PostForm extends Component<{
 			this.state.photos.forEach(photo => {
 				const base64 = photo.base64;
 
-				if (base64) attachments.push(base64);
+				if (base64) {
+					attachments.push(base64);
+				}
 			});
 
 			API.handleRequest("/post", "POST", {
@@ -232,23 +234,23 @@ export default class PostForm extends Component<{
 
 				<div className={"clearfix bottom"}>
 					<div className={"actionButtons"}>
-						<Tooltip placement={"top"} title={"Add photos"}>
-							<Upload
-								name={"image-upload"}
-								listType={"picture-card"}
-								className={"uploader"}
-								showUploadList={false}
-								action={"https://qpo.st"}
-								beforeUpload={this.beforeUpload}
-								onChange={this.uploadChange}
-								disabled={this.state.photos.length >= 4}
-							>
+						<Upload
+							name={"image-upload"}
+							listType={"picture-card"}
+							className={"uploader"}
+							showUploadList={false}
+							action={"https://qpo.st"}
+							beforeUpload={this.beforeUpload}
+							onChange={this.uploadChange}
+							disabled={this.state.photos.length >= 4}
+						>
+							<Tooltip placement={"top"} title={"Add photos"}>
 								<Button type={"link"} className={"actionButton"}
 										disabled={this.state.photos.length >= 4}>
 									<i className="fas fa-images"/>
 								</Button>
-							</Upload>
-						</Tooltip>
+							</Tooltip>
+						</Upload>
 					</div>
 
 					<div className={"characterCount"}>
