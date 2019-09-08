@@ -1,5 +1,10 @@
 {% set title = title|default(siteName) %}
 {% set originalTitle = title %}
+{% set description = description|default(defaultDescription) %}
+{% set twitterImage = twitterImage|default(defaultTwitterImage) %}
+{% if title != siteName %}
+	{% set title = title ~ " - " ~ siteName %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +24,7 @@
 
 	<meta name="twitter:title" content="{{ title }}"/>
 	<meta name="twitter:description" content="{{ description }}"/>
-	<meta name="twitter:image" content="{{ image }}"/>
+	<meta name="twitter:image" content="{{ twitterImage }}"/>
 	<meta name="twitter:card" content="summary"/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -51,7 +56,7 @@
 	{% endfor %}
 
 	<script type="text/javascript">
-		window["CSRF_TOKEN"] = "{{ csrfToken }}";
+		window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
 		window["POST_CHARACTER_LIMIT"] = {{ postCharacterLimit }};
 
 		window["restoreTitle"] = "{{ profileLoadPost is defined ? originalTitle }}";

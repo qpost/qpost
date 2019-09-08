@@ -20,6 +20,7 @@
 
 namespace qpost\Controller;
 
+use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -28,6 +29,6 @@ class ReactController extends AbstractController {
 	 * @Route("/{reactRouting}", defaults={"reactRouting": null})
 	 */
 	public function index() {
-		return $this->render("react.html.twig");
+		return $this->render("react.html.twig", Twig::param());
 	}
 }
