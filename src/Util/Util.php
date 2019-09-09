@@ -20,8 +20,10 @@
 
 namespace qpost\Util;
 
+use function is_null;
 use function rand;
 use function strlen;
+use function trim;
 
 class Util {
 	/**
@@ -39,5 +41,67 @@ class Util {
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		}
 		return $randomString;
+	}
+
+	/**
+	 * Returns a string that fixes exploits like a zero-width space
+	 *
+	 * @access public
+	 * @param string $string
+	 * @return string
+	 */
+	public static function fixString($string): string {
+		return preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', str_replace("\xE2\x80\x8B", "", str_replace("\xE2\x80\xAE", "", $string)));
+	}
+
+	/**
+	 * Returns wheter a string or array is empty
+	 *
+	 * @access public
+	 * @param string|array $var
+	 * @return bool
+	 */
+	public static function isEmpty($var): bool {
+		if (is_array($var)) {
+			return count($var) == 0;
+		} else if (is_string($var)) {
+			return $var == "" || trim($var) == "" || str_replace(" ", "", str_replace(" ", "", $var)) == "" || strlen($var) == 0;
+		} else {
+			return is_null($var) || empty($var);
+		}
+	}
+
+	/**
+	 * Checks whether a string contains another string
+	 *
+	 * @access public
+	 * @param string $string The full string
+	 * @param string $check The substring to be checked
+	 * @return bool
+	 */
+	public static function contains($string, $check): bool {
+		return strpos($string, $check) !== false;
+	}
+
+	/**
+	 * Returns a sanatized string that avoids prepending or traling spaces and XSS attacks
+	 *
+	 * @access public
+	 * @param string $string The string to sanatize
+	 * @return string
+	 */
+	public static function sanatizeString($string): string {
+		return trim(htmlentities($string));
+	}
+
+	/**
+	 * Opposite of sanatizeString()
+	 *
+	 * @access public
+	 * @param string $string
+	 * @return string
+	 */
+	public static function desanatizeString($string): string {
+		return html_entity_decode($string);
 	}
 }

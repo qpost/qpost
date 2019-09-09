@@ -35,6 +35,26 @@ class UserRepository extends ServiceEntityRepository {
 		parent::__construct($registry, User::class);
 	}
 
+	/**
+	 * Checks whether a specific username is still available.
+	 *
+	 * @param string $username The username to look for.
+	 * @return bool
+	 */
+	public function isUsernameAvailable(string $username): bool {
+		return $this->count(["username" => $username]) === 0;
+	}
+
+	/**
+	 * Checks whether a specific email address is still available.
+	 *
+	 * @param string $email The email address to look for.
+	 * @return bool
+	 */
+	public function isEmailAvailable(string $email): bool {
+		return $this->count(["email" => $email]) === 0;
+	}
+
 	// /**
 	//  * @return User[] Returns an array of User objects
 	//  */
