@@ -3,12 +3,10 @@
 	{% set messages = app.flashes(messageType) %}
 
 	{% if messages|length > 0 %}
-		<div class="container mt-3">
-			{% for message in messages %}
-				<div class="alert alert-{{ messageType == "error" ? "danger" : messageType }} mb-3" role="alert">
-					{{ message }}
-				</div>
-			{% endfor %}
-		</div>
+		{% for message in messages %}
+			<div class="alert alert-{{ messageType == "error" ? "danger" : messageType }} mb-3" role="alert">
+				{{ message }}
+			</div>
+		{% endfor %}
 	{% endif %}
 {% endfor %}
