@@ -28,9 +28,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ReactController extends AbstractController {
+class HomeController extends AbstractController {
 	/**
-	 * @Route("/{reactRouting}", defaults={"reactRouting": null})
+	 * @Route("/")
 	 *
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
@@ -39,6 +39,11 @@ class ReactController extends AbstractController {
 	public function index(Request $request, EntityManagerInterface $entityManager) {
 		$authService = new AuthorizationService($request, $entityManager);
 
-		return $this->render("react.html.twig", Twig::param());
+		if ($authService->isAuthorized()) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			// TODO: Show landing page
+			return $this->render("pages/home/index.html.twig", Twig::param());
+		}
 	}
 }

@@ -15,15 +15,9 @@
 			</div>
 
 			<form class="mt-3" method="post" action="/">
-				{{ insertCSRF() }}
+				{% include "parts/csrf.html.twig" %}
 
-				{% if errorMsg is defined and errorMsg %}
-					{{ createAlert("errorMsg",errorMsg,"danger",true) }}
-				{% endif %}
-
-				{% if successMsg is defined and successMsg %}
-					{{ createAlert("successMsg",successMsg,"success",true) }}
-				{% endif %}
+				{% include "parts/flash.html.twig" %}
 
 				<input type="email" class="form-control mb-2" name="email" placeholder="Email"/>
 				<input type="text" class="form-control mb-2" name="displayName" placeholder="Full Name"/>
