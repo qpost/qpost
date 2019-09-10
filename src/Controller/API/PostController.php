@@ -121,7 +121,12 @@ class PostController extends AbstractController {
 						if ($file) {
 							$path = null;
 							while (is_null($path) || file_exists($path)) $path = sys_get_temp_dir() . "/qpost/attachments/" . rand(0, getrandmax()) . ".png";
-							mkdir(dirname($path), 0777, true);
+
+							$directoryPath = dirname($path);
+							if (!file_exists($directoryPath)) {
+								mkdir($directoryPath, 0777, true);
+							}
+
 							file_put_contents($path, $file);
 
 							if (!(@getimagesize($path))) {
