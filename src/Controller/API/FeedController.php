@@ -65,7 +65,7 @@ class FeedController extends AbstractController {
 					->getResult();
 
 				foreach ($feedEntries as $feedEntry) {
-					if (!is_null($user)/* && !$feedEntry->mayView($user)*/) continue; // TODO: mayView check
+					// TODO: mayView check
 					array_push($results, $apiService->serialize($feedEntry));
 				}
 
@@ -90,7 +90,7 @@ class FeedController extends AbstractController {
 				->getResult();
 
 			foreach ($feedEntries as $feedEntry) {
-				if (!is_null($user)/* && !$feedEntry->mayView($user)*/) continue; // TODO: mayView check
+				// TODO: mayView check
 				array_push($results, $apiService->serialize($feedEntry));
 			}
 
@@ -121,7 +121,7 @@ class FeedController extends AbstractController {
 						->getResult();
 
 					foreach ($feedEntries as $feedEntry) {
-						if (!is_null($user)/* && !$feedEntry->mayView($user)*/) continue; // TODO: mayView check
+						// TODO: mayView check
 						array_push($results, $apiService->serialize($feedEntry));
 					}
 
@@ -155,7 +155,7 @@ class FeedController extends AbstractController {
 					->getResult();
 
 				foreach ($feedEntries as $feedEntry) {
-					if (!is_null($user)/* && !$feedEntry->mayView($user)*/) continue; // TODO: mayView check
+					// TODO: mayView check
 					array_push($results, $apiService->serialize($feedEntry));
 				}
 
