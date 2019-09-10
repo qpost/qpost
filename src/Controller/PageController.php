@@ -27,7 +27,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class StatusController extends AbstractController {
+class PageController extends AbstractController {
 	/**
 	 * @Route("/status/{id}")
 	 *
@@ -35,7 +35,7 @@ class StatusController extends AbstractController {
 	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function index(int $id, EntityManagerInterface $entityManager) {
+	public function status(int $id, EntityManagerInterface $entityManager) {
 		/**
 		 * @var FeedEntry $feedEntry
 		 */
