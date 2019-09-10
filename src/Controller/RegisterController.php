@@ -221,7 +221,5 @@ class RegisterController extends AbstractController {
 		}
 
 		return $this->redirect($this->generateUrl("qpost_home_index"));
-
-		return $this->render("register/index.html.twig", Twig::param());
 	}
 }
