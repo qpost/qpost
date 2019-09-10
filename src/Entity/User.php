@@ -24,7 +24,11 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
+use qpost\Constants\FeedEntryType;
 use qpost\Constants\PrivacyLevel;
+use function count;
+use function is_null;
 
 /**
  * Represents a user.
@@ -52,16 +56,19 @@ class User {
 
 	/**
 	 * @ORM\Column(type="string", length=60, nullable=true)
+	 * @Serializer\Exclude()
 	 */
 	private $password;
 
 	/**
 	 * @ORM\Column(type="string", length=50)
+	 * @Serializer\Exclude()
 	 */
 	private $email;
 
 	/**
 	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @Serializer\Exclude()
 	 */
 	private $avatar;
 
@@ -87,11 +94,13 @@ class User {
 
 	/**
 	 * @ORM\Column(type="boolean")
+	 * @Serializer\Exclude()
 	 */
 	private $emailActivated = false;
 
 	/**
 	 * @ORM\Column(type="string", length=7, nullable=true)
+	 * @Serializer\Exclude()
 	 */
 	private $emailActivationToken;
 
@@ -102,86 +111,103 @@ class User {
 
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
+	 * @Serializer\Exclude()
 	 */
 	private $lastUsernameChange;
 
 	/**
 	 * @ORM\ManyToMany(targetEntity="qpost\Entity\UserFeaturedBox", mappedBy="users")
+	 * @Serializer\Exclude()
 	 */
 	private $featuringBoxes;
 
 	/**
 	 * @ORM\OneToOne(targetEntity="qpost\Entity\UserFeaturedBox", inversedBy="user", cascade={"persist", "remove"})
+	 * @Serializer\Exclude()
 	 */
 	private $featuredBox;
 
 	/**
 	 * @ORM\OneToOne(targetEntity="qpost\Entity\UserGigadriveData", inversedBy="user", cascade={"persist", "remove"})
+	 * @Serializer\Exclude()
 	 */
 	private $gigadriveData;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Token", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $tokens;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="sender", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $following;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="receiver", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $followers;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="sender", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $sentRequests;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="receiver", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $followRequests;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="target", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $suspensions;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="staff")
+	 * @Serializer\Exclude()
 	 */
 	private $createdSuspensions;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $feedEntries;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Notification", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $notifications;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $favorites;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\MediaFile", mappedBy="originalUploader")
+	 * @Serializer\Exclude()
 	 */
 	private $uploadedFiles;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $blocking;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="target", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $blockedBy;
 
@@ -304,6 +330,14 @@ class User {
 		$this->avatar = $avatar;
 
 		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getAvatarURL(): string {
+		return !is_null($this->avatar) ? $this->avatar : $_ENV["DEFAULT_AVATAR_URL"];
 	}
 
 	/**
@@ -724,6 +758,8 @@ class User {
 
 	/**
 	 * @return bool Whether or not this user is currently suspended.
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("suspended")
 	 */
 	public function isSuspended(): bool {
 		foreach ($this->getSuspensions() as $suspension) {
@@ -845,6 +881,102 @@ class User {
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getPostCount(): int {
+		$i = 0;
+
+		foreach ($this->getFeedEntries() as $feedEntry) {
+			if ($feedEntry->getType() === FeedEntryType::POST && is_null($feedEntry->getParent())) {
+				$i++;
+			}
+		}
+
+		return $i;
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getReplyCount(): int {
+		$i = 0;
+
+		foreach ($this->getFeedEntries() as $feedEntry) {
+			if ($feedEntry->getType() === FeedEntryType::POST && !is_null($feedEntry->getParent())) {
+				$i++;
+			}
+		}
+
+		return $i;
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getShareCount(): int {
+		$i = 0;
+
+		foreach ($this->getFeedEntries() as $feedEntry) {
+			if ($feedEntry->getType() === FeedEntryType::SHARE && !is_null($feedEntry->getParent())) {
+				$i++;
+			}
+		}
+
+		return $i;
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getFollowingPostCount(): int {
+		$i = 0;
+
+		foreach ($this->getFeedEntries() as $feedEntry) {
+			if ($feedEntry->getType() === FeedEntryType::NEW_FOLLOWING && !is_null($feedEntry->getReferencedUser())) {
+				$i++;
+			}
+		}
+
+		return $i;
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getTotalPostCount(): int {
+		return count($this->getFeedEntries());
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getFollowingCount(): int {
+		return count($this->getFollowing());
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getFollowerCount(): int {
+		return count($this->getFollowers());
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getOpenRequestsCount(): int {
+		return count($this->getFollowRequests());
 	}
 
 	/**
