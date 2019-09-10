@@ -78,7 +78,7 @@ class User {
 	/**
 	 * @ORM\Column(type="string", length=32)
 	 */
-	private $privacyLevel;
+	private $privacyLevel = PrivacyLevel::PUBLIC;
 
 	/**
 	 * @ORM\Column(type="datetime")
@@ -88,7 +88,7 @@ class User {
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
-	private $emailActivated;
+	private $emailActivated = false;
 
 	/**
 	 * @ORM\Column(type="string", length=7, nullable=true)
@@ -98,7 +98,7 @@ class User {
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
-	private $verified;
+	private $verified = false;
 
 	/**
 	 * @ORM\Column(type="datetime", nullable=true)
