@@ -38,12 +38,13 @@ class FeedController extends AbstractController {
 	/**
 	 * @Route("/api/feed", methods={"GET"})
 	 *
-	 * @return Response
+	 * @param APIService $apiService
+	 * @return Response|null
 	 */
 	public function feed(APIService $apiService) {
 		$entityManager = $apiService->getEntityManager();
 
-		$parameters = $apiService->getRequest()->query;
+		$parameters = $apiService->parameters();
 		if ($parameters->has("max") && !$parameters->has("user")) {
 			// Load older posts on home feed
 			$response = $apiService->validate(true);

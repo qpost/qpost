@@ -28,6 +28,7 @@ use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -125,5 +126,22 @@ class APIService extends AuthorizationService {
 
 		$string = $this->serializer->serialize($object, "json", $context);
 		return json_decode($string, true);
+	}
+
+	/**
+	 * @return ParameterBag
+	 */
+	public function parameters(): ParameterBag {
+		if (!is_null($this->request)) {
+			if ($this->request->isMethod("GET")) {
+				return $this->request->query;
+			} else {
+				if ($content = $this->request->getContent()) {
+					return new ParameterBag(json_decode($content, true));
+				}
+			}
+		}
+
+		return new ParameterBag([]);
 	}
 }
