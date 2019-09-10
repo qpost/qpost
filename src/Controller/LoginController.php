@@ -28,6 +28,8 @@ use Doctrine\ORM\NonUniqueResultException;
 use qpost\Constants\FlashMessageType;
 use qpost\Entity\Token;
 use qpost\Entity\User;
+use qpost\Entity\UserGigadriveData;
+use qpost\Repository\UserGigadriveDataRepository;
 use qpost\Service\AuthorizationService;
 use qpost\Twig\Twig;
 use qpost\Util\Util;
@@ -118,6 +120,81 @@ class LoginController extends AbstractController {
 		} else {
 			return $this->redirect($this->generateUrl("qpost_home_index"));
 		}
+	}
+
+	/**
+	 * @Route("/login/callback")
+	 */
+	public function callback(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+		if ($authService->isAuthorized()) {
+			$query = $request->query;
+
+			if ($query->has("code")) {
+				/**
+				 * @var UserGigadriveDataRepository $gigadriveRepository
+				 */
+				$gigadriveRepository = $entityManager->getRepository(UserGigadriveData::class);
+
+				$code = $query->get("code");
+				$token = $gigadriveRepository->getGigadriveTokenFromCode($code);
+				if (!is_null($token)) {
+					$userData = $gigadriveRepository->getGigadriveUserData($token);
+
+					if (!is_null($userData)) {
+						if (isset($userData["id"]) && isset($userData["username"]) && isset($userData["avatar"]) && isset($userData["email"])) {
+							$username = $userData["username"];
+							$email = $userData["email"];
+
+							/**
+							 * @var User $user
+							 */
+							$user = $entityManager->getRepository(User::class)->createQueryBuilder("u")
+								->innerJoin("u.gigadriveData", "g")
+								->where("g.accountId = :gigadriveId")
+								->setParameter("gigadriveId", $userData["id"], Type::INTEGER)
+								->getQuery()
+								->getOneOrNullResult();
+
+							if (!is_null($user)) {
+								if (!$user->isSuspended()) {
+									$expiry = new DateTime("now");
+									$expiry->add(DateInterval::createFromDateString("6 month"));
+
+									$token = (new Token())
+										->setUser($user)
+										->setTime(new DateTime("now"))
+										->setLastAccessTime(new DateTime("now"))
+										->setUserAgent($request->headers->get("User-Agent"))
+										->setLastIP($request->getClientIp())
+										->setExpiry($expiry);
+
+									$entityManager->persist($token);
+									$entityManager->flush();
+
+									$response = $this->redirect($this->generateUrl("qpost_home_index"));
+									$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp()));
+
+									return $response;
+								} else {
+									$this->addFlash(FlashMessageType::ERROR, "Your account has been suspended.");
+								}
+							} else {
+								return $this->redirect($this->generateUrl("qpost_register_index", ["code" => $code]));
+							}
+						} else {
+							$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+						}
+					} else {
+						$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+					}
+				} else {
+					$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+				}
+			}
+		}
+
+		return $this->redirect($this->generateUrl("qpost_login_index"));
 	}
 
 	/**

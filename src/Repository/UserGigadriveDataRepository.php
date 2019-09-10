@@ -22,7 +22,12 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use qpost\Cache\CacheHandler;
 use qpost\Entity\UserGigadriveData;
+use qpost\Factory\HttpClientFactory;
+use qpost\Util\Util;
+use function is_null;
+use function json_decode;
 
 /**
  * @method UserGigadriveData|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,6 +38,84 @@ use qpost\Entity\UserGigadriveData;
 class UserGigadriveDataRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, UserGigadriveData::class);
+	}
+
+	/**
+	 * @param string $code
+	 * @return string|null
+	 */
+	public function getGigadriveTokenFromCode(string $code): ?string {
+		if (Util::isEmpty($code)) return null;
+
+		$cacheName = "gigadriveToken_" . $code;
+		if (CacheHandler::existsInCache($cacheName)) {
+			return CacheHandler::getFromCache($cacheName);
+		} else {
+			$token = null;
+			$client = HttpClientFactory::create();
+			$secret = $_ENV["GIGADRIVE_APP_SECRET"];
+
+			$response = $client->get("https://gigadrivegroup.com/api/v3/token", [
+				"query" => [
+					"secret" => $secret,
+					"code" => $code
+				]
+			]);
+
+			$body = $response->getBody();
+			if (!is_null($body)) {
+				$content = $body->getContents();
+				$body->close();
+				if (!is_null($content)) {
+					$j = @json_decode($content, true);
+					if ($j) {
+						if (isset($j["success"]) && !empty($j["success"]) && isset($j["token"])) {
+							$token = $j["token"];
+							CacheHandler::setToCache($cacheName, $token, 3 * 60);
+						}
+					}
+				}
+			}
+
+			return $token;
+		}
+	}
+
+	public function getGigadriveUserData(string $token): ?array {
+		if (Util::isEmpty($token)) return null;
+
+		$cacheName = "gigadriveUserData_" . $token;
+		if (CacheHandler::existsInCache($cacheName)) {
+			return CacheHandler::getFromCache($cacheName);
+		} else {
+			$data = null;
+
+			$client = HttpClientFactory::create();
+			$secret = $_ENV["GIGADRIVE_APP_SECRET"];
+
+			$response = $client->get("https://gigadrivegroup.com/api/v3/user", [
+				"query" => [
+					"secret" => $secret,
+					"token" => $token
+				]
+			]);
+			$body = $response->getBody();
+			if (!is_null($body)) {
+				$content = $body->getContents();
+				$body->close();
+				if (!is_null($content)) {
+					$j = @json_decode($content, true);
+					if ($j) {
+						if (isset($j["success"]) && !empty($j["success"]) && isset($j["user"])) {
+							$data = $j["user"];
+							CacheHandler::setToCache($cacheName, $token, 3 * 60);
+						}
+					}
+				}
+			}
+
+			return $data;
+		}
 	}
 
 	// /**
