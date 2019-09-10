@@ -127,7 +127,7 @@ class LoginController extends AbstractController {
 	 */
 	public function callback(Request $request, EntityManagerInterface $entityManager) {
 		$authService = new AuthorizationService($request, $entityManager);
-		if ($authService->isAuthorized()) {
+		if (!$authService->isAuthorized()) {
 			$query = $request->query;
 
 			if ($query->has("code")) {
