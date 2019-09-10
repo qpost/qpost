@@ -104,4 +104,15 @@ class Util {
 	public static function desanatizeString($string): string {
 		return html_entity_decode($string);
 	}
+
+	/**
+	 * Returns a sanatzied string to use in HTML attributes (avoids problems with quotations)
+	 *
+	 * @access public
+	 * @param string $string The string to sanatize
+	 * @return string
+	 */
+	public static function sanatizeHTMLAttribute($string): string {
+		return trim(htmlspecialchars($string, ENT_QUOTES | ENT_HTML5, "UTF-8"));
+	}
 }

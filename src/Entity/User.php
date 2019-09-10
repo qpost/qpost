@@ -723,6 +723,17 @@ class User {
 	}
 
 	/**
+	 * @return bool Whether or not this user is currently suspended.
+	 */
+	public function isSuspended(): bool {
+		foreach ($this->getSuspensions() as $suspension) {
+			if ($suspension->isActive()) return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * The suspensions on this user's account.
 	 *
 	 * @return Collection|Suspension[]
