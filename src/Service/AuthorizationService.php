@@ -34,22 +34,22 @@ class AuthorizationService {
 	/**
 	 * @var Request $request
 	 */
-	private $request;
+	protected $request;
 
 	/**
 	 * @var EntityManager $entityManager
 	 */
-	private $entityManager;
+	protected $entityManager;
 
 	/**
 	 * @var User|null $user
 	 */
-	private $user;
+	protected $user;
 
 	/**
 	 * @var Token|null $token
 	 */
-	private $token;
+	protected $token;
 
 	/**
 	 * AuthorizationService constructor.

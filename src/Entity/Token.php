@@ -20,6 +20,7 @@
 
 namespace qpost\Entity;
 
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -201,6 +202,15 @@ class Token {
 		$this->expiry = $expiry;
 
 		return $this;
+	}
+
+	/**
+	 * Returns whether the token has expired
+	 *
+	 * @return bool
+	 */
+	public function isExpired(): bool {
+		return !is_null($this->expiry) && $this->expiry <= new DateTime("now");
 	}
 
 	/**
