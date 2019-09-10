@@ -25,7 +25,7 @@ export default class API {
 	 * The axios instance to be used.
 	 */
 	private static http: AxiosInstance = axios.create({
-		baseURL: window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:8000/api" : "https://qpo.st/api",
+		baseURL: window.location.protocol + "//" + window.location.host + "/api",
 		headers: Auth.isLoggedIn() ? {"Authorization": "Bearer " + Auth.getToken()} : {}
 	});
 
