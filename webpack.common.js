@@ -124,10 +124,6 @@ module.exports = {
 	resolve: {
 		extensions: [".tsx", ".ts", ".js", ".jsx"]
 	},
-	output: {
-		filename: "bundle.[hash].js",
-		path: resolve(__dirname, "public/build/")
-	},
 	node: {
 		console: true,
 		fs: "empty",

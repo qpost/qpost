@@ -60,7 +60,7 @@ class Twig {
 
 		$bundleName = null;
 
-		$results = glob(__DIR__ . "/../../public/build/bundle.*.js");
+		$results = glob(__DIR__ . "/../../public/build/bundle*.js");
 		if ($results && count($results) > 0) {
 			$bundleName = basename($results[0]);
 		}
