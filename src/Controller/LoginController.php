@@ -95,7 +95,7 @@ class LoginController extends AbstractController {
 										$entityManager->flush();
 
 										$response = $this->redirect($this->generateUrl("qpost_home_index"));
-										$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp()));
+										$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
 
 										return $response;
 									} else {
@@ -173,7 +173,7 @@ class LoginController extends AbstractController {
 									$entityManager->flush();
 
 									$response = $this->redirect($this->generateUrl("qpost_home_index"));
-									$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp()));
+									$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
 
 									return $response;
 								} else {
