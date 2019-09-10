@@ -84,7 +84,7 @@ class UserGigadriveDataRepository extends ServiceEntityRepository {
 	public function getGigadriveUserData(string $token): ?array {
 		if (Util::isEmpty($token)) return null;
 
-		$cacheName = "gigadriveUserData_" . $token;
+		$cacheName = "gigadriveData_" . $token;
 		if (CacheHandler::existsInCache($cacheName)) {
 			return CacheHandler::getFromCache($cacheName);
 		} else {
@@ -108,7 +108,7 @@ class UserGigadriveDataRepository extends ServiceEntityRepository {
 					if ($j) {
 						if (isset($j["success"]) && !empty($j["success"]) && isset($j["user"])) {
 							$data = $j["user"];
-							CacheHandler::setToCache($cacheName, $token, 3 * 60);
+							CacheHandler::setToCache($cacheName, $data, 3 * 60);
 						}
 					}
 				}
