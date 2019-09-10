@@ -32,6 +32,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function base64_decode;
+use function dirname;
 use function file_exists;
 use function file_put_contents;
 use function filesize;
@@ -41,6 +42,7 @@ use function hash;
 use function is_array;
 use function is_null;
 use function is_string;
+use function mkdir;
 use function rand;
 use function sys_get_temp_dir;
 
@@ -119,6 +121,7 @@ class PostController extends AbstractController {
 						if ($file) {
 							$path = null;
 							while (is_null($path) || file_exists($path)) $path = sys_get_temp_dir() . "/qpost/attachments/" . rand(0, getrandmax()) . ".png";
+							mkdir(dirname($path), 0777, true);
 							file_put_contents($path, $file);
 
 							if (!(@getimagesize($path))) {
