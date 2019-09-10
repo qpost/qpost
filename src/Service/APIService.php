@@ -25,6 +25,7 @@ use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,6 +36,11 @@ use function json_encode;
 
 class APIService extends AuthorizationService {
 	/**
+	 * @var APIService|null $instance
+	 */
+	public static $instance = null;
+
+	/**
 	 * @var LoggerInterface $logger
 	 */
 	private $logger;
@@ -44,6 +50,9 @@ class APIService extends AuthorizationService {
 	 */
 	private $kernel;
 
+	/**
+	 * @var SerializerInterface $serializer
+	 */
 	private $serializer;
 
 	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel) {
@@ -60,6 +69,8 @@ class APIService extends AuthorizationService {
 				)
 			)
 			->build();
+
+		self::$instance = $this;
 	}
 
 	/**

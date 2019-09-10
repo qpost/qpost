@@ -24,7 +24,11 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use qpost\Constants\FeedEntryType;
+use qpost\Service\APIService;
+use function count;
+use function is_null;
 
 /**
  * Represents the data of a created feed entry (post, share, new follower, ...)
@@ -67,11 +71,13 @@ class FeedEntry {
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="parent")
+	 * @Serializer\Exclude()
 	 */
 	private $children;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="feedEntries")
+	 * @Serializer\Exclude()
 	 */
 	private $token;
 
@@ -92,6 +98,7 @@ class FeedEntry {
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $favorites;
 
@@ -304,6 +311,87 @@ class FeedEntry {
 		$this->time = $time;
 
 		return $this;
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getReplyCount(): int {
+		if ($this->type == FeedEntryType::POST) {
+			$i = 0;
+
+			foreach ($this->getChildren() as $child) {
+				if ($child->getType() === FeedEntryType::SHARE) $i++;
+			}
+
+			return $i;
+		}
+
+		return 0;
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getShareCount(): int {
+		if ($this->type == FeedEntryType::POST) {
+			$i = 0;
+
+			foreach ($this->getChildren() as $child) {
+				if ($child->getType() === FeedEntryType::POST) $i++;
+			}
+
+			return $i;
+		}
+
+		return 0;
+	}
+
+	/**
+	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getFavoriteCount(): int {
+		return count($this->getFavorites());
+	}
+
+	/**
+	 * @return bool
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("favorited")
+	 */
+	public function isFavorited(): bool {
+		$apiService = APIService::$instance;
+
+		if (!is_null($apiService) && $apiService->isAuthorized()) {
+			return $apiService->getEntityManager()->getRepository(Favorite::class)->count([
+					"feedEntry" => $this,
+					"user" => $apiService->getUser()
+				]) > 0;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return bool
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("shared")
+	 */
+	public function isShared(): bool {
+		$apiService = APIService::$instance;
+
+		if (!is_null($apiService) && $apiService->isAuthorized()) {
+			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->count([
+					"type" => FeedEntryType::SHARE,
+					"parent" => $this,
+					"user" => $apiService->getUser()
+				]) > 0;
+		}
+
+		return false;
 	}
 
 	/**
