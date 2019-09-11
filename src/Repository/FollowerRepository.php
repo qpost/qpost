@@ -23,6 +23,7 @@ namespace qpost\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use qpost\Entity\Follower;
+use qpost\Entity\User;
 
 /**
  * @method Follower|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,6 +34,18 @@ use qpost\Entity\Follower;
 class FollowerRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, Follower::class);
+	}
+
+	/**
+	 * @param User $sender
+	 * @param User $receiver
+	 * @return bool
+	 */
+	public function isFollowing(User $sender, User $receiver): bool {
+		return $this->count([
+				"sender" => $sender,
+				"receiver" => $receiver
+			]) > 0;
 	}
 
 	// /**
