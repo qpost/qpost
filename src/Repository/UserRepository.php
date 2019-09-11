@@ -22,6 +22,7 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Type;
 use qpost\Entity\User;
 
 /**
@@ -53,6 +54,21 @@ class UserRepository extends ServiceEntityRepository {
 	 */
 	public function isEmailAvailable(string $email): bool {
 		return $this->count(["email" => $email]) === 0;
+	}
+
+	/**
+	 * Gets a user by it's username (case-insenstive).
+	 *
+	 * @param string $username
+	 * @return User|null
+	 */
+	public function getUserByUsername(string $username): ?User {
+		return $this->createQueryBuilder("u")
+			->where("upper(u.username) = upper(:username)")
+			->setParameter("username", $username, Type::STRING)
+			->setCacheable(true)
+			->getQuery()
+			->getOneOrNullResult();
 	}
 
 	// /**

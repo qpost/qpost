@@ -48,11 +48,7 @@ class UserController extends AbstractController {
 			$username = $parameters->get("user");
 
 			if (!Util::isEmpty($username)) {
-				$user = $apiService->getEntityManager()->getRepository(User::class)->createQueryBuilder("u")
-					->where("upper(u.username) = upper(:username)")
-					->setParameter("username", $username, Type::STRING)
-					->getQuery()
-					->getOneOrNullResult();
+				$user = $apiService->getEntityManager()->getRepository(User::class)->getUserByUsername($username);
 
 				if (!is_null($user)) { // TODO: Add mayView check
 					return $apiService->json(["result" => $apiService->serialize($user)]);

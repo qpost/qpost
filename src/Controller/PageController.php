@@ -22,6 +22,7 @@ namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use qpost\Entity\FeedEntry;
+use qpost\Entity\User;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,5 +49,22 @@ class PageController extends AbstractController {
 		}
 
 		throw $this->createNotFoundException("Invalid status ID.");
+	}
+
+	/**
+	 * @Route("/{username}")
+	 *
+	 * @param string $username
+	 * @param EntityManagerInterface $entityManager
+	 * @return Response
+	 */
+	public function profile(string $username, EntityManagerInterface $entityManager) {
+		$user = $entityManager->getRepository(User::class)->getUserByUsername($username);
+
+		if (!is_null($user)) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			throw $this->createNotFoundException("Invalid username.");
+		}
 	}
 }
