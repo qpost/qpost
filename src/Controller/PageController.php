@@ -51,13 +51,6 @@ class PageController extends AbstractController {
 		throw $this->createNotFoundException("Invalid status ID.");
 	}
 
-	/**
-	 * @Route("/{username}")
-	 *
-	 * @param string $username
-	 * @param EntityManagerInterface $entityManager
-	 * @return Response
-	 */
 	public function profile(string $username, EntityManagerInterface $entityManager) {
 		$user = $entityManager->getRepository(User::class)->getUserByUsername($username);
 

@@ -1,3 +1,6 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+qpost_page_profile:
+    path: /{username}
+    controller: qpost\Controller\PageController::profile
