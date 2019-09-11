@@ -71,6 +71,18 @@ class UserRepository extends ServiceEntityRepository {
 			->getOneOrNullResult();
 	}
 
+	/**
+	 * Gets a user by it's id.
+	 *
+	 * @param int $id
+	 * @return User|null
+	 */
+	public function getUserById(int $id): ?User {
+		return $this->findOneBy([
+			"id" => $id
+		]);
+	}
+
 	// /**
 	//  * @return User[] Returns an array of User objects
 	//  */

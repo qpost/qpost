@@ -20,6 +20,7 @@
 
 namespace qpost\Service;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
@@ -27,6 +28,16 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use qpost\Constants\FeedEntryType;
+use qpost\Constants\NotificationType;
+use qpost\Constants\PrivacyLevel;
+use qpost\Entity\FeedEntry;
+use qpost\Entity\Follower;
+use qpost\Entity\FollowRequest;
+use qpost\Entity\Notification;
+use qpost\Entity\User;
+use qpost\Repository\FollowerRepository;
+use qpost\Repository\FollowRequestRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -143,5 +154,113 @@ class APIService extends AuthorizationService {
 		}
 
 		return new ParameterBag([]);
+	}
+
+	/**
+	 * @param User $from
+	 * @param User $to
+	 * @return bool
+	 */
+	public function follow(User $from, User $to): bool {
+		if ($from->getId() === $to->getId()) return false;
+		if ($from->getFollowingCount() >= 1000) return false;
+		if ($to->getPrivacyLevel() === PrivacyLevel::CLOSED) return false;
+
+		/**
+		 * @var FollowerRepository $followerRepository
+		 */
+		$followerRepository = $this->entityManager->getRepository(Follower::class);
+
+		if ($followerRepository->isFollowing($from, $to)) return false;
+
+		/**
+		 * @var FollowRequestRepository $followRequestRepository
+		 */
+		$followRequestRepository = $this->entityManager->getRepository(FollowRequest::class);
+
+		if ($to->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
+			// private user
+
+			if (!$followRequestRepository->hasSentFollowRequest($from, $to)) {
+				// create follow request
+
+				$followRequest = (new FollowRequest())
+					->setSender($from)
+					->setReceiver($to)
+					->setTime(new DateTime("now"));
+
+				$this->entityManager->persist($followRequest);
+				$this->entityManager->flush();
+
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		// create follower data
+		$this->entityManager->persist((new Follower())
+			->setSender($from)
+			->setReceiver($to)
+			->setTime(new DateTime("now")));
+
+		// create notification
+		$this->entityManager->persist((new Notification())
+			->setUser($to)
+			->setType(NotificationType::NEW_FOLLOWER)
+			->setReferencedUser($from)
+			->setSeen(false)
+			->setNotified(false)
+			->setTime(new DateTime("now")));
+
+		$this->entityManager->flush();
+
+		return true;
+	}
+
+	/**
+	 * @param User $from
+	 * @param User $to
+	 * @return bool
+	 */
+	public function unfollow(User $from, User $to): bool {
+		/**
+		 * @var FollowerRepository $followerRepository
+		 */
+		$followerRepository = $this->entityManager->getRepository(Follower::class);
+
+		if (!$followerRepository->isFollowing($from, $to)) return false;
+
+		$follower = $followerRepository->findOneBy([
+			"sender" => $from,
+			"receiver" => $to
+		]);
+
+		$feedEntry = $this->entityManager->getRepository(FeedEntry::class)->findOneBy([
+			"type" => FeedEntryType::NEW_FOLLOWING,
+			"user" => $from,
+			"referencedUser" => $to
+		]);
+
+		if ($feedEntry) $this->entityManager->remove($feedEntry);
+
+		$notification = $this->entityManager->getRepository(Notification::class)->findOneBy([
+			"type" => NotificationType::NEW_FOLLOWER,
+			"user" => $to,
+			"referencedUser" => $from
+		]);
+
+		if ($notification) $this->entityManager->remove($notification);
+
+		$return = false;
+
+		if ($follower) {
+			$this->entityManager->remove($follower);
+			$return = true;
+		}
+
+		$this->entityManager->flush();
+
+		return $return;
 	}
 }
