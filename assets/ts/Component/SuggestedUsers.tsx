@@ -38,7 +38,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 	}
 
 	componentDidMount(): void {
-		API.handleRequest("/suggestedUsers", "GET", {}, (data => {
+		API.handleRequest("/user/suggested", "GET", {}, (data => {
 			if (data["results"]) {
 				const results: User[] = [];
 
