@@ -1,5 +1,5 @@
 /*
- * Copyright (C) $today.year-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -111,7 +111,7 @@ export default class PostForm extends Component<{
 				}
 			});
 
-			API.handleRequest("/post", "POST", {
+			API.handleRequest("/status", "POST", {
 				message,
 				attachments
 			}, data => {
