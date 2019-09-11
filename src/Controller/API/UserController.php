@@ -21,14 +21,52 @@
 namespace qpost\Controller\API;
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\NonUniqueResultException;
 use qpost\Entity\User;
 use qpost\Service\APIService;
+use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function is_null;
 
 class UserController extends AbstractController {
+	/**
+	 * @Route("/api/user", methods={"GET"})
+	 *
+	 * @param APIService $apiService
+	 * @return Response|null
+	 * @throws NonUniqueResultException
+	 */
+	public function info(APIService $apiService) {
+		$response = $apiService->validate(false);
+		if (!is_null($response)) return $response;
+
+		$parameters = $apiService->parameters();
+
+		if ($parameters->has("user")) {
+			$username = $parameters->get("user");
+
+			if (!Util::isEmpty($username)) {
+				$user = $apiService->getEntityManager()->getRepository(User::class)->createQueryBuilder("u")
+					->where("upper(u.username) = upper(:username)")
+					->setParameter("username", $username, Type::STRING)
+					->getQuery()
+					->getOneOrNullResult();
+
+				if (!is_null($user)) { // TODO: Add mayView check
+					return $apiService->json(["result" => $apiService->serialize($user)]);
+				} else {
+					return $apiService->json(["error" => "Unknown user"], 404);
+				}
+			} else {
+				return $apiService->json(["error" => "Unknown user"], 404);
+			}
+		} else {
+			return $apiService->json(["error" => "Unknown user"], 404);
+		}
+	}
+
 	/**
 	 * @Route("/api/user/suggested", methods={"GET"})
 	 *
