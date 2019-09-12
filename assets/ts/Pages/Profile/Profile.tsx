@@ -86,8 +86,7 @@ export default class Profile extends Component<any, {
 
 		if (user !== null) {
 			const registerDate: Date = new Date(user.getTime());
-			// const birthDate: Date | null = user.getBirthday() ? new Date(user.getBirthday()) : null;
-			const birthDate = registerDate;
+			const birthDate: Date | null = user.getBirthday() ? new Date(user.getBirthday()) : null;
 
 			return <div className={"profile"}>
 				<ContentBase>
