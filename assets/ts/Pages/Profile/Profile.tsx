@@ -35,6 +35,8 @@ import VerifiedBadge from "../../Component/VerifiedBadge";
 import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SuggestedUsers from "../../Component/SuggestedUsers";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
+import {Card} from "antd";
+import "antd/es/card/style";
 
 export default class Profile extends Component<any, {
 	user: User,
@@ -83,7 +85,8 @@ export default class Profile extends Component<any, {
 
 		if (user !== null) {
 			const registerDate: Date = new Date(user.getTime());
-			const birthDate: Date | null = user.getBirthday() ? new Date(user.getBirthday()) : null;
+			// const birthDate: Date | null = user.getBirthday() ? new Date(user.getBirthday()) : null;
+			const birthDate = registerDate;
 
 			return <div className={"profile"}>
 				<ContentBase>
@@ -117,6 +120,43 @@ export default class Profile extends Component<any, {
 					</LeftSidebar>
 
 					<PageContent leftSidebar rightSidebar>
+						<Card className={"mobileOnly mb-3"} size={"small"}>
+							<div className={"clearfix"}>
+								<div className={"float-left"}>
+									<img className={"mobileAvatar"} src={user.getAvatarURL()}/>
+								</div>
+
+								<div className={"float-left"}>
+									<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/></h4>
+									<div className={"usernameDisplay"}>@{user.getUsername()}</div>
+								</div>
+							</div>
+
+							<div className={"mt-2"}>
+								{/*TODO: Bio*/}
+
+								<p className={"my-2 text-muted clearfix"}>
+									<div className={"float-left"}>
+										<i className={"fas fa-globe"}/><span
+										style={{marginLeft: "5px"}}>Joined {registerDate.toLocaleString("default", {
+										month: "long",
+										year: "numeric"
+									})}</span>
+									</div>
+									{birthDate ? <div className={"float-left ml-2"}>
+										<i className={"fas fa-birthday-cake"}/><span
+										style={{marginLeft: "7px"}}>{birthDate.toLocaleString("default", {
+										month: "long",
+										day: "numeric",
+										year: "numeric"
+									})}</span>
+									</div> : ""}
+								</p>
+
+								<FollowButton target={user}/>
+							</div>
+						</Card>
+
 						<FeedEntryList user={user}/>
 					</PageContent>
 

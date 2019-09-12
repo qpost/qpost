@@ -27,6 +27,15 @@
 		height: $size;
 	}
 
+	.mobileAvatar {
+		@extend .rounded, .mr-2;
+		$size: 64px;
+
+		border: 1px solid $primary;
+		width: $size;
+		height: $size;
+	}
+
 	.usernameDisplay {
 		@extend .text-muted;
 	}
