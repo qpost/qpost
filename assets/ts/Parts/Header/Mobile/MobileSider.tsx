@@ -86,7 +86,7 @@ export default class MobileSider extends Component<{
 					});
 				}}>
 				<div className={"mx-2 my-2 clearfix"}>
-					<Link to={"/" + currentUser.getUsername()} className={"clearUnderline"}
+					<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}
 						  onClick={(e) => this.toggle()}>
 						<Avatar src={currentUser.getAvatarURL()} className={"mr-2"} shape={"square"} size={"large"}
 								style={{
@@ -107,7 +107,7 @@ export default class MobileSider extends Component<{
 
 				<Menu theme={NightMode.isActive() ? "dark" : "light"} mode="inline" selectable={false}>
 					<Menu.Item key="1">
-						<Link to={"/" + currentUser.getUsername()} className={"clearUnderline"}>
+						<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
 							<i className={"far fa-user iconMargin-10"}/>
 							<span className="nav-text">Profile</span>
 						</Link>

@@ -67,7 +67,7 @@ export default class DesktopHeader extends Component<{
 				</Menu.Item>
 
 				<Menu.Item key={1}>
-					<Link to={"/" + currentUser.getUsername()} className={"clearUnderline"}>
+					<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
 						my profile
 					</Link>
 				</Menu.Item>
