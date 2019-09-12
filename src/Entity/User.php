@@ -27,6 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\PrivacyLevel;
+use qpost\Service\APIService;
 use function count;
 use function is_null;
 
@@ -977,6 +978,25 @@ class User {
 	 */
 	public function getOpenRequestsCount(): int {
 		return count($this->getFollowRequests());
+	}
+
+	/**
+	 * @return bool
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("followsYou")
+	 */
+	public function isFollowingYou(): bool {
+		$apiService = APIService::$instance;
+
+		if (!is_null($apiService)) {
+			$user = $apiService->getUser();
+
+			if (!is_null($user) && $this->getId() !== $user->getId()) {
+				return $apiService->getEntityManager()->getRepository(Follower::class)->isFollowing($this, $user);
+			}
+		}
+
+		return false;
 	}
 
 	/**

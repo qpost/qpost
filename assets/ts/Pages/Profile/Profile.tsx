@@ -37,6 +37,7 @@ import SuggestedUsers from "../../Component/SuggestedUsers";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {Card} from "antd";
 import "antd/es/card/style";
+import FollowsYouBadge from "../../Component/FollowsYouBadge";
 
 export default class Profile extends Component<any, {
 	user: User,
@@ -97,7 +98,8 @@ export default class Profile extends Component<any, {
 							</div>
 
 							<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/></h4>
-							<div className={"usernameDisplay"}>@{user.getUsername()}</div>
+							<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge target={user}/>
+							</div>
 
 							<p className={"my-2 text-muted"}>
 								<i className={"fas fa-globe"}/><span
@@ -128,7 +130,8 @@ export default class Profile extends Component<any, {
 
 								<div className={"float-left"}>
 									<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/></h4>
-									<div className={"usernameDisplay"}>@{user.getUsername()}</div>
+									<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge
+										target={user}/></div>
 								</div>
 							</div>
 
