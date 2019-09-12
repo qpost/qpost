@@ -26,6 +26,7 @@ import FollowButton from "./FollowButton";
 import VerifiedBadge from "./VerifiedBadge";
 import Spin from "antd/es/spin";
 import "antd/es/spin/style";
+import FollowStatus from "../Util/FollowStatus";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -86,7 +87,8 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 									<br/>
 								</Link>
 
-								<FollowButton target={suggestedUser} className={"mt-0 btn-sm"}/>
+								<FollowButton target={suggestedUser} className={"mt-0 btn-sm"}
+											  followStatus={FollowStatus.NOT_FOLLOWING}/>
 							</div>
 						</div>
 					})}

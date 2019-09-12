@@ -48,7 +48,7 @@ export default class FollowButton extends Component<{
 
 		this.state = {
 			redirectToEditPage: false,
-			loading: !this.props.followStatus,
+			loading: this.props.followStatus === undefined,
 			followStatus: null,
 			error: null
 		};
