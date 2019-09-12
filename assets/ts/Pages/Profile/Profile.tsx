@@ -93,7 +93,7 @@ export default class Profile extends Component<any, {
 					<LeftSidebar>
 						<SidebarStickyContent>
 							<div className={"text-center"}>
-								<img className={"mainAvatar"} src={user.getAvatarURL()}/>
+								<img className={"mainAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
 							</div>
 
 							<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/></h4>
@@ -124,7 +124,7 @@ export default class Profile extends Component<any, {
 						<Card className={"mobileOnly mb-3"} size={"small"}>
 							<div className={"clearfix"}>
 								<div className={"float-left"}>
-									<img className={"mobileAvatar"} src={user.getAvatarURL()}/>
+									<img className={"mobileAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
 								</div>
 
 								<div className={"float-left"}>
