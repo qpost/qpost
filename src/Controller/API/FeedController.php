@@ -177,8 +177,8 @@ class FeedController extends AbstractController {
 			->andWhere("f.type = :post or f.type = :share")
 			->setParameter("post", FeedEntryType::POST, Type::STRING)
 			->setParameter("share", FeedEntryType::SHARE, Type::STRING)
-			->andWhere("exists (select 1 from qpost\Entity\Follower ff where ff.receiver = :to) or f.user = :to")
-			->setParameter("to", $currentUser)
+			->andWhere("exists (select 1 from qpost\Entity\Follower ff where ff.sender = :user and ff.receiver = f.user) or f.user = :user")
+			->setParameter("user", $currentUser)
 			->orderBy("f.time", "DESC")
 			->setMaxResults(30)
 			->setCacheable(false);
