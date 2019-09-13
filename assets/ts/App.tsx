@@ -34,6 +34,8 @@ import MobileChecker from "./Util/Mobile/MobileChecker";
 import Status from "./Pages/Status/Status";
 import Profile from "./Pages/Profile/Profile";
 import ProfileRedirect from "./Pages/Profile/ProfileRedirect";
+import PrivateRoute from "./Auth/PrivateRoute";
+import EditProfile from "./Pages/EditProfile/EditProfile";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -87,20 +89,21 @@ export default class App extends Component<any, any> {
 							<Header/>
 
 							<Layout.Content className="navMargin mainContent">
-								<Switch>
-									<div className="legacyCard">
-										<div className="wrapper">
-											<div className="legacyCardBody">
+								<div className="legacyCard">
+									<div className="wrapper">
+										<div className="legacyCardBody">
+											<Switch>
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
 													<Route path={"/"} exact component={Home}/>}
 
+												<PrivateRoute path={"/edit"} exact component={EditProfile}/>
 												<Route path={"/status/:id"} exact component={Status}/>
 												<Route path={"/profile/:username"} exact component={ProfileRedirect}/>
 												<Route path={"/:username"} exact component={Profile}/>
-											</div>
+											</Switch>
 										</div>
 									</div>
-								</Switch>
+								</div>
 							</Layout.Content>
 						</Layout>
 					</div>

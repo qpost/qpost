@@ -23,8 +23,11 @@ namespace qpost\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
+use qpost\Service\AuthorizationService;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -49,6 +52,23 @@ class PageController extends AbstractController {
 		}
 
 		throw $this->createNotFoundException("Invalid status ID.");
+	}
+
+	/**
+	 * @Route("/edit")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return RedirectResponse|Response
+	 */
+	public function edit(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if ($authService->isAuthorized()) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			return $this->redirect($this->generateUrl("qpost_login_index"));
+		}
 	}
 
 	public function profile(string $username, EntityManagerInterface $entityManager) {
