@@ -37,6 +37,8 @@ export default class DesktopHeader extends Component<{
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const currentUser = Auth.getCurrentUser();
+		const notifications = BadgeStatus.getNotifications();
+		const messages = BadgeStatus.getMessages();
 
 		return <Layout.Header
 			hasSider={true}
@@ -75,13 +77,13 @@ export default class DesktopHeader extends Component<{
 
 				<Menu.Item key={2}>
 					<Link to={"/notifications"} className={"clearUnderline"}>
-						notifications <Badge count={BadgeStatus.getNotifications()} className={"ml-2"}/>
+						notifications{notifications > 0 ? <Badge count={notifications} className={"ml-2"}/> : ""}
 					</Link>
 				</Menu.Item>
 
 				<Menu.Item key={3}>
 					<Link to={"/messages"} className={"clearUnderline"}>
-						messages <Badge count={BadgeStatus.getMessages()} className={"ml-2"}/>
+						messages{messages > 0 ? <Badge count={messages} className={"ml-2"}/> : ""}
 					</Link>
 				</Menu.Item>
 

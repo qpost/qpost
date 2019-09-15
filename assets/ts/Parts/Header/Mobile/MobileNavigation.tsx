@@ -33,6 +33,9 @@ export default class MobileNavigation extends Component<{
 	key: any
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		const notifications = BadgeStatus.getNotifications();
+		const messages = BadgeStatus.getMessages();
+
 		return <Layout.Header
 			className={"mobileNav"}
 			style={{
@@ -66,19 +69,19 @@ export default class MobileNavigation extends Component<{
 					</Menu.Item>
 
 					<Menu.Item key={2}>
-						<Badge count={BadgeStatus.getNotifications()}>
-							<Link to={"/notifications"}>
+						<Link to={"/notifications"}>
+							{notifications > 0 ? <Badge count={notifications}>
 								<i className={"fas fa-bell"}/>
-							</Link>
-						</Badge>
+							</Badge> : <i className={"fas fa-bell"}/>}
+						</Link>
 					</Menu.Item>
 
 					<Menu.Item key={3}>
-						<Badge count={BadgeStatus.getMessages()}>
-							<Link to={"/messages"}>
+						<Link to={"/messages"}>
+							{notifications > 0 ? <Badge count={messages}>
 								<i className={"fas fa-envelope"}/>
-							</Link>
-						</Badge>
+							</Badge> : <i className={"fas fa-envelope"}/>}
+						</Link>
 					</Menu.Item>
 				</Menu>
 			</div>
