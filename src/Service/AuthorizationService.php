@@ -52,13 +52,20 @@ class AuthorizationService {
 	protected $token;
 
 	/**
+	 * @var boolean $allowCookieAuth
+	 */
+	protected $allowCookieAuth;
+
+	/**
 	 * AuthorizationService constructor.
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
+	 * @param bool $allowCookieAuth
 	 */
-	public function __construct(Request $request, EntityManagerInterface $entityManager) {
+	public function __construct(Request $request, EntityManagerInterface $entityManager, bool $allowCookieAuth = true) {
 		$this->request = $request;
 		$this->entityManager = $entityManager;
+		$this->allowCookieAuth = $allowCookieAuth;
 
 		$this->load();
 	}
@@ -82,12 +89,14 @@ class AuthorizationService {
 			}
 		}
 
-		// Try loading from cookies
-		$cookies = $this->request->cookies;
-		if ($cookies->has("sesstoken")) {
-			$tokenId = $cookies->get("sesstoken");
+		if ($this->allowCookieAuth) {
+			// Try loading from cookies
+			$cookies = $this->request->cookies;
+			if ($cookies->has("sesstoken")) {
+				$tokenId = $cookies->get("sesstoken");
 
-			$this->loadData($tokenId);
+				$this->loadData($tokenId);
+			}
 		}
 	}
 
