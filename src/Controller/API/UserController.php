@@ -145,7 +145,7 @@ class UserController extends AbstractController {
 												if (!is_null($url)) {
 													$user->setAvatar($url);
 												} else {
-													return $apiService->json(["error" => "An error occurred."]);
+													return $apiService->json(["error" => "An error occurred."], 500);
 												}
 											} catch (Exception $e) {
 												return $apiService->json(["error" => "'avatar' is not a valid image."], 400);
