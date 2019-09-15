@@ -27,6 +27,7 @@ import VerifiedBadge from "./VerifiedBadge";
 import Spin from "antd/es/spin";
 import "antd/es/spin/style";
 import FollowStatus from "../Util/FollowStatus";
+import {Card} from "antd";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -58,14 +59,10 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 				<Spin size={"large"}/>
 			</div>
 		} else if (this.state.results.length > 0) {
-			return <div className="card">
-				<div className="card-header">
-					Suggested
-				</div>
-
+			return <Card title={"Suggested"} size={"small"}>
 				<div className="tab-content" id="users-tablist-content">
 					{this.state.results.map((suggestedUser, i) => {
-						return <div className="px-2 py-1 my-1" style={{height: "70px"}} key={i}>
+						return <div className="my-1" style={{height: "70px"}} key={i}>
 							<Link to={"/" + suggestedUser.getUsername()} className="clearUnderline float-left">
 								<img src={suggestedUser.getAvatarURL()} width="64" height="64" className="rounded"
 									 alt={suggestedUser.getUsername()}/>
@@ -93,7 +90,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 						</div>
 					})}
 				</div>
-			</div>;
+			</Card>;
 		} else {
 			return "";
 		}
