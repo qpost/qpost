@@ -112,7 +112,7 @@ class StatusController extends AbstractController {
 			$message = $parameters->get("message");
 
 			if (is_string($message)) {
-				$message = trim($message);
+				$message = trim(Util::fixString($message));
 
 				/**
 				 * @var int $characterLimit
@@ -152,7 +152,7 @@ class StatusController extends AbstractController {
 					$entityManager = $apiService->getEntityManager();
 					$feedEntry = (new FeedEntry())
 						->setUser($user)
-						->setText($message)
+						->setText(Util::isEmpty($message) ? null : $message)
 						->setToken($token)
 						->setType(FeedEntryType::POST)
 						->setNSFW(false)// TODO

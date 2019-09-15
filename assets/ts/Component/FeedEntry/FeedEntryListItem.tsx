@@ -27,6 +27,7 @@ import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryActionButtons from "./Buttons/FeedEntryActionButtons";
 import TimeAgo from "../TimeAgo";
 import FeedEntryListItemAttachments from "./FeedEntryListItemAttachments";
+import FeedEntryText from "./FeedEntryText";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry
@@ -95,7 +96,7 @@ export default class FeedEntryListItem extends Component<{
 
 							{entry.getText() !== null ? <div className="float-left ml-1 my-2 w-100">
 								<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
-									{entry.getText()}
+									<FeedEntryText feedEntry={entry}/>
 								</p>
 							</div> : ""}
 
