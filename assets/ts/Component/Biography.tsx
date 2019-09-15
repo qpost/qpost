@@ -27,17 +27,21 @@ export default class Biography extends Component<{
 		const user = this.props.user;
 
 		if (user) {
-			let bio = user.getBio();
-			// TODO: Formatting
+			const text = user.getBio();
 
-			if (bio) {
-				return <div className={"my-2"} style={{
-					width: "100%",
-					display: "block",
-					wordWrap: "break-word"
-				}}>
-					{bio}
-				</div>;
+			if (text) {
+				return text ? <div className={"my-2"}>
+					{text.split('\n').map((item, i) => {
+						item = item.trim();
+
+						return item !== "" ? <p key={i} style={{
+							marginBottom: 0,
+							width: "100%",
+							display: "block",
+							wordWrap: "break-word"
+						}}>{item}</p> : "";
+					})}
+				</div> : "";
 			}
 		}
 
