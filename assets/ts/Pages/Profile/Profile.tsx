@@ -107,7 +107,7 @@ export default class Profile extends Component<any, {
 								year: "numeric"
 							})}</span>
 								{birthDate ? <div>
-									<br/><i className={"fas fa-birthday-cake"}/><span
+									<i className={"fas fa-birthday-cake"}/><span
 									style={{marginLeft: "7px"}}>{birthDate.toLocaleString("default", {
 									month: "long",
 									day: "numeric",
