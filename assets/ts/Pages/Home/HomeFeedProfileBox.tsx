@@ -60,7 +60,8 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 										  overflow: "hidden",
 										  textOverflow: "ellipsis",
 										  whiteSpace: "nowrap",
-										  wordWrap: "normal"
+										  wordWrap: "normal",
+										  fontSize: "16px"
 									  }}>
 									{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/>
 								</span>
@@ -69,7 +70,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 						<br/>
 
 						<Link to={"/" + currentUser.getUsername()} className="clearUnderline">
-								<span className="text-muted small"
+								<span className="text-muted"
 									  style={{
 										  marginTop: "-5px",
 										  maxWidth: "100%",
