@@ -19,6 +19,7 @@
 
 import Cookies from "js-cookie";
 import User from "../Entity/Account/User";
+import Header from "../Parts/Header";
 
 export default class Auth {
 	private static currentUser?: User;
@@ -29,6 +30,8 @@ export default class Auth {
 
 	public static setCurrentUser(user?: User): void {
 		this.currentUser = user;
+
+		Header.update();
 	}
 
 	public static isLoggedIn(): boolean {

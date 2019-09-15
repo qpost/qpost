@@ -26,14 +26,34 @@ import MobileNavigation from "./Header/Mobile/MobileNavigation";
 import WindowSizeListener from "react-window-size-listener";
 
 class Header extends Component<any, {
-	mobileMenu: boolean
+	mobileMenu: boolean,
+	id: number
 }> {
+	private static INSTANCE: Header = null;
+
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			mobileMenu: window.innerWidth <= 768
+			mobileMenu: window.innerWidth <= 768,
+			id: Math.random()
 		}
+	}
+
+	public static update(): void {
+		if (this.INSTANCE !== null) {
+			this.INSTANCE.setState({
+				id: Math.random()
+			});
+		}
+	}
+
+	componentDidMount(): void {
+		Header.INSTANCE = this;
+	}
+
+	componentWillUnmount(): void {
+		Header.INSTANCE = null;
 	}
 
 	setIsMobileMenu = (windowWidth: number) => {
