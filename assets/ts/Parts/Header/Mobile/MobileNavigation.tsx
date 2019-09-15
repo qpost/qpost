@@ -26,6 +26,7 @@ import Layout from "antd/es/layout";
 import "antd/es/layout/style";
 import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
+import BadgeStatus from "../../../Auth/BadgeStatus";
 
 export default class MobileNavigation extends Component<{
 	mobile: boolean,
@@ -65,7 +66,7 @@ export default class MobileNavigation extends Component<{
 					</Menu.Item>
 
 					<Menu.Item key={2}>
-						<Badge count={10}>
+						<Badge count={BadgeStatus.getNotifications()}>
 							<Link to={"/notifications"}>
 								<i className={"fas fa-bell"}/>
 							</Link>
@@ -73,7 +74,7 @@ export default class MobileNavigation extends Component<{
 					</Menu.Item>
 
 					<Menu.Item key={3}>
-						<Badge count={10}>
+						<Badge count={BadgeStatus.getMessages()}>
 							<Link to={"/messages"}>
 								<i className={"fas fa-envelope"}/>
 							</Link>

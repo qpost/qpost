@@ -36,6 +36,7 @@ import Profile from "./Pages/Profile/Profile";
 import ProfileRedirect from "./Pages/Profile/ProfileRedirect";
 import PrivateRoute from "./Auth/PrivateRoute";
 import EditProfile from "./Pages/EditProfile/EditProfile";
+import BadgeStatus from "./Auth/BadgeStatus";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -57,9 +58,11 @@ export default class App extends Component<any, any> {
 			if (data.status && data.status === "Token valid" && data.user) {
 				Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
 
-				this.setState({
-					validatedLogin: true
-				})
+				BadgeStatus.update(() => {
+					this.setState({
+						validatedLogin: true
+					});
+				});
 			} else {
 				this.setState({
 					error: "Authentication failed."

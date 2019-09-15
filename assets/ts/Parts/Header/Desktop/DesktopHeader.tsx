@@ -29,6 +29,7 @@ import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
 import Auth from "../../../Auth/Auth";
 import SubMenu from "antd/es/menu/SubMenu";
+import BadgeStatus from "../../../Auth/BadgeStatus";
 
 export default class DesktopHeader extends Component<{
 	mobile: boolean,
@@ -74,13 +75,13 @@ export default class DesktopHeader extends Component<{
 
 				<Menu.Item key={2}>
 					<Link to={"/notifications"} className={"clearUnderline"}>
-						notifications <Badge count={10} className={"ml-2"}/>
+						notifications <Badge count={BadgeStatus.getNotifications()} className={"ml-2"}/>
 					</Link>
 				</Menu.Item>
 
 				<Menu.Item key={3}>
 					<Link to={"/messages"} className={"clearUnderline"}>
-						messages <Badge count={10} className={"ml-2"}/>
+						messages <Badge count={BadgeStatus.getMessages()} className={"ml-2"}/>
 					</Link>
 				</Menu.Item>
 
