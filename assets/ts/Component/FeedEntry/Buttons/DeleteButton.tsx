@@ -26,6 +26,7 @@ export default class DeleteButton extends Component<{
 }, any> {
 	click = (e) => {
 		e.preventDefault();
+		e.stopPropagation();
 
 		// TODO
 	};

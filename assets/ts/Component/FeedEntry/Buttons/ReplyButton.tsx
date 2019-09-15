@@ -26,6 +26,7 @@ export default class ReplyButton extends Component<{
 }, any> {
 	click = (e) => {
 		e.preventDefault();
+		e.stopPropagation();
 
 		// TODO
 	};

@@ -44,6 +44,7 @@ export default class FavoriteButton extends Component<{
 
 	click = (e) => {
 		e.preventDefault();
+		e.stopPropagation();
 
 		if (!this.state.loading) {
 			this.setState({loading: true});

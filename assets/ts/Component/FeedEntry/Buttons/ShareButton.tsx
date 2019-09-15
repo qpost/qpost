@@ -37,6 +37,7 @@ export default class ShareButton extends Component<{
 
 	click = (e) => {
 		e.preventDefault();
+		e.stopPropagation();
 
 		if (!this.isSelf()) {
 			// TODO
