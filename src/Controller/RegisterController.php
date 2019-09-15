@@ -42,6 +42,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function filter_var;
+use function strlen;
 
 class RegisterController extends AbstractController {
 	/**
@@ -92,110 +94,112 @@ class RegisterController extends AbstractController {
 								if ($request->isMethod("POST")) {
 									$parameters = $request->request;
 
-									if ($parameters->has("username") && $parameters->has("email")) {
-										$verifyEmail = (bool)($parameters->get("email") != $email);
-										$email = $parameters->get("email");
-										$username = $parameters->get("username");
+									if ($parameters->has("_csrf_token") && $this->isCsrfTokenValid("csrf", $parameters->get("_csrf_token"))) {
+										if ($parameters->has("username") && $parameters->has("email")) {
+											$verifyEmail = (bool)($parameters->get("email") != $email);
+											$email = $parameters->get("email");
+											$username = $parameters->get("username");
 
-										if (!Util::isEmpty($email) && !Util::isEmpty($username)) {
-											if (strlen($email) >= 3) {
-												if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-													if (strlen($username) >= 3) {
-														if (strlen($username) <= 16) {
-															if (ctype_alnum($username)) {
-																/**
-																 * @var UserRepository $userRepository
-																 */
-																$userRepository = $entityManager->getRepository(User::class);
+											if (!Util::isEmpty($email) && !Util::isEmpty($username)) {
+												if (strlen($email) >= 3) {
+													if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+														if (strlen($username) >= 3) {
+															if (strlen($username) <= 16) {
+																if (ctype_alnum($username)) {
+																	/**
+																	 * @var UserRepository $userRepository
+																	 */
+																	$userRepository = $entityManager->getRepository(User::class);
 
-																if ($userRepository->isEmailAvailable($email)) {
-																	if ($userRepository->isUsernameAvailable($username)) {
-																		$emailActivated = !$verifyEmail;
-																		$emailToken = Util::getRandomString(7);
+																	if ($userRepository->isEmailAvailable($email)) {
+																		if ($userRepository->isUsernameAvailable($username)) {
+																			$emailActivated = !$verifyEmail;
+																			$emailToken = Util::getRandomString(7);
 
-																		$user = (new User())
-																			->setUsername($username)
-																			->setDisplayName($username)
-																			->setEmail($email)
-																			->setEmailActivated($emailActivated)
-																			->setEmailActivationToken($emailToken)
-																			->setTime(new DateTime("now"))
-																			->setGigadriveData((new UserGigadriveData())
-																				->setAccountId($id)
-																				->setJoinDate(new DateTime($registerDate))
-																				->setToken($token)
-																				->setLastUpdate(new DateTime("now")));
-
-																		$entityManager->persist($user);
-																		$entityManager->flush();
-
-																		if ($verifyEmail) {
-																			// Send email
-																			$message = (new Swift_Message("subject"))
-																				->setFrom($_ENV["MAILER_FROM"])
-																				->setTo($email)
-																				->setBody(
-																					$this->renderView("emails/register.html.twig", [
-																						"username" => $username,
-																						"displayName" => $username,
-																						"verificationLink" => "" // TODO
-																					]),
-																					"text/html"
-																				);
-
-																			if ($mailer->send($message) !== 0) {
-																				$entityManager->persist($user);
-																				$entityManager->flush();
-
-																				$this->addFlash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
-																			} else {
-																				$this->addFlash(FlashMessageType::ERROR, "Your email address could not be verified.");
-																			}
-
-																			return $this->redirect($this->generateUrl("qpost_login_index"));
-																		} else {
-																			$expiry = new DateTime("now");
-																			$expiry->add(DateInterval::createFromDateString("6 month"));
-
-																			$token = (new Token())
-																				->setUser($user)
+																			$user = (new User())
+																				->setUsername($username)
+																				->setDisplayName($username)
+																				->setEmail($email)
+																				->setEmailActivated($emailActivated)
+																				->setEmailActivationToken($emailToken)
 																				->setTime(new DateTime("now"))
-																				->setLastAccessTime(new DateTime("now"))
-																				->setUserAgent($request->headers->get("User-Agent"))
-																				->setLastIP($request->getClientIp())
-																				->setExpiry($expiry);
+																				->setGigadriveData((new UserGigadriveData())
+																					->setAccountId($id)
+																					->setJoinDate(new DateTime($registerDate))
+																					->setToken($token)
+																					->setLastUpdate(new DateTime("now")));
 
-																			$entityManager->persist($token);
+																			$entityManager->persist($user);
 																			$entityManager->flush();
 
-																			$response = $this->redirect($this->generateUrl("qpost_home_index"));
-																			$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
+																			if ($verifyEmail) {
+																				// Send email
+																				$message = (new Swift_Message("subject"))
+																					->setFrom($_ENV["MAILER_FROM"])
+																					->setTo($email)
+																					->setBody(
+																						$this->renderView("emails/register.html.twig", [
+																							"username" => $username,
+																							"displayName" => $username,
+																							"verificationLink" => "" // TODO
+																						]),
+																						"text/html"
+																					);
 
-																			return $response;
+																				if ($mailer->send($message) !== 0) {
+																					$entityManager->persist($user);
+																					$entityManager->flush();
+
+																					$this->addFlash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
+																				} else {
+																					$this->addFlash(FlashMessageType::ERROR, "Your email address could not be verified.");
+																				}
+
+																				return $this->redirect($this->generateUrl("qpost_login_index"));
+																			} else {
+																				$expiry = new DateTime("now");
+																				$expiry->add(DateInterval::createFromDateString("6 month"));
+
+																				$token = (new Token())
+																					->setUser($user)
+																					->setTime(new DateTime("now"))
+																					->setLastAccessTime(new DateTime("now"))
+																					->setUserAgent($request->headers->get("User-Agent"))
+																					->setLastIP($request->getClientIp())
+																					->setExpiry($expiry);
+
+																				$entityManager->persist($token);
+																				$entityManager->flush();
+
+																				$response = $this->redirect($this->generateUrl("qpost_home_index"));
+																				$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
+
+																				return $response;
+																			}
+																		} else {
+																			$this->addFlash(FlashMessageType::ERROR, "That username is not available anymore.");
 																		}
 																	} else {
-																		$this->addFlash(FlashMessageType::ERROR, "That username is not available anymore.");
+																		$this->addFlash(FlashMessageType::ERROR, "That email address is not available anymore.");
 																	}
 																} else {
-																	$this->addFlash(FlashMessageType::ERROR, "That email address is not available anymore.");
+																	$this->addFlash(FlashMessageType::ERROR, "Your username may only consist of letters and numbers.");
 																}
 															} else {
-																$this->addFlash(FlashMessageType::ERROR, "Your username may only consist of letters and numbers.");
+																$this->addFlash(FlashMessageType::ERROR, "Your username may not be longer than 16 characters.");
 															}
 														} else {
-															$this->addFlash(FlashMessageType::ERROR, "Your username may not be longer than 16 characters.");
+															$this->addFlash(FlashMessageType::ERROR, "Your username must be at least 3 characters long.");
 														}
 													} else {
-														$this->addFlash(FlashMessageType::ERROR, "Your username must be at least 3 characters long.");
+														$this->addFlash(FlashMessageType::ERROR, "Please enter a valid email address.");
 													}
 												} else {
 													$this->addFlash(FlashMessageType::ERROR, "Please enter a valid email address.");
 												}
 											} else {
-												$this->addFlash(FlashMessageType::ERROR, "Please enter a valid email address.");
+												$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
 											}
-										} else {
-											$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
 										}
 									}
 								}

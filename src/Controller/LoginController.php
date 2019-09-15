@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function is_null;
 use function password_verify;
 use function trim;
 
@@ -57,61 +58,63 @@ class LoginController extends AbstractController {
 			if ($request->isMethod("POST")) {
 				$parameters = $request->request;
 
-				if ($parameters->has("email") && $parameters->has("password")) {
-					$email = trim($parameters->get("email"));
-					$password = trim($parameters->get("password"));
+				if ($parameters->has("_csrf_token") && $this->isCsrfTokenValid("csrf", $parameters->get("_csrf_token"))) {
+					if ($parameters->has("email") && $parameters->has("password")) {
+						$email = trim($parameters->get("email"));
+						$password = trim($parameters->get("password"));
 
-					if (!Util::isEmpty($email) && !Util::isEmpty($password)) {
-						/**
-						 * @var User $user
-						 */
-						$user = $entityManager->getRepository(User::class)->createQueryBuilder("u")
-							->where("upper(u.username) = upper(:query)")
-							->setParameter("query", $email, Type::STRING)
-							->orWhere("upper(u.email) = upper(:query)")
-							->setParameter("query", $email, Type::STRING)
-							->setMaxResults(1)
-							->getQuery()
-							->getOneOrNullResult();
+						if (!Util::isEmpty($email) && !Util::isEmpty($password)) {
+							/**
+							 * @var User $user
+							 */
+							$user = $entityManager->getRepository(User::class)->createQueryBuilder("u")
+								->where("upper(u.username) = upper(:query)")
+								->setParameter("query", $email, Type::STRING)
+								->orWhere("upper(u.email) = upper(:query)")
+								->setParameter("query", $email, Type::STRING)
+								->setMaxResults(1)
+								->getQuery()
+								->getOneOrNullResult();
 
-						if (!is_null($user) && is_null($user->getGigadriveData())) {
-							$passwordHash = $user->getPassword();
+							if (!is_null($user) && is_null($user->getGigadriveData())) {
+								$passwordHash = $user->getPassword();
 
-							if (!is_null($passwordHash) && password_verify($password, $passwordHash)) {
-								if ($user->isEmailActivated()) {
-									if ($user->isSuspended()) {
-										$expiry = new DateTime("now");
-										$expiry->add(DateInterval::createFromDateString("6 month"));
+								if (!is_null($passwordHash) && password_verify($password, $passwordHash)) {
+									if ($user->isEmailActivated()) {
+										if ($user->isSuspended()) {
+											$expiry = new DateTime("now");
+											$expiry->add(DateInterval::createFromDateString("6 month"));
 
-										$token = (new Token())
-											->setUser($user)
-											->setTime(new DateTime("now"))
-											->setLastAccessTime(new DateTime("now"))
-											->setUserAgent($request->headers->get("User-Agent"))
-											->setLastIP($request->getClientIp())
-											->setExpiry($expiry);
+											$token = (new Token())
+												->setUser($user)
+												->setTime(new DateTime("now"))
+												->setLastAccessTime(new DateTime("now"))
+												->setUserAgent($request->headers->get("User-Agent"))
+												->setLastIP($request->getClientIp())
+												->setExpiry($expiry);
 
-										$entityManager->persist($token);
-										$entityManager->flush();
+											$entityManager->persist($token);
+											$entityManager->flush();
 
-										$response = $this->redirect($this->generateUrl("qpost_home_index"));
-										$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
+											$response = $this->redirect($this->generateUrl("qpost_home_index"));
+											$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
 
-										return $response;
+											return $response;
+										} else {
+											$this->addFlash(FlashMessageType::ERROR, "Your account has been suspended.");
+										}
 									} else {
-										$this->addFlash(FlashMessageType::ERROR, "Your account has been suspended.");
+										$this->addFlash(FlashMessageType::ERROR, "Please activate your email address before logging in.");
 									}
 								} else {
-									$this->addFlash(FlashMessageType::ERROR, "Please activate your email address before logging in.");
+									$this->addFlash(FlashMessageType::ERROR, "Invalid credentials.");
 								}
 							} else {
 								$this->addFlash(FlashMessageType::ERROR, "Invalid credentials.");
 							}
 						} else {
-							$this->addFlash(FlashMessageType::ERROR, "Invalid credentials.");
+							$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
 						}
-					} else {
-						$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
 					}
 				}
 			}
