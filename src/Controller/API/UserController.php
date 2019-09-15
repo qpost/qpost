@@ -20,15 +20,30 @@
 
 namespace qpost\Controller\API;
 
+use DateTime;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use qpost\Entity\User;
 use qpost\Service\APIService;
+use qpost\Service\GigadriveService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function base64_decode;
+use function dirname;
+use function file_exists;
+use function file_put_contents;
+use function filesize;
+use function getimagesize;
+use function getrandmax;
 use function is_null;
+use function is_string;
+use function mkdir;
+use function rand;
+use function strlen;
+use function strtotime;
+use function sys_get_temp_dir;
 
 class UserController extends AbstractController {
 	/**
@@ -36,7 +51,6 @@ class UserController extends AbstractController {
 	 *
 	 * @param APIService $apiService
 	 * @return Response|null
-	 * @throws NonUniqueResultException
 	 */
 	public function info(APIService $apiService) {
 		$response = $apiService->validate(false);
@@ -60,6 +74,106 @@ class UserController extends AbstractController {
 			}
 		} else {
 			return $apiService->json(["error" => "Unknown user"], 404);
+		}
+	}
+
+	/**
+	 * @Route("/api/user", methods={"POST"})
+	 *
+	 * @param APIService $apiService
+	 * @param GigadriveService $gigadriveService
+	 * @return Response|null
+	 * @throws Exception
+	 */
+	public function edit(APIService $apiService, GigadriveService $gigadriveService) {
+		$response = $apiService->validate(true);
+		if (!is_null($response)) return $response;
+
+		$parameters = $apiService->parameters();
+		$user = $apiService->getUser();
+
+		if ($parameters->has("displayName")) {
+			$displayName = $parameters->get("displayName");
+
+			if (!Util::isEmpty($displayName)) {
+				if (strlen($displayName) >= 1 && strlen($displayName) <= 24) {
+					if ($parameters->has("bio")) {
+						$bio = $parameters->get("bio");
+
+						if (is_null($bio) || (strlen($bio) >= 0 && strlen($bio) <= 200)) {
+							if ($parameters->has("birthday")) {
+								$birthday = $parameters->get("birthday");
+
+								if (is_null($birthday) || strtotime($birthday)) {
+									$user->setDisplayName($displayName)
+										->setBio(Util::isEmpty($bio) ? null : $bio)
+										->setBirthday(Util::isEmpty($birthday) ? null : new DateTime($birthday));
+
+									if ($parameters->has("avatar")) {
+										$base64 = $parameters->get("avatar");
+
+										if (is_string($base64) && ($avatarFile = @base64_decode($base64))) {
+											$path = null;
+											while (is_null($path) || file_exists($path)) $path = sys_get_temp_dir() . "/qpost/avatar/" . rand(0, getrandmax()) . ".png";
+
+											$directoryPath = dirname($path);
+											if (!file_exists($directoryPath)) {
+												mkdir($directoryPath, 0777, true);
+											}
+
+											file_put_contents($path, $avatarFile);
+
+											if (!(@getimagesize($path))) {
+												return $apiService->json(["error" => "'avatar' is not a valid image."], 400);
+											}
+
+											// Check if file is smaller than 2MB
+											$fileSize = @filesize($path);
+											if (!($fileSize) || !(($fileSize / 1024 / 1024) < 2)) {
+												return $apiService->json(["error" => "'avatar' may not be bigger than 2MB."], 400);
+											}
+
+											$url = $gigadriveService->storeFileOnCDN($avatarFile);
+											if (!is_null($url)) {
+												$user->setAvatar($url);
+											} else {
+												return $apiService->json(["error" => "An error occurred."]);
+											}
+										} else {
+											if (is_null($base64)) {
+												$user->setAvatar(null);
+											} else {
+												return $apiService->json(["error" => "'avatar' has to be a base64 string."], 400);
+											}
+										}
+									}
+
+									$entityManager = $apiService->getEntityManager();
+
+									$entityManager->persist($user);
+									$entityManager->flush();
+
+									return $apiService->json(["result" => $apiService->serialize($user)]);
+								} else {
+									return $apiService->json(["error" => "The birthday must be a valid date."], 400);
+								}
+							} else {
+								return $apiService->json(["error" => "'birthday' is required."], 400);
+							}
+						} else {
+							return $apiService->json(["error" => "The bio must be between 0 and 200 characters long."], 400);
+						}
+					} else {
+						return $apiService->json(["error" => "'bio' is required."], 400);
+					}
+				} else {
+					return $apiService->json(["error" => "The display name must be between 1 and 24 characters long."], 400);
+				}
+			} else {
+				return $apiService->json(["error" => "'displayName' is required."], 400);
+			}
+		} else {
+			return $apiService->json(["error" => "'displayName' is required."], 400);
 		}
 	}
 
