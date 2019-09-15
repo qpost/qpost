@@ -71,15 +71,18 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 							<div className="ml-2 float-left">
 								<Link to={"/" + suggestedUser.getUsername()} className="clearUnderline"
 									  data-user-id="{{ suggestedUser.id }}">
-									<div className="text-muted small float-left mt-1"
+									<div className="float-left mt-1"
 										 style={{
-											 maxWidth: "160px",
+											 maxWidth: "220px",
 											 overflow: "hidden",
 											 textOverflow: "ellipsis",
 											 whiteSpace: "nowrap",
 											 wordWrap: "normal"
 										 }}>
-										@{suggestedUser.getUsername()}<VerifiedBadge target={suggestedUser}/>
+										<span
+											className={"font-weight-bold"}>{suggestedUser.getDisplayName()}</span><VerifiedBadge
+										target={suggestedUser}/> <span
+										className={"text-muted small"}>@{suggestedUser.getUsername()}</span>
 									</div>
 									<br/>
 								</Link>
