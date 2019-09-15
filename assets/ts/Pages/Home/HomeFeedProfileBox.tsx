@@ -23,6 +23,7 @@ import {Link} from "react-router-dom";
 import FollowButton from "../../Component/FollowButton";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import {formatNumberShort} from "../../Util/Format";
+import {Card} from "antd";
 
 export default class HomeFeedProfileBox extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -33,7 +34,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 			return null;
 		}
 
-		return <div className="homeFeedProfileBox card mb-3">
+		return <Card className="homeFeedProfileBox mb-3" size={"small"}>
 			<div className="px-2 py-2">
 				<div className="d-block" style={{height: "50px"}}>
 					<Link to={"/" + currentUser.getUsername()} className="clearUnderline float-left">
@@ -111,6 +112,6 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 					</Link>
 				</div>
 			</div>
-		</div>
+		</Card>
 	}
 }
