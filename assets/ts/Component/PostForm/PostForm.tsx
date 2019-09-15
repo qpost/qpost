@@ -236,7 +236,7 @@ export default class PostForm extends Component<{
 					<div className={"actionButtons"}>
 						<Upload
 							name={"image-upload"}
-							listType={"picture-card"}
+							listType={"text"}
 							className={"uploader"}
 							showUploadList={false}
 							action={"https://qpo.st"}
