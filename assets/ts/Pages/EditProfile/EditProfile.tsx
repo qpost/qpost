@@ -249,6 +249,8 @@ export default class EditProfile extends Component<any, {
 										return;
 									}
 
+									this.setState({loading: true});
+
 									API.handleRequest("/user", "POST", {
 										displayName,
 										bio: bio || null,
