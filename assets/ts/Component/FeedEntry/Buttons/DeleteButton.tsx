@@ -23,17 +23,7 @@ import Auth from "../../../Auth/Auth";
 
 export default class DeleteButton extends Component<{
 	entry: FeedEntry
-}, {
-	favorited: boolean
-}> {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			favorited: this.props.entry.isFavorited()
-		};
-	}
-
+}, any> {
 	click = (e) => {
 		e.preventDefault();
 
@@ -46,7 +36,7 @@ export default class DeleteButton extends Component<{
 			return "";
 		}
 
-		return <div className={"d-inline-block deleteButton" + (this.state.favorited ? " active" : "")}
+		return <div className={"d-inline-block deleteButton"}
 					onClick={(e) => this.click(e)}>
 			<i className={"fas fa-trash-alt"}/>
 		</div>;
