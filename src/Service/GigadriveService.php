@@ -95,10 +95,22 @@ class GigadriveService {
 					if ($data) {
 						if (isset($data["success"]) && isset($data["file"]) && isset($data["file"]["url"])) {
 							return $data["file"]["url"];
+						} else {
+							$this->logger->error("Storage was not successful", [
+								"data" => $data
+							]);
 						}
+					} else {
+						$this->logger->error("Response body is invalid json.");
 					}
+				} else {
+					$this->logger->error("Response body is empty.");
 				}
+			} else {
+				$this->logger->error("Failed to get response body.");
 			}
+		} else {
+			$this->logger->error("Failed to generate base64.");
 		}
 
 		return null;
