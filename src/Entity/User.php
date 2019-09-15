@@ -974,7 +974,7 @@ class User {
 
 	/**
 	 * @return int
-	 * @Serializer\VirtualProperty()
+	 * @Serializer\Exclude()
 	 */
 	public function getOpenRequestsCount(): int {
 		return count($this->getFollowRequests());
