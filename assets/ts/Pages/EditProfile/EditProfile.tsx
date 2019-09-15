@@ -43,6 +43,7 @@ export default class EditProfile extends Component<any, {
 	bio: string | undefined,
 	birthday: string | undefined,
 	avatar: string | PostFormUploadItem | undefined,
+	avatarModified: boolean,
 	loading: boolean
 }> {
 	constructor(props) {
@@ -60,6 +61,7 @@ export default class EditProfile extends Component<any, {
 			bio: user.getBio(),
 			birthday: user.getBirthday(),
 			avatar,
+			avatarModified: false,
 			loading: false
 		};
 	}
@@ -94,7 +96,11 @@ export default class EditProfile extends Component<any, {
 				item.dataURL = result;
 				item.base64 = item.dataURL.replace(/^data:image\/(png|jpg|jpeg|gif);base64,/, "");
 
-				this.setState({avatar: item, loading: false});
+				this.setState({
+					avatar: item,
+					loading: false,
+					avatarModified: true
+				});
 			} else {
 				this.setState({loading: false});
 			}
@@ -205,7 +211,10 @@ export default class EditProfile extends Component<any, {
 											e.preventDefault();
 
 											if (!this.state.loading) {
-												this.setState({avatar: undefined});
+												this.setState({
+													avatar: undefined,
+													avatarModified: true
+												});
 											}
 										}}>
 									Delete profile picture
@@ -251,12 +260,17 @@ export default class EditProfile extends Component<any, {
 
 									this.setState({loading: true});
 
-									API.handleRequest("/user", "POST", {
+									const parameters = {
 										displayName,
 										bio: bio || null,
-										birthday: birthday || null,
-										avatar: (avatar instanceof PostFormUploadItem) ? avatar.base64 : null
-									}, data => {
+										birthday: birthday || null
+									};
+
+									if (this.state.avatarModified) {
+										parameters["avatar"] = (avatar instanceof PostFormUploadItem) ? avatar.base64 : null;
+									}
+
+									API.handleRequest("/user", "POST", parameters, data => {
 										if (data.hasOwnProperty("result")) {
 											const user = BaseObject.convertObject(User, data.result);
 											Auth.setCurrentUser(user);
