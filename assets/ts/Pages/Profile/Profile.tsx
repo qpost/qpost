@@ -38,6 +38,7 @@ import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {Card} from "antd";
 import "antd/es/card/style";
 import FollowsYouBadge from "../../Component/FollowsYouBadge";
+import Biography from "../../Component/Biography";
 
 export default class Profile extends Component<any, {
 	user: User,
@@ -100,6 +101,8 @@ export default class Profile extends Component<any, {
 							<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge target={user}/>
 							</div>
 
+							<Biography user={user}/>
+
 							<p className={"my-2 text-muted"}>
 								<i className={"fas fa-globe"}/><span
 								style={{marginLeft: "5px"}}>Joined {registerDate.toLocaleString("default", {
@@ -135,7 +138,7 @@ export default class Profile extends Component<any, {
 							</div>
 
 							<div className={"mt-2"}>
-								{/*TODO: Bio*/}
+								<Biography user={user}/>
 
 								<p className={"my-2 text-muted clearfix"}>
 									<div className={"float-left"}>
