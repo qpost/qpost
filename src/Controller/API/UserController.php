@@ -23,6 +23,7 @@ namespace qpost\Controller\API;
 use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Exception;
+use Gumlet\ImageResize;
 use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\GigadriveService;
@@ -133,11 +134,21 @@ class UserController extends AbstractController {
 												return $apiService->json(["error" => "'avatar' may not be bigger than 2MB."], 400);
 											}
 
-											$url = $gigadriveService->storeFileOnCDN($avatarFile);
-											if (!is_null($url)) {
-												$user->setAvatar($url);
-											} else {
-												return $apiService->json(["error" => "An error occurred."]);
+											try {
+												$image = new ImageResize($path);
+
+												$image->crop(300, 300, true);
+
+												$avatarFile = $image->getImageAsString();
+
+												$url = $gigadriveService->storeFileOnCDN($avatarFile);
+												if (!is_null($url)) {
+													$user->setAvatar($url);
+												} else {
+													return $apiService->json(["error" => "An error occurred."]);
+												}
+											} catch (Exception $e) {
+												return $apiService->json(["error" => "'avatar' is not a valid image."], 400);
 											}
 										} else {
 											if (is_null($base64)) {
