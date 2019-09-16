@@ -21,9 +21,11 @@ import React, {Component} from "react";
 import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import Auth from "../../../Auth/Auth";
 import {formatNumberShort} from "../../../Util/Format";
+import FeedEntryActionButtons from "./FeedEntryActionButtons";
 
 export default class ShareButton extends Component<{
-	entry: FeedEntry
+	entry: FeedEntry,
+	parent?: FeedEntryActionButtons
 }, {
 	shared: boolean
 }> {

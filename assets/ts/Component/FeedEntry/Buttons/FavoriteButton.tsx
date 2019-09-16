@@ -24,9 +24,11 @@ import {message, Spin} from "antd";
 import "antd/es/spin/style";
 import API from "../../../API/API";
 import BaseObject from "../../../Serialization/BaseObject";
+import FeedEntryActionButtons from "./FeedEntryActionButtons";
 
 export default class FavoriteButton extends Component<{
-	entry: FeedEntry
+	entry: FeedEntry,
+	parent?: FeedEntryActionButtons
 }, {
 	favorited: boolean,
 	loading: boolean,

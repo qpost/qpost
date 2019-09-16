@@ -20,9 +20,11 @@
 import React, {Component} from "react";
 import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import {formatNumberShort} from "../../../Util/Format";
+import FeedEntryActionButtons from "./FeedEntryActionButtons";
 
 export default class ReplyButton extends Component<{
-	entry: FeedEntry
+	entry: FeedEntry,
+	parent?: FeedEntryActionButtons
 }, any> {
 	click = (e) => {
 		e.preventDefault();

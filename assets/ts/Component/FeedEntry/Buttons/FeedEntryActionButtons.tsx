@@ -23,9 +23,11 @@ import ReplyButton from "./ReplyButton";
 import ShareButton from "./ShareButton";
 import FavoriteButton from "./FavoriteButton";
 import DeleteButton from "./DeleteButton";
+import FeedEntryListItem from "../FeedEntryListItem";
 
 export default class FeedEntryActionButtons extends Component<{
-	entry: FeedEntry
+	entry: FeedEntry,
+	parent?: FeedEntryListItem
 }, any> {
 	constructor(props) {
 		super(props);
@@ -34,17 +36,17 @@ export default class FeedEntryActionButtons extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const entry: FeedEntry = this.props.entry;
 
-		return <div className={"d-block w-100"}>
+		return <div className={"d-block w-100"} onClick={(e) => e.stopPropagation()}>
 			<hr/>
 
 			<div className={"feedEntryButtonHolder"}>
-				<ReplyButton entry={entry}/>
+				<ReplyButton entry={entry} parent={this}/>
 
-				<ShareButton entry={entry}/>
+				<ShareButton entry={entry} parent={this}/>
 
-				<FavoriteButton entry={entry}/>
+				<FavoriteButton entry={entry} parent={this}/>
 
-				<DeleteButton entry={entry}/>
+				<DeleteButton entry={entry} parent={this}/>
 			</div>
 		</div>;
 	}

@@ -28,9 +28,11 @@ import FeedEntryActionButtons from "./Buttons/FeedEntryActionButtons";
 import TimeAgo from "../TimeAgo";
 import FeedEntryListItemAttachments from "./FeedEntryListItemAttachments";
 import FeedEntryText from "./FeedEntryText";
+import FeedEntryList from "./FeedEntryList";
 
 export default class FeedEntryListItem extends Component<{
-	entry: FeedEntry
+	entry: FeedEntry,
+	parent?: FeedEntryList
 }, {
 	nsfwWarningActive: boolean,
 	redirect: boolean
@@ -102,7 +104,7 @@ export default class FeedEntryListItem extends Component<{
 
 							<FeedEntryListItemAttachments entry={entry}/>
 
-							<FeedEntryActionButtons entry={entry}/>
+							<FeedEntryActionButtons entry={entry} parent={this}/>
 						</Row>
 					</div>
 				</li>;

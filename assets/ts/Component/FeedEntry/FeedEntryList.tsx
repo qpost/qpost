@@ -79,7 +79,7 @@ export default class FeedEntryList extends Component<{
 			if (this.state.entries.length > 0) {
 				return <ul className={"list-group feedContainer"}>
 					{this.state.entries.map((entry, i) => {
-						return <FeedEntryListItem key={i} entry={entry}/>
+						return <FeedEntryListItem key={i} entry={entry} parent={this}/>
 					})}
 				</ul>;
 			} else {

@@ -93,6 +93,58 @@ class StatusController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/api/status", methods={"DELETE"})
+	 *
+	 * @param APIService $apiService
+	 * @return Response
+	 */
+	public function delete(APIService $apiService): Response {
+		$response = $apiService->validate(true);
+		if (!is_null($response)) return $response;
+
+		$parameters = $apiService->parameters();
+		$user = $apiService->getUser();
+
+		if ($parameters->has("id")) {
+			$id = $parameters->get("id");
+
+			if (!Util::isEmpty($id)) {
+				if (is_numeric($id)) {
+					/**
+					 * @var FeedEntry $feedEntry
+					 */
+					$feedEntry = $apiService->getEntityManager()->getRepository(FeedEntry::class)->findOneBy([
+						"id" => $id
+					]);
+
+					if (!is_null($feedEntry)) {
+						$entryOwner = $feedEntry->getUser();
+
+						if (!is_null($entryOwner) && $entryOwner->getId() === $user->getId()) {
+							$entityManager = $apiService->getEntityManager();
+
+							$entityManager->remove($feedEntry);
+							$entityManager->flush();
+
+							return $apiService->json(["result" => "Done."]);
+						} else {
+							return $apiService->json(["error" => "You are not allowed to delete this status."], 403);
+						}
+					} else {
+						return $apiService->json(["error" => "The requested resource could not be found."], 404);
+					}
+				} else {
+					return $apiService->json(["error" => "'id' has to be an integer."], 400);
+				}
+			} else {
+				return $apiService->json(["error" => "'id' is required."], 400);
+			}
+		} else {
+			return $apiService->json(["error" => "'id' is required."], 400);
+		}
+	}
+
+	/**
 	 * @Route("/api/status", methods={"POST"})
 	 *
 	 * @param APIService $apiService
