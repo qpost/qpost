@@ -149,7 +149,7 @@ export default class DeleteButton extends Component<{
 				visible={this.state.modalVisible}
 				closable={false}
 				onCancel={this.closeModal}>
-				asd
+				Please remember that deleting this post can <b>NOT</b> be undone!
 			</Modal>];
 	}
 }
