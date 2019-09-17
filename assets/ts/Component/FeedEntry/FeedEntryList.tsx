@@ -27,12 +27,16 @@ import BaseObject from "../../Serialization/BaseObject";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
 import Empty from "antd/es/empty";
 import "antd/es/empty/style";
+import InfiniteScroll from "react-infinite-scroller";
+import {Spin} from "antd";
 
 export default class FeedEntryList extends Component<{
 	user?: User
 }, {
 	entries: FeedEntry[] | null,
-	error: string | null
+	error: string | null,
+	loadingMore: boolean,
+	hasMore: boolean
 }> {
 	public static instance: FeedEntryList | null = null;
 
@@ -41,25 +45,15 @@ export default class FeedEntryList extends Component<{
 
 		this.state = {
 			entries: null,
-			error: null
+			error: null,
+			loadingMore: false,
+			hasMore: true
 		}
 	}
 
 	componentDidMount(): void {
 		FeedEntryList.instance = this;
-		const parameters = this.props.user ? {
-			user: this.props.user.getId()
-		} : {};
-
-		API.handleRequest("/feed", "GET", parameters, data => {
-			let entries: FeedEntry[] = this.state.entries || [];
-
-			data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
-
-			this.setState({entries});
-		}, error => {
-			this.setState({error});
-		});
+		this.load();
 	}
 
 	componentWillUnmount(): void {
@@ -74,14 +68,60 @@ export default class FeedEntryList extends Component<{
 		this.setState({entries});
 	}
 
+	load(max?: number) {
+		const parameters = this.props.user ? {
+			user: this.props.user.getId()
+		} : {};
+
+		if (max) parameters["max"] = max;
+
+		API.handleRequest("/feed", "GET", parameters, data => {
+			let entries: FeedEntry[] = this.state.entries || [];
+
+			data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
+
+			this.setState({
+				entries,
+				loadingMore: false,
+				hasMore: data.results.length === 0 ? false : this.state.hasMore
+			});
+		}, error => {
+			this.setState({error, loadingMore: false, hasMore: false});
+		});
+	}
+
+	loadMore() {
+		if (!this.state.loadingMore && this.state.entries.length > 0 && this.state.hasMore) {
+			const lastId = this.state.entries[this.state.entries.length - 1].getId();
+
+			this.setState({
+				loadingMore: true
+			});
+
+			this.load(lastId);
+		}
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.entries !== null) {
 			if (this.state.entries.length > 0) {
-				return <ul className={"list-group feedContainer"}>
-					{this.state.entries.map((entry, i) => {
-						return <FeedEntryListItem key={i} entry={entry} parent={this}/>
-					})}
-				</ul>;
+				return <InfiniteScroll
+					pageStart={1}
+					loadMore={() => {
+						this.loadMore();
+					}}
+					hasMore={this.state.hasMore}
+					loader={<div className={"text-center my-3" + (!this.state.loadingMore ? " d-none" : "")}>
+						<Spin size={"large"}/>
+					</div>}
+					initialLoad={false}
+				>
+					<ul className={"list-group feedContainer"}>
+						{this.state.entries.map((entry, i) => {
+							return <FeedEntryListItem key={i} entry={entry} parent={this}/>
+						})}
+					</ul>
+				</InfiniteScroll>;
 			} else {
 				return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>;
 			}
