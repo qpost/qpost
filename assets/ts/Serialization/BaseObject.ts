@@ -20,6 +20,9 @@
 //import Serialization from "./Serialization";
 import {JsonConvert} from "json2typescript";
 import {PropertyMatchingRule} from "json2typescript/src/json2typescript/json-convert-enums";
+import FeedEntry from "../Entity/Feed/FeedEntry";
+import Auth from "../Auth/Auth";
+import User from "../Entity/Account/User";
 
 export default class BaseObject {
 	private static jsonConvert: JsonConvert;
@@ -29,7 +32,26 @@ export default class BaseObject {
 			object = JSON.parse(object);
 		}
 
-		return this.getJsonConverter().deserializeObject(object, type);
+		const result = this.getJsonConverter().deserializeObject(object, type);
+		const currentUser = Auth.getCurrentUser();
+
+		if (currentUser) {
+			if (result instanceof FeedEntry) {
+				const user = result.getUser();
+
+				if (user && user.getId() === currentUser.getId()) {
+					Auth.setCurrentUser(user);
+				}
+			}
+
+			if (result instanceof User) {
+				if (result.getId() === currentUser.getId()) {
+					Auth.setCurrentUser(result);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	private static getJsonConverter(): JsonConvert {
