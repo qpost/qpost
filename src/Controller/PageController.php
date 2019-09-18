@@ -71,6 +71,23 @@ class PageController extends AbstractController {
 		}
 	}
 
+	/**
+	 * @Route("/notifications")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return RedirectResponse|Response
+	 */
+	public function notifications(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if ($authService->isAuthorized()) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			return $this->redirect($this->generateUrl("qpost_login_index"));
+		}
+	}
+
 	public function profile(string $username, EntityManagerInterface $entityManager) {
 		$user = $entityManager->getRepository(User::class)->getUserByUsername($username);
 

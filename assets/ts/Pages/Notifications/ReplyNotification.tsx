@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,8 +17,18 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.unseenNotification {
-	background: #D6EAFF;
-	border-color: #9FCCFC;
-	border-width: 3px;
+import React, {Component} from "react";
+import Notification from "../../Entity/Feed/Notification";
+
+export default class ReplyNotification extends Component<{
+	notification: Notification
+}, any> {
+	constructor(props) {
+		super(props);
+	}
+
+	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		// TODO
+		return "";
+	}
 }

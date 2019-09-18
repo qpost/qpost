@@ -68,7 +68,7 @@ class APIService extends AuthorizationService {
 	private $serializer;
 
 	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel) {
-		parent::__construct($requestStack->getCurrentRequest(), $entityManager, false); // Disable cookie auth to prevent CSRF attacks
+		parent::__construct($requestStack->getCurrentRequest(), $entityManager, true); // Disable cookie auth to prevent CSRF attacks
 
 		$this->logger = $logger;
 		$this->kernel = $kernel;

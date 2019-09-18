@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,8 +17,10 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.unseenNotification {
-	background: #D6EAFF;
-	border-color: #9FCCFC;
-	border-width: 3px;
+export default class NotificationType {
+	public static NEW_FOLLOWER: string = "NEW_FOLLOWER";
+	public static MENTION: string = "MENTION";
+	public static FAVORITE: string = "FAVORITE";
+	public static SHARE: string = "SHARE";
+	public static REPLY: string = "REPLY";
 }

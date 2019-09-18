@@ -23,6 +23,7 @@ import {PropertyMatchingRule} from "json2typescript/src/json2typescript/json-con
 import FeedEntry from "../Entity/Feed/FeedEntry";
 import Auth from "../Auth/Auth";
 import User from "../Entity/Account/User";
+import Notification from "../Entity/Feed/Notification";
 
 export default class BaseObject {
 	private static jsonConvert: JsonConvert;
@@ -42,11 +43,15 @@ export default class BaseObject {
 				if (user && user.getId() === currentUser.getId()) {
 					Auth.setCurrentUser(user);
 				}
-			}
-
-			if (result instanceof User) {
+			} else if (result instanceof User) {
 				if (result.getId() === currentUser.getId()) {
 					Auth.setCurrentUser(result);
+				}
+			} else if (result instanceof Notification) {
+				let user = result.getUser();
+
+				if (user && user.getId() === currentUser.getId()) {
+					Auth.setCurrentUser(user);
 				}
 			}
 		}
