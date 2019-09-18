@@ -62,12 +62,12 @@ class Notification {
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
-	private $seen;
+	private $seen = false;
 
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
-	private $notified;
+	private $notified = false;
 
 	/**
 	 * @ORM\Column(type="datetime")

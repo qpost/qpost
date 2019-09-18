@@ -32,7 +32,9 @@ import FeedEntryList from "./FeedEntryList";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
-	parent?: FeedEntryList
+	parent?: FeedEntryList,
+	hideButtons?: boolean,
+	hideAttachments?: boolean
 }, {
 	nsfwWarningActive: boolean,
 	redirect: boolean
@@ -102,9 +104,11 @@ export default class FeedEntryListItem extends Component<{
 								</p>
 							</div> : ""}
 
-							<FeedEntryListItemAttachments entry={entry}/>
+							{this.props.hideAttachments && this.props.hideAttachments === true ? "" :
+								<FeedEntryListItemAttachments entry={entry}/>}
 
-							<FeedEntryActionButtons entry={entry} parent={this}/>
+							{this.props.hideButtons && this.props.hideButtons === true ? "" :
+								<FeedEntryActionButtons entry={entry} parent={this}/>}
 						</Row>
 					</div>
 				</li>;

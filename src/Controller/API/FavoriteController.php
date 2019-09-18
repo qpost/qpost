@@ -23,8 +23,10 @@ namespace qpost\Controller\API;
 use DateTime;
 use Exception;
 use qpost\Constants\FeedEntryType;
+use qpost\Constants\NotificationType;
 use qpost\Entity\Favorite;
 use qpost\Entity\FeedEntry;
+use qpost\Entity\Notification;
 use qpost\Service\APIService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,7 +74,16 @@ class FavoriteController extends AbstractController {
 								->setFeedEntry($feedEntry)
 								->setTime(new DateTime("now"));
 
+							$notification = (new Notification())
+								->setUser($feedEntry->getUser())
+								->setReferencedUser($user)
+								->setReferencedFeedEntry($feedEntry)
+								->setType(NotificationType::FAVORITE)
+								->setTime(new DateTime("now"));
+
 							$entityManager->persist($favorite);
+							$entityManager->persist($notification);
+
 							$entityManager->flush();
 
 							return $apiService->json(["result" => $apiService->serialize($favorite)]);
@@ -126,6 +137,18 @@ class FavoriteController extends AbstractController {
 
 						if (!is_null($favorite)) {
 							$entityManager->remove($favorite);
+
+							$notification = $entityManager->getRepository(Notification::class)->findOneBy([
+								"user" => $feedEntry->getUser(),
+								"referencedFeedEntry" => $feedEntry,
+								"referencedUser" => $user,
+								"type" => NotificationType::FAVORITE
+							]);
+
+							if (!is_null($notification)) {
+								$entityManager->remove($notification);
+							}
+
 							$entityManager->flush();
 
 							return $apiService->json(["result" => [
