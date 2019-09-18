@@ -37,6 +37,7 @@ import FavoriteNotification from "./FavoriteNotification";
 import MentionNotification from "./MentionNotification";
 import ReplyNotification from "./ReplyNotification";
 import ShareNotification from "./ShareNotification";
+import BadgeStatus from "../../Auth/BadgeStatus";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -70,6 +71,8 @@ export default class Notifications extends Component<any, {
 				loadingMore: false,
 				hasMore: data.results.length === 0 ? false : this.state.hasMore
 			});
+
+			BadgeStatus.update();
 		}, error => {
 			this.setState({error, loadingMore: false, hasMore: false});
 		});
