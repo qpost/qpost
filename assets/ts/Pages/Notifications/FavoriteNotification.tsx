@@ -39,7 +39,7 @@ export default class FavoriteNotification extends Component<{
 		if (feedEntry && user) {
 			return <Card size={"small"} className={!notification.isSeen() ? "unseenNotification" : ""}>
 				<p className={"mb-0"}>
-					<i className={"fas fa-star text-warning"}/> <Link to={"/profile/Zeryther"}
+					<i className={"fas fa-star text-warning"}/> <Link to={"/profile/" + user.getUsername()}
 																	  className={"font-weight-bold clearUnderline"}><img
 					src={user.getAvatarURL()} width={24} height={24} className={"rounded mr-1"}
 					alt={user.getUsername()}/>{user.getDisplayName()}</Link><VerifiedBadge target={user}/> favorited
