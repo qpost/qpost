@@ -26,20 +26,23 @@ import "antd/es/modal/style";
 import {Button, message} from "antd";
 import "antd/es/button/style";
 import API from "../../../API/API";
+import {Redirect} from "react-router";
 
 export default class DeleteButton extends Component<{
 	entry: FeedEntry,
 	parent?: FeedEntryActionButtons
 }, {
 	modalVisible: boolean,
-	loading: boolean
+	loading: boolean,
+	redirect: boolean
 }> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			modalVisible: false,
-			loading: false
+			loading: false,
+			redirect: false
 		};
 	}
 
@@ -59,6 +62,10 @@ export default class DeleteButton extends Component<{
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		if (this.state.redirect) {
+			return <Redirect to={"/"}/>;
+		}
+
 		const currentUser = Auth.getCurrentUser();
 		if (!currentUser || currentUser.getId() !== this.props.entry.getUser().getId()) {
 			return "";
@@ -94,14 +101,13 @@ export default class DeleteButton extends Component<{
 									const feedEntryItem = buttons.props.parent;
 
 									if (feedEntryItem) {
+										const entry = feedEntryItem.props.entry;
 										const feedEntryList = feedEntryItem.props.parent;
 
 										if (feedEntryList) {
 											const entries = feedEntryList.state.entries;
 
 											if (entries) {
-												const entry = feedEntryItem.props.entry;
-
 												if (entry) {
 													const index = entries.indexOf(entry, 0);
 													if (index > -1) {
@@ -138,6 +144,31 @@ export default class DeleteButton extends Component<{
 												}
 											}
 										}
+									} else if (this.props.entry) {
+										this.setState({
+											loading: true
+										});
+
+										API.handleRequest("/status", "DELETE", {
+											id: this.props.entry.getId()
+										}, data => {
+											message.success("The post has been deleted.");
+
+											this.setState({
+												loading: false,
+												modalVisible: false,
+												redirect: true
+											});
+										}, error => {
+											message.error(error);
+
+											this.setState({
+												loading: false,
+												modalVisible: false
+											});
+										});
+
+										return;
 									}
 								}
 
