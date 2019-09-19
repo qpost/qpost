@@ -89,7 +89,7 @@ class FeedEntry {
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
-	private $nsfw;
+	private $nsfw = false;
 
 	/**
 	 * @ORM\Column(type="datetime")
@@ -322,7 +322,7 @@ class FeedEntry {
 			$i = 0;
 
 			foreach ($this->getChildren() as $child) {
-				if ($child->getType() === FeedEntryType::SHARE) $i++;
+				if ($child->getType() === FeedEntryType::POST) $i++;
 			}
 
 			return $i;
@@ -340,7 +340,7 @@ class FeedEntry {
 			$i = 0;
 
 			foreach ($this->getChildren() as $child) {
-				if ($child->getType() === FeedEntryType::POST) $i++;
+				if ($child->getType() === FeedEntryType::SHARE) $i++;
 			}
 
 			return $i;

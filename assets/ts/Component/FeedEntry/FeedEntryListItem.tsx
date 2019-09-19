@@ -55,22 +55,39 @@ export default class FeedEntryListItem extends Component<{
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		const entry: FeedEntry = this.props.entry;
-		const user: User = entry.getUser();
+		let entry: FeedEntry = this.props.entry;
+		let user: User = entry.getUser();
 
 		if (this.state.redirect) {
-			return <Redirect to={"/status/" + entry.getId()}/>;
+			const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
+
+			return <Redirect to={"/status/" + id}/>;
 		}
 
 		// TODO: Add NSFW warning
-		// TODO: Add attachments
 		switch (entry.getType()) {
 			case FeedEntryType.POST:
+			case FeedEntryType.SHARE:
+				let shareHeader;
+				if (entry.getType() === FeedEntryType.SHARE) {
+					shareHeader = <div>
+						<p className={"mb-0 small text-muted"}>
+							<i className={"fas fa-retweet text-primary"}/> <Link to={"/profile/" + user.getUsername()}
+																				 className={"font-weight-bold clearUnderline"}>{user.getDisplayName()}</Link><VerifiedBadge
+							target={user}/> shared
+						</p>
+					</div>;
+
+					entry = entry.getPost();
+					user = entry.getUser();
+				}
+
 				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} onClick={(e) => {
 					e.preventDefault();
 					this.redirect();
 				}}>
 					<div className={"px-4 py-2"}>
+						{shareHeader ? shareHeader : ""}
 						<Row>
 							<div className={"float-left"}>
 								<Link to={"/" + user.getUsername()} className={"clearUnderline float-left"}>
@@ -112,8 +129,6 @@ export default class FeedEntryListItem extends Component<{
 						</Row>
 					</div>
 				</li>;
-			case FeedEntryType.SHARE:
-
 			case FeedEntryType.NEW_FOLLOWING:
 
 			default:
