@@ -20,6 +20,7 @@
 import React, {Component} from "react";
 import Notification from "../../Entity/Feed/Notification";
 import {Card} from "antd";
+import {Link} from "react-router-dom";
 
 export default class NewFollowerNotification extends Component<{
 	notification: Notification
@@ -35,9 +36,9 @@ export default class NewFollowerNotification extends Component<{
 		return user ? <Card size={"small"} className={!notification.isSeen() ? "unseenNotification" : ""}>
 			<div className={"clearfix"}>
 				<div className={"float-left mr-2"}>
-					<a href={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+					<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
 						<img src={user.getAvatarURL()} width={48} height={48} className={"rounded"}/>
-					</a>
+					</Link>
 				</div>
 
 				<div className={"float-left"}>
@@ -46,8 +47,9 @@ export default class NewFollowerNotification extends Component<{
 					</p>
 
 					<p className={"mb-0"}>
-						<a href={"/profile/" + user.getUsername()}
-						   className={"font-weight-bold clearUnderline"}>{user.getDisplayName()}</a> is now following
+						<Link to={"/profile/" + user.getUsername()}
+							  className={"font-weight-bold clearUnderline"}>{user.getDisplayName()}</Link> is now
+						following
 						you.
 					</p>
 				</div>
