@@ -27,6 +27,7 @@ use qpost\Constants\MediaFileType;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
 use qpost\Service\APIService;
+use qpost\Service\DataDeletionService;
 use qpost\Service\GigadriveService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -96,9 +97,10 @@ class StatusController extends AbstractController {
 	 * @Route("/api/status", methods={"DELETE"})
 	 *
 	 * @param APIService $apiService
+	 * @param DataDeletionService $dataDeletionService
 	 * @return Response
 	 */
-	public function delete(APIService $apiService): Response {
+	public function delete(APIService $apiService, DataDeletionService $dataDeletionService): Response {
 		$response = $apiService->validate(true);
 		if (!is_null($response)) return $response;
 
@@ -121,10 +123,7 @@ class StatusController extends AbstractController {
 						$entryOwner = $feedEntry->getUser();
 
 						if (!is_null($entryOwner) && $entryOwner->getId() === $user->getId()) {
-							$entityManager = $apiService->getEntityManager();
-
-							$entityManager->remove($feedEntry);
-							$entityManager->flush();
+							$dataDeletionService->deleteFeedEntry($feedEntry);
 
 							return $apiService->json(["result" => "Done."]);
 						} else {

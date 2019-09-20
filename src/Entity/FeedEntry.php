@@ -97,7 +97,7 @@ class FeedEntry {
 	private $time;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true, cascade={"remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $favorites;

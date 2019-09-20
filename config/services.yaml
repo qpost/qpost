@@ -27,6 +27,10 @@ services:
         class: qpost\Service\APIService
         arguments: ["@logger", "@doctrine", "@request_stack", "@kernel"]
 
+    deletion:
+        class: qpost\Service\DataDeletionService
+        arguments: ["@doctrine", "@logger"]
+
     gigadrive:
         class: qpost\Service\GigadriveService
         arguments: ["@logger"]
