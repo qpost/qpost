@@ -23,7 +23,7 @@ import Tooltip from "antd/es/tooltip";
 import "antd/es/tooltip/style";
 import Button from "antd/es/button";
 import "antd/es/button/style";
-import Input from "antd/es/input";
+// import Input from "antd/es/input";
 import "antd/es/input/style";
 import Modal from "antd/es/modal";
 import "antd/es/modal/style";
@@ -37,9 +37,10 @@ import FeedEntryList from "../FeedEntry/FeedEntryList";
 import Upload, {RcFile, UploadChangeParam} from "antd/es/upload";
 import Spin from "antd/es/spin";
 import PostFormUploadItem from "./PostFormUploadItem";
-import {Switch} from "antd";
+import {Mentions, Switch} from "antd";
 import "antd/es/switch/style";
 import "antd/es/icon/style";
+import "antd/es/mentions/style";
 import User from "../../Entity/Account/User";
 import Auth from "../../Auth/Auth";
 
@@ -53,17 +54,21 @@ export default class PostForm extends Component<{
 	message: string | null,
 	posting: boolean,
 	photos: PostFormUploadItem[],
-	nsfw: boolean
+	nsfw: boolean,
+	suggestedUsers: User[],
+	loadingUsers: boolean
 }> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			mobile: window.innerWidth <= 768,
-			message: null,
+			message: "",
 			posting: false,
 			photos: [],
-			nsfw: false
+			nsfw: false,
+			suggestedUsers: [],
+			loadingUsers: false
 		};
 	}
 
@@ -153,9 +158,7 @@ export default class PostForm extends Component<{
 		}
 	};
 
-	change = (e) => {
-		const value = e.target.value.length > 0 ? e.target.value : null;
-
+	change = (value) => {
 		this.setState({
 			message: value
 		});
@@ -220,9 +223,65 @@ export default class PostForm extends Component<{
 					</Button>
 				</div>
 				<hr/>
-				<Input.TextArea rows={3} style={{resize: "none"}} id={"postFormTextarea"}
-								placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
-								value={this.state.message}/>
+				<Mentions rows={3} style={{resize: "none", width: "100%"}} id={"postFormTextarea"}
+						  placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
+						  value={this.state.message} loading={this.state.loadingUsers} onSearch={text => {
+					if (!text) {
+						this.setState({
+							suggestedUsers: []
+						});
+						return;
+					}
+
+					if (text.length < 3) return;
+
+					this.setState({
+						loadingUsers: true
+					});
+
+					API.handleRequest("/search", "GET", {
+						query: text,
+						type: "user",
+						limit: 10
+					}, data => {
+						const results = [];
+
+						if (data.hasOwnProperty("results")) {
+							data.results.forEach(entry => {
+								results.push(BaseObject.convertObject(User, entry));
+							});
+						}
+
+						this.setState({
+							suggestedUsers: results,
+							loadingUsers: false
+						});
+					}, error => {
+						AntMessage.error(error);
+
+						this.setState({
+							loadingUsers: false
+						});
+					});
+				}}>
+					{this.state.suggestedUsers.map((user: User, index: number) => {
+						return <Mentions.Option key={index} value={user.getUsername()}
+												className={"antd-demo-dynamic-option"}>
+							<img src={user.getAvatarURL()} alt={user.getUsername()} className={"rounded mr-2"}
+								 width={24} height={24}/>
+
+							<span>
+								<span className={"font-weight-bold"}>
+									{user.getDisplayName()}
+								</span>
+
+								<span className={"text-muted ml-2"}>
+									{"@" + user.getUsername()}
+								</span>
+							</span>
+						</Mentions.Option>;
+					})}
+				</Mentions>
 
 				{this.state.photos.length > 0 ? <div className={"thumbnailHolder"}>
 					{this.state.photos.map((photo: PostFormUploadItem) => {
