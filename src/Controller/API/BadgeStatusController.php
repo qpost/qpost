@@ -86,7 +86,8 @@ class BadgeStatusController extends AbstractController {
 							]);
 
 							foreach ($notifications as $notification) {
-								$notification->setSeen(true);
+								$notification->setSeen(true)
+									->setNotified(true);
 								$entityManager->persist($notification);
 							}
 
