@@ -43,3 +43,17 @@
 .text-qp-gray {
 	color: gray !important;
 }
+
+.vertical-container {
+	height: 100vh;
+	position: relative;
+
+	.vertical-center {
+		margin: 0;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		-ms-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+	}
+}
