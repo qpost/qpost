@@ -37,6 +37,9 @@ import FeedEntryList from "../FeedEntry/FeedEntryList";
 import Upload, {RcFile, UploadChangeParam} from "antd/es/upload";
 import Spin from "antd/es/spin";
 import PostFormUploadItem from "./PostFormUploadItem";
+import {Switch} from "antd";
+import "antd/es/switch/style";
+import "antd/es/icon/style";
 
 export default class PostForm extends Component<{
 	onClose?: () => void,
@@ -47,7 +50,8 @@ export default class PostForm extends Component<{
 	mobile: boolean,
 	message: string | null,
 	posting: boolean,
-	photos: PostFormUploadItem[]
+	photos: PostFormUploadItem[],
+	nsfw: boolean
 }> {
 	constructor(props) {
 		super(props);
@@ -56,7 +60,8 @@ export default class PostForm extends Component<{
 			mobile: window.innerWidth <= 768,
 			message: null,
 			posting: false,
-			photos: []
+			photos: [],
+			nsfw: false
 		};
 	}
 
@@ -88,7 +93,8 @@ export default class PostForm extends Component<{
 		this.setState({
 			posting: false,
 			message: null,
-			photos: []
+			photos: [],
+			nsfw: false
 		});
 	};
 
@@ -111,9 +117,12 @@ export default class PostForm extends Component<{
 				}
 			});
 
+			const nsfw: boolean = this.state.nsfw;
+
 			API.handleRequest("/status", "POST", {
 				message,
-				attachments
+				attachments,
+				nsfw
 			}, data => {
 				if (data.hasOwnProperty("post")) {
 					const post: FeedEntry = BaseObject.convertObject(FeedEntry, data.post);
@@ -252,6 +261,13 @@ export default class PostForm extends Component<{
 								</Button>
 							</Tooltip>
 						</Upload>
+
+						<Switch checkedChildren={"18+"} unCheckedChildren={"18+"} className={"mt-n2"}
+								defaultChecked={this.state.nsfw} onChange={(checked: boolean, event: Event) => {
+							this.setState({
+								nsfw: checked
+							});
+						}}/>
 					</div>
 
 					<div className={"characterCount"}>

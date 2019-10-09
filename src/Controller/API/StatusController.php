@@ -43,6 +43,7 @@ use function getimagesize;
 use function getrandmax;
 use function hash;
 use function is_array;
+use function is_bool;
 use function is_null;
 use function is_numeric;
 use function is_string;
@@ -200,13 +201,22 @@ class StatusController extends AbstractController {
 						return $apiService->json(["error" => "Post is empty."], 400);
 					}
 
+					$nsfw = false;
+					if ($parameters->has("nsfw")) {
+						$nsfw = $parameters->get("nsfw");
+
+						if (!is_bool($nsfw)) {
+							return $apiService->json(["error" => "'nsfw' has to be a boolean."]);
+						}
+					}
+
 					$entityManager = $apiService->getEntityManager();
 					$feedEntry = (new FeedEntry())
 						->setUser($user)
 						->setText(Util::isEmpty($message) ? null : $message)
 						->setToken($token)
 						->setType(FeedEntryType::POST)
-						->setNSFW(false)// TODO
+						->setNSFW($nsfw)
 						->setTime(new DateTime("now"));
 
 					$entityManager->persist($feedEntry);
