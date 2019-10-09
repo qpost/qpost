@@ -36,17 +36,19 @@ export default class FeedEntryActionButtons extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const entry: FeedEntry = this.props.entry;
 
-		return <div className={"d-block w-100"} onClick={(e) => e.stopPropagation()}>
-			<hr/>
+		return <div className={"row w-100 ml-0"}>
+			<div className={"d-block w-100"} onClick={(e) => e.stopPropagation()}>
+				<hr/>
 
-			<div className={"feedEntryButtonHolder"}>
-				<ReplyButton entry={entry} parent={this}/>
+				<div className={"feedEntryButtonHolder"}>
+					<ReplyButton entry={entry} parent={this}/>
 
-				<ShareButton entry={entry} parent={this}/>
+					<ShareButton entry={entry} parent={this}/>
 
-				<FavoriteButton entry={entry} parent={this}/>
+					<FavoriteButton entry={entry} parent={this}/>
 
-				<DeleteButton entry={entry} parent={this}/>
+					<DeleteButton entry={entry} parent={this}/>
+				</div>
 			</div>
 		</div>;
 	}

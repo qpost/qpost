@@ -29,6 +29,7 @@ import TimeAgo from "../TimeAgo";
 import FeedEntryListItemAttachments from "./FeedEntryListItemAttachments";
 import FeedEntryText from "./FeedEntryText";
 import FeedEntryList from "./FeedEntryList";
+import {Alert, Icon} from "antd";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
@@ -64,7 +65,6 @@ export default class FeedEntryListItem extends Component<{
 			return <Redirect to={"/status/" + id}/>;
 		}
 
-		// TODO: Add NSFW warning
 		switch (entry.getType()) {
 			case FeedEntryType.POST:
 			case FeedEntryType.SHARE:
@@ -115,17 +115,30 @@ export default class FeedEntryListItem extends Component<{
 								</p>
 							</div>
 
-							{entry.getText() !== null ? <div className="float-left ml-1 my-2 w-100">
-								<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
-									<FeedEntryText feedEntry={entry}/>
-								</p>
-							</div> : ""}
+							{this.state.nsfwWarningActive ? <div className={"nsfwWarning w-100 mt-2"} onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
 
-							{this.props.hideAttachments && this.props.hideAttachments === true ? "" :
-								<FeedEntryListItemAttachments entry={entry}/>}
+								this.setState({
+									nsfwWarningActive: false
+								});
+							}}>
+								<Alert message={"NSFW content"} type={"error"}
+									   description={"This post was marked as NSFW and may contain inappropriate content. Click to reveal it."}
+									   showIcon icon={<Icon type="warning"/>}/>
+							</div> : <div className={"w-100"}>
+								{entry.getText() !== null ? <div className="float-left ml-1 my-2 w-100">
+									<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
+										<FeedEntryText feedEntry={entry}/>
+									</p>
+								</div> : ""}
 
-							{this.props.hideButtons && this.props.hideButtons === true ? "" :
-								<FeedEntryActionButtons entry={entry} parent={this}/>}
+								{this.props.hideAttachments && this.props.hideAttachments === true ? "" :
+									<FeedEntryListItemAttachments entry={entry}/>}
+
+								{this.props.hideButtons && this.props.hideButtons === true ? "" :
+									<FeedEntryActionButtons entry={entry} parent={this}/>}
+							</div>}
 						</Row>
 					</div>
 				</li>;

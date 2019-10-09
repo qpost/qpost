@@ -33,7 +33,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 			if (attachments.length === 1) {
 				const mediaFile: MediaFile = attachments[0];
 
-				return <div className={"d-block w-100"}>
+				return <div className={"d-block w-100 float-left"}>
 					{mediaFile.getType() === MediaFileType.IMAGE ?
 						<div className={"border border-mainColor bg-dark"} style={{
 							backgroundImage: 'url("' + mediaFile.getURL() + '")',
