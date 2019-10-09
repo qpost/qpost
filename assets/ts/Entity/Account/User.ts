@@ -146,4 +146,8 @@ export default class User {
 	public isFollowingYou(): boolean {
 		return this.followsYou;
 	}
+
+	public getCharacterLimit(): number {
+		return !this.isVerified() ? window["POST_CHARACTER_LIMIT"] : window["VERIFIED_POST_CHARACTER_LIMIT"];
+	}
 }

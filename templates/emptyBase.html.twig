@@ -58,6 +58,7 @@
 	<script type="text/javascript">
 		window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
 		window["POST_CHARACTER_LIMIT"] = {{ postCharacterLimit }};
+		window["VERIFIED_POST_CHARACTER_LIMIT"] = {{ verifiedPostCharacterLimit }};
 
 		window["restoreTitle"] = "{{ profileLoadPost is defined ? originalTitle }}";
 		window["CURRENT_STATUS_MODAL"] = 0;

@@ -40,6 +40,8 @@ import PostFormUploadItem from "./PostFormUploadItem";
 import {Switch} from "antd";
 import "antd/es/switch/style";
 import "antd/es/icon/style";
+import User from "../../Entity/Account/User";
+import Auth from "../../Auth/Auth";
 
 export default class PostForm extends Component<{
 	onClose?: () => void,
@@ -201,6 +203,8 @@ export default class PostForm extends Component<{
 
 	content = () => {
 		const used: number = this.state.message === null ? 0 : this.state.message.length;
+		const user: User = Auth.getCurrentUser();
+		if (!user) return "";
 
 		return <div className={"postForm"}>
 			{this.state.posting === false ? <div>
@@ -271,7 +275,7 @@ export default class PostForm extends Component<{
 					</div>
 
 					<div className={"characterCount"}>
-						{300 - used}
+						{user.getCharacterLimit() - used}
 					</div>
 				</div>
 			</div> : <div className={"text-center my-3"}>
