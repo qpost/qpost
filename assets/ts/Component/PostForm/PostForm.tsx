@@ -43,6 +43,7 @@ import "antd/es/icon/style";
 import "antd/es/mentions/style";
 import User from "../../Entity/Account/User";
 import Auth from "../../Auth/Auth";
+import VerifiedBadge from "../VerifiedBadge";
 
 export default class PostForm extends Component<{
 	onClose?: () => void,
@@ -272,7 +273,7 @@ export default class PostForm extends Component<{
 
 							<span>
 								<span className={"font-weight-bold"}>
-									{user.getDisplayName()}
+									{user.getDisplayName()}<VerifiedBadge target={user}/>
 								</span>
 
 								<span className={"text-muted ml-2"}>
