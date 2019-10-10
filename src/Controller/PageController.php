@@ -105,6 +105,57 @@ class PageController extends AbstractController {
 		}
 	}
 
+	/**
+	 * @Route("/account")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return RedirectResponse|Response
+	 */
+	public function account(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if ($authService->isAuthorized()) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			return $this->redirect($this->generateUrl("qpost_login_index"));
+		}
+	}
+
+	/**
+	 * @Route("/account/privacy")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return RedirectResponse|Response
+	 */
+	public function accountPrivacy(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if ($authService->isAuthorized()) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			return $this->redirect($this->generateUrl("qpost_login_index"));
+		}
+	}
+
+	/**
+	 * @Route("/account/sessions")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return RedirectResponse|Response
+	 */
+	public function accountSessions(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if ($authService->isAuthorized()) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			return $this->redirect($this->generateUrl("qpost_login_index"));
+		}
+	}
+
 	public function profile(string $username, EntityManagerInterface $entityManager) {
 		$user = $entityManager->getRepository(User::class)->getUserByUsername($username);
 
