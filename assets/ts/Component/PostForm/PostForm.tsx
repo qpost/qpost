@@ -23,7 +23,6 @@ import Tooltip from "antd/es/tooltip";
 import "antd/es/tooltip/style";
 import Button from "antd/es/button";
 import "antd/es/button/style";
-// import Input from "antd/es/input";
 import "antd/es/input/style";
 import Modal from "antd/es/modal";
 import "antd/es/modal/style";
@@ -59,6 +58,8 @@ export default class PostForm extends Component<{
 	suggestedUsers: User[],
 	loadingUsers: boolean
 }> {
+	private static keyDownInitiated: boolean = false;
+
 	constructor(props) {
 		super(props);
 
@@ -71,6 +72,20 @@ export default class PostForm extends Component<{
 			suggestedUsers: [],
 			loadingUsers: false
 		};
+	}
+
+	componentDidMount(): void {
+		if (!PostForm.keyDownInitiated) {
+			PostForm.keyDownInitiated = true;
+
+			$(document).on("keydown", "#postFormTextarea", (e) => {
+				if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
+					// CTRL+Enter
+
+					this.send(e);
+				}
+			});
+		}
 	}
 
 	readyToPost(): boolean {
