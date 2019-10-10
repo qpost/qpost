@@ -74,15 +74,20 @@ class FavoriteController extends AbstractController {
 								->setFeedEntry($feedEntry)
 								->setTime(new DateTime("now"));
 
-							$notification = (new Notification())
-								->setUser($feedEntry->getUser())
-								->setReferencedUser($user)
-								->setReferencedFeedEntry($feedEntry)
-								->setType(NotificationType::FAVORITE)
-								->setTime(new DateTime("now"));
+							if ($feedEntry->getUser()->getId() !== $user->getId()) {
+								$notification = (new Notification())
+									->setUser($feedEntry->getUser())
+									->setReferencedUser($user)
+									->setReferencedFeedEntry($feedEntry)
+									->setType(NotificationType::FAVORITE)
+									->setTime(new DateTime("now"));
+							}
 
 							$entityManager->persist($favorite);
-							$entityManager->persist($notification);
+
+							if (isset($notification)) {
+								$entityManager->persist($notification);
+							}
 
 							$entityManager->flush();
 
