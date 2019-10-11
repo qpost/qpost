@@ -35,13 +35,13 @@ export default class AccountMenu extends Component<{
 		super(props);
 
 		this.state = {
-			mobileMenu: window.innerWidth <= 768,
+			mobileMenu: window.innerWidth <= 867,
 			redirect: null
 		};
 	}
 
 	setIsMobileMenu = (windowWidth: number) => {
-		const mobileMenuOpen = windowWidth <= 768;
+		const mobileMenuOpen = windowWidth <= 867;
 
 		if (this.state.mobileMenu !== mobileMenuOpen) {
 			this.setState({
