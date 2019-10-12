@@ -26,11 +26,11 @@ export default class AccountBase extends Component<{
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <Row gutter={20}>
-			<Col lg={8} xl={6}>
+			<Col lg={8} md={6}>
 				<AccountMenu activePoint={this.props.activeKey}/>
 			</Col>
 
-			<Col xl={18} lg={16}>
+			<Col md={18} lg={16}>
 				{this.props.children}
 			</Col>
 		</Row>;
