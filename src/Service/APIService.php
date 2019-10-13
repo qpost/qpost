@@ -112,6 +112,12 @@ class APIService extends AuthorizationService {
 			return $response;
 		}
 
+		// Update token last access time
+		if ($this->isAuthorized()) {
+			$this->entityManager->persist($this->token->setLastAccessTime(new DateTime("now")));
+			$this->entityManager->flush();
+		}
+
 		return null;
 	}
 
