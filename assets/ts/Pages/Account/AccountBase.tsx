@@ -20,6 +20,7 @@
 import React, {Component} from "react";
 import {Col, Row} from "antd";
 import AccountMenu, {AccountMenuKey} from "./AccountMenu";
+import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 
 export default class AccountBase extends Component<{
 	activeKey?: AccountMenuKey
@@ -27,7 +28,9 @@ export default class AccountBase extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <Row gutter={20}>
 			<Col lg={8} md={6}>
-				<AccountMenu activePoint={this.props.activeKey}/>
+				<SidebarStickyContent>
+					<AccountMenu activePoint={this.props.activeKey}/>
+				</SidebarStickyContent>
 			</Col>
 
 			<Col md={18} lg={16}>
