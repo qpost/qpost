@@ -101,11 +101,14 @@ class AuthorizationService {
 	}
 
 	private function loadData(string $tokenId): bool {
+		/**
+		 * @var Token $token
+		 */
 		$token = $this->entityManager->getRepository(Token::class)->findOneBy([
 			"id" => $tokenId
 		]);
 
-		if (!is_null($token)) {
+		if (!is_null($token) && !$token->isExpired()) {
 			$this->token = $token;
 			$this->user = $token->getUser();
 			return true;
