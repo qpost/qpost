@@ -43,6 +43,7 @@ import Following from "./Following";
 import Posts from "./Posts";
 import Favorites from "./Favorites";
 import Followers from "./Followers";
+import {formatNumberShort} from "../../Util/Format";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -212,15 +213,15 @@ export default class Profile extends Component<any, {
 							}
 						}}>
 							<Menu.Item key={"POSTS"}>
-								Posts ({user.getPostCount()})
+								Posts ({formatNumberShort(user.getPostCount())})
 							</Menu.Item>
 
 							<Menu.Item key={"FOLLOWING"}>
-								Following ({user.getFollowingCount()})
+								Following ({formatNumberShort(user.getFollowingCount())})
 							</Menu.Item>
 
 							<Menu.Item key={"FOLLOWERS"}>
-								Followers ({user.getFollowerCount()})
+								Followers ({formatNumberShort(user.getFollowerCount())})
 							</Menu.Item>
 
 							<Menu.Item key={"FAVORITES"}>
