@@ -20,13 +20,96 @@
 
 namespace qpost\Controller\API;
 
+use DateTime;
+use Exception;
+use qpost\Entity\Token;
 use qpost\Service\APIService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function is_null;
+use function is_string;
 
 class TokenController extends AbstractController {
+	/**
+	 * @Route("/api/token", methods={"GET"})
+	 *
+	 * @param APIService $apiService
+	 * @return Response|null
+	 */
+	public function tokens(APIService $apiService) {
+		$response = $apiService->validate(true);
+		if (!is_null($response)) return $response;
+
+		$user = $apiService->getUser();
+
+		$results = [];
+
+		/**
+		 * @var Token[] $tokens
+		 */
+		$tokens = $apiService->getEntityManager()->getRepository(Token::class)->createQueryBuilder("t")
+			->where("t.user = :user")
+			->setParameter("user", $user)
+			->orderBy("t.lastAccessTime", "DESC")
+			->getQuery()
+			->getResult();
+
+		foreach ($tokens as $token) {
+			if (!$token->isExpired()) {
+				$results[] = $apiService->serialize($token);
+			}
+		}
+
+		return $apiService->json(["results" => $results]);
+	}
+
+	/**
+	 * @Route("/api/token", methods={"DELETE"})
+	 *
+	 * @param APIService $apiService
+	 * @return Response|null
+	 * @throws Exception
+	 */
+	public function logout(APIService $apiService) {
+		$response = $apiService->validate(true);
+		if (!is_null($response)) return $response;
+
+		$user = $apiService->getUser();
+
+		$parameters = $apiService->parameters();
+
+		if ($parameters->has("id")) {
+			$id = $parameters->get("id");
+
+			if (is_string($id)) {
+				$entityManager = $apiService->getEntityManager();
+
+				/**
+				 * @var Token $token
+				 */
+				$token = $entityManager->getRepository(Token::class)->findOneBy([
+					"id" => $id,
+					"user" => $user
+				]);
+
+				if ($token && !$token->isExpired()) {
+					$token->setExpiry(new DateTime("now"));
+					$entityManager->persist($token);
+					$entityManager->flush();
+
+					return $apiService->json(["result" => "Success."]);
+				} else {
+					return $apiService->json(["error" => "The requested resource could not be found."], 404);
+				}
+			} else {
+				return $apiService->json(["error" => "'id' has to be a string."], 400);
+			}
+		} else {
+			return $apiService->json(["error" => "'id' is required."], 400);
+		}
+	}
+
 	/**
 	 * @Route("/api/token/verify", methods={"POST"})
 	 *

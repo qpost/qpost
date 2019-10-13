@@ -31,6 +31,7 @@ use qpost\Entity\User;
 use qpost\Entity\UserGigadriveData;
 use qpost\Repository\UserGigadriveDataRepository;
 use qpost\Service\AuthorizationService;
+use qpost\Service\IpStackService;
 use qpost\Twig\Twig;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,10 +50,11 @@ class LoginController extends AbstractController {
 	 *
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
+	 * @param IpStackService $ipStackService
 	 * @return RedirectResponse|Response
 	 * @throws NonUniqueResultException
 	 */
-	public function index(Request $request, EntityManagerInterface $entityManager) {
+	public function index(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService) {
 		$authService = new AuthorizationService($request, $entityManager);
 		if (!$authService->isAuthorized()) {
 			if ($request->isMethod("POST")) {
@@ -94,6 +96,16 @@ class LoginController extends AbstractController {
 												->setExpiry($expiry);
 
 											$entityManager->persist($token);
+
+											$ipStackResult = $ipStackService->createIpStackResult($token);
+											if ($ipStackResult) {
+												$entityManager->persist($ipStackResult);
+
+												$token->setIpStackResult($ipStackResult);
+
+												$entityManager->persist($token);
+											}
+
 											$entityManager->flush();
 
 											$response = $this->redirect($this->generateUrl("qpost_home_index"));
@@ -127,8 +139,14 @@ class LoginController extends AbstractController {
 
 	/**
 	 * @Route("/login/callback")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @param IpStackService $ipStackService
+	 * @return RedirectResponse
+	 * @throws NonUniqueResultException
 	 */
-	public function callback(Request $request, EntityManagerInterface $entityManager) {
+	public function callback(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService) {
 		$authService = new AuthorizationService($request, $entityManager);
 		if (!$authService->isAuthorized()) {
 			$query = $request->query;
@@ -173,6 +191,16 @@ class LoginController extends AbstractController {
 										->setExpiry($expiry);
 
 									$entityManager->persist($token);
+
+									$ipStackResult = $ipStackService->createIpStackResult($token);
+									if ($ipStackResult) {
+										$entityManager->persist($ipStackResult);
+
+										$token->setIpStackResult($ipStackResult);
+
+										$entityManager->persist($token);
+									}
+
 									$entityManager->flush();
 
 									$response = $this->redirect($this->generateUrl("qpost_home_index"));

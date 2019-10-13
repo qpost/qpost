@@ -25,6 +25,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Represents the data of an authorization token for a user.
@@ -44,6 +45,7 @@ class Token {
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="tokens")
 	 * @ORM\JoinColumn(nullable=false)
+	 * @Serializer\Exclude()
 	 */
 	private $user;
 
@@ -74,8 +76,15 @@ class Token {
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="token")
+	 * @Serializer\Exclude()
 	 */
 	private $feedEntries;
+
+	/**
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\IpStackResult", inversedBy="token", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(nullable=true)
+	 */
+	private $ipStackResult;
 
 	public function __construct() {
 		$this->feedEntries = new ArrayCollection();
@@ -247,6 +256,16 @@ class Token {
 				$feedEntry->setToken(null);
 			}
 		}
+
+		return $this;
+	}
+
+	public function getIpStackResult(): ?IpStackResult {
+		return $this->ipStackResult;
+	}
+
+	public function setIpStackResult(IpStackResult $ipStackResult): self {
+		$this->ipStackResult = $ipStackResult;
 
 		return $this;
 	}

@@ -51,7 +51,8 @@
 		"reactstrap": "^8.0.0",
 		"ts-loader": "^5.4.5",
 		"tslib": "^1.10.0",
-		"typescript": "^3.5.2"
+		"typescript": "^3.5.2",
+		"ua-parser-js": "^0.7.20"
 	},
 	"devDependencies": {
 		"@fortawesome/fontawesome-svg-core": "^1.2.19",
@@ -61,6 +62,7 @@
 		"@types/jquery.timeago": "^1.0.29",
 		"@types/node": "^11.13.17",
 		"@types/react-window-size": "^1.2.0",
+		"@types/ua-parser-js": "^0.7.33",
 		"css-loader": "^2.1.1",
 		"del": "^4.1.1",
 		"file-loader": "^3.0.1",

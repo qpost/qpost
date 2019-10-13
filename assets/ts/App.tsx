@@ -40,6 +40,7 @@ import BadgeStatus from "./Auth/BadgeStatus";
 import Notifications from "./Pages/Notifications/Notifications";
 import Messages from "./Pages/Messages/Messages";
 import Account from "./Pages/Account/Account";
+import Sessions from "./Pages/Account/Sessions";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -105,6 +106,7 @@ export default class App extends Component<any, any> {
 												<PrivateRoute path={"/edit"} exact component={EditProfile}/>
 												<PrivateRoute path={"/notifications"} exact component={Notifications}/>
 												<PrivateRoute path={"/messages"} exact component={Messages}/>
+												<PrivateRoute path={"/account/sessions"} exact component={Sessions}/>
 												<PrivateRoute path={"/account"} exact component={Account}/>
 												<Route path={"/status/:id"} exact component={Status}/>
 												<Route path={"/profile/:username"} exact component={ProfileRedirect}/>

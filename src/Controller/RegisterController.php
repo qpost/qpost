@@ -32,6 +32,7 @@ use qpost\Entity\UserGigadriveData;
 use qpost\Repository\UserGigadriveDataRepository;
 use qpost\Repository\UserRepository;
 use qpost\Service\AuthorizationService;
+use qpost\Service\IpStackService;
 use qpost\Twig\Twig;
 use qpost\Util\Util;
 use Swift_Mailer;
@@ -52,10 +53,11 @@ class RegisterController extends AbstractController {
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @param Swift_Mailer $mailer
+	 * @param IpStackService $ipStackService
 	 * @return RedirectResponse|Response
 	 * @throws NonUniqueResultException
 	 */
-	public function index(Request $request, EntityManagerInterface $entityManager, Swift_Mailer $mailer) {
+	public function index(Request $request, EntityManagerInterface $entityManager, Swift_Mailer $mailer, IpStackService $ipStackService) {
 		$authService = new AuthorizationService($request, $entityManager);
 		if (!$authService->isAuthorized()) {
 			$query = $request->query;
@@ -169,6 +171,16 @@ class RegisterController extends AbstractController {
 																					->setExpiry($expiry);
 
 																				$entityManager->persist($token);
+
+																				$ipStackResult = $ipStackService->createIpStackResult($token);
+																				if ($ipStackResult) {
+																					$entityManager->persist($ipStackResult);
+
+																					$token->setIpStackResult($ipStackResult);
+
+																					$entityManager->persist($token);
+																				}
+
 																				$entityManager->flush();
 
 																				$response = $this->redirect($this->generateUrl("qpost_home_index"));

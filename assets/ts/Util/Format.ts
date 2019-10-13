@@ -17,6 +17,8 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+import {UAParser} from "ua-parser-js";
+
 export function formatNumberShort(number: number): string {
 	if (number <= 999) {
 		return number.toString();
@@ -25,4 +27,45 @@ export function formatNumberShort(number: number): string {
 	} else {
 		return (number / 1000000).toFixed(1) + "M";
 	}
+}
+
+export function convertUserAgentToIconClass(userAgent: UAParser): string {
+	const browserName: string | undefined = userAgent.getBrowser().name;
+	if (browserName !== undefined) {
+		if (browserName.includes("Edge")) {
+			return "fab fa-edge"
+		} else if (browserName.includes("Opera")) {
+			return "fab fa-opera"
+		} else if (browserName.includes("Chrome")) {
+			return "fab fa-chrome";
+		} else if (browserName.includes("Internet Explorer")) {
+			return "fab fa-internet-explorer";
+		} else if (browserName.includes("Safari")) {
+			return "fab fa-safari";
+		} else if (browserName.includes("Firefox")) {
+			return "fab fa-firefox";
+		}
+	}
+
+	const vendorName: string | undefined = userAgent.getDevice().vendor;
+	if (vendorName !== undefined) {
+		if (vendorName.includes("Amazon")) {
+			return "fab fa-amazon";
+		} else if (vendorName.includes("Apple")) {
+			return "fab fa-apple";
+		}
+	}
+
+	const osName: string | undefined = userAgent.getOS().name;
+	if (osName !== undefined) {
+		if (osName.includes("Windows")) {
+			return "fab fa-windows";
+		} else if (osName.includes("Nintendo")) {
+			return "fab fa-nintendo-switch";
+		} else if (osName.includes("Playstation")) {
+			return "fab fa-playstation";
+		}
+	}
+
+	return "fas fa-globe";
 }
