@@ -42,6 +42,7 @@ import Messages from "./Pages/Messages/Messages";
 import Account from "./Pages/Account/Account";
 import Sessions from "./Pages/Account/Sessions";
 import ChangeUsername from "./Pages/Account/ChangeUsername";
+import ImageViewer from "./Component/ImageViewer";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -100,6 +101,8 @@ export default class App extends Component<any, any> {
 								<div className="legacyCard">
 									<div className="wrapper">
 										<div className="legacyCardBody">
+											<ImageViewer/>
+
 											<Switch>
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
 													<Route path={"/"} exact component={Home}/>}

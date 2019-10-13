@@ -21,10 +21,18 @@ import React, {Component} from "react";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
 import MediaFile from "../../Entity/Media/MediaFile";
 import MediaFileType from "../../Entity/Media/MediaFileType";
+import ImageViewer from "../ImageViewer";
 
 export default class FeedEntryListItemAttachments extends Component<{
 	entry: FeedEntry
 }, any> {
+	clickHandler(e, index: number) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		ImageViewer.show(this.props.entry, index);
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const entry: FeedEntry = this.props.entry;
 		const attachments: MediaFile[] = entry.getAttachments();
@@ -40,7 +48,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							cursor: "pointer"
-						}}>
+						}} onClick={(e) => this.clickHandler(e, 0)}>
 							<img src={mediaFile.getURL()} style={{
 								maxHeight: "500px",
 								width: "100%",
@@ -60,7 +68,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 								width: "50%",
 								position: "relative",
 								height: "100%"
-							}}>
+							}} onClick={(e) => this.clickHandler(e, 0)}>
 								<div className={"border border-mainColor bg-dark" + (i === 1 ? " border-left-0" : "")}
 									 style={{
 										 maxHeight: "500px",
@@ -91,7 +99,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							cursor: "pointer"
-						}}/>
+						}} onClick={(e) => this.clickHandler(e, 0)}/>
 					</div>
 
 					<div className={"d-inline-block"} style={{
@@ -106,7 +114,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							cursor: "pointer"
-						}}/>
+						}} onClick={(e) => this.clickHandler(e, 1)}/>
 
 						<div className={"border border-mainColor border-left-0 border-top-0 bg-dark mr-2"} style={{
 							maxHeight: "537px",
@@ -116,7 +124,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							cursor: "pointer"
-						}}/>
+						}} onClick={(e) => this.clickHandler(e, 2)}/>
 					</div>
 				</div>;
 			} else if (attachments.length === 4) {
@@ -136,7 +144,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							backgroundImage: 'url("' + attachments[0].getURL() + '")',
 							backgroundSize: "cover",
 							cursor: "pointer"
-						}}/>
+						}} onClick={(e) => this.clickHandler(e, 0)}/>
 
 						<div className={"border border-mainColor border-top-0 bg-dark mr-2"} style={{
 							maxHeight: "500px",
@@ -145,7 +153,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							backgroundImage: 'url("' + attachments[1].getURL() + '")',
 							backgroundSize: "cover",
 							cursor: "pointer"
-						}}/>
+						}} onClick={(e) => this.clickHandler(e, 1)}/>
 					</div>
 
 					<div className={"d-inline-block"} style={{
@@ -160,7 +168,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							backgroundImage: 'url("' + attachments[2].getURL() + '")',
 							backgroundSize: "cover",
 							cursor: "pointer"
-						}}/>
+						}} onClick={(e) => this.clickHandler(e, 2)}/>
 
 						<div className={"border border-mainColor border-left-0 border-top-0 bg-dark mr-2"} style={{
 							maxHeight: "500px",
@@ -169,7 +177,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							backgroundImage: 'url("' + attachments[3].getURL() + '")',
 							backgroundSize: "cover",
 							cursor: "pointer"
-						}}/>
+						}} onClick={(e) => this.clickHandler(e, 3)}/>
 					</div>
 				</div>;
 			}
