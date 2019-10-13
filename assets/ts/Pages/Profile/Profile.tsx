@@ -29,27 +29,40 @@ import Spin from "antd/es/spin";
 import "antd/es/spin/style";
 import Alert from "antd/es/alert";
 import "antd/es/alert/style";
-import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import FollowButton from "../../Component/FollowButton";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SuggestedUsers from "../../Component/SuggestedUsers";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
-import {Card} from "antd";
+import {Card, Menu} from "antd";
 import "antd/es/card/style";
 import FollowsYouBadge from "../../Component/FollowsYouBadge";
 import Biography from "../../Component/Biography";
+import {Redirect, Route, Switch} from "react-router-dom";
+import Following from "./Following";
+import Posts from "./Posts";
+import Favorites from "./Favorites";
+import Followers from "./Followers";
+
+export declare type ProfilePageProps = {
+	user: User,
+	parent: Profile
+};
 
 export default class Profile extends Component<any, {
 	user: User,
-	error: string | null
+	error: string | null,
+	redirect: string | null,
+	activeMenuPoint: string | null
 }> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			user: null,
-			error: null
+			error: null,
+			redirect: null,
+			activeMenuPoint: null
 		};
 	}
 
@@ -90,6 +103,8 @@ export default class Profile extends Component<any, {
 			const birthDate: Date | null = user.getBirthday() ? new Date(user.getBirthday()) : null;
 
 			return <div className={"profile"}>
+				{this.state.redirect ? <Redirect to={this.state.redirect}/> : ""}
+
 				<ContentBase>
 					<LeftSidebar>
 						<SidebarStickyContent>
@@ -162,7 +177,67 @@ export default class Profile extends Component<any, {
 							</div>
 						</Card>
 
-						<FeedEntryList user={user}/>
+						<Menu selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"} onClick={(e) => {
+							if (e.key) {
+								const key = e.key;
+
+								if (key !== this.state.activeMenuPoint) {
+									switch (key) {
+										case "POSTS":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername()
+											});
+											break;
+										case "FOLLOWING":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername() + "/following"
+											});
+											break;
+										case "FOLLOWERS":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername() + "/followers"
+											});
+											break;
+										case "FAVORITES":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername() + "/favorites"
+											});
+											break;
+									}
+								}
+							}
+						}}>
+							<Menu.Item key={"POSTS"}>
+								Posts ({user.getPostCount()})
+							</Menu.Item>
+
+							<Menu.Item key={"FOLLOWING"}>
+								Following ({user.getFollowingCount()})
+							</Menu.Item>
+
+							<Menu.Item key={"FOLLOWERS"}>
+								Followers ({user.getFollowerCount()})
+							</Menu.Item>
+
+							<Menu.Item key={"FAVORITES"}>
+								Favorites
+							</Menu.Item>
+						</Menu>
+
+						<Switch>
+							<Route path={"/:username/following"}
+								   render={(props) => <Following {...props} user={this.state.user} parent={this}/>}/>
+							<Route path={"/:username/followers"}
+								   render={(props) => <Followers {...props} user={this.state.user} parent={this}/>}/>
+							<Route path={"/:username/favorites"}
+								   render={(props) => <Favorites {...props} user={this.state.user} parent={this}/>}/>
+							<Route path={"/:username"}
+								   render={(props) => <Posts {...props} user={this.state.user} parent={this}/>}/>
+						</Switch>
 					</PageContent>
 
 					<RightSidebar>

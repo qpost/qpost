@@ -115,8 +115,8 @@ export default class App extends Component<any, any> {
 															  component={ChangeUsername}/>
 												<PrivateRoute path={"/account"} exact component={Account}/>
 												<Route path={"/status/:id"} exact component={Status}/>
-												<Route path={"/profile/:username"} exact component={ProfileRedirect}/>
-												<Route path={"/:username"} exact component={Profile}/>
+												<Route path={"/profile/:username"} component={ProfileRedirect}/>
+												<Route path={"/:username"} component={Profile}/>
 											</Switch>
 										</div>
 									</div>
