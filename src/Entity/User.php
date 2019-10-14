@@ -974,6 +974,14 @@ class User {
 
 	/**
 	 * @return int
+	 * @Serializer\VirtualProperty()
+	 */
+	public function getFavoritesCount(): int {
+		return count($this->getFavorites());
+	}
+
+	/**
+	 * @return int
 	 * @Serializer\Exclude()
 	 */
 	public function getOpenRequestsCount(): int {

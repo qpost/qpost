@@ -72,6 +72,9 @@ export default class User {
 	@JsonProperty("followerCount", Number)
 	private followerCount: number = undefined;
 
+	@JsonProperty("favoritesCount", Number)
+	private favoritesCount: number = undefined;
+
 	@JsonProperty("followsYou", Boolean)
 	private followsYou: boolean = undefined;
 
@@ -141,6 +144,10 @@ export default class User {
 
 	public getFollowerCount(): number {
 		return this.followerCount;
+	}
+
+	public getFavoritesCount(): number {
+		return this.favoritesCount;
 	}
 
 	public isFollowingYou(): boolean {

@@ -225,7 +225,7 @@ export default class Profile extends Component<any, {
 							</Menu.Item>
 
 							<Menu.Item key={"FAVORITES"}>
-								Favorites
+								Favorites ({formatNumberShort(user.getFavoritesCount())})
 							</Menu.Item>
 						</Menu>
 
