@@ -21,17 +21,20 @@
 namespace qpost\Controller\API;
 
 use DateTime;
+use Doctrine\DBAL\Types\Type;
 use Exception;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\NotificationType;
 use qpost\Entity\Favorite;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Notification;
+use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function array_push;
 use function is_null;
 use function is_numeric;
 
@@ -173,6 +176,72 @@ class FavoriteController extends AbstractController {
 			}
 		} else {
 			return $apiService->json(["error" => "'post' is required."], 400);
+		}
+	}
+
+	/**
+	 * @Route("/api/favorites", methods={"GET"})
+	 *
+	 * @param APIService $apiService
+	 * @return Response|null
+	 */
+	public function favorites(APIService $apiService) {
+		$response = $apiService->validate(true);
+		if (!is_null($response)) return $response;
+
+		$parameters = $apiService->parameters();
+
+		if ($parameters->has("user")) {
+			$entityManager = $apiService->getEntityManager();
+
+			/**
+			 * @var User $user
+			 */
+			$user = $entityManager->getRepository(User::class)->findOneBy([
+				"id" => $parameters->get("user")
+			]);
+
+			if ($user) {
+				$max = null;
+				if ($parameters->has("max")) {
+					$max = $parameters->get("max");
+					if (!is_numeric($max)) {
+						return $apiService->json(["error" => "'max' has to be an integer."], 400);
+					}
+				}
+
+				$results = [];
+
+				$builder = $entityManager->getRepository(Favorite::class)->createQueryBuilder("f")
+					->where("f.user = :user")
+					->setParameter("user", $user)
+					->orderBy("f.time", "DESC")
+					->setMaxResults(30)
+					->setCacheable(false);
+
+				if ($max) {
+					$builder->andWhere("f.id < :id")
+						->setParameter("id", $max, Type::INTEGER);
+				}
+
+				/**
+				 * @var Favorite[] $favorites
+				 */
+				$favorites = $builder
+					->getQuery()
+					->getResult();
+
+				foreach ($favorites as $favorite) {
+					// TODO: mayView check
+					array_push($results, $apiService->serialize($favorite));
+				}
+
+				return $apiService->json(["results" => $results]);
+			} else {
+				return $apiService->json(["error" => "The requested resource could not be found."], 404);
+			}
+		} else {
+			return $apiService->json(["error" => "'user' is required."], 400);
 		}
 	}
 }

@@ -27,6 +27,7 @@ import {Button, message} from "antd";
 import "antd/es/button/style";
 import API from "../../../API/API";
 import {Redirect} from "react-router";
+import FeedEntryList from "../FeedEntryList";
 
 export default class DeleteButton extends Component<{
 	entry: FeedEntry,
@@ -104,7 +105,7 @@ export default class DeleteButton extends Component<{
 										const entry = feedEntryItem.props.entry;
 										const feedEntryList = feedEntryItem.props.parent;
 
-										if (feedEntryList) {
+										if (feedEntryList && feedEntryList instanceof FeedEntryList) {
 											const entries = feedEntryList.state.entries;
 
 											if (entries) {

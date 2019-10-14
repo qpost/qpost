@@ -17,18 +17,36 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React, {Component} from "react";
-import {ProfilePageProps} from "./Profile";
-import FavoriteList from "../../Component/FeedEntry/FavoriteList";
+import User from "../Account/User";
+import FeedEntry from "./FeedEntry";
+import {JsonProperty} from "json2typescript";
 
-export default class Favorites extends Component<ProfilePageProps, any> {
-	componentDidMount(): void {
-		this.props.parent.setState({
-			activeMenuPoint: "FAVORITES"
-		})
+export default class Favorite {
+	@JsonProperty("id", Number)
+	private id: number = undefined;
+
+	@JsonProperty("user", User)
+	private user: User = undefined;
+
+	@JsonProperty("feedEntry", FeedEntry)
+	private feedEntry: FeedEntry = undefined;
+
+	@JsonProperty("time", String)
+	private time: string = undefined;
+
+	public getId(): number {
+		return this.id;
 	}
 
-	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <FavoriteList user={this.props.user}/>;
+	public getUser(): User {
+		return this.user;
+	}
+
+	public getFeedEntry(): FeedEntry {
+		return this.feedEntry;
+	}
+
+	public getTime(): string {
+		return this.time;
 	}
 }

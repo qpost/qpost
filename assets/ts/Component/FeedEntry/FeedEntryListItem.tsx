@@ -30,10 +30,11 @@ import FeedEntryListItemAttachments from "./FeedEntryListItemAttachments";
 import FeedEntryText from "./FeedEntryText";
 import FeedEntryList from "./FeedEntryList";
 import {Alert, Icon} from "antd";
+import FavoriteList from "./FavoriteList";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
-	parent?: FeedEntryList,
+	parent?: FeedEntryList | FavoriteList,
 	hideButtons?: boolean,
 	hideAttachments?: boolean
 }, {
