@@ -63,7 +63,7 @@ export default class FeedEntryListItem extends Component<{
 		if (this.state.redirect) {
 			const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
 
-			return <Redirect to={"/status/" + id}/>;
+			return <Redirect push to={"/status/" + id}/>;
 		}
 
 		switch (entry.getType()) {

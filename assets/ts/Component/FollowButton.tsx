@@ -142,7 +142,7 @@ export default class FollowButton extends Component<{
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.redirectToEditPage) {
-			return <Redirect to={"/edit"}/>
+			return <Redirect push to={"/edit"}/>
 		}
 
 		let text: string = "";

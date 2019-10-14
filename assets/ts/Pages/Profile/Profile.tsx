@@ -104,7 +104,7 @@ export default class Profile extends Component<any, {
 			const birthDate: Date | null = user.getBirthday() ? new Date(user.getBirthday()) : null;
 
 			return <div className={"profile"}>
-				{this.state.redirect ? <Redirect to={this.state.redirect}/> : ""}
+				{this.state.redirect ? <Redirect push to={this.state.redirect}/> : ""}
 
 				<ContentBase>
 					<LeftSidebar>
