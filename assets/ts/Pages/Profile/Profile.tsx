@@ -213,7 +213,7 @@ export default class Profile extends Component<any, {
 							}
 						}}>
 							<Menu.Item key={"POSTS"}>
-								Posts ({formatNumberShort(user.getPostCount())})
+								Posts ({formatNumberShort(user.getTotalPostCount())})
 							</Menu.Item>
 
 							<Menu.Item key={"FOLLOWING"}>
