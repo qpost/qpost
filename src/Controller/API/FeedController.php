@@ -163,6 +163,63 @@ class FeedController extends AbstractController {
 			} else {
 				return $apiService->json(["error" => "The requested user could not be found."], 404);
 			}
+		} else if ($parameters->has("min") && $parameters->has("user")) {
+			// Load new posts on profile page
+			$response = $apiService->validate(false);
+			if (!is_null($response)) return $response;
+
+			/**
+			 * @var User $user
+			 */
+			$user = $entityManager->getRepository(User::class)->findOneBy([
+				"id" => $parameters->get("user")
+			]);
+
+			if (!is_null($user)) { // TODO: Add mayView check
+				$results = [];
+
+				/**
+				 * @var FeedEntry[] $feedEntries
+				 */
+				$feedEntries = $this->profileFeedQuery($apiService, $user)
+					->andWhere("f.id > :id")
+					->setParameter("id", $parameters->get("min"), Type::INTEGER)
+					->getQuery()
+					->getResult();
+
+				foreach ($feedEntries as $feedEntry) {
+					// TODO: mayView check
+					array_push($results, $apiService->serialize($feedEntry));
+				}
+
+				return $apiService->json(["results" => $results]);
+			} else {
+				return $apiService->json(["error" => "The requested user could not be found."], 404);
+			}
+		} else if ($parameters->has("min") && !$parameters->has("user")) {
+			// Load new posts on home feed
+			$response = $apiService->validate(true);
+			if (!is_null($response)) return $response;
+
+			$user = $apiService->getUser();
+
+			$results = [];
+
+			/**
+			 * @var FeedEntry[] $feedEntries
+			 */
+			$feedEntries = $this->homeFeedQuery($apiService, $user)
+				->andWhere("f.id > :id")
+				->setParameter("id", $parameters->get("min"), Type::INTEGER)
+				->getQuery()
+				->getResult();
+
+			foreach ($feedEntries as $feedEntry) {
+				// TODO: mayView check
+				array_push($results, $apiService->serialize($feedEntry));
+			}
+
+			return $apiService->json(["results" => $results]);
 		} else {
 			return $apiService->json(["error" => "Bad request"], 400);
 		}

@@ -36,7 +36,8 @@ export default class FeedEntryList extends Component<{
 	entries: FeedEntry[] | null,
 	error: string | null,
 	loadingMore: boolean,
-	hasMore: boolean
+	hasMore: boolean,
+	loadNewTask: any
 }> {
 	public static instance: FeedEntryList | null = null;
 
@@ -47,16 +48,22 @@ export default class FeedEntryList extends Component<{
 			entries: null,
 			error: null,
 			loadingMore: false,
-			hasMore: true
+			hasMore: true,
+			loadNewTask: null
 		}
 	}
 
 	componentDidMount(): void {
 		FeedEntryList.instance = this;
 		this.load();
+		this.loadNewTask();
 	}
 
 	componentWillUnmount(): void {
+		if (this.state.loadNewTask) {
+			clearTimeout(this.state.loadNewTask);
+		}
+
 		FeedEntryList.instance = null;
 	}
 
@@ -66,6 +73,42 @@ export default class FeedEntryList extends Component<{
 		entries.unshift(feedEntry);
 
 		this.setState({entries});
+	}
+
+	loadNew() {
+		if (this.state.entries.length === 0) return;
+
+		const parameters = this.props.user ? {
+			user: this.props.user.getId()
+		} : {};
+
+		parameters["min"] = this.state.entries[0].getId();
+
+		API.handleRequest("/feed", "GET", parameters, data => {
+			let entries: FeedEntry[] = [];
+
+			data.results.forEach(result => {
+				const feedEntry: FeedEntry = BaseObject.convertObject(FeedEntry, result);
+
+				for (let i = 0; i < this.state.entries.length; i++) {
+					const entry = this.state.entries[i];
+					if (entry.getId() === feedEntry.getId()) return;
+				}
+
+				entries.push(feedEntry);
+			});
+
+			if (this.state.entries) {
+				this.state.entries.forEach(entry => entries.push(entry));
+			}
+
+			this.setState({
+				entries,
+				loadingMore: false
+			});
+		}, error => {
+			this.setState({error, loadingMore: false});
+		});
 	}
 
 	load(max?: number) {
@@ -87,6 +130,17 @@ export default class FeedEntryList extends Component<{
 			});
 		}, error => {
 			this.setState({error, loadingMore: false, hasMore: false});
+		});
+	}
+
+	private loadNewTask(): void {
+		if (FeedEntryList.instance !== this) return;
+
+		this.setState({
+			loadNewTask: setTimeout(() => {
+				this.loadNew();
+				this.loadNewTask();
+			}, 5000)
 		});
 	}
 
