@@ -41,8 +41,10 @@ export default class FollowerListItem extends Component<{
 			<Card size={"small"} className={"userBox"}>
 				<div className={"clearfix"}>
 					<div className={"float-left"}>
-						<img alt={user.getUsername()} src={user.getAvatarURL()}
-							 className={"rounded border border-primary"} width={48} height={48}/>
+						<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+							<img alt={user.getUsername()} src={user.getAvatarURL()}
+								 className={"rounded border border-primary"} width={48} height={48}/>
+						</Link>
 					</div>
 
 					<div className={"float-left ml-2 nameContainer"}>
