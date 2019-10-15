@@ -19,6 +19,7 @@
 
 import React, {Component} from "react";
 import {ProfilePageProps} from "./Profile";
+import FollowerList from "../../Component/User/FollowerList";
 
 export default class Following extends Component<ProfilePageProps, any> {
 	componentDidMount(): void {
@@ -28,6 +29,6 @@ export default class Following extends Component<ProfilePageProps, any> {
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return "following";
+		return <FollowerList user={this.props.user} mode={"from"}/>;
 	}
 }

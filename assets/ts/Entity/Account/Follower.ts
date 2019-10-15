@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,46 +17,36 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.statusPageBox {
-	$width: calc(100% - 170px);
-	$margin: 30px;
+import User from "./User";
+import {JsonObject, JsonProperty} from "json2typescript";
 
-	.nameContainer {
-		width: $width;
+@JsonObject("Follower")
+export default class Follower {
+	@JsonProperty("id", Number)
+	private id: number = undefined;
 
-		.displayName {
-			width: 100%;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
+	@JsonProperty("sender", User)
+	private sender: User = undefined;
 
-			a {
-				font-weight: bold;
-				font-size: 18px;
-				color: #000;
-			}
-		}
+	@JsonProperty("receiver", User)
+	private receiver: User = undefined;
 
-		.username {
-			width: 100%;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
-			margin-top: -4px;
+	@JsonProperty("time", String)
+	private time: string = undefined;
 
-			a {
-				@extend .text-muted;
-			}
-		}
+	public getId(): number {
+		return this.id;
 	}
 
-	.text {
-		margin-top: $margin;
-		color: #000;
-		font-size: 19px;
+	public getSender(): User {
+		return this.sender;
 	}
 
-	.attachments, .actionButtons {
-		margin-top: $margin;
+	public getReceiver(): User {
+		return this.receiver;
+	}
+
+	public getTime(): string {
+		return this.time;
 	}
 }

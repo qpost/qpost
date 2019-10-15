@@ -20,6 +20,7 @@
 
 namespace qpost\Controller\API;
 
+use Doctrine\DBAL\Types\Type;
 use qpost\Constants\FollowStatus;
 use qpost\Constants\PrivacyLevel;
 use qpost\Entity\Follower;
@@ -33,6 +34,7 @@ use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function array_push;
 use function is_null;
 use function is_numeric;
 
@@ -279,6 +281,81 @@ class FollowController extends AbstractController {
 			}
 		} else {
 			return $apiService->json(["error" => "'to' is required."], 400);
+		}
+	}
+
+	/**
+	 * @Route("/api/follows", methods={"GET"})
+	 *
+	 * @param APIService $apiService
+	 * @return Response|null
+	 */
+	public function follows(APIService $apiService) {
+		$response = $apiService->validate(false);
+		if (!is_null($response)) return $response;
+
+		$parameters = $apiService->parameters();
+
+		if ($parameters->has("from") || $parameters->has("to")) {
+			$max = null;
+			if ($parameters->has("max")) {
+				$max = $parameters->get("max");
+				if (!is_numeric($max)) {
+					return $apiService->json(["error" => "'max' has to be an integer."], 400);
+				}
+			}
+
+			$entityManager = $apiService->getEntityManager();
+			$user = null;
+
+			$builder = $entityManager->getRepository(Follower::class)->createQueryBuilder("f");
+
+			if ($parameters->has("from")) {
+				$user = $entityManager->getRepository(User::class)->findOneBy([
+					"id" => $parameters->get("from")
+				]);
+
+				if ($user) {
+					$builder->where("f.sender = :user")
+						->setParameter("user", $user);
+				} else {
+					return $apiService->json(["error" => "The requested resource could not be found."], 404);
+				}
+			} else if ($parameters->has("to")) {
+				$user = $entityManager->getRepository(User::class)->findOneBy([
+					"id" => $parameters->get("to")
+				]);
+
+				if ($user) {
+					$builder->where("f.receiver = :user")
+						->setParameter("user", $user);
+				} else {
+					return $apiService->json(["error" => "The requested resource could not be found."], 404);
+				}
+			}
+
+			if ($max) {
+				$builder->andWhere("f.id < :id")
+					->setParameter("id", $max, Type::INTEGER);
+			}
+
+			$results = [];
+
+			/**
+			 * @var Follower[] $followers
+			 */
+			$followers = $builder->orderBy("f.time", "DESC")
+				->getQuery()
+				->getResult();
+
+			foreach ($followers as $follower) {
+				// TODO: mayView check
+				array_push($results, $apiService->serialize($follower));
+			}
+
+			return $apiService->json(["results" => $results]);
+		} else {
+			return $apiService->json(["error" => "'from' or 'to' are required."], 400);
 		}
 	}
 }

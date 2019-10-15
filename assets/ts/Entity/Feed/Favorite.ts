@@ -19,8 +19,9 @@
 
 import User from "../Account/User";
 import FeedEntry from "./FeedEntry";
-import {JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty} from "json2typescript";
 
+@JsonObject("Favorite")
 export default class Favorite {
 	@JsonProperty("id", Number)
 	private id: number = undefined;

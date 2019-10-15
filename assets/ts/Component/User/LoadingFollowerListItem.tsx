@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,46 +17,23 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.statusPageBox {
-	$width: calc(100% - 170px);
-	$margin: 30px;
+import React, {Component} from "react";
+import {Card, Col} from "antd";
+import Skeleton from "antd/es/skeleton";
+import {FollowerListItemColProps} from "./FollowerListItem";
 
-	.nameContainer {
-		width: $width;
-
-		.displayName {
-			width: 100%;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
-
-			a {
-				font-weight: bold;
-				font-size: 18px;
-				color: #000;
-			}
-		}
-
-		.username {
-			width: 100%;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
-			margin-top: -4px;
-
-			a {
-				@extend .text-muted;
-			}
-		}
-	}
-
-	.text {
-		margin-top: $margin;
-		color: #000;
-		font-size: 19px;
-	}
-
-	.attachments, .actionButtons {
-		margin-top: $margin;
+export default class LoadingFollowerListItem extends Component {
+	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		return <Col {...FollowerListItemColProps}>
+			<Card size={"small"}>
+				<Skeleton loading active avatar={{
+					size: "large",
+					shape: "square"
+				}}
+						  paragraph={{
+							  rows: 4
+						  }}/>
+			</Card>
+		</Col>;
 	}
 }

@@ -17,12 +17,9 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.statusPageBox {
-	$width: calc(100% - 170px);
-	$margin: 30px;
-
+.userBox {
 	.nameContainer {
-		width: $width;
+		width: calc(100% - 190px);
 
 		.displayName {
 			width: 100%;
@@ -48,15 +45,5 @@
 				@extend .text-muted;
 			}
 		}
-	}
-
-	.text {
-		margin-top: $margin;
-		color: #000;
-		font-size: 19px;
-	}
-
-	.attachments, .actionButtons {
-		margin-top: $margin;
 	}
 }
