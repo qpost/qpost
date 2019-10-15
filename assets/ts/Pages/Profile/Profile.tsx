@@ -140,7 +140,7 @@ export default class Profile extends Component<any, {
 					</LeftSidebar>
 
 					<PageContent leftSidebar rightSidebar>
-						<Card className={"mobileOnly mb-3"} size={"small"}>
+						<Card className={"mobilePart mb-3"} size={"small"}>
 							<div className={"clearfix"}>
 								<div className={"float-left"}>
 									<img className={"mobileAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
