@@ -44,6 +44,7 @@ import Posts from "./Posts";
 import Favorites from "./Favorites";
 import Followers from "./Followers";
 import {formatNumberShort} from "../../Util/Format";
+import NightMode from "../../NightMode/NightMode";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -178,7 +179,8 @@ export default class Profile extends Component<any, {
 							</div>
 						</Card>
 
-						<Menu selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"} onClick={(e) => {
+						<Menu theme={NightMode.isActive() ? "dark" : "light"}
+							  selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"} onClick={(e) => {
 							if (e.key) {
 								const key = e.key;
 

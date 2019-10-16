@@ -18,8 +18,10 @@
  */
 
 html.nightMode, html.nightMode > body {
-	background: #474747;
-	color: #FFF;
+	&, .ant-layout {
+		background: #001021;
+		color: #FFF;
+	}
 
 	@import "alerts";
 	@import "base";
@@ -36,6 +38,7 @@ html.nightMode, html.nightMode > body {
 	@import "pagination";
 	@import "post-forms";
 	@import "profile";
+	@import "skeleton";
 	@import "tables";
 	@import "text";
 	@import "util";

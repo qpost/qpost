@@ -17,25 +17,24 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "variables";
-@import "~bootstrap/scss/bootstrap";
-@import "util/index";
+.ant-skeleton {
+	$color: #001021;
 
-@import "alerts";
-@import "base";
-@import "buttons";
-@import "emoji";
-@import "feed";
-@import "feedButtons";
-@import "followButtons";
-@import "footer";
-@import "forms";
-@import "home";
-@import "media";
-@import "navigation";
-@import "notifications";
-@import "post-forms";
-@import "profile";
-@import "status";
-@import "user-box";
-@import "nightmode/index";
+	.ant-skeleton-header {
+		.ant-skeleton-avatar {
+			background: $color;
+		}
+	}
+
+	.ant-skeleton-content {
+		.ant-skeleton-title {
+			background: $color;
+		}
+
+		ul.ant-skeleton-paragraph {
+			li {
+				background: $color;
+			}
+		}
+	}
+}

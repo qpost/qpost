@@ -137,7 +137,9 @@ export default class Sessions extends Component<any, {
 								Last accessed <TimeAgo time={token.getLastAccessTime()}/>
 							</div>
 
-							<Button type={current ? "dashed" : "danger"} loading={this.isLoading(token.getId())}
+							<Button type={current ? "dashed" : "danger"}
+									className={!current ? "customDangerButton" : ""}
+									loading={this.isLoading(token.getId())}
 									onClick={(e) => {
 										e.preventDefault();
 

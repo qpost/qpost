@@ -17,26 +17,33 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.card {
+.card, .ant-card {
 	border: 1px solid #222222;
-	background-color: #383838;
+	background-color: #001529;
+	color: #FFF;
 
 	> .card-header > a {
 		color: #FFF !important;
 	}
+
+	.ant-menu-item:not(:hover):not(.ant-menu-item-selected) {
+		color: #FFF;
+	}
 }
 
-.card > .card-header {
+.card > .card-header,
+.ant-card > .ant-card-head {
 	color: #FFF;
-	background-color: #444444;
-	border-color: #222222;
+	background-color: #001d30;
+	border-color: #001020;
 }
 
-.card > .card-body {
-	background-color: #383838;
+.card > .card-body,
+.ant-card > .ant-card-body {
+	background-color: #001529;
 }
 
 .card-default > .card-footer {
-	background-color: #3f3f3f;
-	border-top: 1px solid #222222;
+	background-color: #001d30;
+	border-top: 1px solid #001020;
 }

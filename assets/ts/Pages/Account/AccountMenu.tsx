@@ -22,6 +22,7 @@ import {Menu} from "antd";
 import WindowSizeListener from "react-window-size-listener";
 import {Redirect} from "react-router";
 import Auth from "../../Auth/Auth";
+import NightMode from "../../NightMode/NightMode";
 
 export declare type AccountMenuKey = "HOME" | "PRIVACY" | "SESSIONS" | "LOGOUT";
 
@@ -59,7 +60,7 @@ export default class AccountMenu extends Component<{
 		}
 
 		return [
-			<Menu onClick={(e) => {
+			<Menu theme={NightMode.isActive() ? "dark" : "light"} onClick={(e) => {
 				if (e.key) {
 					const key = e.key;
 

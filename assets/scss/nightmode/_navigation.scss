@@ -17,6 +17,11 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+.ant-layout-header {
+	@include navigationStyle(mainNav, #001529, #FFF);
+	@include navigationStyle(mobileNav, #001529, $primary);
+}
+
 .dropdown-menu {
 	background-color: #525252;
 }
