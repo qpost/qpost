@@ -18,6 +18,7 @@
  */
 
 .ant-btn {
+	&.ant-btn-dashed,
 	&.ant-btn-default:not(.followButton),
 	&.ant-btn-default[data-follow-status="-1"] {
 		$color: #001949;
