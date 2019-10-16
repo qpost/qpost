@@ -29,15 +29,21 @@ export default class NightMode {
 		NightMode.setActive(NightMode.isActive());
 	}
 
-	public static setActive(active: boolean): void {
+	public static setActive(active: boolean, updateClass?: boolean): void {
+		if (typeof updateClass === "undefined") updateClass = true;
+
 		if (active) {
-			$("#mainNav").addClass("bg-dark").removeClass("bg-primary");
-			$("html").addClass("nightMode");
+			if (updateClass) {
+				$("#mainNav").addClass("bg-dark").removeClass("bg-primary");
+				$("html").addClass("nightMode");
+			}
 
 			localStorage.setItem("nightMode", "true");
 		} else {
-			$("#mainNav").addClass("bg-primary").removeClass("bg-dark");
-			$("html").removeClass("nightMode");
+			if (updateClass) {
+				$("#mainNav").addClass("bg-primary").removeClass("bg-dark");
+				$("html").removeClass("nightMode");
+			}
 
 			localStorage.removeItem("nightMode");
 		}
@@ -50,7 +56,8 @@ export default class NightMode {
 	}
 
 	public static toggle(): void {
-		this.setActive(!this.isActive());
+		this.setActive(!this.isActive(), false);
+
 		window.location.reload();
 	}
 
