@@ -39,6 +39,8 @@ import FeedEntryActionButtons from "../../Component/FeedEntry/Buttons/FeedEntryA
 import SuggestedUsers from "../../Component/SuggestedUsers";
 import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
+import {setPageTitle} from "../../Util/Page";
+import {limitString} from "../../Util/Format";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -64,6 +66,15 @@ export default class Status extends Component<any, {
 					this.setState({
 						status: feedEntry
 					});
+
+					let title = feedEntry.getUser().getDisplayName() + " on qpost";
+
+					const text = feedEntry.getText();
+					if (text) {
+						title += ": \"" + limitString(text, 40, true) + "\"";
+					}
+
+					setPageTitle(title);
 				} else {
 					this.setState({
 						error: "An error occurred."

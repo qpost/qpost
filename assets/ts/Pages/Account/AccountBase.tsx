@@ -21,10 +21,15 @@ import React, {Component} from "react";
 import {Col, Row} from "antd";
 import AccountMenu, {AccountMenuKey} from "./AccountMenu";
 import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
+import {setPageTitle} from "../../Util/Page";
 
 export default class AccountBase extends Component<{
 	activeKey?: AccountMenuKey
 }, any> {
+	componentDidMount(): void {
+		setPageTitle("My account");
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <Row gutter={20}>
 			<Col lg={8} md={6}>

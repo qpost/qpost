@@ -17,16 +17,9 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React, {Component} from "react";
-import {Alert} from "antd";
-import {setPageTitle} from "../../Util/Page";
+export function setPageTitle(title: string, suffix?: string): void {
+	if (typeof suffix === "undefined") suffix = " - qpost";
+	title += suffix;
 
-export default class Messages extends Component<any, any> {
-	componentDidMount(): void {
-		setPageTitle("Messages");
-	}
-
-	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <Alert message={"Messages are still being worked on! Please be patient."} type={"info"} showIcon/>;
-	}
+	document.title = title;
 }

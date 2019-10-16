@@ -37,6 +37,7 @@ import AntMessage from "antd/es/message";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import User from "../../Entity/Account/User";
+import {setPageTitle} from "../../Util/Page";
 
 export default class EditProfile extends Component<any, {
 	displayName: string | undefined,
@@ -64,6 +65,10 @@ export default class EditProfile extends Component<any, {
 			avatarModified: false,
 			loading: false
 		};
+	}
+
+	componentDidMount(): void {
+		setPageTitle("Edit profile");
 	}
 
 	uploadChange = (info: UploadChangeParam) => {

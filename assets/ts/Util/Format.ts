@@ -29,6 +29,15 @@ export function formatNumberShort(number: number): string {
 	}
 }
 
+export function limitString(string: string, length: number, addDots?: boolean) {
+	if (typeof addDots === "undefined") addDots = false;
+
+	if (string.length > length)
+		string = string.substr(0, (addDots ? length - 3 : length)) + (addDots ? "..." : "");
+
+	return string;
+}
+
 export function convertUserAgentToIconClass(userAgent: UAParser): string {
 	const browserName: string | undefined = userAgent.getBrowser().name;
 	if (browserName !== undefined) {

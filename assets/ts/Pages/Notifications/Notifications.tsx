@@ -38,6 +38,7 @@ import MentionNotification from "./MentionNotification";
 import ReplyNotification from "./ReplyNotification";
 import ShareNotification from "./ShareNotification";
 import BadgeStatus from "../../Auth/BadgeStatus";
+import {setPageTitle} from "../../Util/Page";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -58,6 +59,8 @@ export default class Notifications extends Component<any, {
 
 	componentDidMount(): void {
 		this.load();
+
+		setPageTitle("Notifications");
 	}
 
 	load(max?: number) {

@@ -45,6 +45,7 @@ import Favorites from "./Favorites";
 import Followers from "./Followers";
 import {formatNumberShort} from "../../Util/Format";
 import NightMode from "../../NightMode/NightMode";
+import {setPageTitle} from "../../Util/Page";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -79,6 +80,8 @@ export default class Profile extends Component<any, {
 					this.setState({
 						user
 					});
+
+					setPageTitle(user.getDisplayName() + " (@" + user.getUsername() + ")");
 				} else {
 					this.setState({
 						error: "An error occurred."
