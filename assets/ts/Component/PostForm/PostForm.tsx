@@ -1,5 +1,5 @@
 /*
- * Copyright (C) $today.year-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -23,7 +23,6 @@ import Tooltip from "antd/es/tooltip";
 import "antd/es/tooltip/style";
 import Button from "antd/es/button";
 import "antd/es/button/style";
-import Input from "antd/es/input";
 import "antd/es/input/style";
 import Modal from "antd/es/modal";
 import "antd/es/modal/style";
@@ -37,6 +36,13 @@ import FeedEntryList from "../FeedEntry/FeedEntryList";
 import Upload, {RcFile, UploadChangeParam} from "antd/es/upload";
 import Spin from "antd/es/spin";
 import PostFormUploadItem from "./PostFormUploadItem";
+import {Mentions, Switch} from "antd";
+import "antd/es/switch/style";
+import "antd/es/icon/style";
+import "antd/es/mentions/style";
+import User from "../../Entity/Account/User";
+import Auth from "../../Auth/Auth";
+import VerifiedBadge from "../VerifiedBadge";
 
 export default class PostForm extends Component<{
 	onClose?: () => void,
@@ -47,17 +53,39 @@ export default class PostForm extends Component<{
 	mobile: boolean,
 	message: string | null,
 	posting: boolean,
-	photos: PostFormUploadItem[]
+	photos: PostFormUploadItem[],
+	nsfw: boolean,
+	suggestedUsers: User[],
+	loadingUsers: boolean
 }> {
+	private static keyDownInitiated: boolean = false;
+
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			mobile: window.innerWidth <= 768,
-			message: null,
+			message: "",
 			posting: false,
-			photos: []
+			photos: [],
+			nsfw: false,
+			suggestedUsers: [],
+			loadingUsers: false
 		};
+	}
+
+	componentDidMount(): void {
+		if (!PostForm.keyDownInitiated) {
+			PostForm.keyDownInitiated = true;
+
+			$(document).on("keydown", "#postFormTextarea", (e) => {
+				if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
+					// CTRL+Enter
+
+					this.send(e);
+				}
+			});
+		}
 	}
 
 	readyToPost(): boolean {
@@ -88,7 +116,8 @@ export default class PostForm extends Component<{
 		this.setState({
 			posting: false,
 			message: null,
-			photos: []
+			photos: [],
+			nsfw: false
 		});
 	};
 
@@ -111,9 +140,12 @@ export default class PostForm extends Component<{
 				}
 			});
 
-			API.handleRequest("/post", "POST", {
+			const nsfw: boolean = this.state.nsfw;
+
+			API.handleRequest("/status", "POST", {
 				message,
-				attachments
+				attachments,
+				nsfw
 			}, data => {
 				if (data.hasOwnProperty("post")) {
 					const post: FeedEntry = BaseObject.convertObject(FeedEntry, data.post);
@@ -142,9 +174,7 @@ export default class PostForm extends Component<{
 		}
 	};
 
-	change = (e) => {
-		const value = e.target.value.length > 0 ? e.target.value : null;
-
+	change = (value) => {
 		this.setState({
 			message: value
 		});
@@ -192,6 +222,8 @@ export default class PostForm extends Component<{
 
 	content = () => {
 		const used: number = this.state.message === null ? 0 : this.state.message.length;
+		const user: User = Auth.getCurrentUser();
+		if (!user) return "";
 
 		return <div className={"postForm"}>
 			{this.state.posting === false ? <div>
@@ -207,9 +239,65 @@ export default class PostForm extends Component<{
 					</Button>
 				</div>
 				<hr/>
-				<Input.TextArea rows={3} style={{resize: "none"}} id={"postFormTextarea"}
-								placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
-								value={this.state.message}/>
+				<Mentions rows={3} style={{resize: "none", width: "100%"}} id={"postFormTextarea"}
+						  placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
+						  value={this.state.message} loading={this.state.loadingUsers} onSearch={text => {
+					if (!text) {
+						this.setState({
+							suggestedUsers: []
+						});
+						return;
+					}
+
+					if (text.length < 3) return;
+
+					this.setState({
+						loadingUsers: true
+					});
+
+					API.handleRequest("/search", "GET", {
+						query: text,
+						type: "user",
+						limit: 10
+					}, data => {
+						const results = [];
+
+						if (data.hasOwnProperty("results")) {
+							data.results.forEach(entry => {
+								results.push(BaseObject.convertObject(User, entry));
+							});
+						}
+
+						this.setState({
+							suggestedUsers: results,
+							loadingUsers: false
+						});
+					}, error => {
+						AntMessage.error(error);
+
+						this.setState({
+							loadingUsers: false
+						});
+					});
+				}}>
+					{this.state.suggestedUsers.map((user: User, index: number) => {
+						return <Mentions.Option key={index} value={user.getUsername()}
+												className={"antd-demo-dynamic-option"}>
+							<img src={user.getAvatarURL()} alt={user.getUsername()} className={"rounded mr-2"}
+								 width={24} height={24}/>
+
+							<span>
+								<span className={"font-weight-bold"}>
+									{user.getDisplayName()}<VerifiedBadge target={user}/>
+								</span>
+
+								<span className={"text-muted ml-2"}>
+									{"@" + user.getUsername()}
+								</span>
+							</span>
+						</Mentions.Option>;
+					})}
+				</Mentions>
 
 				{this.state.photos.length > 0 ? <div className={"thumbnailHolder"}>
 					{this.state.photos.map((photo: PostFormUploadItem) => {
@@ -236,7 +324,7 @@ export default class PostForm extends Component<{
 					<div className={"actionButtons"}>
 						<Upload
 							name={"image-upload"}
-							listType={"picture-card"}
+							listType={"text"}
 							className={"uploader"}
 							showUploadList={false}
 							action={"https://qpo.st"}
@@ -252,10 +340,17 @@ export default class PostForm extends Component<{
 								</Button>
 							</Tooltip>
 						</Upload>
+
+						<Switch checkedChildren={"18+"} unCheckedChildren={"18+"} className={"mt-n2"}
+								defaultChecked={this.state.nsfw} onChange={(checked: boolean, event: Event) => {
+							this.setState({
+								nsfw: checked
+							});
+						}}/>
 					</div>
 
 					<div className={"characterCount"}>
-						{300 - used}
+						{user.getCharacterLimit() - used}
 					</div>
 				</div>
 			</div> : <div className={"text-center my-3"}>

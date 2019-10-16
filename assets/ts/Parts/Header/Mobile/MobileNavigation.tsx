@@ -26,12 +26,19 @@ import Layout from "antd/es/layout";
 import "antd/es/layout/style";
 import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
+import BadgeStatus from "../../../Auth/BadgeStatus";
+import Auth from "../../../Auth/Auth";
 
 export default class MobileNavigation extends Component<{
 	mobile: boolean,
 	key: any
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		const notifications = BadgeStatus.getNotifications();
+		const messages = BadgeStatus.getMessages();
+
+		if (!Auth.isLoggedIn()) return "";
+
 		return <Layout.Header
 			className={"mobileNav"}
 			style={{
@@ -65,19 +72,19 @@ export default class MobileNavigation extends Component<{
 					</Menu.Item>
 
 					<Menu.Item key={2}>
-						<Badge count={10}>
-							<Link to={"/notifications"}>
+						<Link to={"/notifications"}>
+							{notifications > 0 ? <Badge count={notifications}>
 								<i className={"fas fa-bell"}/>
-							</Link>
-						</Badge>
+							</Badge> : <i className={"fas fa-bell"}/>}
+						</Link>
 					</Menu.Item>
 
 					<Menu.Item key={3}>
-						<Badge count={10}>
-							<Link to={"/messages"}>
+						<Link to={"/messages"}>
+							{notifications > 0 ? <Badge count={messages}>
 								<i className={"fas fa-envelope"}/>
-							</Link>
-						</Badge>
+							</Badge> : <i className={"fas fa-envelope"}/>}
+						</Link>
 					</Menu.Item>
 				</Menu>
 			</div>

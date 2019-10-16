@@ -18,9 +18,24 @@
  */
 
 .profile {
+	.mobilePart {
+		@media only screen and (min-width: 1091px) {
+			display: none !important;
+		}
+	}
+
 	.mainAvatar {
 		@extend .rounded, .mb-2;
 		$size: 256px;
+
+		border: 1px solid $primary;
+		width: $size;
+		height: $size;
+	}
+
+	.mobileAvatar {
+		@extend .rounded, .mr-2;
+		$size: 64px;
 
 		border: 1px solid $primary;
 		width: $size;

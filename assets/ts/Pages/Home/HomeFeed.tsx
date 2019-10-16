@@ -28,8 +28,13 @@ import ContentBase from "../../Component/Layout/ContentBase";
 import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import DummyPostForm from "../../Component/PostForm/DummyPostForm";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
+import {setPageTitle} from "../../Util/Page";
 
 export default class HomeFeed extends Component<any, any> {
+	componentDidMount(): void {
+		setPageTitle("Home");
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return (
 			<ContentBase>

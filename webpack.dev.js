@@ -19,8 +19,13 @@
 
 const merge = require("webpack-merge");
 const common = require("./webpack.common");
+const {resolve} = require("path");
 
 module.exports = merge(common, {
 	mode: "development",
-	watch: true
+	watch: true,
+	output: {
+		filename: "bundle.js",
+		path: resolve(__dirname, "public/build/")
+	}
 });

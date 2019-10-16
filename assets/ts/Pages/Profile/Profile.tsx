@@ -29,23 +29,43 @@ import Spin from "antd/es/spin";
 import "antd/es/spin/style";
 import Alert from "antd/es/alert";
 import "antd/es/alert/style";
-import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import FollowButton from "../../Component/FollowButton";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SuggestedUsers from "../../Component/SuggestedUsers";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
+import {Card, Menu} from "antd";
+import "antd/es/card/style";
+import FollowsYouBadge from "../../Component/FollowsYouBadge";
+import Biography from "../../Component/Biography";
+import {Redirect, Route, Switch} from "react-router-dom";
+import Following from "./Following";
+import Posts from "./Posts";
+import Favorites from "./Favorites";
+import Followers from "./Followers";
+import {formatNumberShort} from "../../Util/Format";
+import NightMode from "../../NightMode/NightMode";
+import {setPageTitle} from "../../Util/Page";
+
+export declare type ProfilePageProps = {
+	user: User,
+	parent: Profile
+};
 
 export default class Profile extends Component<any, {
 	user: User,
-	error: string | null
+	error: string | null,
+	redirect: string | null,
+	activeMenuPoint: string | null
 }> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			user: null,
-			error: null
+			error: null,
+			redirect: null,
+			activeMenuPoint: null
 		};
 	}
 
@@ -60,6 +80,8 @@ export default class Profile extends Component<any, {
 					this.setState({
 						user
 					});
+
+					setPageTitle(user.getDisplayName() + " (@" + user.getUsername() + ")");
 				} else {
 					this.setState({
 						error: "An error occurred."
@@ -86,15 +108,20 @@ export default class Profile extends Component<any, {
 			const birthDate: Date | null = user.getBirthday() ? new Date(user.getBirthday()) : null;
 
 			return <div className={"profile"}>
+				{this.state.redirect ? <Redirect push to={this.state.redirect}/> : ""}
+
 				<ContentBase>
 					<LeftSidebar>
 						<SidebarStickyContent>
 							<div className={"text-center"}>
-								<img className={"mainAvatar"} src={user.getAvatarURL()}/>
+								<img className={"mainAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
 							</div>
 
 							<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/></h4>
-							<div className={"usernameDisplay"}>@{user.getUsername()}</div>
+							<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge target={user}/>
+							</div>
+
+							<Biography user={user}/>
 
 							<p className={"my-2 text-muted"}>
 								<i className={"fas fa-globe"}/><span
@@ -103,7 +130,7 @@ export default class Profile extends Component<any, {
 								year: "numeric"
 							})}</span>
 								{birthDate ? <div>
-									<br/><i className={"fas fa-birthday-cake"}/><span
+									<i className={"fas fa-birthday-cake"}/><span
 									style={{marginLeft: "7px"}}>{birthDate.toLocaleString("default", {
 									month: "long",
 									day: "numeric",
@@ -117,7 +144,106 @@ export default class Profile extends Component<any, {
 					</LeftSidebar>
 
 					<PageContent leftSidebar rightSidebar>
-						<FeedEntryList user={user}/>
+						<Card className={"mobilePart mb-3"} size={"small"}>
+							<div className={"clearfix"}>
+								<div className={"float-left"}>
+									<img className={"mobileAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
+								</div>
+
+								<div className={"float-left"}>
+									<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/></h4>
+									<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge
+										target={user}/></div>
+								</div>
+							</div>
+
+							<div className={"mt-2"}>
+								<Biography user={user}/>
+
+								<p className={"my-2 text-muted clearfix"}>
+									<div className={"float-left"}>
+										<i className={"fas fa-globe"}/><span
+										style={{marginLeft: "5px"}}>Joined {registerDate.toLocaleString("default", {
+										month: "long",
+										year: "numeric"
+									})}</span>
+									</div>
+									{birthDate ? <div className={"float-left ml-2"}>
+										<i className={"fas fa-birthday-cake"}/><span
+										style={{marginLeft: "7px"}}>{birthDate.toLocaleString("default", {
+										month: "long",
+										day: "numeric",
+										year: "numeric"
+									})}</span>
+									</div> : ""}
+								</p>
+
+								<FollowButton target={user}/>
+							</div>
+						</Card>
+
+						<Menu theme={NightMode.isActive() ? "dark" : "light"}
+							  selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"} onClick={(e) => {
+							if (e.key) {
+								const key = e.key;
+
+								if (key !== this.state.activeMenuPoint) {
+									switch (key) {
+										case "POSTS":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername()
+											});
+											break;
+										case "FOLLOWING":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername() + "/following"
+											});
+											break;
+										case "FOLLOWERS":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername() + "/followers"
+											});
+											break;
+										case "FAVORITES":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername() + "/favorites"
+											});
+											break;
+									}
+								}
+							}
+						}}>
+							<Menu.Item key={"POSTS"}>
+								Posts ({formatNumberShort(user.getTotalPostCount())})
+							</Menu.Item>
+
+							<Menu.Item key={"FOLLOWING"}>
+								Following ({formatNumberShort(user.getFollowingCount())})
+							</Menu.Item>
+
+							<Menu.Item key={"FOLLOWERS"}>
+								Followers ({formatNumberShort(user.getFollowerCount())})
+							</Menu.Item>
+
+							<Menu.Item key={"FAVORITES"}>
+								Favorites ({formatNumberShort(user.getFavoritesCount())})
+							</Menu.Item>
+						</Menu>
+
+						<Switch>
+							<Route path={"/:username/following"}
+								   render={(props) => <Following {...props} user={this.state.user} parent={this}/>}/>
+							<Route path={"/:username/followers"}
+								   render={(props) => <Followers {...props} user={this.state.user} parent={this}/>}/>
+							<Route path={"/:username/favorites"}
+								   render={(props) => <Favorites {...props} user={this.state.user} parent={this}/>}/>
+							<Route path={"/:username"}
+								   render={(props) => <Posts {...props} user={this.state.user} parent={this}/>}/>
+						</Switch>
 					</PageContent>
 
 					<RightSidebar>

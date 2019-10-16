@@ -18,12 +18,20 @@
  */
 
 import React, {Component} from "react";
+import Logo from "../../img/qpost-blue-small.png";
+import {Spin} from "antd";
 
 export default class LoadingScreen extends Component<any, any> {
 	render() {
 		return (
-			<div>
-				Loading...
+			<div className={"vertical-container"}>
+				<div className={"text-center vertical-center"}>
+					<div className={"mb-3"}>
+						<img src={Logo} height={60} alt={"Logo"}/>
+					</div>
+
+					<Spin size={"large"}/>
+				</div>
 			</div>
 		);
 	}

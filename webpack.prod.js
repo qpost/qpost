@@ -19,7 +19,12 @@
 
 const merge = require("webpack-merge");
 const common = require("./webpack.common");
+const {resolve} = require("path");
 
 module.exports = merge(common, {
-	mode: "production"
+	mode: "production",
+	output: {
+		filename: "bundle.[hash].js",
+		path: resolve(__dirname, "public/build/")
+	}
 });

@@ -19,10 +19,10 @@
   -->
 
 <browserconfig>
-    <msapplication>
-        <tile>
-            <square150x150logo src="/mstile-150x150.png"/>
-            <TileColor>#007bff</TileColor>
-        </tile>
-    </msapplication>
+	<msapplication>
+		<tile>
+			<square150x150logo src="/mstile-150x150.png"/>
+			<TileColor>#007bff</TileColor>
+		</tile>
+	</msapplication>
 </browserconfig>

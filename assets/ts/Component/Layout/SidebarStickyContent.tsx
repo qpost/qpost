@@ -20,15 +20,34 @@
 import React, {Component} from "react";
 import Affix from "antd/es/affix";
 import "antd/es/affix/style";
+import WindowSizeListener from "react-window-size-listener";
 
-export default class SidebarStickyContent extends Component<any, any> {
+export default class SidebarStickyContent extends Component<any, {
+	mobile: boolean
+}> {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			mobile: window.innerWidth <= 867
+		};
 	}
 
+	setIsMobileMenu = (windowWidth: number) => {
+		const mobileMenuOpen = windowWidth <= 867;
+
+		if (this.state.mobile !== mobileMenuOpen) {
+			this.setState({
+				mobile: mobileMenuOpen
+			});
+		}
+	};
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <Affix offsetTop={70}>
+		return [this.state.mobile === false ? <Affix offsetTop={70}>
 			{this.props.children}
-		</Affix>;
+		</Affix> : this.props.children, <WindowSizeListener onResize={windowSize => {
+			this.setIsMobileMenu(windowSize.windowWidth);
+		}}/>];
 	}
 }

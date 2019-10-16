@@ -24,12 +24,15 @@ import Button from "antd/es/button";
 import "antd/es/button/style";
 import Logo from "../../../../img/navlogo.png";
 import {Link} from "react-router-dom";
+import Auth from "../../../Auth/Auth";
 
 export default class MobileHeader extends Component<{
 	mobile: boolean,
 	key: any
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		const currentUser = Auth.getCurrentUser();
+
 		return <Layout.Header
 			hasSider={true}
 			className={"mainNav"}
@@ -50,9 +53,11 @@ export default class MobileHeader extends Component<{
 					<i className="fas fa-bars"/>
 				</Button>
 
-				<Link to={"/"} className={"clearUnderline"}>
+				{currentUser ? <Link to={"/"} className={"clearUnderline"}>
 					<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
-				</Link>
+				</Link> : <a href={"/"} className={"clearUnderline"}>
+					<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
+				</a>}
 
 				<Button ghost={true} type={"link"} style={{
 					float: "right",

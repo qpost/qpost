@@ -39,6 +39,8 @@ import FeedEntryActionButtons from "../../Component/FeedEntry/Buttons/FeedEntryA
 import SuggestedUsers from "../../Component/SuggestedUsers";
 import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
+import {setPageTitle} from "../../Util/Page";
+import {limitString} from "../../Util/Format";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -64,6 +66,15 @@ export default class Status extends Component<any, {
 					this.setState({
 						status: feedEntry
 					});
+
+					let title = feedEntry.getUser().getDisplayName() + " on qpost";
+
+					const text = feedEntry.getText();
+					if (text) {
+						title += ": \"" + limitString(text, 40, true) + "\"";
+					}
+
+					setPageTitle(title);
 				} else {
 					this.setState({
 						error: "An error occurred."
@@ -90,20 +101,20 @@ export default class Status extends Component<any, {
 				{status !== null && user !== null ? (
 					<Card className={"statusPageBox"}>
 						<div className={"clearfix"}>
-							<Link to={"/" + user.getUsername()} className={"clearUnderline"}>
+							<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
 								<img src={user.getAvatarURL()} className={"rounded float-left mr-2"} width={64}
 									 height={64} alt={user.getUsername()}/>
 							</Link>
 
 							<div className={"float-left nameContainer"}>
 								<div className={"displayName"}>
-									<Link to={"/" + user.getUsername()} className={"clearUnderline"}>
+									<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
 										{user.getDisplayName()}<VerifiedBadge target={user}/>
 									</Link>
 								</div>
 
 								<div className={"username"}>
-									<Link to={"/" + user.getUsername()} className={"clearUnderline"}>
+									<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
 										@{user.getUsername()}
 									</Link>
 								</div>

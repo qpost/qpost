@@ -23,10 +23,13 @@ import App from "./App";
 import "../scss/index.scss";
 import $ from "jquery";
 import "bootstrap";
+import ErrorBoundary from "./ErrorBoundary";
 
 window["jQuery"] = $;
 window["$"] = $;
 
 App.init();
 
-ReactDOM.render(<App/>, document.getElementById("root"));
+ReactDOM.render(<ErrorBoundary>
+	<App/>
+</ErrorBoundary>, document.getElementById("root"));

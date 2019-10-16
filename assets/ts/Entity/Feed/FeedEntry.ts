@@ -35,7 +35,7 @@ export default class FeedEntry {
 	@JsonProperty("following", User, true)
 	private following?: User = undefined;
 
-	@JsonProperty("post", FeedEntry, true)
+	@JsonProperty("parent", FeedEntry, true)
 	private post?: FeedEntry = undefined;
 
 	@JsonProperty("type", String)

@@ -72,6 +72,12 @@ export default class User {
 	@JsonProperty("followerCount", Number)
 	private followerCount: number = undefined;
 
+	@JsonProperty("favoritesCount", Number)
+	private favoritesCount: number = undefined;
+
+	@JsonProperty("followsYou", Boolean)
+	private followsYou: boolean = undefined;
+
 	public getId(): number {
 		return this.id;
 	}
@@ -138,5 +144,17 @@ export default class User {
 
 	public getFollowerCount(): number {
 		return this.followerCount;
+	}
+
+	public getFavoritesCount(): number {
+		return this.favoritesCount;
+	}
+
+	public isFollowingYou(): boolean {
+		return this.followsYou;
+	}
+
+	public getCharacterLimit(): number {
+		return !this.isVerified() ? window["POST_CHARACTER_LIMIT"] : window["VERIFIED_POST_CHARACTER_LIMIT"];
 	}
 }

@@ -18,7 +18,6 @@
  */
 
 import React, {Component} from "react";
-import Auth from "../Auth/Auth";
 import MobileSider from "./Header/Mobile/MobileSider";
 import DesktopHeader from "./Header/Desktop/DesktopHeader";
 import MobileHeader from "./Header/Mobile/MobileHeader";
@@ -26,14 +25,34 @@ import MobileNavigation from "./Header/Mobile/MobileNavigation";
 import WindowSizeListener from "react-window-size-listener";
 
 class Header extends Component<any, {
-	mobileMenu: boolean
+	mobileMenu: boolean,
+	id: number
 }> {
+	private static INSTANCE: Header = null;
+
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			mobileMenu: window.innerWidth <= 768
+			mobileMenu: window.innerWidth <= 768,
+			id: Math.random()
 		}
+	}
+
+	public static update(): void {
+		if (this.INSTANCE !== null) {
+			this.INSTANCE.setState({
+				id: Math.random()
+			});
+		}
+	}
+
+	componentDidMount(): void {
+		Header.INSTANCE = this;
+	}
+
+	componentWillUnmount(): void {
+		Header.INSTANCE = null;
 	}
 
 	setIsMobileMenu = (windowWidth: number) => {
@@ -47,13 +66,6 @@ class Header extends Component<any, {
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		const currentUser = Auth.getCurrentUser();
-
-		if (!currentUser) {
-			Auth.logout();
-			return null;
-		}
-
 		this.setIsMobileMenu(window.innerWidth);
 
 		return [

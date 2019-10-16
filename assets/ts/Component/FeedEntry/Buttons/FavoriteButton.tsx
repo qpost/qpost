@@ -20,31 +20,63 @@
 import React, {Component} from "react";
 import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import {formatNumberShort} from "../../../Util/Format";
+import {message, Spin} from "antd";
+import "antd/es/spin/style";
+import API from "../../../API/API";
+import BaseObject from "../../../Serialization/BaseObject";
+import FeedEntryActionButtons from "./FeedEntryActionButtons";
+import Auth from "../../../Auth/Auth";
+import LoginSuggestionModal from "../../LoginSuggestionModal";
 
 export default class FavoriteButton extends Component<{
-	entry: FeedEntry
+	entry: FeedEntry,
+	parent?: FeedEntryActionButtons
 }, {
-	favorited: boolean
+	favorited: boolean,
+	loading: boolean,
+	entry: FeedEntry
 }> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			favorited: this.props.entry.isFavorited()
+			favorited: this.props.entry.isFavorited(),
+			loading: false,
+			entry: this.props.entry
 		};
 	}
 
 	click = (e) => {
 		e.preventDefault();
+		e.stopPropagation();
 
-		// TODO
+		if (Auth.isLoggedIn()) {
+			if (!this.state.loading) {
+				this.setState({loading: true});
+
+				API.handleRequest("/favorite", this.state.favorited ? "DELETE" : "POST", {
+					post: this.props.entry.getId()
+				}, data => {
+					this.setState({
+						favorited: !this.state.favorited,
+						loading: false,
+						entry: BaseObject.convertObject(FeedEntry, data.result.feedEntry)
+					});
+				}, error => {
+					message.error(error);
+					this.setState({loading: false});
+				})
+			}
+		} else {
+			LoginSuggestionModal.open();
+		}
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <div className={"d-inline-block favoriteButton" + (this.state.favorited ? " active" : "")}
 					onClick={(e) => this.click(e)}>
-			<i className={"fas fa-star"}/><span
-			className={"number"}>{formatNumberShort(this.props.entry.getFavoriteCount())}</span>
+			{!this.state.loading ? <i className={"fas fa-star"}/> : <Spin size={"small"}/>}<span
+			className={"number"}>{formatNumberShort(this.state.entry.getFavoriteCount())}</span>
 		</div>;
 	}
 }

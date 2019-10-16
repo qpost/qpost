@@ -85,8 +85,8 @@ export default class MobileSider extends Component<{
 						mobileMenu: broken
 					});
 				}}>
-				<div className={"mx-2 my-2 clearfix"}>
-					<Link to={"/" + currentUser.getUsername()} className={"clearUnderline"}
+				{currentUser ? <div className={"mx-2 my-2 clearfix"}>
+					<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}
 						  onClick={(e) => this.toggle()}>
 						<Avatar src={currentUser.getAvatarURL()} className={"mr-2"} shape={"square"} size={"large"}
 								style={{
@@ -103,39 +103,53 @@ export default class MobileSider extends Component<{
 							@{currentUser.getUsername()}
 						</div>
 					</div>
-				</div>
+				</div> : ""}
 
 				<Menu theme={NightMode.isActive() ? "dark" : "light"} mode="inline" selectable={false}>
-					<Menu.Item key="1">
-						<Link to={"/" + currentUser.getUsername()} className={"clearUnderline"}>
+					{currentUser ? [<Menu.Item key="1">
+						<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}
+							  onClick={(e) => this.toggle()}>
 							<i className={"far fa-user iconMargin-10"}/>
 							<span className="nav-text">Profile</span>
 						</Link>
-					</Menu.Item>
-					<Menu.Item key="2">
-						<Link to={"/account"} className={"clearUnderline"}>
-							<i className={"fas fa-cog iconMargin-10"}/>
-							<span className="nav-text">Settings</span>
-						</Link>
-					</Menu.Item>
-					<Menu.Item key="3">
-						<Link to={"/logout"} onClick={(e) => {
-							e.preventDefault();
-							Auth.logout();
-						}} className={"clearUnderline"}>
-							<i className={"fas fa-sign-out-alt iconMargin-10"}/>
-							<span className="nav-text">Logout</span>
-						</Link>
-					</Menu.Item>
-					<Menu.Item key="4">
-						<Link to={"/nightmode"} onClick={(e) => {
-							e.preventDefault();
-							NightMode.toggle();
-						}} className={"clearUnderline"}>
-							<i className={"far fa-lightbulb iconMargin-10"}/>
-							<span className="nav-text">Toggle night mode</span>
-						</Link>
-					</Menu.Item>
+					</Menu.Item>,
+						<Menu.Item key="2">
+							<Link to={"/account"} className={"clearUnderline"} onClick={(e) => this.toggle()}>
+								<i className={"fas fa-cog iconMargin-10"}/>
+								<span className="nav-text">Settings</span>
+							</Link>
+						</Menu.Item>,
+						<Menu.Item key="3">
+							<Link to={"#"} onClick={(e) => {
+								e.preventDefault();
+								Auth.logout();
+							}} className={"clearUnderline"}>
+								<i className={"fas fa-sign-out-alt iconMargin-10"}/>
+								<span className="nav-text">Logout</span>
+							</Link>
+						</Menu.Item>,
+						<Menu.Item key="4">
+							<Link to={"#"} onClick={(e) => {
+								e.preventDefault();
+								NightMode.toggle();
+							}} className={"clearUnderline"}>
+								<i className={"far fa-lightbulb iconMargin-10"}/>
+								<span className="nav-text">Toggle night mode</span>
+							</Link>
+						</Menu.Item>] : [
+						<Menu.Item key="1">
+							<a href={"/login"} className={"clearUnderline"}>
+								<i className={"far fa-user iconMargin-10"}/>
+								<span className="nav-text">Login</span>
+							</a>
+						</Menu.Item>,
+						<Menu.Item key="2">
+							<a href={"/"} className={"clearUnderline"}>
+								<i className={"fas fa-sign-in-alt iconMargin-10"}/>
+								<span className="nav-text">Sign up</span>
+							</a>
+						</Menu.Item>
+					]}
 				</Menu>
 			</Layout.Sider>,
 			<div key={1} className={"mobileSliderBackdrop" + (!this.state.collapsed ? " open" : "")} onClick={(e) => {

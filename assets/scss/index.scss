@@ -21,7 +21,6 @@
 @import "~bootstrap/scss/bootstrap";
 @import "util/index";
 
-@import "nightmode/index";
 @import "alerts";
 @import "base";
 @import "buttons";
@@ -38,3 +37,5 @@
 @import "post-forms";
 @import "profile";
 @import "status";
+@import "user-box";
+@import "nightmode/index";

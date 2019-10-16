@@ -33,13 +33,24 @@ import "antd/es/layout/style";
 import MobileChecker from "./Util/Mobile/MobileChecker";
 import Status from "./Pages/Status/Status";
 import Profile from "./Pages/Profile/Profile";
+import ProfileRedirect from "./Pages/Profile/ProfileRedirect";
+import PrivateRoute from "./Auth/PrivateRoute";
+import EditProfile from "./Pages/EditProfile/EditProfile";
+import BadgeStatus from "./Auth/BadgeStatus";
+import Notifications from "./Pages/Notifications/Notifications";
+import Messages from "./Pages/Messages/Messages";
+import Account from "./Pages/Account/Account";
+import Sessions from "./Pages/Account/Sessions";
+import ChangeUsername from "./Pages/Account/ChangeUsername";
+import ImageViewer from "./Component/ImageViewer";
+import LoginSuggestionModal from "./Component/LoginSuggestionModal";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			validatedLogin: false,
+			validatedLogin: !Auth.isLoggedIn(),
 			error: null
 		}
 	}
@@ -49,24 +60,28 @@ export default class App extends Component<any, any> {
 	}
 
 	componentDidMount(): void {
-		// TODO: Pre-load home page data and pass it to the HomeFeed component
-		API.handleRequest("/token/verify", "POST", {}, (data => {
-			if (data.status && data.status === "Token valid" && data.user) {
-				Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
+		if (Auth.isLoggedIn()) {
+			// TODO: Pre-load home page data and pass it to the HomeFeed component
+			API.handleRequest("/token/verify", "POST", {}, (data => {
+				if (data.status && data.status === "Token valid" && data.user) {
+					Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
 
+					BadgeStatus.update(() => {
+						this.setState({
+							validatedLogin: true
+						});
+					});
+				} else {
+					this.setState({
+						error: "Authentication failed."
+					})
+				}
+			}), (error => {
 				this.setState({
-					validatedLogin: true
+					error
 				})
-			} else {
-				this.setState({
-					error: "Authentication failed."
-				})
-			}
-		}), (error => {
-			this.setState({
-				error
-			})
-		}));
+			}));
+		}
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -86,19 +101,30 @@ export default class App extends Component<any, any> {
 							<Header/>
 
 							<Layout.Content className="navMargin mainContent">
-								<Switch>
-									<div className="legacyCard">
-										<div className="wrapper">
-											<div className="legacyCardBody">
+								<div className="legacyCard">
+									<div className="wrapper">
+										<div className="legacyCardBody">
+											<ImageViewer/>
+											<LoginSuggestionModal/>
+
+											<Switch>
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
 													<Route path={"/"} exact component={Home}/>}
 
+												<PrivateRoute path={"/edit"} exact component={EditProfile}/>
+												<PrivateRoute path={"/notifications"} exact component={Notifications}/>
+												<PrivateRoute path={"/messages"} exact component={Messages}/>
+												<PrivateRoute path={"/account/sessions"} exact component={Sessions}/>
+												<PrivateRoute path={"/account/username"} exact
+															  component={ChangeUsername}/>
+												<PrivateRoute path={"/account"} exact component={Account}/>
 												<Route path={"/status/:id"} exact component={Status}/>
-												<Route path={"/:username"} exact component={Profile}/>
-											</div>
+												<Route path={"/profile/:username"} component={ProfileRedirect}/>
+												<Route path={"/:username"} component={Profile}/>
+											</Switch>
 										</div>
 									</div>
-								</Switch>
+								</div>
 							</Layout.Content>
 						</Layout>
 					</div>
