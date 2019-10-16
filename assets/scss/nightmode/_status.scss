@@ -17,30 +17,8 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-html.nightMode, html.nightMode > body {
-	&, .ant-layout {
-		background: #001021;
+.statusPageBox {
+	.text {
 		color: #FFF;
 	}
-
-	@import "alerts";
-	@import "base";
-	@import "buttons";
-	@import "cards";
-	@import "feed";
-	@import "footer";
-	@import "forms";
-	@import "list-group";
-	@import "modals";
-	@import "navigation";
-	@import "notifications";
-	@import "pagination";
-	@import "pagination";
-	@import "post-forms";
-	@import "profile";
-	@import "skeleton";
-	@import "status";
-	@import "tables";
-	@import "text";
-	@import "util";
 }
