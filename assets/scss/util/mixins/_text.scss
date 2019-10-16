@@ -17,20 +17,9 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.statusTrigger {
-	@include desktopOnly() {
-		&:hover {
-			background-color: #001020 !important;
-		}
-	}
-}
-
-.homeFeedLoadMore {
-	background: #383838 !important;
-	border-color: #000 !important;
-	color: white;
-}
-
-.ant-empty-normal {
-	color: #FFF;
+@mixin cutText() {
+	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }

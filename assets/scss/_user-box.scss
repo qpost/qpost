@@ -22,10 +22,7 @@
 		width: calc(100% - 190px);
 
 		.displayName {
-			width: 100%;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
+			@include cutText();
 
 			a {
 				font-weight: bold;
@@ -35,10 +32,7 @@
 		}
 
 		.username {
-			width: 100%;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
+			@include cutText();
 			margin-top: -4px;
 
 			a {
