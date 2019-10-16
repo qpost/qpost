@@ -18,6 +18,7 @@
  */
 
 .ant-btn {
+	&:not(.ant-btn-default):not(.ant-btn-dashed):not(.ant-btn-danger):not(.ant-btn-primary):not(.ant-btn-link),
 	&.ant-btn-dashed,
 	&.ant-btn-default:not(.followButton),
 	&.ant-btn-default[data-follow-status="-1"] {
