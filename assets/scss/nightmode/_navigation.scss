@@ -22,6 +22,14 @@
 	@include navigationStyle(mobileNav, #001529, $primary);
 }
 
+.mobileSider {
+	background-color: #001529 !important;
+
+	.displayName {
+		color: #FFF !important;
+	}
+}
+
 .dropdown-menu {
 	background-color: #525252;
 }
