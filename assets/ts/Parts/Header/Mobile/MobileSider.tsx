@@ -107,19 +107,20 @@ export default class MobileSider extends Component<{
 
 				<Menu theme={NightMode.isActive() ? "dark" : "light"} mode="inline" selectable={false}>
 					{currentUser ? [<Menu.Item key="1">
-						<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
+						<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}
+							  onClick={(e) => this.toggle()}>
 							<i className={"far fa-user iconMargin-10"}/>
 							<span className="nav-text">Profile</span>
 						</Link>
 					</Menu.Item>,
 						<Menu.Item key="2">
-							<Link to={"/account"} className={"clearUnderline"}>
+							<Link to={"/account"} className={"clearUnderline"} onClick={(e) => this.toggle()}>
 								<i className={"fas fa-cog iconMargin-10"}/>
 								<span className="nav-text">Settings</span>
 							</Link>
 						</Menu.Item>,
 						<Menu.Item key="3">
-							<Link to={"/logout"} onClick={(e) => {
+							<Link to={"#"} onClick={(e) => {
 								e.preventDefault();
 								Auth.logout();
 							}} className={"clearUnderline"}>
@@ -128,7 +129,7 @@ export default class MobileSider extends Component<{
 							</Link>
 						</Menu.Item>,
 						<Menu.Item key="4">
-							<Link to={"/nightmode"} onClick={(e) => {
+							<Link to={"#"} onClick={(e) => {
 								e.preventDefault();
 								NightMode.toggle();
 							}} className={"clearUnderline"}>
