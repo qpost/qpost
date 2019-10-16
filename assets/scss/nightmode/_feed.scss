@@ -22,13 +22,15 @@
 	-webkit-transition: background-color 200ms linear;
 	-ms-transition: background-color 200ms linear;
 	transition: background-color 200ms linear;
-}
 
-.statusTrigger:hover {
-	background-color: #001020;
-	-webkit-transition: background-color 200ms linear;
-	-ms-transition: background-color 200ms linear;
-	transition: background-color 200ms linear;
+	@include desktopOnly() {
+		&:hover {
+			background-color: #001020;
+			-webkit-transition: background-color 200ms linear;
+			-ms-transition: background-color 200ms linear;
+			transition: background-color 200ms linear;
+		}
+	}
 }
 
 .homeFeedLoadMore {
