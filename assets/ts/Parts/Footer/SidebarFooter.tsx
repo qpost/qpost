@@ -18,6 +18,7 @@
  */
 
 import React, {Component} from "react";
+import {Link} from "react-router-dom";
 
 export default class SidebarFooter extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -25,6 +26,12 @@ export default class SidebarFooter extends Component<any, any> {
 			<ul>
 				<li>
 					&copy; Copyright 2018-{new Date().getFullYear()} Gigadrive
+				</li>
+
+				<li>
+					<Link to={"/about"}>
+						About
+					</Link>
 				</li>
 
 				<li>

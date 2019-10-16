@@ -44,6 +44,7 @@ import Sessions from "./Pages/Account/Sessions";
 import ChangeUsername from "./Pages/Account/ChangeUsername";
 import ImageViewer from "./Component/ImageViewer";
 import LoginSuggestionModal from "./Component/LoginSuggestionModal";
+import About from "./Pages/About/About";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -118,6 +119,7 @@ export default class App extends Component<any, any> {
 												<PrivateRoute path={"/account/username"} exact
 															  component={ChangeUsername}/>
 												<PrivateRoute path={"/account"} exact component={Account}/>
+												<Route path={"/about"} exact component={About}/>
 												<Route path={"/status/:id"} exact component={Status}/>
 												<Route path={"/profile/:username"} component={ProfileRedirect}/>
 												<Route path={"/:username"} component={Profile}/>
