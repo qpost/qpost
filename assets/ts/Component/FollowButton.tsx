@@ -30,6 +30,7 @@ import "antd/es/spin/style";
 import Button from "antd/es/button";
 import "antd/es/button/style";
 import {Method} from "axios";
+import LoginSuggestionModal from "./LoginSuggestionModal";
 
 export default class FollowButton extends Component<{
 	target: User,
@@ -57,40 +58,44 @@ export default class FollowButton extends Component<{
 	click = (e) => {
 		e.preventDefault();
 
-		if (this.isCurrentUser()) {
-			this.setState({
-				redirectToEditPage: true
-			});
-		} else {
-			if (!this.state.loading) {
-				const followStatus: number = this.followStatus();
-				let method: Method = followStatus === FollowStatus.FOLLOWING || followStatus === FollowStatus.PENDING ? "DELETE" : "POST";
-
+		if (Auth.isLoggedIn()) {
+			if (this.isCurrentUser()) {
 				this.setState({
-					loading: true
+					redirectToEditPage: true
 				});
-
-				API.handleRequest("/follow", method, {to: this.props.target.getId()}, data => {
-					if (data.hasOwnProperty("status")) {
-						this.setState({
-							followStatus: data.status,
-							loading: false
-						});
-					} else {
-						this.setState({
-							loading: false
-						});
-
-						message.error("An error occurred.");
-					}
-				}, error => {
-					message.error(error);
+			} else {
+				if (!this.state.loading) {
+					const followStatus: number = this.followStatus();
+					let method: Method = followStatus === FollowStatus.FOLLOWING || followStatus === FollowStatus.PENDING ? "DELETE" : "POST";
 
 					this.setState({
-						loading: false
+						loading: true
 					});
-				});
+
+					API.handleRequest("/follow", method, {to: this.props.target.getId()}, data => {
+						if (data.hasOwnProperty("status")) {
+							this.setState({
+								followStatus: data.status,
+								loading: false
+							});
+						} else {
+							this.setState({
+								loading: false
+							});
+
+							message.error("An error occurred.");
+						}
+					}, error => {
+						message.error(error);
+
+						this.setState({
+							loading: false
+						});
+					});
+				}
 			}
+		} else {
+			LoginSuggestionModal.open();
 		}
 	};
 

@@ -25,6 +25,8 @@ import "antd/es/spin/style";
 import API from "../../../API/API";
 import BaseObject from "../../../Serialization/BaseObject";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
+import Auth from "../../../Auth/Auth";
+import LoginSuggestionModal from "../../LoginSuggestionModal";
 
 export default class FavoriteButton extends Component<{
 	entry: FeedEntry,
@@ -48,21 +50,25 @@ export default class FavoriteButton extends Component<{
 		e.preventDefault();
 		e.stopPropagation();
 
-		if (!this.state.loading) {
-			this.setState({loading: true});
+		if (Auth.isLoggedIn()) {
+			if (!this.state.loading) {
+				this.setState({loading: true});
 
-			API.handleRequest("/favorite", this.state.favorited ? "DELETE" : "POST", {
-				post: this.props.entry.getId()
-			}, data => {
-				this.setState({
-					favorited: !this.state.favorited,
-					loading: false,
-					entry: BaseObject.convertObject(FeedEntry, data.result.feedEntry)
-				});
-			}, error => {
-				message.error(error);
-				this.setState({loading: false});
-			})
+				API.handleRequest("/favorite", this.state.favorited ? "DELETE" : "POST", {
+					post: this.props.entry.getId()
+				}, data => {
+					this.setState({
+						favorited: !this.state.favorited,
+						loading: false,
+						entry: BaseObject.convertObject(FeedEntry, data.result.feedEntry)
+					});
+				}, error => {
+					message.error(error);
+					this.setState({loading: false});
+				})
+			}
+		} else {
+			LoginSuggestionModal.open();
 		}
 	};
 

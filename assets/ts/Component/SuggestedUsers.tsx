@@ -28,6 +28,7 @@ import Spin from "antd/es/spin";
 import "antd/es/spin/style";
 import FollowStatus from "../Util/FollowStatus";
 import {Card} from "antd";
+import Auth from "../Auth/Auth";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -40,20 +41,24 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 	}
 
 	componentDidMount(): void {
-		API.handleRequest("/user/suggested", "GET", {}, (data => {
-			if (data["results"]) {
-				const results: User[] = [];
+		if (Auth.isLoggedIn()) {
+			API.handleRequest("/user/suggested", "GET", {}, (data => {
+				if (data["results"]) {
+					const results: User[] = [];
 
-				data["results"].forEach(userData => {
-					results.push(BaseObject.convertObject(User, userData));
-				});
+					data["results"].forEach(userData => {
+						results.push(BaseObject.convertObject(User, userData));
+					});
 
-				this.setState({results, loading: false});
-			}
-		}));
+					this.setState({results, loading: false});
+				}
+			}));
+		}
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		if (!Auth.isLoggedIn()) return <div/>;
+
 		if (this.state.loading) {
 			return <div className={"text-center my-3"}>
 				<Spin size={"large"}/>

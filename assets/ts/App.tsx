@@ -43,13 +43,14 @@ import Account from "./Pages/Account/Account";
 import Sessions from "./Pages/Account/Sessions";
 import ChangeUsername from "./Pages/Account/ChangeUsername";
 import ImageViewer from "./Component/ImageViewer";
+import LoginSuggestionModal from "./Component/LoginSuggestionModal";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			validatedLogin: false,
+			validatedLogin: !Auth.isLoggedIn(),
 			error: null
 		}
 	}
@@ -59,26 +60,28 @@ export default class App extends Component<any, any> {
 	}
 
 	componentDidMount(): void {
-		// TODO: Pre-load home page data and pass it to the HomeFeed component
-		API.handleRequest("/token/verify", "POST", {}, (data => {
-			if (data.status && data.status === "Token valid" && data.user) {
-				Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
+		if (Auth.isLoggedIn()) {
+			// TODO: Pre-load home page data and pass it to the HomeFeed component
+			API.handleRequest("/token/verify", "POST", {}, (data => {
+				if (data.status && data.status === "Token valid" && data.user) {
+					Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
 
-				BadgeStatus.update(() => {
-					this.setState({
-						validatedLogin: true
+					BadgeStatus.update(() => {
+						this.setState({
+							validatedLogin: true
+						});
 					});
-				});
-			} else {
+				} else {
+					this.setState({
+						error: "Authentication failed."
+					})
+				}
+			}), (error => {
 				this.setState({
-					error: "Authentication failed."
+					error
 				})
-			}
-		}), (error => {
-			this.setState({
-				error
-			})
-		}));
+			}));
+		}
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -102,6 +105,7 @@ export default class App extends Component<any, any> {
 									<div className="wrapper">
 										<div className="legacyCardBody">
 											<ImageViewer/>
+											<LoginSuggestionModal/>
 
 											<Switch>
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :

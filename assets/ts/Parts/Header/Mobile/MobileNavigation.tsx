@@ -27,6 +27,7 @@ import "antd/es/layout/style";
 import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
 import BadgeStatus from "../../../Auth/BadgeStatus";
+import Auth from "../../../Auth/Auth";
 
 export default class MobileNavigation extends Component<{
 	mobile: boolean,
@@ -35,6 +36,8 @@ export default class MobileNavigation extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const notifications = BadgeStatus.getNotifications();
 		const messages = BadgeStatus.getMessages();
+
+		if (!Auth.isLoggedIn()) return "";
 
 		return <Layout.Header
 			className={"mobileNav"}

@@ -25,6 +25,7 @@ import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import {message, Spin} from "antd";
 import BaseObject from "../../../Serialization/BaseObject";
 import API from "../../../API/API";
+import LoginSuggestionModal from "../../LoginSuggestionModal";
 
 export default class ShareButton extends Component<{
 	entry: FeedEntry,
@@ -48,23 +49,27 @@ export default class ShareButton extends Component<{
 		e.preventDefault();
 		e.stopPropagation();
 
-		if (!this.isSelf()) {
-			if (!this.state.loading) {
-				this.setState({loading: true});
+		if (Auth.isLoggedIn()) {
+			if (!this.isSelf()) {
+				if (!this.state.loading) {
+					this.setState({loading: true});
 
-				API.handleRequest("/share", this.state.shared ? "DELETE" : "POST", {
-					post: this.props.entry.getId()
-				}, data => {
-					this.setState({
-						shared: !this.state.shared,
-						loading: false,
-						entry: BaseObject.convertObject(FeedEntry, data.result.parent)
-					});
-				}, error => {
-					message.error(error);
-					this.setState({loading: false});
-				})
+					API.handleRequest("/share", this.state.shared ? "DELETE" : "POST", {
+						post: this.props.entry.getId()
+					}, data => {
+						this.setState({
+							shared: !this.state.shared,
+							loading: false,
+							entry: BaseObject.convertObject(FeedEntry, data.result.parent)
+						});
+					}, error => {
+						message.error(error);
+						this.setState({loading: false});
+					})
+				}
 			}
+		} else {
+			LoginSuggestionModal.open();
 		}
 	};
 

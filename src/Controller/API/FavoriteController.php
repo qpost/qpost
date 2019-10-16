@@ -186,7 +186,7 @@ class FavoriteController extends AbstractController {
 	 * @return Response|null
 	 */
 	public function favorites(APIService $apiService) {
-		$response = $apiService->validate(true);
+		$response = $apiService->validate(false);
 		if (!is_null($response)) return $response;
 
 		$parameters = $apiService->parameters();
