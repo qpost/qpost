@@ -17,6 +17,21 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+.ant-btn {
+	&.ant-btn-default:not(.followButton),
+	&.ant-btn-default[data-follow-status="-1"] {
+		$color: #001949;
+
+		color: #f8f9fa !important;
+		background-color: $color !important;
+		border-color: darken($color, 5%) !important;
+
+		&:hover {
+			background-color: lighten($color, 5%) !important;
+		}
+	}
+}
+
 .btn-light {
 	color: #f8f9fa !important;
 	background-color: #212529 !important;
