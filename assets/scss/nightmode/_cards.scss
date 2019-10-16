@@ -49,9 +49,18 @@
 }
 
 .ant-modal {
+	.ant-modal-header,
+	.ant-modal-title,
+	.ant-modal-footer {
+		color: #FFF !important;
+		background-color: #001d30;
+		border-color: #001020;
+		border-top: none !important;
+	}
+
 	.ant-modal-content {
 		color: #FFF;
-		background-color: #001d30;
+		background-color: #001529;
 		border-color: #001020;
 	}
 }
