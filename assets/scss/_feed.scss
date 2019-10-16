@@ -1,5 +1,7 @@
 /*!
- * Copyright (C) 2019 Gigadrive Group - All rights reserved.
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +24,13 @@
 	-ms-transition: background-color 200ms linear;
 	transition: background-color 200ms linear;
 
-	&:hover {
-		background-color: rgb(228, 228, 228);
-		-webkit-transition: background-color 200ms linear;
-		-ms-transition: background-color 200ms linear;
-		transition: background-color 200ms linear;
+	@include desktopOnly() {
+		&:hover {
+			background-color: rgb(228, 228, 228);
+			-webkit-transition: background-color 200ms linear;
+			-ms-transition: background-color 200ms linear;
+			transition: background-color 200ms linear;
+		}
 	}
 
 	.nav-link {
@@ -34,37 +38,6 @@
 			color: gray;
 		}
 	}
-}
-
-// post interaction buttons
-.favoriteButton, .shareButton, .replyButton, .deleteButton {
-	cursor: pointer;
-	font-size: 19px;
-}
-
-.replyButton > i,
-.deleteButton > i {
-	color: gray;
-}
-
-.favoriteButton > i:hover {
-	color: gold !important;
-}
-
-.shareButton > i:hover,
-.replyButton > i:hover {
-	color: #007bff !important;
-}
-
-.deleteButton > i:hover {
-	color: red !important;
-}
-
-.favoriteButton > i:hover, .shareButton > i:hover, .replyButton > i:hover, .deleteButton > i:hover,
-.favoriteButton > i, .shareButton > i, .replyButton > i, .deleteButton > i {
-	-webkit-transition: color 200ms linear;
-	-ms-transition: color 200ms linear;
-	transition: color 200ms linear;
 }
 
 // load more button on home feed

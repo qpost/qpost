@@ -3,15 +3,13 @@
 {% block content %}
 	<div class="row">
 		<div class="col-lg-6 offset-lg-3">
-			{% if errorMsg is defined and errorMsg %}
-				{{ createAlert("errorMsg",errorMsg,"danger") }}
-			{% endif %}
+			{% include "parts/flash.html.twig" %}
 			<div class="card">
 				<div class="card-body">
 					<h3 class="text-center mb-2">Log in</h3>
 
-					<form action="/login" method="post">
-						{{ insertCSRF() }}
+					<form action="{{ path("qpost_login_index") }}" method="post">
+						{% include "parts/csrf.html.twig" %}
 						<input type="text" class="form-control mb-2" name="email"
 							   placeholder="Email address or username"{{ _POST["email"] is defined and _POST["email"] ? ' value="'~sanatizeHTMLAttribute(_POST["email"])~'"' }}/>
 						<input type="password" class="form-control mb-2" name="password" placeholder="Password"/>
@@ -19,8 +17,10 @@
 
 						<hr/>
 
-						<a href="/" class="btn btn-block btn-light mb-2">Create an account</a>
-						<a href="/login/gigadrive" class="btn btn-block btn-success" data-no-instant>Sign in with
+						<a href="{{ path("qpost_home_index") }}" class="btn btn-block btn-light mb-2">Create an
+							account</a>
+						<a href="{{ path("qpost_login_gigadrive") }}" class="btn btn-block btn-success" data-no-instant>Sign
+							in with
 							Gigadrive</a>
 					</form>
 				</div>

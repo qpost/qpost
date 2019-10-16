@@ -12,7 +12,8 @@
 					<div class="row">
 						<div class="col-12">
 							<form action="/login" method="post">
-								{{ insertCSRF() }}
+								{% include "parts/csrf.html.twig" %}
+
 								<label for="email" class="sr-only">Username</label>
 								<input type="text" class="form-control" name="email" id="email"
 									   placeholder="Email address or username"/>
@@ -31,7 +32,7 @@
 
 								<div class="or">OR</div>
 
-								<a href="/login/gigadrive" type="button"
+								<a href="{{ path("qpost_login_gigadrive") }}" type="button"
 								   class="btn btn-success btn-lg btn-block clearUnderline">
 									Sign in with Gigadrive
 								</a>

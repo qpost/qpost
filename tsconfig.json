@@ -13,16 +13,16 @@
 		"moduleResolution": "node",
 		"rootDir": "assets",
 		"jsx": "react",
-		"jsxFactory": "JSX.createElement",
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
 		"noImplicitAny": false,
 		"importHelpers": true,
-		"strictNullChecks": true,
 		"suppressImplicitAnyIndexErrors": true,
 		"noUnusedLocals": true,
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
 	},
 	"exclude": [
 		"node_modules",

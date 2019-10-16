@@ -1,12 +1,18 @@
 {% set title = title|default(siteName) %}
 {% set originalTitle = title %}
+{% set description = description|default(defaultDescription) %}
+{% set twitterImage = twitterImage|default(defaultTwitterImage) %}
+{% if title != siteName %}
+	{% set title = title ~ " - " ~ siteName %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<title>{{ title }}</title>
 
 	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+	<meta name="viewport"
+		  content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0"/>
 	<meta http-equiv="x-ua-compatible" content="ie=edge"/>
 	<meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -19,7 +25,7 @@
 
 	<meta name="twitter:title" content="{{ title }}"/>
 	<meta name="twitter:description" content="{{ description }}"/>
-	<meta name="twitter:image" content="{{ image }}"/>
+	<meta name="twitter:image" content="{{ twitterImage }}"/>
 	<meta name="twitter:card" content="summary"/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -42,17 +48,18 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
 		  integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.2/css/flag-icon.min.css" rel="stylesheet"/>
+
 	{% for url in [
 		"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
-		"/css/datepicker.min.css",
-		"/css/jquery.highlight-within-textarea.css"
 	] %}
 		<link href="{{ url }}" type="text/css" rel="stylesheet"/>
 	{% endfor %}
 
 	<script type="text/javascript">
-		window["CSRF_TOKEN"] = "{{ csrfToken }}";
+		window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
 		window["POST_CHARACTER_LIMIT"] = {{ postCharacterLimit }};
+		window["VERIFIED_POST_CHARACTER_LIMIT"] = {{ verifiedPostCharacterLimit }};
 
 		window["restoreTitle"] = "{{ profileLoadPost is defined ? originalTitle }}";
 		window["CURRENT_STATUS_MODAL"] = 0;
@@ -70,17 +77,6 @@
 		{% endif %}
 	</script>
 
-	{% for url in [
-		"/assets/js/dropzone.js",
-		"/build/bundle.js",
-		"https://www.google.com/recaptcha/api.js",
-		"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
-		"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
-		"/assets/js/jquery.highlight-within-textarea.js"
-	] %}
-		<script type="text/javascript" src="{{ url }}"></script>
-	{% endfor %}
-
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script>
 		(adsbygoogle = window.adsbygoogle || []).push({
@@ -92,5 +88,15 @@
 
 <body class="{% block additionalBodyClasses %}{% endblock %}">
 {% block body %}{% endblock %}
+
+{# "/assets/js/jquery.highlight-within-textarea.js" #}
+{% for url in [
+	"/build/" ~ bundleName,
+	"https://www.google.com/recaptcha/api.js",
+	"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
+	"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
+] %}
+	<script type="text/javascript" src="{{ url }}"></script>
+{% endfor %}
 </body>
 </html>

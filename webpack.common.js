@@ -1,8 +1,20 @@
 /*
- * Copyright (c) 2019 Gigadrive Group - All rights reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited.
- * Proprietary and confidential.
- * https://gigadrivegroup.com/dev/technologies
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
 const {resolve} = require("path");
@@ -10,7 +22,8 @@ const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const optimizeCss = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
-	entry: "./assets/ts/index.ts",
+	entry: "./assets/ts/index.tsx",
+	context: resolve("./"),
 	devtool: false,
 	module: {
 		rules: [
@@ -36,6 +49,31 @@ module.exports = {
 							includePaths: [
 								resolve(__dirname, "node_modules")
 							]
+						}
+					}
+				]
+			},
+			{
+				test: /\.less$/,
+				use: [
+					{
+						loader: "style-loader"
+					},
+					{
+						loader: "css-loader"
+					},
+					{
+						loader: "less-loader",
+						options: {
+							javascriptEnabled: true,
+							modifyVars: {
+								"primary-color": "#007bff",
+								"screen-xs": "0",
+								"screen-sm": "676px",
+								"screen-md": "868px",
+								"screen-lg": "1092px",
+								"screen-xl": "1500px"
+							}
 						}
 					}
 				]
@@ -85,10 +123,6 @@ module.exports = {
 	],
 	resolve: {
 		extensions: [".tsx", ".ts", ".js", ".jsx"]
-	},
-	output: {
-		filename: "bundle.js",
-		path: resolve(__dirname, "public/build/")
 	},
 	node: {
 		console: true,

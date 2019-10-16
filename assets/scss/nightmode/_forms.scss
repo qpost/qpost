@@ -1,5 +1,7 @@
 /*!
- * Copyright (C) 2019 Gigadrive Group - All rights reserved.
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +18,8 @@
  */
 
 .form-control,
+.ant-input,
+.ant-mentions, .ant-mentions > textarea,
 .form-control:focus,
 .breadcrumb,
 .custom-file-label,
@@ -25,8 +29,8 @@
 .datepicker-top-left::before, .datepicker-top-right::before,
 .datepicker-panel > ul > li,
 .datepicker-panel > ul > li.disabled, .datepicker-panel > ul > li.disabled:hover {
-	border: 1px solid #474747;
-	background-color: #535353;
+	border: 1px solid #001020;
+	background-color: #001d30;
 	color: #FFF !important;
 	box-shadow: none;
 }

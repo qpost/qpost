@@ -1,5 +1,7 @@
 /*!
- * Copyright (C) 2019 Gigadrive Group - All rights reserved.
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
+
+.ant-layout-header {
+	@include navigationStyle(mainNav, #001529, #FFF);
+	@include navigationStyle(mobileNav, #001529, $primary);
+}
+
+.mobileSider {
+	background-color: #001529 !important;
+
+	.displayName {
+		color: #FFF !important;
+	}
+}
 
 .dropdown-menu {
 	background-color: #525252;

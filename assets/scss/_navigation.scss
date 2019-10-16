@@ -1,5 +1,7 @@
 /*!
- * Copyright (C) 2019 Gigadrive Group - All rights reserved.
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +16,122 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
+
+@mixin navigationStyle($identifier, $mainColor,$textColor) {
+	&.#{$identifier} {
+		@if ($identifier == mobileNav) {
+			border-top: 1px solid darken($mainColor, 20%);
+			padding: 0 10px !important;
+
+			i {
+				font-size: 21px;
+			}
+
+			img {
+				height: 1em;
+				width: 1em;
+			}
+
+			.ant-menu-item.menuitem-overflowed {
+				display: inline-block !important;
+			}
+
+			.ant-menu-overflowed-submenu {
+				display: none !important;
+			}
+		}
+
+		@if ($identifier == mainNav) {
+			padding: 0 15px !important;
+
+			.ant-btn-background-ghost.ant-btn-link {
+				&, &:hover, &:active {
+					color: $textColor !important;
+				}
+			}
+		}
+
+		&, > .ant-menu {
+			background-color: $mainColor !important;
+
+			.ant-menu-item-active a {
+				text-decoration: none !important;
+			}
+
+			&, & a {
+				&a:hover {
+					color: $textColor !important;
+					text-decoration: none !important;
+				}
+
+				color: $textColor !important;
+			}
+
+			.ant-menu-submenu-title {
+				color: $textColor !important;
+			}
+
+			li {
+				border-bottom: none !important;
+			}
+		}
+	}
+}
+
+.mobileSliderBackdrop {
+	height: 0;
+	opacity: 0;
+
+	&.open {
+		position: fixed;
+		z-index: 99;
+		height: 100%;
+		width: 100%;
+		background-color: #000;
+		opacity: .8;
+		transition: opacity .3s ease-in-out;
+		-webkit-transition: opacity .3s ease-in-out;
+		-moz-transition: opacity .3s ease-in-out;
+		-o-transition: opacity .3s ease-in-out;
+		-ms-transition: opacity .3s ease-in-out;
+	}
+}
+
+.mobileSider {
+	background-color: #FFF !important;
+	color: #000 !important;
+
+	&:not(.ant-layout-sider-collapsed) {
+		$size: 70vw;
+		width: $size !important;
+		max-width: $size !important;
+		min-width: 200px !important;
+	}
+
+	.displayName {
+		font-weight: bold;
+		margin-bottom: 0 !important;
+
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.username {
+		@extend .text-muted, .small;
+		margin-bottom: 0 !important;
+		margin-top: -3px;
+
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+}
+
+.ant-layout-header {
+	@include navigationStyle(mainNav, $primary, #FFF);
+	@include navigationStyle(mobileNav, #FFF, $primary);
+}
 
 #accountDropdown:after {
 	display: none;

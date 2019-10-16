@@ -1,29 +1,86 @@
 <?php
+/**
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
 
 namespace qpost\Twig;
 
-use Twig\Environment;
-use Twig\Loader\LoaderInterface;
-use UnexpectedValueException;
+use Symfony\Component\Intl\Intl;
+use function array_merge;
+use function basename;
+use function count;
+use function explode;
+use function glob;
+use function strlen;
+use function substr;
 
-// originally created by Julian van de Groep <me@flash.moe>
-// https://github.com/flashwave/misuzu/blob/master/src/Twig.php
-// Licensed under the Apache License 2.0 (https://github.com/flashwave/misuzu/blob/master/LICENSE)
-//
-// modified by Mehdi Baaboura <mbaaboura@gigadrivegroup.com>: adjusted classes and namespaces to current Twig standards
-class Twig extends Environment {
-	protected static $instance = null;
+class Twig {
+	public static function param($parameters = []): array {
+		$availableLocales = [];
 
-	public function __construct(LoaderInterface $loader, array $options = []) {
-		if (self::$instance !== null) {
-			throw new UnexpectedValueException("Instance of Twig already present, use the static instance() function.");
+		$results = glob(__DIR__ . "/../../translations/messages.*.json");
+		if ($results) {
+			foreach ($results as $path) {
+				$name = basename($path);
+				$code = explode(".", substr($name, strlen("messages.")))[0];
+
+				if ($code) {
+					$name = Intl::getLocaleBundle()->getLocaleName($code, $code);
+					$flag = $code;
+
+					switch ($code) {
+						case "en":
+							$flag = "gb";
+							break;
+					}
+
+					$availableLocales[] = [
+						"name" => $name,
+						"code" => $code,
+						"flag" => $flag
+					];
+				}
+			}
 		}
 
-		parent::__construct($loader, $options);
-		self::$instance = $this;
-	}
+		$bundleName = null;
 
-	public static function instance(): Environment {
-		return self::$instance;
+		$results = glob(__DIR__ . "/../../public/build/bundle*.js");
+		if ($results && count($results) > 0) {
+			$bundleName = basename($results[0]);
+		}
+
+		$twigGlobals = [
+			"siteName" => "qpost",
+			"defaultDescription" => isset($_ENV["DEFAULT_DESCRIPTION"]) ? $_ENV["DEFAULT_DESCRIPTION"] : "",
+			"defaultTwitterImage" => isset($_ENV["DEFAULT_TWITTER_IMAGE"]) ? $_ENV["DEFAULT_TWITTER_IMAGE"] : "",
+			"postCharacterLimit" => $_ENV["POST_CHARACTER_LIMIT"],
+			"verifiedPostCharacterLimit" => $_ENV["VERIFIED_POST_CHARACTER_LIMIT"],
+			"availableLocales" => $availableLocales,
+			"bundleName" => $bundleName,
+			"_POST" => isset($_POST) ? $_POST : [],
+			"_GET" => isset($_GET) ? $_GET : [],
+			"_COOKIE" => isset($_COOKIE) ? $_COOKIE : [],
+			"_SERVER" => isset($_SERVER) ? $_SERVER : [],
+			"_SESSION" => isset($_SESSION) ? $_SESSION : [],
+			"_ENV" => isset($_ENV) ? $_ENV : []
+		];
+
+		return array_merge($twigGlobals, $parameters);
 	}
 }

@@ -1,5 +1,7 @@
 /*!
- * Copyright (C) 2019 Gigadrive Group - All rights reserved.
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,6 +16,89 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
+
+.dummyPostForm {
+	$size: 36px;
+
+	@extend .clearfix;
+
+	&, * {
+		cursor: pointer !important;
+	}
+
+	img.avatar {
+		@extend .rounded;
+		width: $size;
+		height: $size;
+		float: left;
+	}
+
+	.fakeTextBox {
+		@extend .rounded;
+
+		height: $size;
+		line-height: calc(#{$size} - 1px);
+		float: left;
+		margin-left: 15px;
+		width: calc(100% - #{$size} - 20px);
+	}
+}
+
+.postFormBackdrop {
+	position: fixed;
+	z-index: 1000;
+	height: 100%;
+	width: 100%;
+	background-color: #FFF;
+	top: 0;
+	left: 0;
+	padding: 20px 20px;
+}
+
+.postForm {
+	.thumbnailHolder {
+		@extend .row, .ml-1;
+
+		.thumbnail {
+			@extend .mt-2, .mr-2;
+			float: left;
+
+			.deleteButton {
+				float: right;
+				margin-left: -50px;
+				z-index: 99999;
+				position: relative;
+			}
+
+			.thumbnailImage {
+				@extend .rounded;
+				border: 1px solid $primary;
+				background-color: $dark;
+				width: 100px;
+				height: 100px;
+				background-size: cover;
+			}
+		}
+	}
+
+	.bottom {
+		margin-top: 20px;
+
+		.actionButtons {
+			float: left;
+
+			.actionButton {
+				font-size: 20px;
+				margin-right: 10px;
+			}
+		}
+
+		.characterCount {
+			float: right;
+			line-height: 32px;
+		}
+	}
+}
 
 .replyForm {
 	margin-top: 60px !important;
