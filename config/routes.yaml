@@ -4,6 +4,9 @@
 qpost_page_profile:
     path: /{username}
     controller: qpost\Controller\PageController::profile
+qpost_page_profile_alternative:
+    path: /profile/{username}
+    controller: qpost\Controller\PageController::profile
 qpost_page_profile_following:
     path: /{username}/following
     controller: qpost\Controller\PageController::profile
