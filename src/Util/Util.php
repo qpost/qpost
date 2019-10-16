@@ -115,4 +115,19 @@ class Util {
 	public static function sanatizeHTMLAttribute($string): string {
 		return trim(htmlspecialchars($string, ENT_QUOTES | ENT_HTML5, "UTF-8"));
 	}
+
+	/**
+	 * Limits a string to a specific length and adds "..." to the end if needed
+	 *
+	 * @access public
+	 * @param string $string
+	 * @param int $length
+	 * @param bool $addDots
+	 * @return string
+	 */
+	public static function limitString($string, $length, $addDots = false) {
+		if (strlen($string) > $length)
+			$string = substr($string, 0, ($addDots ? $length - 3 : $length)) . ($addDots ? "..." : "");
+		return $string;
+	}
 }

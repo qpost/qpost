@@ -22,9 +22,11 @@ namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use qpost\Entity\FeedEntry;
+use qpost\Entity\MediaFile;
 use qpost\Entity\User;
 use qpost\Service\AuthorizationService;
 use qpost\Twig\Twig;
+use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +50,31 @@ class PageController extends AbstractController {
 		]);
 
 		if (!is_null($feedEntry)) {
-			return $this->render("react.html.twig", Twig::param());
+			$user = $feedEntry->getUser();
+
+			$title = $user->getDisplayName() . " on qpost";
+
+			$text = $feedEntry->getText();
+			if ($text) {
+				$title .= ": \"" . Util::limitString($text, 40, true) . "\"";
+			}
+
+			$bigSocialImage = "";
+
+			/**
+			 * @var MediaFile $mediaFile
+			 */
+			$mediaFile = $feedEntry->getAttachments()->first();
+			if ($mediaFile) {
+				$bigSocialImage = $mediaFile->getURL();
+			}
+
+			return $this->render("react.html.twig", Twig::param([
+				"title" => $title,
+				"twitterImage" => $user->getAvatarURL(),
+				"bigSocialImage" => $bigSocialImage,
+				"description" => $feedEntry->getText()
+			]));
 		}
 
 		throw $this->createNotFoundException("Invalid status ID.");
@@ -177,7 +203,11 @@ class PageController extends AbstractController {
 		$user = $entityManager->getRepository(User::class)->getUserByUsername($username);
 
 		if (!is_null($user)) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
+				"description" => $user->getBio(),
+				"twitterImage" => $user->getAvatarURL()
+			]));
 		} else {
 			throw $this->createNotFoundException("Invalid username.");
 		}
