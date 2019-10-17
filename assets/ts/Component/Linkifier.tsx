@@ -20,37 +20,59 @@
 import React, {Component} from "react";
 import ReactLinkify from "react-linkify";
 import {Link} from "react-router-dom";
+import LinkifyIt from 'linkify-it';
+import tlds from 'tlds';
 
 export default class Linkifier extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <ReactLinkify>
-			<ReactLinkify matchDecorator={(text: string) => {
-				const matches = [];
+		return <ReactLinkify matchDecorator={(text: string) => {
+			const matches = [];
 
-				const match = text.match(/([@][\w_-]+)/g);
+			const linkify = new LinkifyIt();
+			linkify.tlds(tlds);
 
-				console.log(text, match);
+			// https://github.com/tasti/react-linkify/issues/10
+			linkify.add('@', {
+				validate: function (text, pos, self) {
+					var tail = text.slice(pos);
 
-				if (match) {
-					match.forEach((value, index) => {
-						matches.push({
-							schema: "",
-							index,
-							lastIndex: index + value.length,
-							text: value,
-							url: "/profile/" + value.substr(1)
-						});
-					});
+					if (!self.re.twitter) {
+						self.re.twitter = new RegExp(
+							'^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')'
+						);
+					}
+					if (self.re.twitter.test(tail)) {
+						// Linkifier allows punctuation chars before prefix,
+						// but we additionally disable `@` ("@@mention" is invalid)
+						if (pos >= 2 && tail[pos - 2] === '@') {
+							return false;
+						}
+						return tail.match(self.re.twitter)[0].length;
+					}
+					return 0;
+				},
+				normalize: function (match) {
+					match.url = '/' + match.url.replace(/^@/, '');
 				}
+			});
 
-				return matches;
-			}} componentDecorator={(decoratedHref: string, decoratedText: string, key: number) => {
-				return <Link to={decoratedHref} key={key}>
-					{decoratedText}
-				</Link>;
+			let match = linkify.match(text);
+
+			if (match) {
+				match.forEach(linkifyMatch => matches.push(linkifyMatch));
+			}
+
+			return matches;
+		}} componentDecorator={(decoratedHref: string, decoratedText: string, key: number) => {
+			return decoratedHref.startsWith("/") ? <Link to={decoratedHref} key={key}>
+				{decoratedText}
+			</Link> : <a href={decoratedHref} key={key} onClick={(e) => {
+				e.stopPropagation();
 			}}>
-				{this.props.children}
-			</ReactLinkify>
+				{decoratedText}
+			</a>;
+		}}>
+			{this.props.children}
 		</ReactLinkify>;
 	}
 }
