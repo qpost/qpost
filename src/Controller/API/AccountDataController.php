@@ -28,7 +28,7 @@ use function is_null;
 
 class AccountDataController extends AbstractController {
 	/**
-	 * @Route("/api/accountData")
+	 * @Route("/api/accountData", methods={"GET"})
 	 *
 	 * @param APIService $apiService
 	 * @return Response|null
