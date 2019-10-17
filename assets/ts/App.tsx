@@ -59,7 +59,9 @@ export default class App extends Component<any, any> {
 	}
 
 	public static init(): void {
-		NightMode.init();
+		if ($("#root").length) {
+			NightMode.init();
+		}
 	}
 
 	componentDidMount(): void {
