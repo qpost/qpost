@@ -42,6 +42,7 @@ import "antd/es/mentions/style";
 import User from "../../Entity/Account/User";
 import Auth from "../../Auth/Auth";
 import VerifiedBadge from "../VerifiedBadge";
+import FeedEntryListItem from "../FeedEntry/FeedEntryListItem";
 
 export default class PostForm extends Component<any, {
 	mobile: boolean,
@@ -267,7 +268,12 @@ export default class PostForm extends Component<any, {
 					</Button>
 				</div>
 				<hr/>
-				{/*{this.state.replyTo ? JSON.stringify(this.state.replyTo) : ""}*/}
+				{this.state.replyTo ?
+					<FeedEntryListItem entry={this.state.replyTo} hideAttachments hideButtons onClick={(e) => {
+						this.setState({
+							open: false
+						});
+					}}/> : ""}
 				<Mentions rows={3} style={{resize: "none", width: "100%"}} id={"postFormTextarea"}
 						  placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
 						  value={this.state.message} loading={this.state.loadingUsers} onSearch={text => {

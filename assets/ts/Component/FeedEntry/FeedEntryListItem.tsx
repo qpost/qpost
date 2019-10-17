@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React, {Component} from "react";
+import React, {Component, MouseEventHandler} from "react";
 import {Row} from "reactstrap";
 import {Link, Redirect} from "react-router-dom";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
@@ -36,7 +36,8 @@ export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
 	parent?: FeedEntryList | FavoriteList,
 	hideButtons?: boolean,
-	hideAttachments?: boolean
+	hideAttachments?: boolean,
+	onClick?: MouseEventHandler
 }, {
 	nsfwWarningActive: boolean,
 	redirect: boolean
@@ -85,7 +86,12 @@ export default class FeedEntryListItem extends Component<{
 
 				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} onClick={(e) => {
 					e.preventDefault();
+
 					this.redirect();
+
+					if (this.props.onClick) {
+						setTimeout(() => this.props.onClick(e), 100);
+					}
 				}}>
 					<div className={"px-4 py-2"}>
 						{shareHeader ? shareHeader : ""}
