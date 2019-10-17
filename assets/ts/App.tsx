@@ -47,6 +47,7 @@ import LoginSuggestionModal from "./Component/LoginSuggestionModal";
 import About from "./Pages/About/About";
 import DeleteAccount from "./Pages/Account/DeleteAccount";
 import Goodbye from "./Pages/Goodbye/Goodbye";
+import PostForm from "./Component/PostForm/PostForm";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -111,6 +112,7 @@ export default class App extends Component<any, any> {
 										<div className="legacyCardBody">
 											<ImageViewer/>
 											<LoginSuggestionModal/>
+											<PostForm/>
 
 											<Switch>
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :

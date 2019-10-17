@@ -23,6 +23,7 @@ import {formatNumberShort} from "../../../Util/Format";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import Auth from "../../../Auth/Auth";
 import LoginSuggestionModal from "../../LoginSuggestionModal";
+import PostForm from "../../PostForm/PostForm";
 
 export default class ReplyButton extends Component<{
 	entry: FeedEntry,
@@ -34,6 +35,13 @@ export default class ReplyButton extends Component<{
 
 		if (Auth.isLoggedIn()) {
 			// TODO
+			const postForm = PostForm.INSTANCE;
+			if (postForm) {
+				postForm.setState({
+					open: true,
+					replyTo: this.props.entry
+				});
+			}
 		} else {
 			LoginSuggestionModal.open();
 		}

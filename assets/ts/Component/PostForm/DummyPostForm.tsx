@@ -27,29 +27,15 @@ import Card from "antd/es/card";
 import "antd/es/card/style";
 import PostForm from "./PostForm";
 
-export default class DummyPostForm extends Component<any, {
-	formOpen: boolean
-}> {
+export default class DummyPostForm extends Component<any, any> {
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			formOpen: false
-		};
 	}
 
 	click = (e) => {
 		e.preventDefault();
 
-		this.setState({
-			formOpen: true
-		});
-	};
-
-	close = () => {
-		this.setState({
-			formOpen: false
-		});
+		PostForm.open();
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -73,8 +59,7 @@ export default class DummyPostForm extends Component<any, {
 				right: 30
 			}}>
 				<i className="fas fa-pencil-alt"/>
-			</Button>,
-			<PostForm visible={this.state.formOpen} parent={this} onClose={this.close}/>
+			</Button>
 		];
 	}
 }

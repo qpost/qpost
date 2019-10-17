@@ -28,7 +28,6 @@ import Modal from "antd/es/modal";
 import "antd/es/modal/style";
 import AntMessage from "antd/es/message";
 import WindowSizeListener from "react-window-size-listener";
-import DummyPostForm from "./DummyPostForm";
 import $ from "jquery";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
@@ -44,12 +43,7 @@ import User from "../../Entity/Account/User";
 import Auth from "../../Auth/Auth";
 import VerifiedBadge from "../VerifiedBadge";
 
-export default class PostForm extends Component<{
-	onClose?: () => void,
-	replyTo?: FeedEntry,
-	visible: boolean,
-	parent: DummyPostForm
-}, {
+export default class PostForm extends Component<any, {
 	mobile: boolean,
 	message: string | null,
 	posting: boolean,
@@ -57,8 +51,11 @@ export default class PostForm extends Component<{
 	nsfw: boolean,
 	suggestedUsers: User[],
 	loadingUsers: boolean
+	replyTo: FeedEntry | null,
+	open: boolean
 }> {
 	private static keyDownInitiated: boolean = false;
+	public static INSTANCE: PostForm = null;
 
 	constructor(props) {
 		super(props);
@@ -70,8 +67,26 @@ export default class PostForm extends Component<{
 			photos: [],
 			nsfw: false,
 			suggestedUsers: [],
-			loadingUsers: false
+			loadingUsers: false,
+			replyTo: null,
+			open: false
 		};
+	}
+
+	public static open(): void {
+		if (this.INSTANCE !== null) {
+			this.INSTANCE.setState({
+				open: true
+			});
+		}
+	}
+
+	public static close(): void {
+		if (this.INSTANCE !== null) {
+			this.INSTANCE.setState({
+				open: false
+			});
+		}
 	}
 
 	componentDidMount(): void {
@@ -86,6 +101,16 @@ export default class PostForm extends Component<{
 				}
 			});
 		}
+
+		if (PostForm.INSTANCE === null) {
+			PostForm.INSTANCE = this;
+		}
+	}
+
+	componentWillUnmount(): void {
+		if (PostForm.INSTANCE === this) {
+			PostForm.INSTANCE = null;
+		}
 	}
 
 	readyToPost(): boolean {
@@ -93,7 +118,7 @@ export default class PostForm extends Component<{
 	}
 
 	isReply: () => boolean = () => {
-		return !!this.props.replyTo;
+		return !!this.state.replyTo;
 	};
 
 	setMobile = (windowWidth: number) => {
@@ -107,9 +132,11 @@ export default class PostForm extends Component<{
 	};
 
 	close = () => {
-		if (this.props.onClose !== null) {
-			this.props.onClose.call(this.props.parent);
-		}
+		this.setState({
+			open: false
+		});
+
+		this.reset();
 	};
 
 	reset = () => {
@@ -117,7 +144,8 @@ export default class PostForm extends Component<{
 			posting: false,
 			message: null,
 			photos: [],
-			nsfw: false
+			nsfw: false,
+			replyTo: null
 		});
 	};
 
@@ -239,6 +267,7 @@ export default class PostForm extends Component<{
 					</Button>
 				</div>
 				<hr/>
+				{/*{this.state.replyTo ? JSON.stringify(this.state.replyTo) : ""}*/}
 				<Mentions rows={3} style={{resize: "none", width: "100%"}} id={"postFormTextarea"}
 						  placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
 						  value={this.state.message} loading={this.state.loadingUsers} onSearch={text => {
@@ -362,7 +391,7 @@ export default class PostForm extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		this.setMobile(window.innerWidth);
 
-		if (this.props.visible) {
+		if (this.state.open) {
 			$("body").addClass("disableScroll");
 
 			setTimeout(() => {
@@ -378,7 +407,7 @@ export default class PostForm extends Component<{
 					key={1}
 					title={null}
 					footer={null}
-					visible={this.props.visible}
+					visible={this.state.open}
 					className={"desktopOnly"}
 					closable={false}
 					onCancel={this.close}>
