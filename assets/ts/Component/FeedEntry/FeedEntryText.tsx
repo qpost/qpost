@@ -19,6 +19,7 @@
 
 import React, {Component} from "react";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
+import Linkify from "react-linkify";
 
 export default class FeedEntryText extends Component<{
 	feedEntry: FeedEntry
@@ -26,15 +27,19 @@ export default class FeedEntryText extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const text = this.props.feedEntry.getText();
 
-		return text ? text.split('\n').map((item, i) => {
-			item = item.trim();
+		return text ? <div className={"specialLinkColor"}>
+			<Linkify>
+				{text.split('\n').map((item, i) => {
+					item = item.trim();
 
-			return item !== "" ? <p key={i} style={{
-				marginBottom: 0,
-				width: "100%",
-				display: "block",
-				wordWrap: "break-word"
-			}}>{item}</p> : "";
-		}) : "";
+					return item !== "" ? <p key={i} style={{
+						marginBottom: 0,
+						width: "100%",
+						display: "block",
+						wordWrap: "break-word"
+					}}>{item}</p> : "";
+				})}
+			</Linkify>
+		</div> : "";
 	}
 }

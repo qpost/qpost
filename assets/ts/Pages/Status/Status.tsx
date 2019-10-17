@@ -41,6 +41,7 @@ import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
 import {limitString} from "../../Util/Format";
+import Linkify from "react-linkify";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -126,7 +127,11 @@ export default class Status extends Component<any, {
 						</div>
 
 						{status.getText() !== null ? <div className={"text"}>
-							{status.getText()}
+							<div className={"specialLinkColor"}>
+								<Linkify>
+									{status.getText()}
+								</Linkify>
+							</div>
 						</div> : ""}
 
 						{status.getAttachments().length > 0 ? <div className={"attachments"}>
