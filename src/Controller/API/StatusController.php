@@ -293,6 +293,8 @@ class StatusController extends AbstractController {
 								$mediaObject = $mediaEmbed->parseUrl($url);
 
 								if ($mediaObject) {
+									$mediaObject->setParam("autoplay", "false");
+
 									$videoURL = str_replace("&amp;", "&", $mediaObject->getEmbedSrc());
 									break;
 								}
