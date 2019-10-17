@@ -92,6 +92,17 @@ class PageController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/goodbye")
+	 *
+	 * @return Response
+	 */
+	public function goodbye() {
+		return $this->render("react.html.twig", Twig::param([
+			"title" => "Goodbye"
+		]));
+	}
+
+	/**
 	 * @Route("/edit")
 	 *
 	 * @param Request $request

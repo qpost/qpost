@@ -46,6 +46,7 @@ import ImageViewer from "./Component/ImageViewer";
 import LoginSuggestionModal from "./Component/LoginSuggestionModal";
 import About from "./Pages/About/About";
 import DeleteAccount from "./Pages/Account/DeleteAccount";
+import Goodbye from "./Pages/Goodbye/Goodbye";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -121,6 +122,7 @@ export default class App extends Component<any, any> {
 												<PrivateRoute path={"/account/username"} exact
 															  component={ChangeUsername}/>
 												<PrivateRoute path={"/account"} exact component={Account}/>
+												<Route path={"/goodbye"} exact component={Goodbye}/>
 												<Route path={"/about"} exact component={About}/>
 												<Route path={"/status/:id"} exact component={Status}/>
 												<Route path={"/profile/:username"} component={ProfileRedirect}/>

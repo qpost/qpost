@@ -24,6 +24,8 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Exception;
 use Gumlet\ImageResize;
+use qpost\Entity\MediaFile;
+use qpost\Entity\Notification;
 use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\GigadriveService;
@@ -41,6 +43,7 @@ use function getrandmax;
 use function is_null;
 use function is_string;
 use function mkdir;
+use function password_verify;
 use function rand;
 use function strlen;
 use function strtotime;
@@ -185,6 +188,61 @@ class UserController extends AbstractController {
 			}
 		} else {
 			return $apiService->json(["error" => "'displayName' is required."], 400);
+		}
+	}
+
+	/**
+	 * @Route("/api/user", methods={"DELETE"})
+	 *
+	 * @param APIService $apiService
+	 * @param GigadriveService $gigadriveService
+	 * @return Response|null
+	 */
+	public function delete(APIService $apiService, GigadriveService $gigadriveService) {
+		$response = $apiService->validate(true);
+		if (!is_null($response)) return $response;
+
+		$user = $apiService->getUser();
+		$parameters = $apiService->parameters();
+
+		if ($parameters->has("password")) {
+			$password = $parameters->get("password");
+
+			if (is_string("password")) {
+				$gigadriveData = $user->getGigadriveData();
+
+				$correctPassword = $gigadriveData ? $gigadriveService->verifyPassword($gigadriveData->getAccountId(), $password) : password_verify($password, $user->getPassword());
+
+				if ($correctPassword) {
+					$entityManager = $apiService->getEntityManager();
+
+					// Update media files
+					foreach ($entityManager->getRepository(MediaFile::class)->findBy([
+						"originalUploader" => $user
+					]) as $mediaFile) {
+						$mediaFile->setOriginalUploader(null);
+						$entityManager->persist($mediaFile);
+					}
+
+					// Delete notifications
+					foreach ($entityManager->getRepository(Notification::class)->findBy([
+						"referencedUser" => $user
+					]) as $notification) {
+						$entityManager->remove($notification);
+					}
+
+					$entityManager->remove($user);
+					$entityManager->flush();
+
+					return $apiService->noContent();
+				} else {
+					return $apiService->json(["error" => "Invalid password."], 400);
+				}
+			} else {
+				return $apiService->json(["error" => "'password' has to be a string."], 400);
+			}
+		} else {
+			return $apiService->json(["error" => "'password' is required."], 400);
 		}
 	}
 

@@ -134,6 +134,15 @@ class APIService extends AuthorizationService {
 	}
 
 	/**
+	 * @return Response
+	 */
+	public function noContent(): Response {
+		return (new Response())
+			->setStatusCode(204)
+			->setContent("");
+	}
+
+	/**
 	 * @param $object
 	 * @return array
 	 */

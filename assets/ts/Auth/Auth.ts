@@ -52,10 +52,12 @@ export default class Auth {
 		}
 	}
 
-	public static logout(): void {
+	public static logout(noRedirect?: boolean): void {
+		if (typeof noRedirect === "undefined") noRedirect = false;
+
 		this.setToken(undefined);
 		this.setCurrentUser(undefined);
 
-		window.location.href = "/";
+		if (!noRedirect) window.location.href = "/";
 	}
 }

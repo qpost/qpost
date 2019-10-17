@@ -25,6 +25,8 @@ use Psr\Log\LoggerInterface;
 use qpost\Factory\HttpClientFactory;
 use function base64_encode;
 use function file_get_contents;
+use function is_null;
+use function json_decode;
 
 class GigadriveService {
 	/**
@@ -114,5 +116,51 @@ class GigadriveService {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Contacts the Gigadrive legacy API to verify a username/password combination.
+	 *
+	 * @param string $username The username, email or ID may be used instead.
+	 * @param string $password The password
+	 * @return bool
+	 */
+	public function verifyPassword(string $username, string $password): bool {
+		$apiKey = $_ENV["GIGADRIVE_LEGACY_API_KEY"];
+
+		$response = $this->httpClient->get("https://api.gigadrivegroup.com/v1/login", [
+			"query" => [
+				"apiKey" => $apiKey,
+				"username" => $username,
+				"password" => $password
+			]
+		]);
+
+		$body = $response->getBody();
+		if (!is_null($body)) {
+			$content = $body->getContents();
+			$body->close();
+
+			if (!is_null($content)) {
+				$data = @json_decode($content, true);
+				if ($data) {
+					if (isset($data["success"]) && isset($data["username"])) {
+						return true;
+					} else {
+						$this->logger->error("Failed to verify credentials", [
+							"data" => $data
+						]);
+					}
+				} else {
+					$this->logger->error("Response body is invalid json.");
+				}
+			} else {
+				$this->logger->error("Response body is empty.");
+			}
+		} else {
+			$this->logger->error("Failed to get response body.");
+		}
+
+		return false;
 	}
 }
