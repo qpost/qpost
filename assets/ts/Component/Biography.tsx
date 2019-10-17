@@ -19,6 +19,7 @@
 
 import React, {Component} from "react";
 import User from "../Entity/Account/User";
+import Linkifier from "./Linkifier";
 
 export default class Biography extends Component<{
 	user: User
@@ -30,17 +31,19 @@ export default class Biography extends Component<{
 			const text = user.getBio();
 
 			if (text) {
-				return text ? <div className={"my-2"}>
-					{text.split('\n').map((item, i) => {
-						item = item.trim();
+				return text ? <div className={"specialLinkColor my-2"}>
+					<Linkifier>
+						{text.split('\n').map((item, i) => {
+							item = item.trim();
 
-						return item !== "" ? <p key={i} style={{
-							marginBottom: 0,
-							width: "100%",
-							display: "block",
-							wordWrap: "break-word"
-						}}>{item}</p> : "";
-					})}
+							return item !== "" ? <p key={i} style={{
+								marginBottom: 0,
+								width: "100%",
+								display: "block",
+								wordWrap: "break-word"
+							}}>{item}</p> : "";
+						})}
+					</Linkifier>
 				</div> : "";
 			}
 		}
