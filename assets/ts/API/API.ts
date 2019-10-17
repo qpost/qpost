@@ -64,10 +64,15 @@ export default class API {
 					}
 				}
 			}).catch(error => {
-				console.error(error);
+				const response = error.response;
+
+				let errorMessage = "An error occurred.";
+				if (response.data && response.data.error) {
+					errorMessage = response.data.error;
+				}
 
 				if (errorCallback) {
-					errorCallback("An error occurred.");
+					errorCallback(errorMessage);
 				}
 			})
 		} else {
