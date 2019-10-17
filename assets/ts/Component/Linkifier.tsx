@@ -52,7 +52,7 @@ export default class Linkifier extends Component<any, any> {
 					return 0;
 				},
 				normalize: function (match) {
-					match.url = '/' + match.url.replace(/^@/, '');
+					match.url = '/profile/' + match.url.replace(/^@/, '');
 				}
 			});
 
