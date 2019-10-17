@@ -34,7 +34,7 @@ export default class About extends Component<any, any> {
 					<h1 className={"mb-3"}>About qpost</h1>
 
 					<p>
-						qpost is a social microblogging network created, that was first released in Summer 2018 by
+						qpost is a social microblogging network, that was first released in Summer 2018 by
 						Gigadrive.
 					</p>
 
