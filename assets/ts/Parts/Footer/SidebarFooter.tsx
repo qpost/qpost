@@ -23,11 +23,11 @@ import {Link} from "react-router-dom";
 export default class SidebarFooter extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <div className={"sidebarFooter"}>
-			<ul>
-				<li>
-					&copy; Copyright 2018-{new Date().getFullYear()} Gigadrive
-				</li>
+			<div className={"copyright"}>
+				&copy; Copyright 2018-{new Date().getFullYear()} Gigadrive
+			</div>
 
+			<ul>
 				<li>
 					<Link to={"/about"}>
 						About
