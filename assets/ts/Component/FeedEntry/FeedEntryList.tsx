@@ -177,7 +177,7 @@ export default class FeedEntryList extends Component<{
 					</ul>
 				</InfiniteScroll>;
 			} else {
-				return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>;
+				return <Empty description={"No posts found."}/>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;
