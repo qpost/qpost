@@ -19,6 +19,7 @@
 
 .form-control,
 .ant-input,
+.ant-calendar, .ant-calendar-input, .ant-calendar-footer, .ant-calendar-header, .ant-calendar-input-wrap, .ant-calendar-year-panel, .ant-calendar-year-panel-header, .ant-calendar-decade-panel, .ant-calendar-decade-panel-header, .ant-calendar-decade-panel-century,
 .ant-mentions, .ant-mentions > textarea,
 .form-control:focus,
 .breadcrumb,
@@ -33,4 +34,16 @@
 	background-color: #001d30;
 	color: #FFF !important;
 	box-shadow: none;
+}
+
+.ant-calendar-date, .ant-calendar-decade-panel-decade, .ant-calendar-year-panel-year {
+	color: #FFF;
+
+	&:hover {
+		background: lighten(#001d30, 10%);
+	}
+}
+
+.ant-calendar-last-month-cell .ant-calendar-date, .ant-calendar-next-month-btn-day .ant-calendar-date {
+	color: darken(#FFF, 35%);
 }
