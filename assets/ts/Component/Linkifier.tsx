@@ -66,7 +66,7 @@ export default class Linkifier extends Component<any, any> {
 		}} componentDecorator={(decoratedHref: string, decoratedText: string, key: number) => {
 			return decoratedHref.startsWith("/") ? <Link to={decoratedHref} key={key}>
 				{decoratedText}
-			</Link> : <a href={decoratedHref} key={key} onClick={(e) => {
+			</Link> : <a href={decoratedHref} key={key} target={"_blank"} onClick={(e) => {
 				e.stopPropagation();
 			}}>
 				{decoratedText}
