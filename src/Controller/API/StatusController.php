@@ -22,6 +22,7 @@ namespace qpost\Controller\API;
 
 use DateTime;
 use Exception;
+use MediaEmbed\MediaEmbed;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\MediaFileType;
 use qpost\Entity\FeedEntry;
@@ -197,10 +198,12 @@ class StatusController extends AbstractController {
 						}
 					}
 
+					// check if empty
 					if (strlen($message) === 0 && count($attachments) === 0) {
 						return $apiService->json(["error" => "Post is empty."], 400);
 					}
 
+					// handle NSFW
 					$nsfw = false;
 					if ($parameters->has("nsfw")) {
 						$nsfw = $parameters->get("nsfw");
@@ -220,6 +223,8 @@ class StatusController extends AbstractController {
 						->setTime(new DateTime("now"));
 
 					$entityManager->persist($feedEntry);
+
+					$mediaFileRepository = $entityManager->getRepository(MediaFile::class);
 
 					foreach ($attachments as $base64) {
 						$file = @base64_decode($base64);
@@ -244,7 +249,7 @@ class StatusController extends AbstractController {
 							/**
 							 * @var MediaFile $mediaFile
 							 */
-							$mediaFile = $entityManager->getRepository(MediaFile::class)->findOneBy([
+							$mediaFile = $mediaFileRepository->findOneBy([
 								"sha256" => $sha256
 							]);
 
@@ -271,6 +276,50 @@ class StatusController extends AbstractController {
 								$mediaFile->addFeedEntry($feedEntry);
 
 								$entityManager->persist($mediaFile);
+							}
+						}
+					}
+
+					// handle video embeds
+					if (!Util::isEmpty($message) && count($attachments) === 0) {
+						$urls = Util::getURLsInString($message);
+
+						if ($urls && count($urls) > 0) {
+							$videoURL = null;
+							$mediaEmbed = new MediaEmbed();
+
+							foreach ($urls as $url) {
+								$mediaObject = $mediaEmbed->parseUrl($url);
+
+								if ($mediaObject) {
+									$videoURL = $mediaObject->getEmbedSrc();
+									break;
+								}
+							}
+
+							if ($videoURL) {
+								$sha256 = hash("sha256", $videoURL);
+
+								$mediaFile = $mediaFileRepository->findOneBy([
+									"url" => $videoURL,
+									"sha256" => $sha256
+								]);
+
+								if (!$mediaFile) {
+									$mediaFile = (new MediaFile())
+										->setSHA256($sha256)
+										->setURL($videoURL)
+										->setOriginalUploader($user)
+										->setType(MediaFileType::VIDEO)
+										->setTime(new DateTime("now"));
+								}
+
+								if ($mediaFile) {
+									$feedEntry->addAttachment($mediaFile);
+									$mediaFile->addFeedEntry($feedEntry);
+
+									$entityManager->persist($mediaFile);
+								}
 							}
 						}
 					}

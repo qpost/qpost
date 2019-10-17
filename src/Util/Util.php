@@ -21,6 +21,7 @@
 namespace qpost\Util;
 
 use function is_null;
+use function preg_match_all;
 use function rand;
 use function strlen;
 use function trim;
@@ -129,5 +130,22 @@ class Util {
 		if (strlen($string) > $length)
 			$string = substr($string, 0, ($addDots ? $length - 3 : $length)) . ($addDots ? "..." : "");
 		return $string;
+	}
+
+	/**
+	 * Finds all URLs in a string
+	 *
+	 * @param string $text The string to check
+	 * @return string[] The URLs that were found
+	 */
+	public static function getURLsInString(string $text): array {
+		// https://stackoverflow.com/a/23367301/4117923
+
+		$pattern = "~[a-z]+://\S+~";
+		if (preg_match_all($pattern, $text, $out)) {
+			return $out[0];
+		}
+
+		return [];
 	}
 }

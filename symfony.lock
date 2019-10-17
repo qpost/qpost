@@ -1,4 +1,7 @@
 {
+    "dereuromark/media-embed": {
+        "version": "0.5.1"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -146,6 +149,9 @@
     },
     "hoa/zformat": {
         "version": "1.17.01.10"
+    },
+    "jbroadway/urlify": {
+        "version": "1.1.3-stable"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"

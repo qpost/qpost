@@ -37,6 +37,16 @@ export default class FeedEntryListItemAttachments extends Component<{
 		const entry: FeedEntry = this.props.entry;
 		const attachments: MediaFile[] = entry.getAttachments();
 
+		if (attachments.length === 1) {
+			const mediaFile: MediaFile = attachments[0];
+
+			if (mediaFile.getType() === MediaFileType.VIDEO) {
+				return <div className={"embed-responsive embed-responsive-16by9"}>
+					<iframe src={mediaFile.getURL()} className={"embed-responsive-item"}/>
+				</div>;
+			}
+		}
+
 		if (attachments.length > 0) {
 			if (attachments.length === 1) {
 				const mediaFile: MediaFile = attachments[0];
