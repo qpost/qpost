@@ -18,28 +18,39 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import Linkifier from "../Linkifier";
+import ReactLinkify from "react-linkify";
+import {Link} from "react-router-dom";
 
-export default class FeedEntryText extends Component<{
-	feedEntry: FeedEntry
-}, any> {
+export default class Linkifier extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		const text = this.props.feedEntry.getText();
+		return <ReactLinkify>
+			<ReactLinkify matchDecorator={(text: string) => {
+				const matches = [];
 
-		return text ? <div className={"specialLinkColor"}>
-			<Linkifier>
-				{text.split('\n').map((item, i) => {
-					item = item.trim();
+				const match = text.match(/([@][\w_-]+)/g);
 
-					return item !== "" ? <p key={i} style={{
-						marginBottom: 0,
-						width: "100%",
-						display: "block",
-						wordWrap: "break-word"
-					}}>{item}</p> : "";
-				})}
-			</Linkifier>
-		</div> : "";
+				console.log(text, match);
+
+				if (match) {
+					match.forEach((value, index) => {
+						matches.push({
+							schema: "",
+							index,
+							lastIndex: index + value.length,
+							text: value,
+							url: "/profile/" + value.substr(1)
+						});
+					});
+				}
+
+				return matches;
+			}} componentDecorator={(decoratedHref: string, decoratedText: string, key: number) => {
+				return <Link to={decoratedHref} key={key}>
+					{decoratedText}
+				</Link>;
+			}}>
+				{this.props.children}
+			</ReactLinkify>
+		</ReactLinkify>;
 	}
 }
