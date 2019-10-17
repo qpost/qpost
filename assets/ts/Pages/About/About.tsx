@@ -250,6 +250,10 @@ export default class About extends Component<any, any> {
 			{
 				name: "media-embed",
 				link: "https://github.com/dereuromark/media-embed"
+			},
+			{
+				name: "react-linkify",
+				link: "https://github.com/tasti/react-linkify"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically
