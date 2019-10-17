@@ -22,6 +22,7 @@ namespace qpost\Constants;
 
 class FeedEntryType {
 	public const POST = "POST";
+	public const REPLY = "REPLY";
 	public const NEW_FOLLOWING = "NEW_FOLLOWING";
 	public const SHARE = "SHARE";
 }
