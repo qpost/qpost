@@ -50,6 +50,7 @@ use function is_numeric;
 use function is_string;
 use function mkdir;
 use function rand;
+use function str_replace;
 use function strlen;
 use function sys_get_temp_dir;
 use function trim;
@@ -292,7 +293,7 @@ class StatusController extends AbstractController {
 								$mediaObject = $mediaEmbed->parseUrl($url);
 
 								if ($mediaObject) {
-									$videoURL = $mediaObject->getEmbedSrc();
+									$videoURL = str_replace("&amp;", "&", $mediaObject->getEmbedSrc());
 									break;
 								}
 							}
