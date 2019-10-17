@@ -246,6 +246,10 @@ export default class About extends Component<any, any> {
 			{
 				name: "webpack-merge",
 				link: "https://github.com/survivejs/webpack-merge"
+			},
+			{
+				name: "media-embed",
+				link: "https://github.com/dereuromark/media-embed"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically
