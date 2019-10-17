@@ -93,13 +93,13 @@ class BadgeStatusController extends AbstractController {
 
 							$entityManager->flush();
 
-							return $apiService->json(["result" => "Done."]);
+							return $apiService->noContent();
 
 							break;
 						case "messages":
 							// TODO
 
-							return $apiService->json(["result" => "Done."]);
+							return $apiService->noContent();
 
 							break;
 						default:

@@ -98,7 +98,7 @@ class TokenController extends AbstractController {
 					$entityManager->persist($token);
 					$entityManager->flush();
 
-					return $apiService->json(["result" => "Success."]);
+					return $apiService->noContent();
 				} else {
 					return $apiService->json(["error" => "The requested resource could not be found."], 404);
 				}

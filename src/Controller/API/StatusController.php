@@ -128,7 +128,7 @@ class StatusController extends AbstractController {
 						if (!is_null($entryOwner) && $entryOwner->getId() === $user->getId()) {
 							$dataDeletionService->deleteFeedEntry($feedEntry);
 
-							return $apiService->json(["result" => "Done."]);
+							return $apiService->noContent();
 						} else {
 							return $apiService->json(["error" => "You are not allowed to delete this status."], 403);
 						}
