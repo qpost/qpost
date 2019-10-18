@@ -46,6 +46,7 @@ import Followers from "./Followers";
 import {formatNumberShort} from "../../Util/Format";
 import NightMode from "../../NightMode/NightMode";
 import {setPageTitle} from "../../Util/Page";
+import ProfileDropdown from "./ProfileDropdown";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -117,7 +118,8 @@ export default class Profile extends Component<any, {
 								<img className={"mainAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
 							</div>
 
-							<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/></h4>
+							<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/><ProfileDropdown
+								user={user} className={"float-right"}/></h4>
 							<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge target={user}/>
 							</div>
 
@@ -179,6 +181,8 @@ export default class Profile extends Component<any, {
 								</p>
 
 								<FollowButton target={user}/>
+
+								<ProfileDropdown user={user}/>
 							</div>
 						</Card>
 

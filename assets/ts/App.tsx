@@ -48,6 +48,7 @@ import About from "./Pages/About/About";
 import DeleteAccount from "./Pages/Account/DeleteAccount";
 import Goodbye from "./Pages/Goodbye/Goodbye";
 import PostForm from "./Component/PostForm/PostForm";
+import BlockModal from "./Component/BlockModal";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -113,6 +114,7 @@ export default class App extends Component<any, any> {
 											<ImageViewer/>
 											<LoginSuggestionModal/>
 											<PostForm/>
+											<BlockModal/>
 
 											<Switch>
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
