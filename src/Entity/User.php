@@ -1008,6 +1008,24 @@ class User {
 	}
 
 	/**
+	 * @return bool
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("blocked")
+	 */
+	public function isBlocked(): bool {
+		$apiService = APIService::$instance;
+
+		if (!is_null($apiService) && $apiService->isAuthorized()) {
+			return $apiService->getEntityManager()->getRepository(Block::class)->count([
+					"user" => $apiService->getUser(),
+					"target" => $this
+				]) > 0;
+		}
+
+		return false;
+	}
+
+	/**
 	 * The notifications on this user's account.
 	 *
 	 * @return Collection|Notification[]

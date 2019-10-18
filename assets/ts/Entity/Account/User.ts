@@ -78,6 +78,9 @@ export default class User {
 	@JsonProperty("followsYou", Boolean)
 	private followsYou: boolean = undefined;
 
+	@JsonProperty("blocked", Boolean)
+	private blocked: boolean = undefined;
+
 	public getId(): number {
 		return this.id;
 	}
@@ -152,6 +155,10 @@ export default class User {
 
 	public isFollowingYou(): boolean {
 		return this.followsYou;
+	}
+
+	public isBlocked(): boolean {
+		return this.blocked;
 	}
 
 	public getCharacterLimit(): number {
