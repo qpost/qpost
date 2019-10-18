@@ -80,7 +80,7 @@ class StatusController extends AbstractController {
 						"id" => $id
 					]);
 
-					if (!is_null($feedEntry)) { // TODO: mayView check
+					if (!is_null($feedEntry) && $apiService->mayView($feedEntry)) {
 						return $apiService->json(["result" => $apiService->serialize($feedEntry)]);
 					} else {
 						return $apiService->json(["error" => "The requested resource could not be found."], 404);

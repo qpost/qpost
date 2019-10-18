@@ -349,7 +349,7 @@ class FollowController extends AbstractController {
 				->getResult();
 
 			foreach ($followers as $follower) {
-				// TODO: mayView check
+				if (!$apiService->mayView($parameters->has("from") ? $follower->getReceiver() : $follower->getSender())) continue;
 				array_push($results, $apiService->serialize($follower));
 			}
 

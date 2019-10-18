@@ -68,7 +68,7 @@ class UserController extends AbstractController {
 			if (!Util::isEmpty($username)) {
 				$user = $apiService->getEntityManager()->getRepository(User::class)->getUserByUsername($username);
 
-				if (!is_null($user)) { // TODO: Add mayView check
+				if (!is_null($user) && $apiService->mayView($user)) {
 					return $apiService->json(["result" => $apiService->serialize($user)]);
 				} else {
 					return $apiService->json(["error" => "Unknown user"], 404);
@@ -286,7 +286,7 @@ class UserController extends AbstractController {
 		$results = [];
 		for ($i = 0; $i < count($suggestedUsers); $i++) {
 			$user = $suggestedUsers[$i];
-			// TODO: mayView check
+			if (!$apiService->mayView($user)) continue;
 			/*if (!$user->mayView($currentUser)) {
 				unset($suggestedUsers[$i]);
 			}*/

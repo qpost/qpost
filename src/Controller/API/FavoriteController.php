@@ -232,7 +232,7 @@ class FavoriteController extends AbstractController {
 					->getResult();
 
 				foreach ($favorites as $favorite) {
-					// TODO: mayView check
+					if (!$apiService->mayView($favorite->getFeedEntry())) continue;
 					array_push($results, $apiService->serialize($favorite));
 				}
 

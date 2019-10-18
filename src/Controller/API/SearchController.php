@@ -103,10 +103,8 @@ class SearchController extends AbstractController {
 									$results = [];
 
 									foreach ($result as $entity) {
-										if ($entity instanceof User) {
-											// TODO: mayView check
-										} else if ($entity instanceof FeedEntry) {
-											// TODO: mayView check
+										if ($entity instanceof User || $entity instanceof FeedEntry) {
+											if (!$apiService->mayView($entity)) continue;
 										}
 
 										$results[] = $apiService->serialize($entity);

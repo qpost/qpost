@@ -172,6 +172,22 @@ class APIService extends AuthorizationService {
 	}
 
 	/**
+	 * @param User|FeedEntry $target
+	 * @param User|null $user
+	 * @return bool
+	 */
+	public function mayView($target, ?User $user = null): bool {
+		if (!$user) $user = $this->getUser();
+
+		if ($target instanceof FeedEntry) {
+			return $this->mayView($user, $target->getUser());
+		} else {
+			// TODO
+			return true;
+		}
+	}
+
+	/**
 	 * @param User $from
 	 * @param User $to
 	 * @return bool
