@@ -182,7 +182,7 @@ export default class Profile extends Component<any, {
 
 								<FollowButton target={user}/>
 
-								<ProfileDropdown user={user}/>
+								<ProfileDropdown user={user} placement={"bottomLeft"}/>
 							</div>
 						</Card>
 

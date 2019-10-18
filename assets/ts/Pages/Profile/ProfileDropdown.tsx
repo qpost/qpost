@@ -25,10 +25,13 @@ import BlockModal from "../../Component/BlockModal";
 
 export default class ProfileDropdown extends Component<{
 	className?: string,
-	user: User
+	user: User,
+	placement?: "topLeft" | "topCenter" | "topRight" | "bottomLeft" | "bottomCenter" | "bottomRight"
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <Dropdown className={this.props.className} placement={"bottomRight"} overlay={() => {
+		const placement = this.props.placement || "bottomRight";
+
+		return <Dropdown className={this.props.className} placement={placement} overlay={() => {
 			return <Menu onClick={(e) => {
 				const key = e.key;
 
