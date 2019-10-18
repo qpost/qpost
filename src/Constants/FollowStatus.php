@@ -33,4 +33,8 @@ class FollowStatus {
 	 * @var int PENDING
 	 */
 	public const PENDING = 2;
+	/**
+	 * @var int BLOCKED
+	 */
+	public const BLOCKED = 3;
 }
