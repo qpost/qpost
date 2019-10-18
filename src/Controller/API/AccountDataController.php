@@ -46,7 +46,7 @@ class AccountDataController extends AbstractController {
 		$gigadriveData = $user->getGigadriveData();
 		if ($gigadriveData) {
 			$result["gigadriveData"] = [
-				"id" => $gigadriveData->getId(),
+				"id" => $gigadriveData->getAccountId(),
 				"joinDate" => $gigadriveData->getJoinDate()->format("Y-m-d H:i:s")
 			];
 		}
