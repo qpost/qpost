@@ -32,15 +32,15 @@
 	border-bottom: 1px solid #222222 !important;
 }
 
-.ant-mentions-dropdown {
+.ant-mentions-dropdown, .ant-dropdown-menu {
 	color: #FFF;
 	background-color: #001d30;
 	border-color: #001020;
 
-	.ant-mentions-dropdown-menu-item {
+	.ant-mentions-dropdown-menu-item, .ant-dropdown-menu-item {
 		color: #FFF;
 
-		&.ant-mentions-dropdown-menu-item-active {
+		&.ant-mentions-dropdown-menu-item-active, &.ant-dropdown-menu-item-active {
 			background-color: lighten(#001d30, 20%) !important;
 		}
 	}
