@@ -181,8 +181,20 @@ class APIService extends AuthorizationService {
 
 		if ($target instanceof FeedEntry) {
 			return $this->mayView($user, $target->getUser());
+		} else if ($target instanceof User) {
+			// self check
+			if ($target->getId() === $user->getId()) {
+				return true;
+			}
+
+			// suspension check
+			if ($target->isSuspended()) {
+				return false;
+			}
+
+			// TODO: Block check
+			return true;
 		} else {
-			// TODO
 			return true;
 		}
 	}
