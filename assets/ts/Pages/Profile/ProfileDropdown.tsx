@@ -18,10 +18,11 @@
  */
 
 import React, {Component} from "react";
-import {Button, Dropdown, Icon, Menu} from "antd";
+import {Button, Dropdown, Icon, Menu, message} from "antd";
 import "antd/es/dropdown/style";
 import User from "../../Entity/Account/User";
 import BlockModal from "../../Component/BlockModal";
+import {Clipboard} from "ts-clipboard";
 
 export default class ProfileDropdown extends Component<{
 	className?: string,
@@ -39,10 +40,18 @@ export default class ProfileDropdown extends Component<{
 					case "1":
 						BlockModal.open(this.props.user);
 						break;
+					case "2":
+						Clipboard.copy("https://qpo.st/" + this.props.user.getUsername());
+						message.success("The link has been copied.");
+						break;
 				}
 			}}>
 				<Menu.Item key={"1"}>
 					<i className="fas fa-ban iconMargin-10"/>Block {"@" + this.props.user.getUsername()}
+				</Menu.Item>
+
+				<Menu.Item key={"2"}>
+					<i className="fas fa-link iconMargin-10"/>Copy profile link
 				</Menu.Item>
 			</Menu>;
 		}}>
