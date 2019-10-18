@@ -18,7 +18,7 @@
  */
 
 .followButton {
-	&[data-follow-status="1"] {
+	&[data-follow-status="1"], &[data-follow-status="3"] {
 		// UNFOLLOW BUTTON
 		@include dangerButton();
 	}

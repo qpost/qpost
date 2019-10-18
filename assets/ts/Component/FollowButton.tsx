@@ -49,8 +49,8 @@ export default class FollowButton extends Component<{
 
 		this.state = {
 			redirectToEditPage: false,
-			loading: this.props.followStatus === undefined,
-			followStatus: null,
+			loading: this.props.followStatus === undefined && !this.props.target.isBlocked(),
+			followStatus: undefined,
 			error: null
 		};
 	}
@@ -66,24 +66,31 @@ export default class FollowButton extends Component<{
 			} else {
 				if (!this.state.loading) {
 					const followStatus: number = this.followStatus();
-					let method: Method = followStatus === FollowStatus.FOLLOWING || followStatus === FollowStatus.PENDING ? "DELETE" : "POST";
+					let method: Method = followStatus === FollowStatus.FOLLOWING || followStatus === FollowStatus.PENDING || followStatus === FollowStatus.BLOCKED ? "DELETE" : "POST";
 
 					this.setState({
 						loading: true
 					});
 
-					API.handleRequest("/follow", method, {to: this.props.target.getId()}, data => {
-						if (data.hasOwnProperty("status")) {
+					API.handleRequest(followStatus === FollowStatus.BLOCKED ? "/block" : "/follow", method, {to: this.props.target.getId()}, data => {
+						if (followStatus === FollowStatus.BLOCKED) {
 							this.setState({
-								followStatus: data.status,
+								followStatus: FollowStatus.NOT_FOLLOWING,
 								loading: false
 							});
 						} else {
-							this.setState({
-								loading: false
-							});
+							if (data.hasOwnProperty("status")) {
+								this.setState({
+									followStatus: data.status,
+									loading: false
+								});
+							} else {
+								this.setState({
+									loading: false
+								});
 
-							message.error("An error occurred.");
+								message.error("An error occurred.");
+							}
 						}
 					}, error => {
 						message.error(error);
@@ -100,6 +107,15 @@ export default class FollowButton extends Component<{
 	};
 
 	componentDidMount(): void {
+		if (this.props.target.isBlocked() && !this.isCurrentUser()) {
+			this.setState({
+				followStatus: FollowStatus.BLOCKED,
+				loading: false
+			});
+
+			return;
+		}
+
 		if (this.props.followStatus === undefined) {
 			// Fetch follow status if it was not passed
 
@@ -162,6 +178,10 @@ export default class FollowButton extends Component<{
 
 				case FollowStatus.PENDING:
 					text = "Pending";
+					break;
+
+				case FollowStatus.BLOCKED:
+					text = "Blocked";
 					break;
 
 				default:
