@@ -20,6 +20,8 @@
 import Cookies from "js-cookie";
 import User from "../Entity/Account/User";
 import Header from "../Parts/Header";
+import API from "../API/API";
+import {message} from "antd";
 
 export default class Auth {
 	private static currentUser?: User;
@@ -55,9 +57,15 @@ export default class Auth {
 	public static logout(noRedirect?: boolean): void {
 		if (typeof noRedirect === "undefined") noRedirect = false;
 
-		this.setToken(undefined);
-		this.setCurrentUser(undefined);
+		API.handleRequest("/token", "DELETE", {
+			id: this.getToken()
+		}, () => {
+			this.setToken(undefined);
+			this.setCurrentUser(undefined);
 
-		if (!noRedirect) window.location.href = "/";
+			if (!noRedirect) window.location.href = "/";
+		}, error => {
+			message.error(error);
+		});
 	}
 }
