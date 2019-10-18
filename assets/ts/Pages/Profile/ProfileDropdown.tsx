@@ -23,6 +23,7 @@ import "antd/es/dropdown/style";
 import User from "../../Entity/Account/User";
 import BlockModal from "../../Component/BlockModal";
 import {Clipboard} from "ts-clipboard";
+import Auth from "../../Auth/Auth";
 
 export default class ProfileDropdown extends Component<{
 	className?: string,
@@ -46,9 +47,9 @@ export default class ProfileDropdown extends Component<{
 						break;
 				}
 			}}>
-				<Menu.Item key={"1"}>
+				{!Auth.isLoggedIn() || this.props.user.getId() !== Auth.getCurrentUser().getId() ? <Menu.Item key={"1"}>
 					<i className="fas fa-ban iconMargin-10"/>Block {"@" + this.props.user.getUsername()}
-				</Menu.Item>
+				</Menu.Item> : ""}
 
 				<Menu.Item key={"2"}>
 					<i className="fas fa-link iconMargin-10"/>Copy profile link
