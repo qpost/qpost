@@ -49,7 +49,7 @@ import DeleteAccount from "./Pages/Account/DeleteAccount";
 import Goodbye from "./Pages/Goodbye/Goodbye";
 import PostForm from "./Component/PostForm/PostForm";
 import BlockModal from "./Component/BlockModal";
-import Privacy from "./Entity/Account/Privacy";
+import Privacy from "./Pages/Account/Privacy";
 
 export default class App extends Component<any, any> {
 	constructor(props) {

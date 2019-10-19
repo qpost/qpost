@@ -18,18 +18,43 @@
  */
 
 import React, {Component} from "react";
-import AccountBase from "../../Pages/Account/AccountBase";
+import {Redirect} from "react-router";
+import {Card, Col} from "antd";
 
-export default class Privacy extends Component<any, any> {
+export default class PrivacyHomeIcon extends Component<{
+	iconClass: string,
+	title: string,
+	description: string,
+	path: string
+}, {
+	redirect: boolean
+}> {
 	constructor(props) {
 		super(props);
 
-		this.state = {};
+		this.state = {
+			redirect: false
+		};
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <AccountBase activeKey={"PRIVACY"}>
-			privacy
-		</AccountBase>;
+		return <Col sm={12} lg={8}>
+			{this.state.redirect ? <Redirect to={this.props.path}/> : ""}
+
+			<Card size={"small"} className={"mb-sm-3 text-center"} style={{cursor: "pointer"}} onClick={(e) => {
+				e.preventDefault();
+
+				this.setState({
+					redirect: true
+				});
+			}}>
+				<h4><i className={this.props.iconClass}/></h4>
+				<h4>{this.props.title}</h4>
+
+				<p className={"mb-0"}>
+					{this.props.description}
+				</p>
+			</Card>
+		</Col>;
 	}
 }
