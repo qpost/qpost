@@ -44,6 +44,8 @@ export default class FollowButton extends Component<{
 	followStatus: number | null,
 	error: string | null
 }> {
+	public static INSTANCES: FollowButton[] = [];
+
 	constructor(props) {
 		super(props);
 
@@ -107,6 +109,10 @@ export default class FollowButton extends Component<{
 	};
 
 	componentDidMount(): void {
+		if (!FollowButton.INSTANCES.includes(this)) {
+			FollowButton.INSTANCES.push(this);
+		}
+
 		if (this.props.target.isBlocked() && !this.isCurrentUser()) {
 			this.setState({
 				followStatus: FollowStatus.BLOCKED,
@@ -149,6 +155,15 @@ export default class FollowButton extends Component<{
 					followStatus: FollowStatus.NOT_FOLLOWING,
 					loading: false
 				});
+			}
+		}
+	}
+
+	componentWillUnmount(): void {
+		if (FollowButton.INSTANCES.includes(this)) {
+			const index = FollowButton.INSTANCES.indexOf(this);
+			if (index > -1) {
+				FollowButton.INSTANCES.splice(index, 1);
 			}
 		}
 	}

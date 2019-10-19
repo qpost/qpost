@@ -23,6 +23,8 @@ import {message, Modal} from "antd";
 import API from "../API/API";
 import BaseObject from "../Serialization/BaseObject";
 import Block from "../Entity/Account/Block";
+import FollowButton from "./FollowButton";
+import FollowStatus from "../Util/FollowStatus";
 
 export default class BlockModal extends Component<any, {
 	open: boolean,
@@ -95,8 +97,17 @@ export default class BlockModal extends Component<any, {
 					if (data.result) {
 						const block = BaseObject.convertObject(Block, data.result);
 						if (block) {
+							const newUser = block.getTarget();
+
 							message.success("You have successfully blocked @" + user.getUsername());
-							// TODO: Update FollowButtons
+
+							FollowButton.INSTANCES.forEach(followButton => {
+								if (followButton.props.target.getId() === newUser.getId()) {
+									followButton.setState({
+										followStatus: FollowStatus.BLOCKED
+									});
+								}
+							});
 						} else {
 							message.error("An error occurred.");
 						}
