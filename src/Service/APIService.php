@@ -190,6 +190,13 @@ class APIService extends AuthorizationService {
 				}
 			}
 
+			// closed privacy level check
+			if ($target->getPrivacyLevel() === PrivacyLevel::CLOSED) {
+				return false;
+			}
+
+			// TODO: PRIVATE PrivacyLevel check
+
 			// suspension check
 			if ($target->isSuspended()) {
 				return false;
