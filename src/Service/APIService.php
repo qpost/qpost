@@ -181,7 +181,7 @@ class APIService extends AuthorizationService {
 		if (!$user) $user = $this->getUser();
 
 		if ($target instanceof FeedEntry) {
-			return $this->mayView($user, $target->getUser());
+			return $this->mayView($target->getUser(), $user);
 		} else if ($target instanceof User) {
 			// self check
 			if ($user) {
