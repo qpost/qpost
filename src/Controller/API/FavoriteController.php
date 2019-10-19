@@ -65,7 +65,7 @@ class FavoriteController extends AbstractController {
 						"type" => FeedEntryType::POST
 					]);
 
-					if (!is_null($feedEntry)) {
+					if (!is_null($feedEntry) && $apiService->mayView($feedEntry)) {
 						$favorite = $entityManager->getRepository(Favorite::class)->findOneBy([
 							"user" => $user,
 							"feedEntry" => $feedEntry
@@ -201,7 +201,7 @@ class FavoriteController extends AbstractController {
 				"id" => $parameters->get("user")
 			]);
 
-			if ($user) {
+			if ($user && $apiService->mayView($user)) {
 				$max = null;
 				if ($parameters->has("max")) {
 					$max = $parameters->get("max");
