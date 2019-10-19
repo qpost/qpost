@@ -130,7 +130,8 @@ export default class BlockModal extends Component<any, {
 			}}
 			confirmLoading={this.state.loading}
 		>
-			block
+			{"@" + user.getUsername()} will no longer be able to follow you or view your profile and posts. You will
+			also no longer receive notifications from {"@" + user.getUsername()}.
 		</Modal>;
 	}
 }
