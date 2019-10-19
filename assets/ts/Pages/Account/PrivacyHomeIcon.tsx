@@ -39,7 +39,7 @@ export default class PrivacyHomeIcon extends Component<{
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <Col sm={12} lg={8}>
-			{this.state.redirect ? <Redirect to={this.props.path}/> : ""}
+			{this.state.redirect ? <Redirect push to={this.props.path}/> : ""}
 
 			<Card size={"small"} className={"mb-sm-3 text-center"} style={{cursor: "pointer"}} onClick={(e) => {
 				e.preventDefault();
