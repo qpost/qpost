@@ -19,6 +19,10 @@
 
 import React, {Component} from "react";
 import Notification from "../../Entity/Feed/Notification";
+import {Card} from "antd";
+import {Link} from "react-router-dom";
+import VerifiedBadge from "../../Component/VerifiedBadge";
+import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 
 export default class MentionNotification extends Component<{
 	notification: Notification
@@ -28,7 +32,26 @@ export default class MentionNotification extends Component<{
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		// TODO
-		return "";
+		const notification = this.props.notification;
+		const user = notification.getReferencedUser();
+		const feedEntry = notification.getReferencedFeedEntry();
+
+		if (feedEntry && user) {
+			return <Card size={"small"} className={!notification.isSeen() ? "unseenNotification" : ""}>
+				<p className={"mb-0"}>
+					<i className={"fas fa-at text-info"}/> <Link to={"/profile/" + user.getUsername()}
+																 className={"font-weight-bold clearUnderline"}><img
+					src={user.getAvatarURL()} width={24} height={24} className={"rounded mr-1"}
+					alt={user.getUsername()}/>{user.getDisplayName()}</Link><VerifiedBadge target={user}/> mentioned
+					you.
+				</p>
+
+				<hr/>
+
+				<FeedEntryListItem entry={feedEntry} hideAttachments={true} hideButtons={true}/>
+			</Card>;
+		} else {
+			return "";
+		}
 	}
 }
