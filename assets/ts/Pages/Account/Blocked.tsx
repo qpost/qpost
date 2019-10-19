@@ -28,6 +28,7 @@ import {Row, Spin} from "antd";
 import FollowerListItem from "../../Component/User/FollowerListItem";
 import InfiniteScroll from "react-infinite-scroller";
 import LoadingFollowerListItem from "../../Component/User/LoadingFollowerListItem";
+import ReturnHeader from "../../Component/ReturnHeader";
 
 export default class Blocked extends Component<any, {
 	blocks: Block[] | null,
@@ -104,6 +105,8 @@ export default class Blocked extends Component<any, {
 		}
 
 		return <AccountBase activeKey={"PRIVACY"}>
+			<ReturnHeader className={"mb-2"}/>
+
 			<h4>Blocked accounts</h4>
 
 			{this.state.blocks !== null ? <div>

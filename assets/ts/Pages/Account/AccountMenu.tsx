@@ -87,8 +87,7 @@ export default class AccountMenu extends Component<{
 						}
 					}
 				}
-			}} selectedKeys={[this.props.activePoint || "HOME"]} mode={this.state.mobileMenu ? "horizontal" : "inline"}
-				  className={"mb-3"}>
+			}} selectedKeys={[this.props.activePoint || "HOME"]} mode={this.state.mobileMenu ? "horizontal" : "inline"}>
 				<Menu.Item key={"HOME"}>
 					<i className="fas fa-user iconMargin-5"/>
 					Account
