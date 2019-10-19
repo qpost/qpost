@@ -62,6 +62,9 @@ class BlockController extends AbstractController {
 				]);
 
 				if (!$block) {
+					$apiService->unfollow($user, $target);
+					$apiService->unfollow($target, $user);
+
 					$block = (new Block())
 						->setUser($user)
 						->setTarget($target)
