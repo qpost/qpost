@@ -21,6 +21,7 @@ import React, {Component} from "react";
 import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import {ProfilePageProps} from "./Profile";
 import DummyPostForm from "../../Component/PostForm/DummyPostForm";
+import Auth from "../../Auth/Auth";
 
 export default class Posts extends Component<ProfilePageProps, any> {
 	componentDidMount(): void {
@@ -31,7 +32,7 @@ export default class Posts extends Component<ProfilePageProps, any> {
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return [
-			<DummyPostForm/>,
+			Auth.isLoggedIn() && Auth.getCurrentUser().getId() === this.props.user.getId() ? <DummyPostForm/> : "",
 			<FeedEntryList user={this.props.user}/>
 		];
 	}
