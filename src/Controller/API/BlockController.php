@@ -55,7 +55,7 @@ class BlockController extends AbstractController {
 				"id" => $parameters->get("target")
 			]);
 
-			if ($target) {
+			if ($target && $apiService->mayView($target)) {
 				$block = $entityManager->getRepository(Block::class)->findOneBy([
 					"user" => $user,
 					"target" => $target
