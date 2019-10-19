@@ -25,8 +25,11 @@ use Exception;
 use MediaEmbed\MediaEmbed;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\MediaFileType;
+use qpost\Constants\NotificationType;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
+use qpost\Entity\Notification;
+use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
 use qpost\Service\GigadriveService;
@@ -37,6 +40,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use function base64_decode;
 use function count;
 use function dirname;
+use function explode;
 use function file_exists;
 use function file_put_contents;
 use function filesize;
@@ -52,6 +56,7 @@ use function mkdir;
 use function rand;
 use function str_replace;
 use function strlen;
+use function substr;
 use function sys_get_temp_dir;
 use function trim;
 
@@ -324,6 +329,41 @@ class StatusController extends AbstractController {
 									$entityManager->persist($mediaFile);
 								}
 							}
+						}
+					}
+
+					// handle mentions
+					if (!Util::isEmpty($message)) {
+						/**
+						 * @var User[] $mentionedUsers
+						 */
+						$mentionedUsers = [];
+						$userRepository = $entityManager->getRepository(User::class);
+
+						foreach (explode(" ", $message) as $word) {
+							if (!Util::startsWith($word, "@")) {
+								continue;
+							}
+
+							if (strlen($word) >= 4 && strlen($word) <= 17) { // @ + minimum of 3 character usernames + maximum of 16 character usernames
+								$username = substr($word, 1);
+								$mentionedUser = $userRepository->getUserByUsername($username);
+
+								if ($mentionedUser && $mentionedUser->getId() != $user->getId() && $apiService->mayView($mentionedUser)) {
+									$mentionedUsers[] = $mentionedUser;
+								}
+							}
+						}
+
+						foreach ($mentionedUsers as $mentionedUser) {
+							$notification = (new Notification())
+								->setUser($mentionedUser)
+								->setReferencedFeedEntry($feedEntry)
+								->setReferencedUser($user)
+								->setType(NotificationType::MENTION)
+								->setTime(new DateTime("now"));
+
+							$entityManager->persist($notification);
 						}
 					}
 

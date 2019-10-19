@@ -148,4 +148,25 @@ class Util {
 
 		return [];
 	}
+
+	/**
+	 * Gets whether a string starts with another
+	 *
+	 * @access public
+	 * @param string $string The string in subject
+	 * @param string $start The string to be checked whether it is the start of $string
+	 * @param bool $ignoreCase If true, the case of the strings won't affect the result
+	 * @return bool
+	 */
+	public static function startsWith($string, $start, $ignoreCase = false) {
+		if (strlen($start) <= strlen($string)) {
+			if ($ignoreCase == true) {
+				return substr($string, 0, strlen($start)) == $start;
+			} else {
+				return strtolower(substr($string, 0, strlen($start))) == strtolower($start);
+			}
+		} else {
+			return false;
+		}
+	}
 }
