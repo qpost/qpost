@@ -216,6 +216,7 @@ class APIService extends AuthorizationService {
 		if ($from->getId() === $to->getId()) return false;
 		if ($from->getFollowingCount() >= 1000) return false;
 		if ($to->getPrivacyLevel() === PrivacyLevel::CLOSED) return false;
+		if (!$this->mayView($to, $from) && !$this->mayView($from, $to)) return false;
 
 		/**
 		 * @var FollowerRepository $followerRepository
