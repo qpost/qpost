@@ -19,7 +19,10 @@
 
 import React, {Component} from "react";
 import User from "../Entity/Account/User";
-import {Modal} from "antd";
+import {message, Modal} from "antd";
+import API from "../API/API";
+import BaseObject from "../Serialization/BaseObject";
+import Block from "../Entity/Account/Block";
 
 export default class BlockModal extends Component<any, {
 	open: boolean,
@@ -79,6 +82,34 @@ export default class BlockModal extends Component<any, {
 			onOk={() => {
 				this.setState({
 					loading: true
+				});
+
+				API.handleRequest("/block", "POST", {
+					target: user.getId()
+				}, data => {
+					this.setState({
+						open: false,
+						loading: false
+					});
+
+					if (data.result) {
+						const block = BaseObject.convertObject(Block, data.result);
+						if (block) {
+							message.success("You have successfully blocked @" + user.getUsername());
+							// TODO: Update FollowButtons
+						} else {
+							message.error("An error occurred.");
+						}
+					} else {
+						message.error("An error occurred.");
+					}
+				}, error => {
+					this.setState({
+						open: false,
+						loading: false
+					});
+
+					message.error(error);
 				});
 			}}
 			onCancel={() => {

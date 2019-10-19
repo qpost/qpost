@@ -72,7 +72,7 @@ export default class FollowButton extends Component<{
 						loading: true
 					});
 
-					API.handleRequest(followStatus === FollowStatus.BLOCKED ? "/block" : "/follow", method, {to: this.props.target.getId()}, data => {
+					API.handleRequest(followStatus === FollowStatus.BLOCKED ? "/block" : "/follow", method, {[followStatus === FollowStatus.BLOCKED ? "target" : "to"]: this.props.target.getId()}, data => {
 						if (followStatus === FollowStatus.BLOCKED) {
 							this.setState({
 								followStatus: FollowStatus.NOT_FOLLOWING,
