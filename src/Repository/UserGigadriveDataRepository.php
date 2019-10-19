@@ -117,33 +117,4 @@ class UserGigadriveDataRepository extends ServiceEntityRepository {
 			return $data;
 		}
 	}
-
-	// /**
-	//  * @return UserGigadriveData[] Returns an array of UserGigadriveData objects
-	//  */
-	/*
-	public function findByExampleField($value)
-	{
-		return $this->createQueryBuilder('u')
-			->andWhere('u.exampleField = :val')
-			->setParameter('val', $value)
-			->orderBy('u.id', 'ASC')
-			->setMaxResults(10)
-			->getQuery()
-			->getResult()
-		;
-	}
-	*/
-
-	/*
-	public function findOneBySomeField($value): ?UserGigadriveData
-	{
-		return $this->createQueryBuilder('u')
-			->andWhere('u.exampleField = :val')
-			->setParameter('val', $value)
-			->getQuery()
-			->getOneOrNullResult()
-		;
-	}
-	*/
 }
