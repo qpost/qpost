@@ -35,7 +35,7 @@ import FeedEntryList from "../FeedEntry/FeedEntryList";
 import Upload, {RcFile, UploadChangeParam} from "antd/es/upload";
 import Spin from "antd/es/spin";
 import PostFormUploadItem from "./PostFormUploadItem";
-import {Mentions, Switch} from "antd";
+import {Mentions, message, Switch} from "antd";
 import "antd/es/switch/style";
 import "antd/es/icon/style";
 import "antd/es/mentions/style";
@@ -105,6 +105,44 @@ export default class PostForm extends Component<any, {
 
 		if (PostForm.INSTANCE === null) {
 			PostForm.INSTANCE = this;
+
+			document.onpaste = (event) => {
+				if ($(event.target).attr("id") === "postFormTextarea") {
+					const items = event.clipboardData.items;
+
+					for (let index in items) {
+						const item = items[index];
+
+						if (item.kind === "file") {
+							const blob = item.getAsFile();
+
+							const uploadItem = new PostFormUploadItem();
+							uploadItem.uid = (Math.random() * 1000).toString();
+							uploadItem.type = item.type;
+
+							const head = "data:" + item.type + ";base64,";
+
+							const fileReader = new FileReader();
+							fileReader.onloadend = () => {
+								const result = fileReader.result;
+
+								if (typeof result === "string") {
+									console.log(result);
+									uploadItem.dataURL = result;
+									uploadItem.base64 = uploadItem.dataURL.substr(head.length);
+									uploadItem.size = Math.round((uploadItem.dataURL.length - head.length) * 3 / 4);
+
+									this.addFile(uploadItem);
+								} else {
+									message.error("An error occurred.");
+								}
+							};
+
+							fileReader.readAsDataURL(blob);
+						}
+					}
+				}
+			};
 		}
 	}
 
@@ -210,23 +248,10 @@ export default class PostForm extends Component<any, {
 	};
 
 	beforeUpload = (file: RcFile, FileList: RcFile[]) => {
-		const size: number = file.size;
-		const type: string = file.type;
-
-		if (!(type === "image/jpeg" || type === "image/png" || type === "image/gif")) {
-			AntMessage.error("Invalid file type.");
-			return false;
-		}
-
-		if (!(size / 1024 / 1024 < 2)) {
-			AntMessage.error("Images must be smaller than 2MB.");
-			return false;
-		}
-
 		const item: PostFormUploadItem = new PostFormUploadItem();
 		item.uid = file.uid;
-		item.size = size;
-		item.type = type;
+		item.size = file.size;
+		item.type = file.type;
 
 		const reader = new FileReader();
 		reader.addEventListener("load", () => {
@@ -235,15 +260,32 @@ export default class PostForm extends Component<any, {
 				item.dataURL = result;
 				item.base64 = item.dataURL.replace(/^data:image\/(png|jpg|jpeg|gif);base64,/, "");
 
-				const photos: PostFormUploadItem[] = this.state.photos;
-				photos.push(item);
-
-				this.setState({photos});
+				this.addFile(item);
 			}
 		});
 		reader.readAsDataURL(file);
 
 		return false;
+	};
+
+	addFile = (item: PostFormUploadItem) => {
+		const size: number = item.size;
+		const type: string = item.type;
+
+		if (!(type === "image/jpeg" || type === "image/png" || type === "image/gif")) {
+			AntMessage.error("Invalid file type.");
+			return;
+		}
+
+		if (!(size / 1024 / 1024 < 2)) {
+			AntMessage.error("Images must be smaller than 2MB.");
+			return;
+		}
+
+		const photos: PostFormUploadItem[] = this.state.photos;
+		photos.push(item);
+
+		this.setState({photos});
 	};
 
 	uploadChange = (info: UploadChangeParam) => {
