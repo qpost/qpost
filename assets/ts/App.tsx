@@ -49,6 +49,7 @@ import DeleteAccount from "./Pages/Account/DeleteAccount";
 import Goodbye from "./Pages/Goodbye/Goodbye";
 import PostForm from "./Component/PostForm/PostForm";
 import BlockModal from "./Component/BlockModal";
+import Privacy from "./Entity/Account/Privacy";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -125,6 +126,7 @@ export default class App extends Component<any, any> {
 												<PrivateRoute path={"/messages"} exact component={Messages}/>
 												<PrivateRoute path={"/account/sessions"} exact component={Sessions}/>
 												<PrivateRoute path={"/account/delete"} exact component={DeleteAccount}/>
+												<PrivateRoute path={"/account/privacy"} exact component={Privacy}/>
 												<PrivateRoute path={"/account/username"} exact
 															  component={ChangeUsername}/>
 												<PrivateRoute path={"/account"} exact component={Account}/>
