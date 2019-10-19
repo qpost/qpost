@@ -64,7 +64,7 @@ class FollowController extends AbstractController {
 					$userRepository = $entityManager->getRepository(User::class);
 					$from = $userRepository->getUserById($fromId);
 
-					if (!is_null($from)) {
+					if (!is_null($from) && $apiService->mayView($from)) {
 						if ($parameters->has("to")) {
 							$toId = $parameters->get("to");
 
@@ -75,7 +75,7 @@ class FollowController extends AbstractController {
 									 */
 									$to = $userRepository->getUserById($toId);
 
-									if (!is_null($to)) {
+									if (!is_null($to) && $apiService->mayView($to)) {
 										/**
 										 * @var Follower $follower
 										 */
@@ -148,7 +148,7 @@ class FollowController extends AbstractController {
 					 */
 					$to = $userRepository->getUserById($toId);
 
-					if (!is_null($to) && $to->getPrivacyLevel() !== PrivacyLevel::CLOSED) {
+					if (!is_null($to) && $to->getPrivacyLevel() !== PrivacyLevel::CLOSED && $apiService->mayView($to)) {
 						/**
 						 * @var FollowerRepository $followerRepository
 						 */
@@ -227,7 +227,7 @@ class FollowController extends AbstractController {
 					 */
 					$to = $userRepository->getUserById($toId);
 
-					if (!is_null($to) && $to->getPrivacyLevel() !== PrivacyLevel::CLOSED) {
+					if (!is_null($to) && $to->getPrivacyLevel() !== PrivacyLevel::CLOSED && $apiService->mayView($to)) {
 						$entityManager = $apiService->getEntityManager();
 
 						/**
@@ -315,7 +315,7 @@ class FollowController extends AbstractController {
 					"id" => $parameters->get("from")
 				]);
 
-				if ($user) {
+				if ($user && $apiService->mayView($user)) {
 					$builder->where("f.sender = :user")
 						->setParameter("user", $user);
 				} else {
@@ -326,7 +326,7 @@ class FollowController extends AbstractController {
 					"id" => $parameters->get("to")
 				]);
 
-				if ($user) {
+				if ($user && $apiService->mayView($user)) {
 					$builder->where("f.receiver = :user")
 						->setParameter("user", $user);
 				} else {
