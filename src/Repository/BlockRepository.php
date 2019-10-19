@@ -23,6 +23,7 @@ namespace qpost\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use qpost\Entity\Block;
+use qpost\Entity\User;
 
 /**
  * @method Block|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,5 +34,17 @@ use qpost\Entity\Block;
 class BlockRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, Block::class);
+	}
+
+	/**
+	 * @param User $user
+	 * @param User $target
+	 * @return bool
+	 */
+	public function isBlocked(User $user, User $target): bool {
+		return $this->count([
+				"user" => $user,
+				"target" => $target
+			]) > 0;
 	}
 }

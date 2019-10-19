@@ -197,10 +197,7 @@ class APIService extends AuthorizationService {
 
 			// block check
 			if ($user) {
-				if ($this->entityManager->getRepository(Block::class)->count([
-						"target" => $user,
-						"user" => $target
-					]) > 0) {
+				if ($this->entityManager->getRepository(Block::class)->isBlocked($target, $user)) {
 					return false;
 				}
 			}
