@@ -21,6 +21,7 @@
 namespace qpost\Controller\API;
 
 use DateTime;
+use Doctrine\DBAL\Types\Type;
 use Exception;
 use MediaEmbed\MediaEmbed;
 use qpost\Constants\FeedEntryType;
@@ -49,6 +50,7 @@ use function getrandmax;
 use function hash;
 use function is_array;
 use function is_bool;
+use function is_int;
 use function is_null;
 use function is_numeric;
 use function is_string;
@@ -220,11 +222,43 @@ class StatusController extends AbstractController {
 					}
 
 					$entityManager = $apiService->getEntityManager();
+
+					// handle reply status
+					$parent = null;
+					$type = FeedEntryType::POST;
+					if ($parameters->has("parent")) {
+						$parentId = $parameters->get("parent");
+
+						if (is_int($parentId)) {
+							$parent = $entityManager->getRepository(FeedEntry::class)->createQueryBuilder("f")
+								->where("f.id = :id")
+								->setParameter("id", $parentId, Type::INTEGER)
+								->andWhere("f.type = :post OR f.type = :reply")
+								->setParameter("post", FeedEntryType::POST, Type::STRING)
+								->setParameter("reply", FeedEntryType::REPLY, Type::STRING)
+								->getQuery()
+								->getOneOrNullResult();
+
+							if ($parent) {
+								if ($apiService->mayView($parent)) {
+									$type = FeedEntryType::REPLY;
+								} else {
+									return $apiService->json(["error" => "The requested resource could not be found."], 404);
+								}
+							} else {
+								return $apiService->json(["error" => "The requested resource could not be found."], 404);
+							}
+						} else {
+							return $apiService->json(["error" => "'parent' has to be a boolean."]);
+						}
+					}
+
 					$feedEntry = (new FeedEntry())
 						->setUser($user)
 						->setText(Util::isEmpty($message) ? null : $message)
 						->setToken($token)
-						->setType(FeedEntryType::POST)
+						->setType($type)
+						->setParent($parent)
 						->setNSFW($nsfw)
 						->setTime(new DateTime("now"));
 
