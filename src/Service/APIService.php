@@ -31,6 +31,7 @@ use Psr\Log\LoggerInterface;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\NotificationType;
 use qpost\Constants\PrivacyLevel;
+use qpost\Entity\Block;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Follower;
 use qpost\Entity\FollowRequest;
@@ -192,7 +193,15 @@ class APIService extends AuthorizationService {
 				return false;
 			}
 
-			// TODO: Block check
+			// block check
+			if ($user) {
+				if ($this->entityManager->getRepository(Block::class)->count([
+						"target" => $user,
+						"user" => $target
+					]) > 0) {
+					return false;
+				}
+			}
 			return true;
 		} else {
 			return true;
