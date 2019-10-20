@@ -124,7 +124,7 @@ export default class Status extends Component<any, {
 							<PostUnavailableAlert/>
 						</Card> : ""}
 
-						<Card className={"statusPageBox"}>
+						<Card className={"statusPageBox"} size={"small"}>
 							<div className={"clearfix"}>
 								<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
 									<img src={user.getAvatarURL()} className={"rounded float-left mr-2"} width={64}
