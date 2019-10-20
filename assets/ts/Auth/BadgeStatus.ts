@@ -26,6 +26,9 @@ export default class BadgeStatus {
 	public static notifications: number = 0;
 	public static messages: number = 0;
 
+	/**
+	 * @deprecated
+	 */
 	public static update(callback?: () => void): void {
 		if (!this.updating) {
 			this.updating = true;
