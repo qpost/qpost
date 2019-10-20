@@ -80,9 +80,6 @@ export default class App extends Component<any, any> {
 						this.setState({
 							validatedLogin: true
 						});
-
-						DesktopNotifications.start();
-						DesktopNotifications.run();
 					});
 				} else {
 					this.setState({
@@ -121,6 +118,7 @@ export default class App extends Component<any, any> {
 											<LoginSuggestionModal/>
 											<PostForm/>
 											<BlockModal/>
+											<DesktopNotifications/>
 
 											<Switch>
 												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
