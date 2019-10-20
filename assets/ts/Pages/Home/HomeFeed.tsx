@@ -35,11 +35,13 @@ export default class HomeFeed extends Component<any, any> {
 	componentDidMount(): void {
 		setPageTitle("Home");
 
-		Notification.requestPermission().then(() => {
-			message.success("Desktop notifications enabled.");
-		}).catch(() => {
-			message.error("Desktop notifications disabled.");
-		});
+		if (Notification.permission === "default") {
+			Notification.requestPermission().then(() => {
+				message.success("Desktop notifications enabled.");
+			}).catch(() => {
+				message.error("Desktop notifications disabled.");
+			});
+		}
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
