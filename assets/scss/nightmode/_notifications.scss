@@ -18,5 +18,9 @@
  */
 
 .unseenNotification {
-	background: #595959 !important;
+	&, .ant-card-body {
+		background: #00243b;
+		border-color: #003751;
+		border-width: 3px;
+	}
 }
