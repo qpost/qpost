@@ -23,8 +23,8 @@ import Header from "../Parts/Header";
 
 export default class BadgeStatus {
 	private static updating: boolean = false;
-	private static notifications: number = 0;
-	private static messages: number = 0;
+	public static notifications: number = 0;
+	public static messages: number = 0;
 
 	public static update(callback?: () => void): void {
 		if (!this.updating) {

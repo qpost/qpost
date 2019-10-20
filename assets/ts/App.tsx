@@ -51,6 +51,7 @@ import PostForm from "./Component/PostForm/PostForm";
 import BlockModal from "./Component/BlockModal";
 import Privacy from "./Pages/Account/Privacy";
 import Blocked from "./Pages/Account/Blocked";
+import DesktopNotifications from "./DesktopNotifications";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -79,6 +80,9 @@ export default class App extends Component<any, any> {
 						this.setState({
 							validatedLogin: true
 						});
+
+						DesktopNotifications.start();
+						DesktopNotifications.run();
 					});
 				} else {
 					this.setState({
