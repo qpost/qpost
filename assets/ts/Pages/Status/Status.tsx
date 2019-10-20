@@ -45,6 +45,7 @@ import Linkifier from "../../Component/Linkifier";
 import ReplyList from "../../Component/FeedEntry/ReplyList";
 import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
+import PostUnavailableAlert from "../../Component/PostUnavailableAlert";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -119,6 +120,10 @@ export default class Status extends Component<any, {
 													  key={index}/>;
 						})}
 
+						{parents.length === 0 && status.getType() === FeedEntryType.REPLY ? <Card size={"small"}>
+							<PostUnavailableAlert/>
+						</Card> : ""}
+
 						<Card className={"statusPageBox"}>
 							<div className={"clearfix"}>
 								<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
@@ -146,10 +151,10 @@ export default class Status extends Component<any, {
 							</div>
 
 							{status.getText() !== null ? <div className={"text"}>
-								{parent && status.getType() === FeedEntryType.REPLY ?
+								{status.getType() === FeedEntryType.REPLY ?
 									<div className={"text-muted small specialLinkColor"}>
-										Replying to <Link
-										to={"/profile/" + parent.getUser().getUsername()}>{"@" + parent.getUser().getUsername()}</Link>
+										Replying to {parent ? <Link
+										to={"/profile/" + parent.getUser().getUsername()}>{"@" + parent.getUser().getUsername()}</Link> : "..."}
 									</div> : ""}
 
 								<div className={"specialLinkColor"}>
