@@ -322,7 +322,7 @@ class FeedEntry {
 			$i = 0;
 
 			foreach ($this->getChildren() as $child) {
-				if ($child->getType() === FeedEntryType::POST) $i++;
+				if ($child->getType() === FeedEntryType::REPLY) $i++;
 			}
 
 			return $i;
