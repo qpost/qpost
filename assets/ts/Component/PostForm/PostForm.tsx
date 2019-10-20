@@ -209,11 +209,15 @@ export default class PostForm extends Component<any, {
 
 			const nsfw: boolean = this.state.nsfw;
 
-			API.handleRequest("/status", "POST", {
+			const parameters = {
 				message,
 				attachments,
 				nsfw
-			}, data => {
+			};
+
+			if (this.state.replyTo) parameters["parent"] = this.state.replyTo.getId();
+
+			API.handleRequest("/status", "POST", parameters, data => {
 				if (data.hasOwnProperty("post")) {
 					const post: FeedEntry = BaseObject.convertObject(FeedEntry, data.post);
 					const entryList: FeedEntryList | null = FeedEntryList.instance;
