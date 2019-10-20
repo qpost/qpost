@@ -29,18 +29,13 @@ import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import DummyPostForm from "../../Component/PostForm/DummyPostForm";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
-import {message} from "antd";
 
 export default class HomeFeed extends Component<any, any> {
 	componentDidMount(): void {
 		setPageTitle("Home");
 
 		if (Notification.permission === "default") {
-			Notification.requestPermission().then(() => {
-				message.success("Desktop notifications enabled.");
-			}).catch(() => {
-				message.error("Desktop notifications disabled.");
-			});
+			Notification.requestPermission();
 		}
 	}
 
