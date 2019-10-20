@@ -224,6 +224,9 @@ class StatusController extends AbstractController {
 					$entityManager = $apiService->getEntityManager();
 
 					// handle reply status
+					/**
+					 * @var FeedEntry $parent
+					 */
 					$parent = null;
 					$type = FeedEntryType::POST;
 					if ($parameters->has("parent")) {
@@ -263,6 +266,20 @@ class StatusController extends AbstractController {
 						->setTime(new DateTime("now"));
 
 					$entityManager->persist($feedEntry);
+
+					// handle reply notification
+					if ($parent && $type === FeedEntryType::REPLY) {
+						if ($parent->getUser()->getId() != $user->getId()) { // don't send self notification
+							$notification = (new Notification())
+								->setUser($parent->getUser())
+								->setReferencedFeedEntry($feedEntry)
+								->setReferencedUser($user)
+								->setType(NotificationType::REPLY)
+								->setTime(new DateTime("now"));
+
+							$entityManager->persist($notification);
+						}
+					}
 
 					$mediaFileRepository = $entityManager->getRepository(MediaFile::class);
 
