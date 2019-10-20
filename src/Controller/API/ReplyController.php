@@ -91,7 +91,7 @@ class ReplyController extends AbstractController {
 					$replyBatches = [];
 
 					foreach ($feedEntries as $reply) {
-						$replyBatch = [$reply];
+						$replyBatch = [$apiService->serialize($reply)];
 
 						while ($reply = $feedEntryRepository->createQueryBuilder("f")
 								->innerJoin("f.user", "u")
@@ -105,7 +105,7 @@ class ReplyController extends AbstractController {
 								->setMaxResults(1)
 								->getQuery()
 								->getOneOrNullResult() && count($replyBatch) < 5) {
-							$replyBatch[] = $reply;
+							$replyBatch[] = $apiService->serialize($reply);
 						}
 
 						$replyBatches[] = $replyBatch;
