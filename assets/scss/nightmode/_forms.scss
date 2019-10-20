@@ -21,7 +21,7 @@
 .ant-input,
 .ant-input-group-addon,
 .ant-message-notice-content,
-.ant-calendar, .ant-calendar-input, .ant-calendar-footer, .ant-calendar-header, .ant-calendar-input-wrap, .ant-calendar-year-panel, .ant-calendar-year-panel-header, .ant-calendar-decade-panel, .ant-calendar-decade-panel-header, .ant-calendar-decade-panel-century,
+.ant-calendar, .ant-calendar-input, .ant-calendar-footer, .ant-calendar-header, .ant-calendar-input-wrap, .ant-calendar-year-panel, .ant-calendar-year-panel-header, .ant-calendar-decade-panel, .ant-calendar-decade-panel-header, .ant-calendar-decade-panel-century, .ant-calendar-today .ant-calendar-date,
 .ant-upload.ant-upload-select-picture-card,
 .ant-mentions, .ant-mentions > textarea,
 .form-control:focus,
@@ -35,6 +35,13 @@
 .datepicker-panel > ul > li.disabled, .datepicker-panel > ul > li.disabled:hover {
 	border: 1px solid #001020;
 	background-color: #001d30;
+	color: #FFF !important;
+	box-shadow: none;
+}
+
+.ant-calendar-selected-day .ant-calendar-date {
+	border: 1px solid #00397a;
+	background-color: #002f47;
 	color: #FFF !important;
 	box-shadow: none;
 }
