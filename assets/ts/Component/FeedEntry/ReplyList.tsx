@@ -103,7 +103,7 @@ export default class ReplyList extends Component<{
 		const entries: FeedEntry[][] = this.state.entries || [];
 		const parent = feedEntry.getPost();
 
-		if (parent.getId() === this.props.feedEntry.getId()) {
+		if (parent.getId() !== this.props.feedEntry.getId()) {
 			entries.forEach((replyBatch: FeedEntry[]) => {
 				if (replyBatch.length > 0) {
 					const lastReply = replyBatch[replyBatch.length - 1];
