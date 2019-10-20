@@ -60,7 +60,7 @@ class ReplyController extends AbstractController {
 					if ($parameters->has("page")) {
 						$page = $parameters->get("page");
 
-						if (is_int($page)) {
+						if (is_numeric($page)) {
 							if ($page < 1) {
 								return $apiService->json(["error" => "'page' has to be at least 1."], 400);
 							}
