@@ -172,7 +172,7 @@ export default class FeedEntryList extends Component<{
 				>
 					<ul className={"list-group feedContainer"}>
 						{this.state.entries.map((entry, i) => {
-							return <FeedEntryListItem key={i} entry={entry} parent={this}/>
+							return <FeedEntryListItem key={entry.getId()} entry={entry} parent={this}/>
 						})}
 					</ul>
 				</InfiniteScroll>;
