@@ -57,7 +57,12 @@ class DesktopNotificationsController extends AbstractController {
 
 		foreach ($notifications as $notification) {
 			$results[] = $apiService->serialize($notification);
+
+			$notification->setNotified(true);
+			$entityManager->persist($notification);
 		}
+
+		$entityManager->flush();
 
 		return $apiService->json([
 			"results" => $results,
