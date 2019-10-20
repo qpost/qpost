@@ -137,6 +137,12 @@ export default class FeedEntryListItem extends Component<{
 									   description={"This post was marked as NSFW and may contain inappropriate content. Click to reveal it."}
 									   showIcon icon={<Icon type="warning"/>}/>
 							</div> : <div className={"w-100"}>
+								{this.props.showParentInfo && entry.getType() === FeedEntryType.REPLY ?
+									<div className={"text-muted small specialLinkColor mt-2"}>
+										Replying to {entry.getPost() ? <Link
+										to={"/profile/" + entry.getPost().getUser().getUsername()}>{"@" + entry.getPost().getUser().getUsername()}</Link> : "..."}
+									</div> : ""}
+
 								{entry.getText() !== null ? <div className="float-left ml-1 my-2 w-100">
 									<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
 										<FeedEntryText feedEntry={entry}/>
