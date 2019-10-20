@@ -43,6 +43,8 @@ import User from "../../Entity/Account/User";
 import Auth from "../../Auth/Auth";
 import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryListItem from "../FeedEntry/FeedEntryListItem";
+import ReplyList from "../FeedEntry/ReplyList";
+import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 
 export default class PostForm extends Component<any, {
 	mobile: boolean,
@@ -221,11 +223,14 @@ export default class PostForm extends Component<any, {
 				if (data.hasOwnProperty("post")) {
 					const post: FeedEntry = BaseObject.convertObject(FeedEntry, data.post);
 					const entryList: FeedEntryList | null = FeedEntryList.instance;
+					const replyList: ReplyList | null = ReplyList.instance;
 
 					AntMessage.success("Your post has been sent.");
 
-					if (entryList) {
+					if (entryList && post.getType() === FeedEntryType.POST) {
 						entryList.prependEntry(post);
+					} else if (replyList && post.getType() === FeedEntryType.REPLY) {
+						replyList.prependEntry(post);
 					}
 
 					this.close();

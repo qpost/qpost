@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,32 +17,17 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@mixin desktopOnly() {
-	@media only screen and (min-width: 768px) {
-		@content
-	}
-}
+import React, {Component} from "react";
+import {Redirect} from "react-router";
 
-@mixin mobileOnly() {
-	@media only screen and (max-width: 767.999px) {
-		@content
+export default class ProfileRedirect extends Component<any, any> {
+	constructor(props) {
+		super(props);
 	}
-}
 
-.desktopOnly {
-	@include mobileOnly() {
-		display: none !important;
-	}
-}
+	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		const id = this.props.match.params.id;
 
-.mobileOnly {
-	@include desktopOnly() {
-		display: none !important;
-	}
-}
-
-.text-center-mobile {
-	@include mobileOnly() {
-		text-align: center !important;
+		return <Redirect to={"/status/" + id}/>;
 	}
 }

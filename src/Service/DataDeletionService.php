@@ -55,7 +55,7 @@ class DataDeletionService {
 		}
 
 		foreach ($feedEntry->getChildren() as $child) {
-			if ($child->getType() === FeedEntryType::POST) {
+			if ($child->getType() === FeedEntryType::POST || $child->getType() === FeedEntryType::REPLY) {
 				$child->setParent(null);
 				$entityManager->persist($child);
 			} else {

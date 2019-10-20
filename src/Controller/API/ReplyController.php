@@ -93,7 +93,8 @@ class ReplyController extends AbstractController {
 					foreach ($feedEntries as $reply) {
 						$replyBatch = [$apiService->serialize($reply)];
 
-						while ($reply = $feedEntryRepository->createQueryBuilder("f")
+						while (count($replyBatch) < 5) {
+							$reply = $feedEntryRepository->createQueryBuilder("f")
 								->innerJoin("f.user", "u")
 								->where("f.user = :user")
 								->setParameter("user", $reply->getUser())
@@ -104,7 +105,9 @@ class ReplyController extends AbstractController {
 								->orderBy("f.time", "ASC")
 								->setMaxResults(1)
 								->getQuery()
-								->getOneOrNullResult() && count($replyBatch) < 5) {
+								->getOneOrNullResult();
+
+							if (!$reply) break;
 							$replyBatch[] = $apiService->serialize($reply);
 						}
 

@@ -42,6 +42,9 @@ import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
 import {limitString} from "../../Util/Format";
 import Linkifier from "../../Component/Linkifier";
+import ReplyList from "../../Component/FeedEntry/ReplyList";
+import FeedEntryType from "../../Entity/Feed/FeedEntryType";
+import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -96,52 +99,77 @@ export default class Status extends Component<any, {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const status: FeedEntry = this.state.status;
 		const user: User = status ? status.getUser() : null;
+		const parent: FeedEntry = status ? status.getPost() : null;
+
+		const parents: FeedEntry[] = [];
+		let pi = parent;
+		while (pi && (pi.getType() === FeedEntryType.POST || pi.getType() === FeedEntryType.REPLY)) {
+			parents.unshift(pi);
+			pi = pi.getPost();
+		}
+
+		console.log(parents);
 
 		return <ContentBase>
 			<PageContent rightSidebar>
 				{status !== null && user !== null ? (
-					<Card className={"statusPageBox"}>
-						<div className={"clearfix"}>
-							<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-								<img src={user.getAvatarURL()} className={"rounded float-left mr-2"} width={64}
-									 height={64} alt={user.getUsername()}/>
-							</Link>
+					<div>
+						{parents.map((entry: FeedEntry, index: number) => {
+							return <FeedEntryListItem hideAttachments={true} entry={entry} showParentInfo={true}
+													  key={index}/>;
+						})}
 
-							<div className={"float-left nameContainer"}>
-								<div className={"displayName"}>
-									<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-										{user.getDisplayName()}<VerifiedBadge target={user}/>
-									</Link>
+						<Card className={"statusPageBox"}>
+							<div className={"clearfix"}>
+								<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+									<img src={user.getAvatarURL()} className={"rounded float-left mr-2"} width={64}
+										 height={64} alt={user.getUsername()}/>
+								</Link>
+
+								<div className={"float-left nameContainer"}>
+									<div className={"displayName"}>
+										<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+											{user.getDisplayName()}<VerifiedBadge target={user}/>
+										</Link>
+									</div>
+
+									<div className={"username"}>
+										<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+											@{user.getUsername()}
+										</Link>
+									</div>
 								</div>
 
-								<div className={"username"}>
-									<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-										@{user.getUsername()}
-									</Link>
+								<div className={"float-right"}>
+									<FollowButton target={user}/>
 								</div>
 							</div>
 
-							<div className={"float-right"}>
-								<FollowButton target={user}/>
+							{status.getText() !== null ? <div className={"text"}>
+								{parent && status.getType() === FeedEntryType.REPLY ?
+									<div className={"text-muted small specialLinkColor"}>
+										Replying to <Link
+										to={"/profile/" + parent.getUser().getUsername()}>{"@" + parent.getUser().getUsername()}</Link>
+									</div> : ""}
+
+								<div className={"specialLinkColor"}>
+									<Linkifier>
+										{status.getText()}
+									</Linkifier>
+								</div>
+							</div> : ""}
+
+							{status.getAttachments().length > 0 ? <div className={"attachments"}>
+								<FeedEntryListItemAttachments entry={status}/>
+							</div> : ""}
+
+							<div className={"actionButtons"}>
+								<FeedEntryActionButtons entry={status}/>
 							</div>
-						</div>
+						</Card>
 
-						{status.getText() !== null ? <div className={"text"}>
-							<div className={"specialLinkColor"}>
-								<Linkifier>
-									{status.getText()}
-								</Linkifier>
-							</div>
-						</div> : ""}
-
-						{status.getAttachments().length > 0 ? <div className={"attachments"}>
-							<FeedEntryListItemAttachments entry={status}/>
-						</div> : ""}
-
-						<div className={"actionButtons"}>
-							<FeedEntryActionButtons entry={status}/>
-						</div>
-					</Card>
+						<ReplyList feedEntry={status}/>
+					</div>
 				) : this.state.error !== null ? (
 					<Alert
 						message="Error"

@@ -31,13 +31,15 @@ import FeedEntryText from "./FeedEntryText";
 import FeedEntryList from "./FeedEntryList";
 import {Alert, Icon} from "antd";
 import FavoriteList from "./FavoriteList";
+import ReplyList from "./ReplyList";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
-	parent?: FeedEntryList | FavoriteList,
+	parent?: FeedEntryList | FavoriteList | ReplyList,
 	hideButtons?: boolean,
 	hideAttachments?: boolean,
-	onClick?: MouseEventHandler
+	onClick?: MouseEventHandler,
+	showParentInfo?: boolean
 }, {
 	nsfwWarningActive: boolean,
 	redirect: boolean
@@ -64,12 +66,13 @@ export default class FeedEntryListItem extends Component<{
 		if (this.state.redirect) {
 			const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
 
-			return <Redirect push to={"/status/" + id}/>;
+			return <Redirect push to={"/r/status/" + id}/>;
 		}
 
 		switch (entry.getType()) {
 			case FeedEntryType.POST:
 			case FeedEntryType.SHARE:
+			case FeedEntryType.REPLY:
 				let shareHeader;
 				if (entry.getType() === FeedEntryType.SHARE) {
 					shareHeader = <div>

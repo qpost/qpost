@@ -52,6 +52,7 @@ import BlockModal from "./Component/BlockModal";
 import Privacy from "./Pages/Account/Privacy";
 import Blocked from "./Pages/Account/Blocked";
 import DesktopNotifications from "./DesktopNotifications";
+import StatusRedirect from "./Pages/Status/StatusRedirect";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -137,6 +138,7 @@ export default class App extends Component<any, any> {
 												<PrivateRoute path={"/account"} exact component={Account}/>
 												<Route path={"/goodbye"} exact component={Goodbye}/>
 												<Route path={"/about"} exact component={About}/>
+												<Route path={"/r/status/:id"} exact component={StatusRedirect}/>
 												<Route path={"/status/:id"} exact component={Status}/>
 												<Route path={"/profile/:username"} component={ProfileRedirect}/>
 												<Route path={"/:username"} component={Profile}/>
