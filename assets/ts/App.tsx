@@ -53,6 +53,7 @@ import Privacy from "./Pages/Account/Privacy";
 import Blocked from "./Pages/Account/Blocked";
 import DesktopNotifications from "./DesktopNotifications";
 import StatusRedirect from "./Pages/Status/StatusRedirect";
+import Search from "./Pages/Search/Search";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -136,6 +137,7 @@ export default class App extends Component<any, any> {
 												<PrivateRoute path={"/account/username"} exact
 															  component={ChangeUsername}/>
 												<PrivateRoute path={"/account"} exact component={Account}/>
+												<Route path={"/search"} exact component={Search}/>
 												<Route path={"/goodbye"} exact component={Goodbye}/>
 												<Route path={"/about"} exact component={About}/>
 												<Route path={"/r/status/:id"} exact component={StatusRedirect}/>

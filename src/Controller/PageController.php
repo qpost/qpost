@@ -103,6 +103,17 @@ class PageController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/search")
+	 *
+	 * @return Response
+	 */
+	public function search() {
+		return $this->render("react.html.twig", Twig::param([
+			"title" => "Search"
+		]));
+	}
+
+	/**
 	 * @Route("/edit")
 	 *
 	 * @param Request $request

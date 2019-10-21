@@ -89,6 +89,12 @@ export default class DesktopHeader extends Component<{
 						</Link>
 					</Menu.Item>,
 
+					<Menu.Item key={4}>
+						<Link to={"/search"} className={"clearUnderline"}>
+							search
+						</Link>
+					</Menu.Item>,
+
 					<SubMenu title={<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
 						<img src={currentUser.getAvatarURL()} width={24} height={24} alt={currentUser.getUsername()}
 							 className={"rounded"}/><span className={"ml-2"}>{currentUser.getUsername()}</span>
