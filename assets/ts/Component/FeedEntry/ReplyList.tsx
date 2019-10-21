@@ -121,6 +121,8 @@ export default class ReplyList extends Component<{
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		if (this.props.feedEntry !== null && this.props.feedEntry.getReplyCount() === 0) return "";
+
 		if (this.state.entries !== null) {
 			if (this.state.entries.length > 0) {
 				return <InfiniteScroll
