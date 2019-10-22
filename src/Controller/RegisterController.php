@@ -137,7 +137,7 @@ class RegisterController extends AbstractController {
 
 																			if ($verifyEmail) {
 																				// Send email
-																				$message = (new Swift_Message("subject"))
+																				$message = (new Swift_Message("Finish your qpost registration"))
 																					->setFrom($_ENV["MAILER_FROM"])
 																					->setTo($email)
 																					->setBody(

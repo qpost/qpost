@@ -101,7 +101,7 @@ class HomeController extends AbstractController {
 														$entityManager->flush();
 
 														// Send email
-														$message = (new Swift_Message("subject"))
+														$message = (new Swift_Message("Finish your qpost registration"))
 															->setFrom($_ENV["MAILER_FROM"])
 															->setTo($email)
 															->setBody(
