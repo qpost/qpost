@@ -47,6 +47,7 @@ import {formatNumberShort} from "../../Util/Format";
 import NightMode from "../../NightMode/NightMode";
 import {setPageTitle} from "../../Util/Page";
 import ProfileDropdown from "./ProfileDropdown";
+import UserBlockedAlert from "../../Component/UserBlockedAlert";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -185,6 +186,8 @@ export default class Profile extends Component<any, {
 								<ProfileDropdown user={user} placement={"bottomLeft"}/>
 							</div>
 						</Card>
+
+						{user.isBlocked() ? <UserBlockedAlert user={user}/> : ""}
 
 						<Menu theme={NightMode.isActive() ? "dark" : "light"}
 							  selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"} onClick={(e) => {
