@@ -35,6 +35,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function ctype_alnum;
 use function filter_var;
 use function password_hash;
@@ -96,6 +97,9 @@ class HomeController extends AbstractController {
 															->setEmailActivationToken($emailToken)
 															->setTime(new DateTime("now"));
 
+														$entityManager->persist($user);
+														$entityManager->flush();
+
 														// Send email
 														$message = (new Swift_Message("subject"))
 															->setFrom($_ENV["MAILER_FROM"])
@@ -104,15 +108,12 @@ class HomeController extends AbstractController {
 																$this->renderView("emails/register.html.twig", [
 																	"username" => $username,
 																	"displayName" => $displayName,
-																	"verificationLink" => "" // TODO
+																	"verificationLink" => $this->generateUrl("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
 																]),
 																"text/html"
 															);
 
 														if ($mailer->send($message) !== 0) {
-															$entityManager->persist($user);
-															$entityManager->flush();
-
 															$this->addFlash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
 														} else {
 															$this->addFlash(FlashMessageType::ERROR, "Your email address could not be verified.");
