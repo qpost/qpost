@@ -18,6 +18,7 @@
 	},
 	"homepage": "https://qpo.st",
 	"dependencies": {
+		"@sentry/browser": "^5.7.1",
 		"@types/bootstrap": "^4.3.0",
 		"@types/dropzone": "^5.0.6",
 		"@types/jquery": "^3.3.29",

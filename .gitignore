@@ -4,6 +4,7 @@ tmp/*
 config.php
 node_modules
 public/build
+assets/ts/config.json
 
 
 ###> symfony/framework-bundle ###

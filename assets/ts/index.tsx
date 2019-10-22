@@ -24,9 +24,15 @@ import "../scss/index.scss";
 import $ from "jquery";
 import "bootstrap";
 import ErrorBoundary from "./ErrorBoundary";
+import config from "./config.json";
+import * as Sentry from '@sentry/browser';
 
 window["jQuery"] = $;
 window["$"] = $;
+
+Sentry.init({
+	dsn: config["sentry-dsn"]
+});
 
 App.init();
 
