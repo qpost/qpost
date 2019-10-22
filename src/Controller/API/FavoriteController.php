@@ -61,11 +61,10 @@ class FavoriteController extends AbstractController {
 					$entityManager = $apiService->getEntityManager();
 
 					$feedEntry = $entityManager->getRepository(FeedEntry::class)->findOneBy([
-						"id" => $postId,
-						"type" => FeedEntryType::POST
+						"id" => $postId
 					]);
 
-					if (!is_null($feedEntry) && $apiService->mayView($feedEntry)) {
+					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY) && $apiService->mayView($feedEntry)) {
 						$favorite = $entityManager->getRepository(Favorite::class)->findOneBy([
 							"user" => $user,
 							"feedEntry" => $feedEntry
@@ -133,11 +132,10 @@ class FavoriteController extends AbstractController {
 					$entityManager = $apiService->getEntityManager();
 
 					$feedEntry = $entityManager->getRepository(FeedEntry::class)->findOneBy([
-						"id" => $postId,
-						"type" => FeedEntryType::POST
+						"id" => $postId
 					]);
 
-					if (!is_null($feedEntry)) {
+					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY)) {
 						$favorite = $entityManager->getRepository(Favorite::class)->findOneBy([
 							"user" => $user,
 							"feedEntry" => $feedEntry

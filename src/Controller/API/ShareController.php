@@ -58,11 +58,10 @@ class ShareController extends AbstractController {
 					$entityManager = $apiService->getEntityManager();
 
 					$feedEntry = $entityManager->getRepository(FeedEntry::class)->findOneBy([
-						"id" => $postId,
-						"type" => FeedEntryType::POST
+						"id" => $postId
 					]);
 
-					if (!is_null($feedEntry)) {
+					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY) && $apiService->mayView($feedEntry)) {
 						$share = $entityManager->getRepository(FeedEntry::class)->findOneBy([
 							"user" => $user,
 							"parent" => $feedEntry,
@@ -129,11 +128,10 @@ class ShareController extends AbstractController {
 					$entityManager = $apiService->getEntityManager();
 
 					$feedEntry = $entityManager->getRepository(FeedEntry::class)->findOneBy([
-						"id" => $postId,
-						"type" => FeedEntryType::POST
+						"id" => $postId
 					]);
 
-					if (!is_null($feedEntry)) {
+					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY)) {
 						$share = $entityManager->getRepository(FeedEntry::class)->findOneBy([
 							"user" => $user,
 							"parent" => $feedEntry,
