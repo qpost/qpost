@@ -90,6 +90,6 @@ export default class FollowersYouKnow extends Component<{
 			}
 		}
 
-		return "";
+		return <div/>;
 	}
 }
