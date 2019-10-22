@@ -140,6 +140,7 @@ class SearchController extends AbstractController {
 
 	private function userQuery(EntityManagerInterface $entityManager, string $query): QueryBuilder {
 		return $entityManager->getRepository(User::class)->createQueryBuilder("u")
+			->join("u.followers", "followers")
 			->where("u.username LIKE :query")
 			->orWhere("u.displayName LIKE :query")
 			->orWhere("u.bio LIKE :query")
@@ -158,6 +159,7 @@ class SearchController extends AbstractController {
 			->orWhere("u.username LIKE :query")
 			->orWhere("u.displayName LIKE :query")
 			->orWhere("u.bio LIKE :query")
-			->setParameter("query", $this->wrap($query));
+			->setParameter("query", $this->wrap($query))
+			->addOrderBy("f.time", "DESC");
 	}
 }
