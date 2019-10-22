@@ -54,18 +54,25 @@ export default class Auth {
 		}
 	}
 
-	public static logout(noRedirect?: boolean): void {
+	public static logout(noRedirect?: boolean, disableTokenDeletion?: boolean): void {
 		if (typeof noRedirect === "undefined") noRedirect = false;
 
-		API.handleRequest("/token", "DELETE", {
-			id: this.getToken()
-		}, () => {
+		if (disableTokenDeletion) {
 			this.setToken(undefined);
 			this.setCurrentUser(undefined);
 
 			if (!noRedirect) window.location.href = "/";
-		}, error => {
-			message.error(error);
-		});
+		} else {
+			API.handleRequest("/token", "DELETE", {
+				id: this.getToken()
+			}, () => {
+				this.setToken(undefined);
+				this.setCurrentUser(undefined);
+
+				if (!noRedirect) window.location.href = "/";
+			}, error => {
+				message.error(error);
+			});
+		}
 	}
 }

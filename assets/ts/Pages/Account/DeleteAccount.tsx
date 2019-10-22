@@ -110,7 +110,7 @@ export default class DeleteAccount extends Component<any, {
 												password: this.state.password
 											}, data => {
 												NightMode.setActive(false, false);
-												Auth.logout(false);
+												Auth.logout(true, true);
 
 												window.location.href = "/goodbye";
 											}, error => {
