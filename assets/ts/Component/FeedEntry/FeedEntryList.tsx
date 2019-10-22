@@ -31,7 +31,8 @@ import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
 
 export default class FeedEntryList extends Component<{
-	user?: User
+	user?: User,
+	searchQuery?: string
 }, {
 	entries: FeedEntry[] | null,
 	error: string | null,
@@ -117,8 +118,13 @@ export default class FeedEntryList extends Component<{
 		} : {};
 
 		if (max) parameters["max"] = max;
+		if (this.props.searchQuery) {
+			parameters["type"] = "post";
+			parameters["query"] = this.props.searchQuery;
+			if (this.state.entries) parameters["offset"] = this.state.entries.length;
+		}
 
-		API.handleRequest("/feed", "GET", parameters, data => {
+		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = this.state.entries || [];
 
 			data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
@@ -134,7 +140,7 @@ export default class FeedEntryList extends Component<{
 	}
 
 	private loadNewTask(): void {
-		if (FeedEntryList.instance !== this) return;
+		if (FeedEntryList.instance !== this || this.props.searchQuery) return;
 
 		this.setState({
 			loadNewTask: setTimeout(() => {

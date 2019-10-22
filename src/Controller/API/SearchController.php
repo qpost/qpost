@@ -99,7 +99,11 @@ class SearchController extends AbstractController {
 									->getQuery()
 									->getResult();
 
-								if ($result) {
+								$apiService->getLogger()->info("result", [
+									"result" => $result
+								]);
+
+								if (is_array($result)) {
 									$results = [];
 
 									foreach ($result as $entity) {

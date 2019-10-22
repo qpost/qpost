@@ -20,18 +20,61 @@
 import React, {Component} from "react";
 import ContentBase from "../../Component/Layout/ContentBase";
 import PageContent from "../../Component/Layout/PageContent";
+import {Col, Input, Menu, Row} from "antd";
+import NightMode from "../../NightMode/NightMode";
+import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
+import FollowerList from "../../Component/User/FollowerList";
 
-export default class Search extends Component<any, any> {
+export default class Search extends Component<any, {
+	query: string,
+	activeMenuPoint: string
+}> {
+	// TODO: Change URL when searching
 	constructor(props) {
 		super(props);
 
-		this.state = {};
+		this.state = {
+			query: "",
+			activeMenuPoint: "POSTS",
+		};
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <ContentBase>
 			<PageContent>
-				search
+				<Row gutter={24}>
+					<Col md={{span: 12, offset: 6}}>
+						<Input.Search placeholder="enter a query" onSearch={value => {
+							const query = value.trim();
+
+							this.setState({
+								query
+							});
+
+							console.log(query);
+						}} enterButton size={"large"} className={"mb-3"}/>
+
+						{this.state.query !== "" ? <div>
+							<Menu onClick={(e) => {
+								this.setState({
+									activeMenuPoint: e.key
+								});
+							}} selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"}
+								  theme={NightMode.isActive() ? "dark" : "light"}>
+								<Menu.Item key={"POSTS"}>
+									Posts
+								</Menu.Item>
+
+								<Menu.Item key={"USERS"}>
+									Users
+								</Menu.Item>
+							</Menu>
+
+							{this.state.activeMenuPoint === "POSTS" ? <FeedEntryList searchQuery={this.state.query}/> :
+								<FollowerList mode={"search"} query={this.state.query}/>}
+						</div> : ""}
+					</Col>
+				</Row>
 			</PageContent>
 		</ContentBase>;
 	}

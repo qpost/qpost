@@ -64,10 +64,11 @@ export default class API {
 					}
 				}
 			}).catch(error => {
+				console.error(error);
 				const response = error.response;
 
 				let errorMessage = "An error occurred.";
-				if (response.data && response.data.error) {
+				if (response && response.data && response.data.error) {
 					errorMessage = response.data.error;
 				}
 

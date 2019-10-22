@@ -30,10 +30,12 @@ import FollowerListItem from "./FollowerListItem";
 import LoadingFollowerListItem from "./LoadingFollowerListItem";
 
 export default class FollowerList extends Component<{
-	user: User,
-	mode: "from" | "to"
+	user?: User,
+	mode: "from" | "to" | "search",
+	query?: string
 }, {
 	followers: Follower[] | null,
+	users: User[] | null,
 	error: string | null,
 	loadingMore: boolean,
 	hasMore: boolean
@@ -45,6 +47,7 @@ export default class FollowerList extends Component<{
 
 		this.state = {
 			followers: null,
+			users: null,
 			error: null,
 			loadingMore: false,
 			hasMore: true
@@ -69,22 +72,39 @@ export default class FollowerList extends Component<{
 	}
 
 	load(max?: number) {
-		const parameters = this.props.user ? {
+		const parameters: any = this.props.user ? {
 			[this.props.mode]: this.props.user.getId()
 		} : {};
 
 		if (max) parameters["max"] = max;
+		if (this.props.mode === "search") {
+			parameters["type"] = "user";
+			if (this.state.users) parameters["offset"] = this.state.users.length;
+		}
+		if (this.props.query) parameters["query"] = this.props.query;
 
-		API.handleRequest("/follows", "GET", parameters, data => {
-			let followers: Follower[] = this.state.followers || [];
+		API.handleRequest(this.props.mode === "search" ? "/search" : "/follows", "GET", parameters, data => {
+			if (this.props.mode !== "search") {
+				let followers: Follower[] = this.state.followers || [];
 
-			data.results.forEach(result => followers.push(BaseObject.convertObject(Follower, result)));
+				data.results.forEach(result => followers.push(BaseObject.convertObject(Follower, result)));
 
-			this.setState({
-				followers,
-				loadingMore: false,
-				hasMore: data.results.length === 0 ? false : this.state.hasMore
-			});
+				this.setState({
+					followers,
+					loadingMore: false,
+					hasMore: data.results.length === 0 ? false : this.state.hasMore
+				});
+			} else {
+				let users: User[] = this.state.users || [];
+
+				data.results.forEach(result => users.push(BaseObject.convertObject(User, result)));
+
+				this.setState({
+					users,
+					loadingMore: false,
+					hasMore: data.results.length === 0 ? false : this.state.hasMore
+				});
+			}
 		}, error => {
 			this.setState({error, loadingMore: false, hasMore: false});
 		});
@@ -103,8 +123,8 @@ export default class FollowerList extends Component<{
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		if (this.state.followers !== null) {
-			if (this.state.followers.length > 0) {
+		if (this.state.followers !== null || this.state.users !== null) {
+			if ((this.state.followers !== null && this.state.followers.length > 0) || (this.state.users !== null && this.state.users.length > 0)) {
 				return <InfiniteScroll
 					pageStart={1}
 					loadMore={() => {
@@ -118,10 +138,12 @@ export default class FollowerList extends Component<{
 				>
 					<ul className={"list-group feedContainer"}>
 						<Row gutter={24}>
-							{this.state.followers.map((follower, i) => {
+							{this.props.mode !== "search" ? (this.state.followers.map((follower, i) => {
 								return <FollowerListItem key={i}
 														 user={this.props.mode === "from" ? follower.getReceiver() : follower.getSender()}/>;
-							})}
+							})) : (this.state.users.map((user, i) => {
+								return <FollowerListItem key={i} user={user}/>;
+							}))}
 						</Row>
 					</ul>
 				</InfiniteScroll>;
