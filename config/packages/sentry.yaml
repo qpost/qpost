@@ -10,3 +10,4 @@ sentry:
         release: '%env(VERSION)%'
         excluded_exceptions:
             - Symfony\Component\Security\Core\Exception\AccessDeniedException
+            - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
