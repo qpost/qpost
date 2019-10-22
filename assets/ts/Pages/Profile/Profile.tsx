@@ -48,6 +48,7 @@ import NightMode from "../../NightMode/NightMode";
 import {setPageTitle} from "../../Util/Page";
 import ProfileDropdown from "./ProfileDropdown";
 import UserBlockedAlert from "../../Component/UserBlockedAlert";
+import FollowersYouKnow from "../../Component/FollowersYouKnow";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -255,6 +256,8 @@ export default class Profile extends Component<any, {
 
 					<RightSidebar>
 						<SidebarStickyContent>
+							<FollowersYouKnow user={this.state.user}/>
+
 							<SuggestedUsers/>
 
 							<SidebarFooter/>
