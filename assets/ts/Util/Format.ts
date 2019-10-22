@@ -29,6 +29,10 @@ export function formatNumberShort(number: number): string {
 	}
 }
 
+export function placeZeroBelowTen(number: number): string {
+	return (number < 10 ? "0" : "") + number;
+}
+
 export function limitString(string: string, length: number, addDots?: boolean) {
 	if (typeof addDots === "undefined") addDots = false;
 

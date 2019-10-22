@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function is_null;
+use function strtotime;
 
 class BirthdayController extends AbstractController {
 	/**
@@ -45,33 +46,44 @@ class BirthdayController extends AbstractController {
 
 		$user = $apiService->getUser();
 		$entityManager = $apiService->getEntityManager();
+		$parameters = $apiService->parameters();
 
-		$date = new DateTime("now"); // TODO
+		if ($parameters->has("date")) {
+			$dateString = $parameters->get("date");
 
-		$limit = new DateTime("now");
-		$limit->add(DateInterval::createFromDateString("30 day"));
+			if (strtotime($dateString)) {
+				$date = new DateTime($dateString);
 
-		$results = [];
+				$limit = new DateTime($dateString);
+				$limit->add(DateInterval::createFromDateString("30 day"));
 
-		$users = $entityManager->getRepository(User::class)->createQueryBuilder("u")
-			->where("u != :user")
-			->innerJoin("u.followers", "f")
-			->where("f.sender = :user")
-			->setParameter("user", $user)
-			->andWhere("u.birthday is not null")
-			->andWhere("DAYOFYEAR(u.birthday) BETWEEN DAYOFYEAR(:date) AND DAYOFYEAR(:limit)")
-			->setParameter("date", $date, Type::DATETIME)
-			->setParameter("limit", $limit, Type::DATETIME)
-			->setMaxResults(5)
-			->setCacheable(true)
-			->getQuery()
-			->getResult();
+				$results = [];
 
-		foreach ($users as $u) {
-			if (!$apiService->mayView($u)) continue;
-			$results[] = $apiService->serialize($u);
+				$users = $entityManager->getRepository(User::class)->createQueryBuilder("u")
+					->where("u != :user")
+					->innerJoin("u.followers", "f")
+					->where("f.sender = :user")
+					->setParameter("user", $user)
+					->andWhere("u.birthday is not null")
+					->andWhere("DAYOFYEAR(u.birthday) BETWEEN DAYOFYEAR(:date) AND DAYOFYEAR(:limit)")
+					->setParameter("date", $date, Type::DATETIME)
+					->setParameter("limit", $limit, Type::DATETIME)
+					->setMaxResults(5)
+					->setCacheable(true)
+					->getQuery()
+					->getResult();
+
+				foreach ($users as $u) {
+					if (!$apiService->mayView($u)) continue;
+					$results[] = $apiService->serialize($u);
+				}
+
+				return $apiService->json(["results" => $results]);
+			} else {
+				return $apiService->json(["error" => "The date must be a valid date."], 400);
+			}
+		} else {
+			return $apiService->json(["error" => "'date' is required."], 400);
 		}
-
-		return $apiService->json(["results" => $results]);
 	}
 }

@@ -28,6 +28,7 @@ import "antd/es/spin/style";
 import {Card} from "antd";
 import Auth from "../Auth/Auth";
 import TimeAgo from "./TimeAgo";
+import {placeZeroBelowTen} from "../Util/Format";
 
 export default class UpcomingBirthdays extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -41,7 +42,11 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 
 	componentDidMount(): void {
 		if (Auth.isLoggedIn()) {
-			API.handleRequest("/birthdays", "GET", {}, (data => {
+			const now = new Date();
+
+			API.handleRequest("/birthdays", "GET", {
+				date: now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDay())
+			}, (data => {
 				if (data["results"]) {
 					const results: User[] = [];
 
