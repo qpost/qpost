@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function filter_var;
 use function strlen;
 
@@ -143,15 +144,12 @@ class RegisterController extends AbstractController {
 																						$this->renderView("emails/register.html.twig", [
 																							"username" => $username,
 																							"displayName" => $username,
-																							"verificationLink" => "" // TODO
+																							"verificationLink" => $this->generateUrl("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
 																						]),
 																						"text/html"
 																					);
 
 																				if ($mailer->send($message) !== 0) {
-																					$entityManager->persist($user);
-																					$entityManager->flush();
-
 																					$this->addFlash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
 																				} else {
 																					$this->addFlash(FlashMessageType::ERROR, "Your email address could not be verified.");
