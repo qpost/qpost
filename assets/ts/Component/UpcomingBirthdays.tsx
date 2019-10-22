@@ -45,7 +45,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 			const now = new Date();
 
 			API.handleRequest("/birthdays", "GET", {
-				date: now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDay())
+				date: now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDate())
 			}, (data => {
 				if (data["results"]) {
 					const results: User[] = [];
