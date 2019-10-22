@@ -29,6 +29,7 @@ import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import DummyPostForm from "../../Component/PostForm/DummyPostForm";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
+import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
 
 export default class HomeFeed extends Component<any, any> {
 	componentDidMount(): void {
@@ -57,6 +58,7 @@ export default class HomeFeed extends Component<any, any> {
 				<RightSidebar>
 					<SidebarStickyContent>
 						<SuggestedUsers/>
+						<UpcomingBirthdays/>
 
 						<SidebarFooter/>
 					</SidebarStickyContent>

@@ -1,4 +1,7 @@
 {
+    "beberlei/doctrineextensions": {
+        "version": "v1.2.3"
+    },
     "dereuromark/media-embed": {
         "version": "0.5.1"
     },

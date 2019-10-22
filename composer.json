@@ -8,6 +8,7 @@
         "ext-iconv": "^7.2",
         "ext-json": "^1.6",
         "ext-mysqli": "^7.2",
+        "beberlei/doctrineextensions": "^1.2",
         "dereuromark/media-embed": "^0.5.1",
         "doctrine/annotations": "^1.7",
         "gumlet/php-image-resize": "^1.9",

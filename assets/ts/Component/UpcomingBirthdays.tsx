@@ -22,15 +22,14 @@ import {Link} from "react-router-dom";
 import User from "../Entity/Account/User";
 import API from "../API/API";
 import BaseObject from "../Serialization/BaseObject";
-import FollowButton from "./FollowButton";
 import VerifiedBadge from "./VerifiedBadge";
 import Spin from "antd/es/spin";
 import "antd/es/spin/style";
-import FollowStatus from "../Util/FollowStatus";
 import {Card} from "antd";
 import Auth from "../Auth/Auth";
+import TimeAgo from "./TimeAgo";
 
-export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
+export default class UpcomingBirthdays extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
 		super(props);
 
@@ -42,7 +41,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 
 	componentDidMount(): void {
 		if (Auth.isLoggedIn()) {
-			API.handleRequest("/user/suggested", "GET", {}, (data => {
+			API.handleRequest("/birthdays", "GET", {}, (data => {
 				if (data["results"]) {
 					const results: User[] = [];
 
@@ -64,17 +63,20 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 				<Spin size={"large"}/>
 			</div>
 		} else if (this.state.results.length > 0) {
-			return <Card title={"Suggested"} size={"small"} className={"mb-3"}>
+			return <Card title={"Upcoming birthdays"} size={"small"} className={"mb-3"}>
 				<div className="tab-content" id="users-tablist-content">
-					{this.state.results.map((suggestedUser, i) => {
+					{this.state.results.map((user, i) => {
+						const birthday = new Date(user.getBirthday());
+						birthday.setFullYear(new Date().getFullYear());
+
 						return <div className="my-1" style={{height: "70px"}} key={i}>
-							<Link to={"/profile/" + suggestedUser.getUsername()} className="clearUnderline float-left">
-								<img src={suggestedUser.getAvatarURL()} width="64" height="64" className="rounded"
-									 alt={suggestedUser.getUsername()}/>
+							<Link to={"/profile/" + user.getUsername()} className="clearUnderline float-left">
+								<img src={user.getAvatarURL()} width="64" height="64" className="rounded"
+									 alt={user.getUsername()}/>
 							</Link>
 
 							<div className="ml-2 float-left">
-								<Link to={"/profile/" + suggestedUser.getUsername()} className="clearUnderline">
+								<Link to={"/profile/" + user.getUsername()} className="clearUnderline">
 									<div className="float-left mt-1"
 										 style={{
 											 maxWidth: "220px",
@@ -84,15 +86,20 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 											 wordWrap: "normal"
 										 }}>
 										<span
-											className={"font-weight-bold"}>{suggestedUser.getDisplayName()}</span><VerifiedBadge
-										target={suggestedUser}/> <span
-										className={"text-muted small"}>@{suggestedUser.getUsername()}</span>
+											className={"font-weight-bold"}>{user.getDisplayName()}</span><VerifiedBadge
+										target={user}/> <span
+										className={"text-muted small"}>@{user.getUsername()}</span>
 									</div>
 									<br/>
 								</Link>
 
-								<FollowButton target={suggestedUser} className={"mt-0 btn-sm"}
-											  followStatus={FollowStatus.NOT_FOLLOWING}/>
+								<div style={{
+									fontSize: "16px",
+									marginTop: "8px"
+								}}>
+									<i className={"far fa-clock"}/> <TimeAgo time={birthday.toUTCString()}
+																			 short={true}/>
+								</div>
 							</div>
 						</div>
 					})}
