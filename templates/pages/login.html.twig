@@ -11,7 +11,8 @@
 					<form action="{{ path("qpost_login_index") }}" method="post">
 						{% include "parts/csrf.html.twig" %}
 						<input type="text" class="form-control mb-2" name="email"
-							   placeholder="Email address or username"{{ _POST["email"] is defined and _POST["email"] ? ' value="'~sanatizeHTMLAttribute(_POST["email"])~'"' }}/>
+							   placeholder="Email address or username"
+							   value="{{ _POST['email'] is defined ? _POST['email'] }}"/>
 						<input type="password" class="form-control mb-2" name="password" placeholder="Password"/>
 						<input type="submit" class="btn btn-block btn-primary" value="Log in"/>
 
