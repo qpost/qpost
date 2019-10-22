@@ -32,7 +32,8 @@ import {Spin} from "antd";
 
 export default class FeedEntryList extends Component<{
 	user?: User,
-	searchQuery?: string
+	searchQuery?: string,
+	disableTask?: boolean
 }, {
 	entries: FeedEntry[] | null,
 	error: string | null,
@@ -66,6 +67,19 @@ export default class FeedEntryList extends Component<{
 		}
 
 		FeedEntryList.instance = null;
+	}
+
+	componentDidUpdate(prevProps: Readonly<{ user?: User; searchQuery?: string }>, prevState: Readonly<{ entries: FeedEntry[] | null; error: string | null; loadingMore: boolean; hasMore: boolean; loadNewTask: any }>, snapshot?: any): void {
+		if (this.props.user !== prevProps.user || this.props.searchQuery !== prevProps.searchQuery) {
+			this.setState({
+				entries: null,
+				error: null,
+				loadingMore: true,
+				hasMore: true
+			});
+
+			this.load();
+		}
 	}
 
 	public prependEntry(feedEntry: FeedEntry): void {
@@ -121,7 +135,7 @@ export default class FeedEntryList extends Component<{
 		if (this.props.searchQuery) {
 			parameters["type"] = "post";
 			parameters["query"] = this.props.searchQuery;
-			if (this.state.entries) parameters["offset"] = this.state.entries.length;
+			if (this.state.entries && this.state.entries.length != 0) parameters["offset"] = this.state.entries.length;
 		}
 
 		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
@@ -140,7 +154,7 @@ export default class FeedEntryList extends Component<{
 	}
 
 	private loadNewTask(): void {
-		if (FeedEntryList.instance !== this || this.props.searchQuery) return;
+		if (FeedEntryList.instance !== this || this.props.searchQuery || this.props.disableTask) return;
 
 		this.setState({
 			loadNewTask: setTimeout(() => {

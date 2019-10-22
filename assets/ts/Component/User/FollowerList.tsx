@@ -63,6 +63,20 @@ export default class FollowerList extends Component<{
 		FollowerList.instance = null;
 	}
 
+	componentDidUpdate(prevProps: Readonly<{ user?: User; mode: "from" | "to" | "search"; query?: string }>, prevState: Readonly<{ followers: Follower[] | null; users: User[] | null; error: string | null; loadingMore: boolean; hasMore: boolean }>, snapshot?: any): void {
+		if (this.props.user !== prevProps.user || this.props.query !== prevProps.query) {
+			this.setState({
+				followers: null,
+				users: null,
+				error: null,
+				loadingMore: true,
+				hasMore: true
+			});
+
+			this.load();
+		}
+	}
+
 	public prependUser(user: Follower): void {
 		const followers: Follower[] = this.state.followers || [];
 
@@ -79,7 +93,7 @@ export default class FollowerList extends Component<{
 		if (max) parameters["max"] = max;
 		if (this.props.mode === "search") {
 			parameters["type"] = "user";
-			if (this.state.users) parameters["offset"] = this.state.users.length;
+			if (this.state.users && this.state.users.length != 0) parameters["offset"] = this.state.users.length;
 		}
 		if (this.props.query) parameters["query"] = this.props.query;
 

@@ -50,8 +50,6 @@ export default class Search extends Component<any, {
 							this.setState({
 								query
 							});
-
-							console.log(query);
 						}} enterButton size={"large"} className={"mb-3"}/>
 
 						{this.state.query !== "" ? <div>
@@ -70,7 +68,8 @@ export default class Search extends Component<any, {
 								</Menu.Item>
 							</Menu>
 
-							{this.state.activeMenuPoint === "POSTS" ? <FeedEntryList searchQuery={this.state.query}/> :
+							{this.state.activeMenuPoint === "POSTS" ?
+								<FeedEntryList searchQuery={this.state.query} disableTask={true}/> :
 								<FollowerList mode={"search"} query={this.state.query}/>}
 						</div> : ""}
 					</Col>
