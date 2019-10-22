@@ -21,6 +21,7 @@ import React, {Component} from "react";
 import Notification from "../../Entity/Feed/Notification";
 import {Card} from "antd";
 import {Link} from "react-router-dom";
+import TimeAgo from "../../Component/TimeAgo";
 
 export default class NewFollowerNotification extends Component<{
 	notification: Notification
@@ -50,7 +51,8 @@ export default class NewFollowerNotification extends Component<{
 						<Link to={"/profile/" + user.getUsername()}
 							  className={"font-weight-bold clearUnderline"}>{user.getDisplayName()}</Link> is now
 						following
-						you.
+						you.<span className={"text-muted ml-2"}><i className="far fa-clock"/> <TimeAgo
+						time={notification.getTime()} short={true}/></span>
 					</p>
 				</div>
 			</div>

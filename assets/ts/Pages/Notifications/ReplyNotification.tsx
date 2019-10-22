@@ -23,6 +23,7 @@ import {Card} from "antd";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
+import TimeAgo from "../../Component/TimeAgo";
 
 export default class ReplyNotification extends Component<{
 	notification: Notification
@@ -43,7 +44,8 @@ export default class ReplyNotification extends Component<{
 																	className={"font-weight-bold clearUnderline"}><img
 					src={user.getAvatarURL()} width={24} height={24} className={"rounded mr-1"}
 					alt={user.getUsername()}/>{user.getDisplayName()}</Link><VerifiedBadge target={user}/> replied to
-					your post.
+					your post.<span className={"text-muted ml-2"}><i className="far fa-clock"/> <TimeAgo
+					time={notification.getTime()} short={true}/></span>
 				</p>
 
 				<hr/>

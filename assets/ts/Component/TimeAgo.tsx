@@ -21,9 +21,17 @@ import React, {Component} from "react";
 import ReactTimeAgo from "react-timeago";
 
 export default class TimeAgo extends Component<{
-	time: string
+	time: string,
+	short?: boolean
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <ReactTimeAgo date={this.props.time}/>;
+		return <ReactTimeAgo date={this.props.time}
+							 formatter={(value: number, unit: string, suffix: string, epochSeconds: number, nextFormatter) => {
+								 if (this.props.short) {
+									 return value + unit.substr(0, 1);
+								 } else {
+									 return nextFormatter();
+								 }
+							 }}/>;
 	}
 }
