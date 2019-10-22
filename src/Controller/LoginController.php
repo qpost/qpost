@@ -83,7 +83,7 @@ class LoginController extends AbstractController {
 
 								if (!is_null($passwordHash) && password_verify($password, $passwordHash)) {
 									if ($user->isEmailActivated()) {
-										if ($user->isSuspended()) {
+										if (!$user->isSuspended()) {
 											$expiry = new DateTime("now");
 											$expiry->add(DateInterval::createFromDateString("6 month"));
 
