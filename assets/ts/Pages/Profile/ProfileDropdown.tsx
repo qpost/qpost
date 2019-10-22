@@ -47,7 +47,7 @@ export default class ProfileDropdown extends Component<{
 						break;
 				}
 			}}>
-				{(!Auth.isLoggedIn() || this.props.user.getId() !== Auth.getCurrentUser().getId()) && !this.props.user.isBlocked() ?
+				{Auth.isLoggedIn() && this.props.user.getId() !== Auth.getCurrentUser().getId() && !this.props.user.isBlocked() ?
 					<Menu.Item key={"1"}>
 					<i className="fas fa-ban iconMargin-10"/>Block {"@" + this.props.user.getUsername()}
 				</Menu.Item> : ""}
