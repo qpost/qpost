@@ -91,7 +91,7 @@ export default class FeedEntryList extends Component<{
 	}
 
 	loadNew() {
-		if (this.state.entries.length === 0) return;
+		if (this.state.entries === null || this.state.entries.length === 0) return;
 
 		const parameters = this.props.user ? {
 			user: this.props.user.getId()
