@@ -21,3 +21,6 @@ monolog:
             handler: deprecation
             max_level: info
             channels: ["php"]
+        sentry:
+            type: service
+            id: Sentry\Monolog\Handler
