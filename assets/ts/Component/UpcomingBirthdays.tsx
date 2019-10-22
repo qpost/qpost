@@ -63,11 +63,18 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 				<Spin size={"large"}/>
 			</div>
 		} else if (this.state.results.length > 0) {
+			const now = new Date();
+
 			return <Card title={"Upcoming birthdays"} size={"small"} className={"mb-3"}>
 				<div className="tab-content" id="users-tablist-content">
 					{this.state.results.map((user, i) => {
 						const birthday = new Date(user.getBirthday());
-						birthday.setFullYear(new Date().getFullYear());
+						birthday.setHours(0);
+						birthday.setMinutes(0);
+						birthday.setSeconds(0);
+						birthday.setFullYear(now.getFullYear());
+
+						const today = birthday.getDay() === now.getDay() && birthday.getMonth() === now.getMonth();
 
 						return <div className="my-1" style={{height: "70px"}} key={i}>
 							<Link to={"/profile/" + user.getUsername()} className="clearUnderline float-left">
@@ -97,8 +104,10 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 									fontSize: "16px",
 									marginTop: "8px"
 								}}>
-									<i className={"far fa-clock"}/> <TimeAgo time={birthday.toUTCString()}
-																			 short={true}/>
+									<i className={"far fa-clock"}/> {today ?
+									<span className={"text-danger font-weight-bold"}>Today</span> :
+									<TimeAgo time={birthday.toUTCString()}
+											 short={true}/>}
 								</div>
 							</div>
 						</div>
