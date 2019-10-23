@@ -46,6 +46,17 @@
 	box-shadow: none;
 }
 
+.ant-calendar-disabled-cell .ant-calendar-date {
+	border: 1px solid #240002;
+	background-color: #380002;
+	color: #ab0002 !important;
+	box-shadow: none;
+
+	&:hover {
+		background-color: #380002 !important;
+	}
+}
+
 .ant-upload {
 	color: #FFF;
 }
