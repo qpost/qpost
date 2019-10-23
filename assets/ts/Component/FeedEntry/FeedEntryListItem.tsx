@@ -79,7 +79,7 @@ export default class FeedEntryListItem extends Component<{
 						<p className={"mb-0 small text-muted"}>
 							<i className={"fas fa-retweet text-primary"}/> <Link to={"/profile/" + user.getUsername()}
 																				 className={"font-weight-bold clearUnderline"}>{user.getDisplayName()}</Link><VerifiedBadge
-							target={user}/> shared
+							target={user}/> shared &middot; <TimeAgo time={entry.getTime()} short={true}/>
 						</p>
 					</div>;
 
