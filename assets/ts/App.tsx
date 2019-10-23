@@ -91,7 +91,9 @@ export default class App extends Component<any, any> {
 			}), (error => {
 				this.setState({
 					error
-				})
+				});
+
+				Auth.logout(false, true);
 			}));
 		}
 	}
