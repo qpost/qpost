@@ -178,6 +178,8 @@ export default class EditProfile extends Component<any, {
 								} else {
 									this.setState({birthday: undefined});
 								}
+							}} disabledDate={current => {
+								return current >= moment().subtract(13, "years");
 							}}/>
 						</Col>
 					</Row>

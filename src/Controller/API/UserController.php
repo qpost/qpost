@@ -108,7 +108,11 @@ class UserController extends AbstractController {
 							if ($parameters->has("birthday")) {
 								$birthday = $parameters->get("birthday");
 
-								if (is_null($birthday) || strtotime($birthday)) {
+								if (is_null($birthday) || ($birthdayTime = strtotime($birthday))) {
+									if (isset($birthdayTime) && $birthdayTime && $birthdayTime > time() - (13 * 365 * 24 * 60 * 60)) {
+										return $apiService->json(["error" => "You have to be at least 13 years old."], 400);
+									}
+
 									$user->setDisplayName($displayName)
 										->setBio(Util::isEmpty($bio) ? null : $bio)
 										->setBirthday(Util::isEmpty($birthday) ? null : new DateTime($birthday));
