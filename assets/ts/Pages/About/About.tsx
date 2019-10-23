@@ -254,6 +254,22 @@ export default class About extends Component<any, any> {
 			{
 				name: "react-linkify",
 				link: "https://github.com/tasti/react-linkify"
+			},
+			{
+				name: "ts-clipboard",
+				link: "https://github.com/gforceg/ts-clipboard"
+			},
+			{
+				name: "@sentry/browser",
+				link: "https://www.npmjs.com/package/@sentry/browser"
+			},
+			{
+				name: "sentry-symfony",
+				link: "https://github.com/getsentry/sentry-symfony"
+			},
+			{
+				name: "DoctrineExtensions",
+				link: "https://github.com/beberlei/DoctrineExtensions"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically
