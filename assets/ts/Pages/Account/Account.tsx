@@ -131,7 +131,7 @@ export default class Account extends Component<any, {
 						<h4>Connections</h4>
 
 						<AccountInfoPart headline={"Current follow requests"}>
-							<Link to={"/requests"}>
+							<Link to={"/account/privacy/requests"}>
 								View All
 							</Link>
 						</AccountInfoPart>

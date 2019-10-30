@@ -233,6 +233,23 @@ class PageController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/account/privacy/requests")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return RedirectResponse|Response
+	 */
+	public function accountPrivacyRequests(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if ($authService->isAuthorized()) {
+			return $this->render("react.html.twig", Twig::param());
+		} else {
+			return $this->redirect($this->generateUrl("qpost_login_index"));
+		}
+	}
+
+	/**
 	 * @Route("/account/sessions")
 	 *
 	 * @param Request $request

@@ -55,6 +55,7 @@ import DesktopNotifications from "./DesktopNotifications";
 import StatusRedirect from "./Pages/Status/StatusRedirect";
 import Search from "./Pages/Search/Search";
 import PrivacyLevel from "./Pages/Account/PrivacyLevel";
+import FollowRequests from "./Pages/Account/FollowRequests";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -139,6 +140,8 @@ export default class App extends Component<any, any> {
 															  component={Blocked}/>
 												<PrivateRoute path={"/account/privacy/level"} exact
 															  component={PrivacyLevel}/>
+												<PrivateRoute path={"/account/privacy/requests"} exact
+															  component={FollowRequests}/>
 												<PrivateRoute path={"/account/username"} exact
 															  component={ChangeUsername}/>
 												<PrivateRoute path={"/account"} exact component={Account}/>

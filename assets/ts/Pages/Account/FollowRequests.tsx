@@ -18,11 +18,9 @@
  */
 
 import React, {Component} from "react";
-import {Row} from "antd";
-import PrivacyHomeIcon from "./PrivacyHomeIcon";
 import AccountBase from "./AccountBase";
 
-export default class Privacy extends Component<any, any> {
+export default class FollowRequests extends Component<any, any> {
 	constructor(props) {
 		super(props);
 
@@ -31,17 +29,7 @@ export default class Privacy extends Component<any, any> {
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <AccountBase activeKey={"PRIVACY"}>
-			<Row gutter={24}>
-				<PrivacyHomeIcon iconClass={"fas fa-sliders-h"} title={"Privacy level"}
-								 description={"Change who may view your content."} path={"/account/privacy/level"}/>
-				<PrivacyHomeIcon iconClass={"fas fa-globe"} title={"Sessions"}
-								 description={"Manage where you are logged into qpost."} path={"/account/sessions"}/>
-				<PrivacyHomeIcon iconClass={"fas fa-ban"} title={"Blocked"}
-								 description={"Manage the users you have blocked."} path={"/account/privacy/blocked"}/>
-				<PrivacyHomeIcon iconClass={"fas fa-info"} title={"Follow requests"}
-								 description={"Manage the follow requests you have sent or received."}
-								 path={"/account/privacy/requests"}/>
-			</Row>
+			requests
 		</AccountBase>;
 	}
 }
