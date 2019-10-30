@@ -67,7 +67,10 @@ class NotificationsController extends AbstractController {
 
 		$results = [];
 		foreach ($notifications as $notification) {
-			$results[] = $apiService->serialize($notification);
+			$referencedUser = $notification->getReferencedUser();
+			if ($referencedUser && $apiService->mayView($referencedUser)) {
+				$results[] = $apiService->serialize($notification);
+			}
 
 			$notification->setSeen(true);
 			$entityManager->persist($notification);
