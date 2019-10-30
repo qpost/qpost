@@ -181,6 +181,19 @@ class APIService extends AuthorizationService {
 		if (!$user) $user = $this->getUser();
 
 		if ($target instanceof FeedEntry) {
+			$targetUser = $target->getUser();
+			if ($targetUser && $targetUser->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
+				if ($user) {
+					if ($user->getId() === $targetUser->getId()) {
+						return true;
+					} else {
+						return $this->isFollowing($user, $targetUser);
+					}
+				} else {
+					return false;
+				}
+			}
+
 			return $this->mayView($target->getUser(), $user);
 		} else if ($target instanceof User) {
 			// self check
@@ -194,8 +207,6 @@ class APIService extends AuthorizationService {
 			if ($target->getPrivacyLevel() === PrivacyLevel::CLOSED) {
 				return false;
 			}
-
-			// TODO: PRIVATE PrivacyLevel check
 
 			// suspension check
 			if ($target->isSuspended()) {
@@ -212,6 +223,15 @@ class APIService extends AuthorizationService {
 		} else {
 			return true;
 		}
+	}
+
+	/**
+	 * @param User $from
+	 * @param User $to
+	 * @return bool
+	 */
+	public function isFollowing(User $from, User $to): bool {
+		return $this->entityManager->getRepository(Follower::class)->isFollowing($from, $to);
 	}
 
 	/**
