@@ -109,23 +109,27 @@ class FeedController extends AbstractController {
 				]);
 
 				if (!is_null($user) && $apiService->mayView($user)) {
-					$results = [];
+					if ($this->privacyLevelCheck($apiService, $apiService->getUser(), $user)) {
+						$results = [];
 
-					/**
-					 * @var FeedEntry[] $feedEntries
-					 */
-					$feedEntries = $this->profileFeedQuery($apiService, $user)
-						->andWhere("f.id < :id")
-						->setParameter("id", $parameters->get("max"), Type::INTEGER)
-						->getQuery()
-						->getResult();
+						/**
+						 * @var FeedEntry[] $feedEntries
+						 */
+						$feedEntries = $this->profileFeedQuery($apiService, $user)
+							->andWhere("f.id < :id")
+							->setParameter("id", $parameters->get("max"), Type::INTEGER)
+							->getQuery()
+							->getResult();
 
-					foreach ($feedEntries as $feedEntry) {
-						if (!$apiService->mayView($feedEntry)) continue;
-						array_push($results, $apiService->serialize($feedEntry));
+						foreach ($feedEntries as $feedEntry) {
+							if (!$apiService->mayView($feedEntry)) continue;
+							array_push($results, $apiService->serialize($feedEntry));
+						}
+
+						return $apiService->json(["results" => $results]);
+					} else {
+						return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
 					}
-
-					return $apiService->json(["results" => $results]);
 				} else {
 					return $apiService->json(["error" => "The requested user could not be found."], 404);
 				}
@@ -145,21 +149,25 @@ class FeedController extends AbstractController {
 			]);
 
 			if (!is_null($user) && $apiService->mayView($user)) {
-				$results = [];
+				if ($this->privacyLevelCheck($apiService, $apiService->getUser(), $user)) {
+					$results = [];
 
-				/**
-				 * @var FeedEntry[] $feedEntries
-				 */
-				$feedEntries = $this->profileFeedQuery($apiService, $user)
-					->getQuery()
-					->getResult();
+					/**
+					 * @var FeedEntry[] $feedEntries
+					 */
+					$feedEntries = $this->profileFeedQuery($apiService, $user)
+						->getQuery()
+						->getResult();
 
-				foreach ($feedEntries as $feedEntry) {
-					if (!$apiService->mayView($feedEntry)) continue;
-					array_push($results, $apiService->serialize($feedEntry));
+					foreach ($feedEntries as $feedEntry) {
+						if (!$apiService->mayView($feedEntry)) continue;
+						array_push($results, $apiService->serialize($feedEntry));
+					}
+
+					return $apiService->json(["results" => $results]);
+				} else {
+					return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
 				}
-
-				return $apiService->json(["results" => $results]);
 			} else {
 				return $apiService->json(["error" => "The requested user could not be found."], 404);
 			}
@@ -176,23 +184,27 @@ class FeedController extends AbstractController {
 			]);
 
 			if (!is_null($user) && $apiService->mayView($user)) {
-				$results = [];
+				if ($this->privacyLevelCheck($apiService, $apiService->getUser(), $user)) {
+					$results = [];
 
-				/**
-				 * @var FeedEntry[] $feedEntries
-				 */
-				$feedEntries = $this->profileFeedQuery($apiService, $user)
-					->andWhere("f.id > :id")
-					->setParameter("id", $parameters->get("min"), Type::INTEGER)
-					->getQuery()
-					->getResult();
+					/**
+					 * @var FeedEntry[] $feedEntries
+					 */
+					$feedEntries = $this->profileFeedQuery($apiService, $user)
+						->andWhere("f.id > :id")
+						->setParameter("id", $parameters->get("min"), Type::INTEGER)
+						->getQuery()
+						->getResult();
 
-				foreach ($feedEntries as $feedEntry) {
-					if (!$apiService->mayView($feedEntry)) continue;
-					array_push($results, $apiService->serialize($feedEntry));
+					foreach ($feedEntries as $feedEntry) {
+						if (!$apiService->mayView($feedEntry)) continue;
+						array_push($results, $apiService->serialize($feedEntry));
+					}
+
+					return $apiService->json(["results" => $results]);
+				} else {
+					return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
 				}
-
-				return $apiService->json(["results" => $results]);
 			} else {
 				return $apiService->json(["error" => "The requested user could not be found."], 404);
 			}
@@ -223,6 +235,18 @@ class FeedController extends AbstractController {
 		} else {
 			return $apiService->json(["error" => "Bad request"], 400);
 		}
+	}
+
+	private function privacyLevelCheck(APIService $apiService, User $from, User $to): bool {
+		if ($to->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
+			if ($from) {
+				return $from->getId() === $to->getId() || $apiService->isFollowing($from, $to);
+			}
+
+			return false;
+		}
+
+		return true;
 	}
 
 	private function homeFeedQuery(APIService $apiService, User $currentUser): QueryBuilder {

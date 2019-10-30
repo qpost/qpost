@@ -39,7 +39,8 @@ export default class FeedEntryList extends Component<{
 	error: string | null,
 	loadingMore: boolean,
 	hasMore: boolean,
-	loadNewTask: any
+	loadNewTask: any,
+	privateWarning: boolean
 }> {
 	public static instance: FeedEntryList | null = null;
 
@@ -51,14 +52,14 @@ export default class FeedEntryList extends Component<{
 			error: null,
 			loadingMore: false,
 			hasMore: true,
-			loadNewTask: null
+			loadNewTask: null,
+			privateWarning: false
 		}
 	}
 
 	componentDidMount(): void {
 		FeedEntryList.instance = this;
 		this.load();
-		this.loadNewTask();
 	}
 
 	componentWillUnmount(): void {
@@ -148,8 +149,14 @@ export default class FeedEntryList extends Component<{
 				loadingMore: false,
 				hasMore: data.results.length === 0 ? false : this.state.hasMore
 			});
+
+			this.loadNewTask();
 		}, error => {
-			this.setState({error, loadingMore: false, hasMore: false});
+			if (error === "You are not allowed to view this resource.") {
+				this.setState({error, loadingMore: false, hasMore: false, privateWarning: true});
+			} else {
+				this.setState({error, loadingMore: false, hasMore: false});
+			}
 		});
 	}
 
@@ -177,6 +184,14 @@ export default class FeedEntryList extends Component<{
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		if (this.state.privateWarning) {
+			return <div className={"text-center my-5"}>
+				<h4>This user has set their profile private.</h4>
+
+				<p>You need to be a follower to view their posts.</p>
+			</div>;
+		}
+
 		if (this.state.entries !== null) {
 			if (this.state.entries.length > 0) {
 				return <InfiniteScroll
