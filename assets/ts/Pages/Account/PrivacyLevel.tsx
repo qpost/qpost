@@ -19,17 +19,81 @@
 
 import React, {Component} from "react";
 import AccountBase from "./AccountBase";
+import Auth from "../../Auth/Auth";
+import Level from "../../Entity/Account/PrivacyLevel";
+import {Button, Card, message, Radio} from "antd";
+import "antd/es/radio/style";
+import ReturnHeader from "../../Component/ReturnHeader";
+import API from "../../API/API";
+import BaseObject from "../../Serialization/BaseObject";
+import User from "../../Entity/Account/User";
 
-export default class PrivacyLevel extends Component<any, any> {
+export default class PrivacyLevel extends Component<any, {
+	privacyLevel: string,
+	loading: boolean
+}> {
 	constructor(props) {
 		super(props);
 
-		this.state = {};
+		this.state = {
+			privacyLevel: Auth.getCurrentUser().getPrivacyLevel(),
+			loading: false
+		};
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		const radioStyle = {
+			display: "block",
+			height: "30px",
+			lineHeight: "30px"
+		};
+
 		return <AccountBase activeKey={"PRIVACY"}>
-			privacy level
+			<ReturnHeader className={"mb-2"}/>
+
+			<Card size={"small"} title={"Privacy level"}>
+				<div className={"mb-3"}>
+					<Radio.Group onChange={(e) => {
+						const newLevel = e.target.value;
+
+						this.setState({
+							privacyLevel: newLevel
+						});
+					}} value={this.state.privacyLevel}>
+						<Radio style={radioStyle} value={Level.PUBLIC}>
+							<b>Public</b> - everyone can see your profile and interact with your content
+						</Radio>
+
+						<Radio style={radioStyle} value={Level.PRIVATE}>
+							<b>Private</b> - only your followers can see your profile and interact with your content,
+							new followers have to be confirmed
+						</Radio>
+
+						<Radio style={radioStyle} value={Level.CLOSED}>
+							<b>Closed</b> - only you can see your profile, nobody can interact with your content
+						</Radio>
+					</Radio.Group>
+				</div>
+
+				<Button type={"primary"} loading={this.state.loading} onClick={(e) => {
+					if (!this.state.loading) {
+						this.setState({loading: true});
+
+						API.handleRequest("/privacyLevel", "POST", {
+							level: this.state.privacyLevel
+						}, data => {
+							Auth.setCurrentUser(BaseObject.convertObject(User, data.result));
+
+							this.setState({loading: false});
+							message.success("The changes have been saved.");
+						}, error => {
+							this.setState({loading: false});
+
+							message.error(error);
+						});
+					}
+				}}>Save changes</Button>
+			</Card>
 		</AccountBase>;
 	}
 }
