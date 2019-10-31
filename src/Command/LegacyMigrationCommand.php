@@ -28,6 +28,7 @@ use mysqli;
 use Psr\Log\LoggerInterface;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\MediaFileType;
+use qpost\Entity\Favorite;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Follower;
 use qpost\Entity\MediaFile;
@@ -69,6 +70,7 @@ class LegacyMigrationCommand extends Command {
 		$mediaRepository = $this->entityManager->getRepository(MediaFile::class);
 		$feedRepository = $this->entityManager->getRepository(FeedEntry::class);
 		$followerRepository = $this->entityManager->getRepository(Follower::class);
+		$favoriteRepository = $this->entityManager->getRepository(Favorite::class);
 
 		switch ($type) {
 			case "users":
@@ -321,20 +323,41 @@ class LegacyMigrationCommand extends Command {
 				$db->close();
 
 				break;
-			case "followrequests":
+			case "favorites":
 				$db = $this->db();
 
-				$db->close();
+				$stmt = $db->prepare("SELECT * FROM `favorites` ORDER BY `time` ASC");
+				if ($stmt->execute()) {
+					$result = $stmt->get_result();
 
-				break;
-			case "notifications":
-				$db = $this->db();
+					if ($result->num_rows) {
+						while ($row = $result->fetch_assoc()) {
+							$user = $row["user"];
+							$post = $row["post"];
+							$time = $row["time"];
 
-				$db->close();
+							$userObject = $userRepository->findOneBy(["id" => $user]);
+							$postObject = $feedRepository->findOneBy(["id" => $post]);
+							if (!$userObject || !$postObject) continue;
 
-				break;
-			case "suspensions":
-				$db = $this->db();
+							if ($favoriteRepository->count(["user" => $userObject, "feedEntry" => $postObject]) === 0) {
+								$output->writeln("#" . $user . " - " . $post);
+
+								$favorite = (new Favorite())
+									->setUser($userObject)
+									->setFeedEntry($postObject)
+									->setTime(new DateTime($time));
+
+								$this->entityManager->persist($favorite);
+								$this->entityManager->flush();
+							} else {
+								$output->writeln("Skipping.");
+							}
+						}
+					}
+				}
+
+				$stmt->close();
 
 				$db->close();
 
