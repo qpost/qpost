@@ -29,7 +29,6 @@ use function filemtime;
 use function glob;
 use function strlen;
 use function substr;
-use function uasort;
 
 class Twig {
 	public static function param($parameters = []): array {
@@ -65,7 +64,7 @@ class Twig {
 		$results = glob(__DIR__ . "/../../public/build/bundle*.js");
 		if ($results && count($results) > 0) {
 			if (count($results) > 1) {
-				uasort($results, function ($a, $b) {
+				usort($results, function ($a, $b) {
 					$aTime = filemtime($a);
 					$bTime = filemtime($b);
 
