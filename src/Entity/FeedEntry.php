@@ -41,9 +41,9 @@ use function is_null;
  * })
  */
 class FeedEntry {
-	// @ORM\GeneratedValue()
 	/**
 	 * @ORM\Id()
+	 * @ORM\GeneratedValue()
 	 * @ORM\Column(type="integer")
 	 */
 	private $id;
