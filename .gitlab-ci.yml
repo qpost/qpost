@@ -10,6 +10,8 @@ cache:
     paths:
     - ~/.ssh/
     - vendor/
+    - node_modules
+    - public/build
 
 deploy:
     stage: deploy
