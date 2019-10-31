@@ -37,8 +37,6 @@ deploy:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - git submodule update --depth 50
-    - composer install --no-dev
-    - composer dump-autoload -o
     - npm i
     - npm run build
     - rsync -avze ssh --exclude=.git --exclude=.env.local --exclude=var ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/
