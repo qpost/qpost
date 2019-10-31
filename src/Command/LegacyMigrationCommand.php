@@ -141,6 +141,64 @@ class LegacyMigrationCommand extends Command {
 				$db->close();
 
 				break;
+			case "media":
+				$db = $this->db();
+
+				$stmt = $db->prepare("SELECT * FROM `media` ORDER BY `time` ASC");
+				if ($stmt->execute()) {
+					$result = $stmt->get_result();
+
+					if ($result->num_rows) {
+						while ($row = $result->fetch_assoc()) {
+							$id = $row["id"];
+							$sha256 = $row["sha256"];
+							$url = $row["url"];
+							$originalUploader = $row["originalUploader"];
+							$type = $row["type"];
+							$time = $row["time"];
+
+							$output->writeln("#" . $id);
+							if ($mediaRepository->count(["id" => $id]) === 0) {
+								if ($type === MediaFileType::VIDEO) {
+									$mediaEmbed = new MediaEmbed();
+
+									$mediaObject = $mediaEmbed->parseUrl($url);
+
+									if ($mediaObject) {
+										$mediaObject->setParam("autoplay", "false");
+
+										$url = str_replace("&amp;", "&", $mediaObject->getEmbedSrc());
+									}
+								}
+
+								if ($mediaRepository->count(["url" => $url]) === 0) {
+									$file = (new MediaFile())
+										->setId($id)
+										->setSHA256($sha256)
+										->setURL($url)
+										->setType($type)
+										->setTime(new DateTime($time))
+										->setOriginalUploader($userRepository->findOneBy(["id" => $originalUploader]));
+
+									$this->entityManager->persist($file);
+									$this->entityManager->flush();
+								} else {
+									$output->writeln("Skipping.");
+								}
+							} else {
+								$output->writeln("Skipping.");
+							}
+
+							$this->entityManager->flush();
+						}
+					}
+				}
+
+				$stmt->close();
+
+				$db->close();
+
+				break;
 			case "feed":
 				$db = $this->db();
 
@@ -227,64 +285,6 @@ class LegacyMigrationCommand extends Command {
 				break;
 			case "followrequests":
 				$db = $this->db();
-
-				$db->close();
-
-				break;
-			case "media":
-				$db = $this->db();
-
-				$stmt = $db->prepare("SELECT * FROM `media` ORDER BY `time` ASC");
-				if ($stmt->execute()) {
-					$result = $stmt->get_result();
-
-					if ($result->num_rows) {
-						while ($row = $result->fetch_assoc()) {
-							$id = $row["id"];
-							$sha256 = $row["sha256"];
-							$url = $row["url"];
-							$originalUploader = $row["originalUploader"];
-							$type = $row["type"];
-							$time = $row["time"];
-
-							$output->writeln("#" . $id);
-							if ($mediaRepository->count(["id" => $id]) === 0) {
-								if ($type === MediaFileType::VIDEO) {
-									$mediaEmbed = new MediaEmbed();
-
-									$mediaObject = $mediaEmbed->parseUrl($url);
-
-									if ($mediaObject) {
-										$mediaObject->setParam("autoplay", "false");
-
-										$url = str_replace("&amp;", "&", $mediaObject->getEmbedSrc());
-									}
-								}
-
-								if ($mediaRepository->count(["url" => $url]) === 0) {
-									$file = (new MediaFile())
-										->setId($id)
-										->setSHA256($sha256)
-										->setURL($url)
-										->setType($type)
-										->setTime(new DateTime($time))
-										->setOriginalUploader($userRepository->findOneBy(["id" => $originalUploader]));
-
-									$this->entityManager->persist($file);
-									$this->entityManager->flush();
-								} else {
-									$output->writeln("Skipping.");
-								}
-							} else {
-								$output->writeln("Skipping.");
-							}
-
-							$this->entityManager->flush();
-						}
-					}
-				}
-
-				$stmt->close();
 
 				$db->close();
 
