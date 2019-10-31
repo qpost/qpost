@@ -237,7 +237,7 @@ class FeedController extends AbstractController {
 		}
 	}
 
-	private function privacyLevelCheck(APIService $apiService, User $from, User $to): bool {
+	private function privacyLevelCheck(APIService $apiService, ?User $from, User $to): bool {
 		if ($to->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
 			if ($from) {
 				return $from->getId() === $to->getId() || $apiService->isFollowing($from, $to);
