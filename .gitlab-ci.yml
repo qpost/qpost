@@ -25,6 +25,9 @@ deploy:
     - 'which php7-gmp || apk add php7-gmp'
     - 'which php7-gd || apk add php7-gd'
     - 'which php7-mbstring || apk add php7-mbstring'
+    - 'which php7-pdo || apk add php7-pdo'
+    - 'which php7-tokenizer || apk add php7-tokenizer'
+    - 'which php7-xml || apk add php7-xml'
     - 'which composer || apk add composer'
     - 'which npm || apk add npm'
     - eval $(ssh-agent -s)
