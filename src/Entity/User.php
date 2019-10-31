@@ -38,9 +38,9 @@ use function is_null;
  * @ORM\Table(indexes={@ORM\Index(columns={"display_name"}),@ORM\Index(columns={"email"}),@ORM\Index(columns={"birthday"}),@ORM\Index(columns={"privacy_level"}),@ORM\Index(columns={"verified"})})
  */
 class User {
+	// @ORM\GeneratedValue(strategy="AUTO")
 	/**
 	 * @ORM\Id()
-	 * @ORM\GeneratedValue()
 	 * @ORM\Column(type="integer")
 	 */
 	private $id;
@@ -236,6 +236,16 @@ class User {
 	 */
 	public function getId(): ?int {
 		return $this->id;
+	}
+
+	/**
+	 * @param int|null $id
+	 * @return $this
+	 */
+	public function setId(?int $id): self {
+		$this->id = $id;
+
+		return $this;
 	}
 
 	/**

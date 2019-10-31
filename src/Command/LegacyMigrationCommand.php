@@ -20,10 +20,13 @@
 
 namespace qpost\Command;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use mysqli;
 use Psr\Log\LoggerInterface;
+use qpost\Entity\User;
+use qpost\Entity\UserGigadriveData;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,6 +59,7 @@ class LegacyMigrationCommand extends Command {
 		switch ($type) {
 			case "users":
 				$db = $this->db();
+				$userRepository = $this->entityManager->getRepository(User::class);
 
 				$stmt = $db->prepare("SELECT * FROM `users` ORDER BY `time` ASC");
 				if ($stmt->execute()) {
@@ -82,6 +86,42 @@ class LegacyMigrationCommand extends Command {
 							$lastUsernameChange = $row["lastUsernameChange"];
 
 							$output->writeln("#" . $id . " - " . $username);
+							if ($userRepository->count(["id" => $id]) === 0) {
+								$user = (new User())
+									->setId($id)
+									->setUsername($username)
+									->setDisplayName($displayName)
+									->setPassword($password)
+									->setEmail($email)
+									->setAvatar($avatar)
+									->setBio($bio)
+									->setBirthday($birthday ? new DateTime($birthday) : null)
+									->setPrivacyLevel($privacyLevel)
+									->setTime(new DateTime($time))
+									->setEmailActivated($emailActivated)
+									->setEmailActivationToken($emailActivationToken)
+									->setVerified($verified)
+									->setLastUsernameChange($lastUsernameChange ? new DateTime($lastUsernameChange) : null);
+
+								if ($gigadriveId) {
+									$now = new DateTime("now");
+
+									$gigadriveData = (new UserGigadriveData())
+										->setAccountId($gigadriveId)
+										->setLastUpdate($now)
+										->setJoinDate($gigadriveJoinDate ? new DateTime($gigadriveJoinDate) : $now)
+										->setToken($token);
+
+									$gigadriveData->setUser($user);
+								}
+
+								$this->entityManager->persist($user);
+								$this->entityManager->flush();
+							} else {
+								$output->writeln("Skipping.");
+							}
+
+							$this->entityManager->flush();
 						}
 					}
 				}
