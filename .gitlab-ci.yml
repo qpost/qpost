@@ -28,6 +28,7 @@ deploy:
     - 'which php7-pdo || apk add php7-pdo'
     - 'which php7-tokenizer || apk add php7-tokenizer'
     - 'which php7-xml || apk add php7-xml'
+    - 'which php7-mysqli || apk add php7-mysqli'
     - 'which composer || apk add composer'
     - 'which npm || apk add npm'
     - eval $(ssh-agent -s)
