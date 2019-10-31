@@ -128,7 +128,7 @@ class IpStackService {
 					if (isset($data["region_code"])) $ipStackResult->setRegionCode($data["region_code"]);
 					if (isset($data["region_name"])) $ipStackResult->setRegionName($data["region_name"]);
 					if (isset($data["city"])) $ipStackResult->setCity($data["city"]);
-					if (isset($data["zip"])) $ipStackResult->setZipCode($data["zip"]);
+					if (isset($data["zip"])) $ipStackResult->setZipCode((int)$data["zip"]);
 					if (isset($data["latitude"])) $ipStackResult->setLatitude($data["latitude"]);
 					if (isset($data["longitude"])) $ipStackResult->setLongitude($data["longitude"]);
 
