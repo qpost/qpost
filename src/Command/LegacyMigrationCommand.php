@@ -57,29 +57,43 @@ class LegacyMigrationCommand extends Command {
 			case "users":
 				$db = $this->db();
 
+				$db->close();
+
 				break;
 			case "feed":
 				$db = $this->db();
+
+				$db->close();
 
 				break;
 			case "follows":
 				$db = $this->db();
 
+				$db->close();
+
 				break;
 			case "followrequests":
 				$db = $this->db();
+
+				$db->close();
 
 				break;
 			case "media":
 				$db = $this->db();
 
+				$db->close();
+
 				break;
 			case "notifications":
 				$db = $this->db();
 
+				$db->close();
+
 				break;
 			case "suspensions":
 				$db = $this->db();
+
+				$db->close();
 
 				break;
 			default:
