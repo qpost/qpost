@@ -19,11 +19,12 @@
 
 import React, {Component} from "react";
 import User from "../../Entity/Account/User";
-import {Card, Col} from "antd";
+import {Button, Card, Col} from "antd";
 import {Link} from "react-router-dom";
 import FollowButton from "../FollowButton";
 import Biography from "../Biography";
 import VerifiedBadge from "../VerifiedBadge";
+import API from "../../API/API";
 
 const FollowerListItemColProps = {
 	sm: 12
@@ -32,9 +33,33 @@ const FollowerListItemColProps = {
 export {FollowerListItemColProps};
 
 export default class FollowerListItem extends Component<{
-	user: User
-}, any> {
+	user: User,
+	requestId?: number
+}, {
+	clear: boolean
+}> {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			clear: false
+		};
+	}
+
+	respond(accept: boolean): void {
+		this.setState({clear: true});
+
+		API.handleRequest("/followRequest", "DELETE", {
+			id: this.props.requestId,
+			action: accept ? "accept" : "decline"
+		});
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		if (this.state.clear) {
+			return "";
+		}
+
 		const user = this.props.user;
 
 		return <Col {...FollowerListItemColProps}>
@@ -65,6 +90,18 @@ export default class FollowerListItem extends Component<{
 						<FollowButton target={user}/>
 					</div>
 				</div>
+
+				{this.props.requestId ? <div className={"my-3 text-center"}>
+					<Button type={"primary"} onClick={(e) => {
+						e.preventDefault();
+						this.respond(true);
+					}}>Accept</Button>
+
+					<Button type={"danger"} className={"customDangerButton ml-3"} onClick={(e) => {
+						e.preventDefault();
+						this.respond(false);
+					}}>Decline</Button>
+				</div> : ""}
 
 				<Biography user={user}/>
 			</Card>
