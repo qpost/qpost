@@ -57,6 +57,7 @@ import Search from "./Pages/Search/Search";
 import PrivacyLevel from "./Pages/Account/PrivacyLevel";
 import FollowRequests from "./Pages/Account/FollowRequests";
 import ChangePassword from "./Pages/Account/ChangePassword";
+import Analytics from "react-router-ga";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -105,63 +106,69 @@ export default class App extends Component<any, any> {
 		if (this.state.validatedLogin === true) {
 			return (
 				<Router>
-					<div className={"h-100"}>
-						<MobileChecker/>
+					<Analytics id={"UA-57891578-9"}>
+						<div className={"h-100"}>
+							<MobileChecker/>
 
-						{/* SCROLL TO TOP ON ROUTE CHANGE */}
-						<Route component={() => {
-							window.scrollTo(0, 0);
-							return null;
-						}}/>
+							{/* SCROLL TO TOP ON ROUTE CHANGE */}
+							<Route component={() => {
+								window.scrollTo(0, 0);
+								return null;
+							}}/>
 
-						<Layout>
-							<Header/>
+							<Layout>
+								<Header/>
 
-							<Layout.Content className="navMargin mainContent">
-								<div className="legacyCard">
-									<div className="wrapper">
-										<div className="legacyCardBody">
-											<ImageViewer/>
-											<LoginSuggestionModal/>
-											<PostForm/>
-											<BlockModal/>
-											<DesktopNotifications/>
+								<Layout.Content className="navMargin mainContent">
+									<div className="legacyCard">
+										<div className="wrapper">
+											<div className="legacyCardBody">
+												<ImageViewer/>
+												<LoginSuggestionModal/>
+												<PostForm/>
+												<BlockModal/>
+												<DesktopNotifications/>
 
-											<Switch>
-												{Auth.isLoggedIn() ? <Route path={"/"} exact component={HomeFeed}/> :
-													<Route path={"/"} exact component={Home}/>}
+												<Switch>
+													{Auth.isLoggedIn() ?
+														<Route path={"/"} exact component={HomeFeed}/> :
+														<Route path={"/"} exact component={Home}/>}
 
-												<PrivateRoute path={"/edit"} exact component={EditProfile}/>
-												<PrivateRoute path={"/notifications"} exact component={Notifications}/>
-												<PrivateRoute path={"/messages"} exact component={Messages}/>
-												<PrivateRoute path={"/account/sessions"} exact component={Sessions}/>
-												<PrivateRoute path={"/account/delete"} exact component={DeleteAccount}/>
-												<PrivateRoute path={"/account/privacy"} exact component={Privacy}/>
-												<PrivateRoute path={"/account/privacy/blocked"} exact
-															  component={Blocked}/>
-												<PrivateRoute path={"/account/privacy/level"} exact
-															  component={PrivacyLevel}/>
-												<PrivateRoute path={"/account/privacy/requests"} exact
-															  component={FollowRequests}/>
-												<PrivateRoute path={"/account/username"} exact
-															  component={ChangeUsername}/>
-												<PrivateRoute path={"/account/password"} exact
-															  component={ChangePassword}/>
-												<PrivateRoute path={"/account"} exact component={Account}/>
-												<Route path={"/search"} exact component={Search}/>
-												<Route path={"/goodbye"} exact component={Goodbye}/>
-												<Route path={"/about"} exact component={About}/>
-												<Route path={"/r/status/:id"} exact component={StatusRedirect}/>
-												<Route path={"/status/:id"} exact component={Status}/>
-												<Route path={"/profile/:username"} component={ProfileRedirect}/>
-												<Route path={"/:username"} component={Profile}/>
-											</Switch>
+													<PrivateRoute path={"/edit"} exact component={EditProfile}/>
+													<PrivateRoute path={"/notifications"} exact
+																  component={Notifications}/>
+													<PrivateRoute path={"/messages"} exact component={Messages}/>
+													<PrivateRoute path={"/account/sessions"} exact
+																  component={Sessions}/>
+													<PrivateRoute path={"/account/delete"} exact
+																  component={DeleteAccount}/>
+													<PrivateRoute path={"/account/privacy"} exact component={Privacy}/>
+													<PrivateRoute path={"/account/privacy/blocked"} exact
+																  component={Blocked}/>
+													<PrivateRoute path={"/account/privacy/level"} exact
+																  component={PrivacyLevel}/>
+													<PrivateRoute path={"/account/privacy/requests"} exact
+																  component={FollowRequests}/>
+													<PrivateRoute path={"/account/username"} exact
+																  component={ChangeUsername}/>
+													<PrivateRoute path={"/account/password"} exact
+																  component={ChangePassword}/>
+													<PrivateRoute path={"/account"} exact component={Account}/>
+													<Route path={"/search"} exact component={Search}/>
+													<Route path={"/goodbye"} exact component={Goodbye}/>
+													<Route path={"/about"} exact component={About}/>
+													<Route path={"/r/status/:id"} exact component={StatusRedirect}/>
+													<Route path={"/status/:id"} exact component={Status}/>
+													<Route path={"/profile/:username"} component={ProfileRedirect}/>
+													<Route path={"/:username"} component={Profile}/>
+												</Switch>
+											</div>
 										</div>
 									</div>
-								</div>
-							</Layout.Content>
-						</Layout>
-					</div>
+								</Layout.Content>
+							</Layout>
+						</div>
+					</Analytics>
 				</Router>
 			);
 		} else if (this.state.error !== null) {

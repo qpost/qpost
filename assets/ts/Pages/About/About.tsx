@@ -66,7 +66,7 @@ export default class About extends Component<any, any> {
 					<h1 className={"my-3"}>Third-party software</h1>
 
 					<p>
-						qpost utilizes third-party software to run, you can find a list below (last update: October 17th
+						qpost utilizes third-party software to run, you can find a list below (last update: October 31st
 						2019).
 					</p>
 
@@ -270,6 +270,10 @@ export default class About extends Component<any, any> {
 			{
 				name: "DoctrineExtensions",
 				link: "https://github.com/beberlei/DoctrineExtensions"
+			},
+			{
+				name: "react-router-ga",
+				link: "https://github.com/fknussel/react-router-ga"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically

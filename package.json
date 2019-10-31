@@ -50,6 +50,7 @@
 		"react-linkify": "^1.0.0-alpha",
 		"react-router": "^5.0.1",
 		"react-router-dom": "^5.0.1",
+		"react-router-ga": "^1.2.2",
 		"react-scripts-ts": "^4.0.8",
 		"react-timeago": "^4.4.0",
 		"reactstrap": "^8.0.0",
