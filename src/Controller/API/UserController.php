@@ -34,6 +34,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function base64_decode;
+use function count;
 use function dirname;
 use function file_exists;
 use function file_put_contents;
@@ -289,6 +290,8 @@ class UserController extends AbstractController {
 
 		$results = [];
 		for ($i = 0; $i < count($suggestedUsers); $i++) {
+			if (count($results) === 5) break;
+
 			$user = $suggestedUsers[$i];
 			if (!$apiService->mayView($user)) continue;
 			/*if (!$user->mayView($currentUser)) {
