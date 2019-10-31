@@ -23,10 +23,10 @@ import Follower from "../../Entity/Account/Follower";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import InfiniteScroll from "react-infinite-scroller";
-import {Row, Spin} from "antd";
+import {Col, Row, Spin} from "antd";
 import Empty from "antd/es/empty";
 import {Alert} from "reactstrap";
-import FollowerListItem from "./FollowerListItem";
+import FollowerListItem, {FollowerListItemColProps} from "./FollowerListItem";
 import LoadingFollowerListItem from "./LoadingFollowerListItem";
 
 export default class FollowerList extends Component<{
@@ -152,12 +152,27 @@ export default class FollowerList extends Component<{
 				>
 					<ul className={"list-group feedContainer"}>
 						<Row gutter={24}>
-							{this.props.mode !== "search" ? (this.state.followers.map((follower, i) => {
-								return <FollowerListItem key={i}
-														 user={this.props.mode === "from" ? follower.getReceiver() : follower.getSender()}/>;
-							})) : (this.state.users.map((user, i) => {
-								return <FollowerListItem key={i} user={user}/>;
-							}))}
+							<Col {...FollowerListItemColProps}>
+								{this.props.mode !== "search" ? (this.state.followers.map((follower, i) => {
+									if (i % 2) return "";
+
+									return <FollowerListItem key={i}
+															 user={this.props.mode === "from" ? follower.getReceiver() : follower.getSender()}/>;
+								})) : (this.state.users.map((user, i) => {
+									return <FollowerListItem key={i} user={user}/>;
+								}))}
+							</Col>
+
+							<Col {...FollowerListItemColProps}>
+								{this.props.mode !== "search" ? (this.state.followers.map((follower, i) => {
+									if (!(i % 2)) return "";
+
+									return <FollowerListItem key={i}
+															 user={this.props.mode === "from" ? follower.getReceiver() : follower.getSender()}/>;
+								})) : (this.state.users.map((user, i) => {
+									return <FollowerListItem key={i} user={user}/>;
+								}))}
+							</Col>
 						</Row>
 					</ul>
 				</InfiniteScroll>;
