@@ -39,7 +39,7 @@ export default class Privacy extends Component<any, any> {
 				<PrivacyHomeIcon iconClass={"fas fa-ban"} title={"Blocked"}
 								 description={"Manage the users you have blocked."} path={"/account/privacy/blocked"}/>
 				<PrivacyHomeIcon iconClass={"fas fa-info"} title={"Follow requests"}
-								 description={"Manage the follow requests you have sent or received."}
+								 description={"Manage the follow requests you received."}
 								 path={"/account/privacy/requests"}/>
 			</Row>
 		</AccountBase>;
