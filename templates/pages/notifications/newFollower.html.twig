@@ -1,0 +1,18 @@
+{% set u2 = notification.follower %}
+
+{% if u2 %}
+	<div class="my-1{{ notification.seen == false ? " unseenFollowerNotification" }}" style="border-color: #CCC;">
+		<div class="float-left mr-1">
+			<a href="/{{ u2.username }}" class="clearUnderline">
+				<img class="rounded mx-1 my-1" src="{{ u2.avatarUrl }}" width="40" height="40"/>
+			</a>
+		</div>
+
+		<div class="float-left">
+			<div class="text-muted small">New follower - @{{ u2.username }}</div>
+			<b><a href="/{{ u2.username }}"
+				  class="clearUnderline convertEmoji">{{ u2.displayName~u2.renderCheckMark }}</a></b> is now following
+			you. &bull; <span class="text-muted">{{ timeago(notification.time) }}</span>
+		</div>
+	</div>
+{% endif %}

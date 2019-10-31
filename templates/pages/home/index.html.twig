@@ -1,0 +1,37 @@
+{% extends "homeBase.html.twig" %}
+
+{% block content %}
+	<img src="/assets/img/qpost-blue-tiny.png" class="homeLogo" alt="qpost Logo" title="qpost Logo"/>
+
+	<p class="homeDescriptionText">
+		A social microblogging network that helps you share your thoughts online, protected by freedom of speech.
+	</p>
+
+	<div class="homeRegisterBoxContainer">
+		<div class="homeRegisterBox">
+			<div class="text-center">
+				<span class="hline">Join<img src="/assets/img/qpost-blue-tiny.png" alt="qpost Logo" title="qpost Logo"/></span>
+			</div>
+
+			<form class="mt-3" method="post" action="/">
+				{% include "parts/csrf.html.twig" %}
+
+				{% include "parts/flash.html.twig" %}
+
+				<input type="email" class="form-control mb-2" name="email" placeholder="Email"/>
+				<input type="text" class="form-control mb-2" name="displayName" placeholder="Full Name"/>
+				<input type="text" class="form-control mb-2" name="username" placeholder="Username"/>
+				<input type="password" class="form-control mb-2" name="password" placeholder="Password"/>
+
+				<hr/>
+
+				<input type="submit" class="btn btn-primary btn-block" value="Create Account"/>
+
+				<div class="homeLoginOr small text-center mb-3 mt-1">OR</div>
+
+				<a href="{{ path("qpost_login_gigadrive") }}" class="btn btn-success btn-block">Sign in with
+					Gigadrive</a>
+			</form>
+		</div>
+	</div>
+{% endblock %}

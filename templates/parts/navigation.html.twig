@@ -1,0 +1,108 @@
+<nav id="mainNav"
+	 class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary">
+	<div class="container-fluid container">
+		<div class="navbar-header">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation"
+					aria-controls="main-navigation" aria-expanded="false" aria-label="Toggle navigation" style="">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<a class="navbar-brand" href="/">
+				<img src="/assets/img/navlogo.png" style="height: 30px"/>
+			</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="main-navigation">
+			<ul class="nav navbar-nav ml-auto">
+				{% if currentUser is defined and currentUser %}
+					<li class="nav-item{{ nav is defined and nav == "NAV_HOME" ? " active" }}">
+						<a href="/" class="nav-link">
+							home
+						</a>
+					</li>
+
+					<li class="nav-item{{ nav is defined and nav == "NAV_PROFILE" ? " active" }}">
+						<a href="/{{ currentUser.username }}" class="nav-link">
+							my profile
+						</a>
+					</li>
+
+					<li class="nav-item{{ nav is defined and nav == "NAV_NOTIFICATIONS" ? " active" }}">
+						<a href="/notifications" class="nav-link notificationTabMainNav">
+							notifications{% if unreadNotifications is defined and unreadNotifications and unreadNotifications > 0 %}
+							<b>({{ unreadNotifications }})</b>
+							{% endif %}
+						</a>
+					</li>
+
+					<li class="nav-item{{ nav is defined and nav == "NAV_MESSAGES" ? " active" }}">
+						<a href="/messages" class="nav-link">
+							messages{% if unreadMessages is defined and unreadMessages and unreadMessages > 0 %}
+							<b>({{ unreadMessages }})</b>
+							{% endif %}
+						</a>
+					</li>
+
+					<li class="nav-item dropdown{{ nav is defined and nav == "NAV_ACCOUNT" ? " active" }}">
+						<a href="#" class="nav-link dropdown-toggle" id="accountDropdown" role="button"
+						   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<img src="{{ currentUser.avatarUrl }}" width="24" height="24"
+								 class="rounded border border-white"/>
+						</a>
+
+						<div class="dropdown-menu dropdown-menu-right shadow" aria-labelledBy="accountDropdown">
+							<a href="/{{ currentUser.username }}" class="dropdown-item">
+								<div class="font-weight-bold" style="font-size: 21px">
+									{{ currentUser.displayName }}
+								</div>
+								<div class="text-muted" style="margin-top: -8px">
+									@{{ currentUser.username }}
+								</div>
+							</a>
+
+							<div class="dropdown-divider"></div>
+
+							<a href="/{{ currentUser.username }}" class="dropdown-item">
+								<i class="far fa-user"></i> Profile
+							</a>
+
+							<a href="/notifications" class="dropdown-item">
+								<i class="far fa-bell"></i> Notifications
+							</a>
+
+							<a href="/messages" class="dropdown-item">
+								<i class="far fa-envelope"></i> Messages
+							</a>
+
+							<div class="dropdown-divider"></div>
+
+							<a href="/edit" class="dropdown-item">
+								Edit profile
+							</a>
+
+							<a href="/account" class="dropdown-item">
+								Settings and privacy
+							</a>
+
+							<a href="/logout" class="dropdown-item">
+								Log out
+							</a>
+
+							<div class="dropdown-divider"></div>
+
+							<a href="#" class="dropdown-item nightModeToggle">
+								Toggle night mode
+							</a>
+						</div>
+					</li>
+				{% else %}
+					<li class="nav-item{{ nav is defined and nav == "NAV_ACCOUNT" ? " active" }}">
+						<a href="/login" class="nav-link">
+							log in
+						</a>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</nav>

@@ -1,110 +1,103 @@
 <?php
-
-use Phpfastcache\CacheManager;
-use Phpfastcache\Config\Config;
-
 /**
- * Utility methods to use with caching
- * 
- * @package Cache
- * @author Gigadrive (support@gigadrivegroup.com)
- * @copyright 2016-2018 Gigadrive
- * @link https://gigadrivegroup.com/dev/technologies
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
  */
+
+namespace qpost\Cache;
+
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use function sys_get_temp_dir;
+
 class CacheHandler {
-	public const OBJECT_CACHE_TIME = 60;
-
-	/**
-	 * Gets the stash caching pool object
-	 * 
-	 * @access public
-	 * @return Stash\Pool
-	 */
-	public static function Manager(){
-		static $InstanceCache = null;
-		if($InstanceCache == null){
-			$driver = new Stash\Driver\FileSystem([]);
-			$InstanceCache = new Stash\Pool($driver);
-		}
-	
-		return $InstanceCache;
-	}
-
 	/**
 	 * Save an object to the cache
-	 * 
-	 * @access public
-	 * @param string $name The key under which the object should be stored (if key is already being used, the old object will be overwritten)
+	 *
+	 * @param string $name The key under which the object should be stored (if the key is already being used, the old object will be overwritten)
 	 * @param mixed $value The object to be stored
 	 * @param int $expiry The amount in seconds for which the object should be held in the cache
 	 */
-	public static function setToCache($name,$value,$expiry){
-		$pool = self::Manager();
-
-		$item = $pool->getItem($name);
-		
+	public static function setToCache(string $name, $value, int $expiry): void {
+		$cache = self::Manager();
+		$item = $cache->getItem($name);
 		$item->set($value);
 		$item->expiresAfter($expiry);
-
-		$pool->save($item);
+		$cache->save($item);
 	}
-	
+
 	/**
-	 * Get an object from the cache
-	 * 
-	 * @access public
-	 * @param string $name The key under which the object was stored
-	 * @return mixed Returns the cached object
+	 * Gets the stash caching pool object
+	 *
+	 * @return FilesystemAdapter
 	 */
-	public static function getFromCache($name){
-		if(self::existsInCache($name)){
-			$item = self::Manager()->getItem($name);
-
-			return $item->get();
-		} else {
-			return null;
+	public static function Manager(): FilesystemAdapter {
+		static $cache = null;
+		if (is_null($cache)) {
+			$cache = new FilesystemAdapter("app.cache", 0, sys_get_temp_dir() . "/mcsh-cache");
 		}
+		return $cache;
 	}
-	
+
 	/**
 	 * Returns whether an object exists in the cache
-	 * 
-	 * @access public
+	 *
 	 * @param string $name The key under which the object was stored
 	 * @return bool Returns true if the object exists
 	 */
-	public static function existsInCache($name){
-		$pool = self::Manager();
-
-		$item = $pool->getItem($name);
-		if(!is_null($item) && $item->isHit()){
-			return true;
-		} else {
-			return false;
-		}
+	public static function existsInCache(string $name): bool {
+		return !is_null(self::getFromCache($name));
 	}
-	
+
 	/**
-	 * Deletes an item from the cache
-	 * 
-	 * @access public
+	 * Get an object from the cache
+	 *
+	 * @param string $name The key under which the object was stored
+	 * @return mixed|null Returns the cached object, null if it does not exist
+	 */
+	public static function getFromCache(string $name) {
+		$cache = self::Manager();
+		$item = $cache->getItem($name);
+		if ($item->isHit()) {
+			return $item->get();
+		}
+		return null;
+	}
+
+	/**
+	 * Deletes an item from the cache.
+	 *
 	 * @param string $name The key under which the object was stored
 	 * @return bool Returns true if the object could be removed
 	 */
-	public static function deleteFromCache($name){
-		if(self::existsInCache($name)){
-			self::Manager()->deleteItem($name);
-		} else {
-			return false;
+	public static function deleteFromCache(string $name): bool {
+		$cache = self::Manager();
+		$item = $cache->getItem($name);
+		if ($item->isHit()) {
+			$cache->deleteItem($name);
+			return true;
 		}
+		return false;
 	}
 
 	/**
 	 * Clears the entire cache
-	 * 
-	 * @access public
 	 */
-	public static function clearCache(){
-		self::Manager()->clear();
+	public static function clearCache(): void {
+		$cache = self::Manager();
+		$cache->clear();
 	}
 }

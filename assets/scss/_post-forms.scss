@@ -1,0 +1,167 @@
+/*!
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.dummyPostForm {
+	$size: 36px;
+
+	@extend .clearfix;
+
+	&, * {
+		cursor: pointer !important;
+	}
+
+	img.avatar {
+		@extend .rounded;
+		width: $size;
+		height: $size;
+		float: left;
+	}
+
+	.fakeTextBox {
+		@extend .rounded;
+
+		height: $size;
+		line-height: calc(#{$size} - 1px);
+		float: left;
+		margin-left: 15px;
+		width: calc(100% - #{$size} - 20px);
+	}
+}
+
+.postFormBackdrop {
+	position: fixed;
+	z-index: 1000;
+	height: 100%;
+	width: 100%;
+	background-color: #FFF;
+	top: 0;
+	left: 0;
+	padding: 20px;
+}
+
+.postForm {
+	.thumbnailHolder {
+		@extend .row, .ml-1;
+
+		.thumbnail {
+			@extend .mt-2, .mr-2;
+			float: left;
+
+			.deleteButton {
+				float: right;
+				margin-left: -50px;
+				z-index: 99999;
+				position: relative;
+			}
+
+			.thumbnailImage {
+				@extend .rounded;
+				border: 1px solid $primary;
+				background-color: $dark;
+				width: 100px;
+				height: 100px;
+				background-size: cover;
+			}
+		}
+	}
+
+	.bottom {
+		margin-top: 20px;
+
+		.actionButtons {
+			float: left;
+
+			.actionButton {
+				font-size: 20px;
+				margin-right: 10px;
+			}
+		}
+
+		.characterCount {
+			float: right;
+			line-height: 32px;
+		}
+	}
+}
+
+.replyForm {
+	margin-top: 60px !important;
+}
+
+.postField {
+	resize: none !important;
+	height: 150px !important;
+	max-height: 60px !important;
+	transition: max-height .3s ease-in-out;
+	-moz-transition: max-height .3s ease-in-out;
+	-webkit-transition: max-height .3s ease-in-out;
+	-o-transition: max-height .3s ease-in-out;
+	-ms-transition: max-height .3s ease-in-out;
+
+	&.active {
+		max-height: 120px !important;
+	}
+
+	&, &:focus {
+		border: none !important;
+		box-shadow: none !important;
+	}
+}
+
+i.addElementIcon {
+	font-size: 27px;
+	margin-right: 5px;
+	float: left;
+}
+
+.addElementGroup {
+	height: 29px;
+}
+
+.addElementText {
+	float: left;
+	margin-top: 3px;
+}
+
+.addElementGroupContainer {
+	margin-bottom: 7px;
+}
+
+.addElementGroupContainer:last-of-type {
+	margin-bottom: 0;
+}
+
+.hwt-container {
+	border-top: 1px solid #ced4da;
+	border-bottom: 1px solid #ced4da;
+	padding: 10px;
+}
+
+.hwt-content {
+	padding: 10px;
+	background: none transparent !important;
+}
+
+.hwt-backdrop {
+	right: -100px !important;
+}
+
+.hwt-content mark {
+	background-color: #FF4F4F;
+}

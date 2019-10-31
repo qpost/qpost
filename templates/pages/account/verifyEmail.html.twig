@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	{% if successMsg is defined and successMsg is not empty %}
+		{{ createAlert("successMsg",successMsg,"success") }}
+	{% endif %}
+
+	{% if errorMsg is defined and errorMsg is not empty %}
+		{{ createAlert("errorMsg",errorMsg,"danger") }}
+	{% endif %}
+{% endblock %}

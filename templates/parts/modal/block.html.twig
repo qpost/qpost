@@ -1,0 +1,29 @@
+<div class="modal fade" id="blockModal" aria-labelledby="blockModalLabel" aria-hidden="true"
+	 tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="blockModalLabel">Block @{{ user.username }}</h5>
+
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				@{{ user.username }} will no longer be able to follow or message you, and you
+				will not see notifications from @{{ user.username }}.
+			</div>
+
+			<div class="modal-footer">
+				<form action="/{{ user.username }}" method="post">
+					{{ insertCSRF() }}
+					<input type="hidden" name="action" value="block"/>
+					<button type="submit" class="btn btn-danger">Block</button>
+				</form>
+
+				<button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>

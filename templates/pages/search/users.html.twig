@@ -1,0 +1,10 @@
+{% extends "pages/search/searchBase.html.twig" %}
+{% import "macro.html.twig" as macro %}
+
+{% block searchResults %}
+	<div class="row">
+		{% for result in results %}
+			{{ macro.userInList(result) }}
+		{% endfor %}
+	</div>
+{% endblock %}

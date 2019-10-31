@@ -1,0 +1,118 @@
+/*!
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+@mixin feedButtonMargin($margin) {
+	margin-right: $margin;
+
+	&:first-child {
+		margin-left: $margin;
+	}
+}
+
+@mixin feedButton($color) {
+	font-size: 18px;
+	color: gray;
+	text-align: center;
+
+	@include media-breakpoint-between(sm, md) {
+		@include make-col-ready();
+		@include make-col(3);
+	}
+
+	@include media-breakpoint-up(lg) {
+		@include make-col-ready();
+		-ms-flex-preferred-size: 0;
+		flex-basis: 0;
+		-ms-flex-positive: 1;
+		flex-grow: 1;
+		max-width: 100%;
+	}
+
+	/*@include media-breakpoint-between(sm,md){
+		@include feedButtonMargin(25px);
+	}*/
+
+	@include media-breakpoint-down(xs) {
+		font-size: 16px;
+
+		@include feedButtonMargin(20px);
+	}
+
+	i, .number {
+		transition: color .3s ease-in-out;
+		-moz-transition: color .3s ease-in-out;
+		-webkit-transition: color .3s ease-in-out;
+		-o-transition: color .3s ease-in-out;
+		-ms-transition: color .3s ease-in-out;
+	}
+
+	&.active, &:hover {
+		cursor: pointer;
+
+		i, .number {
+			color: $color;
+		}
+	}
+
+	&.inactive {
+		i, .number {
+			color: darken(gray, 10%);
+		}
+	}
+
+	&:not(.active):not(.inactive) {
+		transition: text-shadow .3s ease-in-out;
+		-moz-transition: text-shadow .3s ease-in-out;
+		-webkit-transition: text-shadow .3s ease-in-out;
+		-o-transition: text-shadow .3s ease-in-out;
+		-ms-transition: text-shadow .3s ease-in-out;
+
+		&:hover {
+			text-shadow: 0 0 8px $color;
+		}
+	}
+
+	.number {
+		margin-left: 10px;
+	}
+}
+
+.feedEntryButtonHolder {
+	margin-bottom: .5rem;
+
+	@include media-breakpoint-up(lg) {
+		@include make-row();
+	}
+
+	.replyButton {
+		@include feedButton($info);
+	}
+
+	.shareButton {
+		@include feedButton($primary);
+	}
+
+	.favoriteButton {
+		@include feedButton($warning);
+	}
+
+	.deleteButton {
+		@include feedButton($danger);
+	}
+}

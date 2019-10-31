@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-lg-6 offset-lg-3">
+			{% include "parts/flash.html.twig" %}
+			<div class="card">
+				<div class="card-body">
+					<h3 class="text-center mb-2">Register</h3>
+
+					<form action="{{ path("qpost_register_index", {"code": _GET["code"]}) }}" method="post">
+						{% include "parts/csrf.html.twig" %}
+
+						<input type="text" class="form-control mb-2" name="email"
+							   placeholder="Email address"{{ email is defined ? (' value="'~sanatizeHTMLAttribute(email)~'"')|raw }}/>
+
+						<input type="text" class="form-control mb-2" name="username"
+							   placeholder="Username"{{ username is defined ? (' value="'~sanatizeHTMLAttribute(username)~'"')|raw }}/>
+
+						<input type="submit" class="btn btn-block btn-primary" value="Create account"/>
+					</form>
+				</div>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+{% endblock %}

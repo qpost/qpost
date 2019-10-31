@@ -1,0 +1,21 @@
+{% extends "pages/profile/base.html.twig" %}
+{% import "macro.html.twig" as macro %}
+
+{% block content %}
+	{{ parent() }}
+
+	{% if users is defined and users|length > 0 %}
+		<div class="row mt-2">
+			{% for u in users %}
+				{{ macro.userInList(u) }}
+
+			{% endfor %}
+		</div>
+
+		{{ paginate(currentPage,40,num,"/"~user.username~"/followers/(:num)") }}
+	{% else %}
+		<div class="mt-2">
+			{{ createAlert("noUsers","<b>There's nothing here yet!</b><br/>@"~user.username~" has no followers yet!","info") }}
+		</div>
+	{% endif %}
+{% endblock %}

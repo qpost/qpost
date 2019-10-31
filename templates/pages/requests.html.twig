@@ -1,0 +1,48 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	{% if openRequests|length > 0 %}
+		{% for user in openRequests %}
+			<div class="row my-2">
+				<div class="card userCard col-md-6 offset-md-3 mb-3" data-user-id="{{ user.id }}">
+					<div class="card-body">
+						<center>
+							<a href="/{{ user.username }}" class="clearUnderline">
+								<img src="{{ user.avatarUrl }}" width="60" height="60" alt="{{ user.username }}"/>
+								<h5 class="mb-0">{{ user.displayName }}{{ user.renderCheckMark }}</h5>
+							</a>
+
+							<p class="text-muted my-0" style="font-size: 16px">@{{ user.username }}</p>
+
+							{% if maySeeBio(user) %}
+								<p class="mb-0 mt-2">
+									{{ convertLineBreaksToHTML(user.bio) }}
+								</p>
+							{% endif %}
+
+							<form action="/requests" method="post">
+								{{ insertCSRF() }}
+
+								<input type="hidden" name="action" value="accept"/>
+								<input type="hidden" name="user" value="{{ user.id }}"/>
+
+								<input type="submit" class="btn btn-success" style="width: 100px" value="Accept"/>
+							</form>
+
+							<form action="/requests" method="post">
+								{{ insertCSRF() }}
+
+								<input type="hidden" name="action" value="deny"/>
+								<input type="hidden" name="user" value="{{ user.id }}"/>
+
+								<input type="submit" class="btn btn-danger mt-2" style="width: 100px" value="Deny"/>
+							</form>
+						</center>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	{% else %}
+		{{ createAlert("noRequests","You currently have no open follow requests.","info") }}
+	{% endif %}
+{% endblock %}

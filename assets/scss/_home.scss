@@ -1,0 +1,118 @@
+/*!
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.homeBase {
+	background: url("/assets/img/homebg.png") no-repeat bottom left;
+	min-height: 100%;
+	background-size: cover;
+
+	@include media-breakpoint-down(md) {
+		padding-bottom: 20px;
+	}
+
+	@include media-breakpoint-up(md) {
+		background-position: right 120px;
+	}
+
+	.homeLogo {
+		@extend .my-3;
+	}
+
+	.homeDescriptionText {
+		@extend .mt-3;
+
+		margin: 0;
+		font-size: 28px;
+
+		@include media-breakpoint-up(md) {
+			max-width: 60%;
+		}
+	}
+
+	.homeLoginOr {
+		@extend .mb-2, .mr-2;
+
+		color: #ccc;
+		font-weight: bold;
+	}
+
+	.homeRegisterBoxContainer {
+		@extend .row;
+
+		@include media-breakpoint-down(sm) {
+			padding: 0 20px;
+		}
+
+		.homeRegisterBox {
+			@extend .text-primary, .card, .shadow, .mt-5, .col-12, .col-lg-5, .offset-lg-7;
+			padding: 30px 45px;
+
+			.hline {
+				font-weight: bold;
+				font-size: 24px;
+
+				img {
+					@extend .ml-2;
+
+					height: 1em;
+				}
+			}
+
+			form {
+				@include media-breakpoint-up(sm) {
+					float: right;
+				}
+			}
+
+			@include media-breakpoint-only(xs) {
+				text-align: center;
+
+				button {
+					margin-top: 10px;
+					display: block;
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+
+#loginModal {
+	input[type="text"] {
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+		border-bottom: 0;
+	}
+
+	input[type="password"] {
+		@extend .mb-3;
+
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	.or {
+		@extend .my-2;
+
+		text-align: center;
+		color: #ccc;
+		font-weight: bold;
+	}
+}
+

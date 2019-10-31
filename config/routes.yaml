@@ -1,0 +1,21 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+qpost_page_profile:
+    path: /{username}
+    controller: qpost\Controller\PageController::profile
+qpost_page_profile_alternative:
+    path: /profile/{username}
+    controller: qpost\Controller\PageController::profile
+qpost_page_profile_following:
+    path: /{username}/following
+    controller: qpost\Controller\PageController::profile
+qpost_page_profile_followers:
+    path: /{username}/followers
+    controller: qpost\Controller\PageController::profile
+qpost_page_profile_favorites:
+    path: /{username}/favorites
+    controller: qpost\Controller\PageController::profile
+qpost_page_status_alternative:
+    path: /r/status/{id}
+    controller: qpost\Controller\PageController::status

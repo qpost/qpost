@@ -1,0 +1,74 @@
+/*!
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.form-control,
+.ant-input,
+.ant-input-group-addon,
+.ant-message-notice-content,
+.ant-calendar, .ant-calendar-input, .ant-calendar-footer, .ant-calendar-header, .ant-calendar-input-wrap, .ant-calendar-year-panel, .ant-calendar-year-panel-header, .ant-calendar-decade-panel, .ant-calendar-decade-panel-header, .ant-calendar-decade-panel-century, .ant-calendar-today .ant-calendar-date, .ant-calendar-picker-clear,
+.ant-upload.ant-upload-select-picture-card,
+.ant-mentions, .ant-mentions > textarea,
+.form-control:focus,
+.breadcrumb,
+.custom-file-label,
+.input-group-text,
+.datepicker-container,
+.datepicker-panel > ul[data-view="week"] > li,
+.datepicker-top-left::before, .datepicker-top-right::before,
+.datepicker-panel > ul > li,
+.datepicker-panel > ul > li.disabled, .datepicker-panel > ul > li.disabled:hover {
+	border: 1px solid #001020;
+	background-color: #001d30;
+	color: #FFF !important;
+	box-shadow: none;
+}
+
+.ant-calendar-selected-day .ant-calendar-date {
+	border: 1px solid #00397a;
+	background-color: #002f47;
+	color: #FFF !important;
+	box-shadow: none;
+}
+
+.ant-calendar-disabled-cell .ant-calendar-date {
+	border: 1px solid #240002;
+	background-color: #380002;
+	color: #ab0002 !important;
+	box-shadow: none;
+
+	&:hover {
+		background-color: #380002 !important;
+	}
+}
+
+.ant-upload, .ant-radio-wrapper {
+	color: #FFF;
+}
+
+.ant-calendar-date, .ant-calendar-decade-panel-decade, .ant-calendar-year-panel-year {
+	color: #FFF;
+
+	&:hover {
+		background: lighten(#001d30, 10%);
+	}
+}
+
+.ant-calendar-last-month-cell .ant-calendar-date, .ant-calendar-next-month-btn-day .ant-calendar-date {
+	color: darken(#FFF, 35%);
+}

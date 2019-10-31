@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-lg-8 offset-lg-2 border rounded px-3 py-3">
+			{% if notifications|length > 0 %}
+				{% for notification in notifications %}
+					<div class="card mb-2"{{ notification.seen == false ? ' style="background: #D6EAFF; border-color: #9FCCFC;border-width: 3px"' : "" }}>
+						<div class="card-body">
+							{% if notification.type == "MENTION" %}
+								{% include "pages/notifications/mention.html.twig" with {
+									"notification": notification
+								} %}
+							{% elseif notification.type == "REPLY" %}
+								{% include "pages/notifications/reply.html.twig" with {
+									"notification": notification
+								} %}
+							{% elseif notification.type == "SHARE" %}
+								{% include "pages/notifications/share.html.twig" with {
+									"notification": notification
+								} %}
+							{% elseif notification.type == "FAVORITE" %}
+								{% include "pages/notifications/favorite.html.twig" with {
+									"notification": notification
+								} %}
+							{% elseif notification.type == "NEW_FOLLOWER" %}
+								{% include "pages/notifications/newFollower.html.twig" with {
+									"notification": notification
+								} %}
+							{% endif %}
+						</div>
+					</div>
+				{% endfor %}
+
+				{{ paginate(currentPage,itemsPerPage,num,"/notifications/(:num)") }}
+			{% else %}
+				{{ createAlert("noNotifications","You have no notifications yet!","info") }}
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

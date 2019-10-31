@@ -1,0 +1,66 @@
+/*!
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.card, .ant-card, .postFormBackdrop {
+	border: 1px solid #222222;
+	background-color: #001529;
+	color: #FFF;
+
+	> .card-header > a {
+		color: #FFF !important;
+	}
+
+	.ant-menu-item:not(:hover):not(.ant-menu-item-selected) {
+		color: #FFF;
+	}
+}
+
+.card > .card-header,
+.ant-card > .ant-card-head {
+	color: #FFF;
+	background-color: #001d30;
+	border-color: #001020;
+}
+
+.card > .card-body,
+.ant-card > .ant-card-body {
+	background-color: #001529;
+}
+
+.card-default > .card-footer {
+	background-color: #001d30;
+	border-top: 1px solid #001020;
+}
+
+.ant-modal {
+	.ant-modal-header,
+	.ant-modal-title,
+	.ant-modal-footer {
+		color: #FFF !important;
+		background-color: #001d30;
+		border-color: #001020;
+		border-top: none !important;
+	}
+
+	.ant-modal-content {
+		color: #FFF;
+		background-color: #001529;
+		border-color: #001020;
+	}
+}

@@ -1,0 +1,98 @@
+{% set title = title|default(siteName) %}
+{% set originalTitle = title %}
+{% set description = description|default(defaultDescription) %}
+{% set twitterImage = twitterImage|default(defaultTwitterImage) %}
+{% if title != siteName %}
+	{% set title = title ~ " - " ~ siteName %}
+{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{ title }}</title>
+
+	<meta charset="utf-8"/>
+	<meta name="viewport"
+		  content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0"/>
+	<meta http-equiv="x-ua-compatible" content="ie=edge"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+
+	<meta name="og:site_name" content="{{ siteName }}"/>
+	<meta name="og:title" content="{{ title }}"/>
+	<meta name="og:description" content="{{ description }}"/>
+	{% if bigSocialImage is defined and bigSocialImage %}
+		<meta name="og:image" content="{{ bigSocialImage }}"/>
+	{% endif %}
+
+	<meta name="twitter:title" content="{{ title }}"/>
+	<meta name="twitter:description" content="{{ description }}"/>
+	<meta name="twitter:image" content="{{ twitterImage }}"/>
+	<meta name="twitter:card" content="summary"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#007bff">
+	<meta name="apple-mobile-web-app-title" content="qpost">
+	<meta name="application-name" content="qpost">
+	<meta name="msapplication-TileColor" content="#007bff">
+	<meta name="theme-color" content="#007bff">
+
+	<meta name="description" content="{{ description }}"/>
+	<meta name="keywords" content="social,network,posts,profiles,pictures,bio,gigadrive"/>
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+		  integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.2/css/flag-icon.min.css" rel="stylesheet"/>
+
+	{% for url in [
+		"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
+	] %}
+		<link href="{{ url }}" type="text/css" rel="stylesheet"/>
+	{% endfor %}
+
+	<script type="text/javascript">
+		window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
+		window["POST_CHARACTER_LIMIT"] = {{ postCharacterLimit }};
+		window["VERIFIED_POST_CHARACTER_LIMIT"] = {{ verifiedPostCharacterLimit }};
+
+		window["restoreTitle"] = "{{ profileLoadPost is defined ? originalTitle }}";
+		window["CURRENT_STATUS_MODAL"] = 0;
+
+		{% if profileLoadPost is defined and profileLoadPostCreator is defined %}
+		window["restoreUrl"] = "/{{ profileLoadPostCreator }}";
+		{% endif %}
+
+		{% if currentUser is defined and currentUser %}
+		window["CURRENT_USER"] = {{ currentUser.id }};
+		{% endif %}
+
+		{% if forceDisableNightMode is defined and forceDisableNightMode %}
+		window["FORCE_DISABLE_NIGHTMODE"] = true;
+		{% endif %}
+	</script>
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({
+			google_ad_client: "ca-pub-6156128043207415",
+			enable_page_level_ads: true
+		});
+	</script>
+</head>
+
+<body class="{% block additionalBodyClasses %}{% endblock %}">
+{% block body %}{% endblock %}
+
+{# "/assets/js/jquery.highlight-within-textarea.js" #}
+{% for url in [
+	"/build/" ~ bundleName,
+	"https://www.google.com/recaptcha/api.js",
+	"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",
+	"https://twemoji.maxcdn.com/2/twemoji.min.js?11.0",
+] %}
+	<script type="text/javascript" src="{{ url }}"></script>
+{% endfor %}
+</body>
+</html>

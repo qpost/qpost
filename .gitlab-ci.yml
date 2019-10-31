@@ -26,6 +26,7 @@ deploy:
     - 'which php7-gd || apk add php7-gd'
     - 'which php7-mbstring || apk add php7-mbstring'
     - 'which composer || apk add composer'
+    - 'which npm || apk add npm'
     - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
@@ -33,7 +34,12 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - git submodule update --depth 50
     - composer install --no-dev
-    - rsync -avze ssh --exclude=tmp --exclude=config.php --exclude=composer.json --exclude=composer.lock --exclude=.gitignore --exclude=.gitmodules --exclude=.gitlab-ci.yml --exclude=.git --exclude=LICENSE --exclude=README.md ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/
-    - rsync -avze ssh --exclude=tmp --exclude=config.php --exclude=composer.json --exclude=composer.lock --exclude=.gitignore --exclude=.gitmodules --exclude=.gitlab-ci.yml --exclude=.git --exclude=LICENSE --exclude=README.md ./ root@ssh.gigadrivegroup.com:/home/web/qpost/
+    - composer dump-autoload -o
+    - npm i
+    - npm run build
+    - rsync -avze ssh --exclude=.git --exclude=.env.local --exclude=var ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/
+    - rsync -avze ssh --exclude=.git --exclude=.env.local --exclude=var ./ root@node1.qpo.st:~/web/qpost/
+    - ssh -t ssh-gigadrivegroup@zeryther.lima-ssh.de 'cd ~/html/qpost/ && /opt/lima-php/7.2/bin/php ~/phpbin/composer.phar install --no-dev && /opt/lima-php/7.2/bin/php ~/phpbin/composer.phar dump-autoload -o && /opt/lima-php/7.2/bin/php bin/console doctrine:migrations:migrate --no-interaction'
+    - ssh -t root@node1.qpo.st 'cd ~/web/qpost/ && composer install --no-dev && composer dump-autoload -o && sudo chmod -R 777 ./* && php bin/console doctrine:migrations:migrate --no-interaction'
     only:
     - master

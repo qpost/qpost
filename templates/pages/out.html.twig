@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<div class="text-center">
+		<h4>{{ host }} is not part of this website!</h4>
+
+		<p>
+			Are you sure you want to leave {{ siteName }} and head to {{ link }}?<br/>
+			{{ siteName }} is not responsible for any content you find when clicking on "Yes".
+		</p>
+
+		<a href="{{ link }}" class="btn btn-primary">Yes</a>
+		<a href="javascript:history.back()" class="btn btn-light">No</a>
+	</div>
+{% endblock %}

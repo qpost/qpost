@@ -1,0 +1,48 @@
+/*!
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+body, html {
+	background: #F0F2F5;
+}
+
+body.disableScroll {
+	overflow: hidden;
+}
+
+#root {
+	> div {
+		> section.ant-layout {
+			padding-bottom: 80px;
+		}
+	}
+}
+
+.navMargin {
+	margin-top: 64px;
+
+	@include desktopOnly() {
+		margin-top: 70px !important;
+	}
+}
+
+.mainContent {
+	@include media-breakpoint-up(md) {
+		padding: 0 50px;
+	}
+}

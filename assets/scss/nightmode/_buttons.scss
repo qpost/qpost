@@ -1,0 +1,52 @@
+/*!
+ * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.ant-btn {
+	&:not(.ant-btn-default):not(.ant-btn-dashed):not(.ant-btn-danger):not(.ant-btn-primary):not(.ant-btn-link),
+	&.ant-btn-dashed,
+	&.ant-btn-default:not(.followButton),
+	&.ant-btn-default[data-follow-status="-1"] {
+		$color: #001949;
+
+		color: #f8f9fa !important;
+		background-color: $color !important;
+		border-color: darken($color, 5%) !important;
+
+		&:hover {
+			background-color: lighten($color, 5%) !important;
+		}
+	}
+}
+
+.btn-light {
+	color: #f8f9fa !important;
+	background-color: #212529 !important;
+	border-color: #212529 !important;
+}
+
+.btn-primary {
+	color: #fff;
+	background-color: #535353;
+	border-color: #535353;
+
+	&:hover {
+		background-color: #353535;
+		border-color: #2d2d2d;
+	}
+}

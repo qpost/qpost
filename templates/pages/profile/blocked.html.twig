@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<div class="text-center">
+		<img src="{{ user.avatarUrl }}" width="150" height="150"/>
+
+		<h4 class="mb-1">{{ user.displayName }}</h4>
+		<h3 class="mb-0 text-muted small">@{{ user.username }}</h3>
+
+		<p class="mt-3 mb-0">
+			You are blocked from following @{{ user.username }} and viewing @{{ user.username }}'s profile.
+		</p>
+	</div>
+{% endblock %}

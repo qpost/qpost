@@ -1,0 +1,15 @@
+{% set post = notification is defined and notification ? notification.post %}
+{% set u = post is defined and post ? post.user %}
+
+{% if u %}
+	<div class="small text-muted">
+		<i class="fas fa-share text-blue"></i> <a href="/{{ u.username }}"
+												  class="clearUnderline ignoreParentClick convertEmoji"><img
+					src="{{ u.avatarUrl }}" width="16" height="16"/> {{ u.displayName~u.renderCheckMark|raw }}</a>
+		replied to your post &bull; {{ timeago(notification.time) }}
+	</div>
+
+	<hr/>
+
+	{{ post.toListHTML|raw }}
+{% endif %}
