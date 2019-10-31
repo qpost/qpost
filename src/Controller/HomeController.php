@@ -24,6 +24,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use qpost\Constants\FlashMessageType;
+use qpost\Entity\Follower;
 use qpost\Entity\User;
 use qpost\Repository\UserRepository;
 use qpost\Service\AuthorizationService;
@@ -98,6 +99,19 @@ class HomeController extends AbstractController {
 															->setTime(new DateTime("now"));
 
 														$entityManager->persist($user);
+
+														$autoFollowAccountId = $_ENV["AUTOFOLLOW_ACCOUNT_ID"];
+														if ($autoFollowAccountId) {
+															$autoFollowAccount = $userRepository->findOneBy(["id" => $autoFollowAccountId]);
+
+															if ($autoFollowAccount) {
+																$entityManager->persist((new Follower())
+																	->setSender($user)
+																	->setReceiver($autoFollowAccount)
+																	->setTime(new DateTime("now")));
+															}
+														}
+
 														$entityManager->flush();
 
 														// Send email
