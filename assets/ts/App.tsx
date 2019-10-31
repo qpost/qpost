@@ -106,7 +106,7 @@ export default class App extends Component<any, any> {
 		if (this.state.validatedLogin === true) {
 			return (
 				<Router>
-					<Analytics id={"UA-57891578-9"}>
+					<Analytics id={"UA-57891578-9"} debug>
 						<div className={"h-100"}>
 							<MobileChecker/>
 
