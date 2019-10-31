@@ -23,14 +23,18 @@ namespace qpost\Command;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use MediaEmbed\MediaEmbed;
 use mysqli;
 use Psr\Log\LoggerInterface;
+use qpost\Constants\MediaFileType;
+use qpost\Entity\MediaFile;
 use qpost\Entity\User;
 use qpost\Entity\UserGigadriveData;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use function str_replace;
 use function strtolower;
 
 class LegacyMigrationCommand extends Command {
@@ -55,11 +59,12 @@ class LegacyMigrationCommand extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$type = strtolower($input->getArgument("type"));
+		$userRepository = $this->entityManager->getRepository(User::class);
+		$mediaRepository = $this->entityManager->getRepository(MediaFile::class);
 
 		switch ($type) {
 			case "users":
 				$db = $this->db();
-				$userRepository = $this->entityManager->getRepository(User::class);
 
 				$stmt = $db->prepare("SELECT * FROM `users` ORDER BY `time` ASC");
 				if ($stmt->execute()) {
@@ -151,6 +156,59 @@ class LegacyMigrationCommand extends Command {
 				break;
 			case "media":
 				$db = $this->db();
+				$userRepository = $this->entityManager->getRepository(User::class);
+
+				$stmt = $db->prepare("SELECT * FROM `media` ORDER BY `time` ASC");
+				if ($stmt->execute()) {
+					$result = $stmt->get_result();
+
+					if ($result->num_rows) {
+						while ($row = $result->fetch_assoc()) {
+							$id = $row["id"];
+							$sha256 = $row["sha256"];
+							$url = $row["url"];
+							$originalUploader = $row["originalUploader"];
+							$type = $row["type"];
+							$time = $row["time"];
+
+							$output->writeln("#" . $id);
+							if ($mediaRepository->count(["id" => $id]) === 0) {
+								if ($type === MediaFileType::VIDEO) {
+									$mediaEmbed = new MediaEmbed();
+
+									$mediaObject = $mediaEmbed->parseUrl($url);
+
+									if ($mediaObject) {
+										$mediaObject->setParam("autoplay", "false");
+
+										$url = str_replace("&amp;", "&", $mediaObject->getEmbedSrc());
+									}
+								}
+
+								if ($mediaRepository->count(["url" => $url]) === 0) {
+									$file = (new MediaFile())
+										->setId($id)
+										->setSHA256($sha256)
+										->setURL($url)
+										->setType($type)
+										->setTime(new DateTime($time))
+										->setOriginalUploader($userRepository->findOneBy(["id" => $originalUploader]));
+
+									$this->entityManager->persist($file);
+									$this->entityManager->flush();
+								} else {
+									$output->writeln("Skipping.");
+								}
+							} else {
+								$output->writeln("Skipping.");
+							}
+
+							$this->entityManager->flush();
+						}
+					}
+				}
+
+				$stmt->close();
 
 				$db->close();
 

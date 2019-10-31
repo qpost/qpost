@@ -88,6 +88,16 @@ class MediaFile {
 	}
 
 	/**
+	 * @param string|null $id
+	 * @return $this
+	 */
+	public function setId(?string $id): self {
+		$this->id = $id;
+
+		return $this;
+	}
+
+	/**
 	 * The hash of this file.
 	 *
 	 * @return string|null
