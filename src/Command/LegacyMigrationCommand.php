@@ -26,7 +26,9 @@ use Exception;
 use MediaEmbed\MediaEmbed;
 use mysqli;
 use Psr\Log\LoggerInterface;
+use qpost\Constants\FeedEntryType;
 use qpost\Constants\MediaFileType;
+use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
 use qpost\Entity\User;
 use qpost\Entity\UserGigadriveData;
@@ -34,6 +36,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use function is_array;
+use function json_decode;
 use function str_replace;
 use function strtolower;
 
@@ -61,6 +65,7 @@ class LegacyMigrationCommand extends Command {
 		$type = strtolower($input->getArgument("type"));
 		$userRepository = $this->entityManager->getRepository(User::class);
 		$mediaRepository = $this->entityManager->getRepository(MediaFile::class);
+		$feedRepository = $this->entityManager->getRepository(FeedEntry::class);
 
 		switch ($type) {
 			case "users":
@@ -139,6 +144,78 @@ class LegacyMigrationCommand extends Command {
 			case "feed":
 				$db = $this->db();
 
+				$stmt = $db->prepare("SELECT * FROM `feed` ORDER BY `time` ASC");
+				if ($stmt->execute()) {
+					$result = $stmt->get_result();
+
+					if ($result->num_rows) {
+						while ($row = $result->fetch_assoc()) {
+							$id = $row["id"];
+							$user = $row["user"];
+							$text = $row["text"];
+							$following = $row["following"];
+							$post = $row["post"];
+							$sessionId = $row["sessionId"];
+							$type = $row["type"];
+							$nsfw = $row["nsfw"];
+							$attachments = $row["attachments"];
+							$time = $row["time"];
+
+							$output->writeln("#" . $id . " - " . $text);
+							if ($feedRepository->count(["id" => $id]) === 0) {
+								$userObject = $userRepository->findOneBy(["id" => $user]);
+								if (!$userObject) continue;
+
+								if ($type === FeedEntryType::POST && !is_null($post)) {
+									$type = FeedEntryType::REPLY;
+								}
+
+								$feedEntry = (new FeedEntry())
+									->setId($id)
+									->setUser($userObject)
+									->setText($text)
+									->setReferencedUser($userRepository->findOneBy(["id" => $following]))
+									->setParent($feedRepository->findOneBy(["id" => $post]))
+									->setType($type)
+									->setNSFW($nsfw)
+									->setTime(new DateTime($time));
+
+								$this->entityManager->persist($feedEntry);
+
+								if (!is_null($attachments)) {
+									$attachmentArray = json_decode($attachments);
+
+									if ($attachmentArray && is_array($attachmentArray)) {
+										foreach ($attachmentArray as $mediaId) {
+											$mediaFile = $mediaRepository->findOneBy(["id" => $mediaId]);
+
+											if ($mediaFile) {
+												$feedEntry->addAttachment($mediaFile);
+												$mediaFile->addFeedEntry($feedEntry);
+
+												$this->entityManager->persist($mediaFile);
+												$output->writeln("Media file synced.");
+											} else {
+												$output->writeln("Media File not found.");
+											}
+										}
+									} else {
+										$output->writeln("Invalid attachments.");
+									}
+								}
+
+								$this->entityManager->flush();
+							} else {
+								$output->writeln("Skipping.");
+							}
+
+							$this->entityManager->flush();
+						}
+					}
+				}
+
+				$stmt->close();
+
 				$db->close();
 
 				break;
@@ -156,7 +233,6 @@ class LegacyMigrationCommand extends Command {
 				break;
 			case "media":
 				$db = $this->db();
-				$userRepository = $this->entityManager->getRepository(User::class);
 
 				$stmt = $db->prepare("SELECT * FROM `media` ORDER BY `time` ASC");
 				if ($stmt->execute()) {

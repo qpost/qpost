@@ -41,9 +41,9 @@ use function is_null;
  * })
  */
 class FeedEntry {
+	// @ORM\GeneratedValue()
 	/**
 	 * @ORM\Id()
-	 * @ORM\GeneratedValue()
 	 * @ORM\Column(type="integer")
 	 */
 	private $id;
@@ -120,6 +120,16 @@ class FeedEntry {
 	 */
 	public function getId(): ?int {
 		return $this->id;
+	}
+
+	/**
+	 * @param int|null $id
+	 * @return $this
+	 */
+	public function setId(?int $id): self {
+		$this->id = $id;
+
+		return $this;
 	}
 
 	/**

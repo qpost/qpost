@@ -34,10 +34,10 @@ use qpost\Constants\MediaFileType;
  * @ORM\Table(indexes={@ORM\Index(columns={"type"})})
  */
 class MediaFile {
+	// @ORM\GeneratedValue(strategy="CUSTOM")
+	// @ORM\CustomIdGenerator(class="qpost\Database\UniqueIdGenerator")
 	/**
 	 * @ORM\Id()
-	 * @ORM\GeneratedValue(strategy="CUSTOM")
-	 * @ORM\CustomIdGenerator(class="qpost\Database\UniqueIdGenerator")
 	 * @ORM\Column(type="string")
 	 */
 	private $id;
