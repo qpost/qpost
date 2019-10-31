@@ -29,6 +29,7 @@ use Psr\Log\LoggerInterface;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\MediaFileType;
 use qpost\Entity\FeedEntry;
+use qpost\Entity\Follower;
 use qpost\Entity\MediaFile;
 use qpost\Entity\User;
 use qpost\Entity\UserGigadriveData;
@@ -37,6 +38,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use function is_array;
+use function is_null;
 use function json_decode;
 use function str_replace;
 use function strtolower;
@@ -66,6 +68,7 @@ class LegacyMigrationCommand extends Command {
 		$userRepository = $this->entityManager->getRepository(User::class);
 		$mediaRepository = $this->entityManager->getRepository(MediaFile::class);
 		$feedRepository = $this->entityManager->getRepository(FeedEntry::class);
+		$followerRepository = $this->entityManager->getRepository(Follower::class);
 
 		switch ($type) {
 			case "users":
@@ -279,6 +282,41 @@ class LegacyMigrationCommand extends Command {
 				break;
 			case "follows":
 				$db = $this->db();
+
+				$stmt = $db->prepare("SELECT * FROM `follows` ORDER BY `time` ASC");
+				if ($stmt->execute()) {
+					$result = $stmt->get_result();
+
+					if ($result->num_rows) {
+						while ($row = $result->fetch_assoc()) {
+							$follower = $row["follower"];
+							$following = $row["following"];
+							$time = $row["time"];
+
+							$output->writeln("#" . $follower . " - " . $following);
+
+							$sender = $userRepository->findOneBy(["id" => $follower]);
+							$receiver = $userRepository->findOneBy(["id" => $following]);
+							if (!$sender || !$receiver) continue;
+
+							if ($followerRepository->count(["sender" => $sender, "receiver" => $receiver]) === 0) {
+								$follower = (new Follower())
+									->setSender($sender)
+									->setReceiver($receiver)
+									->setTime(new DateTime($time));
+
+								$this->entityManager->persist($follower);
+								$this->entityManager->flush();
+							} else {
+								$output->writeln("Skipping.");
+							}
+
+							$this->entityManager->flush();
+						}
+					}
+				}
+
+				$stmt->close();
 
 				$db->close();
 
