@@ -57,6 +57,37 @@ class LegacyMigrationCommand extends Command {
 			case "users":
 				$db = $this->db();
 
+				$stmt = $db->prepare("SELECT * FROM `users` ORDER BY `time` ASC");
+				if ($stmt->execute()) {
+					$result = $stmt->get_result();
+
+					if ($result->num_rows) {
+						while ($row = $result->fetch_assoc()) {
+							$id = $row["id"];
+							$gigadriveId = $row["gigadriveId"];
+							$displayName = $row["displayName"];
+							$username = $row["username"];
+							$password = $row["password"];
+							$email = $row["email"];
+							$avatar = $row["avatar"];
+							$bio = $row["bio"];
+							$token = $row["token"];
+							$birthday = $row["birthday"];
+							$privacyLevel = $row["privacy.level"];
+							$gigadriveJoinDate = $row["gigadriveJoinDate"];
+							$time = $row["time"];
+							$emailActivated = $row["emailActivated"];
+							$emailActivationToken = $row["emailActivationToken"];
+							$verified = $row["verified"];
+							$lastUsernameChange = $row["lastUsernameChange"];
+
+							$output->writeln("#" . $id . " - " . $username);
+						}
+					}
+				}
+
+				$stmt->close();
+
 				$db->close();
 
 				break;
@@ -99,6 +130,8 @@ class LegacyMigrationCommand extends Command {
 			default:
 				throw new Exception("Invalid type.");
 		}
+
+		$output->writeln("Done.");
 	}
 
 	private function db(): mysqli {
