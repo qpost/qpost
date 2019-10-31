@@ -19,7 +19,7 @@
 
 import React, {Component} from "react";
 import User from "../../Entity/Account/User";
-import {Button, Card, Col} from "antd";
+import {Button, Card} from "antd";
 import {Link} from "react-router-dom";
 import FollowButton from "../FollowButton";
 import Biography from "../Biography";
@@ -62,49 +62,47 @@ export default class FollowerListItem extends Component<{
 
 		const user = this.props.user;
 
-		return <Col {...FollowerListItemColProps}>
-			<Card size={"small"} className={"userBox"}>
-				<div className={"clearfix"}>
-					<div className={"float-left"}>
+		return <Card size={"small"} className={"userBox"}>
+			<div className={"clearfix"}>
+				<div className={"float-left"}>
+					<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+						<img alt={user.getUsername()} src={user.getAvatarURL()}
+							 className={"rounded border border-primary"} width={48} height={48}/>
+					</Link>
+				</div>
+
+				<div className={"float-left ml-2 nameContainer"}>
+					<div className={"displayName"}>
 						<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-							<img alt={user.getUsername()} src={user.getAvatarURL()}
-								 className={"rounded border border-primary"} width={48} height={48}/>
+							{user.getDisplayName()}<VerifiedBadge target={user}/>
 						</Link>
 					</div>
 
-					<div className={"float-left ml-2 nameContainer"}>
-						<div className={"displayName"}>
-							<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-								{user.getDisplayName()}<VerifiedBadge target={user}/>
-							</Link>
-						</div>
-
-						<div className={"username"}>
-							<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-								{"@" + user.getUsername()}
-							</Link>
-						</div>
-					</div>
-
-					<div className={"float-right mt-2"}>
-						<FollowButton target={user}/>
+					<div className={"username"}>
+						<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+							{"@" + user.getUsername()}
+						</Link>
 					</div>
 				</div>
 
-				{this.props.requestId ? <div className={"my-3 text-center"}>
-					<Button type={"primary"} onClick={(e) => {
-						e.preventDefault();
-						this.respond(true);
-					}}>Accept</Button>
+				<div className={"float-right mt-2"}>
+					<FollowButton target={user}/>
+				</div>
+			</div>
 
-					<Button type={"danger"} className={"customDangerButton ml-3"} onClick={(e) => {
-						e.preventDefault();
-						this.respond(false);
-					}}>Decline</Button>
-				</div> : ""}
+			{this.props.requestId ? <div className={"my-3 text-center"}>
+				<Button type={"primary"} onClick={(e) => {
+					e.preventDefault();
+					this.respond(true);
+				}}>Accept</Button>
 
-				<Biography user={user}/>
-			</Card>
-		</Col>;
+				<Button type={"danger"} className={"customDangerButton ml-3"} onClick={(e) => {
+					e.preventDefault();
+					this.respond(false);
+				}}>Decline</Button>
+			</div> : ""}
+
+			<Biography user={user}/>
+		</Card>;
 	}
 }
