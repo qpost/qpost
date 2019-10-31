@@ -284,6 +284,27 @@ class PageController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/account/password")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return RedirectResponse|Response
+	 */
+	public function accountPassword(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if ($authService->isAuthorized()) {
+			if (!$authService->getUser()->getGigadriveData()) {
+				return $this->render("react.html.twig", Twig::param());
+			} else {
+				return $this->redirect($this->generateUrl("qpost_page_account"));
+			}
+		} else {
+			return $this->redirect($this->generateUrl("qpost_login_index"));
+		}
+	}
+
+	/**
 	 * @Route("/account/delete")
 	 *
 	 * @param Request $request

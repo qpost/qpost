@@ -56,6 +56,7 @@ import StatusRedirect from "./Pages/Status/StatusRedirect";
 import Search from "./Pages/Search/Search";
 import PrivacyLevel from "./Pages/Account/PrivacyLevel";
 import FollowRequests from "./Pages/Account/FollowRequests";
+import ChangePassword from "./Pages/Account/ChangePassword";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -144,6 +145,8 @@ export default class App extends Component<any, any> {
 															  component={FollowRequests}/>
 												<PrivateRoute path={"/account/username"} exact
 															  component={ChangeUsername}/>
+												<PrivateRoute path={"/account/password"} exact
+															  component={ChangePassword}/>
 												<PrivateRoute path={"/account"} exact component={Account}/>
 												<Route path={"/search"} exact component={Search}/>
 												<Route path={"/goodbye"} exact component={Goodbye}/>
