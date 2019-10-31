@@ -87,7 +87,9 @@ class PageController extends AbstractController {
 	 */
 	public function about() {
 		return $this->render("react.html.twig", Twig::param([
-			"title" => "About"
+			"title" => "About",
+			"description" => "Basic information about qpost",
+			"bigSocialImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png"
 		]));
 	}
 
@@ -109,7 +111,8 @@ class PageController extends AbstractController {
 	 */
 	public function search() {
 		return $this->render("react.html.twig", Twig::param([
-			"title" => "Search"
+			"title" => "Search",
+			"twitterImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png"
 		]));
 	}
 
