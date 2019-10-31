@@ -97,6 +97,14 @@ export default class Account extends Component<any, {
 							{this.state.email}
 						</AccountInfoPart>
 
+						{!this.state.gigadriveData ? <AccountInfoPart headline={"Password"}>
+							&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;
+
+							<Link to={"/account/password"} className={"float-right"}>
+								(change)
+							</Link>
+						</AccountInfoPart> : ""}
+
 						<AccountInfoPart headline={"Date joined"}>
 							{new Date(user.getTime()).toLocaleString()}
 						</AccountInfoPart>
