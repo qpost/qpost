@@ -24,6 +24,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use qpost\Constants\FlashMessageType;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\Follower;
 use qpost\Entity\User;
 use qpost\Repository\UserRepository;
@@ -161,9 +162,9 @@ class HomeController extends AbstractController {
 			}
 
 			return $this->render("pages/home/index.html.twig", Twig::param([
-				"title" => "Home",
 				"description" => "A social microblogging network that helps you share your thoughts online, protected by freedom of speech.",
-				"bigSocialImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png"
+				"bigSocialImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png",
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		}
 	}

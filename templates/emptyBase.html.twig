@@ -4,6 +4,8 @@
 {% set twitterImage = twitterImage|default(defaultTwitterImage) %}
 {% if title != siteName %}
 	{% set title = title ~ " - " ~ siteName %}
+{% else %}
+	{% set title = "The open-source Twitter alternative - qpost" %}
 {% endif %}
 <!DOCTYPE html>
 <html lang="en">
@@ -57,6 +59,10 @@
 
 	{% if styleBundleName is defined and styleBundleName %}
 		<link href="/build/{{ styleBundleName }}" type="text/css" rel="stylesheet"/>
+	{% endif %}
+
+	{% if canonicalURL is defined and canonicalURL %}
+		<link rel="canonical" href="{{ canonicalURL }}"/>
 	{% endif %}
 
 	<script type="text/javascript">

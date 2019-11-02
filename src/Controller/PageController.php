@@ -21,6 +21,7 @@
 namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
 use qpost\Entity\User;
@@ -32,6 +33,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageController extends AbstractController {
 	/**
@@ -73,7 +75,8 @@ class PageController extends AbstractController {
 				"title" => $title,
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $bigSocialImage,
-				"description" => $feedEntry->getText()
+				"description" => $feedEntry->getText(),
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		}
 
@@ -89,7 +92,8 @@ class PageController extends AbstractController {
 		return $this->render("react.html.twig", Twig::param([
 			"title" => "About",
 			"description" => "Basic information about qpost",
-			"bigSocialImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png"
+			"bigSocialImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_about", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -100,7 +104,8 @@ class PageController extends AbstractController {
 	 */
 	public function goodbye() {
 		return $this->render("react.html.twig", Twig::param([
-			"title" => "Goodbye"
+			"title" => "Goodbye",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_goodbye", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -112,7 +117,8 @@ class PageController extends AbstractController {
 	public function search() {
 		return $this->render("react.html.twig", Twig::param([
 			"title" => "Search",
-			"twitterImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png"
+			"twitterImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_search", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -127,7 +133,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_edit", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -144,7 +152,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_notifications", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -161,7 +171,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_messages", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -178,7 +190,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_account", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -195,7 +209,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountprivacy", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -212,7 +228,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountprivacyblocked", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -229,7 +247,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountprivacylevel", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -246,7 +266,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountprivacyrequests", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -263,7 +285,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountsessions", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -280,7 +304,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountusername", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -298,7 +324,9 @@ class PageController extends AbstractController {
 
 		if ($authService->isAuthorized()) {
 			if (!$authService->getUser()->getGigadriveData()) {
-				return $this->render("react.html.twig", Twig::param());
+				return $this->render("react.html.twig", Twig::param([
+					MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountpassword", [], UrlGeneratorInterface::ABSOLUTE_URL)
+				]));
 			} else {
 				return $this->redirect($this->generateUrl("qpost_page_account"));
 			}
@@ -318,7 +346,9 @@ class PageController extends AbstractController {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if ($authService->isAuthorized()) {
-			return $this->render("react.html.twig", Twig::param());
+			return $this->render("react.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountdelete", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -331,7 +361,8 @@ class PageController extends AbstractController {
 			return $this->render("react.html.twig", Twig::param([
 				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"description" => $user->getBio(),
-				"twitterImage" => $user->getAvatarURL()
+				"twitterImage" => $user->getAvatarURL(),
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		} else {
 			throw $this->createNotFoundException("Invalid username.");

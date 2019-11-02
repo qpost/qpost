@@ -26,6 +26,7 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use qpost\Constants\FlashMessageType;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\Token;
 use qpost\Entity\User;
 use qpost\Entity\UserGigadriveData;
@@ -40,6 +41,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function is_null;
 use function password_verify;
 use function trim;
@@ -131,7 +133,9 @@ class LoginController extends AbstractController {
 				}
 			}
 
-			return $this->render("pages/login.html.twig", Twig::param());
+			return $this->render("pages/login.html.twig", Twig::param([
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_login_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			]));
 		} else {
 			return $this->redirect($this->generateUrl("qpost_home_index"));
 		}
