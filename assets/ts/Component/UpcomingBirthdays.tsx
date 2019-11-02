@@ -79,7 +79,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 						birthday.setSeconds(0);
 						birthday.setFullYear(now.getFullYear());
 
-						const today = birthday.getDay() === now.getDay() && birthday.getMonth() === now.getMonth();
+						const today = birthday.getDate() === now.getDate() && birthday.getMonth() === now.getMonth();
 
 						return <div className="my-1" style={{height: "70px"}} key={i}>
 							<Link to={"/profile/" + user.getUsername()} className="clearUnderline float-left">
