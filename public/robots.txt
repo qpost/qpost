@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /build/
+Disallow: /account
+Disallow: /account/*
+Disallow: /notifications
+Disallow: /messages
+Disallow: /profile/
+Disallow: /edit
+Disallow: /logout
+Disallow: /nightmode
+Disallow: /goodbye
+
+Crawl-delay: 10
+Sitemap: https://qpo.st/sitemap.xml
