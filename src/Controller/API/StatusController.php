@@ -320,6 +320,10 @@ class StatusController extends AbstractController {
 
 								$url = $gigadriveService->storeFileOnCDN($file);
 								if (!is_null($url)) {
+									if (Util::endsWith($url, ".gif") && count($attachments) > 0) {
+										return $apiService->json(["error" => "You may not upload more attachments, if you include a GIF."], 400);
+									}
+
 									$mediaFile = (new MediaFile())
 										->setSHA256($sha256)
 										->setURL($url)

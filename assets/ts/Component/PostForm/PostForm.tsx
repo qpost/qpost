@@ -292,6 +292,17 @@ export default class PostForm extends Component<any, {
 		}
 
 		const photos: PostFormUploadItem[] = this.state.photos;
+
+		if (photos.length > 0) {
+			for (let photo of photos) {
+				if (photo.type === "image/gif") {
+					AntMessage.error("You can not add more attachments.");
+
+					return;
+				}
+			}
+		}
+
 		photos.push(item);
 
 		this.setState({photos});
@@ -304,6 +315,13 @@ export default class PostForm extends Component<any, {
 		const used: number = this.state.message === null ? 0 : this.state.message.length;
 		const user: User = Auth.getCurrentUser();
 		if (!user) return "";
+
+		let canAddPhoto = this.state.photos.length === 4;
+		for (let photo of this.state.photos) {
+			if (photo.type === "image/gif") {
+				canAddPhoto = false;
+			}
+		}
 
 		return <div className={"postForm"}>
 			{this.state.posting === false ? <div>
@@ -421,7 +439,7 @@ export default class PostForm extends Component<any, {
 						>
 							<Tooltip placement={"top"} title={"Add photos"}>
 								<Button type={"link"} className={"actionButton"}
-										disabled={this.state.photos.length >= 4}>
+										disabled={canAddPhoto}>
 									<i className="fas fa-images"/>
 								</Button>
 							</Tooltip>
