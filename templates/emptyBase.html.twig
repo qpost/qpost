@@ -4,6 +4,8 @@
 {% set twitterImage = twitterImage|default(defaultTwitterImage) %}
 {% if title != siteName %}
 	{% set title = title ~ " - " ~ siteName %}
+{% else %}
+	{% set title = "The open-source Twitter alternative - qpost" %}
 {% endif %}
 <!DOCTYPE html>
 <html lang="en">
