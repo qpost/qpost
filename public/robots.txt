@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /build/
+Disallow: /account
+Disallow: /account/*
+Disallow: /notifications
+Disallow: /messages
+Disallow: /profile/
+
+Crawl-delay: 10
