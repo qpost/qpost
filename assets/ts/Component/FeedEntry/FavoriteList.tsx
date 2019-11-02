@@ -118,7 +118,8 @@ export default class FavoriteList extends Component<{
 				>
 					<ul className={"list-group feedContainer"}>
 						{this.state.favorites.map((favorite, i) => {
-							return <FeedEntryListItem key={i} entry={favorite.getFeedEntry()} parent={this}/>
+							return <FeedEntryListItem key={i} entry={favorite.getFeedEntry()} parent={this}
+													  showParentInfo={true}/>
 						})}
 					</ul>
 				</InfiniteScroll>;

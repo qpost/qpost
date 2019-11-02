@@ -38,6 +38,7 @@ use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function array_key_exists;
 use function base64_decode;
 use function count;
 use function dirname;
@@ -348,7 +349,7 @@ class StatusController extends AbstractController {
 							foreach ($urls as $url) {
 								$mediaObject = $mediaEmbed->parseUrl($url);
 
-								if ($mediaObject) {
+								if ($mediaObject && array_key_exists("iframe-player", $mediaObject->stub())) {
 									$mediaObject->setParam("autoplay", "false");
 
 									$videoURL = str_replace("&amp;", "&", $mediaObject->getEmbedSrc());

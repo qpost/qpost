@@ -328,7 +328,7 @@ class FeedEntry {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getReplyCount(): int {
-		if ($this->type == FeedEntryType::POST) {
+		if ($this->type == FeedEntryType::POST || $this->type == FeedEntryType::REPLY) {
 			$i = 0;
 
 			foreach ($this->getChildren() as $child) {
@@ -346,7 +346,7 @@ class FeedEntry {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getShareCount(): int {
-		if ($this->type == FeedEntryType::POST) {
+		if ($this->type == FeedEntryType::POST || $this->type == FeedEntryType::SHARE) {
 			$i = 0;
 
 			foreach ($this->getChildren() as $child) {
