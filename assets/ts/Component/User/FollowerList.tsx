@@ -28,6 +28,7 @@ import Empty from "antd/es/empty";
 import {Alert} from "reactstrap";
 import FollowerListItem, {FollowerListItemColProps} from "./FollowerListItem";
 import LoadingFollowerListItem from "./LoadingFollowerListItem";
+import {isEven, isOdd} from "../../Util/Format";
 
 export default class FollowerList extends Component<{
 	user?: User,
@@ -153,23 +154,27 @@ export default class FollowerList extends Component<{
 					<ul className={"list-group feedContainer"}>
 						<Row gutter={24}>
 							<Col {...FollowerListItemColProps}>
-								{this.props.mode !== "search" ? (this.state.followers.map((follower, i) => {
-									if (i % 2) return "";
-
+								{this.props.mode !== "search" ? (this.state.followers.filter((value, index) => {
+									return isOdd(index + 1);
+								}).map((follower, i) => {
 									return <FollowerListItem key={i}
 															 user={this.props.mode === "from" ? follower.getReceiver() : follower.getSender()}/>;
-								})) : (this.state.users.map((user, i) => {
+								})) : (this.state.users.filter((value, index) => {
+									return isOdd(index + 1);
+								}).map((user, i) => {
 									return <FollowerListItem key={i} user={user}/>;
 								}))}
 							</Col>
 
 							<Col {...FollowerListItemColProps}>
-								{this.props.mode !== "search" ? (this.state.followers.map((follower, i) => {
-									if (!(i % 2)) return "";
-
+								{this.props.mode !== "search" ? (this.state.followers.filter((value, index) => {
+									return isEven(index + 1);
+								}).map((follower, i) => {
 									return <FollowerListItem key={i}
 															 user={this.props.mode === "from" ? follower.getReceiver() : follower.getSender()}/>;
-								})) : (this.state.users.map((user, i) => {
+								})) : (this.state.users.filter((value, index) => {
+									return isEven(index + 1);
+								}).map((user, i) => {
 									return <FollowerListItem key={i} user={user}/>;
 								}))}
 							</Col>

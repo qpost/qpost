@@ -294,7 +294,7 @@ export default class PostForm extends Component<any, {
 		const photos: PostFormUploadItem[] = this.state.photos;
 
 		if (photos.length > 0) {
-			for (let photo of photos) {
+			for (const photo of photos) {
 				if (photo.type === "image/gif") {
 					AntMessage.error("You can not add more attachments.");
 
@@ -317,7 +317,7 @@ export default class PostForm extends Component<any, {
 		if (!user) return "";
 
 		let canAddPhoto = this.state.photos.length === 4;
-		for (let photo of this.state.photos) {
+		for (const photo of this.state.photos) {
 			if (photo.type === "image/gif") {
 				canAddPhoto = false;
 			}

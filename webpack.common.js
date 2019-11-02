@@ -33,52 +33,6 @@ module.exports = {
 				exclude: /node_modules/
 			},
 			{
-				test: /\.css$/,
-				use: [
-					{loader: "style-loader"},
-					{loader: "css-loader"}
-				]
-			},
-			{
-				test: /\.scss$/,
-				use: [
-					{loader: "style-loader"},
-					{loader: "css-loader"},
-					{
-						loader: "sass-loader", options: {
-							includePaths: [
-								resolve(__dirname, "node_modules")
-							]
-						}
-					}
-				]
-			},
-			{
-				test: /\.less$/,
-				use: [
-					{
-						loader: "style-loader"
-					},
-					{
-						loader: "css-loader"
-					},
-					{
-						loader: "less-loader",
-						options: {
-							javascriptEnabled: true,
-							modifyVars: {
-								"primary-color": "#007bff",
-								"screen-xs": "0",
-								"screen-sm": "676px",
-								"screen-md": "868px",
-								"screen-lg": "1092px",
-								"screen-xl": "1500px"
-							}
-						}
-					}
-				]
-			},
-			{
 				test: /\.png$/,
 				use: "url-loader"
 			},

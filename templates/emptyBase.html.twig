@@ -55,6 +55,10 @@
 		<link href="{{ url }}" type="text/css" rel="stylesheet"/>
 	{% endfor %}
 
+	{% if styleBundleName is defined and styleBundleName %}
+		<link href="/build/{{ styleBundleName }}" type="text/css" rel="stylesheet"/>
+	{% endif %}
+
 	<script type="text/javascript">
 		window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
 		window["POST_CHARACTER_LIMIT"] = {{ postCharacterLimit }};
