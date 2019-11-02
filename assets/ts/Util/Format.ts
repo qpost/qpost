@@ -46,6 +46,12 @@ export function cacheImage(url: string): string {
 	return "https://images.weserv.nl/?url=" + encodeURI(url);
 }
 
+export function stillGIFURL(url: string): string {
+	url = url.toLowerCase();
+
+	return url.endsWith(".gif") ? cacheImage(url) : url;
+}
+
 export function convertUserAgentToIconClass(userAgent: UAParser): string {
 	const browserName: string | undefined = userAgent.getBrowser().name;
 	if (browserName !== undefined) {
