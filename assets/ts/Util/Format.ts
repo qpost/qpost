@@ -50,6 +50,31 @@ export function stillGIFURL(url: string): string {
 	return url.endsWith(".gif") ? cacheImage(url) : url;
 }
 
+// https://github.com/jonschlinkert/is-number/blob/master/index.js
+export function isNumber(value: any): boolean {
+	if (typeof value === "number") return true;
+
+	if (typeof value === "string" && value.trim() !== "") {
+		return Number.isFinite(+value);
+	}
+
+	return false;
+}
+
+// https://github.com/jonschlinkert/is-odd/blob/master/index.js
+export function isOdd(value: any): boolean {
+	const n = Math.abs(value);
+	if (!isNumber(n)) return false;
+	if (!Number.isInteger(n)) return false;
+	if (!Number.isSafeInteger(n)) return false;
+
+	return (n % 2) === 1;
+}
+
+export function isEven(value: any): boolean {
+	return !isOdd(value);
+}
+
 export function convertUserAgentToIconClass(userAgent: UAParser): string {
 	const browserName: string | undefined = userAgent.getBrowser().name;
 	if (browserName !== undefined) {
