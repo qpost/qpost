@@ -4,7 +4,7 @@
 	"description": "A social microblogging website written in PHP and TypeScript.",
 	"scripts": {
 		"build": "npm run clean && webpack --config=webpack.prod.js",
-		"watch": "webpack --config=webpack.dev.js",
+		"watch": "npm run clean && webpack --config=webpack.dev.js",
 		"clean": "node clean.js"
 	},
 	"repository": {
@@ -75,6 +75,7 @@
 		"file-loader": "^3.0.1",
 		"less": "^3.9.0",
 		"less-loader": "^4.1.0",
+		"mini-css-extract-plugin": "^0.8.0",
 		"mobx": "^5.11.0",
 		"node-sass": "^4.12.0",
 		"optimize-css-assets-webpack-plugin": "^5.0.1",

@@ -29,6 +29,7 @@ use function filemtime;
 use function glob;
 use function strlen;
 use function substr;
+use function usort;
 
 class Twig {
 	public static function param($parameters = []): array {
@@ -59,9 +60,34 @@ class Twig {
 			}
 		}
 
-		$bundleName = null;
+		// load js
+		$bundleName = self::loadBundleFile(__DIR__ . "/../../public/build/bundle*.js");
 
-		$results = glob(__DIR__ . "/../../public/build/bundle*.js");
+		// load css
+		$styleBundleName = self::loadBundleFile(__DIR__ . "/../../public/build/main*.css");
+
+		$twigGlobals = [
+			"siteName" => "qpost",
+			"defaultDescription" => isset($_ENV["DEFAULT_DESCRIPTION"]) ? $_ENV["DEFAULT_DESCRIPTION"] : "",
+			"defaultTwitterImage" => isset($_ENV["DEFAULT_TWITTER_IMAGE"]) ? $_ENV["DEFAULT_TWITTER_IMAGE"] : "",
+			"postCharacterLimit" => $_ENV["POST_CHARACTER_LIMIT"],
+			"verifiedPostCharacterLimit" => $_ENV["VERIFIED_POST_CHARACTER_LIMIT"],
+			"availableLocales" => $availableLocales,
+			"bundleName" => $bundleName,
+			"styleBundleName" => $styleBundleName,
+			"_POST" => isset($_POST) ? $_POST : [],
+			"_GET" => isset($_GET) ? $_GET : [],
+			"_COOKIE" => isset($_COOKIE) ? $_COOKIE : [],
+			"_SERVER" => isset($_SERVER) ? $_SERVER : [],
+			"_SESSION" => isset($_SESSION) ? $_SESSION : [],
+			"_ENV" => isset($_ENV) ? $_ENV : []
+		];
+
+		return array_merge($twigGlobals, $parameters);
+	}
+
+	private static function loadBundleFile(string $pattern): ?string {
+		$results = glob($pattern);
 		if ($results && count($results) > 0) {
 			if (count($results) > 1) {
 				usort($results, function ($a, $b) {
@@ -72,25 +98,9 @@ class Twig {
 				});
 			}
 
-			$bundleName = basename($results[0]);
+			return basename($results[0]);
 		}
 
-		$twigGlobals = [
-			"siteName" => "qpost",
-			"defaultDescription" => isset($_ENV["DEFAULT_DESCRIPTION"]) ? $_ENV["DEFAULT_DESCRIPTION"] : "",
-			"defaultTwitterImage" => isset($_ENV["DEFAULT_TWITTER_IMAGE"]) ? $_ENV["DEFAULT_TWITTER_IMAGE"] : "",
-			"postCharacterLimit" => $_ENV["POST_CHARACTER_LIMIT"],
-			"verifiedPostCharacterLimit" => $_ENV["VERIFIED_POST_CHARACTER_LIMIT"],
-			"availableLocales" => $availableLocales,
-			"bundleName" => $bundleName,
-			"_POST" => isset($_POST) ? $_POST : [],
-			"_GET" => isset($_GET) ? $_GET : [],
-			"_COOKIE" => isset($_COOKIE) ? $_COOKIE : [],
-			"_SERVER" => isset($_SERVER) ? $_SERVER : [],
-			"_SESSION" => isset($_SESSION) ? $_SESSION : [],
-			"_ENV" => isset($_ENV) ? $_ENV : []
-		];
-
-		return array_merge($twigGlobals, $parameters);
+		return null;
 	}
 }
