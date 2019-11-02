@@ -42,6 +42,10 @@ export function limitString(string: string, length: number, addDots?: boolean) {
 	return string;
 }
 
+export function cacheImage(url: string): string {
+	return "https://images.weserv.nl/?url=" + encodeURI(url);
+}
+
 export function convertUserAgentToIconClass(userAgent: UAParser): string {
 	const browserName: string | undefined = userAgent.getBrowser().name;
 	if (browserName !== undefined) {
