@@ -47,8 +47,6 @@ export function cacheImage(url: string): string {
 }
 
 export function stillGIFURL(url: string): string {
-	url = url.toLowerCase();
-
 	return url.endsWith(".gif") ? cacheImage(url) : url;
 }
 

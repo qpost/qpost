@@ -16,27 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
+@import "~react-gif-player/src/GifPlayer";
 
-@import "variables";
-@import "~bootstrap/scss/bootstrap";
-@import "util/index";
+.gif_player {
+	width: 500px;
+	max-width: 100%;
 
-@import "alerts";
-@import "base";
-@import "buttons";
-@import "emoji";
-@import "feed";
-@import "feedButtons";
-@import "followButtons";
-@import "footer";
-@import "forms";
-@import "gif-player";
-@import "home";
-@import "media";
-@import "navigation";
-@import "notifications";
-@import "post-forms";
-@import "profile";
-@import "status";
-@import "user-box";
-@import "nightmode/index";
+	img {
+		@extend .rounded;
+
+		border: 1px solid $primary;
+		width: 100%;
+	}
+}

@@ -18,6 +18,7 @@
  */
 
 import React, {Component, MouseEventHandler} from "react";
+import $ from "jquery";
 import {Row} from "reactstrap";
 import {Link, Redirect} from "react-router-dom";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
@@ -89,6 +90,10 @@ export default class FeedEntryListItem extends Component<{
 
 				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} onClick={(e) => {
 					e.preventDefault();
+
+					if ($(e.target).closest(".gif_player").length) {
+						return;
+					}
 
 					this.redirect();
 

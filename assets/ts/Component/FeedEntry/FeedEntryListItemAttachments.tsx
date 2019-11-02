@@ -22,6 +22,8 @@ import FeedEntry from "../../Entity/Feed/FeedEntry";
 import MediaFile from "../../Entity/Media/MediaFile";
 import MediaFileType from "../../Entity/Media/MediaFileType";
 import ImageViewer from "../ImageViewer";
+import GifPlayer from "react-gif-player";
+import {stillGIFURL} from "../../Util/Format";
 
 export default class FeedEntryListItemAttachments extends Component<{
 	entry: FeedEntry
@@ -40,10 +42,15 @@ export default class FeedEntryListItemAttachments extends Component<{
 		if (attachments.length === 1) {
 			const mediaFile: MediaFile = attachments[0];
 
-			if (mediaFile.getType() === MediaFileType.VIDEO) {
-				return <div className={"embed-responsive embed-responsive-16by9"}>
-					<iframe src={mediaFile.getURL()} className={"embed-responsive-item"}/>
-				</div>;
+			switch (mediaFile.getType()) {
+				case MediaFileType.VIDEO:
+					return <div className={"embed-responsive embed-responsive-16by9"}>
+						<iframe src={mediaFile.getURL()} className={"embed-responsive-item"}/>
+					</div>;
+				case MediaFileType.IMAGE:
+					if (mediaFile.getURL().endsWith(".gif")) {
+						return <GifPlayer gif={mediaFile.getURL()} still={stillGIFURL(mediaFile.getURL())}/>;
+					}
 			}
 		}
 
