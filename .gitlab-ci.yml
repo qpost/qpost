@@ -40,8 +40,8 @@ deploy:
     - git submodule update --depth 50
     - npm i
     - npm run build
-    - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=var --exclude=vendor ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/
-    - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=var --exclude=vendor ./ root@node1.qpo.st:/home/web/qpost/
+    - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=var --exclude=vendor --exclude=node_modules ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/
+    - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=var --exclude=vendor --exclude=node_modules ./ root@node1.qpo.st:/home/web/qpost/
     - ssh -t ssh-gigadrivegroup@zeryther.lima-ssh.de 'cd ~/html/qpost/ && /opt/lima-php/7.2/bin/php ~/phpbin/composer.phar install --no-dev && /opt/lima-php/7.2/bin/php ~/phpbin/composer.phar dump-autoload -o && /opt/lima-php/7.2/bin/php bin/console doctrine:migrations:migrate --no-interaction'
     - ssh -t root@node1.qpo.st 'cd /home/web/qpost/ && composer install --no-dev && composer dump-autoload -o && chmod -R 777 ./* && php bin/console doctrine:migrations:migrate --no-interaction'
     only:
