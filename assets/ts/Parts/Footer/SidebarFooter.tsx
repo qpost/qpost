@@ -41,6 +41,12 @@ export default class SidebarFooter extends Component<any, any> {
 				</li>
 
 				<li>
+					<a href={"https://support.gigadrivegroup.com/hc/en-us#360002202679"} target={"_blank"}>
+						Help
+					</a>
+				</li>
+
+				<li>
 					<a href={"https://gigadrivegroup.com/legal/contact"} target={"_blank"}>
 						Contact
 					</a>
