@@ -21,10 +21,12 @@
 namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\User;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class VerifyEmailController extends AbstractController {
 	/**
@@ -50,7 +52,8 @@ class VerifyEmailController extends AbstractController {
 			$entityManager->flush();
 
 			return $this->render("pages/verifyEmail.html.twig", Twig::param([
-				"title" => "Verify your email address"
+				"title" => "Verify your email address",
+				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_verifyemail_verifyemail", ["userId" => $userId, "activationToken" => $activationToken], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		} else {
 			throw $this->createNotFoundException("Invalid token-user combination.");

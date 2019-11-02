@@ -9,6 +9,7 @@ Disallow: /edit
 Disallow: /logout
 Disallow: /nightmode
 Disallow: /goodbye
+Disallow: /verify-email/
 
 Crawl-delay: 10
 Sitemap: https://qpo.st/sitemap.xml

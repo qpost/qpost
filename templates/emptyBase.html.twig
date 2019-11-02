@@ -61,6 +61,10 @@
 		<link href="/build/{{ styleBundleName }}" type="text/css" rel="stylesheet"/>
 	{% endif %}
 
+	{% if canonicalURL is defined and canonicalURL %}
+		<link rel="canonical" href="{{ canonicalURL }}"/>
+	{% endif %}
+
 	<script type="text/javascript">
 		window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
 		window["POST_CHARACTER_LIMIT"] = {{ postCharacterLimit }};
