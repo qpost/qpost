@@ -4,7 +4,7 @@
 	"description": "A social microblogging website written in PHP and TypeScript.",
 	"scripts": {
 		"build": "npm run clean && webpack --config=webpack.prod.js",
-		"watch": "npm run clean && webpack --config=webpack.dev.js",
+		"watch": "webpack --config=webpack.dev.js",
 		"clean": "node clean.js"
 	},
 	"repository": {
@@ -41,10 +41,11 @@
 		"jquery-ui": "^1.12.1",
 		"js-cookie": "^2.2.0",
 		"json2typescript": "^1.2.3",
-		"npm": "^6.10.0",
+		"npm": "^6.12.1",
 		"popper.js": "^1.15.0",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",
+		"react-gif-player": "^0.4.2",
 		"react-images-viewer": "^1.6.2",
 		"react-infinite-scroller": "^1.2.4",
 		"react-linkify": "^1.0.0-alpha",

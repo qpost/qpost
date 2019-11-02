@@ -158,7 +158,7 @@ class Util {
 	 * @param bool $ignoreCase If true, the case of the strings won't affect the result
 	 * @return bool
 	 */
-	public static function startsWith($string, $start, $ignoreCase = false) {
+	public static function startsWith(string $string, string $start, bool $ignoreCase = false): bool {
 		if (strlen($start) <= strlen($string)) {
 			if ($ignoreCase == true) {
 				return substr($string, 0, strlen($start)) == $start;
@@ -168,5 +168,18 @@ class Util {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Gets whether a string ends with another
+	 *
+	 * @access public
+	 * @param string $string The string in subject
+	 * @param string $end The string to be checked whether it is the end of $string
+	 * @return bool
+	 */
+	public static function endsWith(string $string, string $end): bool {
+		$length = strlen($end);
+		return $length === 0 ? true : (substr($end, -$length) === $end);
 	}
 }

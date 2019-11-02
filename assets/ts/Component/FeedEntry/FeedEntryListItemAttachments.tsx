@@ -22,6 +22,8 @@ import FeedEntry from "../../Entity/Feed/FeedEntry";
 import MediaFile from "../../Entity/Media/MediaFile";
 import MediaFileType from "../../Entity/Media/MediaFileType";
 import ImageViewer from "../ImageViewer";
+import GifPlayer from "react-gif-player";
+import {stillGIFURL} from "../../Util/Format";
 
 export default class FeedEntryListItemAttachments extends Component<{
 	entry: FeedEntry
@@ -40,10 +42,15 @@ export default class FeedEntryListItemAttachments extends Component<{
 		if (attachments.length === 1) {
 			const mediaFile: MediaFile = attachments[0];
 
-			if (mediaFile.getType() === MediaFileType.VIDEO) {
-				return <div className={"embed-responsive embed-responsive-16by9"}>
-					<iframe src={mediaFile.getURL()} className={"embed-responsive-item"}/>
-				</div>;
+			switch (mediaFile.getType()) {
+				case MediaFileType.VIDEO:
+					return <div className={"embed-responsive embed-responsive-16by9"}>
+						<iframe src={mediaFile.getURL()} className={"embed-responsive-item"}/>
+					</div>;
+				case MediaFileType.IMAGE:
+					if (mediaFile.getURL().endsWith(".gif")) {
+						return <GifPlayer gif={mediaFile.getURL()} still={stillGIFURL(mediaFile.getURL())}/>;
+					}
 			}
 		}
 
@@ -54,12 +61,12 @@ export default class FeedEntryListItemAttachments extends Component<{
 				return <div className={"d-block w-100 float-left"}>
 					{mediaFile.getType() === MediaFileType.IMAGE ?
 						<div className={"border border-mainColor bg-dark"} style={{
-							backgroundImage: 'url("' + mediaFile.getURL() + '")',
+							backgroundImage: 'url("' + stillGIFURL(mediaFile.getURL()) + '")',
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 0)}>
-							<img src={mediaFile.getURL()} style={{
+							<img src={stillGIFURL(mediaFile.getURL())} style={{
 								maxHeight: "500px",
 								width: "100%",
 								height: "100%",
@@ -83,7 +90,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 									 style={{
 										 maxHeight: "500px",
 										 height: "100%",
-										 backgroundImage: 'url("' + mediaFile.getURL() + '")',
+										 backgroundImage: 'url("' + stillGIFURL(mediaFile.getURL()) + '")',
 										 backgroundSize: "cover",
 										 backgroundPosition: "center",
 										 cursor: "pointer"
@@ -105,7 +112,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							maxHeight: "573px",
 							width: "100%",
 							height: "100%",
-							backgroundImage: 'url("' + attachments[0].getURL() + '")',
+							backgroundImage: 'url("' + stillGIFURL(attachments[0].getURL()) + '")',
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							cursor: "pointer"
@@ -120,7 +127,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							maxHeight: "537px",
 							width: "100%",
 							height: "50%",
-							backgroundImage: 'url("' + attachments[1].getURL() + '")',
+							backgroundImage: 'url("' + stillGIFURL(attachments[1].getURL()) + '")',
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							cursor: "pointer"
@@ -130,7 +137,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							maxHeight: "537px",
 							width: "100%",
 							height: "50%",
-							backgroundImage: 'url("' + attachments[2].getURL() + '")',
+							backgroundImage: 'url("' + stillGIFURL(attachments[2].getURL()) + '")',
 							backgroundSize: "cover",
 							backgroundPosition: "center",
 							cursor: "pointer"
@@ -151,7 +158,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							maxHeight: "500px",
 							width: "100%",
 							height: "50%",
-							backgroundImage: 'url("' + attachments[0].getURL() + '")',
+							backgroundImage: 'url("' + stillGIFURL(attachments[0].getURL()) + '")',
 							backgroundSize: "cover",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 0)}/>
@@ -160,7 +167,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							maxHeight: "500px",
 							width: "100%",
 							height: "50%",
-							backgroundImage: 'url("' + attachments[1].getURL() + '")',
+							backgroundImage: 'url("' + stillGIFURL(attachments[1].getURL()) + '")',
 							backgroundSize: "cover",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 1)}/>
@@ -175,7 +182,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							maxHeight: "500px",
 							width: "100%",
 							height: "50%",
-							backgroundImage: 'url("' + attachments[2].getURL() + '")',
+							backgroundImage: 'url("' + stillGIFURL(attachments[2].getURL()) + '")',
 							backgroundSize: "cover",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 2)}/>
@@ -184,7 +191,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							maxHeight: "500px",
 							width: "100%",
 							height: "50%",
-							backgroundImage: 'url("' + attachments[3].getURL() + '")',
+							backgroundImage: 'url("' + stillGIFURL(attachments[3].getURL()) + '")',
 							backgroundSize: "cover",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 3)}/>
