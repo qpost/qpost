@@ -17,10 +17,16 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+.homeBackground {
+	background: rgb(0, 123, 255);
+	background: -moz-linear-gradient(180deg, rgba(0, 123, 255, 1) 0%, rgba(0, 212, 255, 1) 33%, rgba(255, 255, 255, 1) 75%);
+	background: -webkit-linear-gradient(180deg, rgba(0, 123, 255, 1) 0%, rgba(0, 212, 255, 1) 33%, rgba(255, 255, 255, 1) 75%);
+	background: linear-gradient(180deg, rgba(0, 123, 255, 1) 0%, rgba(0, 212, 255, 1) 33%, rgba(255, 255, 255, 1) 75%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007bff", endColorstr="#ffffff", GradientType=1);
+}
+
 .homeBase {
-	background: url("/assets/img/homebg.png") no-repeat bottom left;
 	min-height: 100%;
-	background-size: cover;
 
 	@include media-breakpoint-down(md) {
 		padding-bottom: 20px;
@@ -39,6 +45,7 @@
 
 		margin: 0;
 		font-size: 28px;
+		color: #FFF;
 
 		@include media-breakpoint-up(md) {
 			max-width: 60%;
