@@ -40,6 +40,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function is_null;
+use function password_hash;
+use const PASSWORD_BCRYPT;
 
 class ResetPasswordController extends AbstractController {
 	/**
@@ -90,7 +92,7 @@ class ResetPasswordController extends AbstractController {
 										$this->renderView("emails/register.html.twig", [
 											"username" => $user->getUsername(),
 											"displayName" => $user->getDisplayName(),
-											"verificationLink" => $this->generateUrl("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
+											"verificationLink" => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", ["uid" => $user->getId(), "token" => $token->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
 										]),
 										"text/html"
 									)
@@ -112,6 +114,88 @@ class ResetPasswordController extends AbstractController {
 				"title" => "Reset your password",
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
+		} else {
+			return $this->redirectToRoute("qpost_home_index");
+		}
+	}
+
+	/**
+	 * @Route("/reset-password-response")
+	 *
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return RedirectResponse|Response
+	 */
+	public function resetPasswordResponse(Request $request, EntityManagerInterface $entityManager) {
+		$authService = new AuthorizationService($request, $entityManager);
+
+		if (!$authService->isAuthorized()) {
+			$query = $request->query;
+
+			if ($query->has("token") && $query->has("uid")) {
+				$tokenId = $query->get("token");
+				$userId = $query->get("uid");
+
+				$user = $entityManager->getRepository(User::class)->findOneBy(["id" => $userId]);
+
+				$token = $entityManager->getRepository(ResetPasswordToken::class)->findOneBy([
+					"user" => $user,
+					"id" => $tokenId,
+					"active" => true
+				]);
+
+				if ($user && $token) {
+					$renderForm = true;
+
+					if ($request->isMethod("POST")) {
+						$parameters = $request->request;
+
+						if ($parameters->has("_csrf_token") && $this->isCsrfTokenValid("csrf", $parameters->get("_csrf_token"))) {
+							if ($parameters->has("password") && $parameters->has("password2")) {
+								$password = $parameters->get("password");
+								$password2 = $parameters->get("password2");
+
+								if ($password === $password2) {
+									$hash = password_hash($password, PASSWORD_BCRYPT);
+
+									$entityManager->persist($user->setPassword($hash));
+									$entityManager->persist($token->setActive(false)->setTimeAccessed(new DateTime("now")));
+									$entityManager->flush();
+
+									$this->addFlash(FlashMessageType::SUCCESS, "Your password has been changed.");
+									$renderForm = false;
+								} else {
+									$this->addFlash(FlashMessageType::ERROR, "The passwords do not match.");
+								}
+							}
+						}
+					}
+
+					return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
+						"title" => "Reset your password",
+						"renderForm" => $renderForm,
+						"user" => $user,
+						"token" => $token,
+						MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+					]));
+				} else {
+					$this->addFlash(FlashMessageType::ERROR, "Invalid token.");
+
+					return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
+						"title" => "Reset your password",
+						"renderForm" => false,
+						MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+					]));
+				}
+			} else {
+				$this->addFlash(FlashMessageType::ERROR, "Invalid token.");
+
+				return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
+					"title" => "Reset your password",
+					"renderForm" => false,
+					MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+				]));
+			}
 		} else {
 			return $this->redirectToRoute("qpost_home_index");
 		}

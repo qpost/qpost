@@ -12,6 +12,7 @@ Disallow: /goodbye
 Disallow: /verify-email/
 Disallow: /login/callback
 Disallow: /login/gigadrive
+Disallow: /reset-password-response
 
 Crawl-delay: 10
 Sitemap: https://qpo.st/sitemap.xml
