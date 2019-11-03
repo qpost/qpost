@@ -5,49 +5,6 @@
 {% block body %}
 	<div class="identifier--forceDayMode"></div> {# <-- DISABLES NIGHTMODE #}
 
-	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-body my-3">
-					<div class="row">
-						<div class="col-12">
-							<form action="/login" method="post">
-								{% include "parts/csrf.html.twig" %}
-
-								<label for="email" class="sr-only">Username</label>
-								<input type="text" class="form-control" name="email" id="email"
-									   placeholder="Email address or username"/>
-
-								<label for="password" class="sr-only">Password</label>
-								<input type="password" class="form-control" name="password" id="password"
-									   placeholder="Password"/>
-
-								<button type="submit" class="btn btn-primary btn-lg btn-block">
-									Log in
-								</button>
-
-								<button type="button" class="btn btn-light btn-lg btn-block">
-									Create an account
-								</button>
-
-								<div class="or">OR</div>
-
-								<a href="{{ path("qpost_login_gigadrive") }}" type="button"
-								   class="btn btn-success btn-lg btn-block clearUnderline">
-									Sign in with Gigadrive
-								</a>
-							</form>
-						</div>
-					</div>
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<div class="homeBase">
 		<div class="container pt-3">
 			<div class="float-right">
@@ -56,9 +13,7 @@
 				<a href="https://gigadrivegroup.com/advertise" target="_blank"
 				   class="btn btn-link text-white mb-2 mr-3">advertise</a>
 
-				<button type="submit" class="btn btn-link text-white mb-2" data-toggle="modal"
-						data-target="#loginModal">log in
-				</button>
+				<a href="{{ path("qpost_login_index") }}" class="btn btn-link text-white mb-2">log in</a>
 			</div>
 		</div>
 
