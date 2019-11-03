@@ -18,6 +18,7 @@
  */
 
 import {JsonObject, JsonProperty} from "json2typescript";
+import Feature from "./Feature";
 
 @JsonObject("User")
 export default class User {
@@ -165,7 +166,7 @@ export default class User {
 	}
 
 	public getCharacterLimit(): number {
-		return !this.isVerified() ? window["POST_CHARACTER_LIMIT"] : window["VERIFIED_POST_CHARACTER_LIMIT"];
+		return !this.hasFeature(Feature.INCREASED_CHARACTER_LIMIT) ? window["POST_CHARACTER_LIMIT"] : window["INCREASED_POST_CHARACTER_LIMIT"];
 	}
 
 	public getFeatures(): string[] | null {
