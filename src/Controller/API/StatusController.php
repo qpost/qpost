@@ -299,7 +299,7 @@ class StatusController extends AbstractController {
 							file_put_contents($path, $file);
 
 							if (!(@getimagesize($path))) {
-								continue;
+								return $apiService->json(["error" => "One of the attachments is invalid."], 400);
 							}
 
 							$sha256 = hash("sha256", $file);
@@ -320,7 +320,7 @@ class StatusController extends AbstractController {
 
 								$url = $gigadriveService->storeFileOnCDN($file);
 								if (!is_null($url)) {
-									if (Util::endsWith($url, ".gif") && count($attachments) > 0) {
+									if (Util::endsWith($url, ".gif") && count($attachments) > 1) {
 										return $apiService->json(["error" => "You may not upload more attachments, if you include a GIF."], 400);
 									}
 
@@ -330,6 +330,8 @@ class StatusController extends AbstractController {
 										->setOriginalUploader($user)
 										->setType(MediaFileType::IMAGE)
 										->setTime(new DateTime("now"));
+								} else {
+									return $apiService->json(["error" => "Failed to upload attachments."], 400);
 								}
 							}
 
@@ -339,6 +341,8 @@ class StatusController extends AbstractController {
 
 								$entityManager->persist($mediaFile);
 							}
+						} else {
+							return $apiService->json(["error" => "'attachments' has to be an array of base64 strings."], 400);
 						}
 					}
 
