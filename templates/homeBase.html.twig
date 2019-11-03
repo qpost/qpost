@@ -50,11 +50,16 @@
 
 	<div class="homeBase">
 		<div class="container pt-3">
-			{# <a href="#" class="btn btn-link clearUnderline">discover</a> #}
+			<div class="float-right">
+				<a href="{{ path("qpost_page_about") }}" class="btn btn-link text-white mb-2 mr-3">about</a>
 
-			<button type="submit" class="btn btn-primary mb-2 float-right" data-toggle="modal"
-					data-target="#loginModal">Log in
-			</button>
+				<a href="https://gigadrivegroup.com/advertise" target="_blank"
+				   class="btn btn-link text-white mb-2 mr-3">advertise</a>
+
+				<button type="submit" class="btn btn-link text-white mb-2" data-toggle="modal"
+						data-target="#loginModal">log in
+				</button>
+			</div>
 		</div>
 
 		<div class="container my-5">
@@ -68,6 +73,11 @@
 		<div class="text-center small text-muted text-uppercase font-weight-bold homeFooter">
 			<a href="https://gigadrivegroup.com/legal/contact" target="_blank" class="clearUnderline mx-3">
 				Contact Info
+			</a>
+
+			<a href="https://support.gigadrivegroup.com/hc/en-us/categories/360002202679-qpost" target="_blank"
+			   class="clearUnderline mx-3">
+				Support
 			</a>
 
 			<a href="https://gigadrivegroup.com/legal/terms-of-service" target="_blank" class="clearUnderline mx-3">
