@@ -24,6 +24,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\Type;
 use qpost\Entity\User;
+use function strtolower;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -43,6 +44,9 @@ class UserRepository extends ServiceEntityRepository {
 	 * @return bool
 	 */
 	public function isUsernameAvailable(string $username): bool {
+		$blacklist = ["about", "login", "logout", "nightmode", "account", "notifications", "messages", "profile", "terms", "tos", "privacy", "policy", "disclaimer", "edit", "search", "goodbye", "status", "api", "mehdi", "baaboura"];
+		if (in_array(strtolower($username), $blacklist)) return false;
+
 		return $this->count(["username" => $username]) === 0;
 	}
 
