@@ -20,15 +20,26 @@
 
 namespace qpost\Controller;
 
+use DateTime;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
+use qpost\Entity\ResetPasswordToken;
+use qpost\Entity\User;
 use qpost\Service\AuthorizationService;
 use qpost\Twig\Twig;
+use qpost\Util\Util;
+use Swift_Mailer;
+use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function is_null;
 
 class ResetPasswordController extends AbstractController {
 	/**
@@ -36,12 +47,67 @@ class ResetPasswordController extends AbstractController {
 	 *
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
-	 * @return Response
+	 * @param Swift_Mailer $mailer
+	 * @return RedirectResponse|Response
+	 * @throws NonUniqueResultException
 	 */
-	public function index(Request $request, EntityManagerInterface $entityManager) {
+	public function index(Request $request, EntityManagerInterface $entityManager, Swift_Mailer $mailer) {
 		$authService = new AuthorizationService($request, $entityManager);
 
 		if (!$authService->isAuthorized()) {
+			if ($request->isMethod("POST")) {
+				$parameters = $request->request;
+
+				if ($parameters->has("_csrf_token") && $this->isCsrfTokenValid("csrf", $parameters->get("_csrf_token"))) {
+					if ($parameters->has("email")) {
+						$email = (string)$parameters->get("email");
+
+						if (!Util::isEmpty($email)) {
+							/**
+							 * @var User $user
+							 */
+							$user = $entityManager->getRepository(User::class)->createQueryBuilder("u")
+								->where("upper(u.username) = upper(:query)")
+								->setParameter("query", $email, Type::STRING)
+								->orWhere("upper(u.email) = upper(:query)")
+								->setParameter("query", $email, Type::STRING)
+								->setMaxResults(1)
+								->getQuery()
+								->getOneOrNullResult();
+
+							if (!is_null($user) && is_null($user->getGigadriveData())) {
+								$token = (new ResetPasswordToken())
+									->setUser($user)
+									->setTime(new DateTime("now"));
+
+								$entityManager->persist($token);
+								$entityManager->flush();
+
+								$mailer->send((new Swift_Message("Reset your qpost password"))
+									->setFrom($_ENV["MAILER_FROM"])
+									->setTo($user->getEmail())
+									->setBody(
+										$this->renderView("emails/register.html.twig", [
+											"username" => $user->getUsername(),
+											"displayName" => $user->getDisplayName(),
+											"verificationLink" => $this->generateUrl("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
+										]),
+										"text/html"
+									)
+								);
+
+								$this->addSuccessfulFlash();
+							} else {
+								// add successful flash regardless of whether the user exists to prevent leaking email addresses
+								$this->addSuccessfulFlash();
+							}
+						} else {
+							$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+						}
+					}
+				}
+			}
+
 			return $this->render("pages/resetPassword.html.twig", Twig::param([
 				"title" => "Reset your password",
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
@@ -49,5 +115,9 @@ class ResetPasswordController extends AbstractController {
 		} else {
 			return $this->redirectToRoute("qpost_home_index");
 		}
+	}
+
+	private function addSuccessfulFlash(): void {
+		$this->addFlash(FlashMessageType::SUCCESS, "An email has been sent to you, that contains a link to reset your password.");
 	}
 }
