@@ -58,22 +58,30 @@
 			<hr class="mt-2"/>
 
 			<footer class="small text-muted my-2">
-				&copy; Copyright {{ "now"|date("Y") }} Gigadrive Group - All rights reserved.
+				&copy; Copyright 2018-{{ "now"|date("Y") }} Gigadrive - All rights reserved.
 
 				<div class="float-right">
-					<a href="https://gigadrivegroup.com/legal/contact" target="_blank">Contact Info</a>
+					<a href="{{ path("qpost_redirect_contact") }}" target="_blank">Contact Info</a>
 
 					&bull;
 
-					<a href="https://gigadrivegroup.com/legal/terms-of-service" target="_blank">Terms of Service</a>
+					<a href="{{ path("qpost_page_about") }}">About</a>
 
 					&bull;
 
-					<a href="https://gigadrivegroup.com/legal/privacy" target="_blank">Privacy Policy</a>
+					<a href="{{ path("qpost_redirect_help") }}" target="_blank">Help</a>
 
 					&bull;
 
-					<a href="https://gigadrivegroup.com/legal/disclaimer" target="_blank">Disclaimer</a>
+					<a href="{{ path("qpost_redirect_terms") }}" target="_blank">Terms of Service</a>
+
+					&bull;
+
+					<a href="{{ path("qpost_redirect_privacy") }}" target="_blank">Privacy Policy</a>
+
+					&bull;
+
+					<a href="{{ path("qpost_redirect_disclaimer") }}" target="_blank">Disclaimer</a>
 				</div>
 			</footer>
 		{% endblock %}

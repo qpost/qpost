@@ -35,38 +35,37 @@ export default class SidebarFooter extends Component<any, any> {
 				</li>
 
 				<li>
-					<a href={"https://gigadrivegroup.com/advertise"} target={"_blank"}>
+					<a href={"/advertise"} target={"_blank"}>
 						Advertise
 					</a>
 				</li>
 
 				<li>
-					<a href={"https://support.gigadrivegroup.com/hc/en-us/categories/360002202679-qpost"}
-					   target={"_blank"}>
+					<a href={"/help"} target={"_blank"}>
 						Help
 					</a>
 				</li>
 
 				<li>
-					<a href={"https://gigadrivegroup.com/legal/contact"} target={"_blank"}>
+					<a href={"/contact"} target={"_blank"}>
 						Contact
 					</a>
 				</li>
 
 				<li>
-					<a href={"https://gigadrivegroup.com/legal/terms-of-service"} target={"_blank"}>
+					<a href={"/terms"} target={"_blank"}>
 						Terms
 					</a>
 				</li>
 
 				<li>
-					<a href={"https://gigadrivegroup.com/legal/privacy-policy"} target={"_blank"}>
+					<a href={"/privacy"} target={"_blank"}>
 						Privacy
 					</a>
 				</li>
 
 				<li>
-					<a href={"https://gigadrivegroup.com/legal/disclaimer"} target={"_blank"}>
+					<a href={"/disclaimer"} target={"_blank"}>
 						Disclaimer
 					</a>
 				</li>
