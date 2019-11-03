@@ -18,6 +18,7 @@
  */
 
 import {JsonObject, JsonProperty} from "json2typescript";
+import Feature from "./Feature";
 
 @JsonObject("User")
 export default class User {
@@ -80,6 +81,9 @@ export default class User {
 
 	@JsonProperty("blocked", Boolean)
 	private blocked: boolean = undefined;
+
+	@JsonProperty("features", [String])
+	private features: string[] | null = undefined;
 
 	public getId(): number {
 		return this.id;
@@ -162,6 +166,18 @@ export default class User {
 	}
 
 	public getCharacterLimit(): number {
-		return !this.isVerified() ? window["POST_CHARACTER_LIMIT"] : window["VERIFIED_POST_CHARACTER_LIMIT"];
+		return !this.hasFeature(Feature.INCREASED_CHARACTER_LIMIT) ? window["POST_CHARACTER_LIMIT"] : window["INCREASED_POST_CHARACTER_LIMIT"];
+	}
+
+	public getFeatures(): string[] | null {
+		return this.features;
+	}
+
+	public hasFeature(feature: string): boolean {
+		if (this.features !== null) {
+			return this.features.includes(feature);
+		}
+
+		return false;
 	}
 }

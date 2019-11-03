@@ -24,6 +24,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Exception;
 use MediaEmbed\MediaEmbed;
+use qpost\Constants\Feature;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\MediaFileType;
 use qpost\Constants\NotificationType;
@@ -179,7 +180,7 @@ class StatusController extends AbstractController {
 				/**
 				 * @var int $characterLimit
 				 */
-				$characterLimit = $user->isVerified() ? $_ENV["VERIFIED_POST_CHARACTER_LIMIT"] : $_ENV["POST_CHARACTER_LIMIT"];
+				$characterLimit = $user->hasFeature(Feature::INCREASED_CHARACTER_LIMIT) ? $_ENV["INCREASED_POST_CHARACTER_LIMIT"] : $_ENV["POST_CHARACTER_LIMIT"];
 
 				if (strlen($message) >= 0 && strlen($message) <= $characterLimit) {
 					$attachments = [];

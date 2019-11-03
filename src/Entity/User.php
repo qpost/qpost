@@ -212,6 +212,11 @@ class User {
 	 */
 	private $blockedBy;
 
+	/**
+	 * @ORM\Column(type="array", nullable=true)
+	 */
+	private $features = [];
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -1220,6 +1225,45 @@ class User {
 			if ($blockedBy->getTarget() === $this) {
 				$blockedBy->setTarget(null);
 			}
+		}
+
+		return $this;
+	}
+
+	public function getFeatures(): ?array {
+		return $this->features;
+	}
+
+	public function setFeatures(?array $features): self {
+		$this->features = $features;
+
+		return $this;
+	}
+
+	public function hasFeature(string $feature): bool {
+		return !is_null($this->features) && in_array($feature, $this->features);
+	}
+
+	public function giveFeature(string $feature): self {
+		$features = $this->features;
+		if (is_null($features)) $features = [];
+
+		$features[] = $feature;
+
+		$this->features = $features;
+		return $this;
+	}
+
+	public function takeFeature(string $feature): self {
+		if (!is_null($this->features)) {
+			$features = [];
+
+			foreach ($this->features as $f) {
+				if ($f !== $feature) $features[] = $f;
+			}
+
+			if (count($features) === 0) $features = null;
+			$this->features = $features;
 		}
 
 		return $this;

@@ -71,7 +71,7 @@ class Twig {
 			"defaultDescription" => isset($_ENV["DEFAULT_DESCRIPTION"]) ? $_ENV["DEFAULT_DESCRIPTION"] : "",
 			"defaultTwitterImage" => isset($_ENV["DEFAULT_TWITTER_IMAGE"]) ? $_ENV["DEFAULT_TWITTER_IMAGE"] : "",
 			"postCharacterLimit" => $_ENV["POST_CHARACTER_LIMIT"],
-			"verifiedPostCharacterLimit" => $_ENV["VERIFIED_POST_CHARACTER_LIMIT"],
+			"increasedPostCharacterLimit" => $_ENV["INCREASED_POST_CHARACTER_LIMIT"],
 			"availableLocales" => $availableLocales,
 			"bundleName" => $bundleName,
 			"styleBundleName" => $styleBundleName,

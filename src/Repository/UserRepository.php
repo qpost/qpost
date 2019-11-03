@@ -44,7 +44,7 @@ class UserRepository extends ServiceEntityRepository {
 	 * @return bool
 	 */
 	public function isUsernameAvailable(string $username): bool {
-		$blacklist = ["about", "login", "logout", "nightmode", "account", "notifications", "messages", "profile", "terms", "tos", "privacy", "policy", "disclaimer", "edit", "search", "goodbye", "status", "api", "mehdi", "baaboura"];
+		$blacklist = ["about", "login", "logout", "nightmode", "account", "notifications", "messages", "profile", "terms", "tos", "privacy", "policy", "disclaimer", "edit", "search", "goodbye", "status", "api", "mehdi", "baaboura", "guidelines", "rules", "contact", "help", "support", "advertise"];
 		if (in_array(strtolower($username), $blacklist)) return false;
 
 		return $this->count(["username" => $username]) === 0;
