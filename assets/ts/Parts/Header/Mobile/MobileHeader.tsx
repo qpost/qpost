@@ -48,7 +48,8 @@ export default class MobileHeader extends Component<{
 			}}>
 				<Button id={"mobileSiderTrigger"} ghost={true} type={"link"} style={{
 					float: "left",
-					lineHeight: "64px"
+					lineHeight: "64px",
+					marginTop: "-2px"
 				}}>
 					<i className="fas fa-bars"/>
 				</Button>
@@ -59,12 +60,18 @@ export default class MobileHeader extends Component<{
 					<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
 				</a>}
 
-				<Button ghost={true} type={"link"} style={{
-					float: "right",
-					lineHeight: "64px"
-				}}>
-					<i className="fas fa-bars"/>
-				</Button>
+				{currentUser ?
+					<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline float-right"}>
+						<img src={currentUser.getAvatarURL()} alt={currentUser.getUsername()} width={24} height={24}
+							 className={"rounded border border-primary"} style={{
+							marginTop: "-3px"
+						}}/>
+					</Link> : <a href={"/login"} className={"clearUnderline float-right"}>
+						<img src={"https://cdn.gigadrivegroup.com/defaultAvatar.png"} alt={"Log in"} width={24}
+							 height={24} className={"rounded border border-primary"} style={{
+							marginTop: "-3px"
+						}}/>
+					</a>}
 			</div>
 		</Layout.Header>;
 	}
