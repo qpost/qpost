@@ -61,7 +61,7 @@ class PageController extends AbstractController {
 				$title .= ": \"" . Util::limitString($text, 40, true) . "\"";
 			}
 
-			$bigSocialImage = "";
+			$bigSocialImage = $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png";
 
 			/**
 			 * @var MediaFile $mediaFile
@@ -92,7 +92,8 @@ class PageController extends AbstractController {
 		return $this->render("react.html.twig", Twig::param([
 			"title" => "About",
 			"description" => "Basic information about qpost",
-			"bigSocialImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png",
+			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
+			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_about", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
@@ -105,6 +106,8 @@ class PageController extends AbstractController {
 	public function goodbye() {
 		return $this->render("react.html.twig", Twig::param([
 			"title" => "Goodbye",
+			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
+			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
 			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_goodbye", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
@@ -117,7 +120,8 @@ class PageController extends AbstractController {
 	public function search() {
 		return $this->render("react.html.twig", Twig::param([
 			"title" => "Search",
-			"twitterImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png",
+			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
+			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
 			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_search", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
@@ -362,6 +366,7 @@ class PageController extends AbstractController {
 				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"description" => $user->getBio(),
 				"twitterImage" => $user->getAvatarURL(),
+				"bigSocialImage" => $user->getAvatarURL(),
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		} else {
