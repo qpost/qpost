@@ -163,8 +163,8 @@ class HomeController extends AbstractController {
 
 			return $this->render("pages/home/index.html.twig", Twig::param([
 				"description" => "A social microblogging network that helps you share your thoughts online, protected by freedom of speech.",
-				"bigSocialImage" => $this->generateUrl("qpost_home_index") . "assets/img/bigSocialImage-default.png",
-				"twitterImage" => $this->generateUrl("qpost_home_index") . "assets/img/favicon-512.png",
+				"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
+				"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		}
