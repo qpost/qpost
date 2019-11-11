@@ -107,10 +107,17 @@ class FeedEntry {
 	 */
 	private $attachments;
 
+	/**
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries")
+	 * @Serializer\Exclude()
+	 */
+	private $hashtags;
+
 	public function __construct() {
 		$this->children = new ArrayCollection();
 		$this->favorites = new ArrayCollection();
 		$this->attachments = new ArrayCollection();
+		$this->hashtags = new ArrayCollection();
 	}
 
 	/**
@@ -470,6 +477,29 @@ class FeedEntry {
 	public function removeAttachment(MediaFile $attachment): self {
 		if ($this->attachments->contains($attachment)) {
 			$this->attachments->removeElement($attachment);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection|Hashtag[]
+	 */
+	public function getHashtags(): Collection {
+		return $this->hashtags;
+	}
+
+	public function addHashtag(Hashtag $hashtag): self {
+		if (!$this->hashtags->contains($hashtag)) {
+			$this->hashtags[] = $hashtag;
+		}
+
+		return $this;
+	}
+
+	public function removeHashtag(Hashtag $hashtag): self {
+		if ($this->hashtags->contains($hashtag)) {
+			$this->hashtags->removeElement($hashtag);
 		}
 
 		return $this;
