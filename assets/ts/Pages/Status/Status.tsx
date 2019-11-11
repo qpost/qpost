@@ -46,6 +46,8 @@ import ReplyList from "../../Component/FeedEntry/ReplyList";
 import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 import PostUnavailableAlert from "../../Component/PostUnavailableAlert";
+import LeftSidebar from "../../Component/Layout/LeftSidebar";
+import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -112,12 +114,17 @@ export default class Status extends Component<any, {
 		console.log(parents);
 
 		return <ContentBase>
-			<PageContent rightSidebar>
+			<LeftSidebar>
+				<SidebarStickyContent>
+					<HomeFeedProfileBox/>
+				</SidebarStickyContent>
+			</LeftSidebar>
+
+			<PageContent leftSidebar rightSidebar>
 				{status !== null && user !== null ? (
 					<div>
 						{parents.map((entry: FeedEntry, index: number) => {
-							return <FeedEntryListItem hideAttachments={true} entry={entry} showParentInfo={true}
-													  key={index}/>;
+							return <FeedEntryListItem entry={entry} showParentInfo={true} key={index}/>;
 						})}
 
 						{parents.length === 0 && status.getType() === FeedEntryType.REPLY ? <Card size={"small"}>
