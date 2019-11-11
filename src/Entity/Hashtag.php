@@ -55,6 +55,11 @@ class Hashtag {
 	 */
 	private $feedEntries;
 
+	/**
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\TrendingHashtagData", inversedBy="hashtag", cascade={"persist", "remove"})
+	 */
+	private $trendingData;
+
 	public function __construct() {
 		$this->feedEntries = new ArrayCollection();
 	}
@@ -120,6 +125,16 @@ class Hashtag {
 			$this->feedEntries->removeElement($feedEntry);
 			$feedEntry->removeHashtag($this);
 		}
+
+		return $this;
+	}
+
+	public function getTrendingData(): ?TrendingHashtagData {
+		return $this->trendingData;
+	}
+
+	public function setTrendingData(?TrendingHashtagData $trendingData): self {
+		$this->trendingData = $trendingData;
 
 		return $this;
 	}
