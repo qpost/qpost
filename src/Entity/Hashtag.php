@@ -24,6 +24,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="qpost\Repository\HashtagRepository")
@@ -37,11 +38,13 @@ class Hashtag {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User")
+	 * @Serializer\Exclude()
 	 */
 	private $creator;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry")
+	 * @Serializer\Exclude()
 	 */
 	private $creatingEntry;
 
@@ -52,16 +55,19 @@ class Hashtag {
 
 	/**
 	 * @ORM\ManyToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="hashtags")
+	 * @Serializer\Exclude()
 	 */
 	private $feedEntries;
 
 	/**
 	 * @ORM\OneToOne(targetEntity="qpost\Entity\TrendingHashtagData", inversedBy="hashtag", cascade={"persist", "remove"})
+	 * @Serializer\Exclude()
 	 */
 	private $trendingData;
 
 	/**
 	 * @ORM\Column(type="boolean", nullable=true)
+	 * @Serializer\Exclude()
 	 */
 	private $blacklisted = false;
 

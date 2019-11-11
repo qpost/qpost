@@ -34,4 +34,14 @@ class TrendingHashtagDataRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, TrendingHashtagData::class);
 	}
+
+	/**
+	 * @return TrendingHashtagData[]
+	 */
+	public function getTrends(): array {
+		return $this->createQueryBuilder("t")
+			->orderBy("t.postsThisWeek", "DESC")
+			->getQuery()
+			->getResult();
+	}
 }
