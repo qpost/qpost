@@ -69,13 +69,13 @@ class APIService extends AuthorizationService {
 	private $serializer;
 
 	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel) {
-		parent::__construct($requestStack->getCurrentRequest(), $entityManager, $kernel->isDebug()); // Disable cookie auth to prevent CSRF attacks
+		parent::__construct($requestStack->getCurrentRequest(), $entityManager, $kernel->getEnvironment() !== "prod"); // Disable cookie auth to prevent CSRF attacks
 
 		$this->logger = $logger;
 		$this->kernel = $kernel;
 		$this->serializer = SerializerBuilder::create()
 			->setDebug($kernel->isDebug())
-			->setCacheDir(__DIR__ . "/../../var/cache/" . $kernel->getEnvironment() . "/jms/")
+			->setCacheDir(__DIR__ . "/../../var/cache/" . $kernel->getEnvironment() . "/jms")
 			->setPropertyNamingStrategy(
 				new SerializedNameAnnotationStrategy(
 					new IdenticalPropertyNamingStrategy()
