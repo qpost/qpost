@@ -316,7 +316,7 @@ class StatusController extends AbstractController {
 								// Check if file is smaller than 2MB
 								$fileSize = @filesize($path);
 								if (!($fileSize) || !(($fileSize / 1024 / 1024) < 2)) {
-									continue;
+									return $apiService->json(["error" => "Attachments can not be bigger than 2MB."], 413);
 								}
 
 								$url = $gigadriveService->storeFileOnCDN($file);
