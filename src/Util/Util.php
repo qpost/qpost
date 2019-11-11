@@ -203,6 +203,8 @@ class Util {
 				if (!self::startsWith($hashtag, "#")) continue;
 				$hashtag = substr($hashtag, 1);
 
+				if (strlen($hashtag) > 64) continue;
+
 				if (count($results) > 0) {
 					// filter duplicates
 					foreach ($results as $result) {
