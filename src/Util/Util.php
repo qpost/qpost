@@ -20,6 +20,10 @@
 
 namespace qpost\Util;
 
+use function array_count_values;
+use function array_keys;
+use function count;
+use function explode;
 use function is_array;
 use function is_null;
 use function preg_match_all;
@@ -193,26 +197,30 @@ class Util {
 	public static function extractHashtags(string $text): array {
 		$results = [];
 
-		// https://stackoverflow.com/a/16609221/4117923
-		preg_match_all("/(#\w+)/u", $text, $matches);
-		if ($matches && is_array($matches)) {
-			$hashtagsArray = array_count_values($matches[0]);
-			$hashtags = array_keys($hashtagsArray);
+		foreach (explode(" ", $text) as $part) {
+			if (!self::startsWith($part, "#")) continue;
 
-			foreach ($hashtags as $hashtag) {
-				if (!self::startsWith($hashtag, "#")) continue;
-				$hashtag = substr($hashtag, 1);
+			// https://stackoverflow.com/a/16609221/4117923
+			preg_match_all("/(#\w+)/u", $part, $matches);
+			if ($matches && is_array($matches)) {
+				$hashtagsArray = array_count_values($matches[0]);
+				$hashtags = array_keys($hashtagsArray);
 
-				if (strlen($hashtag) > 64) continue;
+				foreach ($hashtags as $hashtag) {
+					if (!self::startsWith($hashtag, "#")) continue;
+					$hashtag = substr($hashtag, 1);
 
-				if (count($results) > 0) {
-					// filter duplicates
-					foreach ($results as $result) {
-						if (strtoupper($result) === $hashtag) continue;
+					if (strlen($hashtag) > 64) continue;
+
+					if (count($results) > 0) {
+						// filter duplicates
+						foreach ($results as $result) {
+							if (strtoupper($result) === $hashtag) continue;
+						}
 					}
-				}
 
-				$results[] = $hashtag;
+					$results[] = $hashtag;
+				}
 			}
 		}
 
