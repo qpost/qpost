@@ -122,8 +122,7 @@ export default class Status extends Component<any, {
 				{status !== null && user !== null ? (
 					<div>
 						{parents.map((entry: FeedEntry, index: number) => {
-							return <FeedEntryListItem hideAttachments={true} entry={entry} showParentInfo={true}
-													  key={index}/>;
+							return <FeedEntryListItem entry={entry} showParentInfo={true} key={index}/>;
 						})}
 
 						{parents.length === 0 && status.getType() === FeedEntryType.REPLY ? <Card size={"small"}>
