@@ -187,7 +187,7 @@ class Util {
 	 */
 	public static function endsWith(string $string, string $end): bool {
 		$length = strlen($end);
-		return $length === 0 ? true : (substr($end, -$length) === $end);
+		return $length === 0 ? true : (substr($string, -$length) === $end);
 	}
 
 	/**
