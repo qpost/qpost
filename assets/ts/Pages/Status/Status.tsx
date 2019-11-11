@@ -115,7 +115,9 @@ export default class Status extends Component<any, {
 
 		return <ContentBase>
 			<LeftSidebar>
-				<HomeFeedProfileBox/>
+				<SidebarStickyContent>
+					<HomeFeedProfileBox/>
+				</SidebarStickyContent>
 			</LeftSidebar>
 
 			<PageContent leftSidebar rightSidebar>
