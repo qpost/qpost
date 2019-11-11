@@ -60,6 +60,11 @@ class Hashtag {
 	 */
 	private $trendingData;
 
+	/**
+	 * @ORM\Column(type="boolean", nullable=true)
+	 */
+	private $blacklisted = false;
+
 	public function __construct() {
 		$this->feedEntries = new ArrayCollection();
 	}
@@ -135,6 +140,16 @@ class Hashtag {
 
 	public function setTrendingData(?TrendingHashtagData $trendingData): self {
 		$this->trendingData = $trendingData;
+
+		return $this;
+	}
+
+	public function getBlacklisted(): ?bool {
+		return $this->blacklisted;
+	}
+
+	public function setBlacklisted(?bool $blacklisted): self {
+		$this->blacklisted = $blacklisted;
 
 		return $this;
 	}
