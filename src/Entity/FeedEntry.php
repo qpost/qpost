@@ -109,6 +109,7 @@ class FeedEntry {
 
 	/**
 	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries")
+	 * @Serializer\Exclude()
 	 */
 	private $hashtags;
 

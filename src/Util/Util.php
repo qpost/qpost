@@ -20,10 +20,13 @@
 
 namespace qpost\Util;
 
+use function is_array;
 use function is_null;
 use function preg_match_all;
 use function rand;
 use function strlen;
+use function strtoupper;
+use function substr;
 use function trim;
 
 class Util {
@@ -181,5 +184,36 @@ class Util {
 	public static function endsWith(string $string, string $end): bool {
 		$length = strlen($end);
 		return $length === 0 ? true : (substr($end, -$length) === $end);
+	}
+
+	/**
+	 * @param string $text
+	 * @return array
+	 */
+	public static function extractHashtags(string $text): array {
+		$results = [];
+
+		// https://stackoverflow.com/a/16609221/4117923
+		preg_match_all("/(#\w+)/u", $text, $matches);
+		if ($matches && is_array($matches)) {
+			$hashtagsArray = array_count_values($matches[0]);
+			$hashtags = array_keys($hashtagsArray);
+
+			foreach ($hashtags as $hashtag) {
+				if (!self::startsWith($hashtag, "#")) continue;
+				$hashtag = substr($hashtag, 1);
+
+				if (count($results) > 0) {
+					// filter duplicates
+					foreach ($results as $result) {
+						if (strtoupper($result) === $hashtag) continue;
+					}
+				}
+
+				$results[] = $hashtag;
+			}
+		}
+
+		return $results;
 	}
 }

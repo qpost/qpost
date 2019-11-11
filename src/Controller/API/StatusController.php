@@ -29,6 +29,7 @@ use qpost\Constants\FeedEntryType;
 use qpost\Constants\MediaFileType;
 use qpost\Constants\NotificationType;
 use qpost\Entity\FeedEntry;
+use qpost\Entity\Hashtag;
 use qpost\Entity\MediaFile;
 use qpost\Entity\Notification;
 use qpost\Entity\User;
@@ -268,6 +269,27 @@ class StatusController extends AbstractController {
 						->setTime(new DateTime("now"));
 
 					$entityManager->persist($feedEntry);
+
+					// handle hashtags
+					if (!Util::isEmpty($message)) {
+						$tags = Util::extractHashtags($message);
+
+						if (count($tags) > 0) {
+							foreach ($tags as $tag) {
+								$hashtag = $entityManager->getRepository(Hashtag::class)->findHashtag($tag);
+								if (!$hashtag) {
+									$hashtag = (new Hashtag())
+										->setId($tag)
+										->setCreator($user)
+										->setCreatingEntry($feedEntry)
+										->setTime(new DateTime("now"));
+								}
+
+								$hashtag->addFeedEntry($feedEntry);
+								$entityManager->persist($hashtag);
+							}
+						}
+					}
 
 					// handle reply notification
 					if ($parent && $type === FeedEntryType::REPLY) {
