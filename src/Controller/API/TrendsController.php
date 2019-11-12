@@ -44,6 +44,6 @@ class TrendsController extends AbstractController {
 			$results[] = $apiService->serialize($trend);
 		}
 
-		return $apiService->json($results, 200);
+		return $apiService->json(["results" => $results], 200);
 	}
 }

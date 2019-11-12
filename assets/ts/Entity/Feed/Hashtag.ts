@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,27 +17,21 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "variables";
-@import "~bootstrap/scss/bootstrap";
-@import "util/index";
+import {JsonObject, JsonProperty} from "json2typescript";
 
-@import "alerts";
-@import "base";
-@import "buttons";
-@import "emoji";
-@import "feed";
-@import "feedButtons";
-@import "followButtons";
-@import "footer";
-@import "forms";
-@import "gif-player";
-@import "home";
-@import "media";
-@import "navigation";
-@import "notifications";
-@import "post-forms";
-@import "profile";
-@import "status";
-@import "trends";
-@import "user-box";
-@import "nightmode/index";
+@JsonObject("Hashtag")
+export default class Hashtag {
+	@JsonProperty("id", String)
+	private id: string = undefined;
+
+	@JsonProperty("time", String)
+	private time: string = undefined;
+
+	public getId(): string {
+		return this.id;
+	}
+
+	public getTime(): string {
+		return this.time;
+	}
+}
