@@ -28,10 +28,12 @@ use function is_array;
 use function is_null;
 use function preg_match_all;
 use function rand;
+use function str_replace;
 use function strlen;
 use function strtoupper;
 use function substr;
 use function trim;
+use const PHP_EOL;
 
 class Util {
 	/**
@@ -197,7 +199,7 @@ class Util {
 	public static function extractHashtags(string $text): array {
 		$results = [];
 
-		foreach (explode(" ", $text) as $part) {
+		foreach (explode(" ", str_replace(PHP_EOL, " ", $text)) as $part) {
 			if (!self::startsWith($part, "#")) continue;
 
 			// https://stackoverflow.com/a/16609221/4117923
