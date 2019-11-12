@@ -24,6 +24,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use qpost\Constants\FeedEntryType;
 use qpost\Entity\FeedEntry;
+use qpost\Entity\Hashtag;
 use qpost\Entity\Notification;
 
 class DataDeletionService {
@@ -61,6 +62,13 @@ class DataDeletionService {
 			} else {
 				$this->deleteFeedEntry($child);
 			}
+		}
+
+		foreach ($entityManager->getRepository(Hashtag::class)->findBy([
+			"creatingEntry" => $feedEntry
+		]) as $hashtag) {
+			$hashtag->setCreatingEntry(null);
+			$entityManager->persist($hashtag);
 		}
 
 		$entityManager->remove($feedEntry);
