@@ -24,6 +24,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Exception;
 use Gumlet\ImageResize;
+use qpost\Entity\Hashtag;
 use qpost\Entity\MediaFile;
 use qpost\Entity\Notification;
 use qpost\Entity\User;
@@ -234,6 +235,14 @@ class UserController extends AbstractController {
 						"referencedUser" => $user
 					]) as $notification) {
 						$entityManager->remove($notification);
+					}
+
+					// Update hashtags
+					foreach ($entityManager->getRepository(Hashtag::class)->findBy([
+						"creator" => $user
+					]) as $hashtag) {
+						$hashtag->setCreator(null);
+						$entityManager->persist($hashtag);
 					}
 
 					$entityManager->remove($user);
