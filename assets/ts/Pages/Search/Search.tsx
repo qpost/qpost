@@ -24,9 +24,11 @@ import {Col, Input, Menu, Row} from "antd";
 import NightMode from "../../NightMode/NightMode";
 import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import FollowerList from "../../Component/User/FollowerList";
+import TrendingTopics from "../../Component/TrendingTopics";
 
 export default class Search extends Component<any, {
 	query: string,
+	value: string,
 	activeMenuPoint: string,
 	forceQuery: string | null
 }> {
@@ -36,6 +38,7 @@ export default class Search extends Component<any, {
 
 		this.state = {
 			query: "",
+			value: "",
 			activeMenuPoint: "POSTS",
 			forceQuery: null
 		};
@@ -45,6 +48,7 @@ export default class Search extends Component<any, {
 		if (localStorage.getItem("searchQuery")) {
 			this.setState({
 				query: localStorage.getItem("searchQuery"),
+				value: localStorage.getItem("searchQuery"),
 				forceQuery: null
 			});
 
@@ -57,11 +61,11 @@ export default class Search extends Component<any, {
 			<PageContent>
 				<Row gutter={24}>
 					<Col md={{span: 12, offset: 6}}>
-						<Input.Search placeholder="enter a query" value={this.state.query} onChange={event => {
+						<Input.Search placeholder="enter a query" value={this.state.value} onChange={event => {
 							const value = event.target.value;
 
 							this.setState({
-								query: value
+								value
 							});
 						}} onSearch={value => {
 							const query = value.trim();
@@ -90,7 +94,7 @@ export default class Search extends Component<any, {
 							{this.state.activeMenuPoint === "POSTS" ?
 								<FeedEntryList searchQuery={this.state.query} disableTask={true}/> :
 								<FollowerList mode={"search"} query={this.state.query}/>}
-						</div> : ""}
+						</div> : <TrendingTopics/>}
 					</Col>
 				</Row>
 			</PageContent>
