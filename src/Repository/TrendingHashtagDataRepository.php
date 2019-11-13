@@ -36,11 +36,13 @@ class TrendingHashtagDataRepository extends ServiceEntityRepository {
 	}
 
 	/**
+	 * @param int $limit
 	 * @return TrendingHashtagData[]
 	 */
-	public function getTrends(): array {
+	public function getTrends(int $limit = 10): array {
 		return $this->createQueryBuilder("t")
 			->orderBy("t.postsThisWeek", "DESC")
+			->setMaxResults($limit)
 			->getQuery()
 			->getResult();
 	}

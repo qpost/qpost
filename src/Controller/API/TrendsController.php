@@ -25,7 +25,9 @@ use qpost\Service\APIService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function intval;
 use function is_null;
+use function is_numeric;
 
 class TrendsController extends AbstractController {
 	/**
@@ -38,9 +40,26 @@ class TrendsController extends AbstractController {
 		$response = $apiService->validate(false);
 		if (!is_null($response)) return $response;
 
+		$parameters = $apiService->parameters();
+
+		$limit = 10;
+		if ($parameters->has("limit")) {
+			$limit = $parameters->get("limit");
+
+			if (!is_numeric($limit)) {
+				return $apiService->json(["error" => "'limit' has to be an integer."], 400);
+			} else {
+				$limit = intval($limit);
+			}
+
+			if (!($limit >= 1 && $limit <= 20)) {
+				return $apiService->json(["error" => "'limit' has to be between 1 and 20."], 400);
+			}
+		}
+
 		$results = [];
 
-		foreach ($apiService->getEntityManager()->getRepository(TrendingHashtagData::class)->getTrends() as $trend) {
+		foreach ($apiService->getEntityManager()->getRepository(TrendingHashtagData::class)->getTrends($limit) as $trend) {
 			$results[] = $apiService->serialize($trend);
 		}
 
