@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,27 +17,36 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "variables";
-@import "~bootstrap/scss/bootstrap";
-@import "util/index";
+import {JsonObject, JsonProperty} from "json2typescript";
+import Hashtag from "./Hashtag";
 
-@import "alerts";
-@import "base";
-@import "buttons";
-@import "emoji";
-@import "feed";
-@import "feedButtons";
-@import "followButtons";
-@import "footer";
-@import "forms";
-@import "gif-player";
-@import "home";
-@import "media";
-@import "navigation";
-@import "notifications";
-@import "post-forms";
-@import "profile";
-@import "status";
-@import "trends";
-@import "user-box";
-@import "nightmode/index";
+@JsonObject("TrendingHashtagData")
+export default class TrendingHashtagData {
+	@JsonProperty("id", Number)
+	private id: number = undefined;
+
+	@JsonProperty("postsThisWeek", Number)
+	private postsThisWeek: number = undefined;
+
+	@JsonProperty("time", String)
+	private time: string = undefined;
+
+	@JsonProperty("hashtag", Hashtag)
+	private hashtag: Hashtag = undefined;
+
+	public getId(): number {
+		return this.id;
+	}
+
+	public getPostsThisWeek(): number {
+		return this.postsThisWeek;
+	}
+
+	public getTime(): string {
+		return this.time;
+	}
+
+	public getHashtag(): Hashtag {
+		return this.hashtag;
+	}
+}

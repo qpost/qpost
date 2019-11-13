@@ -58,6 +58,7 @@ import PrivacyLevel from "./Pages/Account/PrivacyLevel";
 import FollowRequests from "./Pages/Account/FollowRequests";
 import ChangePassword from "./Pages/Account/ChangePassword";
 import Analytics from "react-router-ga";
+import SearchRedirect from "./Pages/Search/SearchRedirect";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -155,6 +156,7 @@ export default class App extends Component<any, any> {
 																  component={ChangePassword}/>
 													<PrivateRoute path={"/account"} exact component={Account}/>
 													<Route path={"/search"} exact component={Search}/>
+													<Route path={"/hashtag/:query"} exact component={SearchRedirect}/>
 													<Route path={"/goodbye"} exact component={Goodbye}/>
 													<Route path={"/about"} exact component={About}/>
 													<Route path={"/r/status/:id"} exact component={StatusRedirect}/>

@@ -18,9 +18,9 @@
  */
 
 import React, {Component} from "react";
-import Affix from "antd/es/affix";
 import "antd/es/affix/style";
 import WindowSizeListener from "react-window-size-listener";
+import Sticky from "react-stickynode";
 
 export default class SidebarStickyContent extends Component<any, {
 	mobile: boolean
@@ -44,11 +44,11 @@ export default class SidebarStickyContent extends Component<any, {
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return [this.state.mobile === false ? <Affix offsetTop={70}>
+		return [this.state.mobile === false ? <Sticky top={70}>
 			<div>
 				{this.props.children}
 			</div>
-		</Affix> : this.props.children, <WindowSizeListener onResize={windowSize => {
+		</Sticky> : this.props.children, <WindowSizeListener onResize={windowSize => {
 			this.setIsMobileMenu(windowSize.windowWidth);
 		}}/>];
 	}

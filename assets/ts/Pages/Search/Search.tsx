@@ -24,10 +24,13 @@ import {Col, Input, Menu, Row} from "antd";
 import NightMode from "../../NightMode/NightMode";
 import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import FollowerList from "../../Component/User/FollowerList";
+import TrendingTopics from "../../Component/TrendingTopics";
 
 export default class Search extends Component<any, {
 	query: string,
-	activeMenuPoint: string
+	value: string,
+	activeMenuPoint: string,
+	forceQuery: string | null
 }> {
 	// TODO: Change URL when searching
 	constructor(props) {
@@ -35,8 +38,22 @@ export default class Search extends Component<any, {
 
 		this.state = {
 			query: "",
+			value: "",
 			activeMenuPoint: "POSTS",
+			forceQuery: null
 		};
+	}
+
+	componentDidMount(): void {
+		if (localStorage.getItem("searchQuery")) {
+			this.setState({
+				query: localStorage.getItem("searchQuery"),
+				value: localStorage.getItem("searchQuery"),
+				forceQuery: null
+			});
+
+			localStorage.removeItem("searchQuery");
+		}
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -44,7 +61,13 @@ export default class Search extends Component<any, {
 			<PageContent>
 				<Row gutter={24}>
 					<Col md={{span: 12, offset: 6}}>
-						<Input.Search placeholder="enter a query" onSearch={value => {
+						<Input.Search placeholder="enter a query" value={this.state.value} onChange={event => {
+							const value = event.target.value;
+
+							this.setState({
+								value
+							});
+						}} onSearch={value => {
 							const query = value.trim();
 
 							this.setState({
@@ -71,7 +94,7 @@ export default class Search extends Component<any, {
 							{this.state.activeMenuPoint === "POSTS" ?
 								<FeedEntryList searchQuery={this.state.query} disableTask={true}/> :
 								<FollowerList mode={"search"} query={this.state.query}/>}
-						</div> : ""}
+						</div> : <TrendingTopics/>}
 					</Col>
 				</Row>
 			</PageContent>

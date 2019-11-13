@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,27 +17,16 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "variables";
-@import "~bootstrap/scss/bootstrap";
-@import "util/index";
+import React, {Component} from "react";
+import {Redirect} from "react-router";
 
-@import "alerts";
-@import "base";
-@import "buttons";
-@import "emoji";
-@import "feed";
-@import "feedButtons";
-@import "followButtons";
-@import "footer";
-@import "forms";
-@import "gif-player";
-@import "home";
-@import "media";
-@import "navigation";
-@import "notifications";
-@import "post-forms";
-@import "profile";
-@import "status";
-@import "trends";
-@import "user-box";
-@import "nightmode/index";
+export default class SearchRedirect extends Component<any, any> {
+	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		const query = "#" + this.props.match.params.query;
+		localStorage.setItem("searchQuery", query);
+
+		return <Redirect to={{
+			pathname: "/search"
+		}}/>;
+	}
+}

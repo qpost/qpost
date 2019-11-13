@@ -127,6 +127,16 @@ class PageController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/hashtag/{tag}")
+	 *
+	 * @param string $tag
+	 * @return Response
+	 */
+	public function hashtag(string $tag) {
+		return $this->forward("qpost\Controller\PageController::search");
+	}
+
+	/**
 	 * @Route("/edit")
 	 *
 	 * @param Request $request
