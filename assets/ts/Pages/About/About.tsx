@@ -66,8 +66,8 @@ export default class About extends Component<any, any> {
 					<h1 className={"my-3"}>Third-party software</h1>
 
 					<p>
-						qpost utilizes third-party software to run, you can find a list below (last update: November 2nd
-						2019).
+						qpost utilizes third-party software to run, you can find a list below (last update: November
+						13th 2019).
 					</p>
 
 					{this.thirdPartySoftware().map((software, index) => {
@@ -278,6 +278,10 @@ export default class About extends Component<any, any> {
 			{
 				name: "react-gif-player",
 				link: "https://github.com/benwiley4000/react-gif-player"
+			},
+			{
+				name: "react-stickynode",
+				link: "https://github.com/yahoo/react-stickynode"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically
