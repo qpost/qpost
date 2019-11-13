@@ -48,7 +48,7 @@ export default class HomeFeed extends Component<any, any> {
 					<SidebarStickyContent>
 						<HomeFeedProfileBox/>
 
-						<TrendingTopics/>
+						<TrendingTopics limit={5}/>
 					</SidebarStickyContent>
 				</LeftSidebar>
 

@@ -25,7 +25,9 @@ import {Card, message} from "antd";
 import BaseObject from "../Serialization/BaseObject";
 import {Link} from "react-router-dom";
 
-export default class TrendingTopics extends Component<any, {
+export default class TrendingTopics extends Component<{
+	limit?: number
+}, {
 	loading: boolean,
 	trends: TrendingHashtagData[] | null
 }> {
@@ -39,7 +41,9 @@ export default class TrendingTopics extends Component<any, {
 	}
 
 	componentDidMount(): void {
-		API.handleRequest("/trends", "GET", {}, data => {
+		API.handleRequest("/trends", "GET", {
+			limit: this.props.limit || 10
+		}, data => {
 			if (data.results) {
 				const results: TrendingHashtagData[] = [];
 
