@@ -27,7 +27,8 @@ import FollowerList from "../../Component/User/FollowerList";
 
 export default class Search extends Component<any, {
 	query: string,
-	activeMenuPoint: string
+	activeMenuPoint: string,
+	forceQuery: string | null
 }> {
 	// TODO: Change URL when searching
 	constructor(props) {
@@ -36,7 +37,19 @@ export default class Search extends Component<any, {
 		this.state = {
 			query: "",
 			activeMenuPoint: "POSTS",
+			forceQuery: null
 		};
+	}
+
+	componentDidMount(): void {
+		if (localStorage.getItem("searchQuery")) {
+			this.setState({
+				query: localStorage.getItem("searchQuery"),
+				forceQuery: null
+			});
+
+			localStorage.removeItem("searchQuery");
+		}
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -44,7 +57,13 @@ export default class Search extends Component<any, {
 			<PageContent>
 				<Row gutter={24}>
 					<Col md={{span: 12, offset: 6}}>
-						<Input.Search placeholder="enter a query" onSearch={value => {
+						<Input.Search placeholder="enter a query" value={this.state.query} onChange={event => {
+							const value = event.target.value;
+
+							this.setState({
+								query: value
+							});
+						}} onSearch={value => {
 							const query = value.trim();
 
 							this.setState({

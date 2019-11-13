@@ -78,7 +78,7 @@ export default class Linkifier extends Component<any, any> {
 				},
 
 				normalize: function (match) {
-					match.url = '/r/search/' + encodeURI(match.url);
+					match.url = '/hashtag/' + encodeURI(match.url.substr(1));
 				}
 			});
 

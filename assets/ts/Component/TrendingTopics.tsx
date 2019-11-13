@@ -69,7 +69,7 @@ export default class TrendingTopics extends Component<any, {
 					{this.state.trends.map((trend: TrendingHashtagData, index: number) => {
 						const tag: string = trend.getHashtag().getId();
 
-						return <Link to={"/r/search/" + encodeURI("#" + tag)} className={"clearUnderline"}>
+						return <Link to={"/hashtag/" + encodeURI(tag)} className={"clearUnderline"}>
 							<li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} key={index}>
 								<div className={"px-4 py-2"}>
 									<p className={"mb-0 text-muted small"}>#{index + 1}</p>
