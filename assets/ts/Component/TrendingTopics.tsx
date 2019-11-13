@@ -23,6 +23,7 @@ import Spin from "antd/es/spin";
 import API from "../API/API";
 import {Card, message} from "antd";
 import BaseObject from "../Serialization/BaseObject";
+import {Link} from "react-router-dom";
 
 export default class TrendingTopics extends Component<any, {
 	loading: boolean,
@@ -66,14 +67,18 @@ export default class TrendingTopics extends Component<any, {
 			return <Card size={"small"} title={"Trending topics"} className={"card-nopadding trending-topics mb-3"}>
 				<ul className={"list-group feedContainer"}>
 					{this.state.trends.map((trend: TrendingHashtagData, index: number) => {
-						return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} key={index}>
-							<div className={"px-4 py-2"}>
-								<p className={"mb-0 text-muted small"}>#{index + 1}</p>
-								<p className={"mb-0 font-weight-bold"}>#{trend.getHashtag().getId()}</p>
-								<p className={"mb-0 text-muted"}>{trend.getPostsThisWeek()} post{trend.getPostsThisWeek() !== 1 ? "s" : ""} this
-									week</p>
-							</div>
-						</li>;
+						const tag: string = trend.getHashtag().getId();
+
+						return <Link to={"/r/search/" + encodeURI("#" + tag)} className={"clearUnderline"}>
+							<li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} key={index}>
+								<div className={"px-4 py-2"}>
+									<p className={"mb-0 text-muted small"}>#{index + 1}</p>
+									<p className={"mb-0 font-weight-bold"}>#{tag}</p>
+									<p className={"mb-0 text-muted"}>{trend.getPostsThisWeek()} post{trend.getPostsThisWeek() !== 1 ? "s" : ""} this
+										week</p>
+								</div>
+							</li>
+						</Link>;
 					})}
 				</ul>
 			</Card>;
