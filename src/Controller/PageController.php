@@ -127,6 +127,18 @@ class PageController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/offline.html")
+	 *
+	 * @return Response
+	 */
+	public function offline() {
+		return $this->render("pages/offline.html.twig", Twig::param([
+			"title" => "Offline",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_offline", [], UrlGeneratorInterface::ABSOLUTE_URL)
+		]));
+	}
+
+	/**
 	 * @Route("/hashtag/{tag}")
 	 *
 	 * @param string $tag
