@@ -88,18 +88,12 @@ class APIService {
 	 */
 	private $security;
 
-	/**
-	 * @var PushNotificationService $notificationService
-	 */
-	private $notificationService;
-
-	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security, PushNotificationService $notificationService) {
+	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security) {
 		$this->logger = $logger;
 		$this->entityManager = $entityManager;
 		$this->requestStack = $requestStack;
 		$this->kernel = $kernel;
 		$this->security = $security;
-		$this->notificationService = $notificationService;
 		$this->serializer = SerializerBuilder::create()
 			->setDebug($kernel->isDebug())
 			->setCacheDir(__DIR__ . "/../../var/cache/" . $kernel->getEnvironment() . "/jms")
@@ -375,7 +369,6 @@ class APIService {
 			->setTime(new DateTime("now"));
 
 		$this->entityManager->persist($notification);
-		$this->notificationService->createPushNotification($notification);
 
 		$this->entityManager->flush();
 

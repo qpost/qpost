@@ -30,7 +30,6 @@ use qpost\Entity\FeedEntry;
 use qpost\Entity\Notification;
 use qpost\Entity\User;
 use qpost\Service\APIService;
-use qpost\Service\PushNotificationService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,11 +43,10 @@ class FavoriteController extends AbstractController {
 	 * @Route("/api/favorite", methods={"POST"})
 	 *
 	 * @param APIService $apiService
-	 * @param PushNotificationService $notificationService
 	 * @return Response|null
 	 * @throws Exception
 	 */
-	public function favorite(APIService $apiService, PushNotificationService $notificationService) {
+	public function favorite(APIService $apiService) {
 		$response = $apiService->validate(true);
 		if (!is_null($response)) return $response;
 
@@ -91,8 +89,6 @@ class FavoriteController extends AbstractController {
 
 							if (isset($notification)) {
 								$entityManager->persist($notification);
-
-								$notificationService->createPushNotification($notification);
 							}
 
 							$entityManager->flush();

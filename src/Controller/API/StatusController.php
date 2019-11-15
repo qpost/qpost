@@ -36,7 +36,6 @@ use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
 use qpost\Service\GigadriveService;
-use qpost\Service\PushNotificationService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -162,11 +161,10 @@ class StatusController extends AbstractController {
 	 *
 	 * @param APIService $apiService
 	 * @param GigadriveService $gigadriveService
-	 * @param PushNotificationService $notificationService
 	 * @return Response
 	 * @throws Exception
 	 */
-	public function post(APIService $apiService, GigadriveService $gigadriveService, PushNotificationService $notificationService): Response {
+	public function post(APIService $apiService, GigadriveService $gigadriveService): Response {
 		$response = $apiService->validate(true);
 		if (!is_null($response)) return $response;
 
@@ -304,8 +302,6 @@ class StatusController extends AbstractController {
 								->setTime(new DateTime("now"));
 
 							$entityManager->persist($notification);
-
-							$notificationService->createPushNotification($notification);
 						}
 					}
 
@@ -451,8 +447,6 @@ class StatusController extends AbstractController {
 								->setTime(new DateTime("now"));
 
 							$entityManager->persist($notification);
-
-							$notificationService->createPushNotification($notification);
 						}
 					}
 

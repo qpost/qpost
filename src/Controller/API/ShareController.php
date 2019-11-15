@@ -27,7 +27,6 @@ use qpost\Constants\NotificationType;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Notification;
 use qpost\Service\APIService;
-use qpost\Service\PushNotificationService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,11 +39,10 @@ class ShareController extends AbstractController {
 	 * @Route("/api/share", methods={"POST"})
 	 *
 	 * @param APIService $apiService
-	 * @param PushNotificationService $notificationService
 	 * @return Response|null
 	 * @throws Exception
 	 */
-	public function share(APIService $apiService, PushNotificationService $notificationService) {
+	public function share(APIService $apiService) {
 		$response = $apiService->validate(true);
 		if (!is_null($response)) return $response;
 
@@ -87,8 +85,6 @@ class ShareController extends AbstractController {
 
 							$entityManager->persist($share);
 							$entityManager->persist($notification);
-
-							$notificationService->createPushNotification($notification);
 
 							$entityManager->flush();
 
