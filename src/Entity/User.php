@@ -218,6 +218,12 @@ class User implements UserInterface {
 	 */
 	private $features = [];
 
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
+	 */
+	private $pushSubscriptions;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -233,6 +239,7 @@ class User implements UserInterface {
 		$this->uploadedFiles = new ArrayCollection();
 		$this->blocking = new ArrayCollection();
 		$this->blockedBy = new ArrayCollection();
+		$this->pushSubscriptions = new ArrayCollection();
 	}
 
 	/**
@@ -1282,6 +1289,34 @@ class User implements UserInterface {
 
 			if (count($features) === 0) $features = null;
 			$this->features = $features;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection|PushSubscription[]
+	 */
+	public function getPushSubscriptions(): Collection {
+		return $this->pushSubscriptions;
+	}
+
+	public function addPushSubscription(PushSubscription $pushSubscription): self {
+		if (!$this->pushSubscriptions->contains($pushSubscription)) {
+			$this->pushSubscriptions[] = $pushSubscription;
+			$pushSubscription->setUser($this);
+		}
+
+		return $this;
+	}
+
+	public function removePushSubscription(PushSubscription $pushSubscription): self {
+		if ($this->pushSubscriptions->contains($pushSubscription)) {
+			$this->pushSubscriptions->removeElement($pushSubscription);
+			// set the owning side to null (unless already changed)
+			if ($pushSubscription->getUser() === $this) {
+				$pushSubscription->setUser(null);
+			}
 		}
 
 		return $this;
