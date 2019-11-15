@@ -1,0 +1,4 @@
+bentools_webpush:
+    settings:
+        public_key: '%env(WEBPUSH_PUBLIC_KEY)%'
+        private_key: '%env(WEBPUSH_PRIVATE_KEY)%'

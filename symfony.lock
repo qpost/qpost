@@ -2,6 +2,9 @@
     "beberlei/doctrineextensions": {
         "version": "v1.2.3"
     },
+    "bentools/webpush-bundle": {
+        "version": "0.5.1"
+    },
     "clue/stream-filter": {
         "version": "v1.4.1"
     },
@@ -102,6 +105,9 @@
     "egulias/email-validator": {
         "version": "2.1.11"
     },
+    "fgrosse/phpasn1": {
+        "version": "v2.1.1"
+    },
     "fig/link-util": {
         "version": "1.0.0"
     },
@@ -174,6 +180,9 @@
     "jms/serializer": {
         "version": "3.2.0"
     },
+    "minishlink/web-push": {
+        "version": "v5.2.4"
+    },
     "monolog/monolog": {
         "version": "1.25.1"
     },
@@ -185,6 +194,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "paragonie/sodium_compat": {
+        "version": "v1.12.1"
     },
     "php-http/client-common": {
         "version": "2.0.0"
@@ -269,6 +281,9 @@
             "version": "3.0",
             "ref": "9746f0823302d7980e5273ef7a69ef3f5ac80914"
         }
+    },
+    "spomky-labs/base64url": {
+        "version": "v2.0.1"
     },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.1"
@@ -618,6 +633,33 @@
     },
     "twig/twig": {
         "version": "v2.11.3"
+    },
+    "web-token/jwt-core": {
+        "version": "v1.3.9"
+    },
+    "web-token/jwt-key-mgmt": {
+        "version": "v1.3.9"
+    },
+    "web-token/jwt-signature": {
+        "version": "v1.3.9"
+    },
+    "web-token/jwt-signature-algorithm-ecdsa": {
+        "version": "v1.3.9"
+    },
+    "web-token/jwt-signature-algorithm-eddsa": {
+        "version": "v1.3.9"
+    },
+    "web-token/jwt-signature-algorithm-hmac": {
+        "version": "v1.3.9"
+    },
+    "web-token/jwt-signature-algorithm-none": {
+        "version": "v1.3.9"
+    },
+    "web-token/jwt-signature-algorithm-rsa": {
+        "version": "v1.3.9"
+    },
+    "web-token/jwt-util-ecc": {
+        "version": "v1.3.9"
     },
     "webmozart/assert": {
         "version": "1.5.0"
