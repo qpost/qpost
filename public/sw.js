@@ -49,33 +49,11 @@ self.addEventListener("fetch", (event) => {
 	// only cache HTTP GET requests
 	if (request.method !== "GET") return;
 
-	event.respondWith(loadFromCache(request).then(
-		(response => {
-			// Response was cached
+	event.respondWith(fetch(request).then(response => {
+		event.waitUntil(updateCache(request, response.clone()));
 
-			// Update cache
-			event.waitUntil(fetch(request).then((response) => {
-				return updateCache(request, response);
-			}));
-
-			return response;
-		}),
-
-		(() => {
-			// Response was not cached
-
-			return fetch(request).then(response => {
-				event.waitUntil(updateCache(request, response.clone()));
-
-				return response;
-			}).catch(error => {
-				console.error(LOG_PREFIX + "Network request failed for uncached resource.", error);
-				return caches.open(CACHE_NAME).then(cache => {
-					return cache.match(OFFLINE_PAGE)
-				});
-			});
-		})
-	).catch(error => {
+		return response;
+	}).catch(error => {
 		if (request.destination !== "document" || request.mode !== "navigate") return;
 
 		console.error(LOG_PREFIX + "Network request failed. Serving offline page", error);
