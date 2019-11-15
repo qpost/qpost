@@ -286,6 +286,10 @@ export default class About extends Component<any, any> {
 			{
 				name: "webpush-bundle",
 				link: "https://github.com/bpolaszek/webpush-bundle"
+			},
+			{
+				name: "webpush-client",
+				link: "https://github.com/bpolaszek/webpush-js"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically
