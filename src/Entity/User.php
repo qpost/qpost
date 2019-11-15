@@ -28,6 +28,7 @@ use JMS\Serializer\Annotation as Serializer;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\PrivacyLevel;
 use qpost\Service\APIService;
+use Symfony\Component\Security\Core\User\UserInterface;
 use function count;
 use function is_null;
 
@@ -37,7 +38,7 @@ use function is_null;
  * @ORM\Entity(repositoryClass="qpost\Repository\UserRepository")
  * @ORM\Table(indexes={@ORM\Index(columns={"display_name"}),@ORM\Index(columns={"email"}),@ORM\Index(columns={"birthday"}),@ORM\Index(columns={"privacy_level"}),@ORM\Index(columns={"verified"})})
  */
-class User {
+class User implements UserInterface {
 	/**
 	 * @ORM\Id()
 	 * @ORM\GeneratedValue(strategy="AUTO")
@@ -308,6 +309,23 @@ class User {
 		$this->password = $password;
 
 		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getSalt(): ?string {
+		return null;
+	}
+
+	public function eraseCredentials(): void {
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getRoles(): array {
+		return ["ROLE_USER"];
 	}
 
 	/**

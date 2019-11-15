@@ -36,6 +36,7 @@ use qpost\Entity\FeedEntry;
 use qpost\Entity\Follower;
 use qpost\Entity\FollowRequest;
 use qpost\Entity\Notification;
+use qpost\Entity\Token;
 use qpost\Entity\User;
 use qpost\Repository\FollowerRepository;
 use qpost\Repository\FollowRequestRepository;
@@ -44,10 +45,14 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Security;
+use function is_string;
 use function json_decode;
 use function json_encode;
+use function strlen;
+use function substr;
 
-class APIService extends AuthorizationService {
+class APIService {
 	/**
 	 * @var APIService|null $instance
 	 */
@@ -59,6 +64,16 @@ class APIService extends AuthorizationService {
 	private $logger;
 
 	/**
+	 * @var EntityManagerInterface $entityManager
+	 */
+	private $entityManager;
+
+	/**
+	 * @var RequestStack $requestStack
+	 */
+	private $requestStack;
+
+	/**
 	 * @var KernelInterface $kernel
 	 */
 	private $kernel;
@@ -68,11 +83,17 @@ class APIService extends AuthorizationService {
 	 */
 	private $serializer;
 
-	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel) {
-		parent::__construct($requestStack->getCurrentRequest(), $entityManager, $kernel->isDebug()); // Disable cookie auth to prevent CSRF attacks
+	/**
+	 * @var Security $security
+	 */
+	private $security;
 
+	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security) {
 		$this->logger = $logger;
+		$this->entityManager = $entityManager;
+		$this->requestStack = $requestStack;
 		$this->kernel = $kernel;
+		$this->security = $security;
 		$this->serializer = SerializerBuilder::create()
 			->setDebug($kernel->isDebug())
 			->setCacheDir(__DIR__ . "/../../var/cache/" . $kernel->getEnvironment() . "/jms")
@@ -101,6 +122,65 @@ class APIService extends AuthorizationService {
 	}
 
 	/**
+	 * @return EntityManagerInterface
+	 */
+	public function getEntityManager(): EntityManagerInterface {
+		return $this->entityManager;
+	}
+
+	/**
+	 * @return RequestStack
+	 */
+	public function getRequestStack(): RequestStack {
+		return $this->requestStack;
+	}
+
+	/**
+	 * @return Security
+	 */
+	public function getSecurity(): Security {
+		return $this->security;
+	}
+
+	/**
+	 * @return SerializerInterface
+	 */
+	public function getSerializer(): SerializerInterface {
+		return $this->serializer;
+	}
+
+	public function getToken(): ?Token {
+		$request = $this->requestStack->getCurrentRequest();
+		$token = null;
+		if ($request->cookies->has("sesstoken")) {
+			$token = $request->cookies->get("sesstoken");
+		} else if ($request->headers->has("Authorization")) {
+			$authorization = $request->headers->get("Authorization");
+
+			if ($authorization && is_string($authorization)) {
+				$prefix = "Bearer ";
+
+				// Check if starts with token type prefix
+				if (strlen($authorization) > strlen($prefix) && substr($authorization, 0, strlen($prefix)) === $prefix) {
+					$token = substr($authorization, strlen($prefix));
+				}
+			}
+		}
+
+		return $token ? $this->entityManager->getRepository(Token::class)->findOneBy(["id" => $token]) : null;
+	}
+
+	public function getUser(): ?User {
+		$user = $this->security->getUser();
+
+		return $user && $user instanceof User ? $user : null;
+	}
+
+	public function isAuthorized(): bool {
+		return !is_null($this->getUser());
+	}
+
+	/**
 	 * @param bool $requireAuthorization Whether or not the request has to be authorized.
 	 * @return Response|null
 	 */
@@ -111,12 +191,6 @@ class APIService extends AuthorizationService {
 			$response->setStatusCode(401);
 
 			return $response;
-		}
-
-		// Update token last access time
-		if ($this->isAuthorized()) {
-			$this->entityManager->persist($this->token->setLastAccessTime(new DateTime("now")));
-			$this->entityManager->flush();
 		}
 
 		return null;
@@ -159,11 +233,13 @@ class APIService extends AuthorizationService {
 	 * @return ParameterBag
 	 */
 	public function parameters(): ParameterBag {
-		if (!is_null($this->request)) {
-			if ($this->request->isMethod("GET")) {
-				return $this->request->query;
+		$request = $this->requestStack->getCurrentRequest();
+
+		if (!is_null($request)) {
+			if ($request->isMethod("GET")) {
+				return $request->query;
 			} else {
-				if ($content = $this->request->getContent()) {
+				if ($content = $request->getContent()) {
 					return new ParameterBag(json_decode($content, true));
 				}
 			}

@@ -54,9 +54,9 @@ class ResetPasswordController extends AbstractController {
 	 * @throws NonUniqueResultException
 	 */
 	public function index(Request $request, EntityManagerInterface $entityManager, Swift_Mailer $mailer) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if (!$authService->isAuthorized()) {
+		if (!$user) {
 			if ($request->isMethod("POST")) {
 				$parameters = $request->request;
 
@@ -127,9 +127,9 @@ class ResetPasswordController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function resetPasswordResponse(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if (!$authService->isAuthorized()) {
+		if (!$user) {
 			$query = $request->query;
 
 			if ($query->has("token") && $query->has("uid")) {
