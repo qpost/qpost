@@ -70,9 +70,12 @@ class PushNotificationService {
 
 		switch ($notification->getType()) {
 			case NotificationType::NEW_FOLLOWER:
+				$bio = $referencedUser->getBio();
+				if (is_null($bio)) $bio = "";
+
 				$title = $referencedUser->getDisplayName() . " (@" . $referencedUser->getUsername() . ") is now following you.";
 				$icon = $referencedUser->getAvatarURL();
-				$body = $referencedUser->getBio();
+				$body = $bio;
 				break;
 			case NotificationType::MENTION:
 				$title = $referencedUser->getDisplayName() . " (@" . $referencedUser->getUsername() . ") mentioned you.";
