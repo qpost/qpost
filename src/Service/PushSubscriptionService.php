@@ -25,6 +25,7 @@ use BenTools\WebPushBundle\Model\Subscription\UserSubscriptionManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\PushSubscription;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use function hash;
 
@@ -40,8 +41,8 @@ class PushSubscriptionService implements UserSubscriptionManagerInterface {
 	 */
 	private $logger;
 
-	public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger) {
-		$this->entityManager = $entityManager;
+	public function __construct(RegistryInterface $registry, LoggerInterface $logger) {
+		$this->entityManager = $registry->getEntityManager();
 		$this->logger = $logger;
 	}
 
