@@ -51,7 +51,6 @@ import PostForm from "./Component/PostForm/PostForm";
 import BlockModal from "./Component/BlockModal";
 import Privacy from "./Pages/Account/Privacy";
 import Blocked from "./Pages/Account/Blocked";
-import DesktopNotifications from "./DesktopNotifications";
 import StatusRedirect from "./Pages/Status/StatusRedirect";
 import Search from "./Pages/Search/Search";
 import PrivacyLevel from "./Pages/Account/PrivacyLevel";
@@ -59,6 +58,7 @@ import FollowRequests from "./Pages/Account/FollowRequests";
 import ChangePassword from "./Pages/Account/ChangePassword";
 import Analytics from "react-router-ga";
 import SearchRedirect from "./Pages/Search/SearchRedirect";
+import PushManager from "./PushManager";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -84,6 +84,8 @@ export default class App extends Component<any, any> {
 					Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
 
 					BadgeStatus.update(() => {
+						PushManager.init();
+
 						this.setState({
 							validatedLogin: true
 						});
@@ -128,7 +130,6 @@ export default class App extends Component<any, any> {
 												<LoginSuggestionModal/>
 												<PostForm/>
 												<BlockModal/>
-												<DesktopNotifications/>
 
 												<Switch>
 													{Auth.isLoggedIn() ?
