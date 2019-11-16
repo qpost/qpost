@@ -84,6 +84,8 @@
 		{% if forceDisableNightMode is defined and forceDisableNightMode %}
 		window["FORCE_DISABLE_NIGHTMODE"] = true;
 		{% endif %}
+
+		window["VAPID_SERVER_KEY"] = "{{ bentools_webpush.server_key }}";
 	</script>
 
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>

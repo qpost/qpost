@@ -61,8 +61,8 @@ class RegisterController extends AbstractController {
 	 * @throws NonUniqueResultException
 	 */
 	public function index(Request $request, EntityManagerInterface $entityManager, Swift_Mailer $mailer, IpStackService $ipStackService) {
-		$authService = new AuthorizationService($request, $entityManager);
-		if (!$authService->isAuthorized()) {
+		$user = $this->getUser();
+		if (!$user) {
 			$query = $request->query;
 
 			if ($query->has("code")) {

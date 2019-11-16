@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,20 +18,20 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import "../scss/index.scss";
-import $ from "jquery";
-import "bootstrap";
-import ErrorBoundary from "./ErrorBoundary";
-import "./registerServiceWorker";
+namespace qpost\Repository;
 
-window["jQuery"] = $;
-window["$"] = $;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use qpost\Entity\PushSubscription;
 
-App.init();
-
-ReactDOM.render(<ErrorBoundary>
-	<App/>
-</ErrorBoundary>, document.getElementById("root"));
+/**
+ * @method PushSubscription|null find($id, $lockMode = null, $lockVersion = null)
+ * @method PushSubscription|null findOneBy(array $criteria, array $orderBy = null)
+ * @method PushSubscription[]    findAll()
+ * @method PushSubscription[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class PushSubscriptionRepository extends ServiceEntityRepository {
+	public function __construct(ManagerRegistry $registry) {
+		parent::__construct($registry, PushSubscription::class);
+	}
+}

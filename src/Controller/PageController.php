@@ -127,6 +127,18 @@ class PageController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/offline.html")
+	 *
+	 * @return Response
+	 */
+	public function offline() {
+		return $this->render("pages/offline.html.twig", Twig::param([
+			"title" => "Offline",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_offline", [], UrlGeneratorInterface::ABSOLUTE_URL)
+		]));
+	}
+
+	/**
 	 * @Route("/hashtag/{tag}")
 	 *
 	 * @param string $tag
@@ -144,9 +156,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function edit(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_edit", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -163,9 +175,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function notifications(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_notifications", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -182,9 +194,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function messages(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_messages", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -201,9 +213,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function account(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_account", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -220,9 +232,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function accountPrivacy(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountprivacy", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -239,9 +251,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function accountPrivacyBlocked(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountprivacyblocked", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -258,9 +270,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function accountPrivacyLevel(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountprivacylevel", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -277,9 +289,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function accountPrivacyRequests(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountprivacyrequests", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -296,9 +308,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function accountSessions(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountsessions", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -315,9 +327,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function accountUsername(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountusername", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
@@ -334,10 +346,10 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function accountPassword(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
-			if (!$authService->getUser()->getGigadriveData()) {
+		if ($user) {
+			if (!$user->getGigadriveData()) {
 				return $this->render("react.html.twig", Twig::param([
 					MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountpassword", [], UrlGeneratorInterface::ABSOLUTE_URL)
 				]));
@@ -357,9 +369,9 @@ class PageController extends AbstractController {
 	 * @return RedirectResponse|Response
 	 */
 	public function accountDelete(Request $request, EntityManagerInterface $entityManager) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_accountdelete", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));

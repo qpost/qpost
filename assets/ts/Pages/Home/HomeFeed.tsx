@@ -35,10 +35,6 @@ import TrendingTopics from "../../Component/TrendingTopics";
 export default class HomeFeed extends Component<any, any> {
 	componentDidMount(): void {
 		setPageTitle("Home");
-
-		if (Notification.permission === "default") {
-			Notification.requestPermission();
-		}
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

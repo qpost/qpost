@@ -67,7 +67,7 @@ export default class About extends Component<any, any> {
 
 					<p>
 						qpost utilizes third-party software to run, you can find a list below (last update: November
-						13th 2019).
+						15th 2019).
 					</p>
 
 					{this.thirdPartySoftware().map((software, index) => {
@@ -282,6 +282,14 @@ export default class About extends Component<any, any> {
 			{
 				name: "react-stickynode",
 				link: "https://github.com/yahoo/react-stickynode"
+			},
+			{
+				name: "webpush-bundle",
+				link: "https://github.com/bpolaszek/webpush-bundle"
+			},
+			{
+				name: "webpush-client",
+				link: "https://github.com/bpolaszek/webpush-js"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically

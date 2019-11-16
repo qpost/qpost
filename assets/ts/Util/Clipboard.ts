@@ -17,20 +17,18 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import "../scss/index.scss";
-import $ from "jquery";
-import "bootstrap";
-import ErrorBoundary from "./ErrorBoundary";
-import "./registerServiceWorker";
+import {Clipboard} from "ts-clipboard";
 
-window["jQuery"] = $;
-window["$"] = $;
+export async function copyToClipboard(text: string) {
+	// https://www.pwabuilder.com/feature/Copy%20to%20Clipboard
+	if (navigator.clipboard) {
+		try {
+			await navigator.clipboard["writeText"](text);
+			return;
+		} catch (ignored) {
+		}
+	}
 
-App.init();
-
-ReactDOM.render(<ErrorBoundary>
-	<App/>
-</ErrorBoundary>, document.getElementById("root"));
+	// fallback to ts-clipboard
+	Clipboard.copy(text);
+}

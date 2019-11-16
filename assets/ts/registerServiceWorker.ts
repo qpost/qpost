@@ -17,20 +17,17 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import "../scss/index.scss";
-import $ from "jquery";
-import "bootstrap";
-import ErrorBoundary from "./ErrorBoundary";
-import "./registerServiceWorker";
+if ("serviceWorker" in navigator) {
+	const sw = navigator.serviceWorker;
 
-window["jQuery"] = $;
-window["$"] = $;
-
-App.init();
-
-ReactDOM.render(<ErrorBoundary>
-	<App/>
-</ErrorBoundary>, document.getElementById("root"));
+	if (sw.controller) {
+		console.log("[QPOST-SW] Service worker is already registered");
+	} else {
+		// register service worker
+		sw.register("sw.js", {
+			scope: "./"
+		}).then(reg => {
+			console.log("[QPOST-SW] Service worker has been registered for scope: " + reg.scope);
+		});
+	}
+}

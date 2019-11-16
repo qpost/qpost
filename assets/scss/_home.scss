@@ -66,8 +66,31 @@
 			padding: 0 20px;
 		}
 
+		.homeSponsorBox {
+			@extend .col-12, .col-lg-7, .mt-5, .text-white, .text-center, .order-last, .order-md-first;
+
+			@include media-breakpoint-down(sm) {
+				box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+				border-radius: .25rem !important;
+				background-color: #1d2124;
+				padding: 30px;
+			}
+
+			h4 {
+				color: #FFF;
+				font-weight: bold;
+				letter-spacing: 4px;
+				text-transform: uppercase;
+				margin-top: 30px;
+			}
+
+			img {
+				margin-right: 35px;
+			}
+		}
+
 		.homeRegisterBox {
-			@extend .text-primary, .card, .shadow, .mt-5, .col-12, .col-lg-5, .offset-lg-7;
+			@extend .text-primary, .card, .shadow, .mt-5, .col-12, .col-lg-5;
 			padding: 30px 45px;
 
 			.hline {

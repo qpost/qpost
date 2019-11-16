@@ -32,5 +32,6 @@ return [
 	Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
 	Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
 	Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
-	Sentry\SentryBundle\SentryBundle::class => ['prod' => true]
+	Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
+	BenTools\WebPushBundle\WebPushBundle::class => ['all' => true],
 ];
