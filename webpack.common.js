@@ -58,13 +58,13 @@ module.exports = {
 			}
 		]
 	},
-	optimization: {
+	/*optimization: {
 		minimizer: [
 			new UglifyJsPlugin({
 				extractComments: "all"
 			})
 		]
-	},
+	},*/
 	plugins: [
 		new optimizeCss({
 			cssProcessorOptions: {
