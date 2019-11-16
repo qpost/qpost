@@ -1,6 +1,6 @@
 {
 	"name": "qpost",
-	"version": "2.0.0",
+	"version": "2.2.1",
 	"description": "A social microblogging website written in PHP and TypeScript.",
 	"scripts": {
 		"build": "npm run clean && webpack --config=webpack.prod.js",
@@ -41,7 +41,8 @@
 		"jquery-ui": "^1.12.1",
 		"js-cookie": "^2.2.1",
 		"json2typescript": "^1.2.3",
-		"npm": "^6.12.1",
+		"npm": "^6.13.0",
+		"permissions.request": "^0.1.1",
 		"popper.js": "^1.16.0",
 		"react": "^16.11.0",
 		"react-dom": "^16.11.0",

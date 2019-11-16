@@ -63,11 +63,14 @@ class PageController extends AbstractController {
 
 			$bigSocialImage = $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png";
 
+			$twitterCardType = "summary";
+
 			/**
 			 * @var MediaFile $mediaFile
 			 */
 			$mediaFile = $feedEntry->getAttachments()->first();
 			if ($mediaFile) {
+				$twitterCardType = "summary_large_image";
 				$bigSocialImage = $mediaFile->getURL();
 			}
 
@@ -76,6 +79,7 @@ class PageController extends AbstractController {
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $bigSocialImage,
 				"description" => $feedEntry->getText(),
+				"twitterCardType" => $twitterCardType,
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		}
