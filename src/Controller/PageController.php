@@ -63,11 +63,14 @@ class PageController extends AbstractController {
 
 			$bigSocialImage = $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png";
 
+			$twitterCardType = "summary";
+
 			/**
 			 * @var MediaFile $mediaFile
 			 */
 			$mediaFile = $feedEntry->getAttachments()->first();
 			if ($mediaFile) {
+				$twitterCardType = "summary_large_image";
 				$bigSocialImage = $mediaFile->getURL();
 			}
 
