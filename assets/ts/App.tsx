@@ -60,7 +60,6 @@ import Analytics from "react-router-ga";
 import SearchRedirect from "./Pages/Search/SearchRedirect";
 import PushManager from "./PushManager";
 import BadgeUpdater from "./BadgeUpdater";
-import {polyfill} from "permissions.request";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -76,8 +75,6 @@ export default class App extends Component<any, any> {
 		if ($("#root").length) {
 			NightMode.init();
 		}
-
-		polyfill();
 	}
 
 	componentDidMount(): void {
