@@ -84,8 +84,10 @@
 				margin-top: 30px;
 			}
 
-			img {
-				margin-right: 35px;
+			a {
+				@include media-breakpoint-up(md) {
+					padding: 15px;
+				}
 			}
 		}
 
