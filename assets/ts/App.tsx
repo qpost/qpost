@@ -59,6 +59,7 @@ import ChangePassword from "./Pages/Account/ChangePassword";
 import Analytics from "react-router-ga";
 import SearchRedirect from "./Pages/Search/SearchRedirect";
 import PushManager from "./PushManager";
+import BadgeUpdater from "./BadgeUpdater";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -85,6 +86,7 @@ export default class App extends Component<any, any> {
 
 					BadgeStatus.update(() => {
 						PushManager.init();
+						BadgeUpdater.init();
 
 						this.setState({
 							validatedLogin: true
