@@ -110,6 +110,8 @@
 
 		gtag('config', 'UA-57891578-9');
 	</script>
+
+	<script type="text/javascript" src="/assets/js/permissions.polyfill.min.js"></script>
 </head>
 
 <body class="{% block additionalBodyClasses %}{% endblock %}">
@@ -117,7 +119,6 @@
 
 {# "/assets/js/jquery.highlight-within-textarea.js" #}
 {% for url in [
-	"/assets/js/permissions.polyfill.min.js",
 	"/build/" ~ bundleName,
 	"/assets/js/notification.js",
 	"https://www.google.com/recaptcha/api.js",
