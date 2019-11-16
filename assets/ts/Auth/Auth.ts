@@ -22,7 +22,7 @@ import User from "../Entity/Account/User";
 import Header from "../Parts/Header";
 import API from "../API/API";
 import {message} from "antd";
-import PushManager from "../PushManager";
+import PushNotificationsManager from "../PushNotificationsManager";
 
 export default class Auth {
 	private static currentUser?: User;
@@ -80,7 +80,7 @@ export default class Auth {
 	}
 
 	private static killPushSubscription(callback?) {
-		const WebPushClient = PushManager.WebPushClient;
+		const WebPushClient = PushNotificationsManager.WebPushClient;
 		if (WebPushClient) {
 			const subscription = WebPushClient.getSubscription();
 

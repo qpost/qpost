@@ -109,24 +109,6 @@
 		gtag('js', new Date());
 
 		gtag('config', 'UA-57891578-9');
-
-		// permissions polyfill for edge
-		"permissions" in navigator || (navigator.permissions = {
-			query: function (i) {
-				return new Promise(function (n, o) {
-					if ("notifications" === i.name) {
-						var r = Notification.permission;
-						switch (r) {
-							case"default":
-								return void n("prompt");
-							default:
-								return void n(r)
-						}
-					}
-					n("prompt")
-				})
-			}
-		});
 	</script>
 </head>
 

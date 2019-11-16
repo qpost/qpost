@@ -17,17 +17,28 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-if ("serviceWorker" in navigator) {
-	const sw = navigator.serviceWorker;
+//import "webpush-client";
+import "./webpush-client";
 
-	if (sw.controller) {
-		console.log("[QPOST-SW] Service worker is already registered");
-	} else {
-		// register service worker
-		sw.register("/sw.js", {
-			scope: "./"
-		}).then(reg => {
-			console.log("[QPOST-SW] Service worker has been registered for scope: " + reg.scope);
-		});
+export default class PushNotificationsManager {
+	public static WebPushClient = null;
+
+	public static init(): void {
+		setTimeout(() => {
+			window["WebPushClientFactory"].create({
+				serviceWorkerPath: "/sw.js",
+				serverKey: window["VAPID_SERVER_KEY"],
+				subscribeUrl: "/webpush/"
+			}).then(WebPushClient => {
+				PushNotificationsManager.WebPushClient = WebPushClient;
+				console.log("WebPushClient initiated", WebPushClient);
+
+				WebPushClient.subscribe().then(subscription => {
+					console.log("Subscribed to push notifications.", subscription);
+				}).catch(reason => {
+					console.error("Failed to subscribe to push notifications.", reason);
+				});
+			});
+		}, 500);
 	}
 }

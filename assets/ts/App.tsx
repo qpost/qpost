@@ -58,7 +58,7 @@ import FollowRequests from "./Pages/Account/FollowRequests";
 import ChangePassword from "./Pages/Account/ChangePassword";
 import Analytics from "react-router-ga";
 import SearchRedirect from "./Pages/Search/SearchRedirect";
-import PushManager from "./PushManager";
+import PushNotificationsManager from "./PushNotificationsManager";
 import BadgeUpdater from "./BadgeUpdater";
 
 export default class App extends Component<any, any> {
@@ -85,7 +85,7 @@ export default class App extends Component<any, any> {
 					Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
 
 					BadgeStatus.update(() => {
-						PushManager.init();
+						PushNotificationsManager.init();
 						BadgeUpdater.init();
 
 						this.setState({
