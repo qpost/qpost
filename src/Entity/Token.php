@@ -86,8 +86,14 @@ class Token {
 	 */
 	private $ipStackResult;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="token")
+	 */
+	private $pushSubscriptions;
+
 	public function __construct() {
 		$this->feedEntries = new ArrayCollection();
+		$this->pushSubscriptions = new ArrayCollection();
 	}
 
 	/**
@@ -266,6 +272,34 @@ class Token {
 
 	public function setIpStackResult(IpStackResult $ipStackResult): self {
 		$this->ipStackResult = $ipStackResult;
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection|PushSubscription[]
+	 */
+	public function getPushSubscriptions(): Collection {
+		return $this->pushSubscriptions;
+	}
+
+	public function addPushSubscription(PushSubscription $pushSubscription): self {
+		if (!$this->pushSubscriptions->contains($pushSubscription)) {
+			$this->pushSubscriptions[] = $pushSubscription;
+			$pushSubscription->setToken($this);
+		}
+
+		return $this;
+	}
+
+	public function removePushSubscription(PushSubscription $pushSubscription): self {
+		if ($this->pushSubscriptions->contains($pushSubscription)) {
+			$this->pushSubscriptions->removeElement($pushSubscription);
+			// set the owning side to null (unless already changed)
+			if ($pushSubscription->getToken() === $this) {
+				$pushSubscription->setToken(null);
+			}
+		}
 
 		return $this;
 	}

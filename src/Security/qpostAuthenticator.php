@@ -24,7 +24,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\Token;
-use qpost\Util\Util;
+use qpost\Service\TokenService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -35,9 +35,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use function is_string;
-use function strlen;
-use function substr;
 
 class qpostAuthenticator extends AbstractGuardAuthenticator {
 	use TargetPathTrait;
@@ -46,47 +43,37 @@ class qpostAuthenticator extends AbstractGuardAuthenticator {
 	private $urlGenerator;
 	private $csrfTokenManager;
 	private $logger;
+	private $tokenService;
 
-	public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, LoggerInterface $logger) {
+	public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, LoggerInterface $logger, TokenService $tokenService) {
 		$this->entityManager = $entityManager;
 		$this->urlGenerator = $urlGenerator;
 		$this->csrfTokenManager = $csrfTokenManager;
 		$this->logger = $logger;
+		$this->tokenService = $tokenService;
 	}
 
 	public function supports(Request $request) {
-		return $request->cookies->has("sesstoken") || (Util::startsWith($request->getPathInfo(), "/api") && $request->headers->has("Authorization") && Util::startsWith($request->headers->get("Authorization"), "Bearer "));
+		return !is_null($this->tokenService->getTokenFromRequest($request));
 	}
 
 	public function getCredentials(Request $request) {
-		$token = null;
-		if ($request->cookies->has("sesstoken")) {
-			$token = $request->cookies->get("sesstoken");
-		} else if ($request->headers->has("Authorization")) {
-			$authorization = $request->headers->get("Authorization");
-
-			if ($authorization && is_string($authorization)) {
-				$prefix = "Bearer ";
-
-				// Check if starts with token type prefix
-				if (strlen($authorization) > strlen($prefix) && substr($authorization, 0, strlen($prefix)) === $prefix) {
-					$token = substr($authorization, strlen($prefix));
-				}
-			}
-		}
-
-		return ["token" => $token];
+		$token = $this->tokenService->getTokenFromRequest($request);
+		return !is_null($token) ? ["token" => $token->getId()] : ["token" => null];
 	}
 
 	public function getUser($credentials, UserProviderInterface $userProvider) {
-		$token = $this->entityManager->getRepository(Token::class)->findOneBy(["id" => $credentials["token"]]);
+		$tokenId = $credentials["token"];
+		if (!is_null($tokenId)) {
+			$token = $this->entityManager->getRepository(Token::class)->findOneBy(["id" => $tokenId]);
 
-		if ($token && !$token->isExpired()) {
-			$token->setLastAccessTime(new DateTime("now"));
-			$this->entityManager->persist($token);
-			$this->entityManager->flush();
+			if ($token && !$token->isExpired()) {
+				$token->setLastAccessTime(new DateTime("now"));
+				$this->entityManager->persist($token);
+				$this->entityManager->flush();
 
-			return $token->getUser();
+				return $token->getUser();
+			}
 		}
 
 		return null;

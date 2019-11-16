@@ -52,6 +52,11 @@ class PushSubscription implements UserSubscriptionInterface {
 	 */
 	private $subscription = [];
 
+	/**
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="pushSubscriptions")
+	 */
+	private $token;
+
 	public function getId(): ?int {
 		return $this->id;
 	}
@@ -114,5 +119,15 @@ class PushSubscription implements UserSubscriptionInterface {
 	 */
 	public function getContentEncoding(): string {
 		return $this->subscription["content-encoding"] ?? "aesgcm";
+	}
+
+	public function getToken(): ?Token {
+		return $this->token;
+	}
+
+	public function setToken(?Token $token): self {
+		$this->token = $token;
+
+		return $this;
 	}
 }

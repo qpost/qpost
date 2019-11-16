@@ -41,9 +41,15 @@ class PushSubscriptionService implements UserSubscriptionManagerInterface {
 	 */
 	private $logger;
 
-	public function __construct(RegistryInterface $registry, LoggerInterface $logger) {
+	/**
+	 * @var TokenService $tokenService
+	 */
+	private $tokenService;
+
+	public function __construct(RegistryInterface $registry, LoggerInterface $logger, TokenService $tokenService) {
 		$this->entityManager = $registry->getEntityManager();
 		$this->logger = $logger;
+		$this->tokenService = $tokenService;
 	}
 
 	/**
@@ -53,7 +59,8 @@ class PushSubscriptionService implements UserSubscriptionManagerInterface {
 		return (new PushSubscription())
 			->setUser($user)
 			->setSubscriptionHash($subscriptionHash)
-			->setSubscription($subscription);
+			->setSubscription($subscription)
+			->setToken($this->tokenService->getCurrentToken());
 	}
 
 	/**
