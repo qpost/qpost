@@ -25,6 +25,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Psr\Log\LoggerInterface;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\Token;
@@ -57,8 +58,8 @@ class LoginController extends AbstractController {
 	 * @throws NonUniqueResultException
 	 */
 	public function index(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService) {
-		$authService = new AuthorizationService($request, $entityManager);
-		if (!$authService->isAuthorized()) {
+		$user = $this->getUser();
+		if (!$user) {
 			if ($request->isMethod("POST")) {
 				$parameters = $request->request;
 
@@ -147,12 +148,13 @@ class LoginController extends AbstractController {
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @param IpStackService $ipStackService
+	 * @param LoggerInterface $logger
 	 * @return RedirectResponse
 	 * @throws NonUniqueResultException
 	 */
-	public function callback(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService) {
-		$authService = new AuthorizationService($request, $entityManager);
-		if (!$authService->isAuthorized()) {
+	public function callback(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService, LoggerInterface $logger) {
+		$user = $this->getUser();
+		if (!$user) {
 			$query = $request->query;
 
 			if ($query->has("code")) {
@@ -206,6 +208,8 @@ class LoginController extends AbstractController {
 									}
 
 									$entityManager->flush();
+
+									$logger->info("Logged in");
 
 									$response = $this->redirect($this->generateUrl("qpost_home_index"));
 									$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));

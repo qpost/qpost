@@ -28,6 +28,7 @@ use JMS\Serializer\Annotation as Serializer;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\PrivacyLevel;
 use qpost\Service\APIService;
+use Symfony\Component\Security\Core\User\UserInterface;
 use function count;
 use function is_null;
 
@@ -37,7 +38,7 @@ use function is_null;
  * @ORM\Entity(repositoryClass="qpost\Repository\UserRepository")
  * @ORM\Table(indexes={@ORM\Index(columns={"display_name"}),@ORM\Index(columns={"email"}),@ORM\Index(columns={"birthday"}),@ORM\Index(columns={"privacy_level"}),@ORM\Index(columns={"verified"})})
  */
-class User {
+class User implements UserInterface {
 	/**
 	 * @ORM\Id()
 	 * @ORM\GeneratedValue(strategy="AUTO")
@@ -217,6 +218,12 @@ class User {
 	 */
 	private $features = [];
 
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
+	 */
+	private $pushSubscriptions;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -232,6 +239,7 @@ class User {
 		$this->uploadedFiles = new ArrayCollection();
 		$this->blocking = new ArrayCollection();
 		$this->blockedBy = new ArrayCollection();
+		$this->pushSubscriptions = new ArrayCollection();
 	}
 
 	/**
@@ -308,6 +316,23 @@ class User {
 		$this->password = $password;
 
 		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getSalt(): ?string {
+		return null;
+	}
+
+	public function eraseCredentials(): void {
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getRoles(): array {
+		return ["ROLE_USER"];
 	}
 
 	/**
@@ -1264,6 +1289,34 @@ class User {
 
 			if (count($features) === 0) $features = null;
 			$this->features = $features;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection|PushSubscription[]
+	 */
+	public function getPushSubscriptions(): Collection {
+		return $this->pushSubscriptions;
+	}
+
+	public function addPushSubscription(PushSubscription $pushSubscription): self {
+		if (!$this->pushSubscriptions->contains($pushSubscription)) {
+			$this->pushSubscriptions[] = $pushSubscription;
+			$pushSubscription->setUser($this);
+		}
+
+		return $this;
+	}
+
+	public function removePushSubscription(PushSubscription $pushSubscription): self {
+		if ($this->pushSubscriptions->contains($pushSubscription)) {
+			$this->pushSubscriptions->removeElement($pushSubscription);
+			// set the owning side to null (unless already changed)
+			if ($pushSubscription->getUser() === $this) {
+				$pushSubscription->setUser(null);
+			}
 		}
 
 		return $this;

@@ -17,20 +17,15 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import "../scss/index.scss";
-import $ from "jquery";
-import "bootstrap";
-import ErrorBoundary from "./ErrorBoundary";
-import "./registerServiceWorker";
+import Auth from "./Auth/Auth";
+import BadgeStatus from "./Auth/BadgeStatus";
 
-window["jQuery"] = $;
-window["$"] = $;
-
-App.init();
-
-ReactDOM.render(<ErrorBoundary>
-	<App/>
-</ErrorBoundary>, document.getElementById("root"));
+export default class BadgeUpdater {
+	public static init(): void {
+		if (Auth.isLoggedIn()) {
+			setTimeout(() => {
+				BadgeStatus.update(BadgeUpdater.init, true);
+			}, 5000);
+		}
+	}
+}

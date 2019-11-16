@@ -19,3 +19,6 @@ qpost_page_profile_favorites:
 qpost_page_status_alternative:
     path: /r/status/{id}
     controller: qpost\Controller\PageController::status
+bentools_webpush:
+    resource: '@WebPushBundle/Resources/config/routing.xml'
+    prefix: /webpush

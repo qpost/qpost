@@ -29,8 +29,8 @@ export default class BadgeStatus {
 	/**
 	 * @deprecated
 	 */
-	public static update(callback?: () => void): void {
-		if (!this.updating) {
+	public static update(callback?: () => void, ignoreUpdatingFlag?: boolean): void {
+		if (!this.updating || ignoreUpdatingFlag) {
 			this.updating = true;
 
 			API.handleRequest("/badgestatus", "GET", {}, (data => {

@@ -57,9 +57,9 @@ class HomeController extends AbstractController {
 	 * @throws Exception
 	 */
 	public function index(Request $request, EntityManagerInterface $entityManager, Swift_Mailer $mailer) {
-		$authService = new AuthorizationService($request, $entityManager);
+		$user = $this->getUser();
 
-		if ($authService->isAuthorized()) {
+		if ($user) {
 			return $this->render("react.html.twig", Twig::param());
 		} else {
 			if ($request->isMethod("POST")) {

@@ -23,17 +23,11 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    api:
-        class: qpost\Service\APIService
-        arguments: ["@logger", "@doctrine", "@request_stack", "@kernel"]
-
-    deletion:
-        class: qpost\Service\DataDeletionService
+    qpost\Service\PushSubscriptionService:
+        class: qpost\Service\PushSubscriptionService
         arguments: ["@doctrine", "@logger"]
-
-    gigadrive:
-        class: qpost\Service\GigadriveService
-        arguments: ["@logger"]
+        tags:
+            - { name: bentools_webpush.subscription_manager, user_class: 'qpost\Entity\User' }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
