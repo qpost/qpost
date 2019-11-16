@@ -290,6 +290,10 @@ export default class About extends Component<any, any> {
 			{
 				name: "webpush-client",
 				link: "https://github.com/bpolaszek/webpush-js"
+			},
+			{
+				name: "permissions.request",
+				link: "https://github.com/chromium/permissions.request"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically
