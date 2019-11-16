@@ -22,6 +22,7 @@ import User from "../Entity/Account/User";
 import Header from "../Parts/Header";
 import API from "../API/API";
 import {message} from "antd";
+import PushManager from "../PushManager";
 
 export default class Auth {
 	private static currentUser?: User;
@@ -63,16 +64,38 @@ export default class Auth {
 
 			if (!noRedirect) window.location.href = "/";
 		} else {
-			API.handleRequest("/token", "DELETE", {
-				id: this.getToken()
-			}, () => {
-				this.setToken(undefined);
-				this.setCurrentUser(undefined);
+			this.killPushSubscription(() => {
+				API.handleRequest("/token", "DELETE", {
+					id: this.getToken()
+				}, () => {
+					this.setToken(undefined);
+					this.setCurrentUser(undefined);
 
-				if (!noRedirect) window.location.href = "/";
-			}, error => {
-				message.error(error);
+					if (!noRedirect) window.location.href = "/";
+				}, error => {
+					message.error(error);
+				});
 			});
+		}
+	}
+
+	private static killPushSubscription(callback?) {
+		const WebPushClient = PushManager.WebPushClient;
+		if (WebPushClient) {
+			const subscription = WebPushClient.getSubscription();
+
+			if (subscription) {
+				subscription.unsubscribe().then(value => {
+					if (callback) callback();
+				}).catch(reason => {
+					console.error("Failed to kill push subscription", reason);
+					if (callback) callback();
+				});
+			} else {
+				if (callback) callback();
+			}
+		} else {
+			if (callback) callback();
 		}
 	}
 }
