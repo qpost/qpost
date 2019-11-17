@@ -134,7 +134,15 @@ export default class Sessions extends Component<any, {
 							</div>
 
 							<div className={"my-3"}>
-								Last accessed <TimeAgo time={token.getLastAccessTime()}/>
+								<p className={"mb-0"}>
+									Last accessed <TimeAgo time={token.getLastAccessTime()}/>
+								</p>
+
+								<p className={"mb-0"}>
+									Notifications are {token.hasNotifications() ?
+									<span className={"text-success"}>enabled</span> :
+									<span className={"text-danger"}>disabled</span>}.
+								</p>
 							</div>
 
 							<Button type={current ? "dashed" : "danger"}
