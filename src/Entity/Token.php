@@ -303,4 +303,13 @@ class Token {
 
 		return $this;
 	}
+
+	/**
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName(value="notifications")
+	 * @return bool
+	 */
+	public function hasNotifications(): bool {
+		return !is_null($this->pushSubscriptions) && count($this->pushSubscriptions) > 0;
+	}
 }

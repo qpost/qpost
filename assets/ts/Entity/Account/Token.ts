@@ -43,6 +43,9 @@ export default class Token {
 	@JsonProperty("ipStackResult", IpStackResult, true)
 	private ipStackResult: IpStackResult | null = undefined;
 
+	@JsonProperty("notifications", Boolean)
+	private notifications: boolean = undefined;
+
 	public getId(): string {
 		return this.id;
 	}
@@ -69,5 +72,9 @@ export default class Token {
 
 	public getIPStackResult(): IpStackResult | null {
 		return this.ipStackResult;
+	}
+
+	public hasNotifications(): boolean {
+		return this.notifications;
 	}
 }
