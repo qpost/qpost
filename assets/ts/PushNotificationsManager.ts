@@ -33,11 +33,17 @@ export default class PushNotificationsManager {
 				PushNotificationsManager.WebPushClient = WebPushClient;
 				console.log("WebPushClient initiated", WebPushClient);
 
-				WebPushClient.subscribe().then(subscription => {
-					console.log("Subscribed to push notifications.", subscription);
-				}).catch(reason => {
-					console.error("Failed to subscribe to push notifications.", reason);
-				});
+				if (WebPushClient.isSupported()) {
+					Notification.requestPermission().then(value => {
+						console.log("Notification permission status changed", value);
+
+						WebPushClient.subscribe().then(subscription => {
+							console.log("Subscribed to push notifications.", subscription);
+						}).catch(reason => {
+							console.error("Failed to subscribe to push notifications.", reason);
+						});
+					});
+				}
 			});
 		}, 500);
 	}
