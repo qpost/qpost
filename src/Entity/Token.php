@@ -88,6 +88,7 @@ class Token {
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="token")
+	 * @Serializer\Exclude()
 	 */
 	private $pushSubscriptions;
 
