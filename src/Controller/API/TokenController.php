@@ -96,6 +96,11 @@ class TokenController extends AbstractController {
 				if ($token && !$token->isExpired()) {
 					$token->setExpiry(new DateTime("now"));
 					$entityManager->persist($token);
+
+					foreach ($token->getPushSubscriptions() as $subscription) {
+						$entityManager->remove($subscription);
+					}
+
 					$entityManager->flush();
 
 					return $apiService->noContent();
