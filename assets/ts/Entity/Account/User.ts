@@ -34,7 +34,7 @@ export default class User {
 	@JsonProperty("avatarURL", String)
 	private avatarURL: string = undefined;
 
-	@JsonProperty("header", String)
+	@JsonProperty("header", String, true)
 	private header?: string = undefined;
 
 	@JsonProperty("bio", String, true)
