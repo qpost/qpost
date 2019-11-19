@@ -35,7 +35,7 @@ export default class User {
 	private avatarURL: string = undefined;
 
 	@JsonProperty("header", String)
-	private header: string = undefined;
+	private header?: string = undefined;
 
 	@JsonProperty("bio", String, true)
 	private bio?: string = undefined;
@@ -104,7 +104,7 @@ export default class User {
 		return this.avatarURL;
 	}
 
-	public getHeaderURL(): string {
+	public getHeaderURL(): string | undefined {
 		return this.header;
 	}
 
