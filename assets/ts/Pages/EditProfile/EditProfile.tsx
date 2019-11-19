@@ -298,8 +298,8 @@ export default class EditProfile extends Component<any, {
 								onChange={this.uploadChange}
 							>
 								{header ? <div style={{
-									width: "300px",
-									height: "300px",
+									width: "500px",
+									height: "167px",
 									backgroundImage: "url(\"" + header + "\")",
 									backgroundRepeat: "no-repeat",
 									backgroundPosition: "center",
