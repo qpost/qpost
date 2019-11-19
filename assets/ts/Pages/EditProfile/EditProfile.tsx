@@ -45,6 +45,8 @@ export default class EditProfile extends Component<any, {
 	birthday: string | undefined,
 	avatar: string | PostFormUploadItem | undefined,
 	avatarModified: boolean,
+	header: string | PostFormUploadItem | undefined,
+	headerModified: boolean,
 	loading: boolean
 }> {
 	constructor(props) {
@@ -57,12 +59,17 @@ export default class EditProfile extends Component<any, {
 			avatar = undefined;
 		}
 
+		let header = user.getHeaderURL();
+		if (!header) header = undefined;
+
 		this.state = {
 			displayName: user.getDisplayName(),
 			bio: user.getBio(),
 			birthday: user.getBirthday(),
 			avatar,
 			avatarModified: false,
+			header,
+			headerModified: false,
 			loading: false
 		};
 	}
@@ -74,7 +81,7 @@ export default class EditProfile extends Component<any, {
 	uploadChange = (info: UploadChangeParam) => {
 	};
 
-	beforeUpload = (file: RcFile, FileList: RcFile[]) => {
+	beforeAvatarUpload = (file: RcFile, FileList: RcFile[]) => {
 		const size: number = file.size;
 		const type: string = file.type;
 
@@ -115,6 +122,47 @@ export default class EditProfile extends Component<any, {
 		return false;
 	};
 
+	beforeHeaderUpload = (file: RcFile, FileList: RcFile[]) => {
+		const size: number = file.size;
+		const type: string = file.type;
+
+		if (!(type === "image/jpeg" || type === "image/png" || type === "image/gif")) {
+			AntMessage.error("Invalid file type.");
+			return false;
+		}
+
+		if (!(size / 1024 / 1024 < 5)) {
+			AntMessage.error("Images must be smaller than 5MB.");
+			return false;
+		}
+
+		const item: PostFormUploadItem = new PostFormUploadItem();
+		item.uid = file.uid;
+		item.size = size;
+		item.type = type;
+
+		const reader = new FileReader();
+		this.setState({loading: true});
+		reader.addEventListener("load", () => {
+			const result: string = typeof reader.result === "string" ? reader.result : null;
+			if (result) {
+				item.dataURL = result;
+				item.base64 = item.dataURL.replace(/^data:image\/(png|jpg|jpeg|gif);base64,/, "");
+
+				this.setState({
+					header: item,
+					loading: false,
+					headerModified: true
+				});
+			} else {
+				this.setState({loading: false});
+			}
+		});
+		reader.readAsDataURL(file);
+
+		return false;
+	};
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const labelCol = {xs: {span: 6, offset: 0}, md: {span: 3, offset: 0}};
 		const wrapperCol = {xs: {span: 18, offset: 0}, md: {span: 21, offset: 0}};
@@ -124,6 +172,11 @@ export default class EditProfile extends Component<any, {
 		let avatar = this.state.avatar;
 		if (avatar instanceof PostFormUploadItem) {
 			avatar = avatar.dataURL;
+		}
+
+		let header = this.state.header;
+		if (header instanceof PostFormUploadItem) {
+			header = header.dataURL;
 		}
 
 		return <ContentBase>
@@ -196,7 +249,7 @@ export default class EditProfile extends Component<any, {
 								className={"uploader"}
 								showUploadList={false}
 								action={"https://qpo.st"}
-								beforeUpload={this.beforeUpload}
+								beforeUpload={this.beforeAvatarUpload}
 								onChange={this.uploadChange}
 							>
 								{avatar ? <div style={{
@@ -229,6 +282,51 @@ export default class EditProfile extends Component<any, {
 						</Col>
 					</Row>
 
+					<Row className={"mb-3"}>
+						<Col {...labelCol}>
+							Header picture
+						</Col>
+
+						<Col {...wrapperCol}>
+							<Upload
+								name={"image-upload"}
+								listType={"picture-card"}
+								className={"uploader"}
+								showUploadList={false}
+								action={"https://qpo.st"}
+								beforeUpload={this.beforeHeaderUpload}
+								onChange={this.uploadChange}
+							>
+								{header ? <div style={{
+									width: "300px",
+									height: "300px",
+									backgroundImage: "url(\"" + header + "\")",
+									backgroundRepeat: "no-repeat",
+									backgroundPosition: "center",
+									backgroundSize: "cover"
+								}}/> : <div>
+									<Icon type={"plus"}/>
+									<div className="ant-upload-text">Upload</div>
+								</div>}
+							</Upload>
+
+							{header ?
+								<Button type={"danger"} className={"customDangerButton"} disabled={this.state.loading}
+										onClick={(e) => {
+											e.preventDefault();
+
+											if (!this.state.loading) {
+												this.setState({
+													header: undefined,
+													headerModified: true
+												});
+											}
+										}}>
+									Delete header picture
+								</Button> : ""}
+						</Col>
+					</Row>
+
 					<Row>
 						<Col {...labelCol}>
 							&nbsp;
@@ -243,6 +341,7 @@ export default class EditProfile extends Component<any, {
 									const bio = this.state.bio;
 									const birthday = this.state.birthday;
 									let avatar = this.state.avatar;
+									let header = this.state.header;
 
 									// Validate fields
 									if (displayName.length === 0) {
@@ -275,6 +374,10 @@ export default class EditProfile extends Component<any, {
 
 									if (this.state.avatarModified) {
 										parameters["avatar"] = (avatar instanceof PostFormUploadItem) ? avatar.base64 : null;
+									}
+
+									if (this.state.headerModified) {
+										parameters["header"] = (header instanceof PostFormUploadItem) ? header.base64 : null;
 									}
 
 									API.handleRequest("/user", "POST", parameters, data => {
