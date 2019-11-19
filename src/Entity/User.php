@@ -224,6 +224,11 @@ class User implements UserInterface {
 	 */
 	private $pushSubscriptions;
 
+	/**
+	 * @ORM\Column(type="string", length=255, nullable=true)
+	 */
+	private $header;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -1318,6 +1323,16 @@ class User implements UserInterface {
 				$pushSubscription->setUser(null);
 			}
 		}
+
+		return $this;
+	}
+
+	public function getHeader(): ?string {
+		return $this->header;
+	}
+
+	public function setHeader(?string $header): self {
+		$this->header = $header;
 
 		return $this;
 	}
