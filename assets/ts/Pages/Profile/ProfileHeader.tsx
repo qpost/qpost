@@ -18,19 +18,19 @@
  */
 
 import React, {Component} from "react";
-import Col from "antd/es/col";
-import "antd/es/col/style";
+import User from "../../Entity/Account/User";
 
-export default class LeftSidebar extends Component<{
-	negativeOffset?: boolean
+export default class ProfileHeader extends Component<{
+	user: User
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return (
-			<Col lg={8} xl={6} className={"d-none d-lg-block"} style={this.props.negativeOffset ? {
-				marginTop: "-130px"
-			} : {}}>
-				{this.props.children}
-			</Col>
-		)
+		const user = this.props.user;
+		if (!user || !user.getHeaderURL()) return "";
+
+		const header: string = user.getHeaderURL();
+
+		return <div className={"profileHeader"} style={{
+			backgroundImage: "url('" + header + "')"
+		}}/>;
 	}
 }

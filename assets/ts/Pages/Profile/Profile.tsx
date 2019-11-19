@@ -49,6 +49,7 @@ import {setPageTitle} from "../../Util/Page";
 import ProfileDropdown from "./ProfileDropdown";
 import UserBlockedAlert from "../../Component/UserBlockedAlert";
 import FollowersYouKnow from "../../Component/FollowersYouKnow";
+import ProfileHeader from "./ProfileHeader";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -114,7 +115,9 @@ export default class Profile extends Component<any, {
 				{this.state.redirect ? <Redirect push to={this.state.redirect}/> : ""}
 
 				<ContentBase>
-					<LeftSidebar>
+					<ProfileHeader user={user}/>
+
+					<LeftSidebar negativeOffset={!!user.getHeaderURL()}>
 						<SidebarStickyContent>
 							<div className={"text-center"}>
 								<img className={"mainAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
