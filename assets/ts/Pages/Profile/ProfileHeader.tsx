@@ -19,6 +19,7 @@
 
 import React, {Component} from "react";
 import User from "../../Entity/Account/User";
+import {stillGIFURL} from "../../Util/Format";
 
 export default class ProfileHeader extends Component<{
 	user: User
@@ -27,7 +28,7 @@ export default class ProfileHeader extends Component<{
 		const user = this.props.user;
 		if (!user || !user.getHeaderURL()) return "";
 
-		const header: string = user.getHeaderURL();
+		const header: string = stillGIFURL(user.getHeaderURL());
 
 		return <div className={"profileHeader"} style={{
 			backgroundImage: "url('" + header + "')"
