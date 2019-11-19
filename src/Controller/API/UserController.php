@@ -119,6 +119,7 @@ class UserController extends AbstractController {
 										->setBio(Util::isEmpty($bio) ? null : $bio)
 										->setBirthday(Util::isEmpty($birthday) ? null : new DateTime($birthday));
 
+									// handle avatar upload
 									if ($parameters->has("avatar")) {
 										$base64 = $parameters->get("avatar");
 
@@ -164,6 +165,56 @@ class UserController extends AbstractController {
 												$user->setAvatar(null);
 											} else {
 												return $apiService->json(["error" => "'avatar' has to be a base64 string."], 400);
+											}
+										}
+									}
+
+									// handle header upload
+									if ($parameters->has("header")) {
+										$base64 = $parameters->get("header");
+
+										if (is_string($base64) && ($headerFile = @base64_decode($base64))) {
+											$path = null;
+											while (is_null($path) || file_exists($path)) $path = sys_get_temp_dir() . "/qpost/header/" . rand(0, getrandmax()) . ".png";
+
+											$directoryPath = dirname($path);
+											if (!file_exists($directoryPath)) {
+												mkdir($directoryPath, 0777, true);
+											}
+
+											file_put_contents($path, $headerFile);
+
+											if (!(@getimagesize($path))) {
+												return $apiService->json(["error" => "'header' is not a valid image."], 400);
+											}
+
+											// Check if file is smaller than 2MB
+											$fileSize = @filesize($path);
+											if (!($fileSize) || !(($fileSize / 1024 / 1024) < 5)) {
+												return $apiService->json(["error" => "'header' may not be bigger than 5MB."], 400);
+											}
+
+											try {
+												$image = new ImageResize($path);
+
+												$image->crop(1500, 500, true);
+
+												$headerFile = $image->getImageAsString();
+
+												$url = $gigadriveService->storeFileOnCDN($headerFile);
+												if (!is_null($url)) {
+													$user->setHeader($url);
+												} else {
+													return $apiService->json(["error" => "An error occurred."], 500);
+												}
+											} catch (Exception $e) {
+												return $apiService->json(["error" => "'header' is not a valid image."], 400);
+											}
+										} else {
+											if (is_null($base64)) {
+												$user->setHeader(null);
+											} else {
+												return $apiService->json(["error" => "'header' has to be a base64 string."], 400);
 											}
 										}
 									}
