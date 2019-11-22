@@ -27,6 +27,8 @@ use Gumlet\ImageResize;
 use qpost\Entity\Hashtag;
 use qpost\Entity\MediaFile;
 use qpost\Entity\Notification;
+use qpost\Entity\ResetPasswordToken;
+use qpost\Entity\Suspension;
 use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\GigadriveService;
@@ -286,6 +288,28 @@ class UserController extends AbstractController {
 						"referencedUser" => $user
 					]) as $notification) {
 						$entityManager->remove($notification);
+					}
+
+					// Delete reset password tokens
+					foreach ($entityManager->getRepository(ResetPasswordToken::class)->findBy([
+						"user" => $user
+					]) as $passwordToken) {
+						$entityManager->remove($passwordToken);
+					}
+
+					// Update created suspensions
+					foreach ($entityManager->getRepository(Suspension::class)->findBy([
+						"staff" => $user
+					]) as $suspension) {
+						$suspension->setStaff(null);
+						$entityManager->persist($suspension);
+					}
+
+					// Delete own suspensions
+					foreach ($entityManager->getRepository(Suspension::class)->findBy([
+						"target" => $user
+					]) as $suspension) {
+						$entityManager->remove($suspension);
 					}
 
 					// Update hashtags
