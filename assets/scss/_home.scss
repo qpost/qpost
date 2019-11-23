@@ -92,33 +92,46 @@
 		}
 
 		.homeRegisterBox {
-			@extend .text-primary, .card, .shadow, .mt-5, .col-12, .col-lg-5;
-			padding: 30px 45px;
+			@extend .mt-5, .col-12, .col-lg-5;
 
-			.hline {
-				font-weight: bold;
-				font-size: 24px;
+			.homeRegisterBoxContent {
+				@extend .text-primary, .card, .shadow;
+				padding: 30px 45px;
 
-				img {
-					@extend .ml-2;
+				.hline {
+					font-weight: bold;
+					font-size: 24px;
 
-					height: 1em;
+					img {
+						@extend .ml-2;
+
+						height: 1em;
+					}
+				}
+
+				form {
+					@include media-breakpoint-up(sm) {
+						float: right;
+					}
+				}
+
+				@include media-breakpoint-only(xs) {
+					text-align: center;
+
+					button {
+						margin-top: 10px;
+						display: block;
+						width: 100%;
+					}
 				}
 			}
 
-			form {
-				@include media-breakpoint-up(sm) {
-					float: right;
-				}
-			}
-
-			@include media-breakpoint-only(xs) {
+			.appStoreIcons {
+				margin-top: 30px;
 				text-align: center;
 
-				button {
-					margin-top: 10px;
-					display: block;
-					width: 100%;
+				img {
+					height: 70px;
 				}
 			}
 		}
