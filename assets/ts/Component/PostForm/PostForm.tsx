@@ -45,6 +45,7 @@ import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryListItem from "../FeedEntry/FeedEntryListItem";
 import ReplyList from "../FeedEntry/ReplyList";
 import FeedEntryType from "../../Entity/Feed/FeedEntryType";
+import FirstPostEncouragement from "../FirstPostEncouragement";
 
 export default class PostForm extends Component<any, {
 	mobile: boolean,
@@ -76,10 +77,11 @@ export default class PostForm extends Component<any, {
 		};
 	}
 
-	public static open(): void {
+	public static open(message?: string): void {
 		if (this.INSTANCE !== null) {
 			this.INSTANCE.setState({
-				open: true
+				open: true,
+				message: message ? message : ""
 			});
 		}
 	}
@@ -235,6 +237,8 @@ export default class PostForm extends Component<any, {
 
 					this.close();
 					this.reset();
+
+					FirstPostEncouragement.hide();
 				} else {
 					AntMessage.error("An error occurred.");
 					this.setState({

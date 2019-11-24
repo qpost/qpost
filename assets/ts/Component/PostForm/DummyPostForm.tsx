@@ -26,6 +26,7 @@ import "antd/es/button/style";
 import Card from "antd/es/card";
 import "antd/es/card/style";
 import PostForm from "./PostForm";
+import FirstPostEncouragement from "../FirstPostEncouragement";
 
 export default class DummyPostForm extends Component<any, any> {
 	constructor(props) {
@@ -59,7 +60,8 @@ export default class DummyPostForm extends Component<any, any> {
 				right: 30
 			}}>
 				<i className="fas fa-pencil-alt"/>
-			</Button>
+			</Button>,
+			<FirstPostEncouragement/>
 		];
 	}
 }
