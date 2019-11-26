@@ -157,7 +157,7 @@ export default class PostForm extends Component<any, {
 	}
 
 	readyToPost(): boolean {
-		return this.state.posting === false && ((this.state.message != null && this.state.message.length >= 1 && this.state.message.length <= 300) || (this.state.photos.length > 0));
+		return this.state.posting === false && ((this.state.message != null && this.state.message.length >= 1 && this.state.message.length <= Auth.getCurrentUser().getCharacterLimit()) || (this.state.photos.length > 0));
 	}
 
 	isReply: () => boolean = () => {
