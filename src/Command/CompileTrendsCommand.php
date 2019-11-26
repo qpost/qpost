@@ -29,6 +29,7 @@ use qpost\Entity\TrendingHashtagData;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use function count;
 use function strtotime;
 
 class CompileTrendsCommand extends Command {
@@ -46,7 +47,7 @@ class CompileTrendsCommand extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		/**
-		 * @var string $trendingTags
+		 * @var string[] $trendingTags
 		 */
 		$trendingTags = [];
 
@@ -66,7 +67,14 @@ class CompileTrendsCommand extends Command {
 			->setMaxResults(10)
 			->getQuery();
 
-		foreach ($query->getResult() as $result) {
+		/**
+		 * @var Hashtag[] $toCompile
+		 */
+		$toCompile = $query->getResult();
+
+		$output->writeln("Hashtags to compile: " . count($toCompile));
+
+		foreach ($toCompile as $result) {
 			/**
 			 * @var Hashtag $hashtag
 			 */
@@ -94,14 +102,27 @@ class CompileTrendsCommand extends Command {
 			$trendingTags[] = $hashtag->getId();
 		}
 
+		$toRemoveQuery = $this->entityManager->getRepository(Hashtag::class)->createQueryBuilder("h")
+			->innerJoin("h.trendingData", "t")
+			->where("h.trendingData IS NOT NULL");
+
+		if (count($trendingTags) > 0) {
+			$toRemoveQuery
+				->andWhere("h.id NOT IN (:tags)")
+				->setParameter("tags", $trendingTags);
+		}
+
+		/**
+		 * @var Hashtag[] $toRemove
+		 */
+		$toRemove = $toRemoveQuery->getQuery()->getResult();
+
+		$output->writeln("Hashtags to remove from the trending list: " . count($toRemove));
+
 		// remove former trending tags
-		foreach ($this->entityManager->getRepository(Hashtag::class)->createQueryBuilder("h")
-					 ->innerJoin("h.trendingData", "t")
-					 ->where("h.trendingData IS NOT NULL")
-					 ->andWhere("h.id NOT IN (:tags)")
-					 ->setParameter("tags", $trendingTags)
-					 ->getQuery()
-					 ->getResult() as $hashtag) {
+		foreach ($toRemove as $hashtag) {
+			$output->writeln("Removed #" . $hashtag->getId() . " from the trending list.");
+
 			$this->entityManager->remove($hashtag->getTrendingData());
 		}
 
