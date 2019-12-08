@@ -39,6 +39,11 @@ export default class BadgeStatus {
 				this.updating = false;
 
 				Header.update();
+
+				if (window.isElectron()) {
+					window["Bridge"].setDockBadge(this.notifications + this.messages);
+				}
+
 				if (callback) callback();
 			}), error => {
 				message.error("Failed to fetch notification info.");

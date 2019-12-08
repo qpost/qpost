@@ -17,21 +17,7 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import "./electron";
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import "../scss/index.scss";
-import $ from "jquery";
-import "bootstrap";
-import ErrorBoundary from "./ErrorBoundary";
-import "./registerServiceWorker";
+window.isElectron = () => {
+	return "Bridge" in window;
+};
 
-window["jQuery"] = $;
-window["$"] = $;
-
-App.init();
-
-ReactDOM.render(<ErrorBoundary>
-	<App/>
-</ErrorBoundary>, document.getElementById("root"));
