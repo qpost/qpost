@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-window.isElectron = () => {
+window["isElectron"] = () => {
 	return "Bridge" in window;
 };
 

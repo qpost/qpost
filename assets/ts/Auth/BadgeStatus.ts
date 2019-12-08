@@ -40,7 +40,7 @@ export default class BadgeStatus {
 
 				Header.update();
 
-				if (window.isElectron()) {
+				if (window["isElectron"]()) {
 					window["Bridge"].setDockBadge(this.notifications + this.messages);
 				}
 
