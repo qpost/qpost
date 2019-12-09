@@ -28,7 +28,10 @@ use Psr\Log\LoggerInterface;
 use qpost\Constants\NotificationType;
 use qpost\Entity\Notification;
 use qpost\Entity\PushSubscription;
+use qpost\Factory\HttpClientFactory;
+use qpost\Util\Util;
 use function count;
+use function substr;
 
 class PushNotificationService {
 	/**
@@ -112,12 +115,45 @@ class PushNotificationService {
 				]);
 
 				try {
-					$responses = $this->sender->push($pushNotification->createMessage(), $subscriptions);
+					$subscriptionsToSend = [];
 
-					// Delete expired subscriptions
-					foreach ($responses as $response) {
-						if ($response->isExpired()) {
-							$this->subscriptionService->delete($response->getSubscription());
+					foreach ($subscriptions as $subscription) {
+						$url = "https://fcm.googleapis.com/fcm/send";
+						$data = $subscription->getSubscription();
+						$endpoint = $data["endpoint"];
+
+						if (isset($data["GCM"]) && Util::startsWith($endpoint, $url)) {
+							$url = "https://fcm.googleapis.com/fcm/send";
+							$httpClient = HttpClientFactory::create();
+
+							$token = substr($endpoint, strlen($url) + 1);
+
+							$httpResponse = $httpClient->request("POST", $url, [
+								"json" => [
+									"to" => $token,
+									"notification" => [
+										"title" => $title,
+										"body" => $body,
+										"icon" => $icon
+									],
+								],
+								"headers" => [
+									"Authorization" => "key=" . $_ENV["FIREBASE_SERVER_KEY"]
+								]
+							]);
+						} else {
+							$subscriptionsToSend[] = $subscription;
+						}
+					}
+
+					if (count($subscriptionsToSend) > 0) {
+						$responses = $this->sender->push($pushNotification->createMessage(), $subscriptionsToSend);
+
+						// Delete expired subscriptions
+						foreach ($responses as $response) {
+							if ($response->isExpired()) {
+								$this->subscriptionService->delete($response->getSubscription());
+							}
 						}
 					}
 				} catch (Exception $e) {
