@@ -40,11 +40,11 @@ export default class SidebarFooter extends Component<any, any> {
 					</a>
 				</li>
 
-				<li>
+				{/*<li>
 					<a href={"/help"} target={"_blank"}>
 						Help
 					</a>
-				</li>
+				</li>*/}
 
 				<li>
 					<a href={"/contact"} target={"_blank"}>
@@ -53,25 +53,25 @@ export default class SidebarFooter extends Component<any, any> {
 				</li>
 
 				<li>
-					<a href={"/terms"} target={"_blank"}>
+					<a href={"/terms"}>
 						Terms
 					</a>
 				</li>
 
 				<li>
-					<a href={"/privacy"} target={"_blank"}>
+					<a href={"/privacy"}>
 						Privacy
 					</a>
 				</li>
 
 				<li>
-					<a href={"/disclaimer"} target={"_blank"}>
+					<a href={"/disclaimer"}>
 						Disclaimer
 					</a>
 				</li>
 
 				<li>
-					<a href={"/apidocs"} target={"_blank"}>
+					<a href={"/apidocs"}>
 						Developers
 					</a>
 				</li>
