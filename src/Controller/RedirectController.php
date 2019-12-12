@@ -68,7 +68,10 @@ class RedirectController extends AbstractController {
 	 * @return RedirectResponse
 	 */
 	public function rules() {
-		return $this->redirect("https://go.qpo.st/rules");
+		return $this->render("pages/rules.html.twig", Twig::param([
+			"title" => "Rules and Guidelines"
+		]));
+//		return $this->redirect("https://go.qpo.st/rules");
 	}
 
 	/**
