@@ -1,0 +1,239 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Follow</h1>
+
+	<p>
+		This endpoint may be used to get information of follow relationships and modify them.
+	</p>
+
+	<h2 id="object">The Follow object</h2>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>id</td>
+			<td>integer</td>
+			<td>The unique identifier of this Block</td>
+		</tr>
+		<tr>
+			<td>sender</td>
+			<td><a href="{{ path("qpost_apidocs_user") }}#object">User</a></td>
+			<td>The creator of this Follow</td>
+		</tr>
+		<tr>
+			<td>receiver</td>
+			<td><a href="{{ path("qpost_apidocs_user") }}#object">User</a></td>
+			<td>The user that was followed</td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>string</td>
+			<td>The timestamp of when this Follow was created</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /follow</h2>
+
+	<p>
+		Gets info about a specific follow relationship.
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>from</td>
+			<td>integer</td>
+			<td>The ID of the sending User</td>
+		</tr>
+		<tr>
+			<td>to</td>
+			<td>integer</td>
+			<td>The ID of the target User</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<p>This endpoint might either return a <a href="{{ path("qpost_apidocs_follow") }}#object">Follow</a> object, or
+		uses the following structure:</p>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>status</td>
+			<td><a href="https://gitlab.com/Gigadrive/qpost/qpost/blob/master/src/Constants/FollowStatus.php"
+				   target="_blank">integer</a></td>
+			<td>The status of the follow relationship</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr/>
+
+	<h2><span class="badge badge-info">POST</span> /follow</h2>
+
+	<p>
+		Creates a new Follow from the current user to a specific user.<br/>
+		<span class="text-danger font-weight-bold">Requires authorization</span>
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>to</td>
+			<td>integer</td>
+			<td>The ID of the target User</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>status</td>
+			<td><a href="https://gitlab.com/Gigadrive/qpost/qpost/blob/master/src/Constants/FollowStatus.php"
+				   target="_blank">integer</a></td>
+			<td>The status of the follow relationship</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr/>
+
+	<h2><span class="badge badge-danger">DELETE</span> /follower</h2>
+
+	<p>
+		Deletes a follow relationship from the current user to a specific FeedEntry.<br/>
+		<span class="text-danger font-weight-bold">Requires authorization</span>
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>to</td>
+			<td>integer</td>
+			<td>The ID of the target User</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>status</td>
+			<td><a href="https://gitlab.com/Gigadrive/qpost/qpost/blob/master/src/Constants/FollowStatus.php"
+				   target="_blank">integer</a></td>
+			<td>The status of the follow relationship</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /follows</h2>
+
+	<p>
+		Gets all follow relationships for a specific user.
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>from</td>
+			<td>?integer</td>
+			<td>The ID of the user to look for</td>
+		</tr>
+		<tr>
+			<td>to</td>
+			<td>?integer</td>
+			<td>The ID of the user to look for</td>
+		</tr>
+		<tr>
+			<td>max</td>
+			<td>?integer</td>
+			<td>The maximum ID for follows to look for</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<p>Returns multiple <a href="{{ path("qpost_apidocs_favorite") }}#object">Favorite</a> objects.</p>
+{% endblock %}

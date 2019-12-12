@@ -1,0 +1,45 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Password</h1>
+
+	<p>
+		This endpoint may be used to get users followed by the current user with upcoming birthdays.
+	</p>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /birthdays</h2>
+
+	<p>
+		Get users followed by the current user with upcoming birthdays.<br/>
+		<span class="text-danger font-weight-bold">Requires authorization</span>
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>date</td>
+			<td>string</td>
+			<td>The current date to base the upcoming birthdays off of</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<p>Returns multiple <a href="{{ path("qpost_apidocs_user") }}#object">User</a> objects.</p>
+{% endblock %}

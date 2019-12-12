@@ -1,0 +1,102 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Trends</h1>
+
+	<p>
+		This endpoint may be used to get information of trends and hashtags.
+	</p>
+
+	<h2 id="object">The Hashtag object</h2>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>id</td>
+			<td>string</td>
+			<td>The unique identifier of this Hashtag</td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>string</td>
+			<td>The timestamp of when this Hashtag was created</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2 id="trendobject">The TrendingHashtagData object</h2>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>id</td>
+			<td>integer</td>
+			<td>The unique identifier of this TrendingHashtagData</td>
+		</tr>
+		<tr>
+			<td>postsThisWeek</td>
+			<td>integer</td>
+			<td>The amount of posts that were created with this hashtag in the current week</td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>string</td>
+			<td>The timestamp of when this Hashtag was created</td>
+		</tr>
+		<tr>
+			<td>hashtag</td>
+			<td><a href="{{ path("qpost_apidocs_trends") }}">Hashtag</a></td>
+			<td>The hashtag of this trend</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /trends</h2>
+
+	<p>
+		Get currently active trending topics in the proper order.
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>limit</td>
+			<td>integer</td>
+			<td>The maximum amount of trending topics to return</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<p>Returns multiple <a href="{{ path("qpost_apidocs_trends") }}#trendobject">TrendingHashtagData</a> objects.</p>
+{% endblock %}

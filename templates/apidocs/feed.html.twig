@@ -1,0 +1,184 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Feed</h1>
+
+	<p>
+		This endpoint may be used to get information of feed entries (posts, replies and shares) and modify them.
+	</p>
+
+	<h2 id="object">The FeedEntry object</h2>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>id</td>
+			<td>integer</td>
+			<td>The unique identifier of this FeedEntry</td>
+		</tr>
+		<tr>
+			<td>user</td>
+			<td><a href="{{ path("qpost_apidocs_user") }}#object">User</a></td>
+			<td>The creator of this FeedEntry</td>
+		</tr>
+		<tr>
+			<td>text</td>
+			<td>?string</td>
+			<td>The message of this feed entry</td>
+		</tr>
+		<tr>
+			<td>following</td>
+			<td>?<a href="{{ path("qpost_apidocs_user") }}#object">User</a></td>
+			<td><em>Deprecated:</em> The referenced user in this FeedEntry (only for type <code>NEW_FOLLOWING</code>)
+			</td>
+		</tr>
+		<tr>
+			<td>parent</td>
+			<td>?<a href="{{ path("qpost_apidocs_feed") }}#object">FeedEntry</a></td>
+			<td>The parent of this FeedEntry (only for types <code>REPLY</code> and <code>SHARE</code>)</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>string</td>
+			<td>The type of this FeedEntry, one of these values: <code>POST</code> / <code>REPLY</code> / <code>NEW_FOLLOWING</code>
+				/ <code>SHARE</code></td>
+		</tr>
+		<tr>
+			<td>nsfw</td>
+			<td>boolean</td>
+			<td>Whether or not this FeedEntry was marked as 18+</td>
+		</tr>
+		<tr>
+			<td>attachments</td>
+			<td><a href="{{ path("qpost_apidocs_feed") }}#mediaobject">MediaFile</a>[]</td>
+			<td>The attachments of this FeedEntry</td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>string</td>
+			<td>The timestamp of when this FeedEntry was created</td>
+		</tr>
+		<tr>
+			<td>replyCount</td>
+			<td>integer</td>
+			<td>The amount of replies this FeedEntry has</td>
+		</tr>
+		<tr>
+			<td>shareCount</td>
+			<td>integer</td>
+			<td>The amount of shares this FeedEntry has</td>
+		</tr>
+		<tr>
+			<td>favoriteCount</td>
+			<td>integer</td>
+			<td>The amount of favorites this FeedEntry has</td>
+		</tr>
+		<tr>
+			<td>shared</td>
+			<td>boolean</td>
+			<td>Whether or not the currently authenticated user has shared this FeedEntry, false if not authenticated
+			</td>
+		</tr>
+		<tr>
+			<td>favorited</td>
+			<td>boolean</td>
+			<td>Whether or not the currently authenticated user has favorited this FeedEntry, false if not
+				authenticated
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2 id="mediaobject">The MediaFile object</h2>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>id</td>
+			<td>string</td>
+			<td>The unique identifier of this MediaFile</td>
+		</tr>
+		<tr>
+			<td>sha256</td>
+			<td>string</td>
+			<td>The sha256 hash of this MediaFile</td>
+		</tr>
+		<tr>
+			<td>url</td>
+			<td>string</td>
+			<td>The URL of this MediaFile</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>string</td>
+			<td>The type of this MediaFile, one of these values: <code>IMAGE</code> / <code>VIDEO</code> /
+				<code>LINK</code></td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>string</td>
+			<td>The timestamp of when this MediaFile was created</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /feed</h2>
+
+	<p>
+		Gets entries on a feed, by specific parameters.<br/>
+		<span class="text-danger font-weight-bold">Requires authorization for specific parameter combinations</span>
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>max</td>
+			<td>integer</td>
+			<td>The maximum ID for feed entries to look for (can not be combined with <code>min</code>)</td>
+		</tr>
+		<tr>
+			<td>min</td>
+			<td>integer</td>
+			<td>The minimum ID for feed entries to look for (can not be combined with <code>max</code>)</td>
+		</tr>
+		<tr>
+			<td>user</td>
+			<td>integer</td>
+			<td>The ID of the user to filter the feed entries by</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<p>Returns multiple <a href="{{ path("qpost_apidocs_feed") }}#object">FeedEntry</a> objects.</p>
+{% endblock %}

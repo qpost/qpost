@@ -1,0 +1,61 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Search</h1>
+
+	<p>
+		This endpoint may be used to search for specific content on qpost.
+	</p>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /search</h2>
+
+	<p>
+		Searches for specific content on qpost.
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>type</td>
+			<td>string</td>
+			<td>The type of content to search for, either <code>user</code> or <code>post</code></td>
+		</tr>
+		<tr>
+			<td>query</td>
+			<td>string</td>
+			<td>The search query to use</td>
+		</tr>
+		<tr>
+			<td>offset</td>
+			<td>?integer</td>
+			<td>The offset to use for the query</td>
+		</tr>
+		<tr>
+			<td>limit</td>
+			<td>?integer</td>
+			<td>The maximum amount of objects to return</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<p>Returns <a href="{{ path("qpost_apidocs_feed") }}#object">FeedEntry</a> or <a
+				href="{{ path("qpost_apidocs_user") }}#object">User</a> objects, depending on the value specified for
+		the <code>type</code> parameter.</p>
+{% endblock %}

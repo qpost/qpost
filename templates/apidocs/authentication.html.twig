@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Authentication</h1>
+
+	<p>
+		Authentication is done through a token, that can be acquired through the <a
+				href="{{ path("qpost_login_index") }}">login page</a>. It is afterwards stored in the cookies and sent
+		through the <code>Authorization</code> header.<br/>
+		We are currently working on a system to allow for token generation without the exchange of passwords.<br/>
+		Some routes may be used without the usage of a token.
+	</p>
+{% endblock %}

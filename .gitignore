@@ -25,3 +25,6 @@ assets/ts/config.json
 ###> symfony/web-server-bundle ###
 /.web-server-pid
 ###< symfony/web-server-bundle ###
+
+/gource.ppm
+/gource.mp4

@@ -1,0 +1,50 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Reply</h1>
+
+	<p>
+		This endpoint may be used to get information of replies to specific statuses.
+	</p>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /replies</h2>
+
+	<p>
+		Gets all replies to the specified status.
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>feedEntry</td>
+			<td>integer</td>
+			<td>The ID of the status to look for</td>
+		</tr>
+		<tr>
+			<td>page</td>
+			<td>?integer</td>
+			<td>Used for pagination</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<p>Returns multiple <a href="{{ path("qpost_apidocs_notifications") }}#object">Notification</a> objects inside
+		separate arrays (reply batches).</p>
+{% endblock %}

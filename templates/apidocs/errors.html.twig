@@ -1,0 +1,126 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Error codes</h1>
+
+	<p>
+		The qpost API returns <a href="https://www.restapitutorial.com/httpstatuscodes.html" target="_blank">standard
+			HTTP error codes</a> depending on the status of the response. Usually an "error" string accompanies the
+		response object, telling you more about the error, but here is a general list of what the error codes mean.
+	</p>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Code</th>
+			<th>Name</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>200</td>
+			<td>OK</td>
+			<td>The request was successful and the response contains the requested content.</td>
+		</tr>
+		<tr>
+			<td>204</td>
+			<td>No Content</td>
+			<td>The request was successful and nothing was returned, usually used with <code>DELETE</code> requests.
+			</td>
+		</tr>
+		<tr>
+			<td>400</td>
+			<td>Bad Request</td>
+			<td>The request used invalid parameters.</td>
+		</tr>
+		<tr>
+			<td>401</td>
+			<td>Unauthorized</td>
+			<td>The request is missing an authorization token.</td>
+		</tr>
+		<tr>
+			<td>403</td>
+			<td>Forbidden</td>
+			<td>The authorized user may not view this content.</td>
+		</tr>
+		<tr>
+			<td>404</td>
+			<td>Not Found</td>
+			<td>The requested resource could not be found.</td>
+		</tr>
+		<tr>
+			<td>405</td>
+			<td>Method Not Allowed</td>
+			<td>The request's HTTP method is not allowed here.</td>
+		</tr>
+		<tr>
+			<td>408</td>
+			<td>Request Timeout</td>
+			<td>The request took too long to process.</td>
+		</tr>
+		<tr>
+			<td>409</td>
+			<td>Conflict</td>
+			<td>The request cannot be processed due to a conflict, usually when trying to create a resource that already
+				exists.
+			</td>
+		</tr>
+		<tr>
+			<td>410</td>
+			<td>Gone</td>
+			<td>The requested resource no longer exists, usually used on <a
+						href="{{ path("qpost_apidocs_feed") }}#object">FeedEntry</a> objects that were deleted due to
+				violation of the rules and guidelines.
+			</td>
+		</tr>
+		<tr>
+			<td>413</td>
+			<td>Request Entity Too Large</td>
+			<td>The request was too large and cannot be processed.</td>
+		</tr>
+		<tr>
+			<td>414</td>
+			<td>Request-URI Too Long</td>
+			<td>The request URI was too large and cannot be processed.</td>
+		</tr>
+		<tr>
+			<td>429</td>
+			<td>Too Many Requests</td>
+			<td>The client has sent too many requests in a short amount of time. Try again later.</td>
+		</tr>
+		<tr>
+			<td>431</td>
+			<td>Request Header Fields Too Large</td>
+			<td>The request headers were too large and can't be processed.</td>
+		</tr>
+		<tr>
+			<td>451</td>
+			<td>Unavailable for Legal Reasons</td>
+			<td>The requested resource no longer exists, because it was removed following a legal request.</td>
+		</tr>
+		<tr>
+			<td>500</td>
+			<td>Internal Server Error</td>
+			<td rowspan="3">An issue on our end, please report it.</td>
+		</tr>
+		<tr>
+			<td>502</td>
+			<td>Bad Gateway</td>
+		</tr>
+		<tr>
+			<td>503</td>
+			<td>Service Unavailable</td>
+		</tr>
+		<tr>
+			<td>504</td>
+			<td>Gateway Timeout</td>
+			<td>Usually a temporary issue with the connection, try again later.</td>
+		</tr>
+		</tbody>
+	</table>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<h1>API documentation</h1>
+
+	<p>
+		With the release of qpost version 2, a REST API has been added to allow third-party developers to integrate
+		software more flexibly into qpost. Furthermore, this REST API is the same that the official qpost front-end
+		uses, meaning we allow all third-party developers to use the same routes as we do.
+	</p>
+
+	<h2>Topics</h2>
+
+	<ul>
+		<li>
+			<a href="{{ path("qpost_apidocs_introduction") }}">Introduction</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_authentication") }}">Authentication</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_errors") }}">Error codes</a>
+		</li>
+	</ul>
+
+	<h2>Available endpoints</h2>
+
+	<ul>
+		<li>
+			<a href="{{ path("qpost_apidocs_accountdata") }}">Account data</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_badgestatus") }}">Badge status</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_birthday") }}">Birthday</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_block") }}">Block</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_favorite") }}">Favorite</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_feed") }}">Feed</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_follow") }}">Follow</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_followersyouknow") }}">Followers you know</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_followrequest") }}">Follow request</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_notifications") }}">Notifications</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_password") }}">Password</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_privacylevel") }}">Privacy level</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_reply") }}">Reply</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_search") }}">Search</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_share") }}">Share</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_status") }}">Status</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_token") }}">Token</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_trends") }}">Trends</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_user") }}">User</a>
+		</li>
+
+		<li>
+			<a href="{{ path("qpost_apidocs_username") }}">Username</a>
+		</li>
+	</ul>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Followers you know</h1>
+
+	<p>
+		This endpoint may be used to get information of follow relationships and modify them.
+	</p>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /followersyouknow</h2>
+
+	<p>
+		Gets all followers, the current user follows for the target user.<br/>
+		<span class="text-danger font-weight-bold">Requires authorization</span>
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>target</td>
+			<td>integer</td>
+			<td>The ID of the target user</td>
+		</tr>
+		<tr>
+			<td>offset</td>
+			<td>?integer</td>
+			<td>The amount of users to skip in the query</td>
+		</tr>
+		<tr>
+			<td>limit</td>
+			<td>?integer</td>
+			<td>The maximum amount of users to return</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3>Response</h3>
+
+	<p>Returns multiple <a href="{{ path("qpost_apidocs_user") }}#object">User</a> objects.</p>
+{% endblock %}

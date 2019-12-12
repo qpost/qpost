@@ -1,0 +1,28 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Introduction</h1>
+
+	<p>
+		The base API of the qpost API is <code>https://qpo.st/api</code>.<br/>
+		Almost every one of the endpoints described in this documentation returns an object with either a
+		<code>result</code> or <code>results</code> property, containing an object or array, depending on the case.<br/>
+		If the request is not successful, the response object will contain an <code>error</code> property, containing an
+		error message describing what went wrong, along with an appropriate <a
+				href="{{ path("qpost_apidocs_errors") }}">HTTP status code</a>.
+	</p>
+
+	<p>
+		Parameters for <code>POST</code> and <code>DELETE</code> requests must be JSON encoded in the request body,
+		whereas parameters for <code>GET</code> requests are to be passed through the query portion of the URL.
+	</p>
+
+	<p>
+		Please note, that the qpost API is still under heavy development and things may break at any point in time. We
+		are currently working on streamlining the tools offered for third-party developers.
+	</p>
+{% endblock %}

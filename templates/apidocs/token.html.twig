@@ -1,0 +1,226 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+	<small>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+	</small>
+
+	<h1>Token</h1>
+
+	<p>
+		This endpoint may be used to get information of account sessions and modify them.
+	</p>
+
+	<h2 id="object">The Token object</h2>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>id</td>
+			<td>string</td>
+			<td>The unique identifier of this Token <b>(do not share this with anybody, it is equivalent to sharing your
+					password!!)</b></td>
+		</tr>
+		<tr>
+			<td>lastIP</td>
+			<td>string</td>
+			<td>The last IP that was used with this token</td>
+		</tr>
+		<tr>
+			<td>userAgent</td>
+			<td>string</td>
+			<td>The last user agent that was used with this token</td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>string</td>
+			<td>The timestamp of when this Token was created</td>
+		</tr>
+		<tr>
+			<td>lastAccessTime</td>
+			<td>string</td>
+			<td>The timestamp of when this Token was used with the API</td>
+		</tr>
+		<tr>
+			<td>expiry</td>
+			<td>string</td>
+			<td>The timestamp of when this Token will expire and be invalidated</td>
+		</tr>
+		<tr>
+			<td>ipStackResult</td>
+			<td>?<a href="{{ path("qpost_apidocs_token") }}#ipobject">IpStackResult</a></td>
+			<td>Geolocation info about this Token</td>
+		</tr>
+		<tr>
+			<td>notifications</td>
+			<td>boolean</td>
+			<td>Whether or not push notifications have been accessed from this session</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h2 id="ipobject">The IpStackResult object</h2>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>id</td>
+			<td>integer</td>
+			<td>The unique identifier of this IpStackResult</td>
+		</tr>
+		<tr>
+			<td>ip</td>
+			<td>?string</td>
+			<td>The IP of this IpStackResult</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>?string</td>
+			<td>The type of the IP address</td>
+		</tr>
+		<tr>
+			<td>continentCode</td>
+			<td>?string</td>
+			<td>The continent code of this location</td>
+		</tr>
+		<tr>
+			<td>continentName</td>
+			<td>?string</td>
+			<td>The continent name of this location</td>
+		</tr>
+		<tr>
+			<td>countryCode</td>
+			<td>?string</td>
+			<td>The country code of this location</td>
+		</tr>
+		<tr>
+			<td>countryName</td>
+			<td>?string</td>
+			<td>The country name of this location</td>
+		</tr>
+		<tr>
+			<td>regionCode</td>
+			<td>?string</td>
+			<td>The region code of this location</td>
+		</tr>
+		<tr>
+			<td>regionName</td>
+			<td>?string</td>
+			<td>The region name of this location</td>
+		</tr>
+		<tr>
+			<td>city</td>
+			<td>?string</td>
+			<td>The city of this location</td>
+		</tr>
+		<tr>
+			<td>zipCode</td>
+			<td>?integer</td>
+			<td>The zip code of this location</td>
+		</tr>
+		<tr>
+			<td>latitude</td>
+			<td>?float</td>
+			<td>The latitude of this location</td>
+		</tr>
+		<tr>
+			<td>longitude</td>
+			<td>?float</td>
+			<td>The longitude of this location</td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>string</td>
+			<td>The time of when this IpStackResult was created</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr/>
+
+	<h2><span class="badge badge-success">GET</span> /token</h2>
+
+	<p>
+		Gets all available tokens for the current user.<br/>
+		<span class="text-danger font-weight-bold">Requires authorization</span>
+	</p>
+
+	<h3>Response</h3>
+
+	<p>Returns multiple <a href="{{ path("qpost_apidocs_token") }}#object">Token</a> objects.</p>
+
+	<hr/>
+
+	<h2><span class="badge badge-danger">DELETE</span> /token</h2>
+
+	<p>
+		Invalidates the passed token.<br/>
+		<span class="text-danger font-weight-bold">Requires authorization</span>
+	</p>
+
+	<h3>Parameters</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>id</td>
+			<td>string</td>
+			<td>The of the Token to invalidate</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<hr/>
+
+	<h2><span class="badge badge-info">POST</span> /token/verify</h2>
+
+	<p>
+		Validates the current Token.<br/>
+		<span class="text-danger font-weight-bold">Requires authorization</span>
+	</p>
+
+	<h3>Response</h3>
+
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>status</td>
+			<td>string</td>
+			<td>The status of the Token</td>
+		</tr>
+		<tr>
+			<td>user</td>
+			<td><a href="{{ path("qpost_apidocs_user") }}">User</a></td>
+			<td>The User that owns this Token</td>
+		</tr>
+		</tbody>
+	</table>
+{% endblock %}
