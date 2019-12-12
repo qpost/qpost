@@ -56,7 +56,10 @@ class RedirectController extends AbstractController {
 	 * @return RedirectResponse
 	 */
 	public function disclaimer() {
-		return $this->redirect("https://go.qpo.st/disclaimer");
+		return $this->render("pages/disclaimer.html.twig", Twig::param([
+			"title" => "Disclaimer"
+		]));
+//		return $this->redirect("https://go.qpo.st/disclaimer");
 	}
 
 	/**
