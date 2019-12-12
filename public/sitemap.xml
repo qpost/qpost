@@ -33,4 +33,124 @@
 		<loc>https://qpo.st/search</loc>
 		<lastmod>2019-10-31</lastmod>
 	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/introduction</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/authentication</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/errors</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/accountdata</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/badgestatus</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/birthday</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/block</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/favorite</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/feed</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/follow</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/followersyouknow</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/followrequest</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/notifications</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/password</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/privacyLevel</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/reply</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/search</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/share</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/status</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/token</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/trends</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/user</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpo.st/apidocs/username</loc>
+		<lastmod>2019-12-12</lastmod>
+	</url>
 </urlset>
