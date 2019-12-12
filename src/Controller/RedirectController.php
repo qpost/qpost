@@ -20,6 +20,7 @@
 
 namespace qpost\Controller;
 
+use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,7 +32,10 @@ class RedirectController extends AbstractController {
 	 * @return RedirectResponse
 	 */
 	public function terms() {
-		return $this->redirect("https://go.qpo.st/terms");
+		return $this->render("pages/terms.html.twig", Twig::param([
+			"title" => "Terms of Service"
+		]));
+//		return $this->redirect("https://go.qpo.st/terms");
 	}
 
 	/**
