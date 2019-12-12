@@ -69,6 +69,12 @@ export default class SidebarFooter extends Component<any, any> {
 						Disclaimer
 					</a>
 				</li>
+
+				<li>
+					<a href={"/apidocs"} target={"_blank"}>
+						Developers
+					</a>
+				</li>
 			</ul>
 		</div>;
 	}
