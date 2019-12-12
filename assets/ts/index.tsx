@@ -26,12 +26,24 @@ import $ from "jquery";
 import "bootstrap";
 import ErrorBoundary from "./ErrorBoundary";
 import "./registerServiceWorker";
+import Auth from "./Auth/Auth";
 
 window["jQuery"] = $;
 window["$"] = $;
 
+const ReactNativeWebView = window["ReactNativeWebView"];
+
 App.init();
 
-ReactDOM.render(<ErrorBoundary>
-	<App/>
-</ErrorBoundary>, document.getElementById("root"));
+if ($("#root").length) {
+	ReactDOM.render(<ErrorBoundary>
+		<App/>
+	</ErrorBoundary>, document.getElementById("root"));
+}
+
+if (ReactNativeWebView) {
+	ReactNativeWebView.postMessage(JSON.stringify({
+		type: "token",
+		token: Auth.getToken()
+	}));
+}

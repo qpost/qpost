@@ -24,6 +24,8 @@ export default class PushNotificationsManager {
 	public static WebPushClient = null;
 
 	public static init(): void {
+		if (window["ReactNativeWebView"]) return;
+
 		setTimeout(() => {
 			window["WebPushClientFactory"].create({
 				serviceWorkerPath: "/sw.js",

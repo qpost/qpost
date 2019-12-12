@@ -53,6 +53,14 @@ export default class Auth {
 		} else {
 			Cookies.remove("sesstoken");
 		}
+
+		const ReactNativeWebView = window["ReactNativeWebView"];
+		if (ReactNativeWebView) {
+			ReactNativeWebView.postMessage({
+				type: "token",
+				token: Auth.getToken()
+			});
+		}
 	}
 
 	public static logout(noRedirect?: boolean, disableTokenDeletion?: boolean): void {
