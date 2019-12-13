@@ -1,0 +1,41 @@
+{% extends "homeBase.html.twig" %}
+
+{% block content %}
+	<a href="{{ path("qpost_home_index") }}" class="clearUnderline">
+		<img src="/assets/img/qpost-white-tiny.png" class="homeLogo" alt="qpost Logo" title="qpost Logo"/>
+	</a>
+
+	<div class="text-center">
+		<h1 class="font-weight-bold text-uppercase text-white mb-3">Download</h1>
+
+		<div class="row">
+			<div class="col-12 col-sm-6 col-md-3 offset-md-3 mb-3">
+				<a href="{{ path("qpost_download_windows") }}" class="clearUnderline">
+					<div class="card bg-primary text-white">
+						<div class="card-body">
+							<h3 class="display-3 text-white"><i class="fab fa-windows"></i></h3>
+
+							<p class="mb-0 font-weight-bold">Windows</p>
+						</div>
+					</div>
+				</a>
+			</div>
+
+			<div class="col-12 col-sm-6 col-md-3 mb-3">
+				<a href="{{ path("qpost_download_android") }}" class="clearUnderline">
+					<div class="card bg-primary text-white">
+						<div class="card-body">
+							<h3 class="display-3 text-white"><i class="fab fa-android"></i></h3>
+
+							<p class="mb-0 font-weight-bold">Android</p>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<p class="mt-5 text-white">
+			Your device isn't listed? qpost can be used on any device with a modern web browser installed.
+		</p>
+	</div>
+{% endblock %}
