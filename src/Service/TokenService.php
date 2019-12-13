@@ -75,9 +75,18 @@ class TokenService {
 			}
 		}
 
-		return $this->entityManager->getRepository(Token::class)->findOneBy([
+		$token = $this->entityManager->getRepository(Token::class)->findOneBy([
 			"id" => $token
 		]);
+
+		if ($request->headers->has("User-Agent")) {
+			$token->setUserAgent($request->headers->get("User-Agent"));
+
+			$this->entityManager->persist($token);
+			$this->entityManager->flush();
+		}
+
+		return $token;
 	}
 
 	/**
