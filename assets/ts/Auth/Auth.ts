@@ -70,7 +70,13 @@ export default class Auth {
 			this.setToken(undefined);
 			this.setCurrentUser(undefined);
 
-			if (!noRedirect) window.location.href = "/";
+			if (!noRedirect) {
+				if (window["ReactNativeWebView"]) {
+					window.location.href = "/login";
+				} else {
+					window.location.href = "/";
+				}
+			}
 		} else {
 			this.killPushSubscription(() => {
 				API.handleRequest("/token", "DELETE", {
@@ -79,7 +85,13 @@ export default class Auth {
 					this.setToken(undefined);
 					this.setCurrentUser(undefined);
 
-					if (!noRedirect) window.location.href = "/";
+					if (!noRedirect) {
+						if (window["ReactNativeWebView"]) {
+							window.location.href = "/login";
+						} else {
+							window.location.href = "/";
+						}
+					}
 				}, error => {
 					message.error(error);
 				});

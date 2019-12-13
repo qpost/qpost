@@ -17,28 +17,30 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "variables";
-@import "~bootstrap/scss/bootstrap";
-@import "util/index";
+.mobileLoginBase {
+	color: $white;
+	height: 100%;
+	text-align: center;
+	padding: 40px;
+	width: 100%;
+	max-width: 330px;
+	margin: auto;
 
-@import "alerts";
-@import "base";
-@import "buttons";
-@import "emoji";
-@import "feed";
-@import "feedButtons";
-@import "followButtons";
-@import "footer";
-@import "forms";
-@import "gif-player";
-@import "home";
-@import "media";
-@import "mobile";
-@import "navigation";
-@import "notifications";
-@import "post-forms";
-@import "profile";
-@import "status";
-@import "trends";
-@import "user-box";
-@import "nightmode/index";
+	.logo {
+		margin-bottom: 30px;
+	}
+
+	#loginForm {
+		input[type="text"] {
+			margin-bottom: -1px;
+			border-bottom-right-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+
+		input[type="password"] {
+			margin-bottom: 10px;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+	}
+}

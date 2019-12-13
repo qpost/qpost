@@ -20,153 +20,58 @@
 
 namespace qpost\Controller;
 
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
-use qpost\Entity\Follower;
-use qpost\Entity\User;
-use qpost\Repository\UserRepository;
 use qpost\Service\AuthorizationService;
+use qpost\Service\PostRequestService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use function ctype_alnum;
-use function filter_var;
-use function password_hash;
-use function strlen;
-use function trim;
-use const FILTER_VALIDATE_EMAIL;
-use const PASSWORD_BCRYPT;
 
 class HomeController extends AbstractController {
 	/**
 	 * @Route("/")
 	 *
 	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @param Swift_Mailer $mailer
+	 * @param PostRequestService $postRequestService
 	 * @return Response
 	 * @throws Exception
 	 */
-	public function index(Request $request, EntityManagerInterface $entityManager, Swift_Mailer $mailer) {
+	public function index(Request $request, PostRequestService $postRequestService) {
 		$user = $this->getUser();
 
 		if ($user) {
 			return $this->render("react.html.twig", Twig::param());
 		} else {
-			if ($request->isMethod("POST")) {
-				$parameters = $request->request;
+			$postRequestService->handleRegistration($this, $request);
 
-				if ($parameters->has("_csrf_token") && $this->isCsrfTokenValid("csrf", $parameters->get("_csrf_token"))) {
-					if ($parameters->has("email") && $parameters->has("displayName") && $parameters->has("username") && $parameters->has("password")) {
-						$email = trim(Util::fixString($parameters->get("email")));
-						$displayName = trim(Util::fixString($parameters->get("displayName")));
-						$username = trim(Util::fixString($parameters->get("username")));
-						$password = trim($parameters->get("password"));
+			$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
 
-						if (!Util::isEmpty($email) && !Util::isEmpty($displayName) && !Util::isEmpty($username) && !Util::isEmpty($password)) {
-							if (strlen($email) >= 3 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-								if (strlen($displayName) >= 1 && strlen($displayName) <= 25) {
-									if (strlen($username) >= 3 && strlen($username) <= 16) {
-										if (ctype_alnum($username)) {
-											if (!Util::contains($displayName, "☑️") && !Util::contains($displayName, "✔️") && !Util::contains($displayName, "✅") && !Util::contains($displayName, "🗹") && !Util::contains($displayName, "🗸")) {
-												/**
-												 * @var UserRepository $userRepository
-												 */
-												$userRepository = $entityManager->getRepository(User::class);
-
-												if ($userRepository->isEmailAvailable($email)) {
-													if ($userRepository->isUsernameAvailable($username)) {
-														$displayName = Util::sanatizeString($displayName);
-														$emailToken = Util::getRandomString(7);
-														$password = password_hash($password, PASSWORD_BCRYPT);
-
-														// Create user
-														$user = new User();
-														$user->setUsername($username)
-															->setDisplayName($displayName)
-															->setEmail($email)
-															->setPassword($password)
-															->setEmailActivated(false)
-															->setEmailActivationToken($emailToken)
-															->setTime(new DateTime("now"));
-
-														$entityManager->persist($user);
-
-														$autoFollowAccountId = $_ENV["AUTOFOLLOW_ACCOUNT_ID"];
-														if ($autoFollowAccountId) {
-															$autoFollowAccount = $userRepository->findOneBy(["id" => $autoFollowAccountId]);
-
-															if ($autoFollowAccount) {
-																$entityManager->persist((new Follower())
-																	->setSender($user)
-																	->setReceiver($autoFollowAccount)
-																	->setTime(new DateTime("now")));
-															}
-														}
-
-														$entityManager->flush();
-
-														// Send email
-														$message = (new Swift_Message("Finish your qpost registration"))
-															->setFrom($_ENV["MAILER_FROM"])
-															->setTo($email)
-															->setBody(
-																$this->renderView("emails/register.html.twig", [
-																	"username" => $username,
-																	"displayName" => $displayName,
-																	"verificationLink" => $this->generateUrl("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
-																]),
-																"text/html"
-															);
-
-														if ($mailer->send($message) !== 0) {
-															$this->addFlash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
-														} else {
-															$this->addFlash(FlashMessageType::ERROR, "Your email address could not be verified.");
-														}
-													} else {
-														$this->addFlash(FlashMessageType::ERROR, "That username is not available anymore.");
-													}
-												} else {
-													$this->addFlash(FlashMessageType::ERROR, "That email address is not available anymore.");
-												}
-											} else {
-												$this->addFlash(FlashMessageType::ERROR, "Your name contains invalid characters.");
-											}
-										} else {
-											$this->addFlash(FlashMessageType::ERROR, "Your username may only consist of letters and numbers.");
-										}
-									} else {
-										$this->addFlash(FlashMessageType::ERROR, "Your username must be between 3 and 16 characters long.");
-									}
-								} else {
-									$this->addFlash(FlashMessageType::ERROR, "Your name must be between 1 and 25 characters long.");
-								}
-							} else {
-								$this->addFlash(FlashMessageType::ERROR, "Please enter a valid email address.");
-							}
-						} else {
-							$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
-						}
-					}
-				}
-			}
-
-			return $this->render("pages/home/index.html.twig", Twig::param([
+			return $this->render($isMobile === false ? "pages/home/index.html.twig" : "pages/mobile/register.html.twig", Twig::param([
 				"description" => "A social microblogging network that helps you share your thoughts online, protected by freedom of speech.",
 				"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 				"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		}
+	}
+
+	public function csrf(string $id, ?string $token): bool {
+		return $this->isCsrfTokenValid($id, $token);
+	}
+
+	public function flash(string $type, string $message) {
+		$this->addFlash($type, $message);
+	}
+
+	public function view(string $view, array $parameters = []): string {
+		return $this->renderView($view, $parameters);
+	}
+
+	public function url(string $route, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string {
+		return $this->generateUrl($route, $parameters, $referenceType);
 	}
 }

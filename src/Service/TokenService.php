@@ -79,7 +79,7 @@ class TokenService {
 			"id" => $token
 		]);
 
-		if ($request->headers->has("User-Agent")) {
+		if ($token && $request->headers->has("User-Agent")) {
 			$token->setUserAgent($request->headers->get("User-Agent"));
 
 			$this->entityManager->persist($token);

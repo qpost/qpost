@@ -134,7 +134,9 @@ class LoginController extends AbstractController {
 				}
 			}
 
-			return $this->render("pages/login.html.twig", Twig::param([
+			$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
+
+			return $this->render($isMobile === false ? "pages/login.html.twig" : "pages/mobile/login.html.twig", Twig::param([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_login_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		} else {
