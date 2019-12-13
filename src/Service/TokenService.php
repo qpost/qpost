@@ -62,7 +62,7 @@ class TokenService {
 		$token = null;
 		if ($request->cookies->has("sesstoken")) {
 			$token = $request->cookies->get("sesstoken");
-		} else if (Util::startsWith($request->getPathInfo(), "/api") && $request->headers->has("Authorization")) {
+		} else if ((Util::startsWith($request->getPathInfo(), "/api") || Util::startsWith($request->getPathInfo(), "/webpush")) && $request->headers->has("Authorization")) {
 			$authorization = $request->headers->get("Authorization");
 
 			if ($authorization && is_string($authorization)) {
