@@ -20,10 +20,12 @@
 
 namespace qpost\Controller;
 
+use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectController extends AbstractController {
 	/**
@@ -33,7 +35,8 @@ class RedirectController extends AbstractController {
 	 */
 	public function terms() {
 		return $this->render("pages/terms.html.twig", Twig::param([
-			"title" => "Terms of Service"
+			"title" => "Terms of Service",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_terms", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 //		return $this->redirect("https://go.qpo.st/terms");
 	}
@@ -45,7 +48,8 @@ class RedirectController extends AbstractController {
 	 */
 	public function privacy() {
 		return $this->render("pages/privacy.html.twig", Twig::param([
-			"title" => "Privacy Policy"
+			"title" => "Privacy Policy",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_privacy", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 //		return $this->redirect("https://go.qpo.st/privacy");
 	}
@@ -57,7 +61,8 @@ class RedirectController extends AbstractController {
 	 */
 	public function disclaimer() {
 		return $this->render("pages/disclaimer.html.twig", Twig::param([
-			"title" => "Disclaimer"
+			"title" => "Disclaimer",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_disclaimer", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 //		return $this->redirect("https://go.qpo.st/disclaimer");
 	}
@@ -69,7 +74,8 @@ class RedirectController extends AbstractController {
 	 */
 	public function rules() {
 		return $this->render("pages/rules.html.twig", Twig::param([
-			"title" => "Rules and Guidelines"
+			"title" => "Rules and Guidelines",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_rules", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 //		return $this->redirect("https://go.qpo.st/rules");
 	}

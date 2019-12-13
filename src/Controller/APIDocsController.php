@@ -20,10 +20,12 @@
 
 namespace qpost\Controller;
 
+use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class APIDocsController extends AbstractController {
 	/**
@@ -32,7 +34,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function indexAction() {
 		return $this->render("apidocs/index.html.twig", Twig::param([
-			"title" => "API documentation"
+			"title" => "API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -42,7 +45,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function introductionAction() {
 		return $this->render("apidocs/introduction.html.twig", Twig::param([
-			"title" => "Introduction - API documentation"
+			"title" => "Introduction - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_introduction", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -52,7 +56,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function authenticationAction() {
 		return $this->render("apidocs/authentication.html.twig", Twig::param([
-			"title" => "Authentication - API documentation"
+			"title" => "Authentication - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_authentication", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -62,7 +67,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function errorsAction() {
 		return $this->render("apidocs/errors.html.twig", Twig::param([
-			"title" => "Errors - API documentation"
+			"title" => "Errors - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_errors", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -72,7 +78,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function accountDataAction() {
 		return $this->render("apidocs/accountData.html.twig", Twig::param([
-			"title" => "Account data - API documentation"
+			"title" => "Account data - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_accountdata", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -82,7 +89,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function badgeStatusAction() {
 		return $this->render("apidocs/badgeStatus.html.twig", Twig::param([
-			"title" => "Badge status - API documentation"
+			"title" => "Badge status - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_badgestatus", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -92,7 +100,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function birthdayAction() {
 		return $this->render("apidocs/birthday.html.twig", Twig::param([
-			"title" => "Birthday - API documentation"
+			"title" => "Birthday - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_birthday", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -102,7 +111,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function blockAction() {
 		return $this->render("apidocs/block.html.twig", Twig::param([
-			"title" => "Block - API documentation"
+			"title" => "Block - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_block", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -112,7 +122,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function favoriteAction() {
 		return $this->render("apidocs/favorite.html.twig", Twig::param([
-			"title" => "Favorite - API documentation"
+			"title" => "Favorite - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_favorite", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -122,7 +133,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function feedAction() {
 		return $this->render("apidocs/feed.html.twig", Twig::param([
-			"title" => "Feed - API documentation"
+			"title" => "Feed - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_feed", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -132,7 +144,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function followAction() {
 		return $this->render("apidocs/follow.html.twig", Twig::param([
-			"title" => "Follow - API documentation"
+			"title" => "Follow - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_follow", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -142,7 +155,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function followersYouKnowAction() {
 		return $this->render("apidocs/followersYouKnow.html.twig", Twig::param([
-			"title" => "Followers you know - API documentation"
+			"title" => "Followers you know - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_followersyouknow", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -152,7 +166,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function followRequestAction() {
 		return $this->render("apidocs/followRequest.html.twig", Twig::param([
-			"title" => "Follow request - API documentation"
+			"title" => "Follow request - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_followrequest", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -162,7 +177,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function notificationsAction() {
 		return $this->render("apidocs/notifications.html.twig", Twig::param([
-			"title" => "Notifications - API documentation"
+			"title" => "Notifications - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_notifications", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -172,7 +188,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function passwordAction() {
 		return $this->render("apidocs/password.html.twig", Twig::param([
-			"title" => "Password - API documentation"
+			"title" => "Password - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_password", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -182,7 +199,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function privacyLevelAction() {
 		return $this->render("apidocs/privacyLevel.html.twig", Twig::param([
-			"title" => "Privacy level - API documentation"
+			"title" => "Privacy level - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_privacylevel", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -192,7 +210,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function replyAction() {
 		return $this->render("apidocs/reply.html.twig", Twig::param([
-			"title" => "Reply - API documentation"
+			"title" => "Reply - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_reply", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -202,7 +221,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function searchAction() {
 		return $this->render("apidocs/search.html.twig", Twig::param([
-			"title" => "Search - API documentation"
+			"title" => "Search - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_search", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -212,7 +232,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function shareAction() {
 		return $this->render("apidocs/share.html.twig", Twig::param([
-			"title" => "Share - API documentation"
+			"title" => "Share - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_share", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -222,7 +243,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function statusAction() {
 		return $this->render("apidocs/status.html.twig", Twig::param([
-			"title" => "Status - API documentation"
+			"title" => "Status - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_status", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -232,7 +254,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function tokenAction() {
 		return $this->render("apidocs/token.html.twig", Twig::param([
-			"title" => "Token - API documentation"
+			"title" => "Token - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_token", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -242,7 +265,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function trendsAction() {
 		return $this->render("apidocs/trends.html.twig", Twig::param([
-			"title" => "Trends - API documentation"
+			"title" => "Trends - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_trends", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -252,7 +276,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function userAction() {
 		return $this->render("apidocs/user.html.twig", Twig::param([
-			"title" => "User - API documentation"
+			"title" => "User - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_user", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 
@@ -262,7 +287,8 @@ class APIDocsController extends AbstractController {
 	 */
 	public function usernameAction() {
 		return $this->render("apidocs/username.html.twig", Twig::param([
-			"title" => "Username - API documentation"
+			"title" => "Username - API documentation",
+			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_username", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 }
