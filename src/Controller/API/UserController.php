@@ -24,13 +24,9 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Exception;
 use Gumlet\ImageResize;
-use qpost\Entity\Hashtag;
-use qpost\Entity\MediaFile;
-use qpost\Entity\Notification;
-use qpost\Entity\ResetPasswordToken;
-use qpost\Entity\Suspension;
 use qpost\Entity\User;
 use qpost\Service\APIService;
+use qpost\Service\DataDeletionService;
 use qpost\Service\GigadriveService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -255,9 +251,10 @@ class UserController extends AbstractController {
 	 *
 	 * @param APIService $apiService
 	 * @param GigadriveService $gigadriveService
+	 * @param DataDeletionService $dataDeletionService
 	 * @return Response|null
 	 */
-	public function delete(APIService $apiService, GigadriveService $gigadriveService) {
+	public function delete(APIService $apiService, GigadriveService $gigadriveService, DataDeletionService $dataDeletionService) {
 		$response = $apiService->validate(true);
 		if (!is_null($response)) return $response;
 
@@ -273,55 +270,7 @@ class UserController extends AbstractController {
 				$correctPassword = $gigadriveData ? $gigadriveService->verifyPassword($gigadriveData->getAccountId(), $password) : password_verify($password, $user->getPassword());
 
 				if ($correctPassword) {
-					$entityManager = $apiService->getEntityManager();
-
-					// Update media files
-					foreach ($entityManager->getRepository(MediaFile::class)->findBy([
-						"originalUploader" => $user
-					]) as $mediaFile) {
-						$mediaFile->setOriginalUploader(null);
-						$entityManager->persist($mediaFile);
-					}
-
-					// Delete notifications
-					foreach ($entityManager->getRepository(Notification::class)->findBy([
-						"referencedUser" => $user
-					]) as $notification) {
-						$entityManager->remove($notification);
-					}
-
-					// Delete reset password tokens
-					foreach ($entityManager->getRepository(ResetPasswordToken::class)->findBy([
-						"user" => $user
-					]) as $passwordToken) {
-						$entityManager->remove($passwordToken);
-					}
-
-					// Update created suspensions
-					foreach ($entityManager->getRepository(Suspension::class)->findBy([
-						"staff" => $user
-					]) as $suspension) {
-						$suspension->setStaff(null);
-						$entityManager->persist($suspension);
-					}
-
-					// Delete own suspensions
-					foreach ($entityManager->getRepository(Suspension::class)->findBy([
-						"target" => $user
-					]) as $suspension) {
-						$entityManager->remove($suspension);
-					}
-
-					// Update hashtags
-					foreach ($entityManager->getRepository(Hashtag::class)->findBy([
-						"creator" => $user
-					]) as $hashtag) {
-						$hashtag->setCreator(null);
-						$entityManager->persist($hashtag);
-					}
-
-					$entityManager->remove($user);
-					$entityManager->flush();
+					$dataDeletionService->deleteUser($user);
 
 					return $apiService->noContent();
 				} else {

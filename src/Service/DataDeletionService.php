@@ -25,7 +25,11 @@ use Psr\Log\LoggerInterface;
 use qpost\Constants\FeedEntryType;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Hashtag;
+use qpost\Entity\MediaFile;
 use qpost\Entity\Notification;
+use qpost\Entity\ResetPasswordToken;
+use qpost\Entity\Suspension;
+use qpost\Entity\User;
 
 class DataDeletionService {
 	/**
@@ -41,6 +45,64 @@ class DataDeletionService {
 	public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger) {
 		$this->entityManager = $entityManager;
 		$this->logger = $logger;
+	}
+
+	public function deleteUser(User $user) {
+		$entityManager = $this->entityManager;
+
+		// Update media files
+		foreach ($entityManager->getRepository(MediaFile::class)->findBy([
+			"originalUploader" => $user
+		]) as $mediaFile) {
+			$mediaFile->setOriginalUploader(null);
+			$entityManager->persist($mediaFile);
+		}
+
+		// Delete notifications
+		foreach ($entityManager->getRepository(Notification::class)->findBy([
+			"referencedUser" => $user
+		]) as $notification) {
+			$entityManager->remove($notification);
+		}
+
+		// Delete reset password tokens
+		foreach ($entityManager->getRepository(ResetPasswordToken::class)->findBy([
+			"user" => $user
+		]) as $passwordToken) {
+			$entityManager->remove($passwordToken);
+		}
+
+		// Update created suspensions
+		foreach ($entityManager->getRepository(Suspension::class)->findBy([
+			"staff" => $user
+		]) as $suspension) {
+			$suspension->setStaff(null);
+			$entityManager->persist($suspension);
+		}
+
+		// Delete own suspensions
+		foreach ($entityManager->getRepository(Suspension::class)->findBy([
+			"target" => $user
+		]) as $suspension) {
+			$entityManager->remove($suspension);
+		}
+
+		// Update hashtags
+		foreach ($entityManager->getRepository(Hashtag::class)->findBy([
+			"creator" => $user
+		]) as $hashtag) {
+			$hashtag->setCreator(null);
+			$entityManager->persist($hashtag);
+		}
+
+		foreach ($entityManager->getRepository(FeedEntry::class)->findBy([
+			"user" => $user
+		]) as $feedEntry) {
+			$this->deleteFeedEntry($feedEntry);
+		}
+
+		$entityManager->remove($user);
+		$entityManager->flush();
 	}
 
 	/**
