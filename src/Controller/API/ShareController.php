@@ -24,6 +24,7 @@ use DateTime;
 use Exception;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\NotificationType;
+use qpost\Constants\PrivacyLevel;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Notification;
 use qpost\Service\APIService;
@@ -69,26 +70,30 @@ class ShareController extends AbstractController {
 						]);
 
 						if (is_null($share)) {
-							$share = (new FeedEntry())
-								->setUser($user)
-								->setParent($feedEntry)
-								->setType(FeedEntryType::SHARE)
-								->setToken($token)
-								->setTime(new DateTime("now"));
+							if ($feedEntry->getUser()->getPrivacyLevel() === PrivacyLevel::PUBLIC) {
+								$share = (new FeedEntry())
+									->setUser($user)
+									->setParent($feedEntry)
+									->setType(FeedEntryType::SHARE)
+									->setToken($token)
+									->setTime(new DateTime("now"));
 
-							$notification = (new Notification())
-								->setUser($feedEntry->getUser())
-								->setReferencedUser($user)
-								->setReferencedFeedEntry($feedEntry)
-								->setType(NotificationType::SHARE)
-								->setTime(new DateTime("now"));
+								$notification = (new Notification())
+									->setUser($feedEntry->getUser())
+									->setReferencedUser($user)
+									->setReferencedFeedEntry($feedEntry)
+									->setType(NotificationType::SHARE)
+									->setTime(new DateTime("now"));
 
-							$entityManager->persist($share);
-							$entityManager->persist($notification);
+								$entityManager->persist($share);
+								$entityManager->persist($notification);
 
-							$entityManager->flush();
+								$entityManager->flush();
 
-							return $apiService->json(["result" => $apiService->serialize($share)]);
+								return $apiService->json(["result" => $apiService->serialize($share)]);
+							} else {
+								return $apiService->json(["error" => "You can not share this post at this time."], 403);
+							}
 						} else {
 							return $apiService->json(["error" => "You have already shared this post."], 409);
 						}
