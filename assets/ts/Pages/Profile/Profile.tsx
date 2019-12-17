@@ -120,7 +120,10 @@ export default class Profile extends Component<any, {
 					<LeftSidebar negativeOffset={!!user.getHeaderURL()}>
 						<SidebarStickyContent>
 							<div className={"text-center"}>
-								<img className={"mainAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
+								<img className={"mainAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}
+									 style={{
+										 backgroundColor: "#000"
+									 }}/>
 							</div>
 
 							<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/><ProfileDropdown
@@ -154,7 +157,10 @@ export default class Profile extends Component<any, {
 						<Card className={"mobilePart mb-3"} size={"small"}>
 							<div className={"clearfix"}>
 								<div className={"float-left"}>
-									<img className={"mobileAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}/>
+									<img className={"mobileAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}
+										 style={{
+											 backgroundColor: "#000"
+										 }}/>
 								</div>
 
 								<div className={"float-left"}>
