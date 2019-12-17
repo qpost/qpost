@@ -24,6 +24,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Exception;
 use Gumlet\ImageResize;
+use qpost\Constants\PrivacyLevel;
 use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
@@ -310,6 +311,8 @@ class UserController extends AbstractController {
 			->setParameter("id", $user->getId(), Type::INTEGER)
 			->andWhere("u.emailActivated = :activated")
 			->setParameter("activated", true, Type::BOOLEAN)
+			->andWhere("u.privacyLevel = :public")
+			->setParameter("public", PrivacyLevel::PUBLIC, Type::STRING)
 			->andWhere("me.id = :id")
 			->setParameter("id", $user->getId(), Type::INTEGER)
 			->andWhere("their_friends.id != :id")
