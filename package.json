@@ -1,6 +1,6 @@
 {
 	"name": "qpost",
-	"version": "2.2.7",
+	"version": "2.2.8",
 	"description": "A social microblogging website written in PHP and TypeScript.",
 	"scripts": {
 		"build": "npm run clean && webpack --config=webpack.prod.js",
