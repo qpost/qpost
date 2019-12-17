@@ -66,6 +66,7 @@ class FeedEntry {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", inversedBy="children")
+	 * @Serializer\Exclude()
 	 */
 	private $parent;
 
@@ -238,9 +239,20 @@ class FeedEntry {
 	 * The parent of this feed entry.
 	 *
 	 * @return FeedEntry|null
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("parent")
 	 */
 	public function getParent(): ?self {
-		return $this->parent;
+		$parent = $this->parent;
+		$apiService = APIService::$instance;
+
+		if (!is_null($apiService)) {
+			if (!$apiService->mayView($parent)) {
+				return null;
+			}
+		}
+
+		return $parent;
 	}
 
 	/**

@@ -77,7 +77,8 @@ export default class FeedEntryListItemAttachments extends Component<{
 			} else if (attachments.length === 2) {
 				return <div style={{
 					height: "537px",
-					width: "100%"
+					width: "100%",
+					overflow: "hidden"
 				}}>
 					{attachments.map((mediaFile: MediaFile, i: number) => {
 						return mediaFile.getType() === MediaFileType.IMAGE ?
@@ -101,7 +102,8 @@ export default class FeedEntryListItemAttachments extends Component<{
 			} else if (attachments.length === 3) {
 				return <div style={{
 					height: "537px",
-					width: "100%"
+					width: "100%",
+					overflow: "hidden"
 				}}>
 					<div className={"d-inline-block"} style={{
 						width: "50%",
@@ -147,7 +149,8 @@ export default class FeedEntryListItemAttachments extends Component<{
 			} else if (attachments.length === 4) {
 				return <div style={{
 					height: "537px",
-					width: "100%"
+					width: "100%",
+					overflow: "hidden"
 				}}>
 					<div className={"d-inline-block"} style={{
 						width: "50%",

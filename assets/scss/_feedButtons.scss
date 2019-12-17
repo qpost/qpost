@@ -76,18 +76,6 @@
 		}
 	}
 
-	&:not(.active):not(.inactive) {
-		transition: text-shadow .3s ease-in-out;
-		-moz-transition: text-shadow .3s ease-in-out;
-		-webkit-transition: text-shadow .3s ease-in-out;
-		-o-transition: text-shadow .3s ease-in-out;
-		-ms-transition: text-shadow .3s ease-in-out;
-
-		&:hover {
-			text-shadow: 0 0 8px $color;
-		}
-	}
-
 	.number {
 		margin-left: 10px;
 	}

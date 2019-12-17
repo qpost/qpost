@@ -28,7 +28,7 @@ export default class TimeAgo extends Component<{
 		return <ReactTimeAgo date={this.props.time}
 							 formatter={(value: number, unit: string, suffix: string, epochSeconds: number, nextFormatter) => {
 								 if (this.props.short) {
-									 return value + unit.substr(0, 1);
+									 return unit.toLowerCase().startsWith("month") ? value + "mo" : value + unit.substr(0, 1);
 								 } else {
 									 return nextFormatter();
 								 }

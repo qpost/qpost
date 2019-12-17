@@ -43,6 +43,7 @@
 
 		@if ($identifier == mainNav) {
 			padding: 0 15px !important;
+			border-bottom: 1px solid darken($mainColor, 20%);
 
 			.ant-btn-background-ghost.ant-btn-link {
 				&, &:hover, &:active {
