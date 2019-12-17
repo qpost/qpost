@@ -19,6 +19,7 @@
 
 import React, {Component, MouseEventHandler} from "react";
 import $ from "jquery";
+import {Row} from "reactstrap";
 import {Link, Redirect} from "react-router-dom";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
 import User from "../../Entity/Account/User";
@@ -100,64 +101,66 @@ export default class FeedEntryListItem extends Component<{
 						setTimeout(() => this.props.onClick(e), 100);
 					}
 				}}>
-					<div className={"px-3 py-2"}>
+					<div className={"px-4 py-2"}>
 						{shareHeader ? shareHeader : ""}
-						<div className={"float-left"}>
-							<Link to={"/" + user.getUsername()} className={"clearUnderline float-left"}>
-								<img className={"rounded mx-1 my-1"} src={entry.getUser().getAvatarURL()} width={40}
-									 height={40} alt={entry.getUser().getUsername()}/>
-							</Link>
+						<Row>
+							<div className={"float-left"}>
+								<Link to={"/" + user.getUsername()} className={"clearUnderline float-left"}>
+									<img className={"rounded mx-1 my-1"} src={entry.getUser().getAvatarURL()} width={40}
+										 height={40} alt={entry.getUser().getUsername()}/>
+								</Link>
 
-							<p className={"float-left ml-1 mb-0"}>
-								<Link to={"/" + user.getUsername()} className={"clearUnderline"}>
+								<p className={"float-left ml-1 mb-0"}>
+									<Link to={"/" + user.getUsername()} className={"clearUnderline"}>
 										<span className={"font-weight-bold convertEmoji mr-2"}>
 											{user.getDisplayName()}<VerifiedBadge target={user}/>
 										</span>
-								</Link>
+									</Link>
 
-								<span className={"text-muted font-weight-normal"}>
+									<span className={"text-muted font-weight-normal"}>
 										@{user.getUsername()}
 									</span>
 
-								<br/>
+									<br/>
 
-								<span className={"small text-muted"}>
+									<span className={"small text-muted"}>
 										<i className={"far fa-clock"}/> <TimeAgo
-									time={entry.getTime()}/>
+										time={entry.getTime()}/>
 									</span>
-							</p>
-						</div>
+								</p>
+							</div>
 
-						{this.state.nsfwWarningActive ? <div className={"nsfwWarning w-100 mt-2"} onClick={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
+							{this.state.nsfwWarningActive ? <div className={"nsfwWarning w-100 mt-2"} onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
 
-							this.setState({
-								nsfwWarningActive: false
-							});
-						}}>
-							<Alert message={"NSFW content"} type={"error"}
-								   description={"This post was marked as NSFW and may contain inappropriate content. Click to reveal it."}
-								   showIcon icon={<Icon type="warning"/>}/>
-						</div> : <div className={"w-100"}>
-							{this.props.showParentInfo && entry.getType() === FeedEntryType.REPLY ?
-								<div className={"text-muted small specialLinkColor mt-2"}>
-									Replying to {entry.getPost() ? <Link
-									to={"/profile/" + entry.getPost().getUser().getUsername()}>{"@" + entry.getPost().getUser().getUsername()}</Link> : "..."}
+								this.setState({
+									nsfwWarningActive: false
+								});
+							}}>
+								<Alert message={"NSFW content"} type={"error"}
+									   description={"This post was marked as NSFW and may contain inappropriate content. Click to reveal it."}
+									   showIcon icon={<Icon type="warning"/>}/>
+							</div> : <div className={"w-100"}>
+								{this.props.showParentInfo && entry.getType() === FeedEntryType.REPLY ?
+									<div className={"text-muted small specialLinkColor mt-2"}>
+										Replying to {entry.getPost() ? <Link
+										to={"/profile/" + entry.getPost().getUser().getUsername()}>{"@" + entry.getPost().getUser().getUsername()}</Link> : "..."}
+									</div> : ""}
+
+								{entry.getText() !== null ? <div className="float-left ml-1 my-2 w-100">
+									<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
+										<FeedEntryText feedEntry={entry}/>
+									</p>
 								</div> : ""}
 
-							{entry.getText() !== null ? <div className="float-left ml-1 my-2 w-100">
-								<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
-									<FeedEntryText feedEntry={entry}/>
-								</p>
-							</div> : ""}
+								{this.props.hideAttachments && this.props.hideAttachments === true ? "" :
+									<FeedEntryListItemAttachments entry={entry}/>}
 
-							{this.props.hideAttachments && this.props.hideAttachments === true ? "" :
-								<FeedEntryListItemAttachments entry={entry}/>}
-
-							{this.props.hideButtons && this.props.hideButtons === true ? "" :
-								<FeedEntryActionButtons entry={entry} parent={this}/>}
-						</div>}
+								{this.props.hideButtons && this.props.hideButtons === true ? "" :
+									<FeedEntryActionButtons entry={entry} parent={this}/>}
+							</div>}
+						</Row>
 					</div>
 				</li>;
 			case FeedEntryType.NEW_FOLLOWING:
