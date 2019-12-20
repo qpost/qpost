@@ -153,7 +153,7 @@ export default class FeedEntryListItem extends Component<{
 												to={"/profile/" + entry.getPost().getUser().getUsername()}>{"@" + entry.getPost().getUser().getUsername()}</Link> : "..."}
 											</div> : ""}
 
-										{entry.getText() !== null ? <div className="float-left ml-1 my-2 w-100">
+										{entry.getText() ? <div className="float-left ml-1 my-2 w-100">
 											<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
 												<FeedEntryText feedEntry={entry}/>
 											</p>
