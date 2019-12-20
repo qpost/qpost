@@ -347,12 +347,18 @@ class StatusController extends AbstractController {
 										return $apiService->json(["error" => "You may not upload more attachments, if you include a GIF."], 400);
 									}
 
-									$mediaFile = (new MediaFile())
-										->setSHA256($sha256)
-										->setURL($url)
-										->setOriginalUploader($user)
-										->setType(MediaFileType::IMAGE)
-										->setTime(new DateTime("now"));
+									$mediaFile = $mediaFileRepository->findOneBy([
+										"url" => $url
+									]);
+
+									if (!$mediaFile) {
+										$mediaFile = (new MediaFile())
+											->setSHA256($sha256)
+											->setURL($url)
+											->setOriginalUploader($user)
+											->setType(MediaFileType::IMAGE)
+											->setTime(new DateTime("now"));
+									}
 								} else {
 									return $apiService->json(["error" => "Failed to upload attachments."], 400);
 								}
@@ -389,14 +395,13 @@ class StatusController extends AbstractController {
 							}
 
 							if ($videoURL) {
-								$sha256 = hash("sha256", $videoURL);
-
 								$mediaFile = $mediaFileRepository->findOneBy([
-									"url" => $videoURL,
-									"sha256" => $sha256
+									"url" => $videoURL
 								]);
 
 								if (!$mediaFile) {
+									$sha256 = hash("sha256", $videoURL);
+
 									$mediaFile = (new MediaFile())
 										->setSHA256($sha256)
 										->setURL($videoURL)
