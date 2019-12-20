@@ -29,6 +29,12 @@
 	font-size: 16px;
 	color: gray;
 	text-align: center;
+	padding: 5px;
+	@extend .border, .rounded;
+	border-color: transparent !important;
+	-webkit-transition: background-color 200ms linear;
+	-ms-transition: background-color 200ms linear;
+	transition: background-color 200ms linear;
 
 	@include media-breakpoint-between(sm, md) {
 		@include make-col-ready();
@@ -65,11 +71,17 @@
 	}
 
 	&.active, &:hover {
-		cursor: pointer;
+		&:not(.inactive) {
+			cursor: pointer;
+		}
 
 		i, .number {
 			color: $color;
 		}
+	}
+
+	&:not(.inactive):hover {
+		background-color: rgba(red(gray), green(gray), blue(gray), .2);
 	}
 
 	&.inactive {
