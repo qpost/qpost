@@ -45,4 +45,9 @@ body.disableScroll {
 	@include media-breakpoint-up(md) {
 		padding: 0 50px;
 	}
+
+	@include media-breakpoint-up(sm) {
+		@include make-container();
+		@include make-container-max-widths($container-max-widths);
+	}
 }
