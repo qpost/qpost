@@ -20,7 +20,7 @@
 .statusTrigger {
 	@include desktopOnly() {
 		&:hover {
-			background-color: #001020 !important;
+			//background-color: #001020 !important;
 		}
 	}
 }
