@@ -24,6 +24,7 @@ import API from "../API/API";
 import {Card, message} from "antd";
 import BaseObject from "../Serialization/BaseObject";
 import {Link} from "react-router-dom";
+import Storage from "../Util/Storage";
 
 export default class TrendingTopics extends Component<{
 	limit?: number
@@ -41,17 +42,21 @@ export default class TrendingTopics extends Component<{
 	}
 
 	componentDidMount(): void {
+		const storedTopics = Storage.sessionGet("trendingTopics");
+		if (storedTopics) {
+			this.load(JSON.parse(storedTopics));
+			return;
+		}
+
 		API.handleRequest("/trends", "GET", {
 			limit: 20
 		}, data => {
 			if (data.results) {
-				const results: TrendingHashtagData[] = [];
+				this.load(data.results);
 
-				data.results.forEach(result => {
-					results.push(BaseObject.convertObject(TrendingHashtagData, result));
-				});
-
-				this.setState({loading: false, trends: results});
+				if (this.state.trends) {
+					Storage.sessionSet("trendingTopics", JSON.stringify(this.state.trends));
+				}
 			} else {
 				this.setState({loading: false});
 				message.error("An error occurred.");
@@ -61,6 +66,16 @@ export default class TrendingTopics extends Component<{
 			message.error(error);
 		});
 	}
+
+	load = (results) => {
+		const trends: TrendingHashtagData[] = [];
+
+		results.forEach(result => {
+			results.push(BaseObject.convertObject(TrendingHashtagData, result));
+		});
+
+		this.setState({loading: false, trends});
+	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.loading) {
