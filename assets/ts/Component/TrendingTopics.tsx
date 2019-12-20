@@ -42,7 +42,7 @@ export default class TrendingTopics extends Component<{
 
 	componentDidMount(): void {
 		API.handleRequest("/trends", "GET", {
-			limit: this.props.limit || 10
+			limit: 20
 		}, data => {
 			if (data.results) {
 				const results: TrendingHashtagData[] = [];
@@ -71,6 +71,8 @@ export default class TrendingTopics extends Component<{
 			return <Card size={"small"} title={"Trending topics"} className={"card-nopadding trending-topics mb-3"}>
 				<ul className={"list-group feedContainer"}>
 					{this.state.trends.map((trend: TrendingHashtagData, index: number) => {
+						if (index >= this.props.limit) return "";
+
 						const tag: string = trend.getHashtag().getId();
 
 						return <Link to={"/hashtag/" + encodeURI(tag)} className={"clearUnderline"}>
