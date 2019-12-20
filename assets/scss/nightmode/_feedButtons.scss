@@ -17,44 +17,6 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.statusPageBox {
-	$width: calc(100% - 190px);
-	$margin: 30px;
-
-	.nameContainer {
-		width: $width;
-
-		.displayName {
-			@include cutText();
-
-			a {
-				font-weight: bold;
-				font-size: 18px;
-				color: #000;
-			}
-		}
-
-		.username {
-			@include cutText();
-			margin-top: -4px;
-
-			a {
-				@extend .text-muted;
-			}
-		}
-	}
-
-	.text {
-		margin-top: $margin;
-		color: #000;
-		font-size: 19px;
-	}
-
-	.attachments, .actionButtons {
-		margin-top: $margin;
-	}
-
-	.ant-card-body {
-		padding-bottom: 0;
-	}
+.feedEntryButtonHolder {
+	background-color: #001020 !important;
 }
