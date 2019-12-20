@@ -38,8 +38,6 @@ export default class FeedEntryActionButtons extends Component<{
 
 		return <div className={"row w-100 ml-0"}>
 			<div className={"d-block w-100"} onClick={(e) => e.stopPropagation()}>
-				<hr/>
-
 				<div className={"feedEntryButtonHolder"} style={this.props.parent ? {
 					marginRight: "-15px",
 					marginLeft: "-15px"
