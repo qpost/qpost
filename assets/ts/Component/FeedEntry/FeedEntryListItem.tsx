@@ -145,7 +145,7 @@ export default class FeedEntryListItem extends Component<{
 									}}>
 										<Alert message={"NSFW content"} type={"error"}
 											   description={"This post was marked as NSFW and may contain inappropriate content. Click to reveal it."}
-											   showIcon icon={<Icon type="warning"/>}/>
+											   showIcon icon={<Icon type="warning"/>} className={"mb-3"}/>
 									</div> : <div className={"w-100"}>
 										{this.props.showParentInfo && entry.getType() === FeedEntryType.REPLY ?
 											<div className={"text-muted small specialLinkColor mt-2"}>
