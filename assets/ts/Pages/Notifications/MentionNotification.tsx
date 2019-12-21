@@ -19,11 +19,7 @@
 
 import React, {Component} from "react";
 import Notification from "../../Entity/Feed/Notification";
-import {Card} from "antd";
-import {Link} from "react-router-dom";
-import VerifiedBadge from "../../Component/VerifiedBadge";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
-import TimeAgo from "../../Component/TimeAgo";
 
 export default class MentionNotification extends Component<{
 	notification: Notification
@@ -38,7 +34,9 @@ export default class MentionNotification extends Component<{
 		const feedEntry = notification.getReferencedFeedEntry();
 
 		if (feedEntry && user) {
-			return <Card size={"small"} className={!notification.isSeen() ? "unseenNotification" : ""}>
+			return <FeedEntryListItem entry={feedEntry} showParentInfo={true}/>;
+
+			/*return <Card size={"small"} className={!notification.isSeen() ? "unseenNotification" : ""}>
 				<p className={"mb-0"}>
 					<i className={"fas fa-at text-info"}/> <Link to={"/profile/" + user.getUsername()}
 																 className={"font-weight-bold clearUnderline"}><img
@@ -51,7 +49,7 @@ export default class MentionNotification extends Component<{
 				<hr/>
 
 				<FeedEntryListItem entry={feedEntry} hideButtons={true}/>
-			</Card>;
+			</Card>;*/
 		} else {
 			return "";
 		}
