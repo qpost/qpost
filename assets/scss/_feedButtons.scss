@@ -36,10 +36,10 @@
 	-ms-transition: background-color 200ms linear;
 	transition: background-color 200ms linear;
 
-	@include media-breakpoint-between(sm, md) {
+	/*@include media-breakpoint-between(sm, md) {
 		@include make-col-ready();
 		@include make-col(3);
-	}
+	}*/
 
 	/*@include media-breakpoint-up(lg) {
 		@include make-col-ready();
