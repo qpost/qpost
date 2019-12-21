@@ -120,5 +120,6 @@
 
 	.deleteButton {
 		@include feedButton($danger);
+		width: 48.633px;
 	}
 }
