@@ -124,7 +124,9 @@ export default class App extends Component<any, any> {
 							<Layout>
 								<Header/>
 
-								<Layout.Content className="navMargin mainContent">
+								<Layout.Content className="navMargin mainContent" style={{
+									overflowX: "visible"
+								}}>
 									<div className="legacyCard">
 										<div className="wrapper">
 											<div className="legacyCardBody">
