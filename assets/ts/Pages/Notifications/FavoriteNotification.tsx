@@ -50,7 +50,7 @@ export default class FavoriteNotification extends Component<{
 
 				<hr/>
 
-				<FeedEntryListItem entry={feedEntry} hideAttachments={true} hideButtons={true}/>
+				<FeedEntryListItem entry={feedEntry} hideButtons={true}/>
 			</Card>;
 		} else {
 			return "";
