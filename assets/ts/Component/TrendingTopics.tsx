@@ -42,7 +42,7 @@ export default class TrendingTopics extends Component<{
 	}
 
 	componentDidMount(): void {
-		const storedTopics = Storage.sessionGet("trendingTopics");
+		const storedTopics = Storage.sessionGet(Storage.SESSION_TRENDING_TOPICS);
 		if (storedTopics) {
 			this.load(JSON.parse(storedTopics));
 			return;
@@ -55,7 +55,7 @@ export default class TrendingTopics extends Component<{
 				this.load(data.results);
 
 				if (this.state.trends) {
-					Storage.sessionSet("trendingTopics", JSON.stringify(this.state.trends));
+					Storage.sessionSet(Storage.SESSION_TRENDING_TOPICS, JSON.stringify(this.state.trends));
 				}
 			} else {
 				this.setState({loading: false});

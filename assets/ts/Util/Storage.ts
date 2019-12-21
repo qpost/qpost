@@ -18,6 +18,8 @@
  */
 
 export default class Storage {
+	public static readonly SESSION_TRENDING_TOPICS = "trendingTopics";
+
 	public static sessionGet(key) {
 		const stringValue = window.sessionStorage.getItem(key);
 
