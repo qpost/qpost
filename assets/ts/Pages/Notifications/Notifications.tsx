@@ -39,6 +39,8 @@ import ReplyNotification from "./ReplyNotification";
 import ShareNotification from "./ShareNotification";
 import BadgeStatus from "../../Auth/BadgeStatus";
 import {setPageTitle} from "../../Util/Page";
+import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
+import TrendingTopics from "../../Component/TrendingTopics";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -97,7 +99,8 @@ export default class Notifications extends Component<any, {
 		return <ContentBase>
 			<RightSidebar>
 				<SidebarStickyContent>
-					<SidebarFooter/>
+					<HomeFeedProfileBox/>
+					<TrendingTopics limit={5}/>
 				</SidebarStickyContent>
 			</RightSidebar>
 
@@ -148,7 +151,7 @@ export default class Notifications extends Component<any, {
 				<SidebarStickyContent>
 					<SuggestedUsers/>
 
-					{/*<SidebarFooter/>*/}
+					<SidebarFooter/>
 				</SidebarStickyContent>
 			</RightSidebar>
 		</ContentBase>;
