@@ -29,6 +29,7 @@ import {Card} from "antd";
 import Auth from "../Auth/Auth";
 import TimeAgo from "./TimeAgo";
 import {placeZeroBelowTen} from "../Util/Format";
+import Storage from "../Util/Storage";
 
 export default class UpcomingBirthdays extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -42,23 +43,37 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 
 	componentDidMount(): void {
 		if (Auth.isLoggedIn()) {
+			const storedBirthdays = Storage.sessionGet(Storage.SESSION_UPCOMING_BIRTHDAYS);
+			if (storedBirthdays) {
+				this.load(JSON.parse(storedBirthdays));
+				return;
+			}
+
 			const now = new Date();
 
 			API.handleRequest("/birthdays", "GET", {
 				date: now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDate())
 			}, (data => {
 				if (data["results"]) {
-					const results: User[] = [];
+					this.load(data["results"]);
 
-					data["results"].forEach(userData => {
-						results.push(BaseObject.convertObject(User, userData));
-					});
-
-					this.setState({results, loading: false});
+					if (this.state.results) {
+						Storage.sessionSet(Storage.SESSION_UPCOMING_BIRTHDAYS, JSON.stringify(this.state.results));
+					}
 				}
 			}));
 		}
 	}
+
+	load = (results) => {
+		const birthdays: User[] = [];
+
+		results.forEach(userData => {
+			birthdays.push(BaseObject.convertObject(User, userData));
+		});
+
+		this.setState({results: birthdays, loading: false});
+	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (!Auth.isLoggedIn()) return <div/>;
