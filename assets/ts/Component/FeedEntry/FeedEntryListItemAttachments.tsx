@@ -79,7 +79,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 					height: "537px",
 					width: "100%",
 					overflow: "hidden"
-				}}>
+				}} className={!this.props.entry.getText() ? " mt-2" : ""}>
 					{attachments.map((mediaFile: MediaFile, i: number) => {
 						return mediaFile.getType() === MediaFileType.IMAGE ?
 							<div key={i} className={"d-inline-block"} style={{
@@ -104,7 +104,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 					height: "537px",
 					width: "100%",
 					overflow: "hidden"
-				}}>
+				}} className={!this.props.entry.getText() ? " mt-2" : ""}>
 					<div className={"d-inline-block"} style={{
 						width: "50%",
 						position: "relative",
@@ -151,7 +151,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 					height: "537px",
 					width: "100%",
 					overflow: "hidden"
-				}}>
+				}} className={!this.props.entry.getText() ? " mt-2" : ""}>
 					<div className={"d-inline-block"} style={{
 						width: "50%",
 						position: "relative",
