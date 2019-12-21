@@ -163,6 +163,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							height: "50%",
 							backgroundImage: 'url("' + stillGIFURL(attachments[0].getURL()) + '")',
 							backgroundSize: "cover",
+							backgroundPosition: "center",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 0)}/>
 
@@ -172,6 +173,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							height: "50%",
 							backgroundImage: 'url("' + stillGIFURL(attachments[1].getURL()) + '")',
 							backgroundSize: "cover",
+							backgroundPosition: "center",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 1)}/>
 					</div>
@@ -187,6 +189,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							height: "50%",
 							backgroundImage: 'url("' + stillGIFURL(attachments[2].getURL()) + '")',
 							backgroundSize: "cover",
+							backgroundPosition: "center",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 2)}/>
 
@@ -196,6 +199,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 							height: "50%",
 							backgroundImage: 'url("' + stillGIFURL(attachments[3].getURL()) + '")',
 							backgroundSize: "cover",
+							backgroundPosition: "center",
 							cursor: "pointer"
 						}} onClick={(e) => this.clickHandler(e, 3)}/>
 					</div>
