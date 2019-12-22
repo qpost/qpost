@@ -71,7 +71,7 @@ export default class TrendingTopics extends Component<{
 		const trends: TrendingHashtagData[] = [];
 
 		results.forEach(result => {
-			results.push(BaseObject.convertObject(TrendingHashtagData, result));
+			trends.push(BaseObject.convertObject(TrendingHashtagData, result));
 		});
 
 		this.setState({loading: false, trends});
