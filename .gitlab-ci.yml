@@ -39,6 +39,7 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - git submodule update --depth 50
     - npm i
+    - npm rebuild node-sass
     - npm run build
     - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=var --exclude=vendor --exclude=node_modules ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/
     - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=var --exclude=vendor --exclude=node_modules ./ root@node1.qpo.st:/home/web/qpost/
