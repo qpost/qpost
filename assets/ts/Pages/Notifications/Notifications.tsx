@@ -41,6 +41,7 @@ import BadgeStatus from "../../Auth/BadgeStatus";
 import {setPageTitle} from "../../Util/Page";
 import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
 import TrendingTopics from "../../Component/TrendingTopics";
+import PageHeader from "../../Component/PageHeader";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -105,6 +106,7 @@ export default class Notifications extends Component<any, {
 			</RightSidebar>
 
 			<PageContent leftSidebar rightSidebar>
+				<PageHeader title={"Notifications"} iconClass={"fas fa-bell"}/>
 				{this.state.notifications !== null ?
 					<div>
 						{this.state.notifications.length > 0 ? <InfiniteScroll

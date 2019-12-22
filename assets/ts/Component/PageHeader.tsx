@@ -18,38 +18,36 @@
  */
 
 import React, {Component} from "react";
-import "antd/es/affix/style";
-import WindowSizeListener from "react-window-size-listener";
-import Sticky from "react-stickynode";
+import SidebarStickyContent from "./Layout/SidebarStickyContent";
+import NightMode from "../NightMode/NightMode";
 
-export default class SidebarStickyContent extends Component<any, {
-	mobile: boolean
-}> {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			mobile: window.innerWidth <= 867
-		};
-	}
-
-	setIsMobileMenu = (windowWidth: number) => {
-		const mobileMenuOpen = windowWidth <= 867;
-
-		if (this.state.mobile !== mobileMenuOpen) {
-			this.setState({
-				mobile: mobileMenuOpen
-			});
-		}
-	};
-
+export default class PageHeader extends Component<{
+	title: string,
+	iconClass?: string,
+	className?: string
+}, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return [this.state.mobile === false ? <Sticky top={70} innerZ={9999}>
-			<div>
-				{this.props.children}
+		return <SidebarStickyContent>
+			<div style={{
+				paddingTop: "6px",
+				marginTop: "-6px",
+				backgroundColor: NightMode.isActive() ? "#000b17" : "#F0F2F5"
+			}}>
+				<div
+					className={"ant-card ant-card-bordered ant-card-small rounded-none rounded-top page-header" + (this.props.className || "")}
+					style={{
+						zIndex: 9999,
+						borderColor: NightMode.isActive() ? "#001020" : "#DFDFDF"
+					}}>
+					<div className={"ant-card-body"} style={{
+						padding: "15px",
+						fontSize: "16px"
+					}}>
+						{this.props.iconClass ? <i className={this.props.iconClass + " mr-2"}/> : ""}
+						{this.props.title}
+					</div>
+				</div>
 			</div>
-		</Sticky> : this.props.children, <WindowSizeListener onResize={windowSize => {
-			this.setIsMobileMenu(windowSize.windowWidth);
-		}}/>];
+		</SidebarStickyContent>;
 	}
 }

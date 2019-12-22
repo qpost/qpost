@@ -31,6 +31,7 @@ import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
 import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
 import TrendingTopics from "../../Component/TrendingTopics";
+import PageHeader from "../../Component/PageHeader";
 
 export default class HomeFeed extends Component<any, any> {
 	componentDidMount(): void {
@@ -49,6 +50,7 @@ export default class HomeFeed extends Component<any, any> {
 				</LeftSidebar>
 
 				<PageContent leftSidebar rightSidebar>
+					<PageHeader title={"Home feed"} iconClass={"fas fa-home"}/>
 					<DummyPostForm/>
 
 					<FeedEntryList/>
