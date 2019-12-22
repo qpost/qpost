@@ -37,8 +37,15 @@ export default class PageHeader extends Component<{
 					className={"ant-card ant-card-bordered ant-card-small rounded-none rounded-top page-header" + (this.props.className || "")}
 					style={{
 						zIndex: 1999,
-						borderColor: NightMode.isActive() ? "#001020" : "#DFDFDF"
-					}}>
+						borderColor: NightMode.isActive() ? "#001020" : "#DFDFDF",
+						cursor: "pointer"
+					}}
+					onClick={event => {
+						event.preventDefault();
+
+						$("html,body").animate({scrollTop: 0}, "slow");
+					}}
+				>
 					<div className={"ant-card-body"} style={{
 						padding: "15px",
 						fontSize: "16px"
