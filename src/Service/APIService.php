@@ -313,8 +313,8 @@ class APIService {
 		if (!$this->mayView($target, $user)) return false;
 		if ($target->getPrivacyLevel() === PrivacyLevel::PUBLIC) return true;
 
-		if ($target->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
-			return $this->isFollowing($user, $target);
+		if ($user->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
+			return $this->isFollowing($target, $user);
 		}
 
 		return true;
