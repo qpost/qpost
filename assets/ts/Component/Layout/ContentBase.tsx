@@ -27,7 +27,9 @@ export default class ContentBase extends Component<any, any> {
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <Row gutter={20}>
+		return <Row gutter={20} style={{
+			overflow: "hidden"
+		}}>
 			{this.props.children}
 		</Row>
 	}
