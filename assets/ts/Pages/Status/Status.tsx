@@ -51,15 +51,19 @@ import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
-	error: string | null
+	error: string | null,
+	loadingFinished: boolean
 }> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			status: null,
-			error: null
+			status: sessionStorage.getItem("nextFeedEntry") ? BaseObject.convertObject(FeedEntry, sessionStorage.getItem("nextFeedEntry")) : null,
+			error: null,
+			loadingFinished: false
 		};
+
+		sessionStorage.removeItem("nextFeedEntry");
 	}
 
 	componentDidMount(): void {
@@ -71,7 +75,8 @@ export default class Status extends Component<any, {
 					const feedEntry = BaseObject.convertObject(FeedEntry, data.result);
 
 					this.setState({
-						status: feedEntry
+						status: feedEntry,
+						loadingFinished: true
 					});
 
 					let title = feedEntry.getUser().getDisplayName() + " on qpost";
@@ -127,9 +132,10 @@ export default class Status extends Component<any, {
 							return <FeedEntryListItem entry={entry} showParentInfo={true} key={index}/>;
 						})}
 
-						{parents.length === 0 && status.getType() === FeedEntryType.REPLY ? <Card size={"small"}>
-							<PostUnavailableAlert/>
-						</Card> : ""}
+						{this.state.loadingFinished && parents.length === 0 && status.getType() === FeedEntryType.REPLY ?
+							<Card size={"small"}>
+								<PostUnavailableAlert/>
+							</Card> : ""}
 
 						<Card className={"statusPageBox"} size={"small"}>
 							<div className={"clearfix"}>

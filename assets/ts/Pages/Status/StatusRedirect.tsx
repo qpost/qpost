@@ -20,7 +20,7 @@
 import React, {Component} from "react";
 import {Redirect} from "react-router";
 
-export default class ProfileRedirect extends Component<any, any> {
+export default class StatusRedirect extends Component<any, any> {
 	constructor(props) {
 		super(props);
 	}
