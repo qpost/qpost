@@ -85,6 +85,8 @@ class CompileTrendsCommand extends Command {
 			 */
 			$amount = $result["amount"];
 
+			if ($amount < 10) continue;
+
 			$output->writeln("#" . $hashtag->getId() . " - " . $amount);
 
 			$trendingData = $hashtag->getTrendingData();
