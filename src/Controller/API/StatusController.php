@@ -293,9 +293,11 @@ class StatusController extends AbstractController {
 
 					// handle reply notification
 					if ($parent && $type === FeedEntryType::REPLY) {
-						if ($parent->getUser()->getId() != $user->getId()) { // don't send self notification
+						$parentUser = $parent->getUser();
+
+						if ($parentUser->getId() != $user->getId() && $apiService->maySendNotifications($parentUser, $user)) { // don't send self notification
 							$notification = (new Notification())
-								->setUser($parent->getUser())
+								->setUser($parentUser)
 								->setReferencedFeedEntry($feedEntry)
 								->setReferencedUser($user)
 								->setType(NotificationType::REPLY)
@@ -444,14 +446,16 @@ class StatusController extends AbstractController {
 						}
 
 						foreach ($mentionedUsers as $mentionedUser) {
-							$notification = (new Notification())
-								->setUser($mentionedUser)
-								->setReferencedFeedEntry($feedEntry)
-								->setReferencedUser($user)
-								->setType(NotificationType::MENTION)
-								->setTime(new DateTime("now"));
+							if ($apiService->maySendNotifications($mentionedUser, $user)) {
+								$notification = (new Notification())
+									->setUser($mentionedUser)
+									->setReferencedFeedEntry($feedEntry)
+									->setReferencedUser($user)
+									->setType(NotificationType::MENTION)
+									->setTime(new DateTime("now"));
 
-							$entityManager->persist($notification);
+								$entityManager->persist($notification);
+							}
 						}
 					}
 

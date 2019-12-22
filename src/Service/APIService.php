@@ -302,6 +302,25 @@ class APIService {
 	}
 
 	/**
+	 * @param User $target
+	 * @param User|null $user
+	 * @return bool
+	 */
+	public function maySendNotifications(User $target, User $user = null): bool {
+		if (!$user) $user = $this->getUser();
+		if (!$user) return false;
+		if ($target->getId() === $user->getId()) return false;
+		if (!$this->mayView($target, $user)) return false;
+		if ($target->getPrivacyLevel() === PrivacyLevel::PUBLIC) return true;
+
+		if ($target->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
+			return $this->isFollowing($user, $target);
+		}
+
+		return true;
+	}
+
+	/**
 	 * @param User $from
 	 * @param User $to
 	 * @return bool
@@ -360,15 +379,17 @@ class APIService {
 			->setTime(new DateTime("now")));
 
 		// create notification
-		$notification = (new Notification())
-			->setUser($to)
-			->setType(NotificationType::NEW_FOLLOWER)
-			->setReferencedUser($from)
-			->setSeen(false)
-			->setNotified(false)
-			->setTime(new DateTime("now"));
+		if ($this->maySendNotifications($to, $from)) {
+			$notification = (new Notification())
+				->setUser($to)
+				->setType(NotificationType::NEW_FOLLOWER)
+				->setReferencedUser($from)
+				->setSeen(false)
+				->setNotified(false)
+				->setTime(new DateTime("now"));
 
-		$this->entityManager->persist($notification);
+			$this->entityManager->persist($notification);
+		}
 
 		$this->entityManager->flush();
 

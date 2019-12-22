@@ -65,6 +65,8 @@ class FavoriteController extends AbstractController {
 					]);
 
 					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY) && $apiService->mayView($feedEntry)) {
+						$owner = $feedEntry->getUser();
+
 						$favorite = $entityManager->getRepository(Favorite::class)->findOneBy([
 							"user" => $user,
 							"feedEntry" => $feedEntry
@@ -76,9 +78,9 @@ class FavoriteController extends AbstractController {
 								->setFeedEntry($feedEntry)
 								->setTime(new DateTime("now"));
 
-							if ($feedEntry->getUser()->getId() !== $user->getId()) {
+							if ($owner->getId() !== $user->getId() && $apiService->maySendNotifications($owner, $user)) {
 								$notification = (new Notification())
-									->setUser($feedEntry->getUser())
+									->setUser($owner)
 									->setReferencedUser($user)
 									->setReferencedFeedEntry($feedEntry)
 									->setType(NotificationType::FAVORITE)

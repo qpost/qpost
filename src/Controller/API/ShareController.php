@@ -63,6 +63,8 @@ class ShareController extends AbstractController {
 					]);
 
 					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY) && $apiService->mayView($feedEntry)) {
+						$owner = $feedEntry->getUser();
+
 						$share = $entityManager->getRepository(FeedEntry::class)->findOneBy([
 							"user" => $user,
 							"parent" => $feedEntry,
@@ -70,7 +72,7 @@ class ShareController extends AbstractController {
 						]);
 
 						if (is_null($share)) {
-							if ($feedEntry->getUser()->getPrivacyLevel() === PrivacyLevel::PUBLIC) {
+							if ($owner->getPrivacyLevel() === PrivacyLevel::PUBLIC) {
 								$share = (new FeedEntry())
 									->setUser($user)
 									->setParent($feedEntry)
@@ -78,12 +80,14 @@ class ShareController extends AbstractController {
 									->setToken($token)
 									->setTime(new DateTime("now"));
 
-								$notification = (new Notification())
-									->setUser($feedEntry->getUser())
-									->setReferencedUser($user)
-									->setReferencedFeedEntry($feedEntry)
-									->setType(NotificationType::SHARE)
-									->setTime(new DateTime("now"));
+								if ($apiService->maySendNotifications($owner, $user)) {
+									$notification = (new Notification())
+										->setUser($owner)
+										->setReferencedUser($user)
+										->setReferencedFeedEntry($feedEntry)
+										->setType(NotificationType::SHARE)
+										->setTime(new DateTime("now"));
+								}
 
 								$entityManager->persist($share);
 								$entityManager->persist($notification);
