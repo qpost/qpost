@@ -36,7 +36,7 @@ export default class PageHeader extends Component<{
 				<div
 					className={"ant-card ant-card-bordered ant-card-small rounded-none rounded-top page-header" + (this.props.className || "")}
 					style={{
-						zIndex: 9999,
+						zIndex: 1999,
 						borderColor: NightMode.isActive() ? "#001020" : "#DFDFDF"
 					}}>
 					<div className={"ant-card-body"} style={{

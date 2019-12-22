@@ -38,7 +38,7 @@ export default class MobileHeader extends Component<{
 			className={"mainNav"}
 			style={{
 				position: "fixed",
-				zIndex: 99999,
+				zIndex: 2000,
 				width: "100%",
 				top: 0,
 				display: !this.props.mobile ? "none" : "block"
