@@ -57,7 +57,9 @@ export default class DummyPostForm extends Component<any, any> {
 				position: "fixed",
 				zIndex: 500,
 				bottom: 90,
-				right: 30
+				right: 30,
+				width: "60px",
+				height: "60px"
 			}}>
 				<i className="fas fa-pencil-alt"/>
 			</Button>,
