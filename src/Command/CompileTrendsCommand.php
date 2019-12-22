@@ -114,7 +114,7 @@ class CompileTrendsCommand extends Command {
 				->setParameter("tags", $trendingTags);
 		}
 
-		/**
+		/**S
 		 * @var Hashtag[] $toRemove
 		 */
 		$toRemove = $toRemoveQuery->getQuery()->getResult();
