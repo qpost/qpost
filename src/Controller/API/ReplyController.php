@@ -91,6 +91,7 @@ class ReplyController extends AbstractController {
 					$replyBatches = [];
 
 					foreach ($feedEntries as $reply) {
+						if (!$apiService->mayView($reply)) continue;
 						$replyBatch = [$apiService->serialize($reply)];
 
 						while (count($replyBatch) < 5) {
@@ -107,7 +108,7 @@ class ReplyController extends AbstractController {
 								->getQuery()
 								->getOneOrNullResult();
 
-							if (!$reply) break;
+							if (!$reply || !$apiService->mayView($reply)) break;
 							$replyBatch[] = $apiService->serialize($reply);
 						}
 
