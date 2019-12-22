@@ -77,7 +77,7 @@ export default class MobileSider extends Component<{
 				collapsed={this.state.collapsed}
 				style={{
 					position: "fixed",
-					zIndex: 100,
+					zIndex: 2001,
 					height: "100%"
 				}}
 				onBreakpoint={broken => {
