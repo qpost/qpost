@@ -74,14 +74,24 @@
 		&:not(.inactive) {
 			cursor: pointer;
 		}
+	}
 
+	&.active {
 		i, .number {
 			color: $color;
 		}
 	}
 
-	&:not(.inactive):hover {
-		background-color: rgba(red(gray), green(gray), blue(gray), .2);
+	@include desktopOnly() {
+		&:hover {
+			i, .number {
+				color: $color;
+			}
+		}
+
+		&:not(.inactive):hover {
+			background-color: rgba(red(gray), green(gray), blue(gray), .2);
+		}
 	}
 
 	&.inactive {
