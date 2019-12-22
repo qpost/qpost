@@ -43,7 +43,7 @@ export default class MobileNavigation extends Component<{
 			className={"mobileNav"}
 			style={{
 				position: "fixed",
-				zIndex: 1,
+				zIndex: 999,
 				width: "100%",
 				bottom: 0,
 				display: !this.props.mobile ? "none" : "block"

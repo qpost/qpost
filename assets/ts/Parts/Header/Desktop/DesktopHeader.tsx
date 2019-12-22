@@ -45,7 +45,7 @@ export default class DesktopHeader extends Component<{
 			className={"mainNav"}
 			style={{
 				position: "fixed",
-				zIndex: 2000,
+				zIndex: 999,
 				width: "100%",
 				top: 0,
 				display: this.props.mobile ? "none" : "block"

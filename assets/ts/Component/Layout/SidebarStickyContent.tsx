@@ -44,7 +44,7 @@ export default class SidebarStickyContent extends Component<any, {
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return [this.state.mobile === false ? <Sticky top={70} innerZ={999}>
+		return [this.state.mobile === false ? <Sticky top={70} innerZ={998}>
 			<div>
 				{this.props.children}
 			</div>
