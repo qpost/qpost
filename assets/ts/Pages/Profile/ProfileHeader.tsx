@@ -30,8 +30,13 @@ export default class ProfileHeader extends Component<{
 
 		const header: string = stillGIFURL(user.getHeaderURL());
 
-		return <div className={"profileHeader"} style={{
-			backgroundImage: "url('" + header + "')"
-		}}/>;
+		return <div style={{
+			paddingLeft: "10px",
+			paddingRight: "10px"
+		}}>
+			<div className={"profileHeader"} style={{
+				backgroundImage: "url('" + header + "')"
+			}}/>
+		</div>;
 	}
 }
