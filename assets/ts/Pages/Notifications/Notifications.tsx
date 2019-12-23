@@ -42,6 +42,7 @@ import {setPageTitle} from "../../Util/Page";
 import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
 import TrendingTopics from "../../Component/TrendingTopics";
 import PageHeader from "../../Component/PageHeader";
+import LoadingFeedEntryListItem from "../../Component/FeedEntry/LoadingFeedEntryListItem";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -97,6 +98,11 @@ export default class Notifications extends Component<any, {
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		const rows = [];
+		for (let i = 0; i < 20; i++) {
+			rows.push(<LoadingFeedEntryListItem key={i}/>);
+		}
+
 		return <ContentBase>
 			<RightSidebar>
 				<SidebarStickyContent>
@@ -144,9 +150,11 @@ export default class Notifications extends Component<any, {
 						</InfiniteScroll> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
 					</div> :
 					this.state.error !== null ? <Alert message={this.state.error} type="error"/> :
-						<div className={"text-center my-3"}>
-							<Spin size={"large"}/>
-						</div>}
+						<ul className={"list-group feedContainer"}>
+							{rows.map((item, i) => {
+								return item;
+							})}
+						</ul>}
 			</PageContent>
 
 			<RightSidebar>
