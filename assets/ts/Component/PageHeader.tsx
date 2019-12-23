@@ -27,7 +27,7 @@ export default class PageHeader extends Component<{
 	className?: string
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <SidebarStickyContent>
+		return <SidebarStickyContent hideOnMobile={true}>
 			<div style={{
 				paddingTop: "6px",
 				marginTop: "-6px",

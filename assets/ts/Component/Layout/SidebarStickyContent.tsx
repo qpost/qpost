@@ -22,7 +22,9 @@ import "antd/es/affix/style";
 import WindowSizeListener from "react-window-size-listener";
 import Sticky from "react-stickynode";
 
-export default class SidebarStickyContent extends Component<any, {
+export default class SidebarStickyContent extends Component<{
+	hideOnMobile?: boolean
+}, {
 	mobile: boolean
 }> {
 	constructor(props) {
@@ -48,7 +50,7 @@ export default class SidebarStickyContent extends Component<any, {
 			<div>
 				{this.props.children}
 			</div>
-		</Sticky> : this.props.children, <WindowSizeListener onResize={windowSize => {
+		</Sticky> : (this.props.hideOnMobile ? "" : this.props.children), <WindowSizeListener onResize={windowSize => {
 			this.setIsMobileMenu(windowSize.windowWidth);
 		}}/>];
 	}
