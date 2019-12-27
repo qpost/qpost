@@ -230,6 +230,11 @@ class User implements UserInterface {
 	 */
 	private $header;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\LinkedAccount", mappedBy="user", orphanRemoval=true)
+	 */
+	private $linkedAccounts;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -246,6 +251,7 @@ class User implements UserInterface {
 		$this->blocking = new ArrayCollection();
 		$this->blockedBy = new ArrayCollection();
 		$this->pushSubscriptions = new ArrayCollection();
+		$this->linkedAccounts = new ArrayCollection();
 	}
 
 	/**
@@ -1334,6 +1340,34 @@ class User implements UserInterface {
 
 	public function setHeader(?string $header): self {
 		$this->header = $header;
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection|LinkedAccount[]
+	 */
+	public function getLinkedAccounts(): Collection {
+		return $this->linkedAccounts;
+	}
+
+	public function addLinkedAccount(LinkedAccount $linkedAccount): self {
+		if (!$this->linkedAccounts->contains($linkedAccount)) {
+			$this->linkedAccounts[] = $linkedAccount;
+			$linkedAccount->setUser($this);
+		}
+
+		return $this;
+	}
+
+	public function removeLinkedAccount(LinkedAccount $linkedAccount): self {
+		if ($this->linkedAccounts->contains($linkedAccount)) {
+			$this->linkedAccounts->removeElement($linkedAccount);
+			// set the owning side to null (unless already changed)
+			if ($linkedAccount->getUser() === $this) {
+				$linkedAccount->setUser(null);
+			}
+		}
 
 		return $this;
 	}
