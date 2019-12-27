@@ -134,7 +134,7 @@ export default class PostForm extends Component<any, {
 									console.log(result);
 									uploadItem.dataURL = result;
 									uploadItem.base64 = uploadItem.dataURL.substr(head.length);
-									uploadItem.size = Math.round((uploadItem.dataURL.length - head.length) * 3 / 4);
+									uploadItem.size = (uploadItem.base64).replace(/=/g, "").length * 0.75;
 
 									this.addFile(uploadItem);
 								} else {
@@ -290,8 +290,8 @@ export default class PostForm extends Component<any, {
 			return;
 		}
 
-		if (!(size / 1024 / 1024 < 2)) {
-			AntMessage.error("Images must be smaller than 2MB.");
+		if (!(size / 1024 / 1024 < 10)) {
+			AntMessage.error("Images must be smaller than 10MB.");
 			return;
 		}
 
