@@ -22,6 +22,7 @@ namespace qpost\Entity;
 
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="qpost\Repository\LinkedAccountRepository")
@@ -36,6 +37,7 @@ class LinkedAccount {
 	private $id;
 
 	/**
+	 * @Serializer\Exclude()
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="linkedAccounts")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
@@ -62,26 +64,31 @@ class LinkedAccount {
 	private $linkedUserAvatar;
 
 	/**
+	 * @Serializer\Exclude()
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	private $clientId;
 
 	/**
+	 * @Serializer\Exclude()
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	private $clientSecret;
 
 	/**
+	 * @Serializer\Exclude()
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	private $accessToken;
 
 	/**
+	 * @Serializer\Exclude()
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	private $refreshToken;
 
 	/**
+	 * @Serializer\Exclude()
 	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	private $expiry;

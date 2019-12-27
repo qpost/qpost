@@ -232,6 +232,7 @@ class User implements UserInterface {
 
 	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\LinkedAccount", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $linkedAccounts;
 
