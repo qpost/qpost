@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -87,7 +87,16 @@ export default class FeedEntryListItem extends Component<{
 					</div>;
 
 					entry = entry.getPost();
+
+					if (!entry) {
+						return "";
+					}
+
 					user = entry.getUser();
+
+					if (!user) {
+						return "";
+					}
 				}
 
 				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} onClick={(e) => {
