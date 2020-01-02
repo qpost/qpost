@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -35,7 +35,7 @@ use qpost\Entity\Notification;
 use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
-use qpost\Service\GigadriveService;
+use qpost\Service\StorageService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -160,11 +160,11 @@ class StatusController extends AbstractController {
 	 * @Route("/api/status", methods={"POST"})
 	 *
 	 * @param APIService $apiService
-	 * @param GigadriveService $gigadriveService
+	 * @param StorageService $storageService
 	 * @return Response
 	 * @throws Exception
 	 */
-	public function post(APIService $apiService, GigadriveService $gigadriveService): Response {
+	public function post(APIService $apiService, StorageService $storageService): Response {
 		$response = $apiService->validate(true);
 		if (!is_null($response)) return $response;
 
@@ -343,7 +343,7 @@ class StatusController extends AbstractController {
 									return $apiService->json(["error" => "Attachments can not be bigger than 10MB."], 413);
 								}
 
-								$url = $gigadriveService->storeFileOnCDN($file);
+								$url = $storageService->uploadImage($file);
 								if (!is_null($url)) {
 									if (Util::endsWith($url, ".gif") && count($attachments) > 1) {
 										return $apiService->json(["error" => "You may not upload more attachments, if you include a GIF."], 400);
