@@ -20,6 +20,7 @@
 
 namespace qpost\Service;
 
+use Exception;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use qpost\Factory\HttpClientFactory;
@@ -89,39 +90,46 @@ class ImgurService {
 	 * @return string|null The final URL, null if it could not be uploaded.
 	 */
 	public function uploadImage(string $data): ?string {
-		$response = $this->httpClient->post("https://api.imgur.com/3/image", [
-			"form_params" => [
-				"image" => $data
-			],
+		try {
+			$response = $this->httpClient->post("https://api.imgur.com/3/image", [
+				"form_params" => [
+					"image" => $data
+				],
 
-			"headers" => [
-				"Authorization" => "Client-ID " . $this->clientId
-			]
-		]);
+				"headers" => [
+					"Authorization" => "Client-ID " . $this->clientId
+				]
+			]);
 
-		$body = $response->getBody();
-		if (!is_null($body)) {
-			$content = $body->getContents();
-			$body->close();
+			$body = $response->getBody();
+			if (!is_null($body)) {
+				$content = $body->getContents();
+				$body->close();
 
-			if (!is_null($content)) {
-				$data = @json_decode($content, true);
-				if ($data) {
-					if (isset($data["data"]) && isset($data["data"]["link"])) {
-						return $data["data"]["link"];
+				if (!is_null($content)) {
+					$data = @json_decode($content, true);
+					if ($data) {
+						if (isset($data["data"]) && isset($data["data"]["link"])) {
+							return $data["data"]["link"];
+						} else {
+							$this->logger->error("Storage was not successful", [
+								"data" => $data
+							]);
+						}
 					} else {
-						$this->logger->error("Storage was not successful", [
-							"data" => $data
-						]);
+						$this->logger->error("Response body is invalid json.");
 					}
 				} else {
-					$this->logger->error("Response body is invalid json.");
+					$this->logger->error("Response body is empty.");
 				}
 			} else {
-				$this->logger->error("Response body is empty.");
+				$this->logger->error("Failed to get response body.");
 			}
-		} else {
-			$this->logger->error("Failed to get response body.");
+		} catch (Exception $e) {
+			$this->logger->error("An error occurred while uploading to imgur.", [
+				"exception" => $e
+			]);
+			return null;
 		}
 
 		return null;
