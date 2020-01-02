@@ -21,7 +21,6 @@
 namespace qpost\Service;
 
 use Psr\Log\LoggerInterface;
-use function base64_decode;
 
 class StorageService {
 	/**
@@ -55,9 +54,7 @@ class StorageService {
 		$imgurURL = $this->imgurService->uploadImage($data);
 		if ($imgurURL) return $imgurURL;
 
-		$decoded = @base64_decode($data);
-		if (!$decoded) $decoded = $data;
-		$gigadriveURL = $this->gigadriveService->storeFileOnCDN($decoded);
+		$gigadriveURL = $this->gigadriveService->storeFileOnCDN($data);
 		if ($gigadriveURL) return $gigadriveURL;
 
 		return null;
