@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -71,9 +71,10 @@ export default class FollowersYouKnow extends Component<{
 							{this.state.users.map((user, i) => {
 								return <Tooltip placement={"top"}
 												title={user.getDisplayName() + " (@" + user.getUsername() + ")"}>
-									<Link key={i} to={"/profile/" + user.getUsername()}
+									<Link key={user.getId()} to={"/profile/" + user.getUsername()}
 										  className="clearUnderline float-left">
-										<img src={user.getAvatarURL()} width="64" height="64" className="rounded"
+										<img src={user.getAvatarURL()} width="64" height="64"
+											 className="rounded mr-1 mb-1"
 											 alt={user.getUsername()}/>
 									</Link>
 								</Tooltip>;
