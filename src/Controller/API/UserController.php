@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -29,6 +29,7 @@ use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
 use qpost\Service\GigadriveService;
+use qpost\Service\StorageService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,11 +87,11 @@ class UserController extends AbstractController {
 	 * @Route("/api/user", methods={"POST"})
 	 *
 	 * @param APIService $apiService
-	 * @param GigadriveService $gigadriveService
+	 * @param StorageService $storageService
 	 * @return Response|null
 	 * @throws Exception
 	 */
-	public function edit(APIService $apiService, GigadriveService $gigadriveService) {
+	public function edit(APIService $apiService, StorageService $storageService) {
 		$response = $apiService->validate(true);
 		if (!is_null($response)) return $response;
 
@@ -150,7 +151,7 @@ class UserController extends AbstractController {
 
 												$avatarFile = $image->getImageAsString();
 
-												$url = $gigadriveService->storeFileOnCDN($avatarFile);
+												$url = $storageService->uploadImage($avatarFile);
 												if (!is_null($url)) {
 													$user->setAvatar($url);
 												} else {
@@ -200,7 +201,7 @@ class UserController extends AbstractController {
 
 												$headerFile = $image->getImageAsString();
 
-												$url = $gigadriveService->storeFileOnCDN($headerFile);
+												$url = $storageService->uploadImage($headerFile);
 												if (!is_null($url)) {
 													$user->setHeader($url);
 												} else {
