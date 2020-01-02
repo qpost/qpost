@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -144,7 +144,7 @@ export default class ReplyList extends Component<{
 						{this.state.entries.map((replyBatch: FeedEntry[], i) => {
 							return <div key={i} className={"mb-2"}>
 								{replyBatch.map((reply: FeedEntry, ri) => {
-									return <FeedEntryListItem key={ri} entry={reply} parent={this}/>
+									return <FeedEntryListItem key={reply.getId()} entry={reply} parent={this}/>
 								})}
 							</div>;
 						})}
