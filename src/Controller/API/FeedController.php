@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -254,6 +254,8 @@ class FeedController extends AbstractController {
 			->innerJoin("f.user", "u")
 			->where("u.privacyLevel != :closed")
 			->setParameter("closed", PrivacyLevel::CLOSED, Type::STRING)
+			->andWhere("f.text NOT LIKE :mentionPrefix")
+			->setParameter("mentionPrefix", "@%", Type::STRING)
 			->andWhere("f.parent is null")
 			->andWhere("f.type = :post or f.type = :share")
 			->setParameter("post", FeedEntryType::POST, Type::STRING)
@@ -271,6 +273,8 @@ class FeedController extends AbstractController {
 			->setParameter("post", FeedEntryType::POST, Type::STRING)
 			->setParameter("share", FeedEntryType::SHARE, Type::STRING)
 			->setParameter("newFollowing", FeedEntryType::NEW_FOLLOWING, Type::STRING)
+			->andWhere("f.text NOT LIKE :mentionPrefix")
+			->setParameter("mentionPrefix", "@%", Type::STRING)
 			->andWhere("f.user = :user")
 			->setParameter("user", $user)
 			->orderBy("f.time", "DESC")
