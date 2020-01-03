@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -42,7 +42,7 @@ class BlockRepository extends ServiceEntityRepository {
 	 * @return bool
 	 */
 	public function isBlocked(User $user, User $target): bool {
-		return $this->count([
+		return ($user->getId() === $target->getId()) ? false : $this->count([
 				"user" => $user,
 				"target" => $target
 			]) > 0;
