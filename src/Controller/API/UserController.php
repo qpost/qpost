@@ -24,6 +24,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Exception;
 use Gumlet\ImageResize;
+use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
 use qpost\Entity\User;
 use qpost\Service\APIService;
@@ -323,6 +324,9 @@ class UserController extends AbstractController {
 			->groupBy("me.id, t.receiver")
 			->setMaxResults(10)
 			->getQuery()
+			->useQueryCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
+			->useResultCache(true)
 			->getResult();
 
 		$results = [];

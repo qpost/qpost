@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -86,6 +86,7 @@ class ReplyController extends AbstractController {
 						->addOrderBy("isSameCreator", "DESC")
 						->addOrderBy("f.time", "ASC")
 						->getQuery()
+						->useQueryCache(true)
 						->getResult();
 
 					$replyBatches = [];
@@ -106,6 +107,7 @@ class ReplyController extends AbstractController {
 								->orderBy("f.time", "ASC")
 								->setMaxResults(1)
 								->getQuery()
+								->useQueryCache(true)
 								->getOneOrNullResult();
 
 							if (!$reply || !$apiService->mayView($reply)) break;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,6 +20,7 @@
 
 namespace qpost\Controller\API;
 
+use qpost\Constants\MiscConstants;
 use qpost\Entity\User;
 use qpost\Service\APIService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -92,6 +93,9 @@ class FollowersYouKnowController extends AbstractController {
 					->setMaxResults($limit)
 					->setCacheable(true)
 					->getQuery()
+					->useQueryCache(true)
+					->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
+					->useResultCache(true)
 					->getResult();
 
 				$results = [];

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -53,6 +53,7 @@ class TokenController extends AbstractController {
 			->setParameter("user", $user)
 			->orderBy("t.lastAccessTime", "DESC")
 			->getQuery()
+			->useQueryCache(true)
 			->getResult();
 
 		foreach ($tokens as $token) {

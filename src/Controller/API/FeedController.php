@@ -119,6 +119,7 @@ class FeedController extends AbstractController {
 							->andWhere("f.id < :id")
 							->setParameter("id", $parameters->get("max"), Type::INTEGER)
 							->getQuery()
+							->useQueryCache(true)
 							->getResult();
 
 						foreach ($feedEntries as $feedEntry) {
@@ -157,6 +158,7 @@ class FeedController extends AbstractController {
 					 */
 					$feedEntries = $this->profileFeedQuery($apiService, $user)
 						->getQuery()
+						->useQueryCache(true)
 						->getResult();
 
 					foreach ($feedEntries as $feedEntry) {
@@ -194,6 +196,7 @@ class FeedController extends AbstractController {
 						->andWhere("f.id > :id")
 						->setParameter("id", $parameters->get("min"), Type::INTEGER)
 						->getQuery()
+						->useQueryCache(true)
 						->getResult();
 
 					foreach ($feedEntries as $feedEntry) {
@@ -224,6 +227,7 @@ class FeedController extends AbstractController {
 				->andWhere("f.id > :id")
 				->setParameter("id", $parameters->get("min"), Type::INTEGER)
 				->getQuery()
+				->useQueryCache(true)
 				->getResult();
 
 			foreach ($feedEntries as $feedEntry) {

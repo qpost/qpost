@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -63,7 +63,7 @@ class NotificationsController extends AbstractController {
 		/**
 		 * @var Notification[] $notifications
 		 */
-		$notifications = $query->getQuery()->getResult();
+		$notifications = $query->getQuery()->useQueryCache(true)->getResult();
 
 		$results = [];
 		foreach ($notifications as $notification) {

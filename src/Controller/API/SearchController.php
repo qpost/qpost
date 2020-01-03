@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -22,6 +22,7 @@ namespace qpost\Controller\API;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
 use qpost\Service\APIService;
@@ -97,6 +98,9 @@ class SearchController extends AbstractController {
 								$result = $databaseQuery->setFirstResult($offset)
 									->setMaxResults($limit)
 									->getQuery()
+									->useQueryCache(true)
+									->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
+									->useResultCache(true)
 									->getResult();
 
 								$apiService->getLogger()->info("result", [

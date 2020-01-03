@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -229,6 +229,7 @@ class FavoriteController extends AbstractController {
 				 */
 				$favorites = $builder
 					->getQuery()
+					->useQueryCache(true)
 					->getResult();
 
 				foreach ($favorites as $favorite) {

@@ -243,6 +243,7 @@ class StatusController extends AbstractController {
 								->setParameter("post", FeedEntryType::POST, Type::STRING)
 								->setParameter("reply", FeedEntryType::REPLY, Type::STRING)
 								->getQuery()
+								->useQueryCache(true)
 								->getOneOrNullResult();
 
 							if ($parent) {
