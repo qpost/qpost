@@ -103,7 +103,7 @@ class FeedEntry {
 	private $favorites;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\MediaFile", inversedBy="feedEntries", fetch="EAGER")
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\MediaFile", inversedBy="feedEntries", fetch="EXTRA_LAZY")
 	 */
 	private $attachments;
 
