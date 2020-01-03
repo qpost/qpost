@@ -108,7 +108,7 @@ class FeedEntry {
 	private $attachments;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries", fetch="EAGER")
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $hashtags;
