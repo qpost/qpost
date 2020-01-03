@@ -27,7 +27,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use qpost\Constants\FeedEntryType;
 use qpost\Service\APIService;
-use function count;
 use function is_null;
 
 /**
@@ -383,7 +382,7 @@ class FeedEntry {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getFavoriteCount(): int {
-		return count($this->getFavorites());
+		return $this->getFavorites()->count();
 	}
 
 	/**
