@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -54,13 +54,13 @@ class Hashtag {
 	private $time;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="hashtags")
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="hashtags", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $feedEntries;
 
 	/**
-	 * @ORM\OneToOne(targetEntity="qpost\Entity\TrendingHashtagData", inversedBy="hashtag", cascade={"persist", "remove"})
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\TrendingHashtagData", inversedBy="hashtag", cascade={"persist", "remove"}, fetch="EAGER")
 	 * @Serializer\Exclude()
 	 */
 	private $trendingData;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -37,13 +37,13 @@ class Block {
 	private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="blocking")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="blocking", fetch="EAGER")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $user;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="blockedBy")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="blockedBy", fetch="EAGER")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $target;

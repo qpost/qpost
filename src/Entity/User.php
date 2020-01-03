@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -118,7 +118,7 @@ class User implements UserInterface {
 	private $lastUsernameChange;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\UserFeaturedBox", mappedBy="users")
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\UserFeaturedBox", mappedBy="users", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $featuringBoxes;
@@ -136,79 +136,79 @@ class User implements UserInterface {
 	private $gigadriveData;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Token", mappedBy="user", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Token", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $tokens;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="sender", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="sender", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $following;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="receiver", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="receiver", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $followers;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="sender", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="sender", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $sentRequests;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="receiver", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="receiver", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $followRequests;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="target", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="target", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $suspensions;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="staff")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="staff", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $createdSuspensions;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="user", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $feedEntries;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Notification", mappedBy="user", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Notification", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $notifications;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="user", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $favorites;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\MediaFile", mappedBy="originalUploader")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\MediaFile", mappedBy="originalUploader", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $uploadedFiles;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="user", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $blocking;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="target", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="target", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $blockedBy;
@@ -219,7 +219,7 @@ class User implements UserInterface {
 	private $features = [];
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="user", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $pushSubscriptions;

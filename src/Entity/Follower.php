@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -37,13 +37,13 @@ class Follower {
 	private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="following")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="following", fetch="EAGER")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $sender;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="followers")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="followers", fetch="EAGER")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $receiver;

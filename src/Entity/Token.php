@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -75,7 +75,7 @@ class Token {
 	private $expiry;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="token")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="token", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $feedEntries;
@@ -87,7 +87,7 @@ class Token {
 	private $ipStackResult;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="token")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="token", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $pushSubscriptions;

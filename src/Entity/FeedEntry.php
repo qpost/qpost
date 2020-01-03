@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -49,7 +49,7 @@ class FeedEntry {
 	private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="feedEntries")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="feedEntries", fetch="EAGER")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $user;
@@ -60,24 +60,24 @@ class FeedEntry {
 	private $text;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", fetch="EAGER")
 	 */
 	private $referencedUser;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", inversedBy="children")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", inversedBy="children", fetch="EAGER")
 	 * @Serializer\Exclude()
 	 */
 	private $parent;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="parent")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="parent", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $children;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="feedEntries")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="feedEntries", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $token;
@@ -98,18 +98,18 @@ class FeedEntry {
 	private $time;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true, cascade={"remove"})
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true, cascade={"remove"}, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $favorites;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\MediaFile", inversedBy="feedEntries")
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\MediaFile", inversedBy="feedEntries", fetch="EAGER")
 	 */
 	private $attachments;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries")
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries", fetch="EAGER")
 	 * @Serializer\Exclude()
 	 */
 	private $hashtags;
