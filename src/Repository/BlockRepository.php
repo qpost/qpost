@@ -22,6 +22,7 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\Block;
 use qpost\Entity\User;
 
@@ -42,9 +43,16 @@ class BlockRepository extends ServiceEntityRepository {
 	 * @return bool
 	 */
 	public function isBlocked(User $user, User $target): bool {
-		return ($user->getId() === $target->getId()) ? false : $this->count([
-				"user" => $user,
-				"target" => $target
-			]) > 0;
+		return ($user->getId() === $target->getId()) ? false : $this->createQueryBuilder("b")
+				->select("count(b.id)")
+				->where("b.user = :user")
+				->setParameter("user", $user)
+				->andWhere("b.target = :target")
+				->setParameter("target", $target)
+				->getQuery()
+				->useQueryCache(true)
+				->useResultCache(true)
+				->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+				->getSingleScalarResult() > 0;
 	}
 }
