@@ -22,9 +22,6 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\DBAL\Types\Type;
-use Exception;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\Block;
 use qpost\Entity\User;
 
@@ -45,60 +42,9 @@ class BlockRepository extends ServiceEntityRepository {
 	 * @return bool
 	 */
 	public function isBlocked(User $user, User $target): bool {
-		try {
-			return ($user->getId() === $target->getId()) ? false : $this->createQueryBuilder("b")
-					->select("count(b.id)")
-					->where("b.user = :user")
-					->setParameter("user", $user)
-					->andWhere("b.target = :target")
-					->setParameter("target", $target)
-					->getQuery()
-					->useQueryCache(true)
-					->useResultCache(true)
-					->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
-					->getSingleScalarResult() > 0;
-		} catch (Exception $e) {
-			return false;
-		}
-	}
-
-	/**
-	 * @param User $user
-	 * @param User $target
-	 * @return Block|null
-	 */
-	public function getBlock(User $user, User $target): ?Block {
-		return $this->createQueryBuilder("b")
-			->where("b.user = :user")
-			->setParameter("user", $user)
-			->andWhere("b.target = :target")
-			->setParameter("target", $target)
-			->setMaxResults(1)
-			->getQuery()
-			->useQueryCache(true)
-			->getOneOrNullResult();
-	}
-
-	/**
-	 * @param User $user
-	 * @param int|null $max
-	 * @return Block[]
-	 */
-	public function getBlocks(User $user, int $max = null): array {
-		$builder = $this->createQueryBuilder("b")
-			->where("b.user = :user")
-			->setParameter("user", $user)
-			->orderBy("b.time", "DESC")
-			->setMaxResults(30)
-			->setCacheable(false);
-
-		if ($max) {
-			$builder->andWhere("b.id < :id")
-				->setParameter("id", $max, Type::INTEGER);
-		}
-
-		return $builder->getQuery()
-			->useQueryCache(true)
-			->getResult();
+		return ($user->getId() === $target->getId()) ? false : $this->count([
+				"user" => $user,
+				"target" => $target
+			]) > 0;
 	}
 }
