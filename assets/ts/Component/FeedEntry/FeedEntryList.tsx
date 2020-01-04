@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -122,8 +122,11 @@ export default class FeedEntryList extends Component<{
 				entries,
 				loadingMore: false
 			});
+
+			this.loadNewTask();
 		}, error => {
 			this.setState({error, loadingMore: false});
+			this.loadNewTask();
 		});
 	}
 
@@ -166,7 +169,6 @@ export default class FeedEntryList extends Component<{
 		this.setState({
 			loadNewTask: setTimeout(() => {
 				this.loadNew();
-				this.loadNewTask();
 			}, 5000)
 		});
 	}
