@@ -25,7 +25,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
-use qpost\Constants\FeedEntryType;
 use qpost\Constants\PrivacyLevel;
 use qpost\Service\APIService;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -935,15 +934,13 @@ class User implements UserInterface {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getPostCount(): int {
-		$i = 0;
+		$apiService = APIService::$instance;
 
-		foreach ($this->getFeedEntries() as $feedEntry) {
-			if ($feedEntry->getType() === FeedEntryType::POST && is_null($feedEntry->getParent())) {
-				$i++;
-			}
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserPostCount($this);
 		}
 
-		return $i;
+		return 0;
 	}
 
 	/**
@@ -951,15 +948,13 @@ class User implements UserInterface {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getReplyCount(): int {
-		$i = 0;
+		$apiService = APIService::$instance;
 
-		foreach ($this->getFeedEntries() as $feedEntry) {
-			if ($feedEntry->getType() === FeedEntryType::POST && !is_null($feedEntry->getParent())) {
-				$i++;
-			}
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserReplyCount($this);
 		}
 
-		return $i;
+		return 0;
 	}
 
 	/**
@@ -967,15 +962,13 @@ class User implements UserInterface {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getShareCount(): int {
-		$i = 0;
+		$apiService = APIService::$instance;
 
-		foreach ($this->getFeedEntries() as $feedEntry) {
-			if ($feedEntry->getType() === FeedEntryType::SHARE && !is_null($feedEntry->getParent())) {
-				$i++;
-			}
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserShareCount($this);
 		}
 
-		return $i;
+		return 0;
 	}
 
 	/**
@@ -983,15 +976,13 @@ class User implements UserInterface {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getFollowingPostCount(): int {
-		$i = 0;
+		$apiService = APIService::$instance;
 
-		foreach ($this->getFeedEntries() as $feedEntry) {
-			if ($feedEntry->getType() === FeedEntryType::NEW_FOLLOWING && !is_null($feedEntry->getReferencedUser())) {
-				$i++;
-			}
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserFollowingPostCount($this);
 		}
 
-		return $i;
+		return 0;
 	}
 
 	/**
@@ -999,7 +990,13 @@ class User implements UserInterface {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getTotalPostCount(): int {
-		return count($this->getFeedEntries());
+		$apiService = APIService::$instance;
+
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserTotalPostCount($this);
+		}
+
+		return $this->getFeedEntries()->count();
 	}
 
 	/**
@@ -1007,7 +1004,13 @@ class User implements UserInterface {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getFollowingCount(): int {
-		return count($this->getFollowing());
+		$apiService = APIService::$instance;
+
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(Follower::class)->getFollowingCount($this);
+		}
+
+		return $this->getFollowing()->count();
 	}
 
 	/**
@@ -1015,7 +1018,13 @@ class User implements UserInterface {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getFollowerCount(): int {
-		return count($this->getFollowers());
+		$apiService = APIService::$instance;
+
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(Follower::class)->getFollowerCount($this);
+		}
+
+		return $this->getFollowers()->count();
 	}
 
 	/**
@@ -1023,7 +1032,13 @@ class User implements UserInterface {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getFavoritesCount(): int {
-		return count($this->getFavorites());
+		$apiService = APIService::$instance;
+
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(Favorite::class)->getFavoriteCount($this);
+		}
+
+		return $this->getFavorites()->count();
 	}
 
 	/**
@@ -1031,7 +1046,7 @@ class User implements UserInterface {
 	 * @Serializer\Exclude()
 	 */
 	public function getOpenRequestsCount(): int {
-		return count($this->getFollowRequests());
+		return $this->getFollowRequests()->count();
 	}
 
 	/**
@@ -1062,10 +1077,7 @@ class User implements UserInterface {
 		$apiService = APIService::$instance;
 
 		if (!is_null($apiService) && $apiService->isAuthorized()) {
-			return $apiService->getEntityManager()->getRepository(Block::class)->count([
-					"user" => $apiService->getUser(),
-					"target" => $this
-				]) > 0;
+			return $apiService->getEntityManager()->getRepository(Block::class)->isBlocked($apiService->getUser(), $this);
 		}
 
 		return false;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -22,7 +22,9 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\Favorite;
+use qpost\Entity\User;
 
 /**
  * @method Favorite|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,5 +35,17 @@ use qpost\Entity\Favorite;
 class FavoriteRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, Favorite::class);
+	}
+
+	public function getFavoriteCount(User $user): int {
+		return $this->createQueryBuilder("f")
+			->select("count(f.id)")
+			->where("f.user = :user")
+			->setParameter("user", $user)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getSingleScalarResult();
 	}
 }

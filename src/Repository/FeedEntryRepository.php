@@ -22,6 +22,9 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Type;
+use qpost\Constants\FeedEntryType;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
 use function is_null;
@@ -41,6 +44,74 @@ class FeedEntryRepository extends ServiceEntityRepository {
 		return $this->findOneBy([
 			"id" => $id
 		]);
+	}
+
+	public function getUserPostCount(User $user): int {
+		return $this->createQueryBuilder("f")
+			->select("count(f.id)")
+			->where("f.user = :user")
+			->setParameter("user", $user)
+			->andWhere("f.type = :type")
+			->setParameter("type", FeedEntryType::POST, Type::STRING)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getSingleScalarResult();
+	}
+
+	public function getUserReplyCount(User $user): int {
+		return $this->createQueryBuilder("f")
+			->select("count(f.id)")
+			->where("f.user = :user")
+			->setParameter("user", $user)
+			->andWhere("f.type = :type")
+			->setParameter("type", FeedEntryType::REPLY, Type::STRING)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getSingleScalarResult();
+	}
+
+	public function getUserShareCount(User $user): int {
+		return $this->createQueryBuilder("f")
+			->select("count(f.id)")
+			->where("f.user = :user")
+			->setParameter("user", $user)
+			->andWhere("f.type = :type")
+			->setParameter("type", FeedEntryType::SHARE, Type::STRING)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getSingleScalarResult();
+	}
+
+	public function getUserFollowingPostCount(User $user): int {
+		return $this->createQueryBuilder("f")
+			->select("count(f.id)")
+			->where("f.user = :user")
+			->setParameter("user", $user)
+			->andWhere("f.type = :type")
+			->setParameter("type", FeedEntryType::NEW_FOLLOWING, Type::STRING)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getSingleScalarResult();
+	}
+
+	public function getUserTotalPostCount(User $user): int {
+		return $this->createQueryBuilder("f")
+			->select("count(f.id)")
+			->where("f.user = :user")
+			->setParameter("user", $user)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getSingleScalarResult();
 	}
 
 	public function getFeed(User $from, User $target = null, int $min = null, int $max = null): array {
