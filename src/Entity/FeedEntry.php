@@ -97,6 +97,21 @@ class FeedEntry {
 	private $time;
 
 	/**
+	 * @Serializer\Exclude()
+	 */
+	private $replyCount = null;
+
+	/**
+	 * @Serializer\Exclude()
+	 */
+	private $shareCount = null;
+
+	/**
+	 * @Serializer\Exclude()
+	 */
+	private $favoriteCount = null;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true, cascade={"remove"}, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
@@ -346,6 +361,10 @@ class FeedEntry {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getReplyCount(): int {
+		if (!is_null($this->replyCount)) {
+			return $this->replyCount;
+		}
+
 		if ($this->type == FeedEntryType::POST || $this->type == FeedEntryType::REPLY) {
 			$i = 0;
 
@@ -360,10 +379,24 @@ class FeedEntry {
 	}
 
 	/**
+	 * @param int|null $replyCount
+	 * @return $this
+	 */
+	public function setReplyCount(?int $replyCount): self {
+		$this->replyCount = $replyCount;
+
+		return $this;
+	}
+
+	/**
 	 * @return int
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getShareCount(): int {
+		if (!is_null($this->shareCount)) {
+			return $this->shareCount;
+		}
+
 		if ($this->type == FeedEntryType::POST || $this->type == FeedEntryType::SHARE) {
 			$i = 0;
 
@@ -378,11 +411,35 @@ class FeedEntry {
 	}
 
 	/**
+	 * @param int|null $shareCount
+	 * @return $this
+	 */
+	public function setShareCount(?int $shareCount): self {
+		$this->shareCount = $shareCount;
+
+		return $this;
+	}
+
+	/**
 	 * @return int
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getFavoriteCount(): int {
+		if (!is_null($this->favoriteCount)) {
+			return $this->favoriteCount;
+		}
+
 		return $this->getFavorites()->count();
+	}
+
+	/**
+	 * @param int|null $favoriteCount
+	 * @return $this
+	 */
+	public function setFavoriteCount(?int $favoriteCount): self {
+		$this->favoriteCount = $favoriteCount;
+
+		return $this;
 	}
 
 	/**

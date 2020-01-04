@@ -21,7 +21,6 @@
 namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\FeedEntry;
 use qpost\Service\APIService;
@@ -39,38 +38,7 @@ class DebugController extends AbstractController {
 	 * @return Response
 	 */
 	public function debugAction(EntityManagerInterface $entityManager, LoggerInterface $logger, APIService $apiService) {
-		$rsm = new ResultSetMappingBuilder($entityManager);
-		$rsm->addRootEntityFromClassMetadata(FeedEntry::class, "f");
-		$rsm->addScalarResult("favoriteCount", "favoriteCount", "integer");
-		$rsm->addScalarResult("replyCount", "replyCount", "integer");
-		$rsm->addScalarResult("shareCount", "shareCount", "integer");
-
-		$value = $entityManager->createNativeQuery("SELECT " . $rsm->generateSelectClause([
-				"f" => "f",
-			]) . ",
-       COALESCE(favoriteCount, 0) AS favoriteCount,
-       COALESCE(replyCount, 0)    AS replyCount,
-       COALESCE(shareCount, 0)    AS shareCount
-FROM feed_entry AS f
-         LEFT JOIN (
-    SELECT feed_entry_id, COUNT(favorite.id) AS favoriteCount
-    FROM favorite
-    GROUP BY feed_entry_id
-) favorite_counts ON favorite_counts.feed_entry_id = f.id
-         LEFT JOIN (
-    SELECT parent_id, SUM(feed_entry.type = 'REPLY') AS replyCount, SUM(feed_entry.type = 'SHARE') AS shareCount
-    FROM feed_entry
-    WHERE feed_entry.type = 'REPLY'
-       OR feed_entry.type = 'SHARE'
-    GROUP BY parent_id
-) children ON children.parent_id = f.id
-WHERE f.user_id = ?
-GROUP BY f.id
-ORDER BY favoriteCount DESC;", $rsm)
-			->setParameter(1, 1)
-			->getResult();
-
-		$logger->info("value", ["value" => $value]);
+		$value = $entityManager->getRepository(FeedEntry::class)->getFeed($this->getUser());
 
 		return $this->render("debug.html.twig", Twig::param([
 			"value" => $value
