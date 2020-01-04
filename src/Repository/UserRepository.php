@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,9 +20,13 @@
 
 namespace qpost\Repository;
 
+use DateInterval;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\Type;
+use qpost\Constants\MiscConstants;
+use qpost\Constants\PrivacyLevel;
 use qpost\Entity\User;
 use function strtolower;
 
@@ -35,6 +39,58 @@ use function strtolower;
 class UserRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, User::class);
+	}
+
+	public function getUpcomingBirthdays(User $user, string $dateString): array {
+		$date = new DateTime($dateString);
+
+		$limit = new DateTime($dateString);
+		$limit->add(DateInterval::createFromDateString("30 day"));
+
+		return $this->createQueryBuilder("u")
+			->where("u != :user")
+			->innerJoin("u.followers", "f")
+			->where("f.sender = :user")
+			->setParameter("user", $user)
+			->andWhere("u.birthday is not null")
+			->andWhere("DAYOFYEAR(u.birthday) BETWEEN DAYOFYEAR(:date) AND DAYOFYEAR(:limit)")
+			->setParameter("date", $date, Type::DATETIME)
+			->setParameter("limit", $limit, Type::DATETIME)
+			->setMaxResults(5)
+			->setCacheable(true)
+			->getQuery()
+			->useQueryCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
+			->useResultCache(true)
+			->getResult();
+	}
+
+	public function getSuggestedUsers(User $user): array {
+		// query is a combination of https://stackoverflow.com/a/12915720 and https://stackoverflow.com/a/24165699
+		return $this->createQueryBuilder("u")
+			->innerJoin("u.followers", "t")
+			->innerJoin("t.sender", "their_friends")
+			->innerJoin("their_friends.followers", "m")
+			->innerJoin("m.sender", "me")
+			->where("u.id != :id")
+			->setParameter("id", $user->getId(), Type::INTEGER)
+			->andWhere("u.emailActivated = :activated")
+			->setParameter("activated", true, Type::BOOLEAN)
+			->andWhere("u.privacyLevel = :public")
+			->setParameter("public", PrivacyLevel::PUBLIC, Type::STRING)
+			->andWhere("me.id = :id")
+			->setParameter("id", $user->getId(), Type::INTEGER)
+			->andWhere("their_friends.id != :id")
+			->setParameter("id", $user->getId(), Type::INTEGER)
+			->andWhere("not exists (select 1 from qpost\Entity\Follower f where f.sender = :id and f.receiver = t.receiver)")
+			->setParameter("id", $user->getId(), Type::INTEGER)
+			->groupBy("me.id, t.receiver")
+			->setMaxResults(10)
+			->getQuery()
+			->useQueryCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
+			->useResultCache(true)
+			->getResult();
 	}
 
 	/**

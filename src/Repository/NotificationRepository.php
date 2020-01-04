@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -22,7 +22,9 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Type;
 use qpost\Entity\Notification;
+use qpost\Entity\User;
 
 /**
  * @method Notification|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,5 +35,32 @@ use qpost\Entity\Notification;
 class NotificationRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, Notification::class);
+	}
+
+	public function getUnseenNotificationsCount(User $user): int {
+		return $this->createQueryBuilder("n")
+			->select("count(n.id)")
+			->where("n.user = :user")
+			->setParameter("user", $user)
+			->andWhere("n.seen = :seen")
+			->setParameter("seen", false, Type::BOOLEAN)
+			->getQuery()
+			->useQueryCache(true)
+			->getSingleScalarResult();
+	}
+
+	/**
+	 * @param User $user
+	 * @return Notification[]
+	 */
+	public function getUnseenNotifcations(User $user): array {
+		return $this->createQueryBuilder("n")
+			->where("n.user = :user")
+			->setParameter("user", $user)
+			->andWhere("n.seen = :seen")
+			->setParameter("seen", false, Type::BOOLEAN)
+			->getQuery()
+			->useQueryCache(true)
+			->getResult();
 	}
 }

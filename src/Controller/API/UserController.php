@@ -21,11 +21,8 @@
 namespace qpost\Controller\API;
 
 use DateTime;
-use Doctrine\DBAL\Types\Type;
 use Exception;
 use Gumlet\ImageResize;
-use qpost\Constants\MiscConstants;
-use qpost\Constants\PrivacyLevel;
 use qpost\Entity\User;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
@@ -300,34 +297,10 @@ class UserController extends AbstractController {
 		$token = $apiService->getToken();
 		$user = $apiService->getUser();
 
-		// query is a combination of https://stackoverflow.com/a/12915720 and https://stackoverflow.com/a/24165699
 		/**
 		 * @var User[] $suggestedUsers
 		 */
-		$suggestedUsers = $apiService->getEntityManager()->getRepository(User::class)->createQueryBuilder("u")
-			->innerJoin("u.followers", "t")
-			->innerJoin("t.sender", "their_friends")
-			->innerJoin("their_friends.followers", "m")
-			->innerJoin("m.sender", "me")
-			->where("u.id != :id")
-			->setParameter("id", $user->getId(), Type::INTEGER)
-			->andWhere("u.emailActivated = :activated")
-			->setParameter("activated", true, Type::BOOLEAN)
-			->andWhere("u.privacyLevel = :public")
-			->setParameter("public", PrivacyLevel::PUBLIC, Type::STRING)
-			->andWhere("me.id = :id")
-			->setParameter("id", $user->getId(), Type::INTEGER)
-			->andWhere("their_friends.id != :id")
-			->setParameter("id", $user->getId(), Type::INTEGER)
-			->andWhere("not exists (select 1 from qpost\Entity\Follower f where f.sender = :id and f.receiver = t.receiver)")
-			->setParameter("id", $user->getId(), Type::INTEGER)
-			->groupBy("me.id, t.receiver")
-			->setMaxResults(10)
-			->getQuery()
-			->useQueryCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
-			->useResultCache(true)
-			->getResult();
+		$suggestedUsers = $apiService->getEntityManager()->getRepository(User::class)->getSuggestedUsers($user);
 
 		$results = [];
 		for ($i = 0; $i < count($suggestedUsers); $i++) {

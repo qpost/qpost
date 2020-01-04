@@ -60,9 +60,7 @@ class FavoriteController extends AbstractController {
 				if (is_numeric($postId)) {
 					$entityManager = $apiService->getEntityManager();
 
-					$feedEntry = $entityManager->getRepository(FeedEntry::class)->findOneBy([
-						"id" => $postId
-					]);
+					$feedEntry = $entityManager->getRepository(FeedEntry::class)->getEntryById($postId);
 
 					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY) && $apiService->mayView($feedEntry)) {
 						$owner = $feedEntry->getUser();
@@ -133,9 +131,7 @@ class FavoriteController extends AbstractController {
 				if (is_numeric($postId)) {
 					$entityManager = $apiService->getEntityManager();
 
-					$feedEntry = $entityManager->getRepository(FeedEntry::class)->findOneBy([
-						"id" => $postId
-					]);
+					$feedEntry = $entityManager->getRepository(FeedEntry::class)->getEntryById($postId);
 
 					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY)) {
 						$favorite = $entityManager->getRepository(Favorite::class)->findOneBy([

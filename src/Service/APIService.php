@@ -167,7 +167,7 @@ class APIService {
 			}
 		}
 
-		return $token ? $this->entityManager->getRepository(Token::class)->findOneBy(["id" => $token]) : null;
+		return $token ? $this->entityManager->getRepository(Token::class)->getTokenById($token) : null;
 	}
 
 	public function getUser(): ?User {

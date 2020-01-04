@@ -20,11 +20,7 @@
 
 namespace qpost\Controller\API;
 
-use DateInterval;
-use DateTime;
-use Doctrine\DBAL\Types\Type;
 use Exception;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\User;
 use qpost\Service\APIService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,29 +49,9 @@ class BirthdayController extends AbstractController {
 			$dateString = $parameters->get("date");
 
 			if (strtotime($dateString)) {
-				$date = new DateTime($dateString);
-
-				$limit = new DateTime($dateString);
-				$limit->add(DateInterval::createFromDateString("30 day"));
-
 				$results = [];
 
-				$users = $entityManager->getRepository(User::class)->createQueryBuilder("u")
-					->where("u != :user")
-					->innerJoin("u.followers", "f")
-					->where("f.sender = :user")
-					->setParameter("user", $user)
-					->andWhere("u.birthday is not null")
-					->andWhere("DAYOFYEAR(u.birthday) BETWEEN DAYOFYEAR(:date) AND DAYOFYEAR(:limit)")
-					->setParameter("date", $date, Type::DATETIME)
-					->setParameter("limit", $limit, Type::DATETIME)
-					->setMaxResults(5)
-					->setCacheable(true)
-					->getQuery()
-					->useQueryCache(true)
-					->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
-					->useResultCache(true)
-					->getResult();
+				$users = $entityManager->getRepository(User::class)->getUpcomingBirthdays($user, $dateString);
 
 				foreach ($users as $u) {
 					if (!$apiService->mayView($u)) continue;

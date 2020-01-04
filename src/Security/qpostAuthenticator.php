@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -65,7 +65,7 @@ class qpostAuthenticator extends AbstractGuardAuthenticator {
 	public function getUser($credentials, UserProviderInterface $userProvider) {
 		$tokenId = $credentials["token"];
 		if (!is_null($tokenId)) {
-			$token = $this->entityManager->getRepository(Token::class)->findOneBy(["id" => $tokenId]);
+			$token = $this->entityManager->getRepository(Token::class)->getTokenById($tokenId);
 
 			if ($token && !$token->isExpired()) {
 				$token->setLastAccessTime(new DateTime("now"));

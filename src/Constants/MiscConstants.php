@@ -27,6 +27,11 @@ class MiscConstants {
 	public const CANONICAL_URL = "canonicalURL";
 
 	/**
+	 * @var int RESULT_CACHE_LIFETIME_SHORT
+	 */
+	public const RESULT_CACHE_LIFETIME_SHORT = 30;
+
+	/**
 	 * @var int RESULT_CACHE_LIFETIME
 	 */
 	public const RESULT_CACHE_LIFETIME = 180;

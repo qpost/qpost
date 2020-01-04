@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -46,11 +46,7 @@ class BadgeStatusController extends AbstractController {
 		$entityManager = $apiService->getEntityManager();
 
 		return $apiService->json([
-			"notifications" => $entityManager->getRepository(Notification::class)->count([
-				"user" => $user,
-				"seen" => false
-			]),
-
+			"notifications" => $entityManager->getRepository(Notification::class)->getUnseenNotificationsCount($user),
 			"messages" => 0 // TODO
 		]);
 	}
@@ -78,12 +74,9 @@ class BadgeStatusController extends AbstractController {
 					switch ($type) {
 						case "notifications":
 							/**
-							 * @var Notification $notifications
+							 * @var Notification[] $notifications
 							 */
-							$notifications = $entityManager->getRepository(Notification::class)->findBy([
-								"user" => $user,
-								"seen" => false
-							]);
+							$notifications = $entityManager->getRepository(Notification::class)->getUnseenNotifcations($user);
 
 							foreach ($notifications as $notification) {
 								$notification->setSeen(true)

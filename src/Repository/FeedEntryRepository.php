@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -33,5 +33,11 @@ use qpost\Entity\FeedEntry;
 class FeedEntryRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, FeedEntry::class);
+	}
+
+	public function getEntryById(int $id): ?FeedEntry {
+		return $this->findOneBy([
+			"id" => $id
+		]);
 	}
 }
