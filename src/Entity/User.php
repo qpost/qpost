@@ -933,62 +933,6 @@ class User implements UserInterface {
 	 * @return int
 	 * @Serializer\VirtualProperty()
 	 */
-	public function getPostCount(): int {
-		$apiService = APIService::$instance;
-
-		if ($apiService) {
-			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserPostCount($this);
-		}
-
-		return 0;
-	}
-
-	/**
-	 * @return int
-	 * @Serializer\VirtualProperty()
-	 */
-	public function getReplyCount(): int {
-		$apiService = APIService::$instance;
-
-		if ($apiService) {
-			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserReplyCount($this);
-		}
-
-		return 0;
-	}
-
-	/**
-	 * @return int
-	 * @Serializer\VirtualProperty()
-	 */
-	public function getShareCount(): int {
-		$apiService = APIService::$instance;
-
-		if ($apiService) {
-			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserShareCount($this);
-		}
-
-		return 0;
-	}
-
-	/**
-	 * @return int
-	 * @Serializer\VirtualProperty()
-	 */
-	public function getFollowingPostCount(): int {
-		$apiService = APIService::$instance;
-
-		if ($apiService) {
-			return $apiService->getEntityManager()->getRepository(FeedEntry::class)->getUserFollowingPostCount($this);
-		}
-
-		return 0;
-	}
-
-	/**
-	 * @return int
-	 * @Serializer\VirtualProperty()
-	 */
 	public function getTotalPostCount(): int {
 		$apiService = APIService::$instance;
 
