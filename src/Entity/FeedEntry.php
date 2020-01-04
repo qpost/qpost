@@ -112,6 +112,16 @@ class FeedEntry {
 	private $favoriteCount = null;
 
 	/**
+	 * @Serializer\Exclude()
+	 */
+	private $shared = null;
+
+	/**
+	 * @Serializer\Exclude()
+	 */
+	private $favorited = null;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true, cascade={"remove"}, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
@@ -448,6 +458,10 @@ class FeedEntry {
 	 * @Serializer\SerializedName("favorited")
 	 */
 	public function isFavorited(): bool {
+		if (!is_null($this->favorited)) {
+			return $this->favorited;
+		}
+
 		$apiService = APIService::$instance;
 
 		if (!is_null($apiService) && $apiService->isAuthorized()) {
@@ -461,11 +475,25 @@ class FeedEntry {
 	}
 
 	/**
+	 * @param bool|null $favorited
+	 * @return $this
+	 */
+	public function setFavorited(?bool $favorited): self {
+		$this->favorited = $favorited;
+
+		return $this;
+	}
+
+	/**
 	 * @return bool
 	 * @Serializer\VirtualProperty()
 	 * @Serializer\SerializedName("shared")
 	 */
 	public function isShared(): bool {
+		if (!is_null($this->shared)) {
+			return $this->shared;
+		}
+
 		$apiService = APIService::$instance;
 
 		if (!is_null($apiService) && $apiService->isAuthorized()) {
@@ -477,6 +505,16 @@ class FeedEntry {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param bool|null $shared
+	 * @return $this
+	 */
+	public function setShared(?bool $shared): self {
+		$this->shared = $shared;
+
+		return $this;
 	}
 
 	/**

@@ -114,11 +114,13 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->getSingleScalarResult();
 	}
 
-	public function getFeed(User $from, User $target = null, int $min = null, int $max = null): array {
+	public function getFeed(?User $from, User $target = null, int $min = null, int $max = null): array {
 		$rsm = $this->createResultSetMappingBuilder("f");
 		$rsm->addScalarResult("favoriteCount", "favoriteCount", "integer");
 		$rsm->addScalarResult("replyCount", "replyCount", "integer");
 		$rsm->addScalarResult("shareCount", "shareCount", "integer");
+		$rsm->addScalarResult("favorited", "favorited", "boolean");
+		$rsm->addScalarResult("shared", "shared", "boolean");
 
 		$ownerWhere = is_null($target) ? "(EXISTS (SELECT 1 FROM follower AS ff WHERE ff.sender_id = ? AND ff.receiver_id = u.id) OR u.id = ?)" : "f.user_id = ?";
 
@@ -127,6 +129,9 @@ class FeedEntryRepository extends ServiceEntityRepository {
 		if (is_null($target)) {
 			$parameters[] = $from->getId();
 		}
+
+		$parameters[] = is_null($from) ? 0 : $from->getId();
+		$parameters[] = is_null($from) ? 0 : $from->getId();
 
 		if (!is_null($min)) {
 			$parameters[] = $min;
@@ -140,15 +145,17 @@ class FeedEntryRepository extends ServiceEntityRepository {
 				"f" => "f",
 			]) . ",COALESCE(favoriteCount, 0) AS favoriteCount,
        COALESCE(replyCount, 0)    AS replyCount,
-       COALESCE(shareCount, 0)    AS shareCount
+       COALESCE(shareCount, 0)    AS shareCount,
+       COALESCE(favorited, 0)     AS favorited,
+       COALESCE(shared, 0)        AS shared
 FROM feed_entry AS f
          LEFT JOIN (
-    SELECT feed_entry_id, COUNT(favorite.id) AS favoriteCount
+    SELECT feed_entry_id, COUNT(favorite.id) AS favoriteCount, SUM(favorite.user_id = ?) AS favorited
     FROM favorite
     GROUP BY feed_entry_id
 ) favorite_counts ON favorite_counts.feed_entry_id = f.id
          LEFT JOIN (
-    SELECT parent_id, SUM(feed_entry.type = 'REPLY') AS replyCount, SUM(feed_entry.type = 'SHARE') AS shareCount
+    SELECT parent_id, SUM(feed_entry.type = 'REPLY') AS replyCount, SUM(feed_entry.type = 'SHARE') AS shareCount, SUM(feed_entry.user_id = ? AND feed_entry.type = 'SHARE') AS shared
     FROM feed_entry
     WHERE feed_entry.type = 'REPLY'
        OR feed_entry.type = 'SHARE'
@@ -179,7 +186,9 @@ LIMIT 30", $rsm);
 
 			$feedEntry->setReplyCount($result["replyCount"])
 				->setShareCount($result["shareCount"])
-				->setFavoriteCount($result["favoriteCount"]);
+				->setFavoriteCount($result["favoriteCount"])
+				->setFavorited($result["favorited"])
+				->setShared($result["shared"]);
 
 			$entries[] = $feedEntry;
 		}
