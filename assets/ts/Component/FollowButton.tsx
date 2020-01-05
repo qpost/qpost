@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -31,6 +31,7 @@ import Button from "antd/es/button";
 import "antd/es/button/style";
 import {Method} from "axios";
 import LoginSuggestionModal from "./LoginSuggestionModal";
+import Storage from "../Util/Storage";
 
 export default class FollowButton extends Component<{
 	target: User,
@@ -67,6 +68,8 @@ export default class FollowButton extends Component<{
 				});
 			} else {
 				if (!this.state.loading) {
+					window.localStorage.removeItem(Storage.SESSION_SUGGESTED_USERS);
+
 					const followStatus: number = this.followStatus();
 					let method: Method = followStatus === FollowStatus.FOLLOWING || followStatus === FollowStatus.PENDING || followStatus === FollowStatus.BLOCKED ? "DELETE" : "POST";
 

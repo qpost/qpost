@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,6 +20,7 @@
 export default class Storage {
 	public static readonly SESSION_TRENDING_TOPICS = "trendingTopics";
 	public static readonly SESSION_UPCOMING_BIRTHDAYS = "upcomingBirthdays";
+	public static readonly SESSION_SUGGESTED_USERS = "suggestedUsers";
 
 	public static sessionGet(key) {
 		const stringValue = window.sessionStorage.getItem(key);

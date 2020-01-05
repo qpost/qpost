@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -29,6 +29,7 @@ import "antd/es/spin/style";
 import FollowStatus from "../Util/FollowStatus";
 import {Card} from "antd";
 import Auth from "../Auth/Auth";
+import Storage from "../Util/Storage";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -42,19 +43,33 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 
 	componentDidMount(): void {
 		if (Auth.isLoggedIn()) {
+			const storedUsers = Storage.sessionGet(Storage.SESSION_SUGGESTED_USERS);
+			if (storedUsers) {
+				this.load(JSON.parse(storedUsers));
+				return;
+			}
+
 			API.handleRequest("/user/suggested", "GET", {}, (data => {
 				if (data["results"]) {
-					const results: User[] = [];
+					this.load(data["results"]);
 
-					data["results"].forEach(userData => {
-						results.push(BaseObject.convertObject(User, userData));
-					});
-
-					this.setState({results, loading: false});
+					if (this.state.results) {
+						Storage.sessionSet(Storage.SESSION_SUGGESTED_USERS, JSON.stringify(this.state.results));
+					}
 				}
 			}));
 		}
 	}
+
+	load = (results) => {
+		const users: User[] = [];
+
+		results.forEach(userData => {
+			users.push(BaseObject.convertObject(User, userData));
+		});
+
+		this.setState({results: users, loading: false});
+	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (!Auth.isLoggedIn()) return <div/>;
