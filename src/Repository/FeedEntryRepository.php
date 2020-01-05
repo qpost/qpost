@@ -124,7 +124,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 
 		$ownerWhere = is_null($target) ? "(EXISTS (SELECT 1 FROM follower AS ff WHERE ff.sender_id = ? AND ff.receiver_id = u.id) OR u.id = ?)" : "f.user_id = ?";
 
-		$parameters = [$from->getId()];
+		$parameters = [is_null($target) ? $from->getId() : $target->getId()];
 
 		if (is_null($target)) {
 			$parameters[] = $from->getId();
