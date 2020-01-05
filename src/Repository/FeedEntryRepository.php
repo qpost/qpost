@@ -114,7 +114,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->getSingleScalarResult();
 	}
 
-	public function getFeed(?User $from, User $target = null, int $min = null, int $max = null): array {
+	public function getFeed(?User $from, ?User $target = null, int $min = null, int $max = null): array {
 		$rsm = $this->createResultSetMappingBuilder("f");
 		$rsm->addScalarResult("favoriteCount", "favoriteCount", "integer");
 		$rsm->addScalarResult("replyCount", "replyCount", "integer");
@@ -124,14 +124,14 @@ class FeedEntryRepository extends ServiceEntityRepository {
 
 		$ownerWhere = is_null($target) ? "(EXISTS (SELECT 1 FROM follower AS ff WHERE ff.sender_id = ? AND ff.receiver_id = u.id) OR u.id = ?)" : "f.user_id = ?";
 
-		$parameters = [is_null($target) ? $from->getId() : $target->getId()];
+		$parameters[] = is_null($from) ? 0 : $from->getId();
+		$parameters[] = is_null($from) ? 0 : $from->getId();
+
+		$parameters[] = is_null($target) ? $from->getId() : $target->getId();
 
 		if (is_null($target)) {
 			$parameters[] = $from->getId();
 		}
-
-		$parameters[] = is_null($from) ? 0 : $from->getId();
-		$parameters[] = is_null($from) ? 0 : $from->getId();
 
 		if (!is_null($min)) {
 			$parameters[] = $min;
