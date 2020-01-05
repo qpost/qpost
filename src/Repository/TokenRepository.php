@@ -38,8 +38,8 @@ class TokenRepository extends ServiceEntityRepository {
 		parent::__construct($registry, Token::class);
 	}
 
-	public function getTokenById(string $id): ?Token {
-		return $this->createQueryBuilder("t")
+	public function getTokenById(?string $id): ?Token {
+		return is_null($id) ? null : $this->createQueryBuilder("t")
 			->where("t.id = :id")
 			->setParameter("id", $id, Type::STRING)
 			->setMaxResults(1)
