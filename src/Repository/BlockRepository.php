@@ -22,6 +22,7 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Type;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\Block;
 use qpost\Entity\User;
@@ -54,5 +55,24 @@ class BlockRepository extends ServiceEntityRepository {
 				->useResultCache(true)
 				->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 				->getSingleScalarResult() > 0;
+	}
+
+	public function getBlocks(User $user, ?int $max = null): array {
+		$builder = $this->createQueryBuilder("b")
+			->where("b.user = :user")
+			->setParameter("user", $user)
+			->orderBy("b.time", "DESC")
+			->setMaxResults(30)
+			->setCacheable(false);
+
+		if (!is_null($max)) {
+			$builder->andWhere("b.id < :id")
+				->setParameter("id", $max, Type::INTEGER);
+		}
+
+		return $builder
+			->getQuery()
+			->useQueryCache(true)
+			->getResult();
 	}
 }
