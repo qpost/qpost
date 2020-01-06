@@ -55,8 +55,10 @@ class FeedController extends AbstractController {
 		if ($parameters->has("user")) {
 			$target = $userRepository->getUserById($parameters->get("user"));
 
-			if (is_null($target) || !$apiService->mayView($target) || !$this->privacyLevelCheck($apiService, $user, $target)) {
+			if (is_null($target) || !$apiService->mayView($target)) {
 				return $apiService->json(["error" => "The requested user could not be found."], 404);
+			} else if (!$this->privacyLevelCheck($apiService, $user, $target)) {
+				return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
 			}
 		}
 
