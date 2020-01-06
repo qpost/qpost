@@ -142,4 +142,18 @@ class UserRepository extends ServiceEntityRepository {
 			"id" => $id
 		]);
 	}
+
+	public function getRecentCreatedAccounts(string $ip): int {
+		$limit = new DateTime("-2 days");
+
+		return $this->createQueryBuilder("u")
+			->select("count(u.id)")
+			->where("u.creationIP = :ip")
+			->setParameter("ip", $ip, Type::STRING)
+			->andWhere("u.time > :limit")
+			->setParameter("limit", $limit, Type::DATETIME)
+			->getQuery()
+			->useQueryCache(true)
+			->getSingleScalarResult();
+	}
 }

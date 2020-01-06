@@ -229,6 +229,12 @@ class User implements UserInterface {
 	 */
 	private $header;
 
+	/**
+	 * @ORM\Column(type="string", length=45, nullable=true)
+	 * @Serializer\Exclude()
+	 */
+	private $creationIP;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -1290,6 +1296,16 @@ class User implements UserInterface {
 
 	public function setHeader(?string $header): self {
 		$this->header = $header;
+
+		return $this;
+	}
+
+	public function getCreationIP(): ?string {
+		return $this->creationIP;
+	}
+
+	public function setCreationIP(?string $creationIP): self {
+		$this->creationIP = $creationIP;
 
 		return $this;
 	}
