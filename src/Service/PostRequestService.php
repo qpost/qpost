@@ -71,54 +71,60 @@ class PostRequestService {
 
 											if ($userRepository->isEmailAvailable($email)) {
 												if ($userRepository->isUsernameAvailable($username)) {
-													$displayName = Util::sanatizeString($displayName);
-													$emailToken = Util::getRandomString(7);
-													$password = password_hash($password, PASSWORD_BCRYPT);
+													$ip = $request->getClientIp();
 
-													// Create user
-													$user = new User();
-													$user->setUsername($username)
-														->setDisplayName($displayName)
-														->setEmail($email)
-														->setPassword($password)
-														->setEmailActivated(false)
-														->setEmailActivationToken($emailToken)
-														->setCreationIP($request->getClientIp())
-														->setTime(new DateTime("now"));
+													if ($userRepository->getRecentCreatedAccounts($ip) < 5) {
+														$displayName = Util::sanatizeString($displayName);
+														$emailToken = Util::getRandomString(7);
+														$password = password_hash($password, PASSWORD_BCRYPT);
 
-													$this->entityManager->persist($user);
+														// Create user
+														$user = new User();
+														$user->setUsername($username)
+															->setDisplayName($displayName)
+															->setEmail($email)
+															->setPassword($password)
+															->setEmailActivated(false)
+															->setEmailActivationToken($emailToken)
+															->setCreationIP($ip)
+															->setTime(new DateTime("now"));
 
-													$autoFollowAccountId = $_ENV["AUTOFOLLOW_ACCOUNT_ID"];
-													if ($autoFollowAccountId) {
-														$autoFollowAccount = $userRepository->findOneBy(["id" => $autoFollowAccountId]);
+														$this->entityManager->persist($user);
 
-														if ($autoFollowAccount) {
-															$this->entityManager->persist((new Follower())
-																->setSender($user)
-																->setReceiver($autoFollowAccount)
-																->setTime(new DateTime("now")));
+														$autoFollowAccountId = $_ENV["AUTOFOLLOW_ACCOUNT_ID"];
+														if ($autoFollowAccountId) {
+															$autoFollowAccount = $userRepository->findOneBy(["id" => $autoFollowAccountId]);
+
+															if ($autoFollowAccount) {
+																$this->entityManager->persist((new Follower())
+																	->setSender($user)
+																	->setReceiver($autoFollowAccount)
+																	->setTime(new DateTime("now")));
+															}
 														}
-													}
 
-													$this->entityManager->flush();
+														$this->entityManager->flush();
 
-													// Send email
-													$message = (new Swift_Message("Finish your qpost registration"))
-														->setFrom($_ENV["MAILER_FROM"])
-														->setTo($email)
-														->setBody(
-															$_this->view("emails/register.html.twig", [
-																"username" => $username,
-																"displayName" => $displayName,
-																"verificationLink" => $_this->url("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
-															]),
-															"text/html"
-														);
+														// Send email
+														$message = (new Swift_Message("Finish your qpost registration"))
+															->setFrom($_ENV["MAILER_FROM"])
+															->setTo($email)
+															->setBody(
+																$_this->view("emails/register.html.twig", [
+																	"username" => $username,
+																	"displayName" => $displayName,
+																	"verificationLink" => $_this->url("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
+																]),
+																"text/html"
+															);
 
-													if ($this->mailer->send($message) !== 0) {
-														$_this->flash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
+														if ($this->mailer->send($message) !== 0) {
+															$_this->flash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
+														} else {
+															$_this->flash(FlashMessageType::ERROR, "Your email address could not be verified.");
+														}
 													} else {
-														$_this->flash(FlashMessageType::ERROR, "Your email address could not be verified.");
+														$this->addFlash(FlashMessageType::ERROR, "You have created too many accounts in a short period of time.");
 													}
 												} else {
 													$_this->flash(FlashMessageType::ERROR, "That username is not available anymore.");
