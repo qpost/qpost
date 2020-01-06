@@ -96,17 +96,22 @@ class ReplyController extends AbstractController {
 						$replyBatch = [$apiService->serialize($reply)];
 
 						while (count($replyBatch) < 5) {
-							$reply = $feedEntryRepository->createQueryBuilder("f")
-								->innerJoin("f.user", "u")
-								->where("f.user = :user")
-								->setParameter("user", $reply->getUser())
-								->andWhere("f.type = :reply")
+							$replyBuilder = $feedEntryRepository->createQueryBuilder("f")
+								->innerJoin("f.user", "u");
+
+							if ($reply->getReplyCount() > 1) {
+								$replyBuilder = $replyBuilder->where("f.user = :user")
+									->setParameter("user", $reply->getUser());
+							}
+
+							$replyBuilder = $replyBuilder->andWhere("f.type = :reply")
 								->setParameter("reply", FeedEntryType::REPLY, Type::STRING)
 								->andWhere("f.parent = :parent")
 								->setParameter("parent", $reply)
 								->orderBy("f.time", "ASC")
-								->setMaxResults(1)
-								->getQuery()
+								->setMaxResults(1);
+
+							$reply = $replyBuilder->getQuery()
 								->useQueryCache(true)
 								->getOneOrNullResult();
 
