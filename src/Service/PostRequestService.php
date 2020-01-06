@@ -124,7 +124,7 @@ class PostRequestService {
 															$_this->flash(FlashMessageType::ERROR, "Your email address could not be verified.");
 														}
 													} else {
-														$this->addFlash(FlashMessageType::ERROR, "You have created too many accounts in a short period of time.");
+														$_this->addFlash(FlashMessageType::ERROR, "You have created too many accounts in a short period of time.");
 													}
 												} else {
 													$_this->flash(FlashMessageType::ERROR, "That username is not available anymore.");
