@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -78,6 +78,9 @@ export default class Status extends Component<any, {
 						status: feedEntry,
 						loadingFinished: true
 					});
+
+					document.querySelector(".statusPageBox").scrollIntoView();
+					window.scrollBy(0, -68);
 
 					let title = feedEntry.getUser().getDisplayName() + " on qpost";
 
