@@ -162,7 +162,7 @@ FROM feed_entry AS f
     GROUP BY parent_id
 ) children ON children.parent_id = f.id
 		INNER JOIN user AS u ON f.user_id = u.id
-WHERE " . $ownerWhere . (is_null($target) ? " AND u.privacy_level != 'CLOSED'" : "") . " AND f.text NOT LIKE '@%'
+WHERE " . $ownerWhere . (is_null($target) ? " AND u.privacy_level != 'CLOSED'" : "") . " AND (f.text IS NULL OR f.text NOT LIKE '@%')
 " . (!is_null($min) ? " AND f.id > ?" : "") . "
 " . (!is_null($max) ? " AND f.id < ?" : "") . "
 AND ((f.type = 'POST' AND f.parent_id IS NULL) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))
