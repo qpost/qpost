@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+  ~ Copyright (C) 2018-2020 Gigadrive - All rights reserved.
   ~ https://gigadrivegroup.com
   ~ https://qpo.st
   ~
@@ -100,7 +100,7 @@
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/followrequest</loc>
+		<loc>https://qpo.st/apidocs/followRequest</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
