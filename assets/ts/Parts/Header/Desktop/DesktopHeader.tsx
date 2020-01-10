@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -51,89 +51,92 @@ export default class DesktopHeader extends Component<{
 				display: this.props.mobile ? "none" : "block"
 			}}>
 
-			{currentUser ? <Link to={"/"} className={"clearUnderline"}>
-				<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
-			</Link> : <a href={"/"} className={"clearUnderline"}>
-				<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
-			</a>}
+			<div className={"container"}>
+				{currentUser ? <Link to={"/"} className={"clearUnderline"}>
+					<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
+				</Link> : <a href={"/"} className={"clearUnderline"}>
+					<img src={Logo} style={{height: "30px"}} alt={"qpost Logo"}/>
+				</a>}
 
-			<Menu
-				theme={NightMode.isActive() ? "dark" : "light"}
-				mode={"horizontal"}
-				selectable={false}
-				style={{
-					lineHeight: "64px",
-					float: "right"
-				}}>
-				{currentUser ? [<Menu.Item key={0}>
-					<Link to={"/"} className={"clearUnderline"}>
-						home
-					</Link>
-				</Menu.Item>,
-
-					<Menu.Item key={1}>
-						<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
-							my profile
+				<Menu
+					theme={NightMode.isActive() ? "dark" : "light"}
+					mode={"horizontal"}
+					selectable={false}
+					style={{
+						lineHeight: "64px",
+						float: "right"
+					}}>
+					{currentUser ? [<Menu.Item key={0}>
+						<Link to={"/"} className={"clearUnderline"}>
+							home
 						</Link>
 					</Menu.Item>,
 
-					<Menu.Item key={2}>
-						<Link to={"/notifications"} className={"clearUnderline"}>
-							notifications{notifications > 0 ? <Badge count={notifications} className={"ml-2"}/> : ""}
-						</Link>
-					</Menu.Item>,
-
-					<Menu.Item key={3}>
-						<Link to={"/messages"} className={"clearUnderline"}>
-							messages{messages > 0 ? <Badge count={messages} className={"ml-2"}/> : ""}
-						</Link>
-					</Menu.Item>,
-
-					<Menu.Item key={4}>
-						<Link to={"/search"} className={"clearUnderline"}>
-							search
-						</Link>
-					</Menu.Item>,
-
-					<SubMenu title={<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
-						<img src={currentUser.getAvatarURL()} width={24} height={24} alt={currentUser.getUsername()}
-							 className={"rounded"}/><span className={"ml-2"}>{currentUser.getUsername()}</span>
-					</Link>}>
-						<Menu.Item>
-							<Link to={"/edit"} className={"clearUnderline"}>
-								Edit profile
+						<Menu.Item key={1}>
+							<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
+								my profile
 							</Link>
-						</Menu.Item>
+						</Menu.Item>,
 
-						<Menu.Item>
-							<Link to={"/account"} className={"clearUnderline"}>
-								Settings and privacy
+						<Menu.Item key={2}>
+							<Link to={"/notifications"} className={"clearUnderline"}>
+								notifications{notifications > 0 ?
+								<Badge count={notifications} className={"ml-2"}/> : ""}
 							</Link>
-						</Menu.Item>
+						</Menu.Item>,
 
-						<Menu.Item>
-							<a href={"/logout"} className={"clearUnderline"} onClick={(e) => {
-								e.preventDefault();
-								Auth.logout();
-							}}>
-								Log out
-							</a>
-						</Menu.Item>
+						<Menu.Item key={3}>
+							<Link to={"/messages"} className={"clearUnderline"}>
+								messages{messages > 0 ? <Badge count={messages} className={"ml-2"}/> : ""}
+							</Link>
+						</Menu.Item>,
 
-						<Menu.Item>
-							<a href={"/nightmode"} className={"clearUnderline"} onClick={(e) => {
-								e.preventDefault();
-								NightMode.toggle();
-							}}>
-								Toggle night mode
-							</a>
-						</Menu.Item>
-					</SubMenu>] : <Menu.Item>
-					<a href={"/login"} className={"clearUnderline"}>
-						log in
-					</a>
-				</Menu.Item>}
-			</Menu>
+						<Menu.Item key={4}>
+							<Link to={"/search"} className={"clearUnderline"}>
+								search
+							</Link>
+						</Menu.Item>,
+
+						<SubMenu title={<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
+							<img src={currentUser.getAvatarURL()} width={24} height={24} alt={currentUser.getUsername()}
+								 className={"rounded"}/><span className={"ml-2"}>{currentUser.getUsername()}</span>
+						</Link>}>
+							<Menu.Item>
+								<Link to={"/edit"} className={"clearUnderline"}>
+									Edit profile
+								</Link>
+							</Menu.Item>
+
+							<Menu.Item>
+								<Link to={"/account"} className={"clearUnderline"}>
+									Settings and privacy
+								</Link>
+							</Menu.Item>
+
+							<Menu.Item>
+								<a href={"/logout"} className={"clearUnderline"} onClick={(e) => {
+									e.preventDefault();
+									Auth.logout();
+								}}>
+									Log out
+								</a>
+							</Menu.Item>
+
+							<Menu.Item>
+								<a href={"/nightmode"} className={"clearUnderline"} onClick={(e) => {
+									e.preventDefault();
+									NightMode.toggle();
+								}}>
+									Toggle night mode
+								</a>
+							</Menu.Item>
+						</SubMenu>] : <Menu.Item>
+						<a href={"/login"} className={"clearUnderline"}>
+							log in
+						</a>
+					</Menu.Item>}
+				</Menu>
+			</div>
 		</Layout.Header>;
 	}
 }
