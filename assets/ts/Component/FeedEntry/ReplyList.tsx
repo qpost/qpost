@@ -22,7 +22,7 @@ import FeedEntry from "../../Entity/Feed/FeedEntry";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import InfiniteScroll from "react-infinite-scroller";
-import {Card, Spin} from "antd";
+import {Spin} from "antd";
 import FeedEntryListItem from "./FeedEntryListItem";
 import {Alert} from "reactstrap";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
@@ -121,8 +121,6 @@ export default class ReplyList extends Component<{
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		if (this.props.feedEntry !== null && this.props.feedEntry.getReplyCount() === 0) return "";
-
 		if (this.state.entries !== null) {
 			if (this.state.entries.length > 0) {
 				return <InfiniteScroll
@@ -136,10 +134,6 @@ export default class ReplyList extends Component<{
 					</div>}
 					initialLoad={false}
 				>
-					<Card size={"small"}>
-						<h4 className={"text-center-mobile"}>Replies</h4>
-					</Card>
-
 					<ul className={"list-group feedContainer"}>
 						{this.state.entries.map((replyBatch: FeedEntry[], i) => {
 							return <div key={i} className={"mb-2"}>
@@ -163,10 +157,6 @@ export default class ReplyList extends Component<{
 			}
 
 			return <div>
-				<Card size={"small"}>
-					<h4>Replies</h4>
-				</Card>
-
 				<ul className={"list-group feedContainer"}>
 					{rows.map((item, i) => {
 						return item;
