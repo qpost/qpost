@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -294,6 +294,10 @@ export default class About extends Component<any, any> {
 			{
 				name: "permissions.request",
 				link: "https://github.com/chromium/permissions.request"
+			},
+			{
+				name: "Firebase Admin SDK for PHP",
+				link: "https://github.com/kreait/firebase-php"
 			}
 		].sort((a, b) => {
 			// sort by name, alphabetically

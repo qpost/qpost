@@ -1,12 +1,12 @@
 {
-    "_readme": [
-        "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-        "This file is @generated automatically"
-    ],
-	"content-hash": "d5eb4fea49f01e240216f56bb076c1ee",
-    "packages": [
-        {
+	"_readme": [
+		"This file locks the dependencies of your project to a known state",
+		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+		"This file is @generated automatically"
+	],
+	"content-hash": "049f963e94fcae58af3cdd0eb089704b",
+	"packages": [
+		{
 			"name": "beberlei/doctrineextensions",
 			"version": "v1.2.3",
 			"source": {
@@ -1523,22 +1523,22 @@
 		{
 			"name": "egulias/email-validator",
 			"version": "2.1.11",
-            "source": {
-                "type": "git",
+			"source": {
+				"type": "git",
 				"url": "https://github.com/egulias/EmailValidator.git",
 				"reference": "92dd169c32f6f55ba570c309d83f5209cefb5e23"
-            },
-            "dist": {
-                "type": "zip",
+			},
+			"dist": {
+				"type": "zip",
 				"url": "https://api.github.com/repos/egulias/EmailValidator/zipball/92dd169c32f6f55ba570c309d83f5209cefb5e23",
 				"reference": "92dd169c32f6f55ba570c309d83f5209cefb5e23",
-                "shasum": ""
-            },
-            "require": {
+				"shasum": ""
+			},
+			"require": {
 				"doctrine/lexer": "^1.0.1",
 				"php": ">= 5.5"
-            },
-            "require-dev": {
+			},
+			"require-dev": {
 				"dominicsayers/isemail": "dev-master",
 				"phpunit/phpunit": "^4.8.35||^5.7||^6.0",
 				"satooshi/php-coveralls": "^1.0.1",
@@ -1546,39 +1546,39 @@
 			},
 			"suggest": {
 				"ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
-            },
-            "type": "library",
+			},
+			"type": "library",
 			"extra": {
 				"branch-alias": {
 					"dev-master": "2.1.x-dev"
 				}
 			},
-            "autoload": {
+			"autoload": {
 				"psr-4": {
 					"Egulias\\EmailValidator\\": "EmailValidator"
 				}
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
 					"name": "Eduardo Gulias Davis"
-                }
-            ],
+				}
+			],
 			"description": "A library for validating emails against several RFCs",
 			"homepage": "https://github.com/egulias/EmailValidator",
-            "keywords": [
+			"keywords": [
 				"email",
 				"emailvalidation",
 				"emailvalidator",
 				"validation",
 				"validator"
-            ],
+			],
 			"time": "2019-08-13T17:33:27+00:00"
-        },
-        {
+		},
+		{
 			"name": "fgrosse/phpasn1",
 			"version": "v2.1.1",
 			"source": {
@@ -1648,6 +1648,56 @@
 			"time": "2018-12-02T01:34:34+00:00"
 		},
 		{
+			"name": "fig/http-message-util",
+			"version": "1.1.3",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-fig/http-message-util.git",
+				"reference": "35b19404371b31b3a43823c755398c48c9966db4"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-fig/http-message-util/zipball/35b19404371b31b3a43823c755398c48c9966db4",
+				"reference": "35b19404371b31b3a43823c755398c48c9966db4",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^5.3 || ^7.0",
+				"psr/http-message": "^1.0"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.1.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Fig\\Http\\Message\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "PHP-FIG",
+					"homepage": "http://www.php-fig.org/"
+				}
+			],
+			"description": "Utility classes and constants for use with PSR-7 (psr/http-message)",
+			"keywords": [
+				"http",
+				"http-message",
+				"psr",
+				"psr-7",
+				"request",
+				"response"
+			],
+			"time": "2018-11-19T16:19:58+00:00"
+		},
+		{
 			"name": "fig/link-util",
 			"version": "1.0.0",
 			"source": {
@@ -1700,6 +1750,374 @@
 				"rest"
 			],
 			"time": "2016-10-17T18:31:11+00:00"
+		},
+		{
+			"name": "firebase/php-jwt",
+			"version": "v5.0.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/firebase/php-jwt.git",
+				"reference": "9984a4d3a32ae7673d6971ea00bae9d0a1abba0e"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/firebase/php-jwt/zipball/9984a4d3a32ae7673d6971ea00bae9d0a1abba0e",
+				"reference": "9984a4d3a32ae7673d6971ea00bae9d0a1abba0e",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3.0"
+			},
+			"require-dev": {
+				"phpunit/phpunit": " 4.8.35"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Firebase\\JWT\\": "src"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"BSD-3-Clause"
+			],
+			"authors": [
+				{
+					"name": "Neuman Vong",
+					"email": "neuman+pear@twilio.com",
+					"role": "Developer"
+				},
+				{
+					"name": "Anant Narayanan",
+					"email": "anant@php.net",
+					"role": "Developer"
+				}
+			],
+			"description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
+			"homepage": "https://github.com/firebase/php-jwt",
+			"time": "2017-06-27T22:17:23+00:00"
+		},
+		{
+			"name": "giggsey/libphonenumber-for-php",
+			"version": "8.11.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/giggsey/libphonenumber-for-php.git",
+				"reference": "f6a367f08e323edc1c27546d8d5818bb016d812e"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/f6a367f08e323edc1c27546d8d5818bb016d812e",
+				"reference": "f6a367f08e323edc1c27546d8d5818bb016d812e",
+				"shasum": ""
+			},
+			"require": {
+				"ext-mbstring": "*",
+				"giggsey/locale": "^1.7",
+				"php": ">=5.3.2"
+			},
+			"require-dev": {
+				"pear/pear-core-minimal": "^1.9",
+				"pear/pear_exception": "^1.0",
+				"pear/versioncontrol_git": "^0.5",
+				"phing/phing": "^2.7",
+				"php-coveralls/php-coveralls": "^1.0|^2.0",
+				"phpunit/phpunit": "^4.8.36|^5.0",
+				"symfony/console": "^2.8|^3.0"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "8.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"libphonenumber\\": "src/"
+				},
+				"exclude-from-classmap": [
+					"/src/data/",
+					"/src/carrier/data/",
+					"/src/geocoding/data/",
+					"/src/timezone/data/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"Apache-2.0"
+			],
+			"authors": [
+				{
+					"name": "Joshua Gigg",
+					"email": "giggsey@gmail.com",
+					"homepage": "https://giggsey.com/"
+				}
+			],
+			"description": "PHP Port of Google's libphonenumber",
+			"homepage": "https://github.com/giggsey/libphonenumber-for-php",
+			"keywords": [
+				"geocoding",
+				"geolocation",
+				"libphonenumber",
+				"mobile",
+				"phonenumber",
+				"validation"
+			],
+			"time": "2019-12-11T10:03:19+00:00"
+		},
+		{
+			"name": "giggsey/locale",
+			"version": "1.8",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/giggsey/Locale.git",
+				"reference": "85a1b251bad11c986fec2a051b10d4b80a5caa1b"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/giggsey/Locale/zipball/85a1b251bad11c986fec2a051b10d4b80a5caa1b",
+				"reference": "85a1b251bad11c986fec2a051b10d4b80a5caa1b",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3.2"
+			},
+			"require-dev": {
+				"pear/pear-core-minimal": "^1.9",
+				"pear/pear_exception": "^1.0",
+				"pear/versioncontrol_git": "^0.5",
+				"phing/phing": "~2.7",
+				"php-coveralls/php-coveralls": "^1.0|^2.0",
+				"phpunit/phpunit": "^4.8|^5.0",
+				"symfony/console": "^2.8|^3.0|^4.0",
+				"symfony/filesystem": "^2.8|^3.0|^4.0",
+				"symfony/finder": "^2.8|^3.0|^4.0",
+				"symfony/process": "^2.8|^3.0|^4.0"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Giggsey\\Locale\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Joshua Gigg",
+					"email": "giggsey@gmail.com",
+					"homepage": "http://giggsey.com/"
+				}
+			],
+			"description": "Locale functions required by libphonenumber-for-php",
+			"time": "2019-10-09T18:53:14+00:00"
+		},
+		{
+			"name": "google/auth",
+			"version": "v1.6.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/googleapis/google-auth-library-php.git",
+				"reference": "45635ac69d0b95f38885531d4ebcdfcb2ebb6f36"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/45635ac69d0b95f38885531d4ebcdfcb2ebb6f36",
+				"reference": "45635ac69d0b95f38885531d4ebcdfcb2ebb6f36",
+				"shasum": ""
+			},
+			"require": {
+				"firebase/php-jwt": "~2.0|~3.0|~4.0|~5.0",
+				"guzzlehttp/guzzle": "~5.3.1|~6.0",
+				"guzzlehttp/psr7": "^1.2",
+				"php": ">=5.4",
+				"psr/cache": "^1.0",
+				"psr/http-message": "^1.0"
+			},
+			"require-dev": {
+				"friendsofphp/php-cs-fixer": "^1.11",
+				"guzzlehttp/promises": "0.1.1|^1.3",
+				"phpseclib/phpseclib": "^2",
+				"phpunit/phpunit": "^4.8.36|^5.7",
+				"sebastian/comparator": ">=1.2.3"
+			},
+			"suggest": {
+				"phpseclib/phpseclib": "May be used in place of OpenSSL for signing strings or for token management. Please require version ^2."
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Google\\Auth\\": "src"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"Apache-2.0"
+			],
+			"description": "Google Auth Library for PHP",
+			"homepage": "http://github.com/google/google-auth-library-php",
+			"keywords": [
+				"Authentication",
+				"google",
+				"oauth2"
+			],
+			"time": "2019-10-29T20:13:04+00:00"
+		},
+		{
+			"name": "google/cloud-core",
+			"version": "v1.34.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/googleapis/google-cloud-php-core.git",
+				"reference": "52db21acb2da25d2d79e493842de58da7836c97f"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/52db21acb2da25d2d79e493842de58da7836c97f",
+				"reference": "52db21acb2da25d2d79e493842de58da7836c97f",
+				"shasum": ""
+			},
+			"require": {
+				"google/auth": "^1.6",
+				"guzzlehttp/guzzle": "^5.3|^6.0",
+				"guzzlehttp/promises": "^1.3",
+				"guzzlehttp/psr7": "^1.2",
+				"monolog/monolog": "^1.1|^2.0",
+				"php": ">=5.5",
+				"psr/http-message": "1.0.*",
+				"rize/uri-template": "~0.3"
+			},
+			"require-dev": {
+				"erusev/parsedown": "^1.6",
+				"google/common-protos": "^1.0",
+				"google/gax": "^1.1",
+				"opis/closure": "^3",
+				"phpdocumentor/reflection": "^3.0",
+				"phpunit/phpunit": "^4.8|^5.0",
+				"squizlabs/php_codesniffer": "2.*"
+			},
+			"suggest": {
+				"opis/closure": "May be used to serialize closures to process jobs in the batch daemon. Please require version ^3.",
+				"symfony/lock": "Required for the Spanner cached based session pool. Please require the following commit: 3.3.x-dev#1ba6ac9"
+			},
+			"bin": [
+				"bin/google-cloud-batch"
+			],
+			"type": "library",
+			"extra": {
+				"component": {
+					"id": "cloud-core",
+					"target": "googleapis/google-cloud-php-core.git",
+					"path": "Core",
+					"entry": "src/ServiceBuilder.php"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Google\\Cloud\\Core\\": "src"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"Apache-2.0"
+			],
+			"description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
+			"time": "2019-10-28T19:05:44+00:00"
+		},
+		{
+			"name": "google/cloud-storage",
+			"version": "v1.17.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/googleapis/google-cloud-php-storage.git",
+				"reference": "626e910530f0b9463a15563f697a66f1cfbd6369"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/626e910530f0b9463a15563f697a66f1cfbd6369",
+				"reference": "626e910530f0b9463a15563f697a66f1cfbd6369",
+				"shasum": ""
+			},
+			"require": {
+				"google/cloud-core": "^1.31",
+				"google/crc32": "^0.1.0"
+			},
+			"require-dev": {
+				"erusev/parsedown": "^1.6",
+				"google/cloud-pubsub": "^1.0",
+				"phpdocumentor/reflection": "^3.0",
+				"phpseclib/phpseclib": "^2",
+				"phpunit/phpunit": "^4.8|^5.0",
+				"squizlabs/php_codesniffer": "2.*"
+			},
+			"suggest": {
+				"google/cloud-pubsub": "May be used to register a topic to receive bucket notifications.",
+				"phpseclib/phpseclib": "May be used in place of OpenSSL for creating signed Cloud Storage URLs. Please require version ^2."
+			},
+			"type": "library",
+			"extra": {
+				"component": {
+					"id": "cloud-storage",
+					"target": "googleapis/google-cloud-php-storage.git",
+					"path": "Storage",
+					"entry": "src/StorageClient.php"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Google\\Cloud\\Storage\\": "src"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"Apache-2.0"
+			],
+			"description": "Cloud Storage Client for PHP",
+			"time": "2020-01-07T21:25:58+00:00"
+		},
+		{
+			"name": "google/crc32",
+			"version": "v0.1.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/google/php-crc32.git",
+				"reference": "a8525f0dea6fca1893e1bae2f6e804c5f7d007fb"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/google/php-crc32/zipball/a8525f0dea6fca1893e1bae2f6e804c5f7d007fb",
+				"reference": "a8525f0dea6fca1893e1bae2f6e804c5f7d007fb",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.4"
+			},
+			"require-dev": {
+				"friendsofphp/php-cs-fixer": "^1.13 || v2.14.2",
+				"paragonie/random_compat": ">=2",
+				"phpunit/phpunit": "^4"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Google\\CRC32\\": "src"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"Apache-2.0"
+			],
+			"authors": [
+				{
+					"name": "Andrew Brampton",
+					"email": "bramp@google.com"
+				}
+			],
+			"description": "Various CRC32 implementations",
+			"homepage": "https://github.com/google/php-crc32",
+			"time": "2019-05-09T06:24:58+00:00"
 		},
 		{
 			"name": "gumlet/php-image-resize",
@@ -1759,59 +2177,59 @@
 		{
 			"name": "guzzlehttp/guzzle",
 			"version": "6.4.1",
-            "source": {
-                "type": "git",
+			"source": {
+				"type": "git",
 				"url": "https://github.com/guzzle/guzzle.git",
 				"reference": "0895c932405407fd3a7368b6910c09a24d26db11"
-            },
-            "dist": {
-                "type": "zip",
+			},
+			"dist": {
+				"type": "zip",
 				"url": "https://api.github.com/repos/guzzle/guzzle/zipball/0895c932405407fd3a7368b6910c09a24d26db11",
 				"reference": "0895c932405407fd3a7368b6910c09a24d26db11",
-                "shasum": ""
-            },
+				"shasum": ""
+			},
             "require": {
 				"ext-json": "*",
 				"guzzlehttp/promises": "^1.0",
 				"guzzlehttp/psr7": "^1.6.1",
 				"php": ">=5.5"
-            },
-            "require-dev": {
+			},
+			"require-dev": {
 				"ext-curl": "*",
 				"phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
 				"psr/log": "^1.1"
-            },
-            "suggest": {
+			},
+			"suggest": {
 				"psr/log": "Required for using the Log middleware"
-            },
-            "type": "library",
+			},
+			"type": "library",
 			"extra": {
 				"branch-alias": {
 					"dev-master": "6.3-dev"
 				}
 			},
-            "autoload": {
-                "psr-4": {
+			"autoload": {
+				"psr-4": {
 					"GuzzleHttp\\": "src/"
 				},
 				"files": [
 					"src/functions_include.php"
 				]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
 					"name": "Michael Dowling",
 					"email": "mtdowling@gmail.com",
 					"homepage": "https://github.com/mtdowling"
-                }
-            ],
+				}
+			],
 			"description": "Guzzle is a PHP HTTP client library",
 			"homepage": "http://guzzlephp.org/",
-            "keywords": [
+			"keywords": [
 				"client",
 				"curl",
 				"framework",
@@ -1859,7 +2277,7 @@
 			"notification-url": "https://packagist.org/downloads/",
 			"license": [
 				"MIT"
-            ],
+			],
 			"authors": [
 				{
 					"name": "Michael Dowling",
@@ -1872,8 +2290,8 @@
 				"promise"
 			],
 			"time": "2016-12-20T10:07:11+00:00"
-        },
-        {
+		},
+		{
 			"name": "guzzlehttp/psr7",
 			"version": "1.6.1",
 			"source": {
@@ -3077,6 +3495,382 @@
 			"time": "2019-09-20T14:24:07+00:00"
 		},
 		{
+			"name": "kreait/clock",
+			"version": "1.0.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/kreait/clock-php.git",
+				"reference": "7bc9a0c78946393a0e1ea52fc527e14779cac47c"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/kreait/clock-php/zipball/7bc9a0c78946393a0e1ea52fc527e14779cac47c",
+				"reference": "7bc9a0c78946393a0e1ea52fc527e14779cac47c",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.0"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^6.5.14"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Kreait\\Clock\\": "src/Clock"
+				},
+				"files": [
+					"src/Clock.php"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Jérôme Gamez",
+					"email": "jerome@gamez.name"
+				}
+			],
+			"description": "A PHP 7.0 compatible clock abstraction",
+			"time": "2019-08-26T15:59:46+00:00"
+		},
+		{
+			"name": "kreait/firebase-php",
+			"version": "4.38.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/kreait/firebase-php.git",
+				"reference": "0a9bec0e8e1cb7fa9ca1c1e5dad1036ee8860b2a"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/kreait/firebase-php/zipball/0a9bec0e8e1cb7fa9ca1c1e5dad1036ee8860b2a",
+				"reference": "0a9bec0e8e1cb7fa9ca1c1e5dad1036ee8860b2a",
+				"shasum": ""
+			},
+			"require": {
+				"ext-ctype": "*",
+				"ext-json": "*",
+				"ext-mbstring": "*",
+				"ext-openssl": "*",
+				"giggsey/libphonenumber-for-php": "^8.9",
+				"google/auth": "^0.11.0|^1.0",
+				"google/cloud-storage": "^1.14",
+				"guzzlehttp/guzzle": "^6.2.1",
+				"kreait/clock": "^1.0.1",
+				"kreait/firebase-tokens": "^1.8.1",
+				"kreait/gcp-metadata": "^1.0.1",
+				"lcobucci/jwt": "^3.3.1",
+				"mtdowling/jmespath.php": "^2.3",
+				"php": "^7.0",
+				"psr/simple-cache": "^1.0",
+				"riverline/multipart-parser": "^2.0",
+				"superbalist/flysystem-google-storage": "^7.0"
+			},
+			"require-dev": {
+				"friendsofphp/php-cs-fixer": "^2.16",
+				"jangregor/phpstan-prophecy": "^0.1.2|^0.2|^0.3|^0.4.2",
+				"phpstan/phpstan-phpunit": "^0.9.4|^0.11.2",
+				"phpunit/phpunit": "^6.5.14|^7.5.17",
+				"symfony/var-dumper": "^3.4|^4.4|^5.0"
+			},
+			"suggest": {
+				"google/cloud-firestore": "^1.0 to use the Firestore component"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "4.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Kreait\\Firebase\\": "src/Firebase"
+				},
+				"files": [
+					"src/Firebase.php"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Jérôme Gamez",
+					"homepage": "https://github.com/jeromegamez"
+				}
+			],
+			"description": "Firebase Admin SDK",
+			"homepage": "https://github.com/kreait/firebase-php",
+			"keywords": [
+				"api",
+				"database",
+				"firebase",
+				"google",
+				"sdk"
+			],
+			"time": "2020-01-02T22:39:48+00:00"
+		},
+		{
+			"name": "kreait/firebase-tokens",
+			"version": "1.9.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/kreait/firebase-tokens-php.git",
+				"reference": "59d4f0239d7c4cc9de2cd327df1bce695a05e48d"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/kreait/firebase-tokens-php/zipball/59d4f0239d7c4cc9de2cd327df1bce695a05e48d",
+				"reference": "59d4f0239d7c4cc9de2cd327df1bce695a05e48d",
+				"shasum": ""
+			},
+			"require": {
+				"ext-json": "*",
+				"ext-openssl": "*",
+				"fig/http-message-util": "^1.1",
+				"guzzlehttp/guzzle": "^6.2.1",
+				"kreait/clock": "^1.0.1",
+				"lcobucci/jwt": "^3.2",
+				"php": "^7.0",
+				"psr/cache": "^1.0",
+				"psr/simple-cache": "^1.0"
+			},
+			"require-dev": {
+				"firebase/php-jwt": "^5.0",
+				"friendsofphp/php-cs-fixer": "^2.0",
+				"phpstan/phpstan-phpunit": "^0.9.3",
+				"phpunit/phpunit": "^6.0",
+				"symfony/cache": "^3.4",
+				"symfony/var-dumper": "^3.4"
+			},
+			"suggest": {
+				"firebase/php-jwt": "^5.0 can be used to create and parse tokens",
+				"guzzlehttp/guzzle": "^6.2.1 can be used as an HTTP handler",
+				"lcobucci/jwt": "^3.2 can be used to create and parse tokens",
+				"psr/cache-implementation": "to cache fetched remote public keys",
+				"psr/simple-cache-implementation": "to cache fetched remote public keys"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Kreait\\Firebase\\JWT\\": "src/JWT",
+					"Firebase\\Auth\\Token\\": "src/Firebase/Auth/Token"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Jérôme Gamez",
+					"homepage": "https://github.com/jeromegamez"
+				}
+			],
+			"description": "A library to work with Firebase tokens",
+			"homepage": "https://github.com/kreait/firebase-token-php",
+			"keywords": [
+				"Authentication",
+				"auth",
+				"firebase",
+				"google",
+				"token"
+			],
+			"time": "2019-10-16T21:09:11+00:00"
+		},
+		{
+			"name": "kreait/gcp-metadata",
+			"version": "1.0.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/kreait/gcp-metadata-php.git",
+				"reference": "9bc4b871bd8623aa018bbd0ff38e3a286e760bc7"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/kreait/gcp-metadata-php/zipball/9bc4b871bd8623aa018bbd0ff38e3a286e760bc7",
+				"reference": "9bc4b871bd8623aa018bbd0ff38e3a286e760bc7",
+				"shasum": ""
+			},
+			"require": {
+				"guzzlehttp/guzzle": "^6.0",
+				"php": "^7.0",
+				"psr/http-message": "^1.0"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^6.0"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Kreait\\": "src"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Jérôme Gamez",
+					"email": "jerome@gamez.name"
+				}
+			],
+			"description": "Get the metadata from a Google Cloud Platform environment.",
+			"keywords": [
+				"gce",
+				"gcp",
+				"google",
+				"google-cloud",
+				"google-cloud-engine",
+				"google-cloud-platform"
+			],
+			"time": "2018-07-28T13:57:51+00:00"
+		},
+		{
+			"name": "lcobucci/jwt",
+			"version": "3.3.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/lcobucci/jwt.git",
+				"reference": "a11ec5f4b4d75d1fcd04e133dede4c317aac9e18"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/lcobucci/jwt/zipball/a11ec5f4b4d75d1fcd04e133dede4c317aac9e18",
+				"reference": "a11ec5f4b4d75d1fcd04e133dede4c317aac9e18",
+				"shasum": ""
+			},
+			"require": {
+				"ext-mbstring": "*",
+				"ext-openssl": "*",
+				"php": "^5.6 || ^7.0"
+			},
+			"require-dev": {
+				"mikey179/vfsstream": "~1.5",
+				"phpmd/phpmd": "~2.2",
+				"phpunit/php-invoker": "~1.1",
+				"phpunit/phpunit": "^5.7 || ^7.3",
+				"squizlabs/php_codesniffer": "~2.3"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "3.1-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Lcobucci\\JWT\\": "src"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"BSD-3-Clause"
+			],
+			"authors": [
+				{
+					"name": "Luís Otávio Cobucci Oblonczyk",
+					"email": "lcobucci@gmail.com",
+					"role": "Developer"
+				}
+			],
+			"description": "A simple library to work with JSON Web Token and JSON Web Signature",
+			"keywords": [
+				"JWS",
+				"jwt"
+			],
+			"time": "2019-05-24T18:30:49+00:00"
+		},
+		{
+			"name": "league/flysystem",
+			"version": "1.0.63",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/thephpleague/flysystem.git",
+				"reference": "8132daec326565036bc8e8d1876f77ec183a7bd6"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8132daec326565036bc8e8d1876f77ec183a7bd6",
+				"reference": "8132daec326565036bc8e8d1876f77ec183a7bd6",
+				"shasum": ""
+			},
+			"require": {
+				"ext-fileinfo": "*",
+				"php": ">=5.5.9"
+			},
+			"conflict": {
+				"league/flysystem-sftp": "<1.0.6"
+			},
+			"require-dev": {
+				"phpspec/phpspec": "^3.4",
+				"phpunit/phpunit": "^5.7.10"
+			},
+			"suggest": {
+				"ext-fileinfo": "Required for MimeType",
+				"ext-ftp": "Allows you to use FTP server storage",
+				"ext-openssl": "Allows you to use FTPS server storage",
+				"league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
+				"league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
+				"league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
+				"league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
+				"league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
+				"league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
+				"league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
+				"league/flysystem-webdav": "Allows you to use WebDAV storage",
+				"league/flysystem-ziparchive": "Allows you to use ZipArchive adapter",
+				"spatie/flysystem-dropbox": "Allows you to use Dropbox storage",
+				"srmklive/flysystem-dropbox-v2": "Allows you to use Dropbox storage for PHP 5 applications"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.1-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"League\\Flysystem\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Frank de Jonge",
+					"email": "info@frenky.net"
+				}
+			],
+			"description": "Filesystem abstraction: Many filesystems, one API.",
+			"keywords": [
+				"Cloud Files",
+				"WebDAV",
+				"abstraction",
+				"aws",
+				"cloud",
+				"copy.com",
+				"dropbox",
+				"file systems",
+				"files",
+				"filesystem",
+				"filesystems",
+				"ftp",
+				"rackspace",
+				"remote",
+				"s3",
+				"sftp",
+				"storage"
+			],
+			"time": "2020-01-04T16:30:31+00:00"
+		},
+		{
 			"name": "minishlink/web-push",
 			"version": "v5.2.4",
 			"source": {
@@ -3209,6 +4003,63 @@
 				"psr-3"
 			],
 			"time": "2019-09-06T13:49:17+00:00"
+		},
+		{
+			"name": "mtdowling/jmespath.php",
+			"version": "2.5.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/jmespath/jmespath.php.git",
+				"reference": "52168cb9472de06979613d365c7f1ab8798be895"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/52168cb9472de06979613d365c7f1ab8798be895",
+				"reference": "52168cb9472de06979613d365c7f1ab8798be895",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.4.0",
+				"symfony/polyfill-mbstring": "^1.4"
+			},
+			"require-dev": {
+				"composer/xdebug-handler": "^1.2",
+				"phpunit/phpunit": "^4.8.36|^7.5.15"
+			},
+			"bin": [
+				"bin/jp.php"
+			],
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "2.5-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"JmesPath\\": "src/"
+				},
+				"files": [
+					"src/JmesPath.php"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Michael Dowling",
+					"email": "mtdowling@gmail.com",
+					"homepage": "https://github.com/mtdowling"
+				}
+			],
+			"description": "Declaratively specify how to extract elements from a JSON document",
+			"keywords": [
+				"json",
+				"jsonpath"
+			],
+			"time": "2019-12-30T18:03:34+00:00"
 		},
 		{
 			"name": "ocramius/package-versions",
@@ -3985,16 +4836,16 @@
 			],
 			"description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
 			"time": "2019-08-22T18:11:29+00:00"
-        },
-        {
-            "name": "psr/cache",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/cache.git",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
-            },
-            "dist": {
+		},
+		{
+			"name": "psr/cache",
+			"version": "1.0.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-fig/cache.git",
+				"reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+			},
+			"dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
                 "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
@@ -4023,16 +4874,16 @@
                     "name": "PHP-FIG",
                     "homepage": "http://www.php-fig.org/"
                 }
-            ],
-            "description": "Common interface for caching libraries",
-            "keywords": [
-                "cache",
-                "psr",
-                "psr-6"
-            ],
-            "time": "2016-08-06T20:24:11+00:00"
-        },
-        {
+			],
+			"description": "Common interface for caching libraries",
+			"keywords": [
+				"cache",
+				"psr",
+				"psr-6"
+			],
+			"time": "2016-08-06T20:24:11+00:00"
+		},
+		{
 			"name": "psr/container",
 			"version": "1.0.0",
 			"source": {
@@ -4329,6 +5180,54 @@
 			"time": "2019-11-01T11:05:21+00:00"
 		},
 		{
+			"name": "psr/simple-cache",
+			"version": "1.0.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-fig/simple-cache.git",
+				"reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+				"reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3.0"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.0.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Psr\\SimpleCache\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "PHP-FIG",
+					"homepage": "http://www.php-fig.org/"
+				}
+			],
+			"description": "Common interfaces for simple caching",
+			"keywords": [
+				"cache",
+				"caching",
+				"psr",
+				"psr-16",
+				"simple-cache"
+			],
+			"time": "2017-10-23T01:57:42+00:00"
+		},
+		{
 			"name": "ralouphie/getallheaders",
 			"version": "3.0.3",
 			"source": {
@@ -4449,6 +5348,102 @@
 				"uuid"
 			],
 			"time": "2018-07-19T23:38:55+00:00"
+		},
+		{
+			"name": "riverline/multipart-parser",
+			"version": "2.0.6",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/Riverline/multipart-parser.git",
+				"reference": "f71c80281d8f04e840c31edede6516b63f4d699b"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/Riverline/multipart-parser/zipball/f71c80281d8f04e840c31edede6516b63f4d699b",
+				"reference": "f71c80281d8f04e840c31edede6516b63f4d699b",
+				"shasum": ""
+			},
+			"require": {
+				"ext-mbstring": "*",
+				"php": ">=5.6.0"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^5.2 || ^6.0 || ^7.0",
+				"psr/http-message": "^1.0",
+				"symfony/psr-http-message-bridge": "^1.1",
+				"zendframework/zend-diactoros": "^1.0"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Riverline\\MultiPartParser\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Romain Cambien",
+					"email": "romain@cambien.net"
+				},
+				{
+					"name": "Riverline",
+					"homepage": "http://www.riverline.fr"
+				}
+			],
+			"description": "One class library to parse multipart content with encoding and charset support.",
+			"keywords": [
+				"http",
+				"multipart",
+				"parser"
+			],
+			"time": "2019-12-16T11:23:08+00:00"
+		},
+		{
+			"name": "rize/uri-template",
+			"version": "0.3.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/rize/UriTemplate.git",
+				"reference": "9e5fdd5c47147aa5adf7f760002ee591ed37b9ca"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/rize/UriTemplate/zipball/9e5fdd5c47147aa5adf7f760002ee591ed37b9ca",
+				"reference": "9e5fdd5c47147aa5adf7f760002ee591ed37b9ca",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3.0"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "~4.0.0"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-0": {
+					"Rize\\UriTemplate": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Marut K",
+					"homepage": "http://twitter.com/rezigned"
+				}
+			],
+			"description": "PHP URI Template (RFC 6570) supports both expansion & extraction",
+			"keywords": [
+				"RFC 6570",
+				"template",
+				"uri"
+			],
+			"time": "2017-06-14T03:57:53+00:00"
 		},
 		{
 			"name": "sensio/framework-extra-bundle",
@@ -4770,6 +5765,53 @@
 				"url"
 			],
 			"time": "2018-08-16T15:44:20+00:00"
+		},
+		{
+			"name": "superbalist/flysystem-google-storage",
+			"version": "7.2.2",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/Superbalist/flysystem-google-cloud-storage.git",
+				"reference": "87e2f450c0e4b5200fef9ffe6863068cc873d734"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/Superbalist/flysystem-google-cloud-storage/zipball/87e2f450c0e4b5200fef9ffe6863068cc873d734",
+				"reference": "87e2f450c0e4b5200fef9ffe6863068cc873d734",
+				"shasum": ""
+			},
+			"require": {
+				"google/cloud-storage": "~1.0",
+				"league/flysystem": "~1.0",
+				"php": ">=5.5.0"
+			},
+			"require-dev": {
+				"mockery/mockery": "0.9.*",
+				"phpunit/phpunit": "~4.0"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.0-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Superbalist\\Flysystem\\GoogleStorage\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Superbalist.com a division of Takealot Online (Pty) Ltd",
+					"email": "info@superbalist.com"
+				}
+			],
+			"description": "Flysystem adapter for Google Cloud Storage",
+			"time": "2019-10-10T12:22:54+00:00"
 		},
 		{
 			"name": "swiftmailer/swiftmailer",
@@ -5330,75 +6372,75 @@
 		{
 			"name": "symfony/dotenv",
 			"version": "v4.3.6",
-            "source": {
-                "type": "git",
+			"source": {
+				"type": "git",
 				"url": "https://github.com/symfony/dotenv.git",
 				"reference": "62d93bf07edd0d76f033d65a7fd1c1ce50d28b50"
-            },
-            "dist": {
-                "type": "zip",
+			},
+			"dist": {
+				"type": "zip",
 				"url": "https://api.github.com/repos/symfony/dotenv/zipball/62d93bf07edd0d76f033d65a7fd1c1ce50d28b50",
 				"reference": "62d93bf07edd0d76f033d65a7fd1c1ce50d28b50",
-                "shasum": ""
-            },
-            "require": {
+				"shasum": ""
+			},
+			"require": {
 				"php": "^7.1.3"
 			},
 			"require-dev": {
 				"symfony/process": "^3.4.2|^4.0"
-            },
-            "type": "library",
+			},
+			"type": "library",
 			"extra": {
 				"branch-alias": {
 					"dev-master": "4.3-dev"
 				}
 			},
-            "autoload": {
-                "psr-4": {
+			"autoload": {
+				"psr-4": {
 					"Symfony\\Component\\Dotenv\\": ""
 				},
 				"exclude-from-classmap": [
 					"/Tests/"
 				]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
                 "MIT"
             ],
-            "authors": [
-                {
+			"authors": [
+				{
 					"name": "Fabien Potencier",
 					"email": "fabien@symfony.com"
 				},
 				{
 					"name": "Symfony Community",
 					"homepage": "https://symfony.com/contributors"
-                }
-            ],
+				}
+			],
 			"description": "Registers environment variables from a .env file",
 			"homepage": "https://symfony.com",
-            "keywords": [
+			"keywords": [
 				"dotenv",
 				"env",
 				"environment"
-            ],
+			],
 			"time": "2019-10-18T11:23:15+00:00"
-        },
-        {
+		},
+		{
 			"name": "symfony/event-dispatcher",
 			"version": "v4.3.8",
-            "source": {
-                "type": "git",
+			"source": {
+				"type": "git",
 				"url": "https://github.com/symfony/event-dispatcher.git",
 				"reference": "0df002fd4f500392eabd243c2947061a50937287"
-            },
-            "dist": {
-                "type": "zip",
+			},
+			"dist": {
+				"type": "zip",
 				"url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/0df002fd4f500392eabd243c2947061a50937287",
 				"reference": "0df002fd4f500392eabd243c2947061a50937287",
-                "shasum": ""
-            },
-            "require": {
+				"shasum": ""
+			},
+			"require": {
 				"php": "^7.1.3",
 				"symfony/event-dispatcher-contracts": "^1.1"
 			},
@@ -5408,8 +6450,8 @@
 			"provide": {
 				"psr/event-dispatcher-implementation": "1.0",
 				"symfony/event-dispatcher-implementation": "1.1"
-            },
-            "require-dev": {
+			},
+			"require-dev": {
 				"psr/log": "~1.0",
 				"symfony/config": "~3.4|~4.0",
 				"symfony/dependency-injection": "~3.4|~4.0",
@@ -5417,39 +6459,39 @@
 				"symfony/http-foundation": "^3.4|^4.0",
 				"symfony/service-contracts": "^1.1",
 				"symfony/stopwatch": "~3.4|~4.0"
-            },
-            "suggest": {
+			},
+			"suggest": {
 				"symfony/dependency-injection": "",
 				"symfony/http-kernel": ""
-            },
-            "type": "library",
+			},
+			"type": "library",
 			"extra": {
 				"branch-alias": {
 					"dev-master": "4.3-dev"
 				}
 			},
-            "autoload": {
-                "psr-4": {
+			"autoload": {
+				"psr-4": {
 					"Symfony\\Component\\EventDispatcher\\": ""
 				},
 				"exclude-from-classmap": [
 					"/Tests/"
 				]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
                 "MIT"
             ],
-            "authors": [
-                {
+			"authors": [
+				{
 					"name": "Fabien Potencier",
 					"email": "fabien@symfony.com"
 				},
 				{
 					"name": "Symfony Community",
 					"homepage": "https://symfony.com/contributors"
-                }
-            ],
+				}
+			],
 			"description": "Symfony EventDispatcher Component",
 			"homepage": "https://symfony.com",
 			"time": "2019-11-03T09:04:05+00:00"
@@ -5502,17 +6544,17 @@
 			],
 			"description": "Generic abstractions related to dispatching event",
 			"homepage": "https://symfony.com",
-            "keywords": [
+			"keywords": [
 				"abstractions",
 				"contracts",
 				"decoupling",
 				"interfaces",
 				"interoperability",
 				"standards"
-            ],
+			],
 			"time": "2019-09-17T09:54:03+00:00"
-        },
-        {
+		},
+		{
 			"name": "symfony/expression-language",
 			"version": "v4.3.6",
 			"source": {
@@ -7564,18 +8606,18 @@
 		{
 			"name": "symfony/translation",
 			"version": "v4.3.6",
-            "source": {
-                "type": "git",
+			"source": {
+				"type": "git",
 				"url": "https://github.com/symfony/translation.git",
 				"reference": "a3aa590ce944afb3434d7a55f81b00927144d5ec"
-            },
-            "dist": {
-                "type": "zip",
+			},
+			"dist": {
+				"type": "zip",
 				"url": "https://api.github.com/repos/symfony/translation/zipball/a3aa590ce944afb3434d7a55f81b00927144d5ec",
 				"reference": "a3aa590ce944afb3434d7a55f81b00927144d5ec",
-                "shasum": ""
-            },
-            "require": {
+				"shasum": ""
+			},
+			"require": {
 				"php": "^7.1.3",
 				"symfony/polyfill-mbstring": "~1.0",
 				"symfony/translation-contracts": "^1.1.6"
@@ -7584,11 +8626,11 @@
 				"symfony/config": "<3.4",
 				"symfony/dependency-injection": "<3.4",
 				"symfony/yaml": "<3.4"
-            },
-            "provide": {
+			},
+			"provide": {
 				"symfony/translation-implementation": "1.0"
-            },
-            "require-dev": {
+			},
+			"require-dev": {
 				"psr/log": "~1.0",
 				"symfony/config": "~3.4|~4.0",
 				"symfony/console": "~3.4|~4.0",
@@ -7604,23 +8646,23 @@
 				"psr/log-implementation": "To use logging capability in translator",
 				"symfony/config": "",
 				"symfony/yaml": ""
-            },
-            "type": "library",
+			},
+			"type": "library",
 			"extra": {
 				"branch-alias": {
 					"dev-master": "4.3-dev"
 				}
 			},
-            "autoload": {
-                "psr-4": {
+			"autoload": {
+				"psr-4": {
 					"Symfony\\Component\\Translation\\": ""
 				},
 				"exclude-from-classmap": [
 					"/Tests/"
 				]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
 				"MIT"
 			],
 			"authors": [
@@ -7671,20 +8713,20 @@
 			"notification-url": "https://packagist.org/downloads/",
 			"license": [
 				"MIT"
-            ],
-            "authors": [
-                {
+			],
+			"authors": [
+				{
 					"name": "Nicolas Grekas",
 					"email": "p@tchwork.com"
-                },
-                {
+				},
+				{
 					"name": "Symfony Community",
 					"homepage": "https://symfony.com/contributors"
-                }
-            ],
+				}
+			],
 			"description": "Generic abstractions related to translation",
 			"homepage": "https://symfony.com",
-            "keywords": [
+			"keywords": [
 				"abstractions",
 				"contracts",
 				"decoupling",
@@ -7790,7 +8832,7 @@
 					"name": "Symfony Community",
 					"homepage": "https://symfony.com/contributors"
 				}
-            ],
+			],
 			"description": "Symfony Twig Bridge",
 			"homepage": "https://symfony.com",
 			"time": "2019-10-30T12:58:49+00:00"
@@ -8961,6 +10003,7 @@
 				"code",
 				"zf"
 			],
+			"abandoned": "laminas/laminas-code",
 			"time": "2019-10-05T23:18:22+00:00"
 		},
 		{
@@ -9028,6 +10071,7 @@
 				"psr",
 				"psr-7"
 			],
+			"abandoned": "laminas/laminas-diactoros",
 			"time": "2019-10-10T17:38:20+00:00"
 		},
 		{
@@ -9082,9 +10126,10 @@
 				"events",
 				"zf2"
 			],
+			"abandoned": "laminas/laminas-eventmanager",
 			"time": "2018-04-25T15:33:34+00:00"
-        }
-    ],
+		}
+	],
 	"packages-dev": [
 		{
 			"name": "easycorp/easy-log-handler",
@@ -9848,11 +10893,11 @@
 			"time": "2019-08-20T14:27:59+00:00"
 		}
 	],
-    "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
-    "prefer-stable": false,
-    "prefer-lowest": false,
+	"aliases": [],
+	"minimum-stability": "stable",
+	"stability-flags": [],
+	"prefer-stable": false,
+	"prefer-lowest": false,
 	"platform": {
 		"php": "^7.1.3",
 		"ext-ctype": "*",
@@ -9862,5 +10907,5 @@
 		"ext-json": "^1.6",
 		"ext-mysqli": "^7.2"
 	},
-    "platform-dev": []
+	"platform-dev": []
 }
