@@ -38,21 +38,30 @@ class StorageService {
 	 */
 	private $gigadriveService;
 
-	public function __construct(LoggerInterface $logger, ImgurService $imgurService, GigadriveService $gigadriveService) {
+	/**
+	 * @var FirebaseService $firebaseService
+	 */
+	private $firebaseService;
+
+	public function __construct(LoggerInterface $logger, ImgurService $imgurService, GigadriveService $gigadriveService, FirebaseService $firebaseService) {
 		$this->logger = $logger;
 		$this->imgurService = $imgurService;
 		$this->gigadriveService = $gigadriveService;
+		$this->firebaseService = $firebaseService;
 	}
 
 	/**
 	 * Uploads an image file to a remote CDN.
 	 *
-	 * @param string $data The binary file data or base64 encoded string
+	 * @param string $data The binary file data
 	 * @return string|null The final URL, null if it could not be uploaded.
 	 */
 	public function uploadImage(string $data): ?string {
 		$imgurURL = $this->imgurService->uploadImage($data);
 		if ($imgurURL) return $imgurURL;
+
+		$firebaseURL = $this->firebaseService->uploadImage($data);
+		if ($firebaseURL) return $firebaseURL;
 
 		$gigadriveURL = $this->gigadriveService->storeFileOnCDN($data);
 		if ($gigadriveURL) return $gigadriveURL;
@@ -79,5 +88,12 @@ class StorageService {
 	 */
 	public function getImgurService(): ImgurService {
 		return $this->imgurService;
+	}
+
+	/**
+	 * @return FirebaseService
+	 */
+	public function getFirebaseService(): FirebaseService {
+		return $this->firebaseService;
 	}
 }

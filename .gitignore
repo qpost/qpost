@@ -5,6 +5,7 @@ config.php
 node_modules
 public/build
 assets/ts/config.json
+/firebase_service_account.json
 
 
 ###> symfony/framework-bundle ###
