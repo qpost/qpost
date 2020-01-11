@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -50,6 +50,7 @@ import ProfileDropdown from "./ProfileDropdown";
 import UserBlockedAlert from "../../Component/UserBlockedAlert";
 import FollowersYouKnow from "../../Component/FollowersYouKnow";
 import ProfileHeader from "./ProfileHeader";
+import Replies from "./Replies";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -212,6 +213,12 @@ export default class Profile extends Component<any, {
 												redirect: "/" + user.getUsername()
 											});
 											break;
+										case "REPLIES":
+											this.setState({
+												activeMenuPoint: key,
+												redirect: "/" + user.getUsername() + "/replies"
+											});
+											break;
 										case "FOLLOWING":
 											this.setState({
 												activeMenuPoint: key,
@@ -238,6 +245,10 @@ export default class Profile extends Component<any, {
 								Posts ({formatNumberShort(user.getTotalPostCount())})
 							</Menu.Item>
 
+							<Menu.Item key={"REPLIES"}>
+								Replies
+							</Menu.Item>
+
 							<Menu.Item key={"FOLLOWING"}>
 								Following ({formatNumberShort(user.getFollowingCount())})
 							</Menu.Item>
@@ -258,6 +269,8 @@ export default class Profile extends Component<any, {
 								   render={(props) => <Followers {...props} user={this.state.user} parent={this}/>}/>
 							<Route path={"/:username/favorites"}
 								   render={(props) => <Favorites {...props} user={this.state.user} parent={this}/>}/>
+							<Route path={"/:username/replies"}
+								   render={(props) => <Replies {...props} user={this.state.user} parent={this}/>}/>
 							<Route path={"/:username"}
 								   render={(props) => <Posts {...props} user={this.state.user} parent={this}/>}/>
 						</Switch>

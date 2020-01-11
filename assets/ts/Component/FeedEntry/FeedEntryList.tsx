@@ -33,7 +33,8 @@ import {Spin} from "antd";
 export default class FeedEntryList extends Component<{
 	user?: User,
 	searchQuery?: string,
-	disableTask?: boolean
+	disableTask?: boolean,
+	type?: "posts" | "replies"
 }, {
 	entries: FeedEntry[] | null,
 	error: string | null,
@@ -99,6 +100,7 @@ export default class FeedEntryList extends Component<{
 		} : {};
 
 		parameters["min"] = this.state.entries[0].getId();
+		parameters["type"] = this.props.type || "posts";
 
 		API.handleRequest("/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = [];
@@ -141,6 +143,8 @@ export default class FeedEntryList extends Component<{
 			parameters["query"] = this.props.searchQuery;
 			if (this.state.entries && this.state.entries.length != 0) parameters["offset"] = this.state.entries.length;
 		}
+
+		parameters["type"] = this.props.type || "posts";
 
 		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = this.state.entries || [];
