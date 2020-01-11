@@ -44,6 +44,7 @@ import TrendingTopics from "../../Component/TrendingTopics";
 import PageHeader from "../../Component/PageHeader";
 import LoadingFeedEntryListItem from "../../Component/FeedEntry/LoadingFeedEntryListItem";
 import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
+import LeftSidebar from "../../Component/Layout/LeftSidebar";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -105,12 +106,12 @@ export default class Notifications extends Component<any, {
 		}
 
 		return <ContentBase>
-			<RightSidebar>
+			<LeftSidebar>
 				<SidebarStickyContent>
 					<HomeFeedProfileBox/>
 					<TrendingTopics limit={5}/>
 				</SidebarStickyContent>
-			</RightSidebar>
+			</LeftSidebar>
 
 			<PageContent leftSidebar rightSidebar>
 				<PageHeader title={"Notifications"} iconClass={"fas fa-bell"}/>
