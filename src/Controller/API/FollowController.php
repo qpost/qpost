@@ -345,6 +345,7 @@ class FollowController extends AbstractController {
 			 * @var Follower[] $followers
 			 */
 			$followers = $builder->orderBy("f.time", "DESC")
+				->setMaxResults(30)
 				->getQuery()
 				->useQueryCache(true)
 				->getResult();
