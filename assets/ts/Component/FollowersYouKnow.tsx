@@ -44,7 +44,7 @@ export default class FollowersYouKnow extends Component<{
 	componentDidMount(): void {
 		API.handleRequest("/followersyouknow", "GET", {
 			target: this.props.user.getId(),
-			limit: 10
+			limit: 4 * 3
 		}, data => {
 			if (data.results) {
 				const users: User[] = this.state.users || [];
