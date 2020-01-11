@@ -114,7 +114,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->getSingleScalarResult();
 	}
 
-	public function getFeed(?User $from, ?User $target = null, int $min = null, int $max = null): array {
+	public function getFeed(?User $from, ?User $target = null, int $min = null, int $max = null, string $type = "posts"): array {
 		$rsm = $this->createResultSetMappingBuilder("f");
 		$rsm->addScalarResult("favoriteCount", "favoriteCount", "integer");
 		$rsm->addScalarResult("replyCount", "replyCount", "integer");
@@ -123,6 +123,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 		$rsm->addScalarResult("shared", "shared", "boolean");
 
 		$ownerWhere = is_null($target) ? "(EXISTS (SELECT 1 FROM follower AS ff WHERE ff.sender_id = ? AND ff.receiver_id = u.id) OR u.id = ?)" : "f.user_id = ?";
+		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY')";
 
 		$parameters[] = is_null($from) ? 0 : $from->getId();
 		$parameters[] = is_null($from) ? 0 : $from->getId();
@@ -165,7 +166,7 @@ FROM feed_entry AS f
 WHERE " . $ownerWhere . (is_null($target) ? " AND u.privacy_level != 'CLOSED'" : "") . " AND (f.text IS NULL OR f.text NOT LIKE '@%')
 " . (!is_null($min) ? " AND f.id > ?" : "") . "
 " . (!is_null($max) ? " AND f.id < ?" : "") . "
-AND ((f.type = 'POST' AND f.parent_id IS NULL) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))
+AND " . $typeWhere . "
 GROUP BY f.id
 ORDER BY f.time DESC
 LIMIT 30", $rsm);

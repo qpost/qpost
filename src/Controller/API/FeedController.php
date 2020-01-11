@@ -50,6 +50,7 @@ class FeedController extends AbstractController {
 		$target = null;
 		$max = null;
 		$min = null;
+		$type = "posts";
 
 		// verify target
 		if ($parameters->has("user")) {
@@ -90,12 +91,21 @@ class FeedController extends AbstractController {
 			}
 		}
 
+		// verify type
+		if ($parameters->has("type")) {
+			$type = $parameters->get("type");
+
+			if (!($type === "posts" || $type === "replies")) {
+				return $apiService->json(["error" => "'type' has to be either 'posts' or 'replies'."], 400);
+			}
+		}
+
 		$results = [];
 
 		/**
 		 * @var FeedEntry[] $feedEntries
 		 */
-		$feedEntries = $entryRepository->getFeed($user, $target, $min, $max);
+		$feedEntries = $entryRepository->getFeed($user, $target, $min, $max, $type);
 
 		foreach ($feedEntries as $feedEntry) {
 			if (!$apiService->mayView($feedEntry)) continue;
