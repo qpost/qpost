@@ -29,6 +29,7 @@ import Empty from "antd/es/empty";
 import "antd/es/empty/style";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
+import Storage from "../../Util/Storage";
 
 export default class FeedEntryList extends Component<{
 	user?: User,
@@ -48,8 +49,10 @@ export default class FeedEntryList extends Component<{
 	constructor(props) {
 		super(props);
 
+		const storedEntries = Storage.sessionGet(this.storageName());
+
 		this.state = {
-			entries: null,
+			entries: storedEntries ? BaseObject.convertArray(FeedEntry, JSON.parse(storedEntries)) : null,
 			error: null,
 			loadingMore: false,
 			hasMore: true,
@@ -125,6 +128,8 @@ export default class FeedEntryList extends Component<{
 				loadingMore: false
 			});
 
+			this.saveToStorage();
+
 			this.loadNewTask();
 		}, error => {
 			this.setState({error, loadingMore: false});
@@ -157,6 +162,8 @@ export default class FeedEntryList extends Component<{
 				hasMore: data.results.length === 0 ? false : this.state.hasMore
 			});
 
+			this.saveToStorage();
+
 			this.loadNewTask();
 		}, error => {
 			if (error === "You are not allowed to view this resource.") {
@@ -165,6 +172,16 @@ export default class FeedEntryList extends Component<{
 				this.setState({error, loadingMore: false, hasMore: false});
 			}
 		});
+	}
+
+	private saveToStorage(): void {
+		const name: string = this.storageName();
+
+		Storage.sessionSet(name, JSON.stringify(this.state.entries), 3);
+	}
+
+	private storageName(): string {
+		return Storage.SESSION_FEED_ENTRY_LIST + "_" + (this.props.user ? this.props.user.getId() : "0") + (this.props.type) + (this.props.searchQuery ? "_" + this.props.searchQuery : "");
 	}
 
 	private loadNewTask(): void {
