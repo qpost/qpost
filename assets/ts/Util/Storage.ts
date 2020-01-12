@@ -17,6 +17,8 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+import {sleep} from "./Thread";
+
 export default class Storage {
 	public static readonly SESSION_TRENDING_TOPICS = "trendingTopics";
 	public static readonly SESSION_UPCOMING_BIRTHDAYS = "upcomingBirthdays";
@@ -49,5 +51,22 @@ export default class Storage {
 		};
 
 		window.sessionStorage.setItem(key, JSON.stringify(newValue))
+	}
+
+	public static clean(): void {
+		for (let i = 0; i < window.sessionStorage.length; i++) {
+			Storage.sessionGet(window.sessionStorage.key(i)); // call get, which automatically removes expired items
+		}
+	}
+
+	public static cleanTask(): void {
+		// periodically clean expired items to avoid storage limit
+
+		// https://stackoverflow.com/a/48882182/4117923
+		(async () => {
+			Storage.clean();
+			await sleep(3000);
+			Storage.cleanTask();
+		})();
 	}
 }

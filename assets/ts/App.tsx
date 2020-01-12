@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -60,6 +60,7 @@ import Analytics from "react-router-ga";
 import SearchRedirect from "./Pages/Search/SearchRedirect";
 import PushNotificationsManager from "./PushNotificationsManager";
 import BadgeUpdater from "./BadgeUpdater";
+import Storage from "./Util/Storage";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -75,6 +76,8 @@ export default class App extends Component<any, any> {
 		if ($("#root").length) {
 			NightMode.init();
 		}
+
+		Storage.cleanTask();
 	}
 
 	componentDidMount(): void {
