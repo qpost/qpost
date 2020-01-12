@@ -119,14 +119,20 @@ export default class FeedEntryList extends Component<{
 				entries.push(feedEntry);
 			});
 
+			console.log("1 - ", entries.length, data.results.length, this.state.entries.length);
+
 			if (this.state.entries) {
+				console.log(this.state.entries);
 				this.state.entries.forEach(entry => entries.push(entry));
+				console.log("2 - ", entries.length);
 			}
 
 			this.setState({
 				entries,
 				loadingMore: false
 			});
+
+			console.log("3 - ", this.state.entries.length);
 
 			this.saveToStorage();
 
@@ -152,7 +158,7 @@ export default class FeedEntryList extends Component<{
 		}
 
 		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
-			let entries: FeedEntry[] = this.state.entries || [];
+			let entries: FeedEntry[] = (this.state.entries && max ? this.state.entries : null) || [];
 
 			data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
 
@@ -162,9 +168,11 @@ export default class FeedEntryList extends Component<{
 				hasMore: data.results.length === 0 ? false : this.state.hasMore
 			});
 
+			console.log("asd", this.state.entries.length);
+
 			this.saveToStorage();
 
-			this.loadNewTask();
+			if (!max) this.loadNewTask();
 		}, error => {
 			if (error === "You are not allowed to view this resource.") {
 				this.setState({error, loadingMore: false, hasMore: false, privateWarning: true});
@@ -175,9 +183,15 @@ export default class FeedEntryList extends Component<{
 	}
 
 	private saveToStorage(): void {
+		const limit: number = 30;
 		const name: string = this.storageName();
 
-		Storage.sessionSet(name, JSON.stringify(this.state.entries), 3);
+		let entries = this.state.entries.slice(0);
+		if (entries) {
+			entries.length = Math.min(limit, entries.length);
+		}
+
+		Storage.sessionSet(name, JSON.stringify(entries), 3);
 	}
 
 	private storageName(): string {
