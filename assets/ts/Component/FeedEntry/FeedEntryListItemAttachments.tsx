@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -49,7 +49,9 @@ export default class FeedEntryListItemAttachments extends Component<{
 					</div>;
 				case MediaFileType.IMAGE:
 					if (mediaFile.getURL().endsWith(".gif")) {
-						return <GifPlayer gif={mediaFile.getURL()} still={stillGIFURL(mediaFile.getURL())}/>;
+						return <div className={"mt-2"}>
+							<GifPlayer gif={mediaFile.getURL()} still={stillGIFURL(mediaFile.getURL())}/>
+						</div>;
 					}
 			}
 		}
