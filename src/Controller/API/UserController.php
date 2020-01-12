@@ -110,7 +110,7 @@ class UserController extends AbstractController {
 								$birthday = $parameters->get("birthday");
 
 								if (is_null($birthday) || ($birthdayTime = strtotime($birthday))) {
-									if (isset($birthdayTime) && $birthdayTime && ($birthdayTime >= time() - (13 * 365 * 24 * 60 * 60) || $birthdayTime >= time() - (120 * 365 * 24 * 60 * 60))) {
+									if (isset($birthdayTime) && $birthdayTime && ($birthdayTime >= time() - (13 * 365 * 24 * 60 * 60) || $birthdayTime <= time() - (120 * 365 * 24 * 60 * 60))) {
 										return $apiService->json(["error" => "You have to be at least 13 years old and at the most 120 years old."], 400);
 									}
 
