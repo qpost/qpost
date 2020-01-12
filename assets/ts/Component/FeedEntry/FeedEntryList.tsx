@@ -181,7 +181,7 @@ export default class FeedEntryList extends Component<{
 	}
 
 	private storageName(): string {
-		return Storage.SESSION_FEED_ENTRY_LIST + "_" + (this.props.user ? this.props.user.getId() : "0") + (this.props.type) + (this.props.searchQuery ? "_" + this.props.searchQuery : "");
+		return Storage.SESSION_FEED_ENTRY_LIST + "_" + (this.props.user ? this.props.user.getId() : "0") + "_" + (this.props.type || "posts") + (this.props.searchQuery ? "_" + this.props.searchQuery : "");
 	}
 
 	private loadNewTask(): void {
