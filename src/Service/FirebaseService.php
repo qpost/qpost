@@ -26,6 +26,7 @@ use Google\Cloud\Storage\Bucket;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Storage;
 use Psr\Log\LoggerInterface;
+use function file_exists;
 use const DIRECTORY_SEPARATOR;
 
 class FirebaseService {
@@ -58,15 +59,19 @@ class FirebaseService {
 		$this->logger = $logger;
 		$this->serviceAccountFile = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $_ENV["FIREBASE_SERVICE_ACCOUNT_CREDENTIALS"];
 
-		$this->factory = (new Factory())
-			->withServiceAccount($this->serviceAccountFile);
+		if (file_exists($this->serviceAccountFile)) {
+			$this->factory = (new Factory())
+				->withServiceAccount($this->serviceAccountFile);
 
-		$this->storage = $this->factory->createStorage();
+			$this->storage = $this->factory->createStorage();
 
-		$this->bucket = $this->storage->getBucket($_ENV["FIREBASE_BUCKET_NAME"]);
+			$this->bucket = $this->storage->getBucket($_ENV["FIREBASE_BUCKET_NAME"]);
+		}
 	}
 
 	public function uploadImage(string $data): ?string {
+		if (is_null($this->bucket)) return null;
+
 		try {
 			$object = $this->bucket->upload($data, [
 				"name" => $_ENV["APP_ENV"] . "-" . (new DateTime("now"))->format("Y-m-d-H-i-s") . ".png"
