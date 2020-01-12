@@ -183,7 +183,7 @@ export default class FeedEntryList extends Component<{
 	}
 
 	private saveToStorage(): void {
-		const limit: number = 30;
+		const limit: number = 15;
 		const name: string = this.storageName();
 
 		let entries = this.state.entries.slice(0);

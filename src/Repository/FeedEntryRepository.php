@@ -169,7 +169,7 @@ WHERE " . $ownerWhere . (is_null($target) ? " AND u.privacy_level != 'CLOSED'" :
 AND " . $typeWhere . "
 GROUP BY f.id
 ORDER BY f.time DESC
-LIMIT 30", $rsm);
+LIMIT 15", $rsm);
 
 		foreach ($parameters as $index => $parameter) {
 			$query = $query->setParameter($index, $parameter);
