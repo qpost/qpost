@@ -40,18 +40,28 @@ export default class BaseObject {
 			if (result instanceof FeedEntry) {
 				const user = result.getUser();
 
-				if (user && user.getId() === currentUser.getId()) {
-					Auth.setCurrentUser(user);
+				if (user) {
+					user.saveToStorage();
+
+					if (user.getId() === currentUser.getId()) {
+						Auth.setCurrentUser(user);
+					}
 				}
 			} else if (result instanceof User) {
+				result.saveToStorage();
+
 				if (result.getId() === currentUser.getId()) {
 					Auth.setCurrentUser(result);
 				}
 			} else if (result instanceof Notification) {
 				let user = result.getUser();
 
-				if (user && user.getId() === currentUser.getId()) {
-					Auth.setCurrentUser(user);
+				if (user) {
+					user.saveToStorage();
+
+					if (user.getId() === currentUser.getId()) {
+						Auth.setCurrentUser(user);
+					}
 				}
 			}
 		}
@@ -76,18 +86,28 @@ export default class BaseObject {
 				if (r instanceof FeedEntry) {
 					const user = r.getUser();
 
-					if (user && user.getId() === currentUser.getId()) {
-						Auth.setCurrentUser(user);
+					if (user) {
+						user.saveToStorage();
+
+						if (user.getId() === currentUser.getId()) {
+							Auth.setCurrentUser(user);
+						}
 					}
 				} else if (r instanceof User) {
+					r.saveToStorage();
+
 					if (r.getId() === currentUser.getId()) {
 						Auth.setCurrentUser(r);
 					}
 				} else if (r instanceof Notification) {
 					let user = r.getUser();
 
-					if (user && user.getId() === currentUser.getId()) {
-						Auth.setCurrentUser(user);
+					if (user) {
+						user.saveToStorage();
+
+						if (user.getId() === currentUser.getId()) {
+							Auth.setCurrentUser(user);
+						}
 					}
 				}
 			})

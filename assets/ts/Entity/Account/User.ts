@@ -19,6 +19,7 @@
 
 import {JsonObject, JsonProperty} from "json2typescript";
 import Feature from "./Feature";
+import Storage from "../../Util/Storage";
 
 @JsonObject("User")
 export default class User {
@@ -158,5 +159,9 @@ export default class User {
 		}
 
 		return false;
+	}
+
+	public saveToStorage(): void {
+		Storage.sessionSet(Storage.SESSION_USER + "_" + this.id, JSON.stringify(this), 3);
 	}
 }

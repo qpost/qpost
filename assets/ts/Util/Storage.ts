@@ -22,6 +22,7 @@ export default class Storage {
 	public static readonly SESSION_UPCOMING_BIRTHDAYS = "upcomingBirthdays";
 	public static readonly SESSION_SUGGESTED_USERS = "suggestedUsers";
 	public static readonly SESSION_FEED_ENTRY_LIST = "feedEntryList";
+	public static readonly SESSION_USER = "user";
 
 	public static sessionGet(key) {
 		const stringValue = window.sessionStorage.getItem(key);
