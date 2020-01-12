@@ -184,8 +184,14 @@ export default class Status extends Component<any, {
 								<FeedEntryListItemAttachments entry={status}/>
 							</div> : ""}
 
+							<p className={"timestamp"}>
+								<i className={"far fa-clock"}/> {new Date(status.getTime()).toLocaleString()}
+							</p>
+
+							<hr className={"mb-0"}/>
+
 							<div className={"actionButtons"}>
-								<FeedEntryActionButtons entry={status}/>
+								<FeedEntryActionButtons entry={status} reduceMargin={true}/>
 							</div>
 						</Card>
 

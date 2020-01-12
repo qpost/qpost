@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -27,7 +27,8 @@ import FeedEntryListItem from "../FeedEntryListItem";
 
 export default class FeedEntryActionButtons extends Component<{
 	entry: FeedEntry,
-	parent?: FeedEntryListItem
+	parent?: FeedEntryListItem,
+	reduceMargin?: boolean
 }, any> {
 	constructor(props) {
 		super(props);
@@ -38,10 +39,11 @@ export default class FeedEntryActionButtons extends Component<{
 
 		return <div className={"row w-100 ml-0"}>
 			<div className={"d-block w-100"} onClick={(e) => e.stopPropagation()}>
-				<div className={"feedEntryButtonHolder"} style={this.props.parent ? {
-					marginRight: "-15px",
-					marginLeft: "-15px"
-				} : {}}>
+				<div className={"feedEntryButtonHolder" + (this.props.reduceMargin ? " reduceMargin" : "")}
+					 style={this.props.parent ? {
+						 marginRight: "-15px",
+						 marginLeft: "-15px"
+					 } : {}}>
 					<ReplyButton entry={entry} parent={this}/>
 
 					<ShareButton entry={entry} parent={this}/>
