@@ -162,6 +162,7 @@ export default class User {
 	}
 
 	public saveToStorage(): void {
-		Storage.sessionSet(Storage.SESSION_USER + "_" + this.username, JSON.stringify(this), 3);
+		Storage.sessionSet(Storage.SESSION_USER + "_" + this.username
+			, JSON.stringify(this), 3);
 	}
 }

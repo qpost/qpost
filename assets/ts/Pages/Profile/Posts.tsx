@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -33,7 +33,7 @@ export default class Posts extends Component<ProfilePageProps, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return [
 			Auth.isLoggedIn() && Auth.getCurrentUser().getId() === this.props.user.getId() ? <DummyPostForm/> : "",
-			<FeedEntryList user={this.props.user}/>
+			<FeedEntryList userID={this.props.user.getId()}/>
 		];
 	}
 }

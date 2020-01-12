@@ -29,6 +29,6 @@ export default class Replies extends Component<ProfilePageProps, any> {
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <FeedEntryList user={this.props.user} type={"replies"}/>;
+		return <FeedEntryList userID={this.props.user.getId()} type={"replies"}/>;
 	}
 }

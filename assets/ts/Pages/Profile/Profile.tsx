@@ -51,6 +51,7 @@ import UserBlockedAlert from "../../Component/UserBlockedAlert";
 import FollowersYouKnow from "../../Component/FollowersYouKnow";
 import ProfileHeader from "./ProfileHeader";
 import Replies from "./Replies";
+import Storage from "../../Util/Storage";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -78,6 +79,11 @@ export default class Profile extends Component<any, {
 		const username = this.props.match.params.username;
 
 		if (username) {
+			const stored = Storage.sessionGet(Storage.SESSION_USER + "_" + username);
+			this.setState({
+				user: BaseObject.convertObject(User, JSON.parse(stored))
+			});
+
 			API.handleRequest("/user", "GET", {user: username}, (data) => {
 				if (data.result) {
 					const user = BaseObject.convertObject(User, data.result);

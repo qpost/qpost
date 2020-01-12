@@ -21,7 +21,6 @@ import React, {Component} from "react";
 import {Alert} from "reactstrap";
 import FeedEntryListItem from "./FeedEntryListItem";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
-import User from "../../Entity/Account/User";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
@@ -32,7 +31,7 @@ import {Spin} from "antd";
 import Storage from "../../Util/Storage";
 
 export default class FeedEntryList extends Component<{
-	user?: User,
+	userID?: number,
 	searchQuery?: string,
 	disableTask?: boolean,
 	type?: "posts" | "replies"
@@ -74,8 +73,8 @@ export default class FeedEntryList extends Component<{
 		FeedEntryList.instance = null;
 	}
 
-	componentDidUpdate(prevProps: Readonly<{ user?: User; searchQuery?: string }>, prevState: Readonly<{ entries: FeedEntry[] | null; error: string | null; loadingMore: boolean; hasMore: boolean; loadNewTask: any }>, snapshot?: any): void {
-		if (this.props.user !== prevProps.user || this.props.searchQuery !== prevProps.searchQuery) {
+	componentDidUpdate(prevProps: Readonly<{ userID?: number; searchQuery?: string; disableTask?: boolean; type?: "posts" | "replies" }>, prevState: Readonly<{ entries: FeedEntry[] | null; error: string | null; loadingMore: boolean; hasMore: boolean; loadNewTask: any; privateWarning: boolean }>, snapshot?: any): void {
+		if (this.props.userID !== prevProps.userID || this.props.searchQuery !== prevProps.searchQuery) {
 			this.setState({
 				entries: null,
 				error: null,
@@ -98,8 +97,8 @@ export default class FeedEntryList extends Component<{
 	loadNew() {
 		if (this.state.entries === null || this.state.entries.length === 0) return;
 
-		const parameters = this.props.user ? {
-			user: this.props.user.getId()
+		const parameters = this.props.userID ? {
+			user: this.props.userID
 		} : {};
 
 		parameters["min"] = this.state.entries[0].getId();
@@ -144,8 +143,8 @@ export default class FeedEntryList extends Component<{
 	}
 
 	load(max?: number) {
-		const parameters = this.props.user ? {
-			user: this.props.user.getId()
+		const parameters = this.props.userID ? {
+			user: this.props.userID
 		} : {};
 
 		if (max) parameters["max"] = max;
@@ -195,7 +194,7 @@ export default class FeedEntryList extends Component<{
 	}
 
 	private storageName(): string {
-		return Storage.SESSION_FEED_ENTRY_LIST + "_" + (this.props.user ? this.props.user.getId() : "0") + "_" + (this.props.type || "posts") + (this.props.searchQuery ? "_" + this.props.searchQuery : "");
+		return Storage.SESSION_FEED_ENTRY_LIST + "_" + (this.props.userID ? this.props.userID : "0") + "_" + (this.props.type || "posts") + (this.props.searchQuery ? "_" + this.props.searchQuery : "");
 	}
 
 	private loadNewTask(): void {
