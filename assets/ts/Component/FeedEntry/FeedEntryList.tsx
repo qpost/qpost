@@ -147,9 +147,9 @@ export default class FeedEntryList extends Component<{
 			parameters["type"] = "post";
 			parameters["query"] = this.props.searchQuery;
 			if (this.state.entries && this.state.entries.length != 0) parameters["offset"] = this.state.entries.length;
+		} else {
+			parameters["type"] = this.props.type || "posts";
 		}
-
-		parameters["type"] = this.props.type || "posts";
 
 		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = this.state.entries || [];
