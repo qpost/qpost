@@ -232,7 +232,7 @@ export default class EditProfile extends Component<any, {
 									this.setState({birthday: undefined});
 								}
 							}} disabledDate={current => {
-								return current >= moment().subtract(13, "years");
+								return current >= moment().subtract(13, "years") || current <= moment().subtract(120, "years");
 							}}/>
 						</Col>
 					</Row>
