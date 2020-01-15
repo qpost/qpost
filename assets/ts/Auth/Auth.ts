@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -79,22 +79,24 @@ export default class Auth {
 			}
 		} else {
 			this.killPushSubscription(() => {
-				API.handleRequest("/token", "DELETE", {
-					id: this.getToken()
-				}, () => {
-					this.setToken(undefined);
-					this.setCurrentUser(undefined);
+				if (this.getToken()) {
+					API.handleRequest("/token", "DELETE", {
+						id: this.getToken()
+					}, () => {
+						this.setToken(undefined);
+						this.setCurrentUser(undefined);
 
-					if (!noRedirect) {
-						if (window["ReactNativeWebView"]) {
-							window.location.href = "/login";
-						} else {
-							window.location.href = "/";
+						if (!noRedirect) {
+							if (window["ReactNativeWebView"]) {
+								window.location.href = "/login";
+							} else {
+								window.location.href = "/";
+							}
 						}
-					}
-				}, error => {
-					message.error(error);
-				});
+					}, error => {
+						message.error(error);
+					});
+				}
 			});
 		}
 	}
