@@ -64,14 +64,6 @@ export default class FeedEntryListItem extends Component<{
 		let entry: FeedEntry = this.props.entry;
 		let user: User = entry.getUser();
 
-		if (this.state.redirect) {
-			const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
-
-			sessionStorage.setItem("nextFeedEntry", JSON.stringify(entry));
-
-			return <Redirect push to={"/r/status/" + id}/>;
-		}
-
 		switch (entry.getType()) {
 			case FeedEntryType.POST:
 			case FeedEntryType.SHARE:
@@ -97,6 +89,14 @@ export default class FeedEntryListItem extends Component<{
 					if (!user) {
 						return "";
 					}
+				}
+
+				if (this.state.redirect) {
+					const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
+
+					sessionStorage.setItem("nextFeedEntry", JSON.stringify(entry));
+
+					return <Redirect push to={"/r/status/" + id}/>;
 				}
 
 				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} onClick={(e) => {
