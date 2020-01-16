@@ -88,7 +88,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 								width: "50%",
 								position: "relative",
 								height: "100%"
-							}} onClick={(e) => this.clickHandler(e, 0)}>
+							}} onClick={(e) => this.clickHandler(e, i)}>
 								<div className={"border border-mainColor bg-dark" + (i === 1 ? " border-left-0" : "")}
 									 style={{
 										 maxHeight: "500px",
