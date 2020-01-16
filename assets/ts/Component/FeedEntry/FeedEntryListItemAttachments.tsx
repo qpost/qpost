@@ -78,7 +78,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 				</div>;
 			} else if (attachments.length === 2) {
 				return <div style={{
-					height: "537px",
+					height: "500px",
 					width: "100%",
 					overflow: "hidden"
 				}} className={!this.props.entry.getText() ? " mt-2" : ""}>
