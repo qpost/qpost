@@ -37,7 +37,7 @@ class SettingsController extends AbstractController {
 		));
 	}
 
-	public function renderAction(string $headline, string $template, string $canonicalURL, array $additionalParameters = []) {
+	private function renderAction(string $headline, string $template, string $canonicalURL, array $additionalParameters = []) {
 		return $this->render($template, array_merge(Twig::param([
 			"title" => $headline,
 			MiscConstants::CANONICAL_URL => $canonicalURL
