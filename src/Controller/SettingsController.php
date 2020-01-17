@@ -38,6 +38,96 @@ class SettingsController extends AbstractController {
 		));
 	}
 
+	/**
+	 * @Route("/account/preferences/appearance")
+	 */
+	public function preferencesAppearance() {
+		return $this->renderAction("Appearance", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/preferences/content")
+	 */
+	public function preferencesContent() {
+		return $this->renderAction("Content settings", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_CONTENT, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/relationships/following")
+	 */
+	public function relationshipsFollowing() {
+		return $this->renderAction("Following", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWING, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/relationships/followers")
+	 */
+	public function relationshipsFollowers() {
+		return $this->renderAction("Followers", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWERS, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/relationships/blocked")
+	 */
+	public function relationshipsBlocked() {
+		return $this->renderAction("Blocked accounts", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIP_BLOCKED, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/account/information")
+	 */
+	public function accountInformation() {
+		return $this->renderAction("Account information", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/account/username")
+	 */
+	public function accountUsername() {
+		return $this->renderAction("Change username", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/account/password")
+	 */
+	public function accountPassword() {
+		return $this->renderAction("Change password", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/account/sessions")
+	 */
+	public function accountSessions() {
+		return $this->renderAction("Active sessions", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/account/privacy")
+	 */
+	public function privacy() {
+		return $this->renderAction("Privacy", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PRIVACY, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
 	private function renderAction(string $headline, string $template, ?string $activeMenuPoint, string $canonicalURL, array $additionalParameters = []) {
 		return $this->render($template, array_merge(Twig::param([
 			"title" => $headline,
