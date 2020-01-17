@@ -42,7 +42,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/preferences/appearance")
 	 */
 	public function preferencesAppearance() {
-		return $this->renderAction("Appearance", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, $this->generateUrl(
+		return $this->renderAction("Appearance", "settings/preferences/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -51,7 +51,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/preferences/content")
 	 */
 	public function preferencesContent() {
-		return $this->renderAction("Content settings", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_CONTENT, $this->generateUrl(
+		return $this->renderAction("Content settings", "settings/preferences/content.html.twig", SettingsNavigationPoint::PREFERENCES_CONTENT, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -60,7 +60,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/relationships/following")
 	 */
 	public function relationshipsFollowing() {
-		return $this->renderAction("Following", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWING, $this->generateUrl(
+		return $this->renderAction("Following", "settings/relationships/following.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWING, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -69,7 +69,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/relationships/followers")
 	 */
 	public function relationshipsFollowers() {
-		return $this->renderAction("Followers", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWERS, $this->generateUrl(
+		return $this->renderAction("Followers", "settings/relationships/followers.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWERS, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -78,7 +78,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/relationships/blocked")
 	 */
 	public function relationshipsBlocked() {
-		return $this->renderAction("Blocked accounts", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIP_BLOCKED, $this->generateUrl(
+		return $this->renderAction("Blocked accounts", "settings/relationships/blocked.html.twig", SettingsNavigationPoint::RELATIONSHIP_BLOCKED, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -87,7 +87,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/account/information")
 	 */
 	public function accountInformation() {
-		return $this->renderAction("Account information", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION, $this->generateUrl(
+		return $this->renderAction("Account information", "settings/account/information.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -96,7 +96,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/account/username")
 	 */
 	public function accountUsername() {
-		return $this->renderAction("Change username", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME, $this->generateUrl(
+		return $this->renderAction("Change username", "settings/account/username.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -105,7 +105,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/account/password")
 	 */
 	public function accountPassword() {
-		return $this->renderAction("Change password", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD, $this->generateUrl(
+		return $this->renderAction("Change password", "settings/account/password.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -114,7 +114,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/account/sessions")
 	 */
 	public function accountSessions() {
-		return $this->renderAction("Active sessions", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS, $this->generateUrl(
+		return $this->renderAction("Active sessions", "settings/account/sessions.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
@@ -123,7 +123,7 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/privacy")
 	 */
 	public function privacy() {
-		return $this->renderAction("Privacy", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PRIVACY, $this->generateUrl(
+		return $this->renderAction("Privacy", "settings/privacy/privacy.html.twig", SettingsNavigationPoint::PRIVACY, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
