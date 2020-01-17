@@ -30,7 +30,7 @@ use function array_merge;
 
 class SettingsController extends AbstractController {
 	/**
-	 * @Route("/account/profile/appearance")
+	 * @Route("/settings/profile/appearance")
 	 */
 	public function profileAppearance() {
 		return $this->renderAction("Edit profile", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PROFILE_APPEARANCE, $this->generateUrl(
@@ -39,7 +39,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/preferences/appearance")
+	 * @Route("/settings/preferences/appearance")
 	 */
 	public function preferencesAppearance() {
 		return $this->renderAction("Appearance", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, $this->generateUrl(
@@ -48,7 +48,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/preferences/content")
+	 * @Route("/settings/preferences/content")
 	 */
 	public function preferencesContent() {
 		return $this->renderAction("Content settings", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_CONTENT, $this->generateUrl(
@@ -57,7 +57,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/relationships/following")
+	 * @Route("/settings/relationships/following")
 	 */
 	public function relationshipsFollowing() {
 		return $this->renderAction("Following", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWING, $this->generateUrl(
@@ -66,7 +66,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/relationships/followers")
+	 * @Route("/settings/relationships/followers")
 	 */
 	public function relationshipsFollowers() {
 		return $this->renderAction("Followers", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWERS, $this->generateUrl(
@@ -75,7 +75,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/relationships/blocked")
+	 * @Route("/settings/relationships/blocked")
 	 */
 	public function relationshipsBlocked() {
 		return $this->renderAction("Blocked accounts", "settings/profile/appearance.html.twig", SettingsNavigationPoint::RELATIONSHIP_BLOCKED, $this->generateUrl(
@@ -84,7 +84,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/account/information")
+	 * @Route("/settings/account/information")
 	 */
 	public function accountInformation() {
 		return $this->renderAction("Account information", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION, $this->generateUrl(
@@ -93,7 +93,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/account/username")
+	 * @Route("/settings/account/username")
 	 */
 	public function accountUsername() {
 		return $this->renderAction("Change username", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME, $this->generateUrl(
@@ -102,7 +102,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/account/password")
+	 * @Route("/settings/account/password")
 	 */
 	public function accountPassword() {
 		return $this->renderAction("Change password", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD, $this->generateUrl(
@@ -111,7 +111,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/account/sessions")
+	 * @Route("/settings/account/sessions")
 	 */
 	public function accountSessions() {
 		return $this->renderAction("Active sessions", "settings/profile/appearance.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS, $this->generateUrl(
@@ -120,7 +120,7 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/account/privacy")
+	 * @Route("/settings/privacy")
 	 */
 	public function privacy() {
 		return $this->renderAction("Privacy", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PRIVACY, $this->generateUrl(
