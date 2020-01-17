@@ -66,6 +66,12 @@ export default class App extends Component<any, any> {
 	public static init(): void {
 		if ($("#root").length) {
 			NightMode.init();
+		} else {
+			$(".settingsNavMobileLine .collapseButton").on("click", function (e) {
+				e.preventDefault();
+
+				$(".settingsNav").toggleClass("navHidden");
+			});
 		}
 
 		Storage.cleanTask();

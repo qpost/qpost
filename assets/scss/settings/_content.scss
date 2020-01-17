@@ -17,14 +17,6 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-html.settingsPage {
-	&, body {
-		background-color: #000b17;
-		color: #FFF;
-	}
-
-	@import "column";
-	@import "content";
-	@import "navigation";
-	@import "text";
+.settingsContent {
+	padding: 0 15px;
 }

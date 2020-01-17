@@ -17,14 +17,10 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-html.settingsPage {
-	&, body {
-		background-color: #000b17;
-		color: #FFF;
+.row {
+	.col-md-4, .col-md-6 {
+		@include media-breakpoint-down(sm) {
+			padding-right: 0 !important;
+		}
 	}
-
-	@import "column";
-	@import "content";
-	@import "navigation";
-	@import "text";
 }

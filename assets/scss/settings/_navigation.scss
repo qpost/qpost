@@ -17,57 +17,94 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@include media-breakpoint-up(md) {
-	.navigationColumn {
+.settingsNavMobileLine {
+	background-color: #001529;
+
+	img {
+		height: 1.7em;
+		margin-left: 10px;
+		margin-top: 8px;
+	}
+
+	button.collapseButton {
+		background-color: darken(#001529, 5%);
+		padding: 10px 15px;
+		border: none !important;
+		outline: none !important;
+	}
+}
+
+.navigationColumn {
+	@include media-breakpoint-up(md) {
 		background-color: #001529;
 		display: flex;
 		justify-content: flex-end;
 		padding-top: 20px;
+	}
 
-		.nav.nav-pills {
+	.nav.nav-pills {
+		@include media-breakpoint-up(md) {
 			width: 200px;
+		}
 
-			.nav-item {
-				margin-bottom: 10px;
-
-				&.open {
-					.child {
-						padding-left: 40px;
-						border-radius: 0;
-
-						&:not(.active) {
-							background-color: lighten(#001529, 5%);
-						}
-					}
-
-					:first-child {
-						&:not(.active):not(i) {
-							background-color: lighten(#001529, 5%);
-						}
-					}
-				}
-
-				&:not(.open) {
-					.child {
-						display: none;
-					}
-				}
-			}
+		@include media-breakpoint-down(sm) {
+			background-color: #001529;
 
 			.dropdown-divider {
-				border-color: lighten(#001529, 15%);
-				margin-bottom: 10px;
-				margin-top: 0;
+				display: none;
+			}
+		}
+
+		.nav-item {
+			margin-bottom: 10px;
+
+			&.open {
+				.child {
+					padding-left: 40px;
+					border-radius: 0;
+
+					&:not(.active) {
+						background-color: lighten(#001529, 5%);
+					}
+				}
+
+				:first-child {
+					&:not(.active):not(i) {
+						background-color: lighten(#001529, 5%);
+					}
+				}
 			}
 
-			a {
-				color: #FFF !important;
-				border-radius: 0;
+			&:not(.open) {
+				.child {
+					display: none;
+				}
+			}
+		}
 
+		.dropdown-divider {
+			border-color: lighten(#001529, 15%);
+			margin-bottom: 10px;
+			margin-top: 0;
+		}
+
+		a {
+			color: #FFF !important;
+			border-radius: 0;
+
+			@include media-breakpoint-up(md) {
 				&:hover:not(.active) {
 					background-color: lighten(#001529, 10%);
 				}
 			}
+		}
+	}
+}
+
+@include media-breakpoint-down(md) {
+	.settingsNav {
+		&.navHidden {
+			display: none;
 		}
 	}
 }

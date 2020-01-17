@@ -1,17 +1,20 @@
 {% extends "emptyBase.html.twig" %}
 
-{% block additionalBodyClasses %}settingsPage h-100{% endblock %}
+{% block additionalHtmlClasses %}settingsPage{% endblock %}
+{% block additionalBodyClasses %}h-100{% endblock %}
 
 {% block body %}
 	<div class="row mr-0 h-md-100">
 		<div class="col-md-4 h-md-100 navigationColumn">
 			{% block navigation %}
-				{% include "settings/navigation/index.html.twig" %}
+				{% include "settings/navigation.html.twig" %}
 			{% endblock %}
 		</div>
 
 		<div class="col-md-6 h-md-100">
-			{% block content %}{% endblock %}
+			<div class="settingsContent">
+				{% block content %}{% endblock %}
+			</div>
 		</div>
 	</div>
 {% endblock %}
