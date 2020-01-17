@@ -5,4 +5,31 @@
 	{{ macro.settingsHeadline("Change username") }}
 
 	{% include "parts/flash.html.twig" %}
+
+	<p>
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>You can only change your username every 30 days.
+		{% if app.user.verified %}
+			<br/>
+			<i class="fas fa-info-circle iconMargin-10 text-info"></i>Changing your username results in losing your verified status.
+			<br/>
+		{% endif %}
+	</p>
+
+	<form action="{{ path("qpost_settings_accountusername") }}" method="post">
+		{% include "parts/csrf.html.twig" %}
+
+		<div class="form-group">
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">@</span>
+				</div>
+
+				<input type="text" class="form-control" id="username" name="username" value="{{ app.user.username }}"/>
+			</div>
+		</div>
+
+		<button type="submit" class="btn btn-primary btn-block">
+			Save changes
+		</button>
+	</form>
 {% endblock %}

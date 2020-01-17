@@ -45,6 +45,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use function is_string;
 use function json_decode;
@@ -88,12 +89,18 @@ class APIService {
 	 */
 	private $security;
 
-	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security) {
+	/**
+	 * @var UrlGeneratorInterface $urlGenerator
+	 */
+	private $urlGenerator;
+
+	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security, UrlGeneratorInterface $urlGenerator) {
 		$this->logger = $logger;
 		$this->entityManager = $entityManager;
 		$this->requestStack = $requestStack;
 		$this->kernel = $kernel;
 		$this->security = $security;
+		$this->urlGenerator = $urlGenerator;
 		$this->serializer = SerializerBuilder::create()
 			->setDebug($kernel->isDebug())
 			->setCacheDir(__DIR__ . "/../../var/cache/" . $kernel->getEnvironment() . "/jms")
@@ -140,6 +147,13 @@ class APIService {
 	 */
 	public function getSecurity(): Security {
 		return $this->security;
+	}
+
+	/**
+	 * @return UrlGeneratorInterface
+	 */
+	public function getUrlGenerator(): UrlGeneratorInterface {
+		return $this->urlGenerator;
 	}
 
 	/**
