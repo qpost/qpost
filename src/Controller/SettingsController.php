@@ -20,8 +20,10 @@
 
 namespace qpost\Controller;
 
+use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\SettingsNavigationPoint;
+use qpost\Entity\User;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,6 +127,16 @@ class SettingsController extends AbstractController {
 	 * @return Response
 	 */
 	public function accountPassword(Request $request) {
+		/**
+		 * @var User $user
+		 */
+		$user = $this->getUser();
+
+		if ($user->getGigadriveData()) {
+			$this->addFlash(FlashMessageType::ERROR, "You are not allowed to view that page.");
+			return $this->redirectToRoute("qpost_settings_accountinformation");
+		}
+
 		return $this->renderAction("Change password", "settings/account/password.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));

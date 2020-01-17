@@ -52,8 +52,12 @@
 			   href="{{ path("qpost_settings_accountinformation") }}">Information</a>
 			<a class="nav-link child{{ navPoint == "ACCOUNT_USERNAME" ? " active" }}"
 			   href="{{ path("qpost_settings_accountusername") }}">Username</a>
-			<a class="nav-link child{{ navPoint == "ACCOUNT_PASSWORD" ? " active" }}"
-			   href="{{ path("qpost_settings_accountpassword") }}">Password</a>
+
+			{% if not app.user.gigadriveData %}
+				<a class="nav-link child{{ navPoint == "ACCOUNT_PASSWORD" ? " active" }}"
+				   href="{{ path("qpost_settings_accountpassword") }}">Password</a>
+			{% endif %}
+
 			<a class="nav-link child{{ navPoint == "ACCOUNT_ACTIVE_SESSIONS" ? " active" }}"
 			   href="{{ path("qpost_settings_accountsessions") }}">Active
 				sessions</a>
