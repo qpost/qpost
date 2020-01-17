@@ -27,12 +27,42 @@
 		.nav.nav-pills {
 			width: 200px;
 
+			.nav-item {
+				margin-bottom: 10px;
+
+				&.open {
+					.child {
+						padding-left: 40px;
+						border-radius: 0;
+
+						&:not(.active) {
+							background-color: lighten(#001529, 5%);
+						}
+					}
+
+					:first-child {
+						&:not(.active):not(i) {
+							background-color: lighten(#001529, 5%);
+						}
+					}
+				}
+
+				&:not(.open) {
+					.child {
+						display: none;
+					}
+				}
+			}
+
 			.dropdown-divider {
 				border-color: lighten(#001529, 15%);
+				margin-bottom: 10px;
+				margin-top: 0;
 			}
 
 			a {
 				color: #FFF !important;
+				border-radius: 0;
 
 				&:hover:not(.active) {
 					background-color: lighten(#001529, 10%);
