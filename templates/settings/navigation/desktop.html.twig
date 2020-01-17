@@ -6,34 +6,36 @@
 
 		<li class="dropdown-divider"></li>
 
-		<li class="nav-item open">
-			<a class="nav-link active" href="#"><i class="fas fa-user-circle iconMargin-10"></i>Profile</a>
+		<li class="nav-item{{ navPoint in ["PROFILE_APPEARANCE"] ? " open" }}">
+			<a class="nav-link" href="#"><i class="fas fa-user-circle iconMargin-10"></i>Profile</a>
 
-			<a class="nav-link child" href="#">Appearance</a>
+			<a class="nav-link child{{ navPoint == "PROFILE_APPEARANCE" ? " active" }}" href="#">Appearance</a>
 		</li>
-		<li class="nav-item">
+		<li class="nav-item{{ navPoint in ["PREFERENCES_APPEARANCE","PREFERENCES_CONTENT"] ? " open" }}">
 			<a class="nav-link" href="#"><i class="fas fa-cog iconMargin-10"></i>Preferences</a>
 
-			<a class="nav-link child" href="#">Appearance</a>
-			<a class="nav-link child" href="#">Content</a>
+			<a class="nav-link child{{ navPoint == "PREFERENCES_APPEARANCE" ? " active" }}" href="#">Appearance</a>
+			<a class="nav-link child{{ navPoint == "PREFERENCES_CONTENT" ? " active" }}" href="#">Content</a>
 		</li>
-		<li class="nav-item">
+		<li class="nav-item{{ navPoint in ["RELATIONSHIPS_FOLLOWING","RELATIONSHIPS_FOLLOWERS","RELATIONSHIP_BLOCKED"] ? " open" }}">
 			<a class="nav-link" href="#"><i class="fas fa-users iconMargin-10"></i>Relationships</a>
 
-			<a class="nav-link child" href="#">Following</a>
-			<a class="nav-link child" href="#">Followers</a>
-			<a class="nav-link child" href="#">Blocked</a>
+			<a class="nav-link child{{ navPoint == "RELATIONSHIPS_FOLLOWING" ? " active" }}" href="#">Following</a>
+			<a class="nav-link child{{ navPoint == "RELATIONSHIPS_FOLLOWERS" ? " active" }}" href="#">Followers</a>
+			<a class="nav-link child{{ navPoint == "RELATIONSHIP_BLOCKED" ? " active" }}" href="#">Blocked</a>
 		</li>
-		<li class="nav-item">
+		<li class="nav-item{{ (navPoint in ["ACCOUNT_INFORMATION","ACCOUNT_USERNAME","ACCOUNT_PASSWORD","ACCOUNT_ACTIVE_SESSIONS"]) ? " open" }}">
 			<a class="nav-link" href="#"><i class="fas fa-user iconMargin-10"></i>Account</a>
 
-			<a class="nav-link child" href="#">Information</a>
-			<a class="nav-link child" href="#">Username</a>
-			<a class="nav-link child" href="#">Password</a>
-			<a class="nav-link child" href="#">Active sessions</a>
+			<a class="nav-link child{{ navPoint == "ACCOUNT_INFORMATION" ? " active" }}" href="#">Information</a>
+			<a class="nav-link child{{ navPoint == "ACCOUNT_USERNAME" ? " active" }}" href="#">Username</a>
+			<a class="nav-link child{{ navPoint == "ACCOUNT_PASSWORD" ? " active" }}" href="#">Password</a>
+			<a class="nav-link child{{ navPoint == "ACCOUNT_ACTIVE_SESSIONS" ? " active" }}" href="#">Active
+				sessions</a>
 		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#"><i class="fas fa-lock iconMargin-10"></i>Privacy</a>
+		<li class="nav-item{{ (navPoint in ["PRIVACY"]) ? " open" }}">
+			<a class="nav-link{{ navPoint == "PRIVACY" ? " active" }}" href="#"><i
+						class="fas fa-lock iconMargin-10"></i>Privacy</a>
 		</li>
 
 		<li class="dropdown-divider"></li>

@@ -21,6 +21,7 @@
 namespace qpost\Controller;
 
 use qpost\Constants\MiscConstants;
+use qpost\Constants\SettingsNavigationPoint;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,15 +33,16 @@ class SettingsController extends AbstractController {
 	 * @Route("/account/profile/appearance")
 	 */
 	public function profileAppearance() {
-		return $this->renderAction("Edit profile", "settings/profile/appearance.html.twig", $this->generateUrl(
+		return $this->renderAction("Edit profile", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PROFILE_APPEARANCE, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
 
-	private function renderAction(string $headline, string $template, string $canonicalURL, array $additionalParameters = []) {
+	private function renderAction(string $headline, string $template, ?string $activeMenuPoint, string $canonicalURL, array $additionalParameters = []) {
 		return $this->render($template, array_merge(Twig::param([
 			"title" => $headline,
-			MiscConstants::CANONICAL_URL => $canonicalURL
+			MiscConstants::CANONICAL_URL => $canonicalURL,
+			SettingsNavigationPoint::VARIABLE_NAME => $activeMenuPoint
 		]), $additionalParameters));
 	}
 }

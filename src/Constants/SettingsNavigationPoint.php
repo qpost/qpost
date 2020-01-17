@@ -21,6 +21,10 @@
 namespace qpost\Constants;
 
 class SettingsNavigationPoint {
+	public const VARIABLE_NAME = "navPoint";
+
+	/////////////////////////////////////////////////////
+
 	public const PROFILE_APPEARANCE = "PROFILE_APPEARANCE";
 
 	public const PREFERENCES_APPEARANCE = "PREFERENCES_APPEARANCE";
