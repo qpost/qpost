@@ -153,25 +153,6 @@ class PageController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/edit")
-	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
-	 * @return RedirectResponse|Response
-	 */
-	public function edit(Request $request, EntityManagerInterface $entityManager) {
-		$user = $this->getUser();
-
-		if ($user) {
-			return $this->render("react.html.twig", Twig::param([
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_edit", [], UrlGeneratorInterface::ABSOLUTE_URL)
-			]));
-		} else {
-			return $this->redirect($this->generateUrl("qpost_login_index"));
-		}
-	}
-
-	/**
 	 * @Route("/notifications")
 	 *
 	 * @param Request $request
