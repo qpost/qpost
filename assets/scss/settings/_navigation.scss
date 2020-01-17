@@ -17,55 +17,27 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "iconMargin";
-@import "mixins/index";
+@include media-breakpoint-up(md) {
+	.navigationColumn {
+		background-color: #001529;
+		display: flex;
+		justify-content: flex-end;
+		padding-top: 20px;
 
-.clearUnderline {
-	text-decoration: none !important;
-}
+		.nav.nav-pills {
+			width: 200px;
 
-.text-blue {
-	color: $primary !important;
-}
+			.dropdown-divider {
+				border-color: lighten(#001529, 15%);
+			}
 
-.text-mainColor {
-	color: $primary;
-}
+			a {
+				color: #FFF !important;
 
-.border-mainColor {
-	border-color: $primary !important;
-}
-
-.bg-monochrome {
-	background-color: $light;
-}
-
-.text-qp-gray {
-	color: gray !important;
-}
-
-.vertical-container {
-	height: 100vh;
-	position: relative;
-
-	.vertical-center {
-		margin: 0;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		-ms-transform: translate(-50%, -50%);
-		transform: translate(-50%, -50%);
-	}
-}
-
-.card-nopadding {
-	.ant-card-body {
-		padding: 0 !important;
-	}
-}
-
-.h-md-100 {
-	@include media-breakpoint-up(md) {
-		height: 100% !important;
+				&:hover:not(.active) {
+					background-color: lighten(#001529, 10%);
+				}
+			}
+		}
 	}
 }

@@ -17,55 +17,9 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "iconMargin";
-@import "mixins/index";
+body.settingsPage {
+	background-color: #000b17;
+	color: #FFF;
 
-.clearUnderline {
-	text-decoration: none !important;
-}
-
-.text-blue {
-	color: $primary !important;
-}
-
-.text-mainColor {
-	color: $primary;
-}
-
-.border-mainColor {
-	border-color: $primary !important;
-}
-
-.bg-monochrome {
-	background-color: $light;
-}
-
-.text-qp-gray {
-	color: gray !important;
-}
-
-.vertical-container {
-	height: 100vh;
-	position: relative;
-
-	.vertical-center {
-		margin: 0;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		-ms-transform: translate(-50%, -50%);
-		transform: translate(-50%, -50%);
-	}
-}
-
-.card-nopadding {
-	.ant-card-body {
-		padding: 0 !important;
-	}
-}
-
-.h-md-100 {
-	@include media-breakpoint-up(md) {
-		height: 100% !important;
-	}
+	@import "navigation";
 }
