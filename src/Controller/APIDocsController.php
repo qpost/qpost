@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -278,17 +278,6 @@ class APIDocsController extends AbstractController {
 		return $this->render("apidocs/user.html.twig", Twig::param([
 			"title" => "User - API documentation",
 			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_user", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
-	}
-
-	/**
-	 * @Route("/apidocs/username")
-	 * @return Response
-	 */
-	public function usernameAction() {
-		return $this->render("apidocs/username.html.twig", Twig::param([
-			"title" => "Username - API documentation",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_username", [], UrlGeneratorInterface::ABSOLUTE_URL)
 		]));
 	}
 }
