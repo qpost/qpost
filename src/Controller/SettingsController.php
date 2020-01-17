@@ -20,6 +20,9 @@
 
 namespace qpost\Controller;
 
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\SettingsNavigationPoint;
@@ -31,6 +34,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function array_merge;
+use function is_null;
+use function is_string;
+use function strlen;
+use function strtoupper;
 
 class SettingsController extends AbstractController {
 	/**
@@ -113,9 +120,66 @@ class SettingsController extends AbstractController {
 	/**
 	 * @Route("/settings/account/username")
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return Response
+	 * @throws Exception
 	 */
-	public function accountUsername(Request $request) {
+	public function accountUsername(Request $request, EntityManagerInterface $entityManager) {
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			if ($parameters->has("username")) {
+				$username = $parameters->get("username");
+
+				if (is_string($username)) {
+					if (ctype_alnum($username)) {
+						if (strlen($username) >= 3) {
+							if (strlen($username) <= 16) {
+								/**
+								 * @var User $user
+								 */
+								$user = $this->getUser();
+
+								$lastChange = $user->getLastUsernameChange();
+								$now = new DateTime("now");
+
+								if (is_null($lastChange) || $lastChange->diff($now)->days > 30) {
+									if ($username !== $user->getUsername()) {
+										// allow users to change username capitalization
+										if (strtoupper($username) === strtoupper($user->getUsername()) || $entityManager->getRepository(User::class)->isUsernameAvailable($username)) {
+											$user->setUsername($username)
+												->setLastUsernameChange($now);
+
+											$entityManager->persist($user);
+											$entityManager->flush();
+
+											$this->addFlash(FlashMessageType::SUCCESS, "Your username has been changed.");
+										} else {
+											$this->addFlash(FlashMessageType::ERROR, "That username is not available anymore.");
+										}
+									} else {
+										$this->addFlash(FlashMessageType::ERROR, "You already have this username.");
+									}
+								} else {
+									$this->addFlash(FlashMessageType::ERROR, "You can only change your username every 30 days.");
+								}
+							} else {
+								$this->addFlash(FlashMessageType::ERROR, "The username cannot be longer than 16 characters.");
+							}
+						} else {
+							$this->addFlash(FlashMessageType::ERROR, "The username has to be at least 3 characters long.");
+						}
+					} else {
+						$this->addFlash(FlashMessageType::ERROR, "The username has to be alphanumeric.");
+					}
+				} else {
+					$this->addFlash(FlashMessageType::ERROR, "Please enter a username.");
+				}
+			} else {
+				$this->addFlash(FlashMessageType::ERROR, "Please enter a username.");
+			}
+		}
+
 		return $this->renderAction("Change username", "settings/account/username.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
