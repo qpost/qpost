@@ -17,10 +17,11 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-body.settingsPage {
-	background-color: #000b17;
+.settingsHeadline {
+	margin-top: 20px;
 	color: #FFF;
+}
 
-	@import "navigation";
-	@import "text";
+.settingsHeadlineSeparator {
+	border-color: lighten(#001529, 15%);
 }
