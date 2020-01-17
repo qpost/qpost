@@ -60,7 +60,7 @@ export default class FollowButton extends Component<{
 
 		if (Auth.isLoggedIn()) {
 			if (this.isCurrentUser()) {
-				window.location.href = "/account";
+				window.location.href = "/edit";
 				return;
 			} else {
 				if (!this.state.loading) {
