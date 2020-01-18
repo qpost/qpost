@@ -127,7 +127,7 @@ export default class FollowButton extends Component<{
 			if (Auth.isLoggedIn()) {
 				if (!this.isCurrentUser()) {
 					API.handleRequest("/follow", "GET", {
-						from: Auth.getCurrentUser().getId(),
+						from: window["CURRENT_USER_ID"],
 						to: this.props.target.getId()
 					}, data => {
 						if (data.status) {
@@ -216,7 +216,6 @@ export default class FollowButton extends Component<{
 	}
 
 	private isCurrentUser(): boolean {
-		const currentUser = Auth.getCurrentUser();
-		return currentUser && currentUser.getId() === this.props.target.getId();
+		return window["CURRENT_USER_ID"] === this.props.target.getId();
 	}
 }

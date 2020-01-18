@@ -69,7 +69,8 @@
 	{% endif %}
 
 	<script type="text/javascript">
-		window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
+		window["CURRENT_USER_ID"] = {{ app.user ? app.user.id : 0 }}
+			window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
 		window["POST_CHARACTER_LIMIT"] = {{ postCharacterLimit }};
 		window["INCREASED_POST_CHARACTER_LIMIT"] = {{ increasedPostCharacterLimit }};
 

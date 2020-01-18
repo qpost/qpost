@@ -17,18 +17,13 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-html.settingsPage {
-	&, body {
-		background-color: #000b17;
-		color: #FFF;
+table.table {
+	color: #FFF !important;
+	background-color: #001529 !important;
+
+	> tr {
+		> td {
+			border-color: lighten(#001529, 15%) !important;
+		}
 	}
-
-	@import "column";
-	@import "content";
-	@import "navigation";
-	@import "tables";
-	@import "text";
-
-	@import "../nightmode/alerts";
-	@import "../nightmode/forms";
 }

@@ -66,6 +66,6 @@
 
 .h-md-100 {
 	@include media-breakpoint-up(md) {
-		height: 100% !important;
+		min-height: 100% !important;
 	}
 }
