@@ -19,4 +19,8 @@
 
 .settingsContent {
 	padding: 0 15px;
+
+	> div.row {
+		margin-right: 0 !important;
+	}
 }
