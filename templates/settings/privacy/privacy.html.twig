@@ -7,6 +7,8 @@
 	{% include "parts/flash.html.twig" %}
 
 	<form action="{{ path("qpost_settings_privacy") }}" method="post">
+		{% include "parts/csrf.html.twig" %}
+
 		<b>Privacy level</b>
 		<p class="small text-muted">Choose who can see and interact with your content.</p>
 
@@ -21,7 +23,7 @@
 
 		<div class="custom-control custom-radio">
 			<input type="radio" id="privacyLevelPrivate" name="privacyLevel" class="custom-control-input"
-				   value="PRIVATE" {{ app.user.privacyLevel == "PUBLIC" ? "checked" }}/>
+				   value="PRIVATE" {{ app.user.privacyLevel == "PRIVATE" ? "checked" }}/>
 			<label class="custom-control-label" for="privacyLevelPrivate">
 				<b>Private</b><br/>
 				<p class="small text-muted">only your followers can see your profile and interact with your content, new
@@ -31,7 +33,7 @@
 
 		<div class="custom-control custom-radio">
 			<input type="radio" id="privacyLevelClosed" name="privacyLevel" class="custom-control-input"
-				   value="CLOSED" {{ app.user.privacyLevel == "PUBLIC" ? "checked" }}/>
+				   value="CLOSED" {{ app.user.privacyLevel == "CLOSED" ? "checked" }}/>
 			<label class="custom-control-label" for="privacyLevelClosed">
 				<b>Closed</b><br/>
 				<p class="small text-muted">only you can see your profile, nobody can interact with your content</p>

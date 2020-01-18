@@ -25,6 +25,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
+use qpost\Constants\PrivacyLevel;
 use qpost\Constants\SettingsNavigationPoint;
 use qpost\Entity\User;
 use qpost\Twig\Twig;
@@ -220,9 +221,36 @@ class SettingsController extends AbstractController {
 	/**
 	 * @Route("/settings/privacy")
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function privacy(Request $request) {
+	public function privacy(Request $request, EntityManagerInterface $entityManager) {
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			if ($parameters->has("privacyLevel")) {
+				$level = $parameters->get("privacyLevel");
+
+				if (PrivacyLevel::isValid($level)) {
+					/**
+					 * @var User $user
+					 */
+					$user = $this->getUser();
+
+					$user->setPrivacyLevel($level);
+
+					$entityManager->persist($user);
+					$entityManager->flush();
+
+					$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+				} else {
+					$this->addFlash(FlashMessageType::ERROR, "Please try again.");
+				}
+			} else {
+				$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+			}
+		}
+
 		return $this->renderAction("Privacy", "settings/privacy/privacy.html.twig", SettingsNavigationPoint::PRIVACY, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
