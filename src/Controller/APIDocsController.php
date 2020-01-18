@@ -194,17 +194,6 @@ class APIDocsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/apidocs/privacyLevel")
-	 * @return Response
-	 */
-	public function privacyLevelAction() {
-		return $this->render("apidocs/privacyLevel.html.twig", Twig::param([
-			"title" => "Privacy level - API documentation",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_privacylevel", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
-	}
-
-	/**
 	 * @Route("/apidocs/reply")
 	 * @return Response
 	 */
