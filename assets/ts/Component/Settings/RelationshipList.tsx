@@ -180,7 +180,7 @@ export default class RelationshipList extends Component<{
 			<td style={{
 				width: "15%"
 			}}>
-				<FollowButton block target={user}
+				<FollowButton className={"mt-2"} block target={user}
 							  followStatus={this.props.type === "FOLLOWING" ? FollowStatus.FOLLOWING : this.props.type === "BLOCKED" ? FollowStatus.BLOCKED : undefined}/>
 			</td>
 		</tr>;
