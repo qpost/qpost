@@ -18,6 +18,7 @@
  */
 
 import React, {Component} from "react";
+import ReactDOM from "react-dom";
 import NightMode from "./NightMode/NightMode";
 import LoadingScreen from "./Component/LoadingScreen";
 import API from "./API/API";
@@ -52,6 +53,7 @@ import SearchRedirect from "./Pages/Search/SearchRedirect";
 import PushNotificationsManager from "./PushNotificationsManager";
 import BadgeUpdater from "./BadgeUpdater";
 import Storage from "./Util/Storage";
+import RelationshipList from "./Component/Settings/RelationshipList";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -72,6 +74,20 @@ export default class App extends Component<any, any> {
 
 				$(".settingsNav").toggleClass("navHidden");
 			});
+		}
+
+		if ($("#relationshipListFollowing").length) {
+			ReactDOM.render(<RelationshipList
+				type={"FOLLOWING"}/>, document.getElementById("relationshipListFollowing"));
+		}
+
+		if ($("#relationshipListFollowers").length) {
+			ReactDOM.render(<RelationshipList
+				type={"FOLLOWERS"}/>, document.getElementById("relationshipListFollowing"));
+		}
+
+		if ($("#relationshipListBlocked").length) {
+			ReactDOM.render(<RelationshipList type={"BLOCKED"}/>, document.getElementById("relationshipListFollowing"));
 		}
 
 		Storage.cleanTask();
