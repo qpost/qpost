@@ -101,7 +101,7 @@
 	}
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(sm) {
 	.settingsNav {
 		&.navHidden {
 			display: none;
