@@ -83,11 +83,11 @@ export default class App extends Component<any, any> {
 
 		if ($("#relationshipListFollowers").length) {
 			ReactDOM.render(<RelationshipList
-				type={"FOLLOWERS"}/>, document.getElementById("relationshipListFollowing"));
+				type={"FOLLOWERS"}/>, document.getElementById("relationshipListFollowers"));
 		}
 
 		if ($("#relationshipListBlocked").length) {
-			ReactDOM.render(<RelationshipList type={"BLOCKED"}/>, document.getElementById("relationshipListFollowing"));
+			ReactDOM.render(<RelationshipList type={"BLOCKED"}/>, document.getElementById("relationshipListBlocked"));
 		}
 
 		Storage.cleanTask();
