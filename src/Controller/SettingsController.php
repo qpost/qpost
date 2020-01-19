@@ -37,8 +37,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function array_merge;
 use function is_null;
 use function is_string;
+use function password_hash;
+use function password_verify;
 use function strlen;
 use function strtoupper;
+use const PASSWORD_BCRYPT;
 
 class SettingsController extends AbstractController {
 	/**
@@ -189,9 +192,10 @@ class SettingsController extends AbstractController {
 	/**
 	 * @Route("/settings/account/password")
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function accountPassword(Request $request) {
+	public function accountPassword(Request $request, EntityManagerInterface $entityManager) {
 		/**
 		 * @var User $user
 		 */
@@ -200,6 +204,57 @@ class SettingsController extends AbstractController {
 		if ($user->getGigadriveData()) {
 			$this->addFlash(FlashMessageType::ERROR, "You are not allowed to view that page.");
 			return $this->redirectToRoute("qpost_settings_accountinformation");
+		}
+
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			if ($parameters->has("oldPassword")) {
+				$oldPassword = $parameters->get("oldPassword");
+
+				if (is_string($oldPassword)) {
+					if ($parameters->has("newPassword")) {
+						$newPassword = $parameters->get("newPassword");
+
+						if (is_string($newPassword)) {
+							if ($parameters->has("newPassword2")) {
+								$newPassword2 = $parameters->get("newPassword2");
+
+								if (is_string($newPassword2)) {
+									if ($newPassword === $newPassword2) {
+										if (password_verify($oldPassword, $user->getPassword())) {
+											$newHash = password_hash($newPassword, PASSWORD_BCRYPT);
+
+											$user->setPassword($newHash);
+
+											$entityManager->persist($user);
+											$entityManager->flush();
+
+											$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+										} else {
+											$this->addFlash(FlashMessageType::ERROR, "Your current password is incorrect.");
+										}
+									} else {
+										$this->addFlash(FlashMessageType::ERROR, "The new passwords don't match.");
+									}
+								} else {
+									$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+								}
+							} else {
+								$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+							}
+						} else {
+							$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+						}
+					} else {
+						$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+					}
+				} else {
+					$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+				}
+			} else {
+				$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+			}
 		}
 
 		return $this->renderAction("Change password", "settings/account/password.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD, $this->generateUrl(
