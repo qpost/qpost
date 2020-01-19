@@ -95,6 +95,11 @@ export default class App extends Component<any, any> {
 			ReactDOM.render(<Sessions/>, document.getElementById("sessionList"));
 		}
 
+		$("#settingsNavLogoutButton").on("click", (e) => {
+			e.preventDefault();
+			Auth.logout();
+		});
+
 		Storage.cleanTask();
 	}
 
