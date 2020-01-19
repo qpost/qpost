@@ -54,6 +54,7 @@ import PushNotificationsManager from "./PushNotificationsManager";
 import BadgeUpdater from "./BadgeUpdater";
 import Storage from "./Util/Storage";
 import RelationshipList from "./Component/Settings/RelationshipList";
+import Sessions from "./Component/Settings/Sessions";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -88,6 +89,10 @@ export default class App extends Component<any, any> {
 
 		if ($("#relationshipListBlocked").length) {
 			ReactDOM.render(<RelationshipList type={"BLOCKED"}/>, document.getElementById("relationshipListBlocked"));
+		}
+
+		if ($("#sessionList").length) {
+			ReactDOM.render(<Sessions/>, document.getElementById("sessionList"));
 		}
 
 		Storage.cleanTask();
