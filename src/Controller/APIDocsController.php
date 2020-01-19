@@ -183,17 +183,6 @@ class APIDocsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/apidocs/password")
-	 * @return Response
-	 */
-	public function passwordAction() {
-		return $this->render("apidocs/password.html.twig", Twig::param([
-			"title" => "Password - API documentation",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_password", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
-	}
-
-	/**
 	 * @Route("/apidocs/reply")
 	 * @return Response
 	 */
