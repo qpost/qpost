@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -40,7 +40,7 @@
 	border-color: #212529 !important;
 }
 
-.btn-primary {
+.btn-primary:not(.bootstrapButton) {
 	color: #fff;
 	background-color: #535353;
 	border-color: #535353;
