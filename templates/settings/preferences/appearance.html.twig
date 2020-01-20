@@ -7,6 +7,8 @@
 	{% include "parts/flash.html.twig" %}
 
 	<form action="{{ path("qpost_settings_preferencesappearance") }}" method="post">
+		{% include "parts/csrf.html.twig" %}
+
 		<div class="mb-4">
 			{{ macro.settingsHeadlineSmall("Display") }}
 

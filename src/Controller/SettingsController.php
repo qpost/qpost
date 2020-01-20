@@ -30,6 +30,7 @@ use qpost\Constants\SettingsNavigationPoint;
 use qpost\Entity\User;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,9 +59,31 @@ class SettingsController extends AbstractController {
 	/**
 	 * @Route("/settings/preferences/appearance")
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function preferencesAppearance(Request $request) {
+	public function preferencesAppearance(Request $request, EntityManagerInterface $entityManager) {
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			/**
+			 * @var User $user
+			 */
+			$user = $this->getUser();
+
+			$entityManager->persist($user->getAppearanceSettings()
+				->setNightMode($this->readCheckbox($parameters, "nightMode"))
+				->setAutoplayGifs($this->readCheckbox($parameters, "autoplayGifs"))
+				->setShowTrends($this->readCheckbox($parameters, "showTrends"))
+				->setShowSuggestedUsers($this->readCheckbox($parameters, "showSuggestedUsers"))
+				->setShowBirthdays($this->readCheckbox($parameters, "showBirthdays"))
+				->setShowMatureWarning($this->readCheckbox($parameters, "showMatureWarning")));
+
+			$entityManager->flush();
+
+			$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+		}
+
 		return $this->renderAction("Appearance", "settings/preferences/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
@@ -316,5 +339,9 @@ class SettingsController extends AbstractController {
 			MiscConstants::CANONICAL_URL => $canonicalURL,
 			SettingsNavigationPoint::VARIABLE_NAME => $activeMenuPoint
 		]), $additionalParameters));
+	}
+
+	private function readCheckbox(ParameterBag $parameterBag, string $key): bool {
+		return $parameterBag->has($key) && $parameterBag->get($key) === "on";
 	}
 }
