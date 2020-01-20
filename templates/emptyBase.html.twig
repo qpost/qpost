@@ -75,7 +75,7 @@
 		window["INCREASED_POST_CHARACTER_LIMIT"] = {{ increasedPostCharacterLimit }};
 
 		{% if app.user %}
-		window["APPEARANCE_SETTINGS"] = JSON.parse('{{ app.user.appearanceSettings|jms }}');
+		window["APPEARANCE_SETTINGS"] = JSON.parse('{{ app.user.appearanceSettings|jms|raw }}');
 		{% endif %}
 
 		window["restoreTitle"] = "{{ profileLoadPost is defined ? originalTitle }}";

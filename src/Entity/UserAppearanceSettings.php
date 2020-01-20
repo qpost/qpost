@@ -42,6 +42,36 @@ class UserAppearanceSettings {
 	 */
 	private $user;
 
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $nightMode = false;
+
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $autoplayGifs = false;
+
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $showTrends = true;
+
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $showSuggestedUsers = true;
+
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $showBirthdays = true;
+
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $showMatureWarning = true;
+
 	public function getId(): ?int {
 		return $this->id;
 	}
@@ -52,6 +82,66 @@ class UserAppearanceSettings {
 
 	public function setUser(User $user): self {
 		$this->user = $user;
+
+		return $this;
+	}
+
+	public function getNightMode(): ?bool {
+		return $this->nightMode;
+	}
+
+	public function setNightMode(bool $nightMode): self {
+		$this->nightMode = $nightMode;
+
+		return $this;
+	}
+
+	public function getAutoplayGifs(): ?bool {
+		return $this->autoplayGifs;
+	}
+
+	public function setAutoplayGifs(bool $autoplayGifs): self {
+		$this->autoplayGifs = $autoplayGifs;
+
+		return $this;
+	}
+
+	public function getShowTrends(): ?bool {
+		return $this->showTrends;
+	}
+
+	public function setShowTrends(bool $showTrends): self {
+		$this->showTrends = $showTrends;
+
+		return $this;
+	}
+
+	public function getShowSuggestedUsers(): ?bool {
+		return $this->showSuggestedUsers;
+	}
+
+	public function setShowSuggestedUsers(bool $showSuggestedUsers): self {
+		$this->showSuggestedUsers = $showSuggestedUsers;
+
+		return $this;
+	}
+
+	public function getShowBirthdays(): ?bool {
+		return $this->showBirthdays;
+	}
+
+	public function setShowBirthdays(bool $showBirthdays): self {
+		$this->showBirthdays = $showBirthdays;
+
+		return $this;
+	}
+
+	public function getShowMatureWarning(): ?bool {
+		return $this->showMatureWarning;
+	}
+
+	public function setShowMatureWarning(bool $showMatureWarning): self {
+		$this->showMatureWarning = $showMatureWarning;
 
 		return $this;
 	}
