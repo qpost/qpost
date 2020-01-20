@@ -19,30 +19,36 @@
 
 export default class AppearanceSettings {
 	public static enablesNightMode(): boolean {
-		return this.data()["nightMode"] || false;
+		return this.readValue("nightMode", false);
 	}
 
 	public static autoplayGIFs(): boolean {
-		return this.data()["autoplayGifs"] || false;
+		return this.readValue("autoplayGifs", false);
 	}
 
 	public static showTrendingTopics(): boolean {
-		return this.data()["showTrendingTopics"] || true;
+		return this.readValue("showTrends", true);
 	}
 
 	public static showSuggestedUsers(): boolean {
-		return this.data()["showSuggestedUsers"] || true;
+		return this.readValue("showSuggestedUsers", true);
 	}
 
 	public static showUpcomingBirthdays(): boolean {
-		return this.data()["showUpcomingBirthdays"] || true;
+		return this.readValue("showBirthdays", true);
 	}
 
 	public static showMatureWarning(): boolean {
-		return this.data()["showMatureWarning"] || true;
+		return this.readValue("showMatureWarning", true);
 	}
 
 	private static data() {
 		return window["APPEARANCE_SETTINGS"] || {};
+	}
+
+	private static readValue(key: string, defaultValue) {
+		const data = this.data();
+
+		return data && data.hasOwnProperty(key) ? data[key] : defaultValue;
 	}
 }
