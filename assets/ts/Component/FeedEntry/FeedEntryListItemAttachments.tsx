@@ -24,6 +24,7 @@ import MediaFileType from "../../Entity/Media/MediaFileType";
 import ImageViewer from "../ImageViewer";
 import GifPlayer from "react-gif-player";
 import {stillGIFURL} from "../../Util/Format";
+import AppearanceSettings from "../../Util/AppearanceSettings";
 
 export default class FeedEntryListItemAttachments extends Component<{
 	entry: FeedEntry
@@ -50,7 +51,8 @@ export default class FeedEntryListItemAttachments extends Component<{
 				case MediaFileType.IMAGE:
 					if (mediaFile.getURL().endsWith(".gif")) {
 						return <div className={"mt-2"}>
-							<GifPlayer gif={mediaFile.getURL()} still={stillGIFURL(mediaFile.getURL())}/>
+							<GifPlayer gif={mediaFile.getURL()} still={stillGIFURL(mediaFile.getURL())}
+									   autoplay={AppearanceSettings.autoplayGIFs()}/>
 						</div>;
 					}
 			}
