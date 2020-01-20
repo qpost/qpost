@@ -33,6 +33,7 @@ import FeedEntryList from "./FeedEntryList";
 import {Alert, Icon} from "antd";
 import FavoriteList from "./FavoriteList";
 import ReplyList from "./ReplyList";
+import AppearanceSettings from "../../Util/AppearanceSettings";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
@@ -49,7 +50,7 @@ export default class FeedEntryListItem extends Component<{
 		super(props);
 
 		this.state = {
-			nsfwWarningActive: this.props.entry.isNSFW(),
+			nsfwWarningActive: AppearanceSettings.showMatureWarning() && this.props.entry.isNSFW(),
 			redirect: false
 		};
 	}
