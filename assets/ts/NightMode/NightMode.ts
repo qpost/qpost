@@ -18,6 +18,7 @@
  */
 
 import $ from "jquery";
+import AppearanceSettings from "../Util/AppearanceSettings";
 
 export default class NightMode {
 	public static init(): void {
@@ -50,7 +51,7 @@ export default class NightMode {
 	}
 
 	public static isActive(): boolean {
-		return window["APPEARANCE_SETTINGS"] && window["APPEARANCE_SETTINGS"]["nightMode"] ? window["APPEARANCE_SETTINGS"]["nightMode"] : false;
+		return AppearanceSettings.enablesNightMode();
 	}
 
 	public static toggle(): void {
