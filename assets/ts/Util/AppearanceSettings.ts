@@ -19,27 +19,27 @@
 
 export default class AppearanceSettings {
 	public static enablesNightMode(): boolean {
-		return this.data()["nightMode"];
+		return this.data()["nightMode"] || false;
 	}
 
 	public static autoplayGIFs(): boolean {
-		return this.data()["autoplayGifs"];
+		return this.data()["autoplayGifs"] || false;
 	}
 
 	public static showTrendingTopics(): boolean {
-		return this.data()["showTrendingTopics"];
+		return this.data()["showTrendingTopics"] || true;
 	}
 
 	public static showSuggestedUsers(): boolean {
-		return this.data()["showSuggestedUsers"];
+		return this.data()["showSuggestedUsers"] || true;
 	}
 
 	public static showUpcomingBirthdays(): boolean {
-		return this.data()["showUpcomingBirthdays"];
+		return this.data()["showUpcomingBirthdays"] || true;
 	}
 
 	public static showMatureWarning(): boolean {
-		return this.data()["showMatureWarning"];
+		return this.data()["showMatureWarning"] || true;
 	}
 
 	private static data() {
