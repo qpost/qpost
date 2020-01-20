@@ -233,14 +233,15 @@ class APIService {
 
 	/**
 	 * @param $object
-	 * @return array
+	 * @param bool $returnString
+	 * @return array|string
 	 */
-	public function serialize($object): array {
+	public function serialize($object, bool $returnString = false) {
 		$context = new SerializationContext();
 		$context->setSerializeNull(true);
 
 		$string = $this->serializer->serialize($object, "json", $context);
-		return json_decode($string, true);
+		return $returnString ? $string : json_decode($string, true);
 	}
 
 	/**

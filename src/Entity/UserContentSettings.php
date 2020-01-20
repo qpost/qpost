@@ -18,34 +18,41 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-namespace qpost\Twig;
+namespace qpost\Entity;
 
-use qpost\Service\APIService;
-use qpost\Util\Util;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
-class TwigExtension extends AbstractExtension {
-	private $apiService;
+/**
+ * @ORM\Entity(repositoryClass="qpost\Repository\UserContentSettingsRepository")
+ */
+class UserContentSettings {
+	/**
+	 * @ORM\Id()
+	 * @ORM\GeneratedValue()
+	 * @ORM\Column(type="integer")
+	 * @Serializer\Exclude()
+	 */
+	private $id;
 
-	public function __construct(APIService $apiService) {
-		$this->apiService = $apiService;
+	/**
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\User", inversedBy="contentSettings", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(nullable=false)
+	 * @Serializer\Exclude()
+	 */
+	private $user;
+
+	public function getId(): ?int {
+		return $this->id;
 	}
 
-	public function getFunctions() {
-		return [
-			new TwigFunction("sanatizeHTMLAttribute", function ($content) {
-				return Util::sanatizeHTMLAttribute($content);
-			})
-		];
+	public function getUser(): ?User {
+		return $this->user;
 	}
 
-	public function getFilters() {
-		return [
-			new TwigFilter("jms", function ($content) {
-				return $this->apiService->serialize($content, true);
-			})
-		];
+	public function setUser(User $user): self {
+		$this->user = $user;
+
+		return $this;
 	}
 }

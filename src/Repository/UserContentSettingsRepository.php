@@ -18,34 +18,20 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-namespace qpost\Twig;
+namespace qpost\Repository;
 
-use qpost\Service\APIService;
-use qpost\Util\Util;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use qpost\Entity\UserContentSettings;
 
-class TwigExtension extends AbstractExtension {
-	private $apiService;
-
-	public function __construct(APIService $apiService) {
-		$this->apiService = $apiService;
-	}
-
-	public function getFunctions() {
-		return [
-			new TwigFunction("sanatizeHTMLAttribute", function ($content) {
-				return Util::sanatizeHTMLAttribute($content);
-			})
-		];
-	}
-
-	public function getFilters() {
-		return [
-			new TwigFilter("jms", function ($content) {
-				return $this->apiService->serialize($content, true);
-			})
-		];
+/**
+ * @method UserContentSettings|null find($id, $lockMode = null, $lockVersion = null)
+ * @method UserContentSettings|null findOneBy(array $criteria, array $orderBy = null)
+ * @method UserContentSettings[]    findAll()
+ * @method UserContentSettings[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class UserContentSettingsRepository extends ServiceEntityRepository {
+	public function __construct(ManagerRegistry $registry) {
+		parent::__construct($registry, UserContentSettings::class);
 	}
 }

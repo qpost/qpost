@@ -235,6 +235,16 @@ class User implements UserInterface {
 	 */
 	private $creationIP;
 
+	/**
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\UserAppearanceSettings", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $appearanceSettings;
+
+	/**
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\UserContentSettings", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $contentSettings;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -1306,6 +1316,50 @@ class User implements UserInterface {
 
 	public function setCreationIP(?string $creationIP): self {
 		$this->creationIP = $creationIP;
+
+		return $this;
+	}
+
+	public function getAppearanceSettings(): ?UserAppearanceSettings {
+		if (is_null($this->appearanceSettings)) {
+			$this->setAppearanceSettings(
+				(new UserAppearanceSettings())
+					->setUser($this)
+			);
+		}
+
+		return $this->appearanceSettings;
+	}
+
+	public function setAppearanceSettings(UserAppearanceSettings $appearanceSettings): self {
+		$this->appearanceSettings = $appearanceSettings;
+
+		// set the owning side of the relation if necessary
+		if ($appearanceSettings->getUser() !== $this) {
+			$appearanceSettings->setUser($this);
+		}
+
+		return $this;
+	}
+
+	public function getContentSettings(): ?UserContentSettings {
+		if (is_null($this->contentSettings)) {
+			$this->setContentSettings(
+				(new UserContentSettings())
+					->setUser($this)
+			);
+		}
+
+		return $this->contentSettings;
+	}
+
+	public function setContentSettings(UserContentSettings $contentSettings): self {
+		$this->contentSettings = $contentSettings;
+
+		// set the owning side of the relation if necessary
+		if ($contentSettings->getUser() !== $this) {
+			$contentSettings->setUser($this);
+		}
 
 		return $this;
 	}
