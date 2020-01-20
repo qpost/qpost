@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -50,9 +50,7 @@ export default class NightMode {
 	}
 
 	public static isActive(): boolean {
-		const storedValue = localStorage.getItem("nightMode");
-
-		return !!(storedValue && storedValue === "true");
+		return window["APPEARANCE_SETTINGS"] && window["APPEARANCE_SETTINGS"]["nightMode"] ? window["APPEARANCE_SETTINGS"]["nightMode"] : false;
 	}
 
 	public static toggle(): void {
