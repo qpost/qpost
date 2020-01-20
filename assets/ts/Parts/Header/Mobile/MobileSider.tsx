@@ -114,7 +114,8 @@ export default class MobileSider extends Component<{
 						</Link>
 					</Menu.Item>,
 						<Menu.Item key="2">
-							<a href={"/account"} className={"clearUnderline"} onClick={(e) => this.toggle()}>
+							<a href={"/settings/profile/appearance"} className={"clearUnderline"}
+							   onClick={(e) => this.toggle()}>
 								<i className={"fas fa-cog iconMargin-10"}/>
 								<span className="nav-text">Settings</span>
 							</a>

@@ -102,7 +102,7 @@ export default class DesktopHeader extends Component<{
 								 className={"rounded"}/><span className={"ml-2"}>{currentUser.getUsername()}</span>
 						</Link>}>
 							<Menu.Item>
-								<a href={"/account"} className={"clearUnderline"}>
+								<a href={"/settings/profile/appearance"} className={"clearUnderline"}>
 									Settings and privacy
 								</a>
 							</Menu.Item>
