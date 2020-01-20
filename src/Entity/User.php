@@ -240,11 +240,6 @@ class User implements UserInterface {
 	 */
 	private $appearanceSettings;
 
-	/**
-	 * @ORM\OneToOne(targetEntity="qpost\Entity\UserContentSettings", mappedBy="user", cascade={"persist", "remove"})
-	 */
-	private $contentSettings;
-
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -1337,28 +1332,6 @@ class User implements UserInterface {
 		// set the owning side of the relation if necessary
 		if ($appearanceSettings->getUser() !== $this) {
 			$appearanceSettings->setUser($this);
-		}
-
-		return $this;
-	}
-
-	public function getContentSettings(): ?UserContentSettings {
-		if (is_null($this->contentSettings)) {
-			$this->setContentSettings(
-				(new UserContentSettings())
-					->setUser($this)
-			);
-		}
-
-		return $this->contentSettings;
-	}
-
-	public function setContentSettings(UserContentSettings $contentSettings): self {
-		$this->contentSettings = $contentSettings;
-
-		// set the owning side of the relation if necessary
-		if ($contentSettings->getUser() !== $this) {
-			$contentSettings->setUser($this);
 		}
 
 		return $this;

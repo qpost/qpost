@@ -75,7 +75,6 @@
 		window["INCREASED_POST_CHARACTER_LIMIT"] = {{ increasedPostCharacterLimit }};
 
 		{% if app.user %}
-		window["CONTENT_SETTINGS"] = JSON.parse('{{ app.user.contentSettings|jms }}');
 		window["APPEARANCE_SETTINGS"] = JSON.parse('{{ app.user.appearanceSettings|jms }}');
 		{% endif %}
 

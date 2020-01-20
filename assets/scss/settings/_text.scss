@@ -17,9 +17,19 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-.settingsHeadline {
+h1.settingsHeadline {
 	margin-top: 20px;
 	color: #FFF;
+}
+
+h4.settingsHeadline {
+	$color: lighten(#001529, 45%);
+
+	color: $color;
+	font-size: 16px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid $color;
+	text-transform: uppercase;
 }
 
 .settingsHeadlineSeparator {

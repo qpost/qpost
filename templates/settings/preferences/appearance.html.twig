@@ -5,4 +5,16 @@
 	{{ macro.settingsHeadline("Appearance") }}
 
 	{% include "parts/flash.html.twig" %}
+
+	<form action="{{ path("qpost_settings_preferencesappearance") }}" method="post">
+		{{ macro.settingsHeadlineSmall("Mature content") }}
+
+		<div class="custom-control custom-checkbox">
+			<input type="checkbox" class="custom-control-input" id="showMatureWarning" name="showMatureWarning"/>
+			<label class="custom-control-label" for="showMatureWarning">
+				<b>Show a warning on mature content</b><br/>
+				<p class="small text-muted">If activated, mature content will need to be clicked on to be revealed.</p>
+			</label>
+		</div>
+	</form>
 {% endblock %}

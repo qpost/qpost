@@ -67,17 +67,6 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/settings/preferences/content")
-	 * @param Request $request
-	 * @return Response
-	 */
-	public function preferencesContent(Request $request) {
-		return $this->renderAction("Content settings", "settings/preferences/content.html.twig", SettingsNavigationPoint::PREFERENCES_CONTENT, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
-	}
-
-	/**
 	 * @Route("/settings/relationships/following")
 	 * @param Request $request
 	 * @return Response

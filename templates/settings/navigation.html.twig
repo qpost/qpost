@@ -24,14 +24,12 @@
 			<a class="nav-link child{{ navPoint == "PROFILE_APPEARANCE" ? " active" }}"
 			   href="{{ path("qpost_settings_profileappearance") }}">Appearance</a>
 		</li>
-		<li class="nav-item{{ navPoint in ["PREFERENCES_APPEARANCE","PREFERENCES_CONTENT"] ? " open" }}">
+		<li class="nav-item{{ navPoint in ["PREFERENCES_APPEARANCE"] ? " open" }}">
 			<a class="nav-link" href="{{ path("qpost_settings_preferencesappearance") }}"><i
 						class="fas fa-cog iconMargin-10"></i>Preferences</a>
 
 			<a class="nav-link child{{ navPoint == "PREFERENCES_APPEARANCE" ? " active" }}"
 			   href="{{ path("qpost_settings_preferencesappearance") }}">Appearance</a>
-			<a class="nav-link child{{ navPoint == "PREFERENCES_CONTENT" ? " active" }}"
-			   href="{{ path("qpost_settings_preferencescontent") }}">Content</a>
 		</li>
 		<li class="nav-item{{ navPoint in ["RELATIONSHIPS_FOLLOWING","RELATIONSHIPS_FOLLOWERS","RELATIONSHIP_BLOCKED"] ? " open" }}">
 			<a class="nav-link" href="{{ path("qpost_settings_relationshipsfollowing") }}"><i
