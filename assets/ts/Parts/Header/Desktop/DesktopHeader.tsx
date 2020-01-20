@@ -115,15 +115,6 @@ export default class DesktopHeader extends Component<{
 									Log out
 								</a>
 							</Menu.Item>
-
-							<Menu.Item>
-								<a href={"/nightmode"} className={"clearUnderline"} onClick={(e) => {
-									e.preventDefault();
-									NightMode.toggle();
-								}}>
-									Toggle night mode
-								</a>
-							</Menu.Item>
 						</SubMenu>] : <Menu.Item>
 						<a href={"/login"} className={"clearUnderline"}>
 							log in

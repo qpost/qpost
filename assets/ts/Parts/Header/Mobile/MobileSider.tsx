@@ -127,15 +127,6 @@ export default class MobileSider extends Component<{
 								<i className={"fas fa-sign-out-alt iconMargin-10"}/>
 								<span className="nav-text">Logout</span>
 							</Link>
-						</Menu.Item>,
-						<Menu.Item key="4">
-							<Link to={"#"} onClick={(e) => {
-								e.preventDefault();
-								NightMode.toggle();
-							}} className={"clearUnderline"}>
-								<i className={"far fa-lightbulb iconMargin-10"}/>
-								<span className="nav-text">Toggle night mode</span>
-							</Link>
 						</Menu.Item>] : [
 						<Menu.Item key="1">
 							<a href={"/login"} className={"clearUnderline"}>
