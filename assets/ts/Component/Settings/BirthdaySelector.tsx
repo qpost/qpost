@@ -18,15 +18,48 @@
  */
 
 import React, {Component} from "react";
+import $ from "jquery";
+import moment from "moment";
+import {DatePicker} from "antd";
 
-export default class BirthdaySelector extends Component<any, any> {
+export default class BirthdaySelector extends Component<any, {
+	birthday: string | undefined
+}> {
+	private static readonly inputSelector = ".form-group > input[name=\"birthday\"]";
+
 	constructor(props) {
 		super(props);
 
-		this.state = {};
+		let birthday: string | undefined = undefined;
+		let loadedBirthday = $(BirthdaySelector.inputSelector).val();
+		if (typeof loadedBirthday === "string" && loadedBirthday !== "") {
+			birthday = loadedBirthday;
+		}
+
+		this.state = {
+			birthday: birthday
+		};
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return "birthday";
+		const birthday = this.state.birthday;
+		const birthdayMoment = birthday ? moment(birthday) : undefined;
+
+		return <DatePicker value={birthdayMoment} onChange={(date) => {
+			if (date) {
+				const value = date.format("YYYY-MM-DD");
+
+				this.setState({
+					birthday: value
+				});
+
+				$(BirthdaySelector.inputSelector).val(value);
+			} else {
+				this.setState({birthday: undefined});
+				$(BirthdaySelector.inputSelector).val("");
+			}
+		}} disabledDate={current => {
+			return current >= moment().subtract(13, "years") || current <= moment().subtract(120, "years");
+		}}/>;
 	}
 }
