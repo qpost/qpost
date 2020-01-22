@@ -55,6 +55,9 @@ import BadgeUpdater from "./BadgeUpdater";
 import Storage from "./Util/Storage";
 import RelationshipList from "./Component/Settings/RelationshipList";
 import Sessions from "./Component/Settings/Sessions";
+import BirthdaySelector from "./Component/Settings/BirthdaySelector";
+import HeaderSelector from "./Component/Settings/HeaderSelector";
+import AvatarSelector from "./Component/Settings/AvatarSelector";
 
 export default class App extends Component<any, any> {
 	constructor(props) {
@@ -93,6 +96,18 @@ export default class App extends Component<any, any> {
 
 		if ($("#sessionList").length) {
 			ReactDOM.render(<Sessions/>, document.getElementById("sessionList"));
+		}
+
+		if ($("#birthdaySelector").length) {
+			ReactDOM.render(<BirthdaySelector/>, document.getElementById("birthdaySelector"));
+		}
+
+		if ($("#avatarSelector").length) {
+			ReactDOM.render(<AvatarSelector/>, document.getElementById("avatarSelector"));
+		}
+
+		if ($("#headerSelector").length) {
+			ReactDOM.render(<HeaderSelector/>, document.getElementById("headerSelector"));
 		}
 
 		$("#settingsNavLogoutButton").on("click", (e) => {
