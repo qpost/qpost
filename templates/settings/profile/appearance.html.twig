@@ -5,4 +5,59 @@
 	{{ macro.settingsHeadline("Edit profile") }}
 
 	{% include "parts/flash.html.twig" %}
+
+	<form action="{{ path("qpost_settings_profileappearance") }}" method="post">
+		{% include "parts/csrf.html.twig" %}
+
+		<div class="mb-4">
+			<div class="form-group">
+				<label for="displayName">Display name</label>
+				<input type="text" class="form-control" id="displayName" name="displayName"
+					   value="{{ app.user.displayName }}"/>
+			</div>
+		</div>
+
+		<div class="mb-4">
+			<div class="form-group">
+				<label for="bio">Biography</label>
+				<textarea type="text" class="form-control" id="bio" name="bio" style="resize: none !important;">
+					{{ app.user.bio|trim }}
+				</textarea>
+			</div>
+		</div>
+
+		<div class="mb-4">
+			<div class="form-group">
+				<label for="birthday">Birthday</label>
+
+				<input type="hidden" name="birthday" value="{{ app.user.birthday ? app.user.birthday|date("Y-m-d") }}"/>
+
+				<div id="birthdaySelector"></div>
+			</div>
+		</div>
+
+		<div class="mb-4">
+			<div class="form-group">
+				<label for="avatar">Avatar</label>
+
+				<input type="hidden" name="avatar" value="{{ app.user.avatarURL }}"/>
+
+				<div id="birthdaySelector"></div>
+			</div>
+		</div>
+
+		<div class="mb-4">
+			<div class="form-group">
+				<label for="header">Header</label>
+
+				<input type="hidden" name="header" value="{{ app.user.header }}"/>
+
+				<div id="birthdaySelector"></div>
+			</div>
+		</div>
+
+		<button type="submit" class="btn btn-primary btn-block bootstrapButton">
+			Save changes
+		</button>
+	</form>
 {% endblock %}
