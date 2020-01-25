@@ -18,15 +18,119 @@
  */
 
 import React, {Component} from "react";
+import {Button, Upload} from "antd";
+import Icon from "antd/es/icon";
+import PostFormUploadItem from "../PostForm/PostFormUploadItem";
+import $ from "jquery";
+import {RcFile, UploadChangeParam} from "antd/es/upload";
+import AntMessage from "antd/es/message";
 
-export default class HeaderSelector extends Component<any, any> {
+export default class HeaderSelector extends Component<any, {
+	header: string | PostFormUploadItem | undefined,
+	headerModified: boolean
+}> {
+	private static readonly inputSelector = ".form-group > input[name=\"header\"]";
+
 	constructor(props) {
 		super(props);
 
-		this.state = {};
+		let header: string | undefined = undefined;
+		let loadedHeader = $(HeaderSelector.inputSelector).val();
+		if (typeof loadedHeader === "string" && loadedHeader !== "") {
+			header = loadedHeader;
+		}
+
+		this.state = {
+			header,
+			headerModified: false
+		};
 	}
 
+	uploadChange = (info: UploadChangeParam) => {
+	};
+
+	beforeHeaderUpload = (file: RcFile, FileList: RcFile[]) => {
+		const size: number = file.size;
+		const type: string = file.type;
+
+		if (!(type === "image/jpeg" || type === "image/png" || type === "image/gif")) {
+			AntMessage.error("Invalid file type.");
+			return false;
+		}
+
+		if (!(size / 1024 / 1024 < 5)) {
+			AntMessage.error("Images must be smaller than 5MB.");
+			return false;
+		}
+
+		const item: PostFormUploadItem = new PostFormUploadItem();
+		item.uid = file.uid;
+		item.size = size;
+		item.type = type;
+
+		const reader = new FileReader();
+		reader.addEventListener("load", () => {
+			const result: string = typeof reader.result === "string" ? reader.result : null;
+			if (result) {
+				item.dataURL = result;
+				item.base64 = item.dataURL.replace(/^data:image\/(png|jpg|jpeg|gif);base64,/, "");
+
+				this.setState({
+					header: item,
+					headerModified: true
+				});
+
+				$(HeaderSelector.inputSelector).val(item.base64);
+			}
+		});
+		reader.readAsDataURL(file);
+
+		return false;
+	};
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return "header";
+		let header = this.state.header;
+		if (header instanceof PostFormUploadItem) {
+			header = header.dataURL;
+		}
+
+		return <div>
+			<Upload
+				name={"image-upload"}
+				listType={"picture-card"}
+				className={"uploader"}
+				showUploadList={false}
+				action={"https://qpo.st"}
+				beforeUpload={this.beforeHeaderUpload}
+				onChange={this.uploadChange}
+			>
+				{header ? <div style={{
+					width: "500px",
+					height: "167px",
+					backgroundImage: "url(\"" + header + "\")",
+					backgroundRepeat: "no-repeat",
+					backgroundPosition: "center",
+					backgroundSize: "cover"
+				}}/> : <div>
+					<Icon type={"plus"}/>
+					<div className="ant-upload-text">Upload</div>
+				</div>}
+			</Upload>
+
+			{header ?
+				<Button type={"danger"} className={"customDangerButton"}
+						onClick={(e) => {
+							e.preventDefault();
+
+							this.setState({
+								header: undefined,
+								headerModified: true
+							});
+
+							$(HeaderSelector.inputSelector).val("");
+						}}>
+					Delete header picture
+				</Button> : ""}
+		</div>;
 	}
 }
