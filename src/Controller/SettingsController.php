@@ -31,6 +31,7 @@ use qpost\Entity\User;
 use qpost\Exception\ProfileImageInvalidException;
 use qpost\Exception\ProfileImageTooBigException;
 use qpost\Service\DataDeletionService;
+use qpost\Service\GigadriveService;
 use qpost\Service\ProfileImageService;
 use qpost\Twig\Twig;
 use qpost\Util\Util;
@@ -405,9 +406,40 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/account/delete")
 	 * @param Request $request
 	 * @param DataDeletionService $deletionService
+	 * @param GigadriveService $gigadriveService
 	 * @return Response
 	 */
-	public function accountDelete(Request $request, DataDeletionService $deletionService) {
+	public function accountDelete(Request $request, DataDeletionService $deletionService, GigadriveService $gigadriveService) {
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			/**
+			 * @var User $user
+			 */
+			$user = $this->getUser();
+
+			if ($parameters->has("password")) {
+				$password = $parameters->get("password");
+
+				$gigadriveData = $user->getGigadriveData();
+
+				$correctPassword = $gigadriveData ? $gigadriveService->verifyPassword($gigadriveData->getAccountId(), $password) : password_verify($password, $user->getPassword());
+
+				if ($correctPassword) {
+					$deletionService->deleteUser($user);
+
+					$response = $this->redirectToRoute("qpost_page_goodbye");
+					$response->headers->clearCookie("sesstoken");
+
+					return $response;
+				} else {
+					$this->addFlash(FlashMessageType::ERROR, "Your password is incorrect.");
+				}
+			} else {
+				$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+			}
+		}
+
 		return $this->renderAction("Delete your account", "settings/account/delete.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
