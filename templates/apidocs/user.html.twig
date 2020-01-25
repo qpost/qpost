@@ -150,59 +150,6 @@
 
 	<hr/>
 
-	<h2><span class="badge badge-info">POST</span> /user</h2>
-
-	<p>
-		Updates the current users profile with the passed parameters.<br/>
-		<span class="text-danger font-weight-bold">Requires authorization</span>
-	</p>
-
-	<h3>Parameters</h3>
-
-	<table class="table table-bordered">
-		<thead>
-		<tr>
-			<th>Property</th>
-			<th>Type</th>
-			<th>Description</th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr>
-			<td>displayName</td>
-			<td>string</td>
-			<td>The new display name to use</td>
-		</tr>
-		<tr>
-			<td>bio</td>
-			<td>?string</td>
-			<td>The new bio to use</td>
-		</tr>
-		<tr>
-			<td>birthday</td>
-			<td>?string</td>
-			<td>The new birthday date to use, has to be at least 13 years in the past.</td>
-		</tr>
-		<tr>
-			<td>avatar</td>
-			<td>?string</td>
-			<td>The new avatar to use encoded in base64.</td>
-		</tr>
-		<tr>
-			<td>header</td>
-			<td>?string</td>
-			<td>The new header image to use encoded in base64.</td>
-		</tr>
-		</tbody>
-	</table>
-
-	<h3>Response</h3>
-
-	<p>Returns a single <a href="{{ path("qpost_apidocs_user") }}#object">User</a> object, filled with the new
-		information.</p>
-
-	<hr/>
-
 	<h2><span class="badge badge-danger">DELETE</span> /user</h2>
 
 	<p>
