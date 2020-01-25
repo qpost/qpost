@@ -13,7 +13,7 @@
 			<div class="form-group">
 				<label for="displayName">Display name</label>
 				<input type="text" class="form-control" id="displayName" name="displayName"
-					   value="{{ app.user.displayName }}"/>
+					   value="{{ app.user.displayName }}" min="1" maxlength="24" required/>
 			</div>
 		</div>
 
@@ -21,7 +21,8 @@
 			<div class="form-group">
 				<label for="bio">Biography</label>
 				<textarea type="text" class="form-control" id="bio" name="bio"
-						  style="resize: none !important; height: 120px !important;">{{ app.user.bio }}</textarea>
+						  style="resize: none !important; height: 120px !important;"
+						  maxlength="200">{{ app.user.bio }}</textarea>
 			</div>
 		</div>
 
