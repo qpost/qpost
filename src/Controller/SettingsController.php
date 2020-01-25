@@ -28,7 +28,11 @@ use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
 use qpost\Constants\SettingsNavigationPoint;
 use qpost\Entity\User;
+use qpost\Exception\ProfileImageInvalidException;
+use qpost\Exception\ProfileImageTooBigException;
+use qpost\Service\ProfileImageService;
 use qpost\Twig\Twig;
+use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,16 +45,127 @@ use function is_string;
 use function password_hash;
 use function password_verify;
 use function strlen;
+use function strtotime;
 use function strtoupper;
+use function time;
 use const PASSWORD_BCRYPT;
 
 class SettingsController extends AbstractController {
 	/**
 	 * @Route("/settings/profile/appearance")
 	 * @param Request $request
+	 * @param ProfileImageService $imageService
+	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function profileAppearance(Request $request) {
+	public function profileAppearance(Request $request, ProfileImageService $imageService, EntityManagerInterface $entityManager) {
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			/**
+			 * @var User $user
+			 */
+			$user = $this->getUser();
+
+			$save = true;
+
+			// Display name
+			$displayName = $parameters->get("displayName");
+			if ($displayName !== $user->getDisplayName()) {
+				$displayName = trim($displayName);
+
+				if (Util::isEmpty($displayName) || !(strlen($displayName) >= 1 && strlen($displayName) <= 24)) {
+					$save = false;
+					$this->addFlash(FlashMessageType::ERROR, "The display name must be between 1 and 24 characters long.");
+				}
+			}
+
+			// Bio
+			$bio = $parameters->get("bio");
+			if ($bio !== $user->getBio()) {
+				$bio = trim($bio);
+
+				if (!Util::isEmpty($bio) && !(strlen($bio) >= 0 && strlen($bio) <= 200)) {
+					$save = false;
+					$this->addFlash(FlashMessageType::ERROR, "The bio must be between 0 and 200 characters long.");
+				}
+			}
+
+			// Birthday
+			$birthday = $parameters->get("birthday");
+			if ($birthday === "") {
+				$user->setBirthday(null);
+			} else if ((!$user->getBirthday() && $birthday !== "") || $user->getBirthday()->format("Y-m-d") !== $birthday) {
+				if ($birthdayTime = strtotime($birthday)) {
+					if ($birthdayTime >= time() - (13 * 365 * 24 * 60 * 60) || $birthdayTime <= time() - (120 * 365 * 24 * 60 * 60)) {
+						$save = false;
+						$this->addFlash(FlashMessageType::ERROR, "You have to be at least 13 years old and at the most 120 years old.");
+					}
+				} else {
+					$save = false;
+					$this->addFlash(FlashMessageType::ERROR, "Please enter a valid birthday.");
+				}
+			}
+
+			// Header
+			$header = $parameters->get("header");
+			if ($save && $header !== $user->getHeader() && $header !== "") { // new header has been uploaded
+				try {
+					$header = $imageService->upload($header, 5, 1500, 500);
+
+					if (is_null($header)) {
+						$save = false;
+						$this->addFlash(FlashMessageType::ERROR, "An error occurred trying to upload the header image.");
+					} else {
+						$user->setHeader($header);
+					}
+				} catch (ProfileImageInvalidException $e) {
+					$save = false;
+					$this->addFlash(FlashMessageType::ERROR, "Please upload a valid header image.");
+				} catch (ProfileImageTooBigException $e) {
+					$save = false;
+					$this->addFlash(FlashMessageType::ERROR, "The header image may not be bigger than 5MB.");
+				}
+			} else if ($header === "") { // header was deleted
+				$user->setHeader(null);
+			}
+
+			// Avatar
+			$avatar = $parameters->get("avatar");
+			if ($save && $avatar !== $user->getAvatarURL() && $avatar !== "") { // new header has been uploaded
+				try {
+					$avatar = $imageService->upload($avatar, 2, 300, 300);
+
+					if (is_null($avatar)) {
+						$save = false;
+						$this->addFlash(FlashMessageType::ERROR, "An error occurred trying to upload the avatar image.");
+					} else {
+						$user->setAvatar($avatar);
+					}
+				} catch (ProfileImageInvalidException $e) {
+					$save = false;
+					$this->addFlash(FlashMessageType::ERROR, "Please upload a valid avatar image.");
+				} catch (ProfileImageTooBigException $e) {
+					$save = false;
+					$this->addFlash(FlashMessageType::ERROR, "The avatar image may not be bigger than 2MB.");
+				}
+			} else if ($avatar === "") { // header was deleted
+				$user->setAvatar(null);
+			}
+
+			$user
+				->setBirthday(Util::isEmpty($birthday) ? null : new DateTime($birthday))
+				->setDisplayName($displayName)
+				->setBio($bio);
+
+			if ($save === true) {
+				$entityManager->persist($user);
+				$entityManager->flush();
+
+				$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+			}
+		}
+
 		return $this->renderAction("Edit profile", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PROFILE_APPEARANCE, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));

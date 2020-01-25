@@ -20,9 +20,8 @@
 		<div class="mb-4">
 			<div class="form-group">
 				<label for="bio">Biography</label>
-				<textarea type="text" class="form-control" id="bio" name="bio" style="resize: none !important;">
-					{{ app.user.bio|trim }}
-				</textarea>
+				<textarea type="text" class="form-control" id="bio" name="bio"
+						  style="resize: none !important; height: 120px !important;">{{ app.user.bio }}</textarea>
 			</div>
 		</div>
 
@@ -40,7 +39,7 @@
 			<div class="form-group">
 				<label for="avatar">Avatar</label>
 
-				<input type="hidden" name="avatar" value="{{ app.user.avatarURL }}"/>
+				<input type="hidden" name="avatar" value="{{ app.user.avatar }}"/>
 
 				<div id="avatarSelector"></div>
 			</div>
