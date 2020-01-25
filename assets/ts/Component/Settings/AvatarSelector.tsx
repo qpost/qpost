@@ -19,6 +19,7 @@
 
 import React, {Component} from "react";
 import {Button, Upload} from "antd";
+import "antd/es/upload/style";
 import Icon from "antd/es/icon";
 import PostFormUploadItem from "../PostForm/PostFormUploadItem";
 import $ from "jquery";

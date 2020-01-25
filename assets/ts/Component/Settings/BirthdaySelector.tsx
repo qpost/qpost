@@ -21,6 +21,7 @@ import React, {Component} from "react";
 import $ from "jquery";
 import moment from "moment";
 import {DatePicker} from "antd";
+import "antd/es/date-picker/style";
 
 export default class BirthdaySelector extends Component<any, {
 	birthday: string | undefined
