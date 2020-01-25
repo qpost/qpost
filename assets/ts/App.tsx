@@ -36,7 +36,6 @@ import Status from "./Pages/Status/Status";
 import Profile from "./Pages/Profile/Profile";
 import ProfileRedirect from "./Pages/Profile/ProfileRedirect";
 import PrivateRoute from "./Auth/PrivateRoute";
-import EditProfile from "./Pages/EditProfile/EditProfile";
 import BadgeStatus from "./Auth/BadgeStatus";
 import Notifications from "./Pages/Notifications/Notifications";
 import Messages from "./Pages/Messages/Messages";
@@ -179,7 +178,6 @@ export default class App extends Component<any, any> {
 														<Route path={"/"} exact component={HomeFeed}/> :
 														<Route path={"/"} exact component={Home}/>}
 
-													<PrivateRoute path={"/edit"} exact component={EditProfile}/>
 													<PrivateRoute path={"/notifications"} exact
 																  component={Notifications}/>
 													<PrivateRoute path={"/messages"} exact component={Messages}/>
