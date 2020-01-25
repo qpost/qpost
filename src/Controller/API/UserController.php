@@ -22,16 +22,12 @@ namespace qpost\Controller\API;
 
 use qpost\Entity\User;
 use qpost\Service\APIService;
-use qpost\Service\DataDeletionService;
-use qpost\Service\GigadriveService;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function count;
 use function is_null;
-use function is_string;
-use function password_verify;
 
 class UserController extends AbstractController {
 	/**
@@ -62,44 +58,6 @@ class UserController extends AbstractController {
 			}
 		} else {
 			return $apiService->json(["error" => "Unknown user"], 404);
-		}
-	}
-
-	/**
-	 * @Route("/api/user", methods={"DELETE"})
-	 *
-	 * @param APIService $apiService
-	 * @param GigadriveService $gigadriveService
-	 * @param DataDeletionService $dataDeletionService
-	 * @return Response|null
-	 */
-	public function delete(APIService $apiService, GigadriveService $gigadriveService, DataDeletionService $dataDeletionService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
-
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
-
-		if ($parameters->has("password")) {
-			$password = $parameters->get("password");
-
-			if (is_string("password")) {
-				$gigadriveData = $user->getGigadriveData();
-
-				$correctPassword = $gigadriveData ? $gigadriveService->verifyPassword($gigadriveData->getAccountId(), $password) : password_verify($password, $user->getPassword());
-
-				if ($correctPassword) {
-					$dataDeletionService->deleteUser($user);
-
-					return $apiService->noContent();
-				} else {
-					return $apiService->json(["error" => "Invalid password."], 400);
-				}
-			} else {
-				return $apiService->json(["error" => "'password' has to be a string."], 400);
-			}
-		} else {
-			return $apiService->json(["error" => "'password' is required."], 400);
 		}
 	}
 
