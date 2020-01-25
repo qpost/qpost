@@ -58,7 +58,10 @@ import BirthdaySelector from "./Component/Settings/BirthdaySelector";
 import HeaderSelector from "./Component/Settings/HeaderSelector";
 import AvatarSelector from "./Component/Settings/AvatarSelector";
 
-export default class App extends Component<any, any> {
+export default class App extends Component<any, {
+	validatedLogin: boolean,
+	error: string | null
+}> {
 	constructor(props) {
 		super(props);
 
