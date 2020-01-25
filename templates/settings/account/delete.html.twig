@@ -1,0 +1,10 @@
+{% extends "settings/base.html.twig" %}
+{% import "settings/macro.html.twig" as macro %}
+
+{% block content %}
+	{{ macro.settingsHeadline("Delete your account") }}
+
+	{% include "parts/flash.html.twig" %}
+
+
+{% endblock %}

@@ -30,6 +30,7 @@ use qpost\Constants\SettingsNavigationPoint;
 use qpost\Entity\User;
 use qpost\Exception\ProfileImageInvalidException;
 use qpost\Exception\ProfileImageTooBigException;
+use qpost\Service\DataDeletionService;
 use qpost\Service\ProfileImageService;
 use qpost\Twig\Twig;
 use qpost\Util\Util;
@@ -396,6 +397,18 @@ class SettingsController extends AbstractController {
 	 */
 	public function accountSessions(Request $request) {
 		return $this->renderAction("Active sessions", "settings/account/sessions.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS, $this->generateUrl(
+			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/settings/account/delete")
+	 * @param Request $request
+	 * @param DataDeletionService $deletionService
+	 * @return Response
+	 */
+	public function accountDelete(Request $request, DataDeletionService $deletionService) {
+		return $this->renderAction("Delete your account", "settings/account/delete.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
