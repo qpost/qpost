@@ -73,17 +73,6 @@ class APIDocsController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/apidocs/accountdata")
-	 * @return Response
-	 */
-	public function accountDataAction() {
-		return $this->render("apidocs/accountData.html.twig", Twig::param([
-			"title" => "Account data - API documentation",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_apidocs_accountdata", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
-	}
-
-	/**
 	 * @Route("/apidocs/badgestatus")
 	 * @return Response
 	 */
