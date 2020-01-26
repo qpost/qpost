@@ -33,6 +33,7 @@ import FeedEntryList from "./FeedEntryList";
 import {Alert, Icon} from "antd";
 import FavoriteList from "./FavoriteList";
 import ReplyList from "./ReplyList";
+import AppearanceSettings from "../../Util/AppearanceSettings";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
@@ -48,8 +49,13 @@ export default class FeedEntryListItem extends Component<{
 	constructor(props) {
 		super(props);
 
+		let entry = this.props.entry;
+		if (entry.getType() === FeedEntryType.SHARE) {
+			entry = entry.getPost();
+		}
+
 		this.state = {
-			nsfwWarningActive: this.props.entry.isNSFW(),
+			nsfwWarningActive: AppearanceSettings.showMatureWarning() && (entry || this.props.entry).isNSFW(),
 			redirect: false
 		};
 	}
@@ -63,14 +69,6 @@ export default class FeedEntryListItem extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		let entry: FeedEntry = this.props.entry;
 		let user: User = entry.getUser();
-
-		if (this.state.redirect) {
-			const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
-
-			sessionStorage.setItem("nextFeedEntry", JSON.stringify(entry));
-
-			return <Redirect push to={"/r/status/" + id}/>;
-		}
 
 		switch (entry.getType()) {
 			case FeedEntryType.POST:
@@ -97,6 +95,14 @@ export default class FeedEntryListItem extends Component<{
 					if (!user) {
 						return "";
 					}
+				}
+
+				if (this.state.redirect) {
+					const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
+
+					sessionStorage.setItem("nextFeedEntry", JSON.stringify(entry));
+
+					return <Redirect push to={"/r/status/" + id}/>;
 				}
 
 				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} onClick={(e) => {

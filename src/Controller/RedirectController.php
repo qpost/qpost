@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -105,5 +105,68 @@ class RedirectController extends AbstractController {
 	 */
 	public function advertise() {
 		return $this->redirect("https://go.qpo.st/advertise");
+	}
+
+	/**
+	 * @Route("/account")
+	 *
+	 * @return RedirectResponse
+	 */
+	public function account() {
+		return $this->redirectToRoute("qpost_settings_accountinformation");
+	}
+
+	/**
+	 * @Route("/account/privacy")
+	 *
+	 * @return RedirectResponse
+	 */
+	public function accountPrivacy() {
+		return $this->redirectToRoute("qpost_settings_privacy");
+	}
+
+	/**
+	 * @Route("/account/privacy/level")
+	 *
+	 * @return RedirectResponse
+	 */
+	public function accountPrivacyLevel() {
+		return $this->redirectToRoute("qpost_settings_privacy");
+	}
+
+	/**
+	 * @Route("/account/privacy/blocked")
+	 *
+	 * @return RedirectResponse
+	 */
+	public function accountPrivacyBlocked() {
+		return $this->redirectToRoute("qpost_settings_relationshipsblocked");
+	}
+
+	/**
+	 * @Route("/account/privacy/requests")
+	 *
+	 * @return RedirectResponse
+	 */
+	public function accountPrivacyRequests() {
+		return "TODO";
+	}
+
+	/**
+	 * @Route("/account/sessions")
+	 *
+	 * @return RedirectResponse
+	 */
+	public function accountSessions() {
+		return $this->redirectToRoute("qpost_settings_accountsessions");
+	}
+
+	/**
+	 * @Route("/edit")
+	 *
+	 * @return RedirectResponse
+	 */
+	public function edit() {
+		return $this->redirectToRoute("qpost_settings_profileappearance");
 	}
 }

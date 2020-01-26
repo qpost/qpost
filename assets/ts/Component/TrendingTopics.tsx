@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -25,6 +25,7 @@ import {Card, message} from "antd";
 import BaseObject from "../Serialization/BaseObject";
 import {Link} from "react-router-dom";
 import Storage from "../Util/Storage";
+import AppearanceSettings from "../Util/AppearanceSettings";
 
 export default class TrendingTopics extends Component<{
 	limit?: number
@@ -42,6 +43,10 @@ export default class TrendingTopics extends Component<{
 	}
 
 	componentDidMount(): void {
+		if (!AppearanceSettings.showTrendingTopics()) {
+			return;
+		}
+
 		const storedTopics = Storage.sessionGet(Storage.SESSION_TRENDING_TOPICS);
 		if (storedTopics) {
 			this.load(JSON.parse(storedTopics));
@@ -78,6 +83,10 @@ export default class TrendingTopics extends Component<{
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		if (!AppearanceSettings.showTrendingTopics()) {
+			return <div/>;
+		}
+
 		if (this.state.loading) {
 			return <div className={"text-center my-3"}>
 				<Spin size={"large"}/>

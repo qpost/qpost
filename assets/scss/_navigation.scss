@@ -137,3 +137,19 @@
 #accountDropdown:after {
 	display: none;
 }
+
+@mixin desktopHeaderUserStyle($bgColor) {
+	.desktopHeaderUser, .desktopHeaderSettings {
+		&, &:hover, &:active, &:focus {
+			background-color: $bgColor !important;
+			top: 0 !important;
+		}
+	}
+
+	.desktopHeaderUser, .desktopHeaderSettings {
+		padding: 0 15px !important;
+	}
+}
+
+@include desktopHeaderUserStyle(darken($primary, 10%));
+

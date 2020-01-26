@@ -18,6 +18,7 @@
  */
 
 import React, {Component} from "react";
+import ReactDOM from "react-dom";
 import NightMode from "./NightMode/NightMode";
 import LoadingScreen from "./Component/LoadingScreen";
 import API from "./API/API";
@@ -35,34 +36,32 @@ import Status from "./Pages/Status/Status";
 import Profile from "./Pages/Profile/Profile";
 import ProfileRedirect from "./Pages/Profile/ProfileRedirect";
 import PrivateRoute from "./Auth/PrivateRoute";
-import EditProfile from "./Pages/EditProfile/EditProfile";
 import BadgeStatus from "./Auth/BadgeStatus";
 import Notifications from "./Pages/Notifications/Notifications";
 import Messages from "./Pages/Messages/Messages";
-import Account from "./Pages/Account/Account";
-import Sessions from "./Pages/Account/Sessions";
-import ChangeUsername from "./Pages/Account/ChangeUsername";
 import ImageViewer from "./Component/ImageViewer";
 import LoginSuggestionModal from "./Component/LoginSuggestionModal";
 import About from "./Pages/About/About";
-import DeleteAccount from "./Pages/Account/DeleteAccount";
 import Goodbye from "./Pages/Goodbye/Goodbye";
 import PostForm from "./Component/PostForm/PostForm";
 import BlockModal from "./Component/BlockModal";
-import Privacy from "./Pages/Account/Privacy";
-import Blocked from "./Pages/Account/Blocked";
 import StatusRedirect from "./Pages/Status/StatusRedirect";
 import Search from "./Pages/Search/Search";
-import PrivacyLevel from "./Pages/Account/PrivacyLevel";
-import FollowRequests from "./Pages/Account/FollowRequests";
-import ChangePassword from "./Pages/Account/ChangePassword";
 import Analytics from "react-router-ga";
 import SearchRedirect from "./Pages/Search/SearchRedirect";
 import PushNotificationsManager from "./PushNotificationsManager";
 import BadgeUpdater from "./BadgeUpdater";
 import Storage from "./Util/Storage";
+import RelationshipList from "./Component/Settings/RelationshipList";
+import Sessions from "./Component/Settings/Sessions";
+import BirthdaySelector from "./Component/Settings/BirthdaySelector";
+import HeaderSelector from "./Component/Settings/HeaderSelector";
+import AvatarSelector from "./Component/Settings/AvatarSelector";
 
-export default class App extends Component<any, any> {
+export default class App extends Component<any, {
+	validatedLogin: boolean,
+	error: string | null
+}> {
 	constructor(props) {
 		super(props);
 
@@ -75,7 +74,48 @@ export default class App extends Component<any, any> {
 	public static init(): void {
 		if ($("#root").length) {
 			NightMode.init();
+		} else {
+			$(".settingsNavMobileLine .collapseButton").on("click", function (e) {
+				e.preventDefault();
+
+				$(".settingsNav").toggleClass("navHidden");
+			});
 		}
+
+		if ($("#relationshipListFollowing").length) {
+			ReactDOM.render(<RelationshipList
+				type={"FOLLOWING"}/>, document.getElementById("relationshipListFollowing"));
+		}
+
+		if ($("#relationshipListFollowers").length) {
+			ReactDOM.render(<RelationshipList
+				type={"FOLLOWERS"}/>, document.getElementById("relationshipListFollowers"));
+		}
+
+		if ($("#relationshipListBlocked").length) {
+			ReactDOM.render(<RelationshipList type={"BLOCKED"}/>, document.getElementById("relationshipListBlocked"));
+		}
+
+		if ($("#sessionList").length) {
+			ReactDOM.render(<Sessions/>, document.getElementById("sessionList"));
+		}
+
+		if ($("#birthdaySelector").length) {
+			ReactDOM.render(<BirthdaySelector/>, document.getElementById("birthdaySelector"));
+		}
+
+		if ($("#avatarSelector").length) {
+			ReactDOM.render(<AvatarSelector/>, document.getElementById("avatarSelector"));
+		}
+
+		if ($("#headerSelector").length) {
+			ReactDOM.render(<HeaderSelector/>, document.getElementById("headerSelector"));
+		}
+
+		$("#settingsNavLogoutButton").on("click", (e) => {
+			e.preventDefault();
+			Auth.logout();
+		});
 
 		Storage.cleanTask();
 	}
@@ -141,26 +181,9 @@ export default class App extends Component<any, any> {
 														<Route path={"/"} exact component={HomeFeed}/> :
 														<Route path={"/"} exact component={Home}/>}
 
-													<PrivateRoute path={"/edit"} exact component={EditProfile}/>
 													<PrivateRoute path={"/notifications"} exact
 																  component={Notifications}/>
 													<PrivateRoute path={"/messages"} exact component={Messages}/>
-													<PrivateRoute path={"/account/sessions"} exact
-																  component={Sessions}/>
-													<PrivateRoute path={"/account/delete"} exact
-																  component={DeleteAccount}/>
-													<PrivateRoute path={"/account/privacy"} exact component={Privacy}/>
-													<PrivateRoute path={"/account/privacy/blocked"} exact
-																  component={Blocked}/>
-													<PrivateRoute path={"/account/privacy/level"} exact
-																  component={PrivacyLevel}/>
-													<PrivateRoute path={"/account/privacy/requests"} exact
-																  component={FollowRequests}/>
-													<PrivateRoute path={"/account/username"} exact
-																  component={ChangeUsername}/>
-													<PrivateRoute path={"/account/password"} exact
-																  component={ChangePassword}/>
-													<PrivateRoute path={"/account"} exact component={Account}/>
 													<Route path={"/search"} exact component={Search}/>
 													<Route path={"/hashtag/:query"} exact component={SearchRedirect}/>
 													<Route path={"/goodbye"} exact component={Goodbye}/>

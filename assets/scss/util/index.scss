@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -61,5 +61,11 @@
 .card-nopadding {
 	.ant-card-body {
 		padding: 0 !important;
+	}
+}
+
+.h-md-100 {
+	@include media-breakpoint-up(md) {
+		min-height: 100% !important;
 	}
 }

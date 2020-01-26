@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -18,6 +18,7 @@
  */
 
 import $ from "jquery";
+import AppearanceSettings from "../Util/AppearanceSettings";
 
 export default class NightMode {
 	public static init(): void {
@@ -50,9 +51,7 @@ export default class NightMode {
 	}
 
 	public static isActive(): boolean {
-		const storedValue = localStorage.getItem("nightMode");
-
-		return !!(storedValue && storedValue === "true");
+		return AppearanceSettings.enablesNightMode();
 	}
 
 	public static toggle(): void {
