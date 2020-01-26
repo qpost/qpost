@@ -49,8 +49,13 @@ export default class FeedEntryListItem extends Component<{
 	constructor(props) {
 		super(props);
 
+		let entry = this.props.entry;
+		if (entry.getType() === FeedEntryType.SHARE) {
+			entry = entry.getPost();
+		}
+
 		this.state = {
-			nsfwWarningActive: AppearanceSettings.showMatureWarning() && this.props.entry.isNSFW(),
+			nsfwWarningActive: AppearanceSettings.showMatureWarning() && (entry || this.props.entry).isNSFW(),
 			redirect: false
 		};
 	}
