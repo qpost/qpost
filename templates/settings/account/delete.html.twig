@@ -1,0 +1,43 @@
+{% extends "settings/base.html.twig" %}
+{% import "settings/macro.html.twig" as macro %}
+
+{% block content %}
+	{{ macro.settingsHeadline("Delete your account") }}
+
+	{% include "parts/flash.html.twig" %}
+
+	<div class="text-center my-3">
+		<div>
+			<img src="{{ app.user.avatarURL }}" class="rounded border-mainColor" width="128" height="128"
+				 alt="{{ app.user.username }}"/>
+		</div>
+
+		<p class="mb-0 font-weight-bold">{{ app.user.displayName }}</p>
+		<p class="mb-0 text-muted small">@{{ app.user.username }}</p>
+	</div>
+
+	<p>
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>This will <b>permanently</b> delete all of your
+		created content, including your posts, favorites, replies and follows.
+		<br/>
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>Cached content may still be available for a while.
+		<br/>
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>This process is completely <b>irreversible</b>.
+		<br/>
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>You will <b>not</b> be able to reactivate your account
+		at all.
+	</p>
+
+	<form action="{{ path("qpost_settings_accountdelete") }}" method="post">
+		{% include "parts/csrf.html.twig" %}
+
+		<div class="form-group">
+			<input type="password" class="form-control" id="password" name="password"
+				   placeholder="Enter your password"/>
+		</div>
+
+		<button type="submit" class="btn btn-danger btn-block">
+			Delete account
+		</button>
+	</form>
+{% endblock %}

@@ -1,0 +1,110 @@
+/*!
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpo.st
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.settingsNavMobileLine {
+	background-color: #001529;
+
+	img {
+		height: 1.7em;
+		margin-left: 10px;
+		margin-top: 8px;
+	}
+
+	button.collapseButton {
+		background-color: darken(#001529, 5%);
+		padding: 10px 15px;
+		border: none !important;
+		outline: none !important;
+	}
+}
+
+.navigationColumn {
+	@include media-breakpoint-up(md) {
+		background-color: #001529;
+		display: flex;
+		justify-content: flex-end;
+		padding-top: 20px;
+	}
+
+	.nav.nav-pills {
+		@include media-breakpoint-up(md) {
+			width: 200px;
+		}
+
+		@include media-breakpoint-down(sm) {
+			background-color: #001529;
+
+			.dropdown-divider {
+				display: none;
+			}
+		}
+
+		.nav-item {
+			margin-bottom: 10px;
+
+			&.open {
+				.child {
+					padding-left: 40px;
+					border-radius: 0;
+
+					&:not(.active) {
+						background-color: lighten(#001529, 5%);
+					}
+				}
+
+				:first-child {
+					&:not(.active):not(i) {
+						background-color: lighten(#001529, 5%);
+					}
+				}
+			}
+
+			&:not(.open) {
+				.child {
+					display: none;
+				}
+			}
+		}
+
+		.dropdown-divider {
+			border-color: lighten(#001529, 15%);
+			margin-bottom: 10px;
+			margin-top: 0;
+		}
+
+		a {
+			color: #FFF !important;
+			border-radius: 0;
+
+			@include media-breakpoint-up(md) {
+				&:hover:not(.active) {
+					background-color: lighten(#001529, 10%);
+				}
+			}
+		}
+	}
+}
+
+@include media-breakpoint-down(sm) {
+	.settingsNav {
+		&.navHidden {
+			display: none;
+		}
+	}
+}

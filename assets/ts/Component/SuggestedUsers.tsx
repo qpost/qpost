@@ -30,6 +30,7 @@ import FollowStatus from "../Util/FollowStatus";
 import {Card} from "antd";
 import Auth from "../Auth/Auth";
 import Storage from "../Util/Storage";
+import AppearanceSettings from "../Util/AppearanceSettings";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -42,7 +43,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 	}
 
 	componentDidMount(): void {
-		if (Auth.isLoggedIn()) {
+		if (Auth.isLoggedIn() && AppearanceSettings.showSuggestedUsers()) {
 			const storedUsers = Storage.sessionGet(Storage.SESSION_SUGGESTED_USERS);
 			if (storedUsers) {
 				this.load(JSON.parse(storedUsers));
@@ -72,7 +73,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		if (!Auth.isLoggedIn()) return <div/>;
+		if (!Auth.isLoggedIn() || !AppearanceSettings.showSuggestedUsers()) return <div/>;
 
 		if (this.state.loading) {
 			return <div className={"text-center my-3"}>

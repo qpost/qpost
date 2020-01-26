@@ -1,0 +1,106 @@
+{% extends "settings/base.html.twig" %}
+{% import "settings/macro.html.twig" as macro %}
+
+{% block content %}
+	{{ macro.settingsHeadline("Account information") }}
+
+	{% include "parts/flash.html.twig" %}
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Username</p>
+
+				<div>
+					@{{ app.user.username }}
+
+					<a class="float-right" href="{{ path("qpost_settings_accountusername") }}">(change)</a>
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Email Address</p>
+
+				<div>
+					{{ app.user.email }}
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Date joined</p>
+
+				<div>
+					{{ app.user.time|date("F jS, Y h:i:s A") }} UTC
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Date of birth</p>
+
+				<div>
+					{{ app.user.birthday ? app.user.birthday|date("F jS, Y") : "N/A" }}
+
+					<a class="float-right" href="{{ path("qpost_settings_profileappearance") }}">(change)</a>
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Account ID</p>
+
+				<div>
+					#{{ app.user.id }}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Current follow requests</p>
+
+				<a href="{{ path("qpost_redirect_accountprivacyrequests") }}">
+					View All
+				</a>
+			</div>
+
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Accounts following you</p>
+
+				<a href="{{ path("qpost_settings_relationshipsfollowers") }}">
+					View All
+				</a>
+			</div>
+
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Accounts you follow</p>
+
+				<a href="{{ path("qpost_settings_relationshipsfollowing") }}">
+					View All
+				</a>
+			</div>
+
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Posts you favorited</p>
+
+				<a href="{{ path("qpost_page_profile_favorites", {"username": app.user.username}) }}">
+					View All
+				</a>
+			</div>
+
+			<div class="mb-3">
+				<p class="mb-0 font-weight-bold">Accounts you blocked</p>
+
+				<a href="{{ path("qpost_redirect_accountprivacyrequests") }}">
+					View All
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<hr class="settingsHeadlineSeparator mt-5"/>
+
+	<div class="mb-4">
+		<p class="mb-0 font-weight-bold">Delete your account</p>
+		<p class="mb-0 text-muted"><a href="{{ path("qpost_settings_accountdelete") }}">Click here</a> if you wish to
+			delete your account.</p>
+	</div>
+{% endblock %}

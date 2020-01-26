@@ -235,6 +235,11 @@ class User implements UserInterface {
 	 */
 	private $creationIP;
 
+	/**
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\UserAppearanceSettings", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $appearanceSettings;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -1306,6 +1311,28 @@ class User implements UserInterface {
 
 	public function setCreationIP(?string $creationIP): self {
 		$this->creationIP = $creationIP;
+
+		return $this;
+	}
+
+	public function getAppearanceSettings(): ?UserAppearanceSettings {
+		if (is_null($this->appearanceSettings)) {
+			$this->setAppearanceSettings(
+				(new UserAppearanceSettings())
+					->setUser($this)
+			);
+		}
+
+		return $this->appearanceSettings;
+	}
+
+	public function setAppearanceSettings(UserAppearanceSettings $appearanceSettings): self {
+		$this->appearanceSettings = $appearanceSettings;
+
+		// set the owning side of the relation if necessary
+		if ($appearanceSettings->getUser() !== $this) {
+			$appearanceSettings->setUser($this);
+		}
 
 		return $this;
 	}

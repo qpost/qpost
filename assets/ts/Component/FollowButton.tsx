@@ -21,7 +21,6 @@ import React, {Component} from "react";
 import User from "../Entity/Account/User";
 import FollowStatus from "../Util/FollowStatus";
 import Auth from "../Auth/Auth";
-import {Redirect} from "react-router-dom";
 import API from "../API/API";
 import message from "antd/es/message";
 import "antd/es/message/style";
@@ -40,7 +39,6 @@ export default class FollowButton extends Component<{
 	size?: "small" | "large" | "default",
 	block?: boolean
 }, {
-	redirectToEditPage: boolean,
 	loading: boolean,
 	followStatus: number | null,
 	error: string | null
@@ -51,7 +49,6 @@ export default class FollowButton extends Component<{
 		super(props);
 
 		this.state = {
-			redirectToEditPage: false,
 			loading: this.props.followStatus === undefined && !this.props.target.isBlocked(),
 			followStatus: undefined,
 			error: null
@@ -63,9 +60,8 @@ export default class FollowButton extends Component<{
 
 		if (Auth.isLoggedIn()) {
 			if (this.isCurrentUser()) {
-				this.setState({
-					redirectToEditPage: true
-				});
+				window.location.href = "/edit";
+				return;
 			} else {
 				if (!this.state.loading) {
 					window.localStorage.removeItem(Storage.SESSION_SUGGESTED_USERS);
@@ -131,7 +127,7 @@ export default class FollowButton extends Component<{
 			if (Auth.isLoggedIn()) {
 				if (!this.isCurrentUser()) {
 					API.handleRequest("/follow", "GET", {
-						from: Auth.getCurrentUser().getId(),
+						from: window["CURRENT_USER_ID"],
 						to: this.props.target.getId()
 					}, data => {
 						if (data.status) {
@@ -180,10 +176,6 @@ export default class FollowButton extends Component<{
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		if (this.state.redirectToEditPage) {
-			return <Redirect push to={"/edit"}/>
-		}
-
 		let text: string = "";
 
 		if (this.isCurrentUser()) {
@@ -224,7 +216,6 @@ export default class FollowButton extends Component<{
 	}
 
 	private isCurrentUser(): boolean {
-		const currentUser = Auth.getCurrentUser();
-		return currentUser && currentUser.getId() === this.props.target.getId();
+		return window["CURRENT_USER_ID"] === this.props.target.getId();
 	}
 }

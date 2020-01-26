@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -17,19 +17,16 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React, {Component} from "react";
-import AccountBase from "./AccountBase";
-import {Button, Card, Col, message, Row} from "antd";
-import Auth from "../../Auth/Auth";
-import Spin from "antd/es/spin";
+import {Alert, Button, Card, Col, message, Row, Spin} from "antd";
 import API from "../../API/API";
-import Alert from "antd/es/alert";
+import React, {Component} from "react";
 import Token from "../../Entity/Account/Token";
 import BaseObject from "../../Serialization/BaseObject";
-import {UAParser} from "ua-parser-js";
-import {convertUserAgentToIconClass} from "../../Util/Format";
 import IpStackResult from "../../Entity/Account/IpStackResult";
-import TimeAgo from "../../Component/TimeAgo";
+import {UAParser} from "ua-parser-js";
+import Auth from "../../Auth/Auth";
+import {convertUserAgentToIconClass} from "../../Util/Format";
+import TimeAgo from "../TimeAgo";
 
 export default class Sessions extends Component<any, {
 	loading: boolean,
@@ -107,10 +104,7 @@ export default class Sessions extends Component<any, {
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		const user = Auth.getCurrentUser();
-		if (!user) return "";
-
-		return <AccountBase activeKey={"SESSIONS"}>
+		return <div>
 			{!this.state.loading ? <Row gutter={24}>
 				{this.state.tokens.map((token: Token, index: number) => {
 					const userAgentString = token.getUserAgent();
@@ -173,6 +167,6 @@ export default class Sessions extends Component<any, {
 			</Row> : this.state.error === null ? <div className={"text-center my-3"}>
 				<Spin size={"large"}/>
 			</div> : <Alert message={this.state.error} type="error"/>}
-		</AccountBase>
+		</div>
 	}
 }

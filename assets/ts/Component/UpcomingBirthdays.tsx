@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -30,6 +30,7 @@ import Auth from "../Auth/Auth";
 import TimeAgo from "./TimeAgo";
 import {placeZeroBelowTen} from "../Util/Format";
 import Storage from "../Util/Storage";
+import AppearanceSettings from "../Util/AppearanceSettings";
 
 export default class UpcomingBirthdays extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -42,7 +43,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 	}
 
 	componentDidMount(): void {
-		if (Auth.isLoggedIn()) {
+		if (Auth.isLoggedIn() && AppearanceSettings.showUpcomingBirthdays()) {
 			const storedBirthdays = Storage.sessionGet(Storage.SESSION_UPCOMING_BIRTHDAYS);
 			if (storedBirthdays) {
 				this.load(JSON.parse(storedBirthdays));
@@ -76,7 +77,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		if (!Auth.isLoggedIn()) return <div/>;
+		if (!Auth.isLoggedIn() || !AppearanceSettings.showUpcomingBirthdays()) return <div/>;
 
 		if (this.state.loading) {
 			return <div className={"text-center my-3"}>

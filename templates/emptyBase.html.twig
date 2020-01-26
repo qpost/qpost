@@ -9,7 +9,7 @@
 	{% set title = "The open-source Twitter alternative - qpost" %}
 {% endif %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{% block additionalHtmlClasses %}{% endblock %}">
 <head>
 	<title>{{ title }}</title>
 
@@ -69,9 +69,14 @@
 	{% endif %}
 
 	<script type="text/javascript">
-		window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
+		window["CURRENT_USER_ID"] = {{ app.user ? app.user.id : 0 }}
+			window["CSRF_TOKEN"] = "{{ csrf_token("csrf") }}";
 		window["POST_CHARACTER_LIMIT"] = {{ postCharacterLimit }};
 		window["INCREASED_POST_CHARACTER_LIMIT"] = {{ increasedPostCharacterLimit }};
+
+		{% if app.user %}
+		window["APPEARANCE_SETTINGS"] = JSON.parse('{{ app.user.appearanceSettings|jms|raw }}');
+		{% endif %}
 
 		window["restoreTitle"] = "{{ profileLoadPost is defined ? originalTitle }}";
 		window["CURRENT_STATUS_MODAL"] = 0;

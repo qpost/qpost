@@ -57,6 +57,18 @@ class BlockRepository extends ServiceEntityRepository {
 				->getSingleScalarResult() > 0;
 	}
 
+	public function getBlock(User $user, User $target): ?Block {
+		return ($user->getId() === $target->getId()) ? null : $this->createQueryBuilder("b")
+			->where("b.user = :user")
+			->setParameter("user", $user)
+			->andWhere("b.target = :target")
+			->setParameter("target", $target)
+			->setMaxResults(1)
+			->getQuery()
+			->useQueryCache(true)
+			->getOneOrNullResult();
+	}
+
 	public function getBlocks(User $user, ?int $max = null): array {
 		$builder = $this->createQueryBuilder("b")
 			->where("b.user = :user")
