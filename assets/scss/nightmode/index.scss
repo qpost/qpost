@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -43,4 +43,6 @@ html.nightMode, html.nightMode > body {
 	@import "tables";
 	@import "text";
 	@import "util";
+
+	@include desktopHeaderUserStyle(darken(#001529, 3%));
 }

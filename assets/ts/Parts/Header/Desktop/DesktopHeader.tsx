@@ -28,7 +28,6 @@ import "antd/es/layout/style";
 import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
 import Auth from "../../../Auth/Auth";
-import SubMenu from "antd/es/menu/SubMenu";
 import BadgeStatus from "../../../Auth/BadgeStatus";
 
 export default class DesktopHeader extends Component<{
@@ -72,7 +71,7 @@ export default class DesktopHeader extends Component<{
 						</Link>
 					</Menu.Item>,
 
-						<Menu.Item key={1}>
+						<Menu.Item key={1} className={"d-none d-lg-inline-block"}>
 							<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
 								my profile
 							</Link>
@@ -97,25 +96,19 @@ export default class DesktopHeader extends Component<{
 							</Link>
 						</Menu.Item>,
 
-						<SubMenu title={<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
-							<img src={currentUser.getAvatarURL()} width={24} height={24} alt={currentUser.getUsername()}
-								 className={"rounded"}/><span className={"ml-2"}>{currentUser.getUsername()}</span>
-						</Link>}>
-							<Menu.Item>
-								<a href={"/settings/profile/appearance"} className={"clearUnderline"}>
-									Settings and privacy
-								</a>
-							</Menu.Item>
+						<Menu.Item key={4} className={"desktopHeaderUser"}>
+							<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
+								<img src={currentUser.getAvatarURL()} width={24} height={24}
+									 alt={currentUser.getUsername()}
+									 className={"rounded"}/><span className={"ml-2"}>{currentUser.getUsername()}</span>
+							</Link>
+						</Menu.Item>,
 
-							<Menu.Item>
-								<a href={"/logout"} className={"clearUnderline"} onClick={(e) => {
-									e.preventDefault();
-									Auth.logout();
-								}}>
-									Log out
-								</a>
-							</Menu.Item>
-						</SubMenu>] : <Menu.Item>
+						<Menu.Item key={5} className={"desktopHeaderSettings"}>
+							<a href={"/settings/preferences/appearance"} className={"clearUnderline"}>
+								<i className="fas fa-cog"/>
+							</a>
+						</Menu.Item>] : <Menu.Item>
 						<a href={"/login"} className={"clearUnderline"}>
 							log in
 						</a>
