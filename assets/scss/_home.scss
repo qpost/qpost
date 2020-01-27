@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -23,6 +23,37 @@
 	background: -webkit-linear-gradient(180deg, rgba(0, 123, 255, 1) 0%, rgba(0, 176, 255, 1) 59%, rgba(149, 222, 255, 1) 100%);
 	background: linear-gradient(180deg, rgba(0, 123, 255, 1) 0%, rgba(0, 176, 255, 1) 59%, rgba(149, 222, 255, 1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#007bff", endColorstr="#95deff", GradientType=1);
+}
+
+.homeNav {
+	@include clearfix();
+
+	.logo {
+		padding: 0.375rem 0.75rem;
+
+		@include media-breakpoint-up(md) {
+			float: left;
+		}
+
+		@include media-breakpoint-down(sm) {
+			text-align: center;
+		}
+
+		img {
+			height: calc(1em + 20px);
+		}
+	}
+
+	.navPoints {
+		@include media-breakpoint-up(md) {
+			float: right;
+		}
+
+		@include media-breakpoint-down(sm) {
+			text-align: center;
+			margin-top: 10px;
+		}
+	}
 }
 
 .homeBase {

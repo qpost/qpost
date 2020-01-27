@@ -1,21 +1,29 @@
 {% extends "emptyBase.html.twig" %}
 
-{% block additionalBodyClasses %}homeBackground{% endblock %}
+{% block additionalHtmlClasses %}settingsPage{% endblock %}
 
 {% block body %}
 	<div class="identifier--forceDayMode"></div> {# <-- DISABLES NIGHTMODE #}
 
 	<div class="homeBase">
 		<div class="container pt-3">
-			<div class="float-right">
-				<a href="{{ path("qpost_page_about") }}" class="btn btn-link text-white mb-2 mr-3">about</a>
+			<div class="homeNav">
+				<div class="logo">
+					<a href="{{ path("qpost_home_index") }}" class="clearUnderline">
+						<img src="/assets/img/qpost-white-tiny.png" alt="qpost Logo" title="qpost Logo"/>
+					</a>
+				</div>
 
-				<a href="{{ path("qpost_download_index") }}" class="btn btn-link text-white mb-2 mr-3">download</a>
+				<div class="navPoints">
+					<a href="{{ path("qpost_page_about") }}" class="btn btn-link text-white mb-2 mr-3">about</a>
 
-				<a href="https://gigadrivegroup.com/advertise" target="_blank"
-				   class="btn btn-link text-white mb-2 mr-3">advertise</a>
+					<a href="{{ path("qpost_download_index") }}" class="btn btn-link text-white mb-2 mr-3">download</a>
 
-				<a href="{{ path("qpost_login_index") }}" class="btn btn-link text-white mb-2">log in</a>
+					<a href="https://gigadrivegroup.com/advertise" target="_blank"
+					   class="btn btn-link text-white mb-2 mr-3">advertise</a>
+
+					<a href="{{ path("qpost_login_index") }}" class="btn btn-link text-white mb-2">log in</a>
+				</div>
 			</div>
 		</div>
 

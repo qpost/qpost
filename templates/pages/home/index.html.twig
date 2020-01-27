@@ -1,8 +1,6 @@
 {% extends "homeBase.html.twig" %}
 
 {% block content %}
-	<img src="/assets/img/qpost-white-tiny.png" class="homeLogo" alt="qpost Logo" title="qpost Logo"/>
-
 	<h1 class="homeDescriptionText">
 		A social microblogging network that helps you share your thoughts online, protected by freedom of speech.
 	</h1>
@@ -41,7 +39,7 @@
 
 					<hr/>
 
-					<input type="submit" class="btn btn-primary btn-block" value="Create Account"/>
+					<input type="submit" class="btn btn-primary btn-block bootstrapButton" value="Create Account"/>
 
 					<div class="homeLoginOr small text-center mb-3 mt-1">OR</div>
 
@@ -56,7 +54,7 @@
 			</div>
 
 			<div class="appStoreIcons">
-				<a href="{{ path("qpost_download_index") }}" class="btn btn-primary btn-lg px-5 py-3">
+				<a href="{{ path("qpost_download_index") }}" class="btn btn-primary btn-lg px-5 py-3 bootstrapButton">
 					Download the app
 				</a>
 			</div>
