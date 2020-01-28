@@ -56,6 +56,27 @@
 	}
 }
 
+.homeDownloadButton, .homeLoginButton {
+	a {
+		width: 100%;
+		max-width: 200px;
+	}
+
+	@include media-breakpoint-up(md) {
+		display: inline;
+	}
+
+	@include media-breakpoint-down(sm) {
+		margin-bottom: 10px;
+	}
+}
+
+@include media-breakpoint-up(md) {
+	.homeDownloadButton {
+		margin-right: 10px;
+	}
+}
+
 .homeBase {
 	min-height: 100%;
 
@@ -72,15 +93,11 @@
 	}
 
 	.homeDescriptionText {
-		@extend .mt-3;
+		@extend .my-3;
 
 		margin: 0;
 		font-size: 28px;
 		color: #FFF;
-
-		@include media-breakpoint-up(md) {
-			max-width: 60%;
-		}
 	}
 
 	.homeLoginOr {

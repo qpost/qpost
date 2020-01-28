@@ -34,7 +34,7 @@
 	}
 }
 
-.btn-light {
+.btn-light:not(.bootstrapButton) {
 	color: #f8f9fa !important;
 	background-color: #212529 !important;
 	border-color: #212529 !important;

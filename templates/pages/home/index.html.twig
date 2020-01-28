@@ -1,9 +1,23 @@
 {% extends "homeBase.html.twig" %}
 
 {% block content %}
-	<h1 class="homeDescriptionText">
-		A social microblogging network that helps you share your thoughts online, protected by freedom of speech.
-	</h1>
+	<div class="text-center">
+		<h1 class="homeDescriptionText">
+			A social microblogging network that helps you share your thoughts online, protected by freedom of speech.
+		</h1>
+
+		<div class="homeDownloadButton">
+			<a href="{{ path("qpost_download_index") }}" class="btn btn-light px-3 py-2 bootstrapButton">
+				Download the app
+			</a>
+		</div>
+
+		<div class="homeLoginButton">
+			<a href="{{ path("qpost_login_index") }}" class="btn btn-primary px-3 py-2 bootstrapButton">
+				Log in
+			</a>
+		</div>
+	</div>
 
 	<div class="homeRegisterBoxContainer">
 		<div class="homeSponsorBox">
@@ -51,12 +65,6 @@
 								href="{{ path("qpost_redirect_terms") }}" target="_blank">terms of service</a>.
 					</p>
 				</form>
-			</div>
-
-			<div class="appStoreIcons">
-				<a href="{{ path("qpost_download_index") }}" class="btn btn-primary btn-lg px-5 py-3 bootstrapButton">
-					Download the app
-				</a>
 			</div>
 		</div>
 	</div>
