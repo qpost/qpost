@@ -34,35 +34,105 @@
 		</div>
 	</div>
 
-	<div class="container container-fluid my-5">
-		<div class="text-center small text-muted text-uppercase font-weight-bold homeFooter">
-			<a href="{{ path("qpost_redirect_contact") }}" target="_blank" class="clearUnderline mx-3">
-				Contact Info
-			</a>
+	<div class="homeFooter">
+		<div class="container container-fluid">
+			<div class="row">
+				<div class="column">
+					<p class="headline">Product</p>
 
-			{#<a href="{{ path("qpost_redirect_help") }}" target="_blank" class="clearUnderline mx-3">
-				Support
-			</a>#}
+					<ul>
+						<li>
+							<a href="{{ path("qpost_download_index") }}">Download</a>
+						</li>
 
-			<a href="{{ path("qpost_redirect_terms") }}" class="clearUnderline mx-3">
-				Terms of Service
-			</a>
+						<li>
+							<a href="{{ path("qpost_home_index") }}">Register</a>
+						</li>
 
-			<a href="{{ path("qpost_redirect_privacy") }}" class="clearUnderline mx-3">
-				Privacy Policy
-			</a>
+						<li>
+							<a href="https://status.gigadrivegroup.com">Status</a>
+						</li>
 
-			<a href="{{ path("qpost_redirect_disclaimer") }}" class="clearUnderline mx-3">
-				Disclaimer
-			</a>
+						<li>
+							<a href="mailto:support@gigadrivegroup.com">Support</a>
+						</li>
+					</ul>
+				</div>
 
-			<a href="{{ path("qpost_apidocs_index") }}" class="clearUnderline mx-3">
-				Developers
-			</a>
+				<div class="column">
+					<p class="headline">Developers</p>
 
-			<br/><br/>
+					<ul>
+						<li>
+							<a href="{{ path("qpost_apidocs_index") }}">API documentation</a>
+						</li>
 
-			&copy; 2018-{{ "now"|date("Y") }} Gigadrive
+						<li>
+							<a href="https://gitlab.com/Gigadrive/qpost">Source Code</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="column">
+					<p class="headline">Company</p>
+
+					<ul>
+						<li>
+							<a href="https://blog.gigadrivegroup.com" target="_blank">Blog</a>
+						</li>
+
+						<li>
+							<a href="#">Branding</a>
+						</li>
+
+						<li>
+							<a href="{{ path("qpost_redirect_advertise") }}" target="_blank">Advertise</a>
+						</li>
+
+						<li>
+							<a href="https://linkedin.com/company/qpost" target="_blank">LinkedIn</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="column">
+					<p class="headline">Legal</p>
+
+					<ul>
+						<li>
+							<a href="{{ path("qpost_redirect_contact") }}" target="_blank">Contact Information</a>
+						</li>
+
+						<li>
+							<a href="{{ path("qpost_redirect_terms") }}">Terms</a>
+						</li>
+
+						<li>
+							<a href="{{ path("qpost_redirect_rules") }}">Rules &amp; Guidelines</a>
+						</li>
+
+						<li>
+							<a href="{{ path("qpost_redirect_privacy") }}">Privacy</a>
+						</li>
+
+						<li>
+							<a href="{{ path("qpost_redirect_disclaimer") }}">Disclaimer</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<hr/>
+
+			<div class="clearfix">
+				<div class="left">
+					&copy; 2018-{{ "now"|date("Y") }} Gigadrive
+				</div>
+
+				<div class="right">
+					right
+				</div>
+			</div>
 		</div>
 	</div>
 {% endblock %}

@@ -77,6 +77,38 @@
 	}
 }
 
+.homeFooter {
+	background-color: lighten(#000b17, 5%);
+	padding: 25px 0;
+
+	.column {
+		@extend .col-md-3, .col-6;
+
+		.headline {
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+
+		ul {
+			list-style-type: none;
+			padding-left: 0;
+		}
+	}
+
+	.left {
+		@include media-breakpoint-up(md) {
+			float: left;
+		}
+	}
+
+	.right {
+		@include media-breakpoint-up(md) {
+			float: right;
+			text-align: right;
+		}
+	}
+}
+
 .homeBase {
 	min-height: 100%;
 
