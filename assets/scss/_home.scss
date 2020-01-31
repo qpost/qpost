@@ -128,8 +128,17 @@
 		@extend .my-3;
 
 		margin: 0;
+	}
+
+	h1.homeDescriptionText {
 		font-size: 28px;
 		color: #FFF;
+	}
+
+	h2.homeDescriptionText {
+		font-size: 18px;
+		color: darken(#FFF, 30%);
+		font-weight: normal;
 	}
 
 	.homeLoginOr {

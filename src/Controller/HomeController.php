@@ -54,7 +54,7 @@ class HomeController extends AbstractController {
 				"A social microblogging network that helps you share your thoughts online, protected by freedom of speech",
 				"The social network with actual free speech",
 				"The Twitter alternative is here!",
-				"It's time to replace Twitter and Mastodon."
+				"Time to get rid of Twitter and Mastodon."
 			];
 
 			$headline = $availableHeadlines[rand(0, count($availableHeadlines) - 1)];
