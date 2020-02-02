@@ -148,6 +148,12 @@
 		font-weight: bold;
 	}
 
+	.homeWaveBackground {
+		background-image: url('/assets/img/homeWaveBackground.png');
+		background-repeat: no-repeat;
+		background-position: center bottom;
+	}
+
 	.homeHighlighted {
 		background-color: lighten(#000b17, 5%);
 	}
