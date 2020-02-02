@@ -148,6 +148,75 @@
 		font-weight: bold;
 	}
 
+	.homeHighlighted {
+		background-color: lighten(#000b17, 5%);
+	}
+
+	.homeFeatureList {
+		@include media-breakpoint-down(md) {
+			text-align: center;
+		}
+
+		.feature {
+			@extend .row, .align-items-center;
+
+			margin-bottom: 25px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			.icon {
+				@extend .col-lg-1;
+
+				@include media-breakpoint-down(md) {
+					margin-bottom: 10px;
+				}
+
+				i, svg {
+					font-size: 48px;
+					color: lighten(#001731, 25%);
+
+					@include media-breakpoint-down(md) {
+						font-size: 24px;
+					}
+				}
+
+				&.left {
+					@extend .order-lg-first;
+				}
+
+				&.right {
+					@extend .order-lg-last;
+
+					@include media-breakpoint-up(lg) {
+						text-align: right;
+					}
+				}
+			}
+
+			.description {
+				@extend .col-lg-11;
+
+				&.right {
+					@include media-breakpoint-up(lg) {
+						text-align: right !important;
+					}
+				}
+
+				.headline {
+					font-size: 21px;
+					font-weight: bold;
+					margin-bottom: 0;
+				}
+
+				.text {
+
+				}
+			}
+		}
+	}
+
 	.homeRegisterBoxContainer {
 		@extend .row;
 
@@ -155,29 +224,10 @@
 			padding: 0 20px;
 		}
 
-		.homeSponsorBox {
+		.homeLeftBox {
 			@extend .col-12, .col-lg-7, .mt-5, .text-white, .text-center, .order-last, .order-md-first;
 
-			@include media-breakpoint-down(sm) {
-				box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
-				border-radius: .25rem !important;
-				background-color: #1d2124;
-				padding: 30px;
-			}
 
-			h4 {
-				color: #FFF;
-				font-weight: bold;
-				letter-spacing: 4px;
-				text-transform: uppercase;
-				margin-top: 30px;
-			}
-
-			a {
-				@include media-breakpoint-up(md) {
-					padding: 15px;
-				}
-			}
 		}
 
 		.homeRegisterBox {
@@ -222,6 +272,24 @@
 				img {
 					height: 70px;
 				}
+			}
+		}
+	}
+
+	.homeSponsors {
+		@extend .mt-5, .text-white, .text-center;
+
+		h4 {
+			color: #FFF;
+			font-weight: bold;
+			letter-spacing: 4px;
+			text-transform: uppercase;
+			margin-top: 30px;
+		}
+
+		a {
+			@include media-breakpoint-up(md) {
+				padding: 15px;
 			}
 		}
 	}
