@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -29,7 +29,8 @@ import LoginSuggestionModal from "../../LoginSuggestionModal";
 
 export default class ShareButton extends Component<{
 	entry: FeedEntry,
-	parent?: FeedEntryActionButtons
+	parent?: FeedEntryActionButtons,
+	onEntryUpdate?: (entry: FeedEntry) => void
 }, {
 	shared: boolean,
 	loading: boolean,
@@ -62,6 +63,10 @@ export default class ShareButton extends Component<{
 							loading: false,
 							entry: BaseObject.convertObject(FeedEntry, data.result.parent)
 						});
+
+						if (this.props.onEntryUpdate) {
+							this.props.onEntryUpdate(this.state.entry);
+						}
 					}, error => {
 						message.error(error);
 						this.setState({loading: false});

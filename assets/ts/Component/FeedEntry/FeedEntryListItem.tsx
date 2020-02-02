@@ -44,7 +44,8 @@ export default class FeedEntryListItem extends Component<{
 	showParentInfo?: boolean
 }, {
 	nsfwWarningActive: boolean,
-	redirect: boolean
+	redirect: boolean,
+	entry: FeedEntry
 }> {
 	constructor(props) {
 		super(props);
@@ -56,7 +57,8 @@ export default class FeedEntryListItem extends Component<{
 
 		this.state = {
 			nsfwWarningActive: AppearanceSettings.showMatureWarning() && (entry || this.props.entry).isNSFW(),
-			redirect: false
+			redirect: false,
+			entry
 		};
 	}
 
@@ -180,7 +182,15 @@ export default class FeedEntryListItem extends Component<{
 											<FeedEntryListItemAttachments entry={entry}/>}
 
 										{this.props.hideButtons && this.props.hideButtons === true ? "" :
-											<FeedEntryActionButtons entry={entry} parent={this}/>}
+											<FeedEntryActionButtons entry={entry} parent={this} onEntryUpdate={(e) => {
+												this.setState({
+													entry: e
+												});
+
+												if (this.props.parent instanceof FeedEntryList) {
+													this.props.parent.replaceEntry(e);
+												}
+											}}/>}
 									</div>}
 							</div>
 						</Row>

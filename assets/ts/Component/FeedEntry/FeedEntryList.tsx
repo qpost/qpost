@@ -94,6 +94,24 @@ export default class FeedEntryList extends Component<{
 		this.setState({entries});
 	}
 
+	public replaceEntry(feedEntry: FeedEntry): void {
+		const entries = [];
+
+		this.state.entries.forEach(entry => {
+			if (entry.getId() === feedEntry.getId()) {
+				entries.push(feedEntry);
+			} else {
+				entries.push(entry);
+			}
+		});
+
+		this.setState({
+			entries
+		});
+
+		this.saveToStorage();
+	}
+
 	loadNew() {
 		if (this.state.entries === null || this.state.entries.length === 0) return;
 
