@@ -17,38 +17,31 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@mixin darkButton() {
-	$color: #001949;
+@keyframes float {
+	0% {
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+	}
 
-	color: #f8f9fa !important;
-	background-color: $color !important;
-	border-color: darken($color, 5%) !important;
+	40% {
+		-webkit-transform: translate3d(0, -6px, 0);
+		transform: translate3d(0, -6px, 0);
+	}
 
-	&:hover {
-		background-color: lighten($color, 5%) !important;
+	100% {
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
 	}
 }
 
-.ant-btn {
-	&:not(.ant-btn-default):not(.ant-btn-dashed):not(.ant-btn-danger):not(.ant-btn-primary):not(.ant-btn-link),
-	&.ant-btn-dashed,
-	&.ant-btn-default:not(.followButton),
-	&.ant-btn-default[data-follow-status="-1"] {
-		@include darkButton();
-	}
-}
-
-.btn-light:not(.bootstrapButton) {
-	@include darkButton();
-}
-
-.btn-primary:not(.bootstrapButton) {
-	color: #fff;
-	background-color: #535353;
-	border-color: #535353;
-
-	&:hover {
-		background-color: #353535;
-		border-color: #2d2d2d;
-	}
+@mixin float-animation() {
+	animation: float 2.3s ease infinite forwards;
+	animation-duration: 2.3s;
+	animation-timing-function: ease;
+	animation-delay: 0s;
+	animation-iteration-count: infinite;
+	animation-direction: normal;
+	animation-fill-mode: forwards;
+	animation-play-state: running;
+	animation-name: float;
 }

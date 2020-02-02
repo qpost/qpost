@@ -28,7 +28,8 @@ import FeedEntryListItem from "../FeedEntryListItem";
 export default class FeedEntryActionButtons extends Component<{
 	entry: FeedEntry,
 	parent?: FeedEntryListItem,
-	reduceMargin?: boolean
+	reduceMargin?: boolean,
+	onEntryUpdate?: (entry: FeedEntry) => void
 }, any> {
 	constructor(props) {
 		super(props);
@@ -46,9 +47,17 @@ export default class FeedEntryActionButtons extends Component<{
 					 } : {}}>
 					<ReplyButton entry={entry} parent={this}/>
 
-					<ShareButton entry={entry} parent={this}/>
+					<ShareButton entry={entry} parent={this} onEntryUpdate={(entry) => {
+						if (this.props.onEntryUpdate) {
+							this.props.onEntryUpdate(entry);
+						}
+					}}/>
 
-					<FavoriteButton entry={entry} parent={this}/>
+					<FavoriteButton entry={entry} parent={this} onEntryUpdate={(entry) => {
+						if (this.props.onEntryUpdate) {
+							this.props.onEntryUpdate(entry);
+						}
+					}}/>
 
 					<DeleteButton entry={entry} parent={this}/>
 				</div>

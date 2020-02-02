@@ -1,0 +1,55 @@
+{% extends "homeBase.html.twig" %}
+
+{% block content %}
+	<div class="container my-5">
+		<h1 class="text-white mb-3">About qpost</h1>
+
+		<p>
+			qpost is a social microblogging network, that was first released in Summer 2018 by Gigadrive.
+		</p>
+
+		<p>
+			<b>Original author</b><br/>
+			<a href="{{ path("qpost_page_profile", {"username": "Zeryther"}) }}">
+				Mehdi Baaboura
+			</a>
+		</p>
+
+		<p>
+			<b>Source code</b><br/>
+			<a href="https://gitlab.com/Gigadrive/qpost/qpost" target="_blank">
+				https://gitlab.com/Gigadrive/qpost
+			</a>
+		</p>
+
+		<p>
+			<b>License</b><br/>
+			<a href="https://gitlab.com/Gigadrive/qpost/qpost/blob/master/LICENSE" target="_blank">
+				GNU GPL v3
+			</a>
+		</p>
+
+		<p>
+			<b>Issue Tracker</b><br/>
+			<a href="https://gitlab.com/Gigadrive/qpost/qpost/issues" target="_blank">
+				https://gitlab.com/Gigadrive/qpost/qpost/issues
+			</a>
+		</p>
+
+		<h2 class="text-white my-3">Third-party software</h2>
+
+		<p>
+			qpost utilizes third-party software to run, you can find a list below (last
+			update: {{ lastUpdate|date("F jS, Y") }}).
+		</p>
+
+		{% for software in thirdPartySoftware %}
+			<p>
+				<b>{{ software.name }}</b><br/>
+				<a href="{{ software.link }}" target="_blank">
+					{{ software.link }}
+				</a>
+			</p>
+		{% endfor %}
+	</div>
+{% endblock %}

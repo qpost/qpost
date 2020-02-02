@@ -1,14 +1,131 @@
 {% extends "homeBase.html.twig" %}
 
 {% block content %}
-	<img src="/assets/img/qpost-white-tiny.png" class="homeLogo" alt="qpost Logo" title="qpost Logo"/>
+	<div class="homeWaveBackground">
+		<div class="container mt-5">
+			<div class="text-center">
+				<h1 class="homeDescriptionText">
+					{{ headline }}
+				</h1>
 
-	<h1 class="homeDescriptionText">
-		A social microblogging network that helps you share your thoughts online, protected by freedom of speech.
-	</h1>
+				<h2 class="homeDescriptionText">
+					Free and open-source social network for all of your devices.<br/>
+					Take social networking back into your own hands, without the fear of censorship!
+				</h2>
 
-	<div class="homeRegisterBoxContainer">
-		<div class="homeSponsorBox">
+				<div class="homeDownloadButton">
+					<a href="{{ path("qpost_download_index") }}" class="btn btn-light px-3 py-2 bootstrapButton">
+						Download the app
+					</a>
+				</div>
+
+				<div class="homeLoginButton">
+					<a href="{{ path("qpost_login_index") }}" class="btn btn-primary px-3 py-2 bootstrapButton">
+						Log in
+					</a>
+				</div>
+			</div>
+
+			<div class="homeRegisterBoxContainer">
+				<div class="homeLeftBox">
+					<img src="/assets/img/hand.png" alt="qpost Smartphone View" height="550"/>
+				</div>
+
+				<div class="homeRegisterBox">
+					<div class="homeRegisterBoxContent">
+						<div class="text-center">
+					<span class="hline">Join<img src="/assets/img/qpost-blue-tiny.png" alt="qpost Logo"
+												 title="qpost Logo"/></span>
+						</div>
+
+						<form class="mt-3" method="post" action="/">
+							{% include "parts/csrf.html.twig" %}
+
+							{% include "parts/flash.html.twig" %}
+
+							<input type="email" class="form-control mb-2" name="email" placeholder="Email"/>
+							<input type="text" class="form-control mb-2" name="displayName" placeholder="Full Name"/>
+							<input type="text" class="form-control mb-2" name="username" placeholder="Username"/>
+							<input type="password" class="form-control mb-2" name="password" placeholder="Password"/>
+
+							<hr/>
+
+							<input type="submit" class="btn btn-primary btn-block bootstrapButton"
+								   value="Create Account"/>
+
+							<div class="homeLoginOr small text-center mb-3 mt-1">OR</div>
+
+							<a href="{{ path("qpost_login_gigadrive") }}" class="btn btn-success btn-block">Sign in with
+								Gigadrive</a>
+
+							<p class="small mt-3 mb-0 text-muted">
+								By clicking Create account or Sign in with Gigadrive, you accept our <a
+										href="{{ path("qpost_redirect_terms") }}" target="_blank">terms of service</a>.
+							</p>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="homeHighlighted py-5">
+		<div class="container">
+			<div class="homeFeatureList">
+				<div class="row">
+					<div class="col-12 col-lg-6 offset-lg-3">
+						<div class="feature">
+							<div class="icon left">
+								<i class="fas fa-feather-alt"></i>
+							</div>
+
+							<div class="description right">
+								<p class="headline">Share your thoughts</p>
+
+								<p class="text">
+									Post what you think in an open-source community, <b>free of censorship</b> - qpost
+									is built with true free speech in mind.
+								</p>
+							</div>
+						</div>
+
+						<div class="feature">
+							<div class="icon right">
+								<i class="fas fa-reply"></i>
+							</div>
+
+							<div class="description">
+								<p class="headline">Get started within 60 seconds</p>
+
+								<p class="text">
+									No need to find servers or understand confusing systems. Create your account and
+									start posting!
+								</p>
+							</div>
+						</div>
+
+						<div class="feature">
+							<div class="icon left">
+								<i class="fas fa-code-branch"></i>
+							</div>
+
+							<div class="description right">
+								<p class="headline">Enjoy transparency</p>
+
+								<p class="text">
+									qpost is <a href="https://gitlab.com/Gigadrive/qpost" target="_blank">completely
+										open-source</a>, meaning you know exactly how it works and data is being used.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container mb-5">
+		<div class="homeSponsors">
 			<h4>Sponsors</h4>
 
 			<div class="mt-3">
@@ -18,46 +135,6 @@
 
 				<a href="https://www.jetbrains.com" class="clearUnderline" target="_blank" rel="noreferrer noopener">
 					<img src="/assets/img/jetbrains.png" alt="GitLab" title="GitLab"/>
-				</a>
-			</div>
-		</div>
-
-		<div class="homeRegisterBox">
-			<div class="homeRegisterBoxContent">
-				<div class="text-center">
-					<span class="hline">Join<img src="/assets/img/qpost-blue-tiny.png" alt="qpost Logo"
-												 title="qpost Logo"/></span>
-				</div>
-
-				<form class="mt-3" method="post" action="/">
-					{% include "parts/csrf.html.twig" %}
-
-					{% include "parts/flash.html.twig" %}
-
-					<input type="email" class="form-control mb-2" name="email" placeholder="Email"/>
-					<input type="text" class="form-control mb-2" name="displayName" placeholder="Full Name"/>
-					<input type="text" class="form-control mb-2" name="username" placeholder="Username"/>
-					<input type="password" class="form-control mb-2" name="password" placeholder="Password"/>
-
-					<hr/>
-
-					<input type="submit" class="btn btn-primary btn-block" value="Create Account"/>
-
-					<div class="homeLoginOr small text-center mb-3 mt-1">OR</div>
-
-					<a href="{{ path("qpost_login_gigadrive") }}" class="btn btn-success btn-block">Sign in with
-						Gigadrive</a>
-
-					<p class="small mt-3 mb-0 text-dark">
-						By clicking Create account or Sign in with Gigadrive, you accept our <a
-								href="{{ path("qpost_redirect_terms") }}" target="_blank">terms of service</a>.
-					</p>
-				</form>
-			</div>
-
-			<div class="appStoreIcons">
-				<a href="{{ path("qpost_download_index") }}" class="btn btn-primary btn-lg px-5 py-3">
-					Download the app
 				</a>
 			</div>
 		</div>

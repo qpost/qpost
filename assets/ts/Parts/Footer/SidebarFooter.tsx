@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -18,7 +18,6 @@
  */
 
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
 
 export default class SidebarFooter extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -29,9 +28,9 @@ export default class SidebarFooter extends Component<any, any> {
 
 			<ul>
 				<li>
-					<Link to={"/about"}>
+					<a href={"/about"}>
 						About
-					</Link>
+					</a>
 				</li>
 
 				<li>

@@ -191,7 +191,11 @@ export default class Status extends Component<any, {
 							<hr className={"mb-0"}/>
 
 							<div className={"actionButtons"}>
-								<FeedEntryActionButtons entry={status} reduceMargin={true}/>
+								<FeedEntryActionButtons entry={status} reduceMargin={true} onEntryUpdate={(e) => {
+									this.setState({
+										status: e
+									});
+								}}/>
 							</div>
 						</Card>
 
