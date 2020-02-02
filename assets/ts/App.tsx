@@ -41,7 +41,6 @@ import Notifications from "./Pages/Notifications/Notifications";
 import Messages from "./Pages/Messages/Messages";
 import ImageViewer from "./Component/ImageViewer";
 import LoginSuggestionModal from "./Component/LoginSuggestionModal";
-import About from "./Pages/About/About";
 import Goodbye from "./Pages/Goodbye/Goodbye";
 import PostForm from "./Component/PostForm/PostForm";
 import BlockModal from "./Component/BlockModal";
@@ -187,7 +186,6 @@ export default class App extends Component<any, {
 													<Route path={"/search"} exact component={Search}/>
 													<Route path={"/hashtag/:query"} exact component={SearchRedirect}/>
 													<Route path={"/goodbye"} exact component={Goodbye}/>
-													<Route path={"/about"} exact component={About}/>
 													<Route path={"/r/status/:id"} exact component={StatusRedirect}/>
 													<Route path={"/status/:id"} exact component={Status}/>
 													<Route path={"/profile/:username"} component={ProfileRedirect}/>

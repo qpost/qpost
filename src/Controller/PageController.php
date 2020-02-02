@@ -88,21 +88,6 @@ class PageController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/about")
-	 *
-	 * @return Response
-	 */
-	public function about() {
-		return $this->render("react.html.twig", Twig::param([
-			"title" => "About",
-			"description" => "Basic information about qpost",
-			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_about", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
-	}
-
-	/**
 	 * @Route("/goodbye")
 	 *
 	 * @return Response
