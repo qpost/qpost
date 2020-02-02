@@ -17,27 +17,29 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+@mixin darkButton() {
+	$color: #001949;
+
+	color: #f8f9fa !important;
+	background-color: $color !important;
+	border-color: darken($color, 5%) !important;
+
+	&:hover {
+		background-color: lighten($color, 5%) !important;
+	}
+}
+
 .ant-btn {
 	&:not(.ant-btn-default):not(.ant-btn-dashed):not(.ant-btn-danger):not(.ant-btn-primary):not(.ant-btn-link),
 	&.ant-btn-dashed,
 	&.ant-btn-default:not(.followButton),
 	&.ant-btn-default[data-follow-status="-1"] {
-		$color: #001949;
-
-		color: #f8f9fa !important;
-		background-color: $color !important;
-		border-color: darken($color, 5%) !important;
-
-		&:hover {
-			background-color: lighten($color, 5%) !important;
-		}
+		@include darkButton();
 	}
 }
 
 .btn-light:not(.bootstrapButton) {
-	color: #f8f9fa !important;
-	background-color: #212529 !important;
-	border-color: #212529 !important;
+	@include darkButton();
 }
 
 .btn-primary:not(.bootstrapButton) {
