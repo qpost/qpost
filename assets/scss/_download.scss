@@ -16,7 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
-@import "buttons";
-@import "float-animation";
-@import "responsive";
-@import "text";
+
+
+.downloadMainHeadline {
+	font-size: 21px;
+	font-weight: bold;
+	margin-bottom: 0;
+}
+
+.downloadPageMainButton {
+	@extend .my-3;
+	width: 200px;
+}
+
+.downloadPageMainImageContainer {
+	text-align: center;
+
+	.downloadPageMainImage {
+		@extend .shadow;
+		//max-height: 320px;
+		width: 100%;
+		max-width: 510px;
+
+		@include media-breakpoint-down(sm) {
+			width: calc(100% - 75px);
+			margin-top: 15px;
+		}
+
+		@include float-animation();
+	}
+}

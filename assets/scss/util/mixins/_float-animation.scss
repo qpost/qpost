@@ -16,7 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
-@import "buttons";
-@import "float-animation";
-@import "responsive";
-@import "text";
+
+@keyframes float {
+	0% {
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+	}
+
+	40% {
+		-webkit-transform: translate3d(0, -6px, 0);
+		transform: translate3d(0, -6px, 0);
+	}
+
+	100% {
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+	}
+}
+
+@mixin float-animation() {
+	animation: float 2.3s ease infinite forwards;
+	animation-duration: 2.3s;
+	animation-timing-function: ease;
+	animation-delay: 0s;
+	animation-iteration-count: infinite;
+	animation-direction: normal;
+	animation-fill-mode: forwards;
+	animation-play-state: running;
+	animation-name: float;
+}
