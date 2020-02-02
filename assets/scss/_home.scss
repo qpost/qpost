@@ -225,9 +225,7 @@
 		}
 
 		.homeLeftBox {
-			@extend .col-12, .col-lg-7, .mt-5, .text-white, .text-center, .order-last, .order-md-first;
-
-
+			@extend .col-12, .col-lg-7, .mt-5, .text-white, .text-center, .order-last, .order-lg-first;
 		}
 
 		.homeRegisterBox {
