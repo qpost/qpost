@@ -124,14 +124,16 @@ class RenderService {
 			]
 		]);
 
-		$body = $response->getBody();
-		if (!is_null($body)) {
-			$content = $body->getContents();
-			$body->close();
+		if ($response->getStatusCode() === 200) {
+			$body = $response->getBody();
+			if (!is_null($body)) {
+				$content = $body->getContents();
+				$body->close();
 
-			if (!is_null($content)) {
-				CacheHandler::setToCache($cacheKey, $content, 10 * 60);
-				return $content;
+				if (!is_null($content)) {
+					CacheHandler::setToCache($cacheKey, $content, 10 * 60);
+					return $content;
+				}
 			}
 		}
 	}
