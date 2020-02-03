@@ -251,6 +251,10 @@ class AboutController extends AbstractController {
 			[
 				"name" => "Firebase Admin SDK for PHP",
 				"link" => "https://github.com/kreait/firebase-php"
+			],
+			[
+				"name" => "CrawlerDetectBundle",
+				"link" => "https://github.com/nicolasmure/CrawlerDetectBundle"
 			]
 		];
 
