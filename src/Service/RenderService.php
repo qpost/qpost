@@ -107,11 +107,11 @@ class RenderService {
 		return new Response($this->twig->render("react.html.twig", Twig::param($parameters)));
 	}
 
-	public function serverSideHTML(string $url, bool $ignoreCache = false): ?string {
+	public function serverSideHTML(string $url): ?string {
 		if (Util::isEmpty($this->prerenderKey)) return null;
 
 		$cacheKey = "ssrHTML_" . urlencode($url);
-		if (!$ignoreCache && CacheHandler::existsInCache($cacheKey)) {
+		if (CacheHandler::existsInCache($cacheKey)) {
 			return CacheHandler::getFromCache($cacheKey);
 		}
 
