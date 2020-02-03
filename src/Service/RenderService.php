@@ -120,7 +120,8 @@ class RenderService {
 			"headers" => [
 				"X-Prerender-Token" => $this->prerenderKey,
 				"Prerender-Dont-Wait-For-Web-Sockets" => "true",
-				"Prerender-Follow-Redirects" => "true"
+				"Prerender-Follow-Redirects" => "true",
+				"Prerender-Wait-Extra-Long" => "true"
 			]
 		]);
 
