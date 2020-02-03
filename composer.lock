@@ -4,7 +4,7 @@
 		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
 		"This file is @generated automatically"
 	],
-	"content-hash": "049f963e94fcae58af3cdd0eb089704b",
+	"content-hash": "6518984a3788408eab40549d74fc7edb",
 	"packages": [
 		{
 			"name": "beberlei/doctrineextensions",
@@ -2188,7 +2188,7 @@
 				"reference": "0895c932405407fd3a7368b6910c09a24d26db11",
 				"shasum": ""
 			},
-            "require": {
+			"require": {
 				"ext-json": "*",
 				"guzzlehttp/promises": "^1.0",
 				"guzzlehttp/psr7": "^1.6.1",
@@ -3196,6 +3196,55 @@
 			"time": "2018-07-31T19:32:56+00:00"
 		},
 		{
+			"name": "jaybizzle/crawler-detect",
+			"version": "v1.2.91",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/JayBizzle/Crawler-Detect.git",
+				"reference": "2af9b6429302fb25ea602f25a98151640ee77b47"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/2af9b6429302fb25ea602f25a98151640ee77b47",
+				"reference": "2af9b6429302fb25ea602f25a98151640ee77b47",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3.0"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^4.8|^5.5|^6.5",
+				"satooshi/php-coveralls": "1.*"
+			},
+			"type": "library",
+			"autoload": {
+				"psr-4": {
+					"Jaybizzle\\CrawlerDetect\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Mark Beech",
+					"email": "m@rkbee.ch",
+					"role": "Developer"
+				}
+			],
+			"description": "CrawlerDetect is a PHP class for detecting bots/crawlers/spiders via the user agent",
+			"homepage": "https://github.com/JayBizzle/Crawler-Detect/",
+			"keywords": [
+				"crawler",
+				"crawler detect",
+				"crawler detector",
+				"crawlerdetect",
+				"php crawler detect"
+			],
+			"time": "2020-02-01T22:39:59+00:00"
+		},
+		{
 			"name": "jbroadway/urlify",
 			"version": "1.1.3-stable",
 			"source": {
@@ -4062,6 +4111,57 @@
 			"time": "2019-12-30T18:03:34+00:00"
 		},
 		{
+			"name": "nmure/crawler-detect-bundle",
+			"version": "v2.0.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/nicolasmure/CrawlerDetectBundle.git",
+				"reference": "b7fe6bae0bd8b04eb578de37b943e68d1e33e438"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/nicolasmure/CrawlerDetectBundle/zipball/b7fe6bae0bd8b04eb578de37b943e68d1e33e438",
+				"reference": "b7fe6bae0bd8b04eb578de37b943e68d1e33e438",
+				"shasum": ""
+			},
+			"require": {
+				"jaybizzle/crawler-detect": "1.*",
+				"php": ">=7.1",
+				"symfony/framework-bundle": "~4.0"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^6.5",
+				"symfony/yaml": "^4.0"
+			},
+			"type": "symfony-bundle",
+			"autoload": {
+				"psr-4": {
+					"Nmure\\CrawlerDetectBundle\\": ""
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Nicolas MURE",
+					"email": "nm2107@hotmail.fr",
+					"homepage": "https://github.com/nicolasmure"
+				}
+			],
+			"description": "A Symfony bundle for the Crawler-Detect library (detects bots/crawlers/spiders via the user agent)",
+			"keywords": [
+				"bot",
+				"bundle",
+				"crawler",
+				"detect",
+				"symfony",
+				"user-agent"
+			],
+			"time": "2017-12-02T20:49:04+00:00"
+		},
+		{
 			"name": "ocramius/package-versions",
 			"version": "1.4.0",
 			"source": {
@@ -4846,16 +4946,16 @@
 				"reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
 			},
 			"dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+				"reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=5.3.0"
+			},
+			"type": "library",
+			"extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
                 }
@@ -4864,16 +4964,16 @@
                 "psr-4": {
                     "Psr\\Cache\\": "src/"
                 }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "PHP-FIG",
+					"homepage": "http://www.php-fig.org/"
+				}
 			],
 			"description": "Common interface for caching libraries",
 			"keywords": [
@@ -6405,8 +6505,8 @@
 			},
 			"notification-url": "https://packagist.org/downloads/",
 			"license": [
-                "MIT"
-            ],
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Fabien Potencier",
@@ -6480,8 +6580,8 @@
 			},
 			"notification-url": "https://packagist.org/downloads/",
 			"license": [
-                "MIT"
-            ],
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Fabien Potencier",
