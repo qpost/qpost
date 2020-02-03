@@ -136,5 +136,7 @@ class RenderService {
 				}
 			}
 		}
+
+		return null;
 	}
 }
