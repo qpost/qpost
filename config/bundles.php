@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -34,4 +34,5 @@ return [
 	Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
 	Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
 	BenTools\WebPushBundle\WebPushBundle::class => ['all' => true],
+	Nmure\CrawlerDetectBundle\CrawlerDetectBundle::class => ['all' => true],
 ];
