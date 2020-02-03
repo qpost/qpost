@@ -20,10 +20,10 @@
 
 namespace qpost\Controller;
 
-use Exception;
 use qpost\Constants\MiscConstants;
 use qpost\Service\AuthorizationService;
 use qpost\Service\PostRequestService;
+use qpost\Service\RenderService;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,14 +37,14 @@ class HomeController extends AbstractController {
 	 *
 	 * @param Request $request
 	 * @param PostRequestService $postRequestService
+	 * @param RenderService $renderService
 	 * @return Response
-	 * @throws Exception
 	 */
-	public function index(Request $request, PostRequestService $postRequestService) {
+	public function index(Request $request, PostRequestService $postRequestService, RenderService $renderService) {
 		$user = $this->getUser();
 
 		if ($user) {
-			return $this->render("react.html.twig", Twig::param());
+			return $renderService->react();
 		} else {
 			$postRequestService->handleRegistration($this, $request);
 

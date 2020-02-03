@@ -26,11 +26,11 @@ use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
 use qpost\Entity\User;
 use qpost\Service\AuthorizationService;
+use qpost\Service\RenderService;
 use qpost\Twig\Twig;
 use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -41,9 +41,10 @@ class PageController extends AbstractController {
 	 *
 	 * @param int $id
 	 * @param EntityManagerInterface $entityManager
+	 * @param RenderService $renderService
 	 * @return Response
 	 */
-	public function status(int $id, EntityManagerInterface $entityManager) {
+	public function status(int $id, EntityManagerInterface $entityManager, RenderService $renderService) {
 		/**
 		 * @var FeedEntry $feedEntry
 		 */
@@ -74,14 +75,14 @@ class PageController extends AbstractController {
 				$bigSocialImage = $mediaFile->getURL();
 			}
 
-			return $this->render("react.html.twig", Twig::param([
+			return $renderService->react([
 				"title" => $title,
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $bigSocialImage,
 				"description" => $feedEntry->getText(),
 				"twitterCardType" => $twitterCardType,
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL)
-			]));
+			]);
 		}
 
 		throw $this->createNotFoundException("Invalid status ID.");
@@ -90,29 +91,31 @@ class PageController extends AbstractController {
 	/**
 	 * @Route("/goodbye")
 	 *
+	 * @param RenderService $renderService
 	 * @return Response
 	 */
-	public function goodbye() {
-		return $this->render("react.html.twig", Twig::param([
+	public function goodbye(RenderService $renderService) {
+		return $renderService->react([
 			"title" => "Goodbye",
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
 			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_goodbye", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
+		]);
 	}
 
 	/**
 	 * @Route("/search")
 	 *
+	 * @param RenderService $renderService
 	 * @return Response
 	 */
-	public function search() {
-		return $this->render("react.html.twig", Twig::param([
+	public function search(RenderService $renderService) {
+		return $renderService->react([
 			"title" => "Search",
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
 			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_search", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
+		]);
 	}
 
 	/**
@@ -140,17 +143,16 @@ class PageController extends AbstractController {
 	/**
 	 * @Route("/notifications")
 	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
+	 * @param RenderService $renderService
 	 * @return RedirectResponse|Response
 	 */
-	public function notifications(Request $request, EntityManagerInterface $entityManager) {
+	public function notifications(RenderService $renderService) {
 		$user = $this->getUser();
 
 		if ($user) {
-			return $this->render("react.html.twig", Twig::param([
+			return $renderService->react([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_notifications", [], UrlGeneratorInterface::ABSOLUTE_URL)
-			]));
+			]);
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -159,33 +161,32 @@ class PageController extends AbstractController {
 	/**
 	 * @Route("/messages")
 	 *
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
+	 * @param RenderService $renderService
 	 * @return RedirectResponse|Response
 	 */
-	public function messages(Request $request, EntityManagerInterface $entityManager) {
+	public function messages(RenderService $renderService) {
 		$user = $this->getUser();
 
 		if ($user) {
-			return $this->render("react.html.twig", Twig::param([
+			return $renderService->react([
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_messages", [], UrlGeneratorInterface::ABSOLUTE_URL)
-			]));
+			]);
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
 	}
 
-	public function profile(string $username, EntityManagerInterface $entityManager) {
+	public function profile(string $username, EntityManagerInterface $entityManager, RenderService $renderService) {
 		$user = $entityManager->getRepository(User::class)->getUserByUsername($username);
 
 		if (!is_null($user)) {
-			return $this->render("react.html.twig", Twig::param([
+			return $renderService->react([
 				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"description" => $user->getBio(),
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $user->getAvatarURL(),
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL)
-			]));
+			]);
 		} else {
 			throw $this->createNotFoundException("Invalid username.");
 		}
