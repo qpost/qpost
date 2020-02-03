@@ -118,7 +118,9 @@ class RenderService {
 		// https://www.prerender.cloud/docs/api/examples
 		$response = $client->request("GET", "https://service.prerender.cloud/" . $url, [
 			"headers" => [
-				"X-Prerender-Token" => $this->prerenderKey
+				"X-Prerender-Token" => $this->prerenderKey,
+				"Prerender-Dont-Wait-For-Web-Sockets" => "true",
+				"Prerender-Follow-Redirects" => "true"
 			]
 		]);
 
