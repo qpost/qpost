@@ -20,7 +20,9 @@
 
 namespace qpost\Service;
 
+use GuzzleHttp\Exception\ConnectException;
 use Nmure\CrawlerDetectBundle\CrawlerDetect\CrawlerDetect;
+use PHPUnit\Runner\Exception;
 use qpost\Cache\CacheHandler;
 use qpost\Constants\MiscConstants;
 use qpost\Factory\HttpClientFactory;
@@ -105,36 +107,43 @@ class RenderService {
 		return new Response($this->twig->render("react.html.twig", Twig::param($parameters)));
 	}
 
-	public function serverSideHTML(string $url, bool $ignoreCache = false): ?string {
+	public function serverSideHTML(string $url): ?string {
 		if (Util::isEmpty($this->prerenderKey)) return null;
 
 		$cacheKey = "ssrHTML_" . urlencode($url);
-		if (!$ignoreCache && CacheHandler::existsInCache($cacheKey)) {
+		if (CacheHandler::existsInCache($cacheKey)) {
 			return CacheHandler::getFromCache($cacheKey);
 		}
 
-		$client = HttpClientFactory::create();
+		try {
+			$client = HttpClientFactory::create();
 
-		// https://www.prerender.cloud/docs/api/examples
-		$response = $client->request("GET", "https://service.prerender.cloud/" . $url, [
-			"headers" => [
-				"X-Prerender-Token" => $this->prerenderKey,
-				"Prerender-Dont-Wait-For-Web-Sockets" => "true",
-				"Prerender-Follow-Redirects" => "true"
-			]
-		]);
+			// https://www.prerender.cloud/docs/api/examples
+			$response = $client->request("GET", "https://service.prerender.cloud/" . $url, [
+				"headers" => [
+					"X-Prerender-Token" => $this->prerenderKey,
+					"Prerender-Dont-Wait-For-Web-Sockets" => "true",
+					"Prerender-Follow-Redirects" => "true",
+					"Prerender-Wait-Extra-Long" => "true"
+				]
+			]);
 
-		if ($response->getStatusCode() === 200) {
-			$body = $response->getBody();
-			if (!is_null($body)) {
-				$content = $body->getContents();
-				$body->close();
+			if ($response->getStatusCode() === 200) {
+				$body = $response->getBody();
+				if (!is_null($body)) {
+					$content = $body->getContents();
+					$body->close();
 
-				if (!is_null($content)) {
-					CacheHandler::setToCache($cacheKey, $content, 10 * 60);
-					return $content;
+					if (!is_null($content)) {
+						CacheHandler::setToCache($cacheKey, $content, 10 * 60);
+						return $content;
+					}
 				}
 			}
+		} catch (ConnectException $e) {
+			return $this->serverSideHTML($url, $ignoreCache);
+		} catch (Exception $e) {
+			return null;
 		}
 
 		return null;
