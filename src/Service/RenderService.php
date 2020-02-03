@@ -20,11 +20,18 @@
 
 namespace qpost\Service;
 
+use Nmure\CrawlerDetectBundle\CrawlerDetect\CrawlerDetect;
+use qpost\Cache\CacheHandler;
+use qpost\Constants\MiscConstants;
+use qpost\Factory\HttpClientFactory;
 use qpost\Twig\Twig;
+use qpost\Util\Util;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
+use function is_null;
+use function urlencode;
 
 class RenderService {
 	/**
@@ -42,17 +49,88 @@ class RenderService {
 	 */
 	private $currentRequest;
 
-	public function __construct(Environment $twig, RequestStack $requestStack) {
+	/**
+	 * @var string $prerenderKey
+	 */
+	private $prerenderKey;
+
+	private $crawlerDetect;
+
+	public function __construct(Environment $twig, RequestStack $requestStack, CrawlerDetect $crawlerDetect) {
 		$this->twig = $twig;
 		$this->requestStack = $requestStack;
+		$this->crawlerDetect = $crawlerDetect;
+
+		$this->prerenderKey = $_ENV["PRERENDER_API_KEY"];
 		$this->currentRequest = $requestStack->getCurrentRequest();
 	}
 
 	public function react(array $parameters = [], bool $ignoreCrawlerCheck = false): Response {
-		if (!$ignoreCrawlerCheck) {
-			// TODO: Check if user is crawler, render server-side
+		// Render server-side
+		if (!$ignoreCrawlerCheck && isset($parameters[MiscConstants::CANONICAL_URL]) && !Util::isEmpty($this->prerenderKey)) {
+			$ignore = false;
+
+			if (!is_null($this->currentRequest)) {
+				$clientIP = $this->currentRequest->getClientIp();
+
+				// https://www.prerender.cloud/ips-v4
+				if (!is_null($clientIP) && $clientIP === "52.34.196.110") {
+					$ignore = true;
+				}
+			}
+
+			if (!$ignore) {
+				$url = $parameters[MiscConstants::CANONICAL_URL];
+
+				$userAgent = null;
+
+				if (!is_null($this->currentRequest) && $this->currentRequest->headers->has("User-Agent")) {
+					$userAgent = $this->currentRequest->headers->get("User-Agent");
+				} else if (isset($_SERVER["HTTP_USER_AGENT"])) {
+					$userAgent = $_SERVER["HTTP_USER_AGENT"];
+				}
+
+				if (!is_null($userAgent)) {
+					if ($this->crawlerDetect->isCrawler($userAgent)) {
+						$ssrHTML = $this->serverSideHTML($url);
+
+						if (!is_null($ssrHTML)) {
+							return new Response($ssrHTML);
+						}
+					}
+				}
+			}
 		}
 
 		return new Response($this->twig->render("react.html.twig", Twig::param($parameters)));
+	}
+
+	public function serverSideHTML(string $url, bool $ignoreCache = false): ?string {
+		if (Util::isEmpty($this->prerenderKey)) return null;
+
+		$cacheKey = "ssrHTML_" . urlencode($url);
+		if (!$ignoreCache && CacheHandler::existsInCache($cacheKey)) {
+			return CacheHandler::getFromCache($cacheKey);
+		}
+
+		$client = HttpClientFactory::create();
+
+		// https://www.prerender.cloud/docs/api/examples
+		$response = $client->request("GET", "https://service.prerender.cloud/" . $url, [
+			"headers" => [
+				"X-Prerender-Token" => $this->prerenderKey
+			]
+		]);
+
+		$body = $response->getBody();
+		if (!is_null($body)) {
+			$content = $body->getContents();
+			$body->close();
+
+			if (!is_null($content)) {
+				CacheHandler::setToCache($cacheKey, $content, 10 * 60);
+				return $content;
+			}
+		}
 	}
 }
