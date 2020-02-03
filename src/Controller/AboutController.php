@@ -33,7 +33,7 @@ class AboutController extends AbstractController {
 	 * @Route("/about")
 	 */
 	public function about() {
-		$lastUpdate = "10-1-2020";
+		$lastUpdate = "04-02-2020";
 
 		$thirdPartySoftware = [
 			[
