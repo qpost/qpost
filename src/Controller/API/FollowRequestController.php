@@ -121,6 +121,14 @@ class FollowRequestController extends AbstractController {
 							$from = $followRequest->getSender();
 							$to = $followRequest->getReceiver();
 
+							$notification = $entityManager->getRepository(Notification::class)->findOneBy([
+								"referencedFollowRequest" => $followRequest
+							]);
+
+							if ($notification) {
+								$entityManager->remove($notification);
+							}
+
 							if ($accept) {
 								// create follower data
 								$entityManager->persist((new Follower())
