@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,6 +20,7 @@
 import User from "../Account/User";
 import FeedEntry from "./FeedEntry";
 import {JsonProperty} from "json2typescript";
+import FollowRequest from "../Account/FollowRequest";
 
 export default class Notification {
 	@JsonProperty("id", Number)
@@ -36,6 +37,9 @@ export default class Notification {
 
 	@JsonProperty("referencedFeedEntry", FeedEntry, true)
 	private referencedFeedEntry?: FeedEntry = undefined;
+
+	@JsonProperty("referencedFollowRequest", FollowRequest, true)
+	private referencedFollowRequest?: FollowRequest = undefined;
 
 	@JsonProperty("seen", Boolean)
 	private seen: boolean = undefined;
@@ -64,6 +68,10 @@ export default class Notification {
 
 	public getReferencedFeedEntry(): FeedEntry {
 		return this.referencedFeedEntry;
+	}
+
+	public getReferencedFollowRequest(): FollowRequest {
+		return this.referencedFollowRequest;
 	}
 
 	public isSeen(): boolean {

@@ -75,6 +75,11 @@ class Notification {
 	private $time;
 
 	/**
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\FollowRequest", cascade={"persist", "remove"}, fetch="EAGER")
+	 */
+	private $referencedFollowRequest;
+
+	/**
 	 * The id of this notification.
 	 *
 	 * @return int|null
@@ -213,6 +218,23 @@ class Notification {
 	 */
 	public function setTime(DateTimeInterface $time): self {
 		$this->time = $time;
+
+		return $this;
+	}
+
+	/**
+	 * @return FollowRequest|null
+	 */
+	public function getReferencedFollowRequest(): ?FollowRequest {
+		return $this->referencedFollowRequest;
+	}
+
+	/**
+	 * @param FollowRequest|null $referencedFollowRequest
+	 * @return $this
+	 */
+	public function setReferencedFollowRequest(?FollowRequest $referencedFollowRequest): self {
+		$this->referencedFollowRequest = $referencedFollowRequest;
 
 		return $this;
 	}
