@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -25,6 +25,7 @@ import FollowButton from "../FollowButton";
 import Biography from "../Biography";
 import VerifiedBadge from "../VerifiedBadge";
 import API from "../../API/API";
+import FollowRequestNotification from "../../Pages/Notifications/FollowRequestNotification";
 
 const FollowerListItemColProps = {
 	sm: 12
@@ -34,7 +35,8 @@ export {FollowerListItemColProps};
 
 export default class FollowerListItem extends Component<{
 	user: User,
-	requestId?: number
+	requestId?: number,
+	notificationParent?: FollowRequestNotification
 }, {
 	clear: boolean
 }> {
@@ -47,7 +49,15 @@ export default class FollowerListItem extends Component<{
 	}
 
 	respond(accept: boolean): void {
-		this.setState({clear: true});
+		if (this.props.notificationParent) {
+			this.props.notificationParent.setState({
+				clear: true
+			});
+		} else {
+			this.setState({
+				clear: true
+			});
+		}
 
 		API.handleRequest("/followRequest", "DELETE", {
 			id: this.props.requestId,

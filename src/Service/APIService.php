@@ -389,6 +389,16 @@ class APIService {
 				$this->entityManager->persist($followRequest);
 				$this->entityManager->flush();
 
+				$notification = (new Notification())
+					->setUser($to)
+					->setReferencedUser($from)
+					->setReferencedFollowRequest($followRequest)
+					->setType(NotificationType::FOLLOW_REQUEST)
+					->setTime(new DateTime("now"));
+
+				$this->entityManager->persist($notification);
+				$this->entityManager->flush();
+
 				return true;
 			} else {
 				return false;

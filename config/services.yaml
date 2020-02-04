@@ -32,8 +32,6 @@ services:
     qpost\Service\RenderService:
         class: qpost\Service\RenderService
         arguments: ["@twig", "@request_stack", "@crawler_detect"]
-        tags:
-            - { name: bentools_webpush.subscription_manager, user_class: 'qpost\Entity\User' }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

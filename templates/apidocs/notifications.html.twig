@@ -36,7 +36,7 @@
 			<td>type</td>
 			<td>string</td>
 			<td>The type of this Notification, one of these values: <code>NEW_FOLLOWER</code> / <code>MENTION</code> /
-				<code>FAVORITE</code> / <code>SHARE</code> / <code>REPLY</code></td>
+				<code>FAVORITE</code> / <code>SHARE</code> / <code>REPLY</code> / <code>FOLLOW_REQUEST</code></td>
 		</tr>
 		<tr>
 			<td>referencedUser</td>
@@ -47,6 +47,11 @@
 			<td>referencedFeedEntry</td>
 			<td>?<a href="{{ path("qpost_apidocs_feed") }}#object">FeedEntry</a></td>
 			<td>The FeedEntry that was referenced in this notification</td>
+		</tr>
+		<tr>
+			<td>referencedFollowRequest</td>
+			<td>?<a href="{{ path("qpost_apidocs_followrequest") }}#object">FollowRequest</a></td>
+			<td>The FollowRequest that was referenced in this notification</td>
 		</tr>
 		<tr>
 			<td>seen</td>

@@ -92,7 +92,7 @@ class RenderService {
 					$userAgent = $_SERVER["HTTP_USER_AGENT"];
 				}
 
-				if (!is_null($userAgent)) {
+				if (!is_null($userAgent) && !Util::contains($userAgent, "Discordbot") && !Util::contains($userAgent, "+https://discordapp.com")) {
 					if ($this->crawlerDetect->isCrawler($userAgent)) {
 						$ssrHTML = $this->serverSideHTML($url);
 
@@ -123,8 +123,7 @@ class RenderService {
 				"headers" => [
 					"X-Prerender-Token" => $this->prerenderKey,
 					"Prerender-Dont-Wait-For-Web-Sockets" => "true",
-					"Prerender-Follow-Redirects" => "true",
-					"Prerender-Wait-Extra-Long" => "true"
+					"Prerender-Follow-Redirects" => "true"
 				]
 			]);
 
@@ -141,7 +140,7 @@ class RenderService {
 				}
 			}
 		} catch (ConnectException $e) {
-			return $this->serverSideHTML($url, $ignoreCache);
+			return $this->serverSideHTML($url);
 		} catch (Exception $e) {
 			return null;
 		}

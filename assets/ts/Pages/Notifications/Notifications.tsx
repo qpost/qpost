@@ -45,6 +45,7 @@ import PageHeader from "../../Component/PageHeader";
 import LoadingFeedEntryListItem from "../../Component/FeedEntry/LoadingFeedEntryListItem";
 import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
 import LeftSidebar from "../../Component/Layout/LeftSidebar";
+import FollowRequestNotification from "./FollowRequestNotification";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -131,19 +132,28 @@ export default class Notifications extends Component<any, {
 								let content = null;
 								switch (notification.getType()) {
 									case NotificationType.NEW_FOLLOWER:
-										content = <NewFollowerNotification key={i} notification={notification}/>;
+										content = <NewFollowerNotification key={notification.getId()}
+																		   notification={notification}/>;
 										break;
 									case NotificationType.FAVORITE:
-										content = <FavoriteNotification key={i} notification={notification}/>;
+										content = <FavoriteNotification key={notification.getId()}
+																		notification={notification}/>;
 										break;
 									case NotificationType.MENTION:
-										content = <MentionNotification key={i} notification={notification}/>;
+										content = <MentionNotification key={notification.getId()}
+																	   notification={notification}/>;
 										break;
 									case NotificationType.REPLY:
-										content = <ReplyNotification key={i} notification={notification}/>;
+										content =
+											<ReplyNotification key={notification.getId()} notification={notification}/>;
 										break;
 									case NotificationType.SHARE:
-										content = <ShareNotification key={i} notification={notification}/>;
+										content =
+											<ShareNotification key={notification.getId()} notification={notification}/>;
+									case NotificationType.FOLLOW_REQUEST:
+										content =
+											<FollowRequestNotification key={notification.getId()}
+																	   notification={notification}/>;
 										break;
 								}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -99,6 +99,11 @@ class PushNotificationService {
 				$title = $referencedUser->getDisplayName() . " (@" . $referencedUser->getUsername() . ") replied to your post.";
 				$icon = $referencedUser->getAvatarURL();
 				$body = $referencedFeedEntry->getText();
+				breaK;
+			case NotificationType::FOLLOW_REQUEST:
+				$title = $referencedUser->getDisplayName() . " (@" . $referencedUser->getUsername() . ") requested to follow you.";
+				$icon = $referencedUser->getAvatarURL();
+				$body = "";
 				break;
 		}
 

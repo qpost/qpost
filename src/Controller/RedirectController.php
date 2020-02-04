@@ -47,10 +47,11 @@ class RedirectController extends AbstractController {
 	 * @return RedirectResponse
 	 */
 	public function privacy() {
-		return $this->render("pages/privacy.html.twig", Twig::param([
+		return $this->redirect("https://gigadrivegroup.com/legal/privacy-policy");
+		/*return $this->render("pages/privacy.html.twig", Twig::param([
 			"title" => "Privacy Policy",
 			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_privacy", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
+		]));*/
 //		return $this->redirect("https://go.qpo.st/privacy");
 	}
 
