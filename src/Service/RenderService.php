@@ -92,7 +92,7 @@ class RenderService {
 					$userAgent = $_SERVER["HTTP_USER_AGENT"];
 				}
 
-				if (!is_null($userAgent)) {
+				if (!is_null($userAgent) && !Util::contains($userAgent, "Discordbot") && !Util::contains($userAgent, "+https://discordapp.com")) {
 					if ($this->crawlerDetect->isCrawler($userAgent)) {
 						$ssrHTML = $this->serverSideHTML($url);
 
