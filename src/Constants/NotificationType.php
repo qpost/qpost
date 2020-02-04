@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -26,4 +26,5 @@ class NotificationType {
 	public const FAVORITE = "FAVORITE";
 	public const SHARE = "SHARE";
 	public const REPLY = "REPLY";
+	public const FOLLOW_REQUEST = "FOLLOW_REQUEST";
 }
