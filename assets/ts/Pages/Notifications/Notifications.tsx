@@ -45,6 +45,7 @@ import PageHeader from "../../Component/PageHeader";
 import LoadingFeedEntryListItem from "../../Component/FeedEntry/LoadingFeedEntryListItem";
 import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
 import LeftSidebar from "../../Component/Layout/LeftSidebar";
+import FollowRequestNotification from "./FollowRequestNotification";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -149,6 +150,10 @@ export default class Notifications extends Component<any, {
 									case NotificationType.SHARE:
 										content =
 											<ShareNotification key={notification.getId()} notification={notification}/>;
+									case NotificationType.FOLLOW_REQUEST:
+										content =
+											<FollowRequestNotification key={notification.getId()}
+																	   notification={notification}/>;
 										break;
 								}
 
