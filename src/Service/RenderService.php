@@ -140,7 +140,7 @@ class RenderService {
 				}
 			}
 		} catch (ConnectException $e) {
-			return $this->serverSideHTML($url, $ignoreCache);
+			return $this->serverSideHTML($url);
 		} catch (Exception $e) {
 			return null;
 		}
