@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function str_replace;
 
 class GeneratedSitemapController extends AbstractController {
 	private $entryLimit = 50;
@@ -43,7 +44,7 @@ class GeneratedSitemapController extends AbstractController {
 		$sitemaps = [];
 
 		for ($i = 1; $i < $this->entryLimit; $i++) {
-			$sitemaps[] = $this->generateUrl("qpost_generatedsitemap_map", ["randomizer" => $i], UrlGeneratorInterface::ABSOLUTE_URL);
+			$sitemaps[] = str_replace("http://", "https://", $this->generateUrl("qpost_generatedsitemap_map", ["randomizer" => $i], UrlGeneratorInterface::ABSOLUTE_URL));
 		}
 
 		return $this->xml($this->render("sitemap/index.xml.twig", [
@@ -72,13 +73,13 @@ class GeneratedSitemapController extends AbstractController {
 			// Users
 
 			foreach ($entityManager->getRepository(User::class)->getSitemapUsers($this->entryLimit) as $username) {
-				$urls[] = $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL);
+				$urls[] = str_replace("http://", "https://", $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		} else {
 			// Feed Entries
 
 			foreach ($entityManager->getRepository(FeedEntry::class)->getSitemapFeedEntries($this->entryLimit) as $id) {
-				$urls[] = $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL);
+				$urls[] = str_replace("http://", "https://", $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		}
 
