@@ -25,6 +25,7 @@ use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
 use qpost\Entity\User;
+use qpost\Service\APIService;
 use qpost\Service\AuthorizationService;
 use qpost\Service\RenderService;
 use qpost\Twig\Twig;
@@ -42,9 +43,10 @@ class PageController extends AbstractController {
 	 * @param int $id
 	 * @param EntityManagerInterface $entityManager
 	 * @param RenderService $renderService
+	 * @param APIService $apiService
 	 * @return Response
 	 */
-	public function status(int $id, EntityManagerInterface $entityManager, RenderService $renderService) {
+	public function status(int $id, EntityManagerInterface $entityManager, RenderService $renderService, APIService $apiService) {
 		/**
 		 * @var FeedEntry $feedEntry
 		 */
@@ -52,7 +54,7 @@ class PageController extends AbstractController {
 			"id" => $id
 		]);
 
-		if (!is_null($feedEntry)) {
+		if (!is_null($feedEntry) && $apiService->mayView($feedEntry)) {
 			$user = $feedEntry->getUser();
 
 			$title = $user->getDisplayName() . " on qpost";

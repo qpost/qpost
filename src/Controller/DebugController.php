@@ -38,7 +38,7 @@ class DebugController extends AbstractController {
 	 * @return Response
 	 */
 	public function debugAction(EntityManagerInterface $entityManager, LoggerInterface $logger, APIService $apiService) {
-		$value = $entityManager->getRepository(FeedEntry::class)->getFeed($this->getUser());
+		$value = $entityManager->getRepository(FeedEntry::class)->getSitemapFeedEntries(50);
 
 		return $this->render("debug.html.twig", Twig::param([
 			"value" => $value

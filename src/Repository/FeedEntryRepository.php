@@ -196,4 +196,31 @@ LIMIT 15", $rsm);
 
 		return $entries;
 	}
+
+	/**
+	 * @param int $limit
+	 * @return int[]
+	 */
+	public function getSitemapFeedEntries(int $limit): array {
+		$rsm = $this->createResultSetMappingBuilder("f");
+		$rsm->addScalarResult("id", "id");
+
+		$query = $this->_em->createNativeQuery("SELECT f.id AS id
+FROM feed_entry AS f
+         INNER JOIN user AS u ON u.id = f.user_id
+WHERE (f.type = 'POST' OR f.type = 'REPLY')
+  AND u.privacy_level = 'PUBLIC'
+ORDER BY RAND()
+LIMIT ?", $rsm);
+
+		$query->setParameter(0, $limit);
+
+		$ids = [];
+
+		foreach ($query->getResult() as $resultSet) {
+			$ids[] = $resultSet["id"];
+		}
+
+		return $ids;
+	}
 }

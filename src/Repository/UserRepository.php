@@ -156,4 +156,33 @@ class UserRepository extends ServiceEntityRepository {
 			->useQueryCache(true)
 			->getSingleScalarResult();
 	}
+
+	/**
+	 * @param int $limit
+	 * @return string[]
+	 */
+	public function getSitemapUsers(int $limit): array {
+		$rsm = $this->createResultSetMappingBuilder("u");
+		$rsm->addScalarResult("username", "username");
+		$rsm->addScalarResult("suspended", "suspended");
+
+		$query = $this->_em->createNativeQuery("SELECT u.username AS username
+FROM user AS u
+         LEFT JOIN suspension s on u.id = s.target_id
+WHERE u.privacy_level = 'PUBLIC'
+  AND u.email_activated = true
+  AND s.id IS NULL
+ORDER BY RAND()
+LIMIT ?", $rsm);
+
+		$query->setParameter(0, $limit);
+
+		$ids = [];
+
+		foreach ($query->getResult() as $resultSet) {
+			$ids[] = $resultSet["username"];
+		}
+
+		return $ids;
+	}
 }

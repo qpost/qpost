@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -227,5 +227,21 @@ class Util {
 		}
 
 		return $results;
+	}
+
+	/**
+	 * @param int $number
+	 * @return bool
+	 */
+	public static function isEven(int $number): bool {
+		return $number % 2 === 0;
+	}
+
+	/**
+	 * @param int $number
+	 * @return bool
+	 */
+	public static function isOdd(int $number): bool {
+		return !self::isEven($number);
 	}
 }
