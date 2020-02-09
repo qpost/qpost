@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,9 +20,6 @@
 
 namespace qpost\Controller\API;
 
-use DateInterval;
-use DateTime;
-use Doctrine\DBAL\Types\Type;
 use Exception;
 use qpost\Entity\User;
 use qpost\Service\APIService;
@@ -52,26 +49,9 @@ class BirthdayController extends AbstractController {
 			$dateString = $parameters->get("date");
 
 			if (strtotime($dateString)) {
-				$date = new DateTime($dateString);
-
-				$limit = new DateTime($dateString);
-				$limit->add(DateInterval::createFromDateString("30 day"));
-
 				$results = [];
 
-				$users = $entityManager->getRepository(User::class)->createQueryBuilder("u")
-					->where("u != :user")
-					->innerJoin("u.followers", "f")
-					->where("f.sender = :user")
-					->setParameter("user", $user)
-					->andWhere("u.birthday is not null")
-					->andWhere("DAYOFYEAR(u.birthday) BETWEEN DAYOFYEAR(:date) AND DAYOFYEAR(:limit)")
-					->setParameter("date", $date, Type::DATETIME)
-					->setParameter("limit", $limit, Type::DATETIME)
-					->setMaxResults(5)
-					->setCacheable(true)
-					->getQuery()
-					->getResult();
+				$users = $entityManager->getRepository(User::class)->getUpcomingBirthdays($user, $dateString);
 
 				foreach ($users as $u) {
 					if (!$apiService->mayView($u)) continue;

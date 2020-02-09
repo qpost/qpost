@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -27,7 +27,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use qpost\Constants\FeedEntryType;
 use qpost\Service\APIService;
-use function count;
 use function is_null;
 
 /**
@@ -49,7 +48,7 @@ class FeedEntry {
 	private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="feedEntries")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="feedEntries", fetch="EAGER")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $user;
@@ -60,24 +59,24 @@ class FeedEntry {
 	private $text;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", fetch="EAGER")
 	 */
 	private $referencedUser;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", inversedBy="children")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", inversedBy="children", fetch="EAGER")
 	 * @Serializer\Exclude()
 	 */
 	private $parent;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="parent")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="parent", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $children;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="feedEntries")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="feedEntries", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $token;
@@ -98,18 +97,43 @@ class FeedEntry {
 	private $time;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true, cascade={"remove"})
+	 * @Serializer\Exclude()
+	 */
+	private $replyCount = null;
+
+	/**
+	 * @Serializer\Exclude()
+	 */
+	private $shareCount = null;
+
+	/**
+	 * @Serializer\Exclude()
+	 */
+	private $favoriteCount = null;
+
+	/**
+	 * @Serializer\Exclude()
+	 */
+	private $shared = null;
+
+	/**
+	 * @Serializer\Exclude()
+	 */
+	private $favorited = null;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="feedEntry", orphanRemoval=true, cascade={"remove"}, fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $favorites;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\MediaFile", inversedBy="feedEntries")
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\MediaFile", inversedBy="feedEntries", fetch="EXTRA_LAZY")
 	 */
 	private $attachments;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries")
+	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $hashtags;
@@ -347,6 +371,10 @@ class FeedEntry {
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getReplyCount(): int {
+		if (!is_null($this->replyCount)) {
+			return $this->replyCount;
+		}
+
 		if ($this->type == FeedEntryType::POST || $this->type == FeedEntryType::REPLY) {
 			$i = 0;
 
@@ -361,10 +389,24 @@ class FeedEntry {
 	}
 
 	/**
+	 * @param int|null $replyCount
+	 * @return $this
+	 */
+	public function setReplyCount(?int $replyCount): self {
+		$this->replyCount = $replyCount;
+
+		return $this;
+	}
+
+	/**
 	 * @return int
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getShareCount(): int {
+		if (!is_null($this->shareCount)) {
+			return $this->shareCount;
+		}
+
 		if ($this->type == FeedEntryType::POST || $this->type == FeedEntryType::SHARE) {
 			$i = 0;
 
@@ -379,11 +421,35 @@ class FeedEntry {
 	}
 
 	/**
+	 * @param int|null $shareCount
+	 * @return $this
+	 */
+	public function setShareCount(?int $shareCount): self {
+		$this->shareCount = $shareCount;
+
+		return $this;
+	}
+
+	/**
 	 * @return int
 	 * @Serializer\VirtualProperty()
 	 */
 	public function getFavoriteCount(): int {
-		return count($this->getFavorites());
+		if (!is_null($this->favoriteCount)) {
+			return $this->favoriteCount;
+		}
+
+		return $this->getFavorites()->count();
+	}
+
+	/**
+	 * @param int|null $favoriteCount
+	 * @return $this
+	 */
+	public function setFavoriteCount(?int $favoriteCount): self {
+		$this->favoriteCount = $favoriteCount;
+
+		return $this;
 	}
 
 	/**
@@ -392,6 +458,10 @@ class FeedEntry {
 	 * @Serializer\SerializedName("favorited")
 	 */
 	public function isFavorited(): bool {
+		if (!is_null($this->favorited)) {
+			return $this->favorited;
+		}
+
 		$apiService = APIService::$instance;
 
 		if (!is_null($apiService) && $apiService->isAuthorized()) {
@@ -405,11 +475,25 @@ class FeedEntry {
 	}
 
 	/**
+	 * @param bool|null $favorited
+	 * @return $this
+	 */
+	public function setFavorited(?bool $favorited): self {
+		$this->favorited = $favorited;
+
+		return $this;
+	}
+
+	/**
 	 * @return bool
 	 * @Serializer\VirtualProperty()
 	 * @Serializer\SerializedName("shared")
 	 */
 	public function isShared(): bool {
+		if (!is_null($this->shared)) {
+			return $this->shared;
+		}
+
 		$apiService = APIService::$instance;
 
 		if (!is_null($apiService) && $apiService->isAuthorized()) {
@@ -421,6 +505,16 @@ class FeedEntry {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param bool|null $shared
+	 * @return $this
+	 */
+	public function setShared(?bool $shared): self {
+		$this->shared = $shared;
+
+		return $this;
 	}
 
 	/**

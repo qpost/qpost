@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -33,6 +33,7 @@ import FeedEntryList from "./FeedEntryList";
 import {Alert, Icon} from "antd";
 import FavoriteList from "./FavoriteList";
 import ReplyList from "./ReplyList";
+import AppearanceSettings from "../../Util/AppearanceSettings";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
@@ -43,14 +44,21 @@ export default class FeedEntryListItem extends Component<{
 	showParentInfo?: boolean
 }, {
 	nsfwWarningActive: boolean,
-	redirect: boolean
+	redirect: boolean,
+	entry: FeedEntry
 }> {
 	constructor(props) {
 		super(props);
 
+		let entry = this.props.entry;
+		if (entry.getType() === FeedEntryType.SHARE) {
+			entry = entry.getPost();
+		}
+
 		this.state = {
-			nsfwWarningActive: this.props.entry.isNSFW(),
-			redirect: false
+			nsfwWarningActive: AppearanceSettings.showMatureWarning() && (entry || this.props.entry).isNSFW(),
+			redirect: false,
+			entry
 		};
 	}
 
@@ -63,14 +71,6 @@ export default class FeedEntryListItem extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		let entry: FeedEntry = this.props.entry;
 		let user: User = entry.getUser();
-
-		if (this.state.redirect) {
-			const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
-
-			sessionStorage.setItem("nextFeedEntry", JSON.stringify(entry));
-
-			return <Redirect push to={"/r/status/" + id}/>;
-		}
 
 		switch (entry.getType()) {
 			case FeedEntryType.POST:
@@ -87,7 +87,24 @@ export default class FeedEntryListItem extends Component<{
 					</div>;
 
 					entry = entry.getPost();
+
+					if (!entry) {
+						return "";
+					}
+
 					user = entry.getUser();
+
+					if (!user) {
+						return "";
+					}
+				}
+
+				if (this.state.redirect) {
+					const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
+
+					sessionStorage.setItem("nextFeedEntry", JSON.stringify(entry));
+
+					return <Redirect push to={"/r/status/" + id}/>;
 				}
 
 				return <li className={"list-group-item px-0 py-0 feedEntry statusTrigger"} onClick={(e) => {
@@ -165,7 +182,15 @@ export default class FeedEntryListItem extends Component<{
 											<FeedEntryListItemAttachments entry={entry}/>}
 
 										{this.props.hideButtons && this.props.hideButtons === true ? "" :
-											<FeedEntryActionButtons entry={entry} parent={this}/>}
+											<FeedEntryActionButtons entry={entry} parent={this} onEntryUpdate={(e) => {
+												this.setState({
+													entry: e
+												});
+
+												if (this.props.parent instanceof FeedEntryList) {
+													this.props.parent.replaceEntry(e);
+												}
+											}}/>}
 									</div>}
 							</div>
 						</Row>

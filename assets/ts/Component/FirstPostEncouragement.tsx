@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -32,7 +32,7 @@ export default class FirstPostEncouragement extends Component<any, {
 
 		let show: boolean = false;
 		const user = Auth.getCurrentUser();
-		if (user && user.getPostCount() === 0) {
+		if (user && user.getTotalPostCount() === 0) {
 			show = true;
 		}
 

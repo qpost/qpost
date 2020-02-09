@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -21,7 +21,6 @@
 namespace qpost\Controller\API;
 
 use DateTime;
-use Doctrine\DBAL\Types\Type;
 use Exception;
 use qpost\Entity\Block;
 use qpost\Entity\User;
@@ -51,9 +50,7 @@ class BlockController extends AbstractController {
 		if ($parameters->has("target")) {
 			$entityManager = $apiService->getEntityManager();
 
-			$target = $entityManager->getRepository(User::class)->findOneBy([
-				"id" => $parameters->get("target")
-			]);
+			$target = $entityManager->getRepository(User::class)->getUserById($parameters->get("target"));
 
 			if ($target && $apiService->mayView($target)) {
 				$block = $entityManager->getRepository(Block::class)->findOneBy([
@@ -101,15 +98,10 @@ class BlockController extends AbstractController {
 		if ($parameters->has("target")) {
 			$entityManager = $apiService->getEntityManager();
 
-			$target = $entityManager->getRepository(User::class)->findOneBy([
-				"id" => $parameters->get("target")
-			]);
+			$target = $entityManager->getRepository(User::class)->getUserById($parameters->get("target"));
 
 			if ($target) {
-				$block = $entityManager->getRepository(Block::class)->findOneBy([
-					"user" => $user,
-					"target" => $target
-				]);
+				$block = $entityManager->getRepository(Block::class)->getBlock($user, $target);
 
 				if ($block) {
 					$entityManager->remove($block);
@@ -143,15 +135,10 @@ class BlockController extends AbstractController {
 		if ($parameters->has("target")) {
 			$entityManager = $apiService->getEntityManager();
 
-			$target = $entityManager->getRepository(User::class)->findOneBy([
-				"id" => $parameters->get("target")
-			]);
+			$target = $entityManager->getRepository(User::class)->getUserById($parameters->get("target"));
 
 			if ($target) {
-				$block = $entityManager->getRepository(Block::class)->findOneBy([
-					"user" => $user,
-					"target" => $target
-				]);
+				$block = $entityManager->getRepository(Block::class)->getBlock($user, $target);
 
 				if ($block) {
 					return $apiService->json(["result" => $apiService->serialize($block)]);
@@ -190,24 +177,10 @@ class BlockController extends AbstractController {
 		$entityManager = $apiService->getEntityManager();
 		$results = [];
 
-		$builder = $entityManager->getRepository(Block::class)->createQueryBuilder("b")
-			->where("b.user = :user")
-			->setParameter("user", $user)
-			->orderBy("b.time", "DESC")
-			->setMaxResults(30)
-			->setCacheable(false);
-
-		if ($max) {
-			$builder->andWhere("b.id < :id")
-				->setParameter("id", $max, Type::INTEGER);
-		}
-
 		/**
 		 * @var Block[] $blocks
 		 */
-		$blocks = $builder
-			->getQuery()
-			->getResult();
+		$blocks = $entityManager->getRepository(Block::class)->getBlocks($user, $max);
 
 		foreach ($blocks as $block) {
 			array_push($results, $apiService->serialize($block));

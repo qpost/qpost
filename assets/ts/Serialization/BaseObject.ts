@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -40,20 +40,77 @@ export default class BaseObject {
 			if (result instanceof FeedEntry) {
 				const user = result.getUser();
 
-				if (user && user.getId() === currentUser.getId()) {
-					Auth.setCurrentUser(user);
+				if (user) {
+					user.saveToStorage();
+
+					if (user.getId() === currentUser.getId()) {
+						Auth.setCurrentUser(user);
+					}
 				}
 			} else if (result instanceof User) {
+				result.saveToStorage();
+
 				if (result.getId() === currentUser.getId()) {
 					Auth.setCurrentUser(result);
 				}
 			} else if (result instanceof Notification) {
 				let user = result.getUser();
 
-				if (user && user.getId() === currentUser.getId()) {
-					Auth.setCurrentUser(user);
+				if (user) {
+					user.saveToStorage();
+
+					if (user.getId() === currentUser.getId()) {
+						Auth.setCurrentUser(user);
+					}
 				}
 			}
+		}
+
+		return result;
+	}
+
+	static convertArray<T>(type: (new () => T), object: string | any[]): T[] {
+		let parsed: any[];
+
+		if (typeof object === "string") {
+			parsed = JSON.parse(object);
+		} else {
+			parsed = object;
+		}
+
+		const result = this.getJsonConverter().deserializeArray(parsed, type);
+		const currentUser = Auth.getCurrentUser();
+
+		if (currentUser) {
+			result.forEach(r => {
+				if (r instanceof FeedEntry) {
+					const user = r.getUser();
+
+					if (user) {
+						user.saveToStorage();
+
+						if (user.getId() === currentUser.getId()) {
+							Auth.setCurrentUser(user);
+						}
+					}
+				} else if (r instanceof User) {
+					r.saveToStorage();
+
+					if (r.getId() === currentUser.getId()) {
+						Auth.setCurrentUser(r);
+					}
+				} else if (r instanceof Notification) {
+					let user = r.getUser();
+
+					if (user) {
+						user.saveToStorage();
+
+						if (user.getId() === currentUser.getId()) {
+							Auth.setCurrentUser(user);
+						}
+					}
+				}
+			})
 		}
 
 		return result;

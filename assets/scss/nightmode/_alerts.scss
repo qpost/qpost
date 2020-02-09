@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -28,8 +28,8 @@
 	border-color: #000;
 }
 
-.ant-alert {
-	&.ant-alert-info {
+.ant-alert, .alert {
+	&.ant-alert-info, &.alert-info {
 		border: 1px solid #001020;
 		background-color: #001d30;
 		color: #FFF !important;
@@ -39,7 +39,7 @@
 		}
 	}
 
-	&.ant-alert-error {
+	&.ant-alert-error, &.alert-danger {
 		border: 1px solid #230002;
 		background-color: #380002;
 		color: #FFF !important;
@@ -49,7 +49,7 @@
 		}
 	}
 
-	&.ant-alert-success {
+	&.ant-alert-success, &.alert-success {
 		border: 1px solid #001f04;
 		background-color: #003805;
 		color: #FFF !important;
@@ -59,7 +59,7 @@
 		}
 	}
 
-	&.ant-alert-warning {
+	&.ant-alert-warning, &.alert-warning {
 		border: 1px solid #4a3611;
 		background-color: #91711a;
 		color: #FFF !important;

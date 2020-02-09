@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -79,6 +79,7 @@ class LoginController extends AbstractController {
 								->setParameter("query", $email, Type::STRING)
 								->setMaxResults(1)
 								->getQuery()
+								->useQueryCache(true)
 								->getOneOrNullResult();
 
 							if (!is_null($user) && is_null($user->getGigadriveData())) {
@@ -183,6 +184,7 @@ class LoginController extends AbstractController {
 								->where("g.accountId = :gigadriveId")
 								->setParameter("gigadriveId", $userData["id"], Type::INTEGER)
 								->getQuery()
+								->useQueryCache(true)
 								->getOneOrNullResult();
 
 							if (!is_null($user)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -93,6 +93,8 @@ class IpStackService {
 	 * @return IpStackResult|null
 	 */
 	public function createIpStackResult(Token $token): ?IpStackResult {
+		if (!$this->apiKey || empty($this->apiKey)) return null;
+
 		$ip = $token->getLastIP();
 		if (!$ip || ($ip === "127.0.0.1" || $ip === "127.0.1.1" || $ip === "::1" || $ip === "localhost")) { // Use example IP in dev environment
 			$ip = "134.201.250.155";

@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -24,6 +24,7 @@
 @import "alerts";
 @import "base";
 @import "buttons";
+@import "download";
 @import "emoji";
 @import "feed";
 @import "feedButtons";
@@ -42,3 +43,4 @@
 @import "trends";
 @import "user-box";
 @import "nightmode/index";
+@import "settings/index";

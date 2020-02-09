@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -74,10 +74,19 @@ class PushSubscriptionService implements UserSubscriptionManagerInterface {
 	 * @inheritDoc
 	 */
 	public function getUserSubscription(UserInterface $user, string $subscriptionHash): ?UserSubscriptionInterface {
-		return $this->entityManager->getRepository(PushSubscription::class)->findOneBy([
-			"user" => $user,
+		/**
+		 * @var PushSubscription $subscription
+		 */
+		$subscription = $this->entityManager->getRepository(PushSubscription::class)->findOneBy([
 			"subscriptionHash" => $subscriptionHash
 		]);
+
+		// overwrite to avoid ghost subscriptions
+		if ($subscription && $subscription->getUser()->getUsername() === $user->getUsername()) {
+			$subscription->setUser($user);
+		}
+
+		return $subscription;
 	}
 
 	/**

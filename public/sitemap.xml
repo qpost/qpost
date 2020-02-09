@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+  ~ Copyright (C) 2018-2020 Gigadrive - All rights reserved.
   ~ https://gigadrivegroup.com
   ~ https://qpo.st
   ~
@@ -41,7 +41,7 @@
 
 	<url>
 		<loc>https://qpo.st/apidocs</loc>
-		<lastmod>2019-12-12</lastmod>
+		<lastmod>2020-01-19</lastmod>
 	</url>
 
 	<url>
@@ -100,22 +100,12 @@
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/followrequest</loc>
+		<loc>https://qpo.st/apidocs/followRequest</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
 		<loc>https://qpo.st/apidocs/notifications</loc>
-		<lastmod>2019-12-12</lastmod>
-	</url>
-
-	<url>
-		<loc>https://qpo.st/apidocs/password</loc>
-		<lastmod>2019-12-12</lastmod>
-	</url>
-
-	<url>
-		<loc>https://qpo.st/apidocs/privacyLevel</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
@@ -151,11 +141,6 @@
 
 	<url>
 		<loc>https://qpo.st/apidocs/user</loc>
-		<lastmod>2019-12-12</lastmod>
-	</url>
-
-	<url>
-		<loc>https://qpo.st/apidocs/username</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 </urlset>

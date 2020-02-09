@@ -1,0 +1,47 @@
+{% extends "settings/base.html.twig" %}
+{% import "settings/macro.html.twig" as macro %}
+
+{% block content %}
+	{{ macro.settingsHeadline("Privacy") }}
+
+	{% include "parts/flash.html.twig" %}
+
+	<form action="{{ path("qpost_settings_privacy") }}" method="post">
+		{% include "parts/csrf.html.twig" %}
+
+		<b>Privacy level</b>
+		<p class="small text-muted">Choose who can see and interact with your content.</p>
+
+		<div class="custom-control custom-radio">
+			<input type="radio" id="privacyLevelPublic" name="privacyLevel" class="custom-control-input"
+				   value="PUBLIC" {{ app.user.privacyLevel == "PUBLIC" ? "checked" }}/>
+			<label class="custom-control-label" for="privacyLevelPublic">
+				<b>Public</b><br/>
+				<p class="small text-muted">everyone can see your profile and interact with your content</p>
+			</label>
+		</div>
+
+		<div class="custom-control custom-radio">
+			<input type="radio" id="privacyLevelPrivate" name="privacyLevel" class="custom-control-input"
+				   value="PRIVATE" {{ app.user.privacyLevel == "PRIVATE" ? "checked" }}/>
+			<label class="custom-control-label" for="privacyLevelPrivate">
+				<b>Private</b><br/>
+				<p class="small text-muted">only your followers can see your profile and interact with your content, new
+					followers have to be confirmed</p>
+			</label>
+		</div>
+
+		<div class="custom-control custom-radio">
+			<input type="radio" id="privacyLevelClosed" name="privacyLevel" class="custom-control-input"
+				   value="CLOSED" {{ app.user.privacyLevel == "CLOSED" ? "checked" }}/>
+			<label class="custom-control-label" for="privacyLevelClosed">
+				<b>Closed</b><br/>
+				<p class="small text-muted">only you can see your profile, nobody can interact with your content</p>
+			</label>
+		</div>
+
+		<button type="submit" class="btn btn-primary btn-block bootstrapButton">
+			Save changes
+		</button>
+	</form>
+{% endblock %}

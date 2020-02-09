@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -93,6 +93,7 @@ class RegisterController extends AbstractController {
 								->where("g.accountId = :gigadriveId")
 								->setParameter("gigadriveId", $id, Type::INTEGER)
 								->getQuery()
+								->useQueryCache(true)
 								->getOneOrNullResult();
 
 							if (is_null($user)) {
@@ -116,96 +117,103 @@ class RegisterController extends AbstractController {
 																	 */
 																	$userRepository = $entityManager->getRepository(User::class);
 
-																	if ($userRepository->isEmailAvailable($email)) {
-																		if ($userRepository->isUsernameAvailable($username)) {
-																			$emailActivated = !$verifyEmail;
-																			$emailToken = Util::getRandomString(7);
+																	$ip = $request->getClientIp();
 
-																			$user = (new User())
-																				->setUsername($username)
-																				->setDisplayName($username)
-																				->setEmail($email)
-																				->setEmailActivated($emailActivated)
-																				->setEmailActivationToken($emailToken)
-																				->setTime(new DateTime("now"))
-																				->setGigadriveData((new UserGigadriveData())
-																					->setAccountId($id)
-																					->setJoinDate(new DateTime($registerDate))
-																					->setToken($token)
-																					->setLastUpdate(new DateTime("now")));
+																	if ($userRepository->getRecentCreatedAccounts($ip) < 5) {
+																		if ($userRepository->isEmailAvailable($email)) {
+																			if ($userRepository->isUsernameAvailable($username)) {
+																				$emailActivated = !$verifyEmail;
+																				$emailToken = Util::getRandomString(7);
 
-																			$entityManager->persist($user);
-
-																			$autoFollowAccountId = $_ENV["AUTOFOLLOW_ACCOUNT_ID"];
-																			if ($autoFollowAccountId) {
-																				$autoFollowAccount = $userRepository->findOneBy(["id" => $autoFollowAccountId]);
-
-																				if ($autoFollowAccount) {
-																					$entityManager->persist((new Follower())
-																						->setSender($user)
-																						->setReceiver($autoFollowAccount)
-																						->setTime(new DateTime("now")));
-																				}
-																			}
-
-																			$entityManager->flush();
-
-																			if ($verifyEmail) {
-																				// Send email
-																				$message = (new Swift_Message("Finish your qpost registration"))
-																					->setFrom($_ENV["MAILER_FROM"])
-																					->setTo($email)
-																					->setBody(
-																						$this->renderView("emails/register.html.twig", [
-																							"username" => $username,
-																							"displayName" => $username,
-																							"verificationLink" => $this->generateUrl("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
-																						]),
-																						"text/html"
-																					);
-
-																				if ($mailer->send($message) !== 0) {
-																					$this->addFlash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
-																				} else {
-																					$this->addFlash(FlashMessageType::ERROR, "Your email address could not be verified.");
-																				}
-
-																				return $this->redirect($this->generateUrl("qpost_login_index"));
-																			} else {
-																				$expiry = new DateTime("now");
-																				$expiry->add(DateInterval::createFromDateString("6 month"));
-
-																				$token = (new Token())
-																					->setUser($user)
+																				$user = (new User())
+																					->setUsername($username)
+																					->setDisplayName($username)
+																					->setEmail($email)
+																					->setEmailActivated($emailActivated)
+																					->setEmailActivationToken($emailToken)
 																					->setTime(new DateTime("now"))
-																					->setLastAccessTime(new DateTime("now"))
-																					->setUserAgent($request->headers->get("User-Agent"))
-																					->setLastIP($request->getClientIp())
-																					->setExpiry($expiry);
+																					->setCreationIP($request->getClientIp())
+																					->setGigadriveData((new UserGigadriveData())
+																						->setAccountId($id)
+																						->setJoinDate(new DateTime($registerDate))
+																						->setToken($token)
+																						->setLastUpdate(new DateTime("now")));
 
-																				$entityManager->persist($token);
+																				$entityManager->persist($user);
 
-																				$ipStackResult = $ipStackService->createIpStackResult($token);
-																				if ($ipStackResult) {
-																					$entityManager->persist($ipStackResult);
+																				$autoFollowAccountId = $_ENV["AUTOFOLLOW_ACCOUNT_ID"];
+																				if ($autoFollowAccountId) {
+																					$autoFollowAccount = $userRepository->findOneBy(["id" => $autoFollowAccountId]);
 
-																					$token->setIpStackResult($ipStackResult);
-
-																					$entityManager->persist($token);
+																					if ($autoFollowAccount) {
+																						$entityManager->persist((new Follower())
+																							->setSender($user)
+																							->setReceiver($autoFollowAccount)
+																							->setTime(new DateTime("now")));
+																					}
 																				}
 
 																				$entityManager->flush();
 
-																				$response = $this->redirect($this->generateUrl("qpost_home_index"));
-																				$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
+																				if ($verifyEmail) {
+																					// Send email
+																					$message = (new Swift_Message("Finish your qpost registration"))
+																						->setFrom($_ENV["MAILER_FROM"])
+																						->setTo($email)
+																						->setBody(
+																							$this->renderView("emails/register.html.twig", [
+																								"username" => $username,
+																								"displayName" => $username,
+																								"verificationLink" => $this->generateUrl("qpost_verifyemail_verifyemail", ["userId" => $user->getId(), "activationToken" => $emailToken], UrlGeneratorInterface::ABSOLUTE_URL)
+																							]),
+																							"text/html"
+																						);
 
-																				return $response;
+																					if ($mailer->send($message) !== 0) {
+																						$this->addFlash(FlashMessageType::SUCCESS, "Your account has been created. An activation email has been sent to you. Click the link in that email to verify your account. (Check your spam folder!)");
+																					} else {
+																						$this->addFlash(FlashMessageType::ERROR, "Your email address could not be verified.");
+																					}
+
+																					return $this->redirect($this->generateUrl("qpost_login_index"));
+																				} else {
+																					$expiry = new DateTime("now");
+																					$expiry->add(DateInterval::createFromDateString("6 month"));
+
+																					$token = (new Token())
+																						->setUser($user)
+																						->setTime(new DateTime("now"))
+																						->setLastAccessTime(new DateTime("now"))
+																						->setUserAgent($request->headers->get("User-Agent"))
+																						->setLastIP($request->getClientIp())
+																						->setExpiry($expiry);
+
+																					$entityManager->persist($token);
+
+																					$ipStackResult = $ipStackService->createIpStackResult($token);
+																					if ($ipStackResult) {
+																						$entityManager->persist($ipStackResult);
+
+																						$token->setIpStackResult($ipStackResult);
+
+																						$entityManager->persist($token);
+																					}
+
+																					$entityManager->flush();
+
+																					$response = $this->redirect($this->generateUrl("qpost_home_index"));
+																					$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
+
+																					return $response;
+																				}
+																			} else {
+																				$this->addFlash(FlashMessageType::ERROR, "That username is not available anymore.");
 																			}
 																		} else {
-																			$this->addFlash(FlashMessageType::ERROR, "That username is not available anymore.");
+																			$this->addFlash(FlashMessageType::ERROR, "That email address is not available anymore.");
 																		}
 																	} else {
-																		$this->addFlash(FlashMessageType::ERROR, "That email address is not available anymore.");
+																		$this->addFlash(FlashMessageType::ERROR, "You have created too many accounts in a short period of time.");
 																	}
 																} else {
 																	$this->addFlash(FlashMessageType::ERROR, "Your username may only consist of letters and numbers.");

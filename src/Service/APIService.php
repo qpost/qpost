@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -45,6 +45,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use function is_string;
 use function json_decode;
@@ -88,12 +89,18 @@ class APIService {
 	 */
 	private $security;
 
-	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security) {
+	/**
+	 * @var UrlGeneratorInterface $urlGenerator
+	 */
+	private $urlGenerator;
+
+	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security, UrlGeneratorInterface $urlGenerator) {
 		$this->logger = $logger;
 		$this->entityManager = $entityManager;
 		$this->requestStack = $requestStack;
 		$this->kernel = $kernel;
 		$this->security = $security;
+		$this->urlGenerator = $urlGenerator;
 		$this->serializer = SerializerBuilder::create()
 			->setDebug($kernel->isDebug())
 			->setCacheDir(__DIR__ . "/../../var/cache/" . $kernel->getEnvironment() . "/jms")
@@ -143,6 +150,13 @@ class APIService {
 	}
 
 	/**
+	 * @return UrlGeneratorInterface
+	 */
+	public function getUrlGenerator(): UrlGeneratorInterface {
+		return $this->urlGenerator;
+	}
+
+	/**
 	 * @return SerializerInterface
 	 */
 	public function getSerializer(): SerializerInterface {
@@ -167,7 +181,7 @@ class APIService {
 			}
 		}
 
-		return $token ? $this->entityManager->getRepository(Token::class)->findOneBy(["id" => $token]) : null;
+		return $token ? $this->entityManager->getRepository(Token::class)->getTokenById($token) : null;
 	}
 
 	public function getUser(): ?User {
@@ -219,14 +233,15 @@ class APIService {
 
 	/**
 	 * @param $object
-	 * @return array
+	 * @param bool $returnString
+	 * @return array|string
 	 */
-	public function serialize($object): array {
+	public function serialize($object, bool $returnString = false) {
 		$context = new SerializationContext();
 		$context->setSerializeNull(true);
 
 		$string = $this->serializer->serialize($object, "json", $context);
-		return json_decode($string, true);
+		return $returnString ? $string : json_decode($string, true);
 	}
 
 	/**
@@ -257,6 +272,14 @@ class APIService {
 		if (!$user) $user = $this->getUser();
 
 		if ($target instanceof FeedEntry) {
+			if ($target->getType() === FeedEntryType::SHARE) {
+				$parent = $target->getParent();
+
+				if ($parent && !$this->mayView($parent, $user)) {
+					return false;
+				}
+			}
+
 			$targetUser = $target->getUser();
 			if ($targetUser && $targetUser->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
 				if ($user) {
@@ -364,6 +387,16 @@ class APIService {
 					->setTime(new DateTime("now"));
 
 				$this->entityManager->persist($followRequest);
+				$this->entityManager->flush();
+
+				$notification = (new Notification())
+					->setUser($to)
+					->setReferencedUser($from)
+					->setReferencedFollowRequest($followRequest)
+					->setType(NotificationType::FOLLOW_REQUEST)
+					->setTime(new DateTime("now"));
+
+				$this->entityManager->persist($notification);
 				$this->entityManager->flush();
 
 				return true;

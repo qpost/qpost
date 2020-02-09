@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -22,6 +22,8 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Type;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\Block;
 use qpost\Entity\User;
 
@@ -42,9 +44,47 @@ class BlockRepository extends ServiceEntityRepository {
 	 * @return bool
 	 */
 	public function isBlocked(User $user, User $target): bool {
-		return $this->count([
-				"user" => $user,
-				"target" => $target
-			]) > 0;
+		return ($user->getId() === $target->getId()) ? false : $this->createQueryBuilder("b")
+				->select("count(b.id)")
+				->where("b.user = :user")
+				->setParameter("user", $user)
+				->andWhere("b.target = :target")
+				->setParameter("target", $target)
+				->getQuery()
+				->useQueryCache(true)
+				->useResultCache(true)
+				->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+				->getSingleScalarResult() > 0;
+	}
+
+	public function getBlock(User $user, User $target): ?Block {
+		return ($user->getId() === $target->getId()) ? null : $this->createQueryBuilder("b")
+			->where("b.user = :user")
+			->setParameter("user", $user)
+			->andWhere("b.target = :target")
+			->setParameter("target", $target)
+			->setMaxResults(1)
+			->getQuery()
+			->useQueryCache(true)
+			->getOneOrNullResult();
+	}
+
+	public function getBlocks(User $user, ?int $max = null): array {
+		$builder = $this->createQueryBuilder("b")
+			->where("b.user = :user")
+			->setParameter("user", $user)
+			->orderBy("b.time", "DESC")
+			->setMaxResults(30)
+			->setCacheable(false);
+
+		if (!is_null($max)) {
+			$builder->andWhere("b.id < :id")
+				->setParameter("id", $max, Type::INTEGER);
+		}
+
+		return $builder
+			->getQuery()
+			->useQueryCache(true)
+			->getResult();
 	}
 }

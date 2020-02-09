@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,10 +20,10 @@
 
 namespace qpost\Controller;
 
-use Exception;
 use qpost\Constants\MiscConstants;
 use qpost\Service\AuthorizationService;
 use qpost\Service\PostRequestService;
+use qpost\Service\RenderService;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,23 +37,33 @@ class HomeController extends AbstractController {
 	 *
 	 * @param Request $request
 	 * @param PostRequestService $postRequestService
+	 * @param RenderService $renderService
 	 * @return Response
-	 * @throws Exception
 	 */
-	public function index(Request $request, PostRequestService $postRequestService) {
+	public function index(Request $request, PostRequestService $postRequestService, RenderService $renderService) {
 		$user = $this->getUser();
 
 		if ($user) {
-			return $this->render("react.html.twig", Twig::param());
+			return $renderService->react();
 		} else {
 			$postRequestService->handleRegistration($this, $request);
 
 			$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
 
+			$availableHeadlines = [
+				"A social microblogging network that helps you share your thoughts online, protected by freedom of speech",
+				"The social network with actual free speech",
+				"The Twitter alternative is here!",
+				"Time to get rid of Twitter and Mastodon."
+			];
+
+			$headline = $availableHeadlines[rand(0, count($availableHeadlines) - 1)];
+
 			return $this->render($isMobile === false ? "pages/home/index.html.twig" : "pages/mobile/register.html.twig", Twig::param([
 				"description" => "A social microblogging network that helps you share your thoughts online, protected by freedom of speech.",
 				"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 				"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
+				"headline" => $headline,
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		}

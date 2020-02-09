@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -229,7 +229,7 @@ export default class PostForm extends Component<any, {
 
 					AntMessage.success("Your post has been sent.");
 
-					if (entryList && post.getType() === FeedEntryType.POST) {
+					if (entryList && post.getType() === FeedEntryType.POST && ((!post.getText()) || (post.getText() && !post.getText().startsWith("@")))) {
 						entryList.prependEntry(post);
 					} else if (replyList && post.getType() === FeedEntryType.REPLY) {
 						replyList.prependEntry(post);

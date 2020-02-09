@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    router.request_context.host: 'qpo.st'
+    router.request_context.scheme: 'https'
 
 services:
     # default configuration for services in *this* file
@@ -28,6 +30,10 @@ services:
         arguments: ["@doctrine", "@logger"]
         tags:
             - { name: bentools_webpush.subscription_manager, user_class: 'qpost\Entity\User' }
+
+    qpost\Service\RenderService:
+        class: qpost\Service\RenderService
+        arguments: ["@twig", "@request_stack", "@crawler_detect"]
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

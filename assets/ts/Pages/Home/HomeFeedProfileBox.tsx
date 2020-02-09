@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -99,7 +99,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 						</div>
 
 						<div className="font-weight-bold text-uppercase float-right">
-							{formatNumberShort(currentUser.getPostCount())}
+							{formatNumberShort(currentUser.getTotalPostCount())}
 						</div>
 					</div>
 				</Link>

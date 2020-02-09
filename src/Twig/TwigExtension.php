@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,15 +20,31 @@
 
 namespace qpost\Twig;
 
+use qpost\Service\APIService;
 use qpost\Util\Util;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class TwigExtension extends AbstractExtension {
+	private $apiService;
+
+	public function __construct(APIService $apiService) {
+		$this->apiService = $apiService;
+	}
+
 	public function getFunctions() {
 		return [
 			new TwigFunction("sanatizeHTMLAttribute", function ($content) {
 				return Util::sanatizeHTMLAttribute($content);
+			})
+		];
+	}
+
+	public function getFilters() {
+		return [
+			new TwigFilter("jms", function ($content) {
+				return $this->apiService->serialize($content, true);
 			})
 		];
 	}

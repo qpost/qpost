@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -345,7 +345,9 @@ class FollowController extends AbstractController {
 			 * @var Follower[] $followers
 			 */
 			$followers = $builder->orderBy("f.time", "DESC")
+				->setMaxResults(30)
 				->getQuery()
+				->useQueryCache(true)
 				->getResult();
 
 			foreach ($followers as $follower) {

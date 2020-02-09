@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -60,9 +60,7 @@ class FavoriteController extends AbstractController {
 				if (is_numeric($postId)) {
 					$entityManager = $apiService->getEntityManager();
 
-					$feedEntry = $entityManager->getRepository(FeedEntry::class)->findOneBy([
-						"id" => $postId
-					]);
+					$feedEntry = $entityManager->getRepository(FeedEntry::class)->getEntryById($postId);
 
 					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY) && $apiService->mayView($feedEntry)) {
 						$owner = $feedEntry->getUser();
@@ -133,9 +131,7 @@ class FavoriteController extends AbstractController {
 				if (is_numeric($postId)) {
 					$entityManager = $apiService->getEntityManager();
 
-					$feedEntry = $entityManager->getRepository(FeedEntry::class)->findOneBy([
-						"id" => $postId
-					]);
+					$feedEntry = $entityManager->getRepository(FeedEntry::class)->getEntryById($postId);
 
 					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY)) {
 						$favorite = $entityManager->getRepository(Favorite::class)->findOneBy([
@@ -229,6 +225,7 @@ class FavoriteController extends AbstractController {
 				 */
 				$favorites = $builder
 					->getQuery()
+					->useQueryCache(true)
 					->getResult();
 
 				foreach ($favorites as $favorite) {

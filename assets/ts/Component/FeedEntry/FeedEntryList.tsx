@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -21,7 +21,6 @@ import React, {Component} from "react";
 import {Alert} from "reactstrap";
 import FeedEntryListItem from "./FeedEntryListItem";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
-import User from "../../Entity/Account/User";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
@@ -29,11 +28,13 @@ import Empty from "antd/es/empty";
 import "antd/es/empty/style";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
+import Storage from "../../Util/Storage";
 
 export default class FeedEntryList extends Component<{
-	user?: User,
+	userID?: number,
 	searchQuery?: string,
-	disableTask?: boolean
+	disableTask?: boolean,
+	type?: "posts" | "replies"
 }, {
 	entries: FeedEntry[] | null,
 	error: string | null,
@@ -47,8 +48,10 @@ export default class FeedEntryList extends Component<{
 	constructor(props) {
 		super(props);
 
+		const storedEntries = Storage.sessionGet(this.storageName());
+
 		this.state = {
-			entries: null,
+			entries: storedEntries ? BaseObject.convertArray(FeedEntry, JSON.parse(storedEntries)) : null,
 			error: null,
 			loadingMore: false,
 			hasMore: true,
@@ -70,8 +73,8 @@ export default class FeedEntryList extends Component<{
 		FeedEntryList.instance = null;
 	}
 
-	componentDidUpdate(prevProps: Readonly<{ user?: User; searchQuery?: string }>, prevState: Readonly<{ entries: FeedEntry[] | null; error: string | null; loadingMore: boolean; hasMore: boolean; loadNewTask: any }>, snapshot?: any): void {
-		if (this.props.user !== prevProps.user || this.props.searchQuery !== prevProps.searchQuery) {
+	componentDidUpdate(prevProps: Readonly<{ userID?: number; searchQuery?: string; disableTask?: boolean; type?: "posts" | "replies" }>, prevState: Readonly<{ entries: FeedEntry[] | null; error: string | null; loadingMore: boolean; hasMore: boolean; loadNewTask: any; privateWarning: boolean }>, snapshot?: any): void {
+		if (this.props.userID !== prevProps.userID || this.props.searchQuery !== prevProps.searchQuery) {
 			this.setState({
 				entries: null,
 				error: null,
@@ -91,14 +94,33 @@ export default class FeedEntryList extends Component<{
 		this.setState({entries});
 	}
 
+	public replaceEntry(feedEntry: FeedEntry): void {
+		const entries = [];
+
+		this.state.entries.forEach(entry => {
+			if (entry.getId() === feedEntry.getId()) {
+				entries.push(feedEntry);
+			} else {
+				entries.push(entry);
+			}
+		});
+
+		this.setState({
+			entries
+		});
+
+		this.saveToStorage();
+	}
+
 	loadNew() {
 		if (this.state.entries === null || this.state.entries.length === 0) return;
 
-		const parameters = this.props.user ? {
-			user: this.props.user.getId()
+		const parameters = this.props.userID ? {
+			user: this.props.userID
 		} : {};
 
 		parameters["min"] = this.state.entries[0].getId();
+		parameters["type"] = this.props.type || "posts";
 
 		API.handleRequest("/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = [];
@@ -114,22 +136,33 @@ export default class FeedEntryList extends Component<{
 				entries.push(feedEntry);
 			});
 
+			console.log("1 - ", entries.length, data.results.length, this.state.entries.length);
+
 			if (this.state.entries) {
+				console.log(this.state.entries);
 				this.state.entries.forEach(entry => entries.push(entry));
+				console.log("2 - ", entries.length);
 			}
 
 			this.setState({
 				entries,
 				loadingMore: false
 			});
+
+			console.log("3 - ", this.state.entries.length);
+
+			this.saveToStorage();
+
+			this.loadNewTask();
 		}, error => {
 			this.setState({error, loadingMore: false});
+			this.loadNewTask();
 		});
 	}
 
 	load(max?: number) {
-		const parameters = this.props.user ? {
-			user: this.props.user.getId()
+		const parameters = this.props.userID ? {
+			user: this.props.userID
 		} : {};
 
 		if (max) parameters["max"] = max;
@@ -137,10 +170,12 @@ export default class FeedEntryList extends Component<{
 			parameters["type"] = "post";
 			parameters["query"] = this.props.searchQuery;
 			if (this.state.entries && this.state.entries.length != 0) parameters["offset"] = this.state.entries.length;
+		} else {
+			parameters["type"] = this.props.type || "posts";
 		}
 
 		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
-			let entries: FeedEntry[] = this.state.entries || [];
+			let entries: FeedEntry[] = (this.state.entries && max ? this.state.entries : null) || [];
 
 			data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
 
@@ -150,7 +185,11 @@ export default class FeedEntryList extends Component<{
 				hasMore: data.results.length === 0 ? false : this.state.hasMore
 			});
 
-			this.loadNewTask();
+			console.log("asd", this.state.entries.length);
+
+			this.saveToStorage();
+
+			if (!max) this.loadNewTask();
 		}, error => {
 			if (error === "You are not allowed to view this resource.") {
 				this.setState({error, loadingMore: false, hasMore: false, privateWarning: true});
@@ -160,13 +199,28 @@ export default class FeedEntryList extends Component<{
 		});
 	}
 
+	private saveToStorage(): void {
+		const limit: number = 15;
+		const name: string = this.storageName();
+
+		let entries = this.state.entries.slice(0);
+		if (entries) {
+			entries.length = Math.min(limit, entries.length);
+		}
+
+		Storage.sessionSet(name, JSON.stringify(entries), 3);
+	}
+
+	private storageName(): string {
+		return Storage.SESSION_FEED_ENTRY_LIST + "_" + (this.props.userID ? this.props.userID : "0") + "_" + (this.props.type || "posts") + (this.props.searchQuery ? "_" + this.props.searchQuery : "");
+	}
+
 	private loadNewTask(): void {
 		if (FeedEntryList.instance !== this || this.props.searchQuery || this.props.disableTask) return;
 
 		this.setState({
 			loadNewTask: setTimeout(() => {
 				this.loadNew();
-				this.loadNewTask();
 			}, 5000)
 		});
 	}

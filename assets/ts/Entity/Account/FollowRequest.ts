@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -18,8 +18,9 @@
  */
 
 import User from "./User";
-import {JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty} from "json2typescript";
 
+@JsonObject("FollowRequest")
 export default class FollowRequest {
 	@JsonProperty("id", Number)
 	private id: number = undefined;

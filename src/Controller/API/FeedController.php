@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,9 +20,6 @@
 
 namespace qpost\Controller\API;
 
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\QueryBuilder;
-use qpost\Constants\FeedEntryType;
 use qpost\Constants\PrivacyLevel;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
@@ -43,198 +40,79 @@ class FeedController extends AbstractController {
 	 */
 	public function feed(APIService $apiService) {
 		$entityManager = $apiService->getEntityManager();
+		$entryRepository = $entityManager->getRepository(FeedEntry::class);
+		$userRepository = $entityManager->getRepository(User::class);
 
 		$parameters = $apiService->parameters();
-		if ($parameters->has("max") && !$parameters->has("user")) {
-			// Load older posts on home feed
-			$response = $apiService->validate(true);
-			if (!is_null($response)) return $response;
+		$apiService->getLogger()->info("param", ["param" => $parameters]);
 
-			$user = $apiService->getUser();
+		$user = $apiService->getUser();
+		$target = null;
+		$max = null;
+		$min = null;
+		$type = "posts";
 
-			if (is_numeric($parameters->get("max"))) {
-				$results = [];
+		// verify target
+		if ($parameters->has("user")) {
+			$target = $userRepository->getUserById($parameters->get("user"));
 
-				/**
-				 * @var FeedEntry[] $feedEntries
-				 */
-				$feedEntries = $this->homeFeedQuery($apiService, $user)
-					->andWhere("f.id < :id")
-					->setParameter("id", $parameters->get("max"), Type::INTEGER)
-					->getQuery()
-					->getResult();
-
-				foreach ($feedEntries as $feedEntry) {
-					if (!$apiService->mayView($feedEntry)) continue;
-					array_push($results, $apiService->serialize($feedEntry));
-				}
-
-				return $apiService->json(["results" => $results]);
-			} else {
-				return $apiService->json(["error" => "'max' has to be an integer."], 400);
-			}
-		} else if (!$parameters->has("max") && !$parameters->has("user")) {
-			// Load first posts on home feed
-			$response = $apiService->validate(true);
-			if (!is_null($response)) return $response;
-
-			$user = $apiService->getUser();
-
-			$results = [];
-
-			/**
-			 * @var FeedEntry[] $feedEntries
-			 */
-			$feedEntries = $this->homeFeedQuery($apiService, $user)
-				->getQuery()
-				->getResult();
-
-			foreach ($feedEntries as $feedEntry) {
-				if (!$apiService->mayView($feedEntry)) continue;
-				array_push($results, $apiService->serialize($feedEntry));
-			}
-
-			return $apiService->json(["results" => $results]);
-		} else if ($parameters->has("max") && $parameters->has("user")) {
-			// Load older posts on profile page
-			$response = $apiService->validate(false);
-			if (!is_null($response)) return $response;
-
-			if (is_numeric($parameters->get("max"))) {
-				/**
-				 * @var User $user
-				 */
-				$user = $entityManager->getRepository(User::class)->findOneBy([
-					"id" => $parameters->get("user")
-				]);
-
-				if (!is_null($user) && $apiService->mayView($user)) {
-					if ($this->privacyLevelCheck($apiService, $apiService->getUser(), $user)) {
-						$results = [];
-
-						/**
-						 * @var FeedEntry[] $feedEntries
-						 */
-						$feedEntries = $this->profileFeedQuery($apiService, $user)
-							->andWhere("f.id < :id")
-							->setParameter("id", $parameters->get("max"), Type::INTEGER)
-							->getQuery()
-							->getResult();
-
-						foreach ($feedEntries as $feedEntry) {
-							if (!$apiService->mayView($feedEntry)) continue;
-							array_push($results, $apiService->serialize($feedEntry));
-						}
-
-						return $apiService->json(["results" => $results]);
-					} else {
-						return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
-					}
-				} else {
-					return $apiService->json(["error" => "The requested user could not be found."], 404);
-				}
-			} else {
-				return $apiService->json(["error" => "'max' has to be an integer."], 400);
-			}
-		} else if (!$parameters->has("max") && $parameters->has("user")) {
-			// Load first posts on profile page
-			$response = $apiService->validate(false);
-			if (!is_null($response)) return $response;
-
-			/**
-			 * @var User $user
-			 */
-			$user = $entityManager->getRepository(User::class)->findOneBy([
-				"id" => $parameters->get("user")
-			]);
-
-			if (!is_null($user) && $apiService->mayView($user)) {
-				if ($this->privacyLevelCheck($apiService, $apiService->getUser(), $user)) {
-					$results = [];
-
-					/**
-					 * @var FeedEntry[] $feedEntries
-					 */
-					$feedEntries = $this->profileFeedQuery($apiService, $user)
-						->getQuery()
-						->getResult();
-
-					foreach ($feedEntries as $feedEntry) {
-						if (!$apiService->mayView($feedEntry)) continue;
-						array_push($results, $apiService->serialize($feedEntry));
-					}
-
-					return $apiService->json(["results" => $results]);
-				} else {
-					return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
-				}
-			} else {
+			if (is_null($target) || !$apiService->mayView($target)) {
 				return $apiService->json(["error" => "The requested user could not be found."], 404);
+			} else if (!$this->privacyLevelCheck($apiService, $user, $target)) {
+				return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
 			}
-		} else if ($parameters->has("min") && $parameters->has("user")) {
-			// Load new posts on profile page
-			$response = $apiService->validate(false);
-			if (!is_null($response)) return $response;
-
-			/**
-			 * @var User $user
-			 */
-			$user = $entityManager->getRepository(User::class)->findOneBy([
-				"id" => $parameters->get("user")
-			]);
-
-			if (!is_null($user) && $apiService->mayView($user)) {
-				if ($this->privacyLevelCheck($apiService, $apiService->getUser(), $user)) {
-					$results = [];
-
-					/**
-					 * @var FeedEntry[] $feedEntries
-					 */
-					$feedEntries = $this->profileFeedQuery($apiService, $user)
-						->andWhere("f.id > :id")
-						->setParameter("id", $parameters->get("min"), Type::INTEGER)
-						->getQuery()
-						->getResult();
-
-					foreach ($feedEntries as $feedEntry) {
-						if (!$apiService->mayView($feedEntry)) continue;
-						array_push($results, $apiService->serialize($feedEntry));
-					}
-
-					return $apiService->json(["results" => $results]);
-				} else {
-					return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
-				}
-			} else {
-				return $apiService->json(["error" => "The requested user could not be found."], 404);
-			}
-		} else if ($parameters->has("min") && !$parameters->has("user")) {
-			// Load new posts on home feed
-			$response = $apiService->validate(true);
-			if (!is_null($response)) return $response;
-
-			$user = $apiService->getUser();
-
-			$results = [];
-
-			/**
-			 * @var FeedEntry[] $feedEntries
-			 */
-			$feedEntries = $this->homeFeedQuery($apiService, $user)
-				->andWhere("f.id > :id")
-				->setParameter("id", $parameters->get("min"), Type::INTEGER)
-				->getQuery()
-				->getResult();
-
-			foreach ($feedEntries as $feedEntry) {
-				if (!$apiService->mayView($feedEntry)) continue;
-				array_push($results, $apiService->serialize($feedEntry));
-			}
-
-			return $apiService->json(["results" => $results]);
-		} else {
-			return $apiService->json(["error" => "Bad request"], 400);
 		}
+
+		// verify authorization
+		if (is_null($target)) {
+			$response = $apiService->validate(true);
+			if (!is_null($response)) return $response;
+		}
+
+		// verify max entry id
+		if ($parameters->has("max")) {
+			$max = $parameters->get("max");
+
+			if (!is_numeric($max)) {
+				return $apiService->json(["error" => "'max' has to be an integer."], 400);
+			}
+		}
+
+		// verify min entry id
+		if ($parameters->has("min")) {
+			if (!is_null($max)) {
+				return $apiService->json(["error" => "'min' and 'max' may not be used together."], 400);
+			}
+
+			$min = $parameters->get("min");
+
+			if (!is_numeric($min)) {
+				return $apiService->json(["error" => "'min' has to be an integer."], 400);
+			}
+		}
+
+		// verify type
+		if ($parameters->has("type")) {
+			$type = $parameters->get("type");
+
+			if (!($type === "posts" || $type === "replies")) {
+				return $apiService->json(["error" => "'type' has to be either 'posts' or 'replies'."], 400);
+			}
+		}
+
+		$results = [];
+
+		/**
+		 * @var FeedEntry[] $feedEntries
+		 */
+		$feedEntries = $entryRepository->getFeed($user, $target, $min, $max, $type);
+
+		foreach ($feedEntries as $feedEntry) {
+			if (!$apiService->mayView($feedEntry)) continue;
+			array_push($results, $apiService->serialize($feedEntry));
+		}
+
+		return $apiService->json(["results" => $results]);
 	}
 
 	private function privacyLevelCheck(APIService $apiService, ?User $from, User $to): bool {
@@ -247,34 +125,5 @@ class FeedController extends AbstractController {
 		}
 
 		return true;
-	}
-
-	private function homeFeedQuery(APIService $apiService, User $currentUser): QueryBuilder {
-		return $apiService->getEntityManager()->getRepository(FeedEntry::class)->createQueryBuilder("f")
-			->innerJoin("f.user", "u")
-			->where("u.privacyLevel != :closed")
-			->setParameter("closed", PrivacyLevel::CLOSED, Type::STRING)
-			->andWhere("f.parent is null")
-			->andWhere("f.type = :post or f.type = :share")
-			->setParameter("post", FeedEntryType::POST, Type::STRING)
-			->setParameter("share", FeedEntryType::SHARE, Type::STRING)
-			->andWhere("exists (select 1 from qpost\Entity\Follower ff where ff.sender = :user and ff.receiver = f.user) or f.user = :user")
-			->setParameter("user", $currentUser)
-			->orderBy("f.time", "DESC")
-			->setMaxResults(30)
-			->setCacheable(false);
-	}
-
-	private function profileFeedQuery(APIService $apiService, User $user): QueryBuilder {
-		return $apiService->getEntityManager()->getRepository(FeedEntry::class)->createQueryBuilder("f")
-			->where("(f.parent is null and f.type = :post) or (f.parent is not null and f.type = :share) or (f.type = :newFollowing)")
-			->setParameter("post", FeedEntryType::POST, Type::STRING)
-			->setParameter("share", FeedEntryType::SHARE, Type::STRING)
-			->setParameter("newFollowing", FeedEntryType::NEW_FOLLOWING, Type::STRING)
-			->andWhere("f.user = :user")
-			->setParameter("user", $user)
-			->orderBy("f.time", "DESC")
-			->setMaxResults(30)
-			->setCacheable(false);
 	}
 }

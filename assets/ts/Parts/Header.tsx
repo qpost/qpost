@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -34,7 +34,7 @@ class Header extends Component<any, {
 		super(props);
 
 		this.state = {
-			mobileMenu: window.innerWidth <= 768,
+			mobileMenu: window.innerWidth <= 870,
 			id: Math.random()
 		}
 	}
@@ -56,7 +56,7 @@ class Header extends Component<any, {
 	}
 
 	setIsMobileMenu = (windowWidth: number) => {
-		const mobileMenuOpen = windowWidth <= 768;
+		const mobileMenuOpen = windowWidth <= 870;
 
 		if (this.state.mobileMenu !== mobileMenuOpen) {
 			this.setState({

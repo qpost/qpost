@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -48,12 +48,7 @@ class TokenController extends AbstractController {
 		/**
 		 * @var Token[] $tokens
 		 */
-		$tokens = $apiService->getEntityManager()->getRepository(Token::class)->createQueryBuilder("t")
-			->where("t.user = :user")
-			->setParameter("user", $user)
-			->orderBy("t.lastAccessTime", "DESC")
-			->getQuery()
-			->getResult();
+		$tokens = $apiService->getEntityManager()->getRepository(Token::class)->getTokens($user);
 
 		foreach ($tokens as $token) {
 			if (!$token->isExpired()) {
@@ -88,12 +83,9 @@ class TokenController extends AbstractController {
 				/**
 				 * @var Token $token
 				 */
-				$token = $entityManager->getRepository(Token::class)->findOneBy([
-					"id" => $id,
-					"user" => $user
-				]);
+				$token = $entityManager->getRepository(Token::class)->getTokenById($id);
 
-				if ($token && !$token->isExpired()) {
+				if ($token && $token->getUser()->getId() === $user->getId() && !$token->isExpired()) {
 					$token->setExpiry(new DateTime("now"));
 					$entityManager->persist($token);
 

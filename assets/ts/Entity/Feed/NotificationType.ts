@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -23,4 +23,5 @@ export default class NotificationType {
 	public static FAVORITE: string = "FAVORITE";
 	public static SHARE: string = "SHARE";
 	public static REPLY: string = "REPLY";
+	public static FOLLOW_REQUEST: string = "FOLLOW_REQUEST";
 }

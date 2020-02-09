@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -22,6 +22,7 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\TrendingHashtagData;
 
 /**
@@ -44,6 +45,9 @@ class TrendingHashtagDataRepository extends ServiceEntityRepository {
 			->orderBy("t.postsThisWeek", "DESC")
 			->setMaxResults($limit)
 			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
 			->getResult();
 	}
 }

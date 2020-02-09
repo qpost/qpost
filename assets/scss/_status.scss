@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -50,7 +50,14 @@
 		font-size: 19px;
 	}
 
-	.attachments, .actionButtons {
+	.timestamp {
+		@extend .text-muted;
+
+		margin-top: $margin;
+		margin-bottom: 0 !important;
+	}
+
+	.attachments {
 		margin-top: $margin;
 	}
 

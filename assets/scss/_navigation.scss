@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -52,7 +52,7 @@
 			}
 		}
 
-		&, > .ant-menu {
+		&, > .container > .ant-menu {
 			background-color: $mainColor !important;
 
 			.ant-menu-item-active a {
@@ -137,3 +137,19 @@
 #accountDropdown:after {
 	display: none;
 }
+
+@mixin desktopHeaderUserStyle($bgColor) {
+	.desktopHeaderUser, .desktopHeaderSettings {
+		&, &:hover, &:active, &:focus {
+			background-color: $bgColor !important;
+			top: 0 !important;
+		}
+	}
+
+	.desktopHeaderUser, .desktopHeaderSettings {
+		padding: 0 15px !important;
+	}
+}
+
+@include desktopHeaderUserStyle(darken($primary, 10%));
+

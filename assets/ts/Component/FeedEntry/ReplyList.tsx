@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -22,7 +22,7 @@ import FeedEntry from "../../Entity/Feed/FeedEntry";
 import API from "../../API/API";
 import BaseObject from "../../Serialization/BaseObject";
 import InfiniteScroll from "react-infinite-scroller";
-import {Card, Spin} from "antd";
+import {Spin} from "antd";
 import FeedEntryListItem from "./FeedEntryListItem";
 import {Alert} from "reactstrap";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
@@ -121,8 +121,6 @@ export default class ReplyList extends Component<{
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		if (this.props.feedEntry !== null && this.props.feedEntry.getReplyCount() === 0) return "";
-
 		if (this.state.entries !== null) {
 			if (this.state.entries.length > 0) {
 				return <InfiniteScroll
@@ -136,15 +134,12 @@ export default class ReplyList extends Component<{
 					</div>}
 					initialLoad={false}
 				>
-					<Card size={"small"}>
-						<h4 className={"text-center-mobile"}>Replies</h4>
-					</Card>
-
 					<ul className={"list-group feedContainer"}>
 						{this.state.entries.map((replyBatch: FeedEntry[], i) => {
 							return <div key={i} className={"mb-2"}>
 								{replyBatch.map((reply: FeedEntry, ri) => {
-									return <FeedEntryListItem key={ri} entry={reply} parent={this}/>
+									return <FeedEntryListItem key={reply.getId()} entry={reply} parent={this}
+															  showParentInfo={true}/>
 								})}
 							</div>;
 						})}
@@ -162,10 +157,6 @@ export default class ReplyList extends Component<{
 			}
 
 			return <div>
-				<Card size={"small"}>
-					<h4>Replies</h4>
-				</Card>
-
 				<ul className={"list-group feedContainer"}>
 					{rows.map((item, i) => {
 						return item;

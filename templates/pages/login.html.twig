@@ -1,12 +1,12 @@
-{% extends "base.html.twig" %}
+{% extends "homeBase.html.twig" %}
 
 {% block content %}
 	<div class="row">
-		<div class="col-lg-6 offset-lg-3">
+		<div class="col-lg-6 offset-lg-3 col-xl-4 offset-xl-4 col-md-8 offset-md-2">
 			{% include "parts/flash.html.twig" %}
 			<div class="card">
 				<div class="card-body">
-					<h3 class="text-center mb-2">Log in</h3>
+					<h3 class="text-center mb-2 text-white">Log in</h3>
 
 					<form action="{{ path("qpost_login_index") }}" method="post">
 						{% include "parts/csrf.html.twig" %}
@@ -14,14 +14,16 @@
 							   placeholder="Email address or username"
 							   value="{{ _POST['email'] is defined ? _POST['email'] }}"/>
 						<input type="password" class="form-control mb-2" name="password" placeholder="Password"/>
-						<input type="submit" class="btn btn-block btn-primary" value="Log in"/>
+						<input type="submit" class="btn btn-block btn-primary bootstrapButton" value="Log in"/>
 
-						<a href="{{ path("qpost_resetpassword_index") }}" class="btn btn-block btn-light">Forgot your
+						<a href="{{ path("qpost_resetpassword_index") }}"
+						   class="btn btn-block btn-light">Forgot your
 							password?</a>
 
 						<hr/>
 
-						<a href="{{ path("qpost_home_index") }}" class="btn btn-block btn-light mb-2">Create an
+						<a href="{{ path("qpost_home_index") }}" class="btn btn-block btn-light mb-2">Create
+							an
 							account</a>
 						<a href="{{ path("qpost_login_gigadrive") }}" class="btn btn-block btn-success" data-no-instant>Sign
 							in with

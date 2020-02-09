@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -76,7 +76,7 @@ class GigadriveService {
 	 * @return string|null The final URL on the Gigadrive CDN, null if the file could not be stored.
 	 */
 	public function storeFileOnCDN(string $fileContent): ?string {
-		$base64 = @base64_encode($fileContent);
+		$base64 = (base64_encode(base64_decode($fileContent)) === $fileContent) ? $fileContent : @base64_encode($fileContent);
 		$apiKey = $_ENV["GIGADRIVE_APP_SECRET"];
 
 		if ($base64) {

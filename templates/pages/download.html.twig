@@ -1,41 +1,67 @@
 {% extends "homeBase.html.twig" %}
 
 {% block content %}
-	<a href="{{ path("qpost_home_index") }}" class="clearUnderline">
-		<img src="/assets/img/qpost-white-tiny.png" class="homeLogo" alt="qpost Logo" title="qpost Logo"/>
-	</a>
+	<div class="homeWaveBackground py-5" style="background-position: center -320px">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-md-4 text-center offset-md-2">
+					<p class="downloadMainHeadline">qpost for Windows</p>
 
-	<div class="text-center">
-		<h1 class="font-weight-bold text-uppercase text-white mb-3">Download</h1>
+					<a class="btn btn-light btn-lg downloadPageMainButton clearUnderline"
+					   href="{{ path("qpost_download_windows") }}">
+						Download
+					</a>
 
-		<div class="row">
-			<div class="col-12 col-sm-6 col-md-3 offset-md-3 mb-3">
-				<a href="{{ path("qpost_download_windows") }}" class="clearUnderline">
-					<div class="card bg-primary text-white">
-						<div class="card-body">
-							<h3 class="display-3 text-white"><i class="fab fa-windows"></i></h3>
+					<p class="small text-muted mb-0">Requires Windows 7 or higher</p>
+				</div>
 
-							<p class="mb-0 font-weight-bold">Windows</p>
-						</div>
-					</div>
-				</a>
-			</div>
-
-			<div class="col-12 col-sm-6 col-md-3 mb-3">
-				<a href="{{ path("qpost_download_android") }}" class="clearUnderline">
-					<div class="card bg-primary text-white">
-						<div class="card-body">
-							<h3 class="display-3 text-white"><i class="fab fa-android"></i></h3>
-
-							<p class="mb-0 font-weight-bold">Android</p>
-						</div>
-					</div>
-				</a>
+				<div class="col-md-4 downloadPageMainImageContainer">
+					<img src="/assets/img/download-windows-screenshot.png" alt="Window Screenshot"
+						 class="downloadPageMainImage"/>
+				</div>
 			</div>
 		</div>
+	</div>
 
-		<p class="mt-5 text-white">
-			Your device isn't listed? qpost can be used on any device with a modern web browser installed.
-		</p>
+	<div class="homeHighlighted py-5">
+		<div class="container">
+			<p class="mb-5 text-white text-center">
+				Your device isn't listed? qpost can be used on any device with a modern web browser installed.
+			</p>
+
+			<div class="row text-center">
+				<div class="col-12 col-sm-6 col-md-3 offset-md-3 mb-3">
+					<a href="{{ path("qpost_download_android") }}" class="clearUnderline">
+						<div class="card bg-primary text-white">
+							<div class="card-body">
+								<h3 class="display-3 text-white"><i class="fab fa-android"></i></h3>
+
+								<p class="mb-0 font-weight-bold">Android</p>
+							</div>
+						</div>
+					</a>
+				</div>
+
+				<div class="col-12 col-sm-6 col-md-3 mb-3">
+					<a href="#" class="clearUnderline" onclick="event.preventDefault();">
+						<div class="card bg-primary text-white" style="opacity: .5;">
+							<div class="card-body">
+								<h3 class="display-3 text-white"><i class="fab fa-apple"></i></h3>
+
+								<p class="mb-0 font-weight-bold">iOS <span
+											class="small text-muted text-uppercase">Soon!</span></p>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="py-5 text-center">
+		<a class="btn btn-light btn-lg downloadPageMainButton clearUnderline"
+		   href="https://gitlab.com/Gigadrive/qpost" target="_blank">
+			View source code
+		</a>
 	</div>
 {% endblock %}

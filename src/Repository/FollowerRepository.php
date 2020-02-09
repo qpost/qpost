@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -22,6 +22,7 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\Follower;
 use qpost\Entity\User;
 
@@ -46,5 +47,29 @@ class FollowerRepository extends ServiceEntityRepository {
 				"sender" => $sender,
 				"receiver" => $receiver
 			]) > 0;
+	}
+
+	public function getFollowingCount(User $user): int {
+		return $this->createQueryBuilder("f")
+			->select("count(f.id)")
+			->where("f.sender = :user")
+			->setParameter("user", $user)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getSingleScalarResult();
+	}
+
+	public function getFollowerCount(User $user): int {
+		return $this->createQueryBuilder("f")
+			->select("count(f.id)")
+			->where("f.receiver = :user")
+			->setParameter("user", $user)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getSingleScalarResult();
 	}
 }

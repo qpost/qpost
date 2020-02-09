@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -39,7 +39,7 @@ class Notification {
 	private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="notifications")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="notifications", fetch="EAGER")
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $user;
@@ -50,12 +50,12 @@ class Notification {
 	private $type;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", fetch="EAGER")
 	 */
 	private $referencedUser;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry")
+	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", fetch="EAGER")
 	 */
 	private $referencedFeedEntry;
 
@@ -73,6 +73,11 @@ class Notification {
 	 * @ORM\Column(type="datetime")
 	 */
 	private $time;
+
+	/**
+	 * @ORM\OneToOne(targetEntity="qpost\Entity\FollowRequest", cascade={"persist", "remove"}, fetch="EAGER")
+	 */
+	private $referencedFollowRequest;
 
 	/**
 	 * The id of this notification.
@@ -213,6 +218,23 @@ class Notification {
 	 */
 	public function setTime(DateTimeInterface $time): self {
 		$this->time = $time;
+
+		return $this;
+	}
+
+	/**
+	 * @return FollowRequest|null
+	 */
+	public function getReferencedFollowRequest(): ?FollowRequest {
+		return $this->referencedFollowRequest;
+	}
+
+	/**
+	 * @param FollowRequest|null $referencedFollowRequest
+	 * @return $this
+	 */
+	public function setReferencedFollowRequest(?FollowRequest $referencedFollowRequest): self {
+		$this->referencedFollowRequest = $referencedFollowRequest;
 
 		return $this;
 	}

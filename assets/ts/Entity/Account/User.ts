@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -19,6 +19,7 @@
 
 import {JsonObject, JsonProperty} from "json2typescript";
 import Feature from "./Feature";
+import Storage from "../../Util/Storage";
 
 @JsonObject("User")
 export default class User {
@@ -54,18 +55,6 @@ export default class User {
 
 	@JsonProperty("suspended", Boolean)
 	private suspended: boolean = undefined;
-
-	@JsonProperty("postCount", Number)
-	private postCount: number = undefined;
-
-	@JsonProperty("replyCount", Number)
-	private replyCount: number = undefined;
-
-	@JsonProperty("shareCount", Number)
-	private shareCount: number = undefined;
-
-	@JsonProperty("followingPostCount", Number)
-	private followingPostCount: number = undefined;
 
 	@JsonProperty("totalPostCount", Number)
 	private totalPostCount: number = undefined;
@@ -132,22 +121,6 @@ export default class User {
 		return this.suspended;
 	}
 
-	public getPostCount(): number {
-		return this.postCount;
-	}
-
-	public getReplyCount(): number {
-		return this.replyCount;
-	}
-
-	public getShareCount(): number {
-		return this.shareCount;
-	}
-
-	public getFollowingPostCount(): number {
-		return this.followingPostCount;
-	}
-
 	public getTotalPostCount(): number {
 		return this.totalPostCount;
 	}
@@ -186,5 +159,10 @@ export default class User {
 		}
 
 		return false;
+	}
+
+	public saveToStorage(): void {
+		Storage.sessionSet(Storage.SESSION_USER + "_" + this.username
+			, JSON.stringify(this), 3);
 	}
 }

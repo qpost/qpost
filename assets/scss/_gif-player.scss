@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -23,9 +23,8 @@
 	max-width: 100%;
 
 	img {
-		@extend .rounded;
+		@extend .rounded, .border, .border-mainColor;
 
-		border: 1px solid $primary;
 		width: 100%;
 	}
 }

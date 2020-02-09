@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -75,9 +75,7 @@ class TokenService {
 			}
 		}
 
-		$token = $this->entityManager->getRepository(Token::class)->findOneBy([
-			"id" => $token
-		]);
+		$token = $this->entityManager->getRepository(Token::class)->getTokenById($token);
 
 		if ($token && $request->headers->has("User-Agent")) {
 			$token->setUserAgent($request->headers->get("User-Agent"));
