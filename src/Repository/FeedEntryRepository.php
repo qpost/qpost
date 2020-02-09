@@ -198,10 +198,11 @@ LIMIT 15", $rsm);
 	}
 
 	/**
+	 * @param int $randomizer
 	 * @param int $limit
 	 * @return int[]
 	 */
-	public function getSitemapFeedEntries(int $limit): array {
+	public function getSitemapFeedEntries(int $randomizer, int $limit): array {
 		$rsm = $this->createResultSetMappingBuilder("f");
 		$rsm->addScalarResult("id", "id");
 
@@ -210,10 +211,11 @@ FROM feed_entry AS f
          INNER JOIN user AS u ON u.id = f.user_id
 WHERE (f.type = 'POST' OR f.type = 'REPLY')
   AND u.privacy_level = 'PUBLIC'
-ORDER BY RAND()
-LIMIT ?", $rsm);
+ORDER BY f.time
+LIMIT ? OFFSET ?", $rsm);
 
 		$query->setParameter(0, $limit);
+		$query->setParameter(1, ($randomizer - 1) * $limit);
 
 		$ids = [];
 

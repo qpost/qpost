@@ -158,10 +158,11 @@ class UserRepository extends ServiceEntityRepository {
 	}
 
 	/**
+	 * @param int $randomizer
 	 * @param int $limit
 	 * @return string[]
 	 */
-	public function getSitemapUsers(int $limit): array {
+	public function getSitemapUsers(int $randomizer, int $limit): array {
 		$rsm = $this->createResultSetMappingBuilder("u");
 		$rsm->addScalarResult("username", "username");
 		$rsm->addScalarResult("suspended", "suspended");
@@ -172,10 +173,11 @@ FROM user AS u
 WHERE u.privacy_level = 'PUBLIC'
   AND u.email_activated = true
   AND s.id IS NULL
-ORDER BY RAND()
-LIMIT ?", $rsm);
+ORDER BY u.time
+LIMIT ? OFFSET ?", $rsm);
 
 		$query->setParameter(0, $limit);
+		$query->setParameter(1, ($randomizer - 1) * $limit);
 
 		$ids = [];
 
