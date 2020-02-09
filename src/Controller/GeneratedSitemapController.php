@@ -23,7 +23,6 @@ namespace qpost\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
-use qpost\Util\Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,9 +41,13 @@ class GeneratedSitemapController extends AbstractController {
 	 */
 	public function indexAction(Request $request) {
 		$sitemaps = [];
+		$types = ["users", "posts"];
+		$limit = $this->entryLimit / 2;
 
-		for ($i = 1; $i < $this->entryLimit; $i++) {
-			$sitemaps[] = str_replace("http://", "https://", $this->generateUrl("qpost_generatedsitemap_map", ["randomizer" => $i], UrlGeneratorInterface::ABSOLUTE_URL));
+		foreach ($types as $type) {
+			for ($i = 1; $i <= $limit; $i++) {
+				$sitemaps[] = str_replace("http://", "https://", $this->generateUrl("qpost_generatedsitemap_map", ["type" => $type, "randomizer" => $i], UrlGeneratorInterface::ABSOLUTE_URL));
+			}
 		}
 
 		return $this->xml($this->render("sitemap/index.xml.twig", [
@@ -59,17 +62,18 @@ class GeneratedSitemapController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/generated-sitemap/map/{randomizer}")
+	 * @Route("/generated-sitemap/map/{type}/{randomizer}")
 	 *
+	 * @param string $type
 	 * @param int $randomizer
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function mapAction(int $randomizer, Request $request, EntityManagerInterface $entityManager) {
+	public function mapAction(string $type, int $randomizer, Request $request, EntityManagerInterface $entityManager) {
 		$urls = [];
 
-		if (Util::isEven($randomizer)) {
+		if ($type === "users") {
 			// Users
 
 			foreach ($entityManager->getRepository(User::class)->getSitemapUsers($randomizer, $this->entryLimit) as $username) {
