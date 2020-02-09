@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function str_replace;
 
 class GeneratedSitemapController extends AbstractController {
-	private $entryLimit = 50;
+	private $entryLimit = 15000;
 
 	/**
 	 * @Route("/generated-sitemap")
