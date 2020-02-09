@@ -72,13 +72,13 @@ class GeneratedSitemapController extends AbstractController {
 		if (Util::isEven($randomizer)) {
 			// Users
 
-			foreach ($entityManager->getRepository(User::class)->getSitemapUsers($this->entryLimit) as $username) {
+			foreach ($entityManager->getRepository(User::class)->getSitemapUsers($randomizer, $this->entryLimit) as $username) {
 				$urls[] = str_replace("http://", "https://", $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		} else {
 			// Feed Entries
 
-			foreach ($entityManager->getRepository(FeedEntry::class)->getSitemapFeedEntries($this->entryLimit) as $id) {
+			foreach ($entityManager->getRepository(FeedEntry::class)->getSitemapFeedEntries($randomizer, $this->entryLimit) as $id) {
 				$urls[] = str_replace("http://", "https://", $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL));
 			}
 		}
