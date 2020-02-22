@@ -74,7 +74,7 @@ class SettingsController extends AbstractController {
 			// Display name
 			$displayName = $parameters->get("displayName");
 			if ($displayName !== $user->getDisplayName()) {
-				$displayName = trim($displayName);
+				$displayName = trim(Util::fixString($displayName));
 
 				if (Util::isEmpty($displayName) || !(strlen($displayName) >= 1 && strlen($displayName) <= 24)) {
 					$save = false;
@@ -85,7 +85,7 @@ class SettingsController extends AbstractController {
 			// Bio
 			$bio = $parameters->get("bio");
 			if ($bio !== $user->getBio()) {
-				$bio = trim($bio);
+				$bio = trim(Util::fixString($bio));
 
 				if (!Util::isEmpty($bio) && !(strlen($bio) >= 0 && strlen($bio) <= 200)) {
 					$save = false;
