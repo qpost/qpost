@@ -22,7 +22,7 @@ namespace qpost\Service\OAuth;
 
 use qpost\Constants\LinkedAccountService;
 
-class TwitterIntergration extends ThirdPartyIntegration {
+class TwitterIntegration extends ThirdPartyIntegration {
 	private $apiBaseURL = "https://api.twitter.com";
 
 	public function getBaseURL(): ?string {
