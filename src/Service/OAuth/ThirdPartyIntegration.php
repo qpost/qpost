@@ -30,6 +30,8 @@ use qpost\Factory\HttpClientFactory;
 use function implode;
 use function is_null;
 use function json_decode;
+use function sprintf;
+use function urlencode;
 
 class ThirdPartyIntegration {
 	/**
@@ -143,6 +145,26 @@ class ThirdPartyIntegration {
 	 */
 	public function getRedirectURL(): ?string {
 		return null; // TODO
+	}
+
+	/**
+	 * The URL at which the user authenticates with this service.
+	 * @return string
+	 */
+	public function getAuthenticationURL(): string {
+		$baseURL = $this->getBaseURL();
+		$clientId = $this->getClientId();
+		$scopes = $this->getScopes();
+		$redirectURL = $this->getRedirectURL();
+
+		if (is_null($baseURL) || is_null($clientId) || is_null($redirectURL) || is_null($scopes)) return null;
+
+		return sprintf(
+			$baseURL . "/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=%s",
+			$clientId,
+			urlencode($redirectURL),
+			urlencode(implode(" ", $scopes))
+		);
 	}
 
 	/**
