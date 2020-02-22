@@ -21,6 +21,9 @@
 namespace qpost\Service\OAuth;
 
 use qpost\Constants\LinkedAccountService;
+use qpost\Util\Util;
+use function is_null;
+use function json_decode;
 
 class DiscordIntegration extends ThirdPartyIntegration {
 	private $apiBaseURL = "https://discordapp.com/api";
@@ -35,5 +38,44 @@ class DiscordIntegration extends ThirdPartyIntegration {
 
 	public function getScopes(): ?array {
 		return ["identify"];
+	}
+
+	public function identify($credentials): ?ThirdPartyIntegrationIdentificationResult {
+		$token = $credentials->getAccessToken();
+
+		$response = $this->httpClient->get($this->apiBaseURL . "/users/@me", [
+			"headers" => [
+				"Authorization" => "Bearer " . $token
+			]
+		]);
+
+		$body = $response->getBody();
+		if (is_null($body)) return null;
+
+		$content = $body->getContents();
+		$body->close();
+		if (is_null($content)) return null;
+
+		$data = @json_decode($content, true);
+		if (!$data) return null;
+
+		if (!isset($data["id"]) || !isset($data["username"]) || !isset($data["discriminator"])) return null;
+
+		$id = $data["id"];
+		$username = $data["username"];
+		$discriminator = $data["discriminator"];
+		$avatar = "https://cdn.discordapp.com/embed/avatars/" . ($discriminator % 5) . ".png";
+
+		if (isset($data["avatar"])) {
+			$avatarHash = $data["avatar"];
+
+			$avatar = "https://cdn.discordapp.com/avatars/" . $id . "/" . $avatarHash . (Util::startsWith($avatarHash, "a_") ? ".gif" : ".png") . "?size=256";
+		}
+
+		return new ThirdPartyIntegrationIdentificationResult(
+			$id,
+			$username . "#" . $discriminator,
+			$avatar
+		);
 	}
 }
