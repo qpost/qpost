@@ -184,7 +184,7 @@ class ThirdPartyIntegration {
 	 * @throws Exception
 	 */
 	public function refreshToken(LinkedAccount $account): ?LinkedAccount {
-		// TODO: Check expiry date
+		if (!$account->isExpired()) return $account;
 
 		if ($account->getService() !== $this->getServiceIdentifier()) return null;
 

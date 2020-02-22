@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,6 +20,7 @@
 
 namespace qpost\Entity;
 
+use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
@@ -200,6 +201,10 @@ class LinkedAccount {
 		$this->expiry = $expiry;
 
 		return $this;
+	}
+
+	public function isExpired(): bool {
+		return is_null($this->expiry) || new DateTime("now") >= $this->expiry;
 	}
 
 	public function getTime(): ?DateTimeInterface {
