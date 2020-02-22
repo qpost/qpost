@@ -178,6 +178,31 @@ class ThirdPartyIntegration {
 	}
 
 	/**
+	 * Updates the user's identification details and saves them to the database.
+	 * @param LinkedAccount $account
+	 * @param ThirdPartyIntegrationIdentificationResult|null $identificationResult
+	 */
+	public function updateIdentification(LinkedAccount $account, ?ThirdPartyIntegrationIdentificationResult $identificationResult = null): void {
+		if (is_null($identificationResult)) {
+			$identificationResult = $this->identify($account);
+		}
+
+		if (is_null($identificationResult)) return;
+
+		try {
+			$account->setLinkedUserId($identificationResult->getId())
+				->setLinkedUserName($identificationResult->getUsername())
+				->setLinkedUserAvatar($identificationResult->getAvatar())
+				->setLastUpdate(new DateTime("now"));
+
+			$this->entityManager->persist($account);
+			$this->entityManager->flush();
+		} catch (Exception $e) {
+			return;
+		}
+	}
+
+	/**
 	 * Refreshes the access token of a {@link LinkedAccount} that is using this service.
 	 * @param LinkedAccount $account
 	 * @return LinkedAccount|null

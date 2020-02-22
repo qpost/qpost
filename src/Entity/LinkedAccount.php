@@ -99,6 +99,11 @@ class LinkedAccount {
 	 */
 	private $time;
 
+	/**
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
+	private $lastUpdate;
+
 	public function getId(): ?int {
 		return $this->id;
 	}
@@ -213,6 +218,16 @@ class LinkedAccount {
 
 	public function setTime(DateTimeInterface $time): self {
 		$this->time = $time;
+
+		return $this;
+	}
+
+	public function getLastUpdate(): ?DateTimeInterface {
+		return $this->lastUpdate;
+	}
+
+	public function setLastUpdate(?DateTimeInterface $lastUpdate): self {
+		$this->lastUpdate = $lastUpdate;
 
 		return $this;
 	}
