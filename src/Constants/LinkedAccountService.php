@@ -35,4 +35,11 @@ class LinkedAccountService {
 	 * @var string TWITTER
 	 */
 	public const TWITTER = "TWITTER";
+
+	/**
+	 * @return string[]
+	 */
+	public static function all(): array {
+		return [self::DISCORD, self::TWITCH, self::TWITTER];
+	}
 }
