@@ -174,6 +174,19 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/settings/profile/linked-accounts")
+	 * @param Request $request
+	 * @param ProfileImageService $imageService
+	 * @param EntityManagerInterface $entityManager
+	 * @return Response
+	 */
+	public function profileLinkedAccounts(Request $request, ProfileImageService $imageService, EntityManagerInterface $entityManager) {
+		return $this->renderAction("Linked Accounts", "settings/profile/linkedAccounts.html.twig", SettingsNavigationPoint::PROFILE_LINKED_ACCOUNTS, $this->generateUrl(
+			"qpost_settings_profilelinkedaccounts", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
 	 * @Route("/settings/preferences/appearance")
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager

@@ -1,0 +1,20 @@
+{% extends "settings/base.html.twig" %}
+{% import "settings/macro.html.twig" as macro %}
+
+{% block content %}
+	{{ macro.settingsHeadline("Linked Accounts") }}
+
+	{% include "parts/flash.html.twig" %}
+
+	{% if app.user.unlinkedServices|length > 0 %}
+		{{ macro.settingsHeadlineSmall("Connect your accounts") }}
+
+		<div class="clearfix">
+			{% for service in app.user.unlinkedServices %}
+				<div class="serviceLinkButton" onclick="window.location.href = '/tpauth/{{ service|lower }}';">
+					{{ macro.linkedAccountIcon(service) }}
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}

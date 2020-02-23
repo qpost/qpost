@@ -26,6 +26,7 @@ class SettingsNavigationPoint {
 	/////////////////////////////////////////////////////
 
 	public const PROFILE_APPEARANCE = "PROFILE_APPEARANCE";
+	public const PROFILE_LINKED_ACCOUNTS = "PROFILE_LINKED_ACCOUNTS";
 
 	public const PREFERENCES_APPEARANCE = "PREFERENCES_APPEARANCE";
 

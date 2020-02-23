@@ -25,6 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use qpost\Constants\LinkedAccountService;
 use qpost\Constants\PrivacyLevel;
 use qpost\Service\APIService;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -1338,6 +1339,28 @@ class User implements UserInterface {
 		}
 
 		return $this;
+	}
+
+	public function hasLinkedService(string $service): bool {
+		foreach ($this->getLinkedAccounts() as $linkedAccount) {
+			if ($linkedAccount->getService() === $service) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public function getUnlinkedServices(): array {
+		$services = [];
+
+		foreach (LinkedAccountService::all() as $service) {
+			if (!$this->hasLinkedService($service)) {
+				$services[] = $service;
+			}
+		}
+
+		return $services;
 	}
 
 	public function getCreationIP(): ?string {
