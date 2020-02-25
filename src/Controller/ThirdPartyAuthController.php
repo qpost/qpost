@@ -99,7 +99,7 @@ class ThirdPartyAuthController extends AbstractController {
 			$linkedAccount = (new LinkedAccount())
 				->setUser($user)
 				->setService($service)
-				->setLastUpdate(new DateTime("now"));
+				->setTime(new DateTime("now"));
 		}
 
 		$expiresIn = $codeResult->getExpiresIn();
