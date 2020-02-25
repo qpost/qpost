@@ -25,6 +25,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
 use qpost\Entity\LinkedAccount;
 use qpost\Factory\HttpClientFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -51,10 +52,16 @@ class ThirdPartyIntegration {
 	 */
 	protected $urlGenerator;
 
-	public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator) {
+	/**
+	 * @var LoggerInterface $logger
+	 */
+	protected $logger;
+
+	public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, LoggerInterface $logger) {
 		$this->httpClient = HttpClientFactory::create();
 		$this->entityManager = $entityManager;
 		$this->urlGenerator = $urlGenerator;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -91,12 +98,17 @@ class ThirdPartyIntegration {
 
 		$content = $body->getContents();
 		$body->close();
+
 		if (is_null($content)) return null;
+
+		$this->logger->info("Code response", [
+			"response" => $content
+		]);
 
 		$data = @json_decode($content, true);
 		if (!$data) return null;
 
-		if (!isset($data["access_token"]) || !isset($data["refresh_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"]) || !isset($data["scope"])) return null;
+		if (!isset($data["access_token"]) || !isset($data["refresh_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"])) return null;
 
 		return new ThirdPartyIntegrationExchangeCodeResult(
 			$data["access_token"],
