@@ -25,7 +25,7 @@ $colors: (
 
 @each $name, $color in $colors {
 	.service-#{$name}-color {
-		color: $color !important;
+		color: $color;
 	}
 
 	.service-#{$name}-bg {
@@ -54,5 +54,22 @@ $colors: (
 	&:hover {
 		background-color: lighten(#001529, 10%);
 		cursor: pointer;
+	}
+}
+
+.linkedAccount {
+	@extend .card, .mb-3;
+
+	.header {
+		@extend .card-header;
+
+		i, svg {
+			color: #FFF !important;
+			font-size: 28px;
+		}
+	}
+
+	.body {
+		@extend .card-body;
 	}
 }
