@@ -42,7 +42,11 @@ class TwitchIntegration extends ThirdPartyIntegration {
 	public function identify($credentials): ?ThirdPartyIntegrationIdentificationResult {
 		$token = $credentials->getAccessToken();
 
-		$response = $this->httpClient->get($this->apiBaseURL . "/helix/users?login=" . $token);
+		$response = $this->httpClient->get($this->apiBaseURL . "/users", [
+			"headers" => [
+				"Authorization" => "Bearer " . $token
+			]
+		]);
 
 		$body = $response->getBody();
 		if (is_null($body)) return null;
@@ -51,8 +55,14 @@ class TwitchIntegration extends ThirdPartyIntegration {
 		$body->close();
 		if (is_null($content)) return null;
 
+		$this->logger->info("Identification response", [
+			"response" => $content
+		]);
+
 		$data = @json_decode($content, true);
 		if (!$data) return null;
+
+		$data = $data["data"][0];
 
 		if (!isset($data["id"]) || !isset($data["login"]) || !isset($data["profile_image_url"])) return null;
 
