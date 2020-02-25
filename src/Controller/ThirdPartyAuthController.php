@@ -65,6 +65,10 @@ class ThirdPartyAuthController extends AbstractController {
 	 * @throws Exception
 	 */
 	public function callback(string $service, ThirdPartyIntegrationManagerService $integrationManagerService, Request $request) {
+		if ($request->query->has("error")) {
+			return $this->redirectToRoute("qpost_settings_profilelinkedaccounts");
+		}
+
 		/**
 		 * @var User $user
 		 */
