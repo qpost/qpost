@@ -27,6 +27,7 @@ use Exception;
 use GuzzleHttp\Client;
 use qpost\Entity\LinkedAccount;
 use qpost\Factory\HttpClientFactory;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function implode;
 use function is_null;
 use function json_decode;
@@ -44,9 +45,15 @@ class ThirdPartyIntegration {
 	 */
 	protected $entityManager;
 
-	public function __construct(EntityManagerInterface $entityManager) {
+	/**
+	 * @var UrlGeneratorInterface $urlGenerator
+	 */
+	protected $urlGenerator;
+
+	public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator) {
 		$this->httpClient = HttpClientFactory::create();
 		$this->entityManager = $entityManager;
+		$this->urlGenerator = $urlGenerator;
 	}
 
 	/**
@@ -144,7 +151,7 @@ class ThirdPartyIntegration {
 	 * @return string|null
 	 */
 	public function getRedirectURL(): ?string {
-		return null; // TODO
+		return $this->urlGenerator->generate("qpost_thirdpartyauth_callback", ["service" => $this->getServiceIdentifier()], UrlGeneratorInterface::ABSOLUTE_URL);
 	}
 
 	/**
