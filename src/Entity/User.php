@@ -1341,14 +1341,18 @@ class User implements UserInterface {
 		return $this;
 	}
 
-	public function hasLinkedService(string $service): bool {
+	public function getLinkedService(string $service): ?LinkedAccount {
 		foreach ($this->getLinkedAccounts() as $linkedAccount) {
 			if ($linkedAccount->getService() === $service) {
-				return true;
+				return $linkedAccount;
 			}
 		}
 
-		return false;
+		return null;
+	}
+
+	public function hasLinkedService(string $service): bool {
+		return !is_null($this->getLinkedService($service));
 	}
 
 	public function getUnlinkedServices(): array {

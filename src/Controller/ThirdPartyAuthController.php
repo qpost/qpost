@@ -20,9 +20,15 @@
 
 namespace qpost\Controller;
 
+use DateInterval;
+use DateTime;
+use Exception;
+use qpost\Entity\LinkedAccount;
+use qpost\Entity\User;
 use qpost\Service\OAuth\ThirdPartyIntegrationManagerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use function is_null;
 
@@ -47,5 +53,67 @@ class ThirdPartyAuthController extends AbstractController {
 		}
 
 		return $this->redirect($authURL);
+	}
+
+	/**
+	 * @Route("/callback/{service}")
+	 * @param string $service
+	 * @param ThirdPartyIntegrationManagerService $integrationManagerService
+	 * @param Request $request
+	 * @return RedirectResponse
+	 * @throws Exception
+	 */
+	public function callback(string $service, ThirdPartyIntegrationManagerService $integrationManagerService, Request $request) {
+		/**
+		 * @var User $user
+		 */
+		$user = $this->getUser();
+		$integration = $integrationManagerService->getIntegrationService($service);
+
+		if (is_null($integration)) {
+			throw $this->createNotFoundException("Unknown service.");
+		}
+
+		if (!$request->query->has("code")) {
+			throw $this->createNotFoundException("No exchange code found.");
+		}
+
+		$code = $request->query->get("code");
+		$codeResult = $integration->exchangeCode($code);
+
+		if (is_null($codeResult)) {
+			throw $this->createNotFoundException("Invalid code.");
+		}
+
+		$identificationResult = $integration->identify($codeResult);
+
+		if (is_null($codeResult)) {
+			throw new Exception("Failed to identify user.");
+		}
+
+		$linkedAccount = $user->getLinkedService($service);
+		if (is_null($linkedAccount)) {
+			$linkedAccount = (new LinkedAccount())
+				->setUser($user)
+				->setService($service)
+				->setLastUpdate(new DateTime("now"));
+		}
+
+		$expiresIn = $codeResult->getExpiresIn();
+		if (!is_null($expiresIn)) {
+			$expiry = new DateTime("now");
+			$expiry->add(new DateInterval("PT" . $codeResult->getExpiresIn() . "S"));
+
+			$linkedAccount->setExpiry($expiry);
+		}
+
+		$linkedAccount->setAccessToken($codeResult->getAccessToken())
+			->setRefreshToken($codeResult->getRefreshToken())
+			->setClientId($codeResult->getClientId())
+			->setClientSecret($codeResult->getClientSecret());
+
+		$integration->updateIdentification($linkedAccount, $identificationResult);
+
+		return $this->redirectToRoute("qpost_settings_profilelinkedaccounts");
 	}
 }
