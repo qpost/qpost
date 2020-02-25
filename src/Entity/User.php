@@ -244,6 +244,7 @@ class User implements UserInterface {
 
 	/**
 	 * @ORM\OneToOne(targetEntity="qpost\Entity\UserAppearanceSettings", mappedBy="user", cascade={"persist", "remove"})
+	 * @Serializer\Exclude()
 	 */
 	private $appearanceSettings;
 
