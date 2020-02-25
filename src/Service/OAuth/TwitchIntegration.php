@@ -34,6 +34,6 @@ class TwitchIntegration extends ThirdPartyIntegration {
 	}
 
 	public function getScopes(): ?array {
-		return ["identify"];
+		return [];
 	}
 }
