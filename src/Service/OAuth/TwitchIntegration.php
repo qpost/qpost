@@ -21,6 +21,8 @@
 namespace qpost\Service\OAuth;
 
 use qpost\Constants\LinkedAccountService;
+use function is_null;
+use function json_decode;
 
 class TwitchIntegration extends ThirdPartyIntegration {
 	private $apiBaseURL = "https://api.twitch.tv/helix";
@@ -35,5 +37,29 @@ class TwitchIntegration extends ThirdPartyIntegration {
 
 	public function getScopes(): ?array {
 		return [];
+	}
+
+	public function identify($credentials): ?ThirdPartyIntegrationIdentificationResult {
+		$token = $credentials->getAccessToken();
+
+		$response = $this->httpClient->get($this->apiBaseURL . "/helix/users?login=" . $token);
+
+		$body = $response->getBody();
+		if (is_null($body)) return null;
+
+		$content = $body->getContents();
+		$body->close();
+		if (is_null($content)) return null;
+
+		$data = @json_decode($content, true);
+		if (!$data) return null;
+
+		if (!isset($data["id"]) || !isset($data["login"]) || !isset($data["profile_image_url"])) return null;
+
+		return new ThirdPartyIntegrationIdentificationResult(
+			$data["id"],
+			$data["login"],
+			$data["profile_image_url"]
+		);
 	}
 }
