@@ -26,6 +26,6 @@ security:
         - { path: ^/webpush, roles: ROLE_USER }
         - { path: ^/settings, roles: ROLE_USER }
         - { path: ^/tpauth, roles: ROLE_USER }
-        - { path: ^/callback, roles: ROLE_USER }
+        - { path: ^/callbacks, roles: ROLE_USER }
     # - { path: ^/admin, roles: ROLE_ADMIN }
     # - { path: ^/profile, roles: ROLE_USER }

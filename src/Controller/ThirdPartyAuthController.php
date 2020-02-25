@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use function is_null;
+use function strtoupper;
 
 class ThirdPartyAuthController extends AbstractController {
 	/**
@@ -56,7 +57,7 @@ class ThirdPartyAuthController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/callback/{service}")
+	 * @Route("/callbacks/{service}")
 	 * @param string $service
 	 * @param ThirdPartyIntegrationManagerService $integrationManagerService
 	 * @param Request $request
@@ -73,6 +74,8 @@ class ThirdPartyAuthController extends AbstractController {
 		if (is_null($integration)) {
 			throw $this->createNotFoundException("Unknown service.");
 		}
+
+		$service = strtoupper($service);
 
 		if (!$request->query->has("code")) {
 			throw $this->createNotFoundException("No exchange code found.");

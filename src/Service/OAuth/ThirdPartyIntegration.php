@@ -32,6 +32,7 @@ use function implode;
 use function is_null;
 use function json_decode;
 use function sprintf;
+use function strtolower;
 use function urlencode;
 
 class ThirdPartyIntegration {
@@ -151,7 +152,7 @@ class ThirdPartyIntegration {
 	 * @return string|null
 	 */
 	public function getRedirectURL(): ?string {
-		return $this->urlGenerator->generate("qpost_thirdpartyauth_callback", ["service" => $this->getServiceIdentifier()], UrlGeneratorInterface::ABSOLUTE_URL);
+		return $this->urlGenerator->generate("qpost_thirdpartyauth_callback", ["service" => strtolower($this->getServiceIdentifier())], UrlGeneratorInterface::ABSOLUTE_URL);
 	}
 
 	/**
