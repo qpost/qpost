@@ -27,6 +27,7 @@ use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
 use qpost\Constants\SettingsNavigationPoint;
+use qpost\Entity\LinkedAccount;
 use qpost\Entity\User;
 use qpost\Exception\ProfileImageInvalidException;
 use qpost\Exception\ProfileImageTooBigException;
@@ -176,11 +177,35 @@ class SettingsController extends AbstractController {
 	/**
 	 * @Route("/settings/profile/linked-accounts")
 	 * @param Request $request
-	 * @param ProfileImageService $imageService
 	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function profileLinkedAccounts(Request $request, ProfileImageService $imageService, EntityManagerInterface $entityManager) {
+	public function profileLinkedAccounts(Request $request, EntityManagerInterface $entityManager) {
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			if ($parameters->has("action")) {
+				$action = $parameters->get("action");
+
+				if ($action === "delete") {
+					if ($parameters->has("id")) {
+						$id = $parameters->get("id");
+						$linkedAccount = $entityManager->getRepository(LinkedAccount::class)->findOneBy([
+							"id" => $id,
+							"user" => $this->getUser()
+						]);
+
+						if ($linkedAccount) {
+							$entityManager->remove($linkedAccount);
+							$entityManager->flush();
+
+							$this->addFlash(FlashMessageType::SUCCESS, "The account has been unlinked.");
+						}
+					}
+				}
+			}
+		}
+
 		return $this->renderAction("Linked Accounts", "settings/profile/linkedAccounts.html.twig", SettingsNavigationPoint::PROFILE_LINKED_ACCOUNTS, $this->generateUrl(
 			"qpost_settings_profilelinkedaccounts", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));

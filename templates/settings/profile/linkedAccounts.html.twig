@@ -49,6 +49,8 @@
 
 					<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
 						{% include "parts/csrf.html.twig" %}
+						<input type="hidden" name="action" value="delete"/>
+						<input type="hidden" name="id" value="{{ link.id }}"/>
 						<button type="submit" class="ant-btn ant-btn-danger">Unlink</button>
 					</form>
 				</div>
