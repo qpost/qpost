@@ -22,16 +22,23 @@ namespace qpost\Controller;
 
 use DateInterval;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use League\OAuth1\Client\Credentials\TemporaryCredentials;
+use qpost\Constants\LinkedAccountService;
 use qpost\Entity\LinkedAccount;
+use qpost\Entity\TemporaryOAuthCredentials;
 use qpost\Entity\User;
 use qpost\Service\OAuth\ThirdPartyIntegrationManagerService;
+use qpost\Service\OAuth\TwitterIntegration;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use function is_null;
+use function serialize;
 use function strtoupper;
+use function unserialize;
 
 class ThirdPartyAuthController extends AbstractController {
 	/**
@@ -47,7 +54,12 @@ class ThirdPartyAuthController extends AbstractController {
 			throw $this->createNotFoundException("Unknown service.");
 		}
 
-		$authURL = $integration->getAuthenticationURL();
+		/**
+		 * @var User $user
+		 */
+		$user = $this->getUser();
+
+		$authURL = $integration->getAuthenticationURL($user);
 
 		if (is_null($authURL)) {
 			throw $this->createNotFoundException("Failed to find auth URL for this service.");
@@ -61,11 +73,12 @@ class ThirdPartyAuthController extends AbstractController {
 	 * @param string $service
 	 * @param ThirdPartyIntegrationManagerService $integrationManagerService
 	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
 	 * @return RedirectResponse
 	 * @throws Exception
 	 */
-	public function callback(string $service, ThirdPartyIntegrationManagerService $integrationManagerService, Request $request) {
-		if ($request->query->has("error")) {
+	public function callback(string $service, ThirdPartyIntegrationManagerService $integrationManagerService, Request $request, EntityManagerInterface $entityManager) {
+		if ($request->query->has("error") || $request->query->has("denied")) { // return to linked accounts page if user denied access
 			return $this->redirectToRoute("qpost_settings_profilelinkedaccounts");
 		}
 
@@ -81,46 +94,101 @@ class ThirdPartyAuthController extends AbstractController {
 
 		$service = strtoupper($service);
 
-		if (!$request->query->has("code")) {
-			throw $this->createNotFoundException("No exchange code found.");
+		if ($service === LinkedAccountService::TWITTER && $integration instanceof TwitterIntegration) {
+			// Twitter OAuth 1.0a
+			if (!$request->query->has("oauth_token") || !$request->query->has("oauth_verifier")) {
+				throw $this->createNotFoundException("No tokens found.");
+			}
+
+			$temporaryCredentials = $entityManager->getRepository(TemporaryOAuthCredentials::class)->getTemporaryCredentialsByUser($user);
+
+			if (is_null($temporaryCredentials)) {
+				throw $this->createNotFoundException("No temporary credentials found.");
+			}
+
+			$token = $request->query->get("oauth_token");
+			$verifier = $request->query->get("oauth_verifier");
+
+			$server = $integration->getOAuthServer();
+
+			$deserialized = unserialize($temporaryCredentials->getCredentials());
+			if (!$deserialized instanceof TemporaryCredentials) {
+				throw $this->createNotFoundException("Invalid credentials supplied.");
+			}
+
+			$tokenCredentials = $server->getTokenCredentials(unserialize($temporaryCredentials->getCredentials()), $token, $verifier);
+
+			$linkedAccount = $user->getLinkedService($service);
+
+			if (is_null($linkedAccount)) {
+				$linkedAccount = (new LinkedAccount())
+					->setUser($user)
+					->setTime(new DateTime("now"))
+					->setService($service);
+			}
+
+			$linkedAccount->setClientId($integration->getClientId())
+				->setClientSecret($integration->getClientSecret())
+				->setAccessToken($tokenCredentials->getIdentifier())
+				->setRefreshToken($tokenCredentials->getSecret());
+
+			$temporaryCredentials->setCredentials(serialize($tokenCredentials));
+
+			$entityManager->persist($temporaryCredentials);
+			$entityManager->flush();
+
+			$identificationResult = $integration->identify($linkedAccount);
+
+			if (is_null($identificationResult)) {
+				throw new Exception("Failed to identify user.");
+			}
+
+			$integration->updateIdentification($linkedAccount, $identificationResult);
+
+			return $this->redirectToRoute("qpost_settings_profilelinkedaccounts");
+		} else {
+			// OAuth 2
+			if (!$request->query->has("code")) {
+				throw $this->createNotFoundException("No exchange code found.");
+			}
+
+			$code = $request->query->get("code");
+			$codeResult = $integration->exchangeCode($code);
+
+			if (is_null($codeResult)) {
+				throw $this->createNotFoundException("Invalid code.");
+			}
+
+			$identificationResult = $integration->identify($codeResult);
+
+			if (is_null($identificationResult)) {
+				throw new Exception("Failed to identify user.");
+			}
+
+			$linkedAccount = $user->getLinkedService($service);
+			if (is_null($linkedAccount)) {
+				$linkedAccount = (new LinkedAccount())
+					->setUser($user)
+					->setService($service)
+					->setTime(new DateTime("now"));
+			}
+
+			$expiresIn = $codeResult->getExpiresIn();
+			if (!is_null($expiresIn)) {
+				$expiry = new DateTime("now");
+				$expiry->add(new DateInterval("PT" . $codeResult->getExpiresIn() . "S"));
+
+				$linkedAccount->setExpiry($expiry);
+			}
+
+			$linkedAccount->setAccessToken($codeResult->getAccessToken())
+				->setRefreshToken($codeResult->getRefreshToken())
+				->setClientId($codeResult->getClientId())
+				->setClientSecret($codeResult->getClientSecret());
+
+			$integration->updateIdentification($linkedAccount, $identificationResult);
+
+			return $this->redirectToRoute("qpost_settings_profilelinkedaccounts");
 		}
-
-		$code = $request->query->get("code");
-		$codeResult = $integration->exchangeCode($code);
-
-		if (is_null($codeResult)) {
-			throw $this->createNotFoundException("Invalid code.");
-		}
-
-		$identificationResult = $integration->identify($codeResult);
-
-		if (is_null($codeResult)) {
-			throw new Exception("Failed to identify user.");
-		}
-
-		$linkedAccount = $user->getLinkedService($service);
-		if (is_null($linkedAccount)) {
-			$linkedAccount = (new LinkedAccount())
-				->setUser($user)
-				->setService($service)
-				->setTime(new DateTime("now"));
-		}
-
-		$expiresIn = $codeResult->getExpiresIn();
-		if (!is_null($expiresIn)) {
-			$expiry = new DateTime("now");
-			$expiry->add(new DateInterval("PT" . $codeResult->getExpiresIn() . "S"));
-
-			$linkedAccount->setExpiry($expiry);
-		}
-
-		$linkedAccount->setAccessToken($codeResult->getAccessToken())
-			->setRefreshToken($codeResult->getRefreshToken())
-			->setClientId($codeResult->getClientId())
-			->setClientSecret($codeResult->getClientSecret());
-
-		$integration->updateIdentification($linkedAccount, $identificationResult);
-
-		return $this->redirectToRoute("qpost_settings_profilelinkedaccounts");
 	}
 }

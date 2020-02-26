@@ -20,20 +20,89 @@
 
 namespace qpost\Service\OAuth;
 
+use DateTime;
+use Exception;
+use League\OAuth1\Client\Credentials\TokenCredentials;
+use League\OAuth1\Client\Server\Twitter;
 use qpost\Constants\LinkedAccountService;
+use qpost\Entity\LinkedAccount;
+use qpost\Entity\TemporaryOAuthCredentials;
+use qpost\Entity\User;
+use function is_null;
+use function serialize;
+use function unserialize;
 
 class TwitterIntegration extends ThirdPartyIntegration {
-	private $apiBaseURL = "https://api.twitter.com";
-
-	public function getBaseURL(): ?string {
-		return $this->apiBaseURL . "/oauth2";
-	}
-
 	public function getServiceIdentifier(): ?string {
 		return LinkedAccountService::TWITTER;
 	}
 
 	public function getScopes(): ?array {
 		return ["identify"];
+	}
+
+	public function getAuthenticationURL(User $user): string {
+		$server = $this->getOAuthServer();
+		$credentialsRepository = $this->entityManager->getRepository(TemporaryOAuthCredentials::class);
+		$credentials = $credentialsRepository->getTemporaryCredentialsByUser($user);
+
+		if (is_null($credentials)) {
+			$credentials = (new TemporaryOAuthCredentials())
+				->setUser($user);
+		}
+
+		$value = $server->getTemporaryCredentials();
+
+		$credentials->setCredentials(serialize($value))
+			->setTime(new DateTime("now"));
+
+		$this->entityManager->persist($credentials);
+		$this->entityManager->flush();
+
+		return $server->getAuthorizationUrl($value);
+	}
+
+	public function identify($credentials): ?ThirdPartyIntegrationIdentificationResult {
+		if (!$credentials instanceof LinkedAccount) return null;
+
+		$server = $this->getOAuthServer($credentials->getClientId(), $credentials->getClientSecret());
+
+		$credentialsRepository = $this->entityManager->getRepository(TemporaryOAuthCredentials::class);
+		$credentials = $credentialsRepository->getTemporaryCredentialsByUser($credentials->getUser());
+
+		$deserialized = unserialize($credentials->getCredentials());
+		if (!$deserialized instanceof TokenCredentials) {
+			throw new Exception("Invalid credentials supplied.");
+		}
+
+		$details = $server->getUserDetails($deserialized);
+
+		$this->entityManager->remove($credentials);
+
+		$this->logger->info("identification", [
+			"details" => $details
+		]);
+
+		return new ThirdPartyIntegrationIdentificationResult(
+			$details->uid,
+			$details->nickname,
+			$details->imageUrl
+		);
+	}
+
+	public function getOAuthServer(?string $identifier = null, ?string $secret = null): Twitter {
+		if (is_null($identifier)) {
+			$identifier = $this->getClientId();
+		}
+
+		if (is_null($secret)) {
+			$secret = $this->getClientSecret();
+		}
+
+		return new Twitter([
+			"identifier" => $identifier,
+			"secret" => $secret,
+			"callback_uri" => $this->getRedirectURL()
+		]);
 	}
 }

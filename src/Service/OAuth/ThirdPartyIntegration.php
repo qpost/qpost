@@ -27,6 +27,7 @@ use Exception;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\LinkedAccount;
+use qpost\Entity\User;
 use qpost\Factory\HttpClientFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function implode;
@@ -169,9 +170,10 @@ class ThirdPartyIntegration {
 
 	/**
 	 * The URL at which the user authenticates with this service.
+	 * @param User $user
 	 * @return string
 	 */
-	public function getAuthenticationURL(): string {
+	public function getAuthenticationURL(User $user): string {
 		$baseURL = $this->getBaseURL();
 		$clientId = $this->getClientId();
 		$scopes = $this->getScopes();
