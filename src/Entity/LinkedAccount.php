@@ -104,6 +104,11 @@ class LinkedAccount {
 	 */
 	private $lastUpdate;
 
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $onProfile = true;
+
 	public function getId(): ?int {
 		return $this->id;
 	}
@@ -228,6 +233,16 @@ class LinkedAccount {
 
 	public function setLastUpdate(?DateTimeInterface $lastUpdate): self {
 		$this->lastUpdate = $lastUpdate;
+
+		return $this;
+	}
+
+	public function isOnProfile(): ?bool {
+		return $this->onProfile;
+	}
+
+	public function setOnProfile(bool $onProfile): self {
+		$this->onProfile = $onProfile;
 
 		return $this;
 	}

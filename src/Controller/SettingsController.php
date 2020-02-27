@@ -202,6 +202,23 @@ class SettingsController extends AbstractController {
 							$this->addFlash(FlashMessageType::SUCCESS, "The account has been unlinked.");
 						}
 					}
+				} else if ($action === "update") {
+					if ($parameters->has("id")) {
+						$id = $parameters->get("id");
+						$linkedAccount = $entityManager->getRepository(LinkedAccount::class)->findOneBy([
+							"id" => $id,
+							"user" => $this->getUser()
+						]);
+
+						if ($linkedAccount) {
+							$linkedAccount->setOnProfile($this->readCheckbox($parameters, "onProfile"));
+
+							$entityManager->persist($linkedAccount);
+							$entityManager->flush();
+
+							$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+						}
+					}
 				}
 			}
 		}

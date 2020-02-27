@@ -63,9 +63,14 @@ $colors: (
 	.header {
 		@extend .card-header;
 
-		i, svg {
+		> .clearfix > .float-left > i, svg {
 			color: #FFF !important;
 			font-size: 28px;
+		}
+
+		.deleteLinkedAccountButton {
+			color: #FFF !important;
+			border: 1px solid #FFF;
 		}
 	}
 

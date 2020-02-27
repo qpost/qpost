@@ -39,19 +39,35 @@
 						<div class="float-left" style="margin-top: 3px;">
 							{{ link.linkedUserName }}
 						</div>
+
+						<div class="float-right">
+							<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
+								{% include "parts/csrf.html.twig" %}
+								<input type="hidden" name="action" value="delete"/>
+								<input type="hidden" name="id" value="{{ link.id }}"/>
+								<button type="submit" class="ant-btn ant-btn-link deleteLinkedAccountButton">
+									<i class="fas fa-times"></i>
+								</button>
+							</form>
+						</div>
 					</div>
 				</div>
 
 				<div class="body">
-					asd
-
-					<hr class="settingsHeadlineSeparator mt-2 mb-3"/>
-
 					<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
 						{% include "parts/csrf.html.twig" %}
-						<input type="hidden" name="action" value="delete"/>
+						<input type="hidden" name="action" value="update"/>
 						<input type="hidden" name="id" value="{{ link.id }}"/>
-						<button type="submit" class="ant-btn ant-btn-danger">Unlink</button>
+
+						<div class="custom-control custom-checkbox mb-3">
+							<input type="checkbox" class="custom-control-input" id="onProfile-{{ link.id }}"
+								   name="onProfile"{{ link.onProfile ? "checked" }}/>
+							<label class="custom-control-label" for="onProfile-{{ link.id }}">
+								<b>Show on profile</b>
+							</label>
+						</div>
+
+						<button type="submit" class="ant-btn ant-btn-primary">Save changes</button>
 					</form>
 				</div>
 			</div>
