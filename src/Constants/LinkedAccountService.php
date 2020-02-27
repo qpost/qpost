@@ -40,6 +40,23 @@ class LinkedAccountService {
 	 * @return string[]
 	 */
 	public static function all(): array {
-		return [self::DISCORD, self::TWITCH, self::TWITTER];
+		$services = [self::DISCORD, self::TWITCH, self::TWITTER];
+		$result = [];
+
+		foreach ($services as $service) {
+			if (self::isEnabled($service)) {
+				$result[] = $service;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param string $service
+	 * @return bool
+	 */
+	public static function isEnabled(string $service): bool {
+		return isset($_ENV[$service . "_CLIENT_ID"]) && !empty($_ENV[$service . "_CLIENT_ID"]) && isset($_ENV[$service . "_CLIENT_SECRET"]) && !empty($_ENV[$service . "_CLIENT_SECRET"]);
 	}
 }
