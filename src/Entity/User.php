@@ -1321,6 +1321,21 @@ class User implements UserInterface {
 		return $this->linkedAccounts;
 	}
 
+	/**
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("identities")
+	 * @return LinkedAccount[]|null
+	 */
+	public function getIdentities(): ?array {
+		$apiService = APIService::$instance;
+
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(LinkedAccount::class)->getProfileLinkedAccounts($this);
+		}
+
+		return null;
+	}
+
 	public function addLinkedAccount(LinkedAccount $linkedAccount): self {
 		if (!$this->linkedAccounts->contains($linkedAccount)) {
 			$this->linkedAccounts[] = $linkedAccount;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -22,7 +22,10 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Type;
+use qpost\Constants\MiscConstants;
 use qpost\Entity\LinkedAccount;
+use qpost\Entity\User;
 
 /**
  * @method LinkedAccount|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,5 +36,22 @@ use qpost\Entity\LinkedAccount;
 class LinkedAccountRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, LinkedAccount::class);
+	}
+
+	/**
+	 * @param User $user
+	 * @return LinkedAccount[]|null
+	 */
+	public function getProfileLinkedAccounts(User $user): ?array {
+		return $this->createQueryBuilder("a")
+			->where("a.user = :user")
+			->setParameter("user", $user)
+			->andWhere("a.onProfile = :onProfile")
+			->setParameter("onProfile", true, Type::BOOLEAN)
+			->getQuery()
+			->useQueryCache(true)
+			->useResultCache(true)
+			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->getResult();
 	}
 }

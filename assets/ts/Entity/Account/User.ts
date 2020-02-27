@@ -20,6 +20,7 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import Feature from "./Feature";
 import Storage from "../../Util/Storage";
+import LinkedAccount from "./LinkedAccount";
 
 @JsonObject("User")
 export default class User {
@@ -76,6 +77,9 @@ export default class User {
 
 	@JsonProperty("features", [String])
 	private features: string[] | null = undefined;
+
+	@JsonProperty("identities", [LinkedAccount])
+	private identities: LinkedAccount[] | null = undefined;
 
 	public getId(): number {
 		return this.id;
@@ -159,6 +163,10 @@ export default class User {
 		}
 
 		return false;
+	}
+
+	public getIdentities(): LinkedAccount[] | null {
+		return this.identities;
 	}
 
 	public saveToStorage(): void {

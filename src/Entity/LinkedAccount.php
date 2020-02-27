@@ -106,6 +106,7 @@ class LinkedAccount {
 
 	/**
 	 * @ORM\Column(type="boolean")
+	 * @Serializer\Exclude()
 	 */
 	private $onProfile = true;
 
