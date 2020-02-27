@@ -210,7 +210,11 @@ class ThirdPartyIntegration {
 			$identificationResult = $this->identify($account);
 		}
 
-		if (is_null($identificationResult)) return;
+		if (is_null($identificationResult)) {
+			$this->entityManager->remove($account);
+			$this->entityManager->flush();
+			return;
+		}
 
 		$account->setLinkedUserId($identificationResult->getId())
 			->setLinkedUserName($identificationResult->getUsername())
