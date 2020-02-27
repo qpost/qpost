@@ -139,10 +139,6 @@ class ThirdPartyAuthController extends AbstractController {
 
 			$identificationResult = $integration->identify($linkedAccount);
 
-			if (is_null($identificationResult)) {
-				throw new Exception("Failed to identify user.");
-			}
-
 			$integration->updateIdentification($linkedAccount, $identificationResult);
 
 			return $this->redirectToRoute("qpost_settings_profilelinkedaccounts");
