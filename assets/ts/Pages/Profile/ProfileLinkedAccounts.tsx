@@ -21,7 +21,8 @@ import React, {Component} from "react";
 import User from "../../Entity/Account/User";
 import LinkedAccount from "../../Entity/Account/LinkedAccount";
 import LinkedAccountService from "../../Entity/Account/LinkedAccountService";
-import {Tooltip} from "antd";
+import {message, Tooltip} from "antd";
+import {Clipboard} from "ts-clipboard";
 
 export default class ProfileLinkedAccounts extends Component<{
 	user: User
@@ -45,7 +46,17 @@ export default class ProfileLinkedAccounts extends Component<{
 						break;
 				}
 
-				return <div className={"profileIdentity"} key={"profileIdentity-" + account.getId()}>
+				return <div className={"profileIdentity"} key={"profileIdentity-" + account.getId()}
+							style={account.getService() === LinkedAccountService.DISCORD ? {
+								cursor: "pointer"
+							} : {}} onClick={(e) => {
+					e.preventDefault();
+
+					if (account.getService() === LinkedAccountService.DISCORD) {
+						Clipboard.copy(account.getLinkedUserName());
+						message.success("The Discord tag has been copied.");
+					}
+				}}>
 					{account.getService() === LinkedAccountService.DISCORD ?
 						<Tooltip title={account.getLinkedUserName()}>
 							{icon}
