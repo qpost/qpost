@@ -26,6 +26,7 @@ import {message, Spin} from "antd";
 import BaseObject from "../../../Serialization/BaseObject";
 import API from "../../../API/API";
 import LoginSuggestionModal from "../../LoginSuggestionModal";
+import PrivacyLevel from "../../../Entity/Account/PrivacyLevel";
 
 export default class ShareButton extends Component<{
 	entry: FeedEntry,
@@ -51,7 +52,7 @@ export default class ShareButton extends Component<{
 		e.stopPropagation();
 
 		if (Auth.isLoggedIn()) {
-			if (!this.isSelf()) {
+			if (!this.isDeactivated()) {
 				if (!this.state.loading) {
 					this.setState({loading: true});
 
@@ -80,7 +81,7 @@ export default class ShareButton extends Component<{
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <div
-			className={"d-inline-block shareButton" + (this.state.shared ? " active" : this.isSelf() ? " inactive" : "")}
+			className={"d-inline-block shareButton" + (this.state.shared ? " active" : this.isDeactivated() ? " inactive" : "")}
 			onClick={(e) => this.click(e)}>
 			{!this.state.loading ? <i className={"fas fa-retweet"}/> : <Spin size={"small"}/>}<span
 			className={"number"}>{formatNumberShort(this.state.entry.getShareCount())}</span>
@@ -96,5 +97,9 @@ export default class ShareButton extends Component<{
 		}
 
 		return self;
+	}
+
+	private isDeactivated() {
+		return this.isSelf() || this.props.entry.getUser().getPrivacyLevel() !== PrivacyLevel.PUBLIC;
 	}
 }
