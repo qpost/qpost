@@ -27,12 +27,12 @@ class ThirdPartyIntegrationExchangeCodeResult {
 	private $accessToken;
 
 	/**
-	 * @var string $refreshToken
+	 * @var string|null $refreshToken
 	 */
 	private $refreshToken;
 
 	/**
-	 * @var int $expiresIn
+	 * @var int|null $expiresIn
 	 */
 	private $expiresIn;
 
@@ -46,7 +46,7 @@ class ThirdPartyIntegrationExchangeCodeResult {
 	 */
 	private $clientSecret;
 
-	public function __construct(string $accessToken, string $refreshToken, int $expiresIn, string $clientId, string $clientSecret) {
+	public function __construct(string $accessToken, ?string $refreshToken, ?int $expiresIn, string $clientId, string $clientSecret) {
 		$this->accessToken = $accessToken;
 		$this->refreshToken = $refreshToken;
 		$this->expiresIn = $expiresIn;
@@ -62,16 +62,16 @@ class ThirdPartyIntegrationExchangeCodeResult {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getRefreshToken(): string {
+	public function getRefreshToken(): ?string {
 		return $this->refreshToken;
 	}
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getExpiresIn(): int {
+	public function getExpiresIn(): ?int {
 		return $this->expiresIn;
 	}
 

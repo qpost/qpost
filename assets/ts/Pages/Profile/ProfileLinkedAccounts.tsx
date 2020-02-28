@@ -44,15 +44,20 @@ export default class ProfileLinkedAccounts extends Component<{
 					case LinkedAccountService.TWITTER:
 						link = "https://twitter.com/" + account.getLinkedUserName();
 						break;
+					case LinkedAccountService.MASTODON:
+						const usernameSplit = account.getLinkedUserName().split("@");
+
+						link = "http://" + usernameSplit[1] + "/@" + usernameSplit[0];
+						break;
 				}
 
 				return <div className={"profileIdentity"} key={"profileIdentity-" + account.getId()}
 							style={account.getService() === LinkedAccountService.DISCORD ? {
 								cursor: "pointer"
 							} : {}} onClick={(e) => {
-					e.preventDefault();
-
 					if (account.getService() === LinkedAccountService.DISCORD) {
+						e.preventDefault();
+
 						Clipboard.copy(account.getLinkedUserName());
 						message.success("The Discord tag has been copied.");
 					}

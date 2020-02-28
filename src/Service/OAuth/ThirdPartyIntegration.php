@@ -109,12 +109,12 @@ class ThirdPartyIntegration {
 		$data = @json_decode($content, true);
 		if (!$data) return null;
 
-		if (!isset($data["access_token"]) || !isset($data["refresh_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"])) return null;
+		if (!isset($data["access_token"]) || !isset($data["token_type"])) return null;
 
 		return new ThirdPartyIntegrationExchangeCodeResult(
 			$data["access_token"],
-			$data["refresh_token"],
-			$data["expires_in"],
+			isset($data["refresh_token"]) ? $data["refresh_token"] : null,
+			isset($data["expires_in"]) ? $data["expires_in"] : null,
 			$clientId,
 			$clientSecret
 		);
