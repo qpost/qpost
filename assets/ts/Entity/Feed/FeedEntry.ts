@@ -36,7 +36,7 @@ export default class FeedEntry {
 	private following?: User = undefined;
 
 	@JsonProperty("parent", FeedEntry, true)
-	private post?: FeedEntry = undefined;
+	private parent?: FeedEntry = undefined;
 
 	@JsonProperty("type", String)
 	private type: string = undefined;
@@ -81,8 +81,8 @@ export default class FeedEntry {
 		return this.following;
 	}
 
-	public getPost(): FeedEntry | undefined {
-		return this.post;
+	public getParent(): FeedEntry | undefined {
+		return this.parent;
 	}
 
 	public getType(): string {

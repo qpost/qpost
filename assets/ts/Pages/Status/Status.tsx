@@ -110,13 +110,13 @@ export default class Status extends Component<any, {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const status: FeedEntry = this.state.status;
 		const user: User = status ? status.getUser() : null;
-		const parent: FeedEntry = status ? status.getPost() : null;
+		const parent: FeedEntry = status ? status.getParent() : null;
 
 		const parents: FeedEntry[] = [];
 		let pi = parent;
 		while (pi && (pi.getType() === FeedEntryType.POST || pi.getType() === FeedEntryType.REPLY)) {
 			parents.unshift(pi);
-			pi = pi.getPost();
+			pi = pi.getParent();
 		}
 
 		console.log(parents);
