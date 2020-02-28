@@ -18,6 +18,7 @@
 		"guzzlehttp/guzzle": "^6.3",
 		"jms/serializer": "^3.2",
 		"kreait/firebase-php": "^4.35",
+		"league/oauth1-client": "^1.7",
 		"nmure/crawler-detect-bundle": "^2.0.0",
 		"sensio/framework-extra-bundle": "^5.4",
 		"sentry/sentry-symfony": "^3.0",

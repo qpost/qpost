@@ -27,6 +27,7 @@ use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
 use qpost\Constants\SettingsNavigationPoint;
+use qpost\Entity\LinkedAccount;
 use qpost\Entity\User;
 use qpost\Exception\ProfileImageInvalidException;
 use qpost\Exception\ProfileImageTooBigException;
@@ -170,6 +171,60 @@ class SettingsController extends AbstractController {
 
 		return $this->renderAction("Edit profile", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PROFILE_APPEARANCE, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
+	 * @Route("/settings/profile/linked-accounts")
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return Response
+	 */
+	public function profileLinkedAccounts(Request $request, EntityManagerInterface $entityManager) {
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			if ($parameters->has("action")) {
+				$action = $parameters->get("action");
+
+				if ($action === "delete") {
+					if ($parameters->has("id")) {
+						$id = $parameters->get("id");
+						$linkedAccount = $entityManager->getRepository(LinkedAccount::class)->findOneBy([
+							"id" => $id,
+							"user" => $this->getUser()
+						]);
+
+						if ($linkedAccount) {
+							$entityManager->remove($linkedAccount);
+							$entityManager->flush();
+
+							$this->addFlash(FlashMessageType::SUCCESS, "The account has been unlinked.");
+						}
+					}
+				} else if ($action === "update") {
+					if ($parameters->has("id")) {
+						$id = $parameters->get("id");
+						$linkedAccount = $entityManager->getRepository(LinkedAccount::class)->findOneBy([
+							"id" => $id,
+							"user" => $this->getUser()
+						]);
+
+						if ($linkedAccount) {
+							$linkedAccount->setOnProfile($this->readCheckbox($parameters, "onProfile"));
+
+							$entityManager->persist($linkedAccount);
+							$entityManager->flush();
+
+							$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+						}
+					}
+				}
+			}
+		}
+
+		return $this->renderAction("Linked Accounts", "settings/profile/linkedAccounts.html.twig", SettingsNavigationPoint::PROFILE_LINKED_ACCOUNTS, $this->generateUrl(
+			"qpost_settings_profilelinkedaccounts", [], UrlGeneratorInterface::ABSOLUTE_URL
 		));
 	}
 

@@ -1,0 +1,76 @@
+{% extends "settings/base.html.twig" %}
+{% import "settings/macro.html.twig" as macro %}
+
+{% block content %}
+	{{ macro.settingsHeadline("Linked Accounts") }}
+
+	{% include "parts/flash.html.twig" %}
+
+	{% if app.user.unlinkedServices|length > 0 %}
+		{{ macro.settingsHeadlineSmall("Connect your accounts") }}
+
+		<div class="clearfix">
+			{% for service in app.user.unlinkedServices %}
+				<div class="serviceLinkButton" onclick="window.location.href = '/tpauth/{{ service|lower }}';">
+					{{ macro.linkedAccountIcon(service) }}
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
+	{% if app.user.linkedAccounts|length > 0 %}
+		{{ macro.settingsHeadlineSmall("Linked accounts") }}
+
+		{% for link in app.user.linkedAccounts %}
+			<div class="linkedAccount">
+				<div class="header service-{{ link.service|lower }}-bg">
+					<div class="clearfix">
+						<div class="float-left mr-3">
+							{{ macro.linkedAccountIcon(link.service) }}
+						</div>
+
+						{% if link.linkedUserAvatar %}
+							<div class="float-left mr-3">
+								<img src="{{ link.linkedUserAvatar }}" alt="{{ link.linkedUserName }}"
+									 title="{{ link.linkedUserName }}" width="32" height="32" class="rounded">
+							</div>
+						{% endif %}
+
+						<div class="float-left" style="margin-top: 3px;">
+							{{ link.linkedUserName }}
+						</div>
+
+						<div class="float-right">
+							<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
+								{% include "parts/csrf.html.twig" %}
+								<input type="hidden" name="action" value="delete"/>
+								<input type="hidden" name="id" value="{{ link.id }}"/>
+								<button type="submit" class="ant-btn ant-btn-link deleteLinkedAccountButton">
+									<i class="fas fa-times"></i>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="body">
+					<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
+						{% include "parts/csrf.html.twig" %}
+						<input type="hidden" name="action" value="update"/>
+						<input type="hidden" name="id" value="{{ link.id }}"/>
+
+						<div class="custom-control custom-checkbox mb-3">
+							<input type="checkbox" class="custom-control-input" id="onProfile-{{ link.id }}"
+								   name="onProfile"{{ link.onProfile ? "checked" }}/>
+							<label class="custom-control-label" for="onProfile-{{ link.id }}">
+								<b>Show on profile</b>
+							</label>
+						</div>
+
+						<button type="submit" class="ant-btn ant-btn-primary">Save changes</button>
+					</form>
+				</div>
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endblock %}

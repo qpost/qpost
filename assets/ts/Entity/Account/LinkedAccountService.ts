@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,31 +17,9 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "variables";
-@import "~bootstrap/scss/bootstrap";
-@import "util/index";
-
-@import "alerts";
-@import "base";
-@import "buttons";
-@import "download";
-@import "emoji";
-@import "feed";
-@import "feedButtons";
-@import "followButtons";
-@import "footer";
-@import "forms";
-@import "gif-player";
-@import "home";
-@import "linked-accounts";
-@import "media";
-@import "mobile";
-@import "navigation";
-@import "notifications";
-@import "post-forms";
-@import "profile";
-@import "status";
-@import "trends";
-@import "user-box";
-@import "nightmode/index";
-@import "settings/index";
+export default class LinkedAccountService {
+	public static DISCORD: string = "DISCORD";
+	public static TWITCH: string = "TWITCH";
+	public static TWITTER: string = "TWITTER";
+	public static MASTODON: string = "MASTODON";
+}
