@@ -123,7 +123,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 		$rsm->addScalarResult("shared", "shared", "boolean");
 
 		$ownerWhere = is_null($target) ? "(EXISTS (SELECT 1 FROM follower AS ff WHERE ff.sender_id = ? AND ff.receiver_id = u.id) OR u.id = ?)" : "f.user_id = ?";
-		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY')";
+		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL AND f.text NOT LIKE '@%') OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY' OR (f.type = 'POST' AND f.text LIKE '@%'))";
 
 		$parameters[] = is_null($from) ? 0 : $from->getId();
 		$parameters[] = is_null($from) ? 0 : $from->getId();
@@ -163,7 +163,7 @@ FROM feed_entry AS f
     GROUP BY parent_id
 ) children ON children.parent_id = f.id
 		INNER JOIN user AS u ON f.user_id = u.id
-WHERE " . $ownerWhere . (is_null($target) ? " AND u.privacy_level != 'CLOSED'" : "") . " AND (f.text IS NULL OR f.text NOT LIKE '@%')
+WHERE " . $ownerWhere . (is_null($target) ? " AND u.privacy_level != 'CLOSED'" : "") . "
 " . (!is_null($min) ? " AND f.id > ?" : "") . "
 " . (!is_null($max) ? " AND f.id < ?" : "") . "
 AND " . $typeWhere . "
