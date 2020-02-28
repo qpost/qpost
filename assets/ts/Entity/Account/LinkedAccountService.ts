@@ -22,4 +22,5 @@ export default class LinkedAccountService {
 	public static TWITCH: string = "TWITCH";
 	public static TWITTER: string = "TWITTER";
 	public static MASTODON: string = "MASTODON";
+	public static LASTFM: string = "LASTFM";
 }

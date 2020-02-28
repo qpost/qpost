@@ -44,6 +44,9 @@ export default class ProfileLinkedAccounts extends Component<{
 					case LinkedAccountService.TWITTER:
 						link = "https://twitter.com/" + account.getLinkedUserName();
 						break;
+					case LinkedAccountService.LASTFM:
+						link = "https://www.last.fm/user/" + account.getLinkedUserName();
+						break;
 					case LinkedAccountService.MASTODON:
 						const usernameSplit = account.getLinkedUserName().split("@");
 

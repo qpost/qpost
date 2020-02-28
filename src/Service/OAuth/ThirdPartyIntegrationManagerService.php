@@ -34,18 +34,21 @@ class ThirdPartyIntegrationManagerService {
 	 * @param TwitchIntegration $twitchIntegration
 	 * @param TwitterIntegration $twitterIntegration
 	 * @param MastodonIntegration $mastodonIntegration
+	 * @param LastFmIntegration $lastFmIntegration
 	 */
 	public function __construct(
 		DiscordIntegration $discordIntegration,
 		TwitchIntegration $twitchIntegration,
 		TwitterIntegration $twitterIntegration,
-		MastodonIntegration $mastodonIntegration
+		MastodonIntegration $mastodonIntegration,
+		LastFmIntegration $lastFmIntegration
 	) {
 		$this->integrationServices = [
 			$discordIntegration,
 			$twitchIntegration,
 			$twitterIntegration,
-			$mastodonIntegration
+			$mastodonIntegration,
+			$lastFmIntegration
 		];
 	}
 

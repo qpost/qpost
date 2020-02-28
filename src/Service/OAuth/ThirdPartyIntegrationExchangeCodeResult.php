@@ -42,11 +42,11 @@ class ThirdPartyIntegrationExchangeCodeResult {
 	private $clientId;
 
 	/**
-	 * @var string $clientSecret
+	 * @var string|null $clientSecret
 	 */
 	private $clientSecret;
 
-	public function __construct(string $accessToken, ?string $refreshToken, ?int $expiresIn, string $clientId, string $clientSecret) {
+	public function __construct(string $accessToken, ?string $refreshToken, ?int $expiresIn, string $clientId, ?string $clientSecret) {
 		$this->accessToken = $accessToken;
 		$this->refreshToken = $refreshToken;
 		$this->expiresIn = $expiresIn;
@@ -83,9 +83,9 @@ class ThirdPartyIntegrationExchangeCodeResult {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getClientSecret(): string {
+	public function getClientSecret(): ?string {
 		return $this->clientSecret;
 	}
 }

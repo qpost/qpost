@@ -143,12 +143,14 @@ class ThirdPartyAuthController extends AbstractController {
 
 			return $this->redirectToRoute("qpost_settings_profilelinkedaccounts");
 		} else {
+			$codeFieldName = $service === LinkedAccountService::LASTFM ? "token" : "code";
+
 			// OAuth 2
-			if (!$request->query->has("code")) {
+			if (!$request->query->has($codeFieldName)) {
 				throw $this->createNotFoundException("No exchange code found.");
 			}
 
-			$code = $request->query->get("code");
+			$code = $request->query->get($codeFieldName);
 			$codeResult = $integration->exchangeCode($code);
 
 			if (is_null($codeResult)) {

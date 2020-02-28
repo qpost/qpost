@@ -21,7 +21,8 @@ $colors: (
 		"discord": #7289DA,
 		"twitch": #9146FF,
 		"twitter": #1DA1F2,
-		"mastodon": #2B90D9
+		"mastodon": #2B90D9,
+		"lastfm": #D51007
 );
 
 @each $name, $color in $colors {

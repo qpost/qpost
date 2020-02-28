@@ -42,10 +42,15 @@ class LinkedAccountService {
 	public const MASTODON = "MASTODON";
 
 	/**
+	 * @var string LASTFM
+	 */
+	public const LASTFM = "LASTFM";
+
+	/**
 	 * @return string[]
 	 */
 	public static function all(): array {
-		$services = [self::DISCORD, self::TWITCH, self::TWITTER, self::MASTODON];
+		$services = [self::DISCORD, self::TWITCH, self::TWITTER, self::MASTODON, self::LASTFM];
 		$result = [];
 
 		foreach ($services as $service) {
