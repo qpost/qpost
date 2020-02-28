@@ -27,6 +27,7 @@ use qpost\Constants\FeedEntryType;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
+use function in_array;
 use function is_null;
 
 /**
@@ -115,6 +116,8 @@ class FeedEntryRepository extends ServiceEntityRepository {
 	}
 
 	public function getFeed(?User $from, ?User $target = null, int $min = null, int $max = null, string $type = "posts"): array {
+		$limit = 15;
+
 		$rsm = $this->createResultSetMappingBuilder("f");
 		$rsm->addScalarResult("favoriteCount", "favoriteCount", "integer");
 		$rsm->addScalarResult("replyCount", "replyCount", "integer");
@@ -141,6 +144,8 @@ class FeedEntryRepository extends ServiceEntityRepository {
 		if (!is_null($max)) {
 			$parameters[] = $max;
 		}
+
+		$parameters[] = (int)($limit + ($limit / 2));
 
 		$query = $this->_em->createNativeQuery("SELECT " . $rsm->generateSelectClause([
 				"f" => "f",
@@ -169,7 +174,7 @@ WHERE " . $ownerWhere . (is_null($target) ? " AND u.privacy_level != 'CLOSED'" :
 AND " . $typeWhere . "
 GROUP BY f.id
 ORDER BY f.time DESC
-LIMIT 15", $rsm);
+LIMIT ?", $rsm);
 
 		foreach ($parameters as $index => $parameter) {
 			$query = $query->setParameter($index, $parameter);
@@ -178,8 +183,13 @@ LIMIT 15", $rsm);
 		$results = $query->getResult();
 
 		$entries = [];
+		$ids = [];
 
 		foreach ($results as $result) {
+			if (count($entries) >= $limit) {
+				break;
+			}
+
 			/**
 			 * @var FeedEntry $feedEntry
 			 */
@@ -191,7 +201,22 @@ LIMIT 15", $rsm);
 				->setFavorited($result["favorited"])
 				->setShared($result["shared"]);
 
+			$id = $feedEntry->getId();
+
+			if ($feedEntry->getType() === FeedEntryType::SHARE || $feedEntry->getType() === FeedEntryType::REPLY) {
+				$parent = $feedEntry->getParent();
+
+				if (!is_null($parent)) {
+					$id = $feedEntry->getParent()->getId();
+				}
+			}
+
+			if (in_array($id, $ids)) {
+				continue;
+			}
+
 			$entries[] = $feedEntry;
+			$ids[] = $id;
 		}
 
 		return $entries;
