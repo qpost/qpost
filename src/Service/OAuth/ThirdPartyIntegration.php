@@ -207,6 +207,16 @@ class ThirdPartyIntegration {
 	 */
 	public function updateIdentification(LinkedAccount $account, ?ThirdPartyIntegrationIdentificationResult $identificationResult = null): void {
 		if (is_null($identificationResult)) {
+			$newAccount = $this->refreshToken($account);
+
+			if (is_null($newAccount)) {
+				$this->entityManager->remove($account);
+				$this->entityManager->flush();
+				return;
+			} else {
+				$account = $newAccount;
+			}
+
 			$identificationResult = $this->identify($account);
 		}
 
@@ -234,7 +244,7 @@ class ThirdPartyIntegration {
 	public function refreshToken(LinkedAccount $account): ?LinkedAccount {
 		if (!$account->isExpired()) return $account;
 
-		if ($account->getService() !== $this->getServiceIdentifier()) return null;
+		if ($account->getService() !== $this->getServiceIdentifier()) return $account;
 
 		$refreshToken = $account->getRefreshToken();
 		if (is_null($refreshToken)) return null;
@@ -267,7 +277,7 @@ class ThirdPartyIntegration {
 		$data = @json_decode($content, true);
 		if (!$data) return null;
 
-		if (!isset($data["access_token"]) || !isset($data["refresh_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"]) || !isset($data["scope"])) return null;
+		if (!isset($data["access_token"]) || !isset($data["refresh_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"])) return null;
 
 		$expiry = new DateTime("now");
 		$expiry->add(new DateInterval("PT" . $data["expires_in"] . "S"));

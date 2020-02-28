@@ -64,20 +64,33 @@ class TwitterIntegration extends ThirdPartyIntegration {
 
 	public function identify($credentials): ?ThirdPartyIntegrationIdentificationResult {
 		if (!$credentials instanceof LinkedAccount) return null;
+		$linkedAccount = $credentials;
 
 		$server = $this->getOAuthServer($credentials->getClientId(), $credentials->getClientSecret());
 
 		$credentialsRepository = $this->entityManager->getRepository(TemporaryOAuthCredentials::class);
 		$credentials = $credentialsRepository->getTemporaryCredentialsByUser($credentials->getUser());
 
-		$deserialized = unserialize($credentials->getCredentials());
-		if (!$deserialized instanceof TokenCredentials) {
-			throw new Exception("Invalid credentials supplied.");
+		$deserialized = null;
+
+		if (is_null($credentials)) {
+			$credentials = new TokenCredentials();
+			$credentials->setIdentifier($linkedAccount->getAccessToken());
+			$credentials->setSecret($linkedAccount->getRefreshToken());
+
+			$deserialized = $credentials;
+		} else {
+			$deserialized = unserialize($credentials->getCredentials());
+			if (!$deserialized instanceof TokenCredentials) {
+				throw new Exception("Invalid credentials supplied.");
+			}
 		}
 
 		$details = $server->getUserDetails($deserialized);
 
-		$this->entityManager->remove($credentials);
+		if ($credentials instanceof TemporaryOAuthCredentials) {
+			$this->entityManager->remove($credentials);
+		}
 
 		$this->logger->info("identification", [
 			"details" => $details
@@ -88,6 +101,10 @@ class TwitterIntegration extends ThirdPartyIntegration {
 			$details->nickname,
 			$details->imageUrl
 		);
+	}
+
+	public function refreshToken(LinkedAccount $account): ?LinkedAccount {
+		return $account;
 	}
 
 	public function getOAuthServer(?string $identifier = null, ?string $secret = null): Twitter {
