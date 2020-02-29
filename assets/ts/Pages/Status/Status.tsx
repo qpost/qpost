@@ -41,13 +41,13 @@ import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
 import {limitString} from "../../Util/Format";
-import Linkifier from "../../Component/Linkifier";
 import ReplyList from "../../Component/FeedEntry/ReplyList";
 import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 import PostUnavailableAlert from "../../Component/PostUnavailableAlert";
 import LeftSidebar from "../../Component/Layout/LeftSidebar";
 import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
+import BioText from "../../Component/BioText";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -174,9 +174,7 @@ export default class Status extends Component<any, {
 									</div> : ""}
 
 								<div className={"specialLinkColor"}>
-									<Linkifier>
-										{status.getText()}
-									</Linkifier>
+									<BioText text={status.getText()}/>
 								</div>
 							</div> : ""}
 
