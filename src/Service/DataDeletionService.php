@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -30,6 +30,7 @@ use qpost\Entity\Notification;
 use qpost\Entity\ResetPasswordToken;
 use qpost\Entity\Suspension;
 use qpost\Entity\User;
+use qpost\Entity\UsernameHistoryEntry;
 
 class DataDeletionService {
 	/**
@@ -95,10 +96,16 @@ class DataDeletionService {
 			$entityManager->persist($hashtag);
 		}
 
+		// Delete feed entries
 		foreach ($entityManager->getRepository(FeedEntry::class)->findBy([
 			"user" => $user
 		]) as $feedEntry) {
 			$this->deleteFeedEntry($feedEntry);
+		}
+
+		// Delete name history
+		foreach ($entityManager->getRepository(UsernameHistoryEntry::class)->getEntriesByUser($user) as $entry) {
+			$entityManager->remove($entry);
 		}
 
 		$entityManager->remove($user);

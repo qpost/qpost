@@ -33,6 +33,7 @@ use qpost\Exception\ProfileImageInvalidException;
 use qpost\Exception\ProfileImageTooBigException;
 use qpost\Service\DataDeletionService;
 use qpost\Service\GigadriveService;
+use qpost\Service\NameHistoryService;
 use qpost\Service\ProfileImageService;
 use qpost\Twig\Twig;
 use qpost\Util\Util;
@@ -309,10 +310,11 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/account/username")
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
+	 * @param NameHistoryService $nameHistoryService
 	 * @return Response
 	 * @throws Exception
 	 */
-	public function accountUsername(Request $request, EntityManagerInterface $entityManager) {
+	public function accountUsername(Request $request, EntityManagerInterface $entityManager, NameHistoryService $nameHistoryService) {
 		if ($this->validate($request)) {
 			$parameters = $request->request;
 
@@ -340,6 +342,8 @@ class SettingsController extends AbstractController {
 
 											$entityManager->persist($user);
 											$entityManager->flush();
+
+											$nameHistoryService->createEntry($user, $username, $request->getClientIp(), $now);
 
 											$this->addFlash(FlashMessageType::SUCCESS, "Your username has been changed.");
 										} else {

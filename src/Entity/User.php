@@ -248,6 +248,12 @@ class User implements UserInterface {
 	 */
 	private $appearanceSettings;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\UsernameHistoryEntry", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
+	 */
+	private $nameHistory;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -265,6 +271,7 @@ class User implements UserInterface {
 		$this->blockedBy = new ArrayCollection();
 		$this->pushSubscriptions = new ArrayCollection();
 		$this->linkedAccounts = new ArrayCollection();
+		$this->nameHistory = new ArrayCollection();
 	}
 
 	/**
@@ -1410,6 +1417,34 @@ class User implements UserInterface {
 		// set the owning side of the relation if necessary
 		if ($appearanceSettings->getUser() !== $this) {
 			$appearanceSettings->setUser($this);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection|UsernameHistoryEntry[]
+	 */
+	public function getNameHistory(): Collection {
+		return $this->nameHistory;
+	}
+
+	public function addNameHistory(UsernameHistoryEntry $nameHistory): self {
+		if (!$this->nameHistory->contains($nameHistory)) {
+			$this->nameHistory[] = $nameHistory;
+			$nameHistory->setUser($this);
+		}
+
+		return $this;
+	}
+
+	public function removeNameHistory(UsernameHistoryEntry $nameHistory): self {
+		if ($this->nameHistory->contains($nameHistory)) {
+			$this->nameHistory->removeElement($nameHistory);
+			// set the owning side to null (unless already changed)
+			if ($nameHistory->getUser() === $this) {
+				$nameHistory->setUser(null);
+			}
 		}
 
 		return $this;
