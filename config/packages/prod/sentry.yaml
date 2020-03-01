@@ -13,3 +13,4 @@ sentry:
             - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
             - Doctrine\DBAL\Exception\DriverException
             - Doctrine\DBAL\Exception\ConnectionException
+            - Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException
