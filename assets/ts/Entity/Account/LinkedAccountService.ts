@@ -17,24 +17,10 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React, {Component} from "react";
-import User from "../Entity/Account/User";
-import BioText from "./BioText";
-
-export default class Biography extends Component<{
-	user: User
-}, any> {
-	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		const user = this.props.user;
-
-		if (user) {
-			const text = user.getBio();
-
-			if (text) {
-				return text ? <BioText text={text}/> : "";
-			}
-		}
-
-		return "";
-	}
+export default class LinkedAccountService {
+	public static DISCORD: string = "DISCORD";
+	public static TWITCH: string = "TWITCH";
+	public static TWITTER: string = "TWITTER";
+	public static MASTODON: string = "MASTODON";
+	public static LASTFM: string = "LASTFM";
 }

@@ -1,7 +1,7 @@
 {
 	"type": "project",
 	"license": "proprietary",
-	"version": "2.7.6",
+	"version": "2.8.0",
 	"require": {
 		"php": "^7.1.3",
 		"ext-ctype": "*",
@@ -18,6 +18,7 @@
 		"guzzlehttp/guzzle": "^6.3",
 		"jms/serializer": "^3.2",
 		"kreait/firebase-php": "^4.35",
+		"league/oauth1-client": "^1.7",
 		"nmure/crawler-detect-bundle": "^2.0.0",
 		"sensio/framework-extra-bundle": "^5.4",
 		"sentry/sentry-symfony": "^3.0",
@@ -40,7 +41,8 @@
 		"symfony/twig-bundle": "4.3.*",
 		"symfony/validator": "4.3.*",
 		"symfony/web-link": "4.3.*",
-		"symfony/yaml": "4.3.*"
+		"symfony/yaml": "4.3.*",
+		"ext-simplexml": "*"
 	},
 	"require-dev": {
 		"symfony/debug-pack": "^1.0",

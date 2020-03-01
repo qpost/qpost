@@ -17,12 +17,15 @@
 
 		<li class="dropdown-divider"></li>
 
-		<li class="nav-item{{ navPoint in ["PROFILE_APPEARANCE"] ? " open" }}">
+		<li class="nav-item{{ navPoint in ["PROFILE_APPEARANCE","PROFILE_LINKED_ACCOUNTS"] ? " open" }}">
 			<a class="nav-link" href="{{ path("qpost_settings_profileappearance") }}"><i
 						class="fas fa-user-circle iconMargin-10"></i>Profile</a>
 
 			<a class="nav-link child{{ navPoint == "PROFILE_APPEARANCE" ? " active" }}"
 			   href="{{ path("qpost_settings_profileappearance") }}">Appearance</a>
+
+			<a class="nav-link child{{ navPoint == "PROFILE_LINKED_ACCOUNTS" ? " active" }}"
+			   href="{{ path("qpost_settings_profilelinkedaccounts") }}">Linked Accounts</a>
 		</li>
 		<li class="nav-item{{ navPoint in ["PREFERENCES_APPEARANCE"] ? " open" }}">
 			<a class="nav-link" href="{{ path("qpost_settings_preferencesappearance") }}"><i

@@ -29,6 +29,7 @@ import "antd/es/empty/style";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
 import Storage from "../../Util/Storage";
+import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 
 export default class FeedEntryList extends Component<{
 	userID?: number,
@@ -87,6 +88,8 @@ export default class FeedEntryList extends Component<{
 	}
 
 	public prependEntry(feedEntry: FeedEntry): void {
+		if (this.hasEntry(feedEntry)) return;
+
 		const entries: FeedEntry[] = this.state.entries || [];
 
 		entries.unshift(feedEntry);
@@ -112,6 +115,34 @@ export default class FeedEntryList extends Component<{
 		this.saveToStorage();
 	}
 
+	public hasEntry(feedEntry: FeedEntry, list?: FeedEntry[]): boolean {
+		let result: boolean = false;
+
+		(list || this.state.entries).forEach((entry: FeedEntry) => {
+			if (entry.getId() === feedEntry.getId()) {
+				result = true;
+			}
+
+			if (entry.getType() === FeedEntryType.REPLY || entry.getType() === FeedEntryType.SHARE) {
+				const parent = entry.getParent();
+
+				if (parent && parent.getId() === feedEntry.getId()) {
+					result = true;
+				}
+			}
+
+			if (feedEntry.getType() === FeedEntryType.REPLY || feedEntry.getType() === FeedEntryType.SHARE) {
+				const parent = feedEntry.getParent();
+
+				if (parent && parent.getId() === entry.getId()) {
+					result = true;
+				}
+			}
+		});
+
+		return result;
+	}
+
 	loadNew() {
 		if (this.state.entries === null || this.state.entries.length === 0) return;
 
@@ -128,20 +159,21 @@ export default class FeedEntryList extends Component<{
 			data.results.forEach(result => {
 				const feedEntry: FeedEntry = BaseObject.convertObject(FeedEntry, result);
 
-				for (let i = 0; i < this.state.entries.length; i++) {
-					const entry = this.state.entries[i];
-					if (entry.getId() === feedEntry.getId()) return;
-				}
+				console.log("asd", this.state.entries, this.hasEntry(feedEntry, this.state.entries));
 
-				entries.push(feedEntry);
+				if (!(this.hasEntry(feedEntry, entries) || (this.state.entries && this.hasEntry(feedEntry, this.state.entries)))) {
+					entries.push(feedEntry);
+				}
 			});
 
-			console.log("1 - ", entries.length, data.results.length, this.state.entries.length);
-
 			if (this.state.entries) {
-				console.log(this.state.entries);
-				this.state.entries.forEach(entry => entries.push(entry));
-				console.log("2 - ", entries.length);
+				this.state.entries.forEach(entry => {
+					if (this.hasEntry(entry, entries)) {
+						return;
+					}
+
+					entries.push(entry)
+				});
 			}
 
 			this.setState({
@@ -177,7 +209,15 @@ export default class FeedEntryList extends Component<{
 		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = (this.state.entries && max ? this.state.entries : null) || [];
 
-			data.results.forEach(result => entries.push(BaseObject.convertObject(FeedEntry, result)));
+			data.results.forEach(result => {
+				const feedEntry: FeedEntry = BaseObject.convertObject(FeedEntry, result);
+
+				if (this.hasEntry(feedEntry, entries)) {
+					return;
+				}
+
+				entries.push(feedEntry);
+			});
 
 			this.setState({
 				entries,

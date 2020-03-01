@@ -52,6 +52,7 @@ import FollowersYouKnow from "../../Component/FollowersYouKnow";
 import ProfileHeader from "./ProfileHeader";
 import Replies from "./Replies";
 import Storage from "../../Util/Storage";
+import ProfileLinkedAccounts from "./ProfileLinkedAccounts";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -156,6 +157,8 @@ export default class Profile extends Component<any, {
 								</div> : ""}
 							</p>
 
+							<ProfileLinkedAccounts user={user}/>
+
 							<FollowButton target={user} block/>
 						</SidebarStickyContent>
 					</LeftSidebar>
@@ -197,6 +200,8 @@ export default class Profile extends Component<any, {
 									})}</span>
 									</div> : ""}
 								</p>
+
+								<ProfileLinkedAccounts user={user}/>
 
 								<FollowButton target={user}/>
 

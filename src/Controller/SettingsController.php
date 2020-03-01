@@ -27,11 +27,13 @@ use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
 use qpost\Constants\SettingsNavigationPoint;
+use qpost\Entity\LinkedAccount;
 use qpost\Entity\User;
 use qpost\Exception\ProfileImageInvalidException;
 use qpost\Exception\ProfileImageTooBigException;
 use qpost\Service\DataDeletionService;
 use qpost\Service\GigadriveService;
+use qpost\Service\NameHistoryService;
 use qpost\Service\ProfileImageService;
 use qpost\Twig\Twig;
 use qpost\Util\Util;
@@ -74,7 +76,7 @@ class SettingsController extends AbstractController {
 			// Display name
 			$displayName = $parameters->get("displayName");
 			if ($displayName !== $user->getDisplayName()) {
-				$displayName = trim($displayName);
+				$displayName = trim(Util::fixString($displayName));
 
 				if (Util::isEmpty($displayName) || !(strlen($displayName) >= 1 && strlen($displayName) <= 24)) {
 					$save = false;
@@ -85,7 +87,7 @@ class SettingsController extends AbstractController {
 			// Bio
 			$bio = $parameters->get("bio");
 			if ($bio !== $user->getBio()) {
-				$bio = trim($bio);
+				$bio = trim(Util::fixString($bio));
 
 				if (!Util::isEmpty($bio) && !(strlen($bio) >= 0 && strlen($bio) <= 200)) {
 					$save = false;
@@ -174,6 +176,60 @@ class SettingsController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/settings/profile/linked-accounts")
+	 * @param Request $request
+	 * @param EntityManagerInterface $entityManager
+	 * @return Response
+	 */
+	public function profileLinkedAccounts(Request $request, EntityManagerInterface $entityManager) {
+		if ($this->validate($request)) {
+			$parameters = $request->request;
+
+			if ($parameters->has("action")) {
+				$action = $parameters->get("action");
+
+				if ($action === "delete") {
+					if ($parameters->has("id")) {
+						$id = $parameters->get("id");
+						$linkedAccount = $entityManager->getRepository(LinkedAccount::class)->findOneBy([
+							"id" => $id,
+							"user" => $this->getUser()
+						]);
+
+						if ($linkedAccount) {
+							$entityManager->remove($linkedAccount);
+							$entityManager->flush();
+
+							$this->addFlash(FlashMessageType::SUCCESS, "The account has been unlinked.");
+						}
+					}
+				} else if ($action === "update") {
+					if ($parameters->has("id")) {
+						$id = $parameters->get("id");
+						$linkedAccount = $entityManager->getRepository(LinkedAccount::class)->findOneBy([
+							"id" => $id,
+							"user" => $this->getUser()
+						]);
+
+						if ($linkedAccount) {
+							$linkedAccount->setOnProfile($this->readCheckbox($parameters, "onProfile"));
+
+							$entityManager->persist($linkedAccount);
+							$entityManager->flush();
+
+							$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+						}
+					}
+				}
+			}
+		}
+
+		return $this->renderAction("Linked Accounts", "settings/profile/linkedAccounts.html.twig", SettingsNavigationPoint::PROFILE_LINKED_ACCOUNTS, $this->generateUrl(
+			"qpost_settings_profilelinkedaccounts", [], UrlGeneratorInterface::ABSOLUTE_URL
+		));
+	}
+
+	/**
 	 * @Route("/settings/preferences/appearance")
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
@@ -254,10 +310,11 @@ class SettingsController extends AbstractController {
 	 * @Route("/settings/account/username")
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
+	 * @param NameHistoryService $nameHistoryService
 	 * @return Response
 	 * @throws Exception
 	 */
-	public function accountUsername(Request $request, EntityManagerInterface $entityManager) {
+	public function accountUsername(Request $request, EntityManagerInterface $entityManager, NameHistoryService $nameHistoryService) {
 		if ($this->validate($request)) {
 			$parameters = $request->request;
 
@@ -285,6 +342,8 @@ class SettingsController extends AbstractController {
 
 											$entityManager->persist($user);
 											$entityManager->flush();
+
+											$nameHistoryService->createEntry($user, $username, $request->getClientIp(), $now);
 
 											$this->addFlash(FlashMessageType::SUCCESS, "Your username has been changed.");
 										} else {

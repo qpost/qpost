@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
@@ -17,24 +18,48 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React, {Component} from "react";
-import User from "../Entity/Account/User";
-import BioText from "./BioText";
+namespace qpost\Service\OAuth;
 
-export default class Biography extends Component<{
-	user: User
-}, any> {
-	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		const user = this.props.user;
+class ThirdPartyIntegrationIdentificationResult {
+	/**
+	 * @var string|int $id
+	 */
+	private $id;
 
-		if (user) {
-			const text = user.getBio();
+	/**
+	 * @var string $username
+	 */
+	private $username;
 
-			if (text) {
-				return text ? <BioText text={text}/> : "";
-			}
-		}
+	/**
+	 * @var string|null $avatar
+	 */
+	private $avatar;
 
-		return "";
+	public function __construct($id, string $username, ?string $avatar) {
+		$this->id = $id;
+		$this->username = $username;
+		$this->avatar = $avatar;
+	}
+
+	/**
+	 * @return string|int
+	 */
+	public function getId() {
+		return $this->id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getUsername(): string {
+		return $this->username;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getAvatar(): ?string {
+		return $this->avatar;
 	}
 }

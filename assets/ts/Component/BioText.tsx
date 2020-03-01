@@ -18,21 +18,29 @@
  */
 
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
-import BioText from "./BioText";
+import Linkifier from "./Linkifier";
 
-export default class Biography extends Component<{
-	user: User
+export default class BioText extends Component<{
+	text: string
 }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		const user = this.props.user;
+		const text = this.props.text;
 
-		if (user) {
-			const text = user.getBio();
+		if (text) {
+			return text ? <div className={"specialLinkColor my-2"}>
+				<Linkifier>
+					{text.split('\n').map((item, i) => {
+						item = item.trim();
 
-			if (text) {
-				return text ? <BioText text={text}/> : "";
-			}
+						return item !== "" ? <p key={i} style={{
+							marginBottom: 0,
+							width: "100%",
+							display: "block",
+							wordWrap: "break-word"
+						}}>{item}</p> : "";
+					})}
+				</Linkifier>
+			</div> : "";
 		}
 
 		return "";

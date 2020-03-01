@@ -6,3 +6,19 @@
 {% macro settingsHeadlineSmall(title) %}
 	<h4 class="settingsHeadline">{{ title }}</h4>
 {% endmacro %}
+
+{% macro linkedAccountIcon(service) %}
+	{% if service == "DISCORD" %}
+		<i class="fab fa-discord service-discord-color"></i>
+	{% elseif service == "TWITCH" %}
+		<i class="fab fa-twitch service-twitch-color"></i>
+	{% elseif service == "TWITTER" %}
+		<i class="fab fa-twitter service-twitter-color"></i>
+	{% elseif service == "MASTODON" %}
+		<i class="fab fa-mastodon service-mastodon-color"></i>
+	{% elseif service == "LASTFM" %}
+		<i class="fab fa-lastfm service-lastfm-color"></i>
+	{% else %}
+		<i class="fas fa-globe text-white"></i>
+	{% endif %}
+{% endmacro %}

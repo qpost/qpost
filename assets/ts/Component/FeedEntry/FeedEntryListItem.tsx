@@ -52,7 +52,7 @@ export default class FeedEntryListItem extends Component<{
 
 		let entry = this.props.entry;
 		if (entry.getType() === FeedEntryType.SHARE) {
-			entry = entry.getPost();
+			entry = entry.getParent();
 		}
 
 		this.state = {
@@ -86,7 +86,7 @@ export default class FeedEntryListItem extends Component<{
 						</p>
 					</div>;
 
-					entry = entry.getPost();
+					entry = entry.getParent();
 
 					if (!entry) {
 						return "";
@@ -100,7 +100,7 @@ export default class FeedEntryListItem extends Component<{
 				}
 
 				if (this.state.redirect) {
-					const id = entry.getType() === FeedEntryType.SHARE ? entry.getPost().getId() : entry.getId();
+					const id = entry.getType() === FeedEntryType.SHARE ? entry.getParent().getId() : entry.getId();
 
 					sessionStorage.setItem("nextFeedEntry", JSON.stringify(entry));
 
@@ -168,8 +168,8 @@ export default class FeedEntryListItem extends Component<{
 									</div> : <div className={"w-100"}>
 										{this.props.showParentInfo && entry.getType() === FeedEntryType.REPLY ?
 											<div className={"text-muted small specialLinkColor mt-2"}>
-												Replying to {entry.getPost() ? <Link
-												to={"/profile/" + entry.getPost().getUser().getUsername()}>{"@" + entry.getPost().getUser().getUsername()}</Link> : "..."}
+												Replying to {entry.getParent() ? <Link
+												to={"/profile/" + entry.getParent().getUser().getUsername()}>{"@" + entry.getParent().getUser().getUsername()}</Link> : "..."}
 											</div> : ""}
 
 										{entry.getText() ? <div className="float-left ml-1 my-2 w-100">

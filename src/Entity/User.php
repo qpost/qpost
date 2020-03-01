@@ -25,6 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use qpost\Constants\LinkedAccountService;
 use qpost\Constants\PrivacyLevel;
 use qpost\Service\APIService;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -230,6 +231,12 @@ class User implements UserInterface {
 	private $header;
 
 	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\LinkedAccount", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
+	 */
+	private $linkedAccounts;
+
+	/**
 	 * @ORM\Column(type="string", length=45, nullable=true)
 	 * @Serializer\Exclude()
 	 */
@@ -237,8 +244,15 @@ class User implements UserInterface {
 
 	/**
 	 * @ORM\OneToOne(targetEntity="qpost\Entity\UserAppearanceSettings", mappedBy="user", cascade={"persist", "remove"})
+	 * @Serializer\Exclude()
 	 */
 	private $appearanceSettings;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\UsernameHistoryEntry", mappedBy="user", orphanRemoval=true)
+	 * @Serializer\Exclude()
+	 */
+	private $nameHistory;
 
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
@@ -256,6 +270,8 @@ class User implements UserInterface {
 		$this->blocking = new ArrayCollection();
 		$this->blockedBy = new ArrayCollection();
 		$this->pushSubscriptions = new ArrayCollection();
+		$this->linkedAccounts = new ArrayCollection();
+		$this->nameHistory = new ArrayCollection();
 	}
 
 	/**
@@ -1305,6 +1321,75 @@ class User implements UserInterface {
 		return $this;
 	}
 
+	/**
+	 * @return Collection|LinkedAccount[]
+	 */
+	public function getLinkedAccounts(): Collection {
+		return $this->linkedAccounts;
+	}
+
+	/**
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("identities")
+	 * @return LinkedAccount[]|null
+	 */
+	public function getIdentities(): ?array {
+		$apiService = APIService::$instance;
+
+		if ($apiService) {
+			return $apiService->getEntityManager()->getRepository(LinkedAccount::class)->getProfileLinkedAccounts($this);
+		}
+
+		return null;
+	}
+
+	public function addLinkedAccount(LinkedAccount $linkedAccount): self {
+		if (!$this->linkedAccounts->contains($linkedAccount)) {
+			$this->linkedAccounts[] = $linkedAccount;
+			$linkedAccount->setUser($this);
+		}
+
+		return $this;
+	}
+
+	public function removeLinkedAccount(LinkedAccount $linkedAccount): self {
+		if ($this->linkedAccounts->contains($linkedAccount)) {
+			$this->linkedAccounts->removeElement($linkedAccount);
+			// set the owning side to null (unless already changed)
+			if ($linkedAccount->getUser() === $this) {
+				$linkedAccount->setUser(null);
+			}
+		}
+
+		return $this;
+	}
+
+	public function getLinkedService(string $service): ?LinkedAccount {
+		foreach ($this->getLinkedAccounts() as $linkedAccount) {
+			if ($linkedAccount->getService() === $service) {
+				return $linkedAccount;
+			}
+		}
+
+		return null;
+	}
+
+	public function hasLinkedService(string $service): bool {
+		return !is_null($this->getLinkedService($service));
+	}
+
+	public function getUnlinkedServices(): array {
+		$services = [];
+
+		foreach (LinkedAccountService::all() as $service) {
+			if (!$this->hasLinkedService($service)) {
+				$services[] = $service;
+			}
+		}
+
+		return $services;
+	}
+
 	public function getCreationIP(): ?string {
 		return $this->creationIP;
 	}
@@ -1332,6 +1417,34 @@ class User implements UserInterface {
 		// set the owning side of the relation if necessary
 		if ($appearanceSettings->getUser() !== $this) {
 			$appearanceSettings->setUser($this);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection|UsernameHistoryEntry[]
+	 */
+	public function getNameHistory(): Collection {
+		return $this->nameHistory;
+	}
+
+	public function addNameHistory(UsernameHistoryEntry $nameHistory): self {
+		if (!$this->nameHistory->contains($nameHistory)) {
+			$this->nameHistory[] = $nameHistory;
+			$nameHistory->setUser($this);
+		}
+
+		return $this;
+	}
+
+	public function removeNameHistory(UsernameHistoryEntry $nameHistory): self {
+		if ($this->nameHistory->contains($nameHistory)) {
+			$this->nameHistory->removeElement($nameHistory);
+			// set the owning side to null (unless already changed)
+			if ($nameHistory->getUser() === $this) {
+				$nameHistory->setUser(null);
+			}
 		}
 
 		return $this;

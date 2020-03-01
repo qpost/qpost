@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -63,5 +63,30 @@
 	.followsYouBadge {
 		color: #8e8f91 !important;
 		background-color: #F8F9FA !important;
+	}
+
+	.profileIdentities {
+		@include clearfix();
+
+		@include media-breakpoint-down(md) {
+			margin-top: 1rem !important;
+			margin-bottom: .5rem !important;
+		}
+
+		.profileIdentity {
+			float: left !important;
+
+			$margin: 20px;
+			margin-right: $margin;
+			margin-bottom: .5rem;
+
+			i, svg {
+				font-size: 24px;
+
+				@include media-breakpoint-down(md) {
+					font-size: 26px !important;
+				}
+			}
+		}
 	}
 }

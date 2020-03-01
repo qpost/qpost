@@ -101,7 +101,7 @@ export default class ReplyList extends Component<{
 
 	public prependEntry(feedEntry: FeedEntry): void {
 		const entries: FeedEntry[][] = this.state.entries || [];
-		const parent = feedEntry.getPost();
+		const parent = feedEntry.getParent();
 
 		if (parent.getId() !== this.props.feedEntry.getId()) {
 			entries.forEach((replyBatch: FeedEntry[]) => {

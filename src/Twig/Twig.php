@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -20,6 +20,7 @@
 
 namespace qpost\Twig;
 
+use qpost\Constants\LinkedAccountService;
 use Symfony\Component\Intl\Intl;
 use function array_merge;
 use function basename;
@@ -75,6 +76,7 @@ class Twig {
 			"availableLocales" => $availableLocales,
 			"bundleName" => $bundleName,
 			"styleBundleName" => $styleBundleName,
+			"linkedAccountServices" => LinkedAccountService::all(),
 			"_POST" => isset($_POST) ? $_POST : [],
 			"_GET" => isset($_GET) ? $_GET : [],
 			"_COOKIE" => isset($_COOKIE) ? $_COOKIE : [],
