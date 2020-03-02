@@ -105,6 +105,9 @@
     "egulias/email-validator": {
         "version": "2.1.11"
     },
+    "evenement/evenement": {
+        "version": "v3.0.1"
+    },
     "fgrosse/phpasn1": {
         "version": "v2.1.1"
     },
@@ -311,6 +314,27 @@
     },
     "ramsey/uuid": {
         "version": "3.8.0"
+    },
+    "react/cache": {
+        "version": "v1.0.0"
+    },
+    "react/dns": {
+        "version": "v1.2.0"
+    },
+    "react/event-loop": {
+        "version": "v1.1.1"
+    },
+    "react/promise": {
+        "version": "v2.7.1"
+    },
+    "react/promise-timer": {
+        "version": "v1.5.1"
+    },
+    "react/socket": {
+        "version": "v1.3.0"
+    },
+    "react/stream": {
+        "version": "v1.1.0"
     },
     "riverline/multipart-parser": {
         "version": "2.0.6"
