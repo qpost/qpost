@@ -51,18 +51,10 @@ class SocketServerCommand extends Command {
 		$restartTimer = $loop->addPeriodicTimer(1, function () use ($server, &$restartCount, $loop) {
 			$restartCount++;
 
-			if($restartCount >= 620){
-				$this->logger->info("Force Restarting.");
-
-				$server->close();
-				$loop->stop();
-
-				return;
-			}
-
-			if ($restartCount >= 600) {
+			if ($restartCount >= 60*4) {
 				$this->logger->info("Restarting.");
 				$server->close();
+				$loop->stop();
 			}
 		});
 
