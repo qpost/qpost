@@ -94,6 +94,9 @@
 		{% endif %}
 
 		window["VAPID_SERVER_KEY"] = "{{ bentools_webpush.server_key }}";
+
+		window["GATEWAY_HOST"] = "{{ _ENV["GATEWAY_HOST"] }}";
+		window["GATEWAY_PORT"] = {{ _ENV["GATEWAY_PORT"] }};
 	</script>
 
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
