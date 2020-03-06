@@ -5,7 +5,8 @@
 	"scripts": {
 		"build": "npm run clean && webpack --config=webpack.prod.js",
 		"watch": "npm run clean && webpack --config=webpack.dev.js",
-		"clean": "node clean.js"
+		"clean": "node clean.js",
+		"stream": "cd stream && ts-node index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -36,6 +37,7 @@
 		"axios": "^0.19.0",
 		"bootstrap": "^4.3.1",
 		"dropzone": "^5.5.1",
+		"express": "^4.17.1",
 		"flag-icon-css": "^3.4.5",
 		"jquery": "^3.4.1",
 		"jquery-ui": "^1.12.1",
@@ -70,6 +72,7 @@
 		"@fortawesome/free-brands-svg-icons": "^5.11.2",
 		"@fortawesome/free-regular-svg-icons": "^5.11.2",
 		"@fortawesome/free-solid-svg-icons": "^5.11.2",
+		"@types/express": "^4.17.3",
 		"@types/jquery.timeago": "^1.0.29",
 		"@types/mysql": "^2.15.9",
 		"@types/node": "^11.15.2",
@@ -89,6 +92,7 @@
 		"run-sequence": "^2.2.1",
 		"sass-loader": "^7.3.1",
 		"style-loader": "^0.23.1",
+		"ts-node": "^8.6.2",
 		"uglifyjs-webpack-plugin": "^2.2.0",
 		"url-loader": "^1.1.2",
 		"webpack": "^4.41.2",
