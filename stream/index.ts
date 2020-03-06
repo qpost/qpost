@@ -23,39 +23,6 @@ require("dotenv").config({
 	path: path.resolve(__dirname, "../.env.local")
 });
 
-const env = process.env.APP_ENV || "dev";
-
-const winston = require("winston");
-const consoleFormat = require("winston-console-format").consoleFormat;
-
-// Init logger
-const log = winston.createLogger({
-	level: env === "dev" ? "debug" : "info",
-	format: winston.format.combine(
-		winston.format.timestamp(),
-		winston.format.errors({ stack: true }),
-		winston.format.splat(),
-		winston.format.json()
-	),
-	transports: [
-		new winston.transports.Console({
-			format: winston.format.combine(
-				winston.format.colorize({ all: true }),
-				winston.format.padLevels(),
-				consoleFormat({
-					showMeta: true,
-					metaStrip: ["timestamp", "service"],
-					inspectOptions: {
-						depth: Infinity,
-						colors: true,
-						maxArrayLength: Infinity,
-						breakLength: 120,
-						compact: Infinity
-					}
-				})
-			)
-		})
-	]
-});
+const log = require("./logger");
 
 log.info("Hello world!");
