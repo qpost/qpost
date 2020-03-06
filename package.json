@@ -6,7 +6,7 @@
 		"build": "npm run clean && webpack --config=webpack.prod.js",
 		"watch": "npm run clean && webpack --config=webpack.dev.js",
 		"clean": "node clean.js",
-		"stream": "cd stream && ts-node index.ts"
+		"stream": "ts-node stream/index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -60,6 +60,7 @@
 		"react-stickynode": "^2.1.1",
 		"react-timeago": "^4.4.0",
 		"reactstrap": "^8.1.1",
+		"socket.io": "^2.3.0",
 		"ts-clipboard": "^1.0.17",
 		"ts-loader": "^5.4.5",
 		"tslib": "^1.10.0",
@@ -80,6 +81,7 @@
 		"@types/node": "^11.15.2",
 		"@types/react-stickynode": "^1.4.0",
 		"@types/react-window-size": "^1.2.0",
+		"@types/socket.io": "^2.1.4",
 		"@types/ua-parser-js": "^0.7.33",
 		"css-loader": "^2.1.1",
 		"del": "^4.1.1",

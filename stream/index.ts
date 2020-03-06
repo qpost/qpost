@@ -23,6 +23,30 @@ require("dotenv").config({
 	path: path.resolve(__dirname, "../.env.local")
 });
 
+// Load constants
+const version = require(path.resolve(__dirname, "../package.json")).version || "1.0.0";
 const log = require("./logger");
+const express = require("express");
+const port = process.env.PORT || 8993;
 
-log.info("Hello world!");
+log.info("Starting Stream API for qpost v" + version);
+
+// Start express
+const app = express();
+app.set("port", port);
+
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
+
+const server = http.listen(port, () => {
+	log.info("Listening on port " + port);
+});
+
+// Connection listener
+io.on("connection", socket => {
+	log.info("Incoming connection");
+
+	socket.on("message", message => {
+		log.debug("Incoming message: " + message);
+	});
+});
