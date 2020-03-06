@@ -17,9 +17,45 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+// Load environment variables
 const path = require("path");
 require("dotenv").config({
 	path: path.resolve(__dirname, "../.env.local")
 });
 
-console.log("Hello world!");
+const env = process.env.APP_ENV || "dev";
+
+const winston = require("winston");
+const consoleFormat = require("winston-console-format").consoleFormat;
+
+// Init logger
+const log = winston.createLogger({
+	level: env === "dev" ? "debug" : "info",
+	format: winston.format.combine(
+		winston.format.timestamp(),
+		winston.format.errors({ stack: true }),
+		winston.format.splat(),
+		winston.format.json()
+	),
+	transports: [
+		new winston.transports.Console({
+			format: winston.format.combine(
+				winston.format.colorize({ all: true }),
+				winston.format.padLevels(),
+				consoleFormat({
+					showMeta: true,
+					metaStrip: ["timestamp", "service"],
+					inspectOptions: {
+						depth: Infinity,
+						colors: true,
+						maxArrayLength: Infinity,
+						breakLength: 120,
+						compact: Infinity
+					}
+				})
+			)
+		})
+	]
+});
+
+log.info("Hello world!");

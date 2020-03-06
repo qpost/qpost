@@ -29,3 +29,5 @@ assets/ts/config.json
 
 /gource.ppm
 /gource.mp4
+
+stream/*.log

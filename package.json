@@ -65,7 +65,9 @@
 		"tslib": "^1.10.0",
 		"typescript": "^3.6.4",
 		"ua-parser-js": "^0.7.20",
-		"webpush-client": "^0.4.0"
+		"webpush-client": "^0.4.0",
+		"winston": "^3.2.1",
+		"winston-console-format": "^1.0.5"
 	},
 	"devDependencies": {
 		"@fortawesome/fontawesome-svg-core": "^1.2.25",
