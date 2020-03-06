@@ -17,4 +17,9 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
+const path = require("path");
+require("dotenv").config({
+	path: path.resolve(__dirname, "../.env.local")
+});
+
 console.log("Hello world!");
