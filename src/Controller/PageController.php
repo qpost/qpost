@@ -35,6 +35,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function is_null;
+use function trim;
 
 class PageController extends AbstractController {
 	/**
@@ -77,11 +79,17 @@ class PageController extends AbstractController {
 				$bigSocialImage = $mediaFile->getURL();
 			}
 
+			$emptyText = is_null($text) || empty($text) || trim($text) === "";
+
+			$replies = $feedEntry->getReplyCount();
+			$shares = $feedEntry->getShareCount();
+			$favorites = $feedEntry->getFavoriteCount();
+
 			return $renderService->react([
 				"title" => $title,
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $bigSocialImage,
-				"description" => $feedEntry->getText(),
+				"description" => Util::limitString(($emptyText ? "" : ($text . ". ")) . " Post by " . $user->getDisplayName() . "(@" . $user->getUsername() . "). " . $replies . " repl" . ($replies === 1 ? "y" : "ies") . ", " . $shares . " share" . ($shares === 1 ? "" : "s") . " and " . $favorites . " favorite" . ($favorites === 1 ? "" : "s") . ".", MiscConstants::META_DESCRIPTION_LENGTH, true),
 				"twitterCardType" => $twitterCardType,
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL)
 			]);
