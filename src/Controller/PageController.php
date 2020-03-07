@@ -184,7 +184,7 @@ class PageController extends AbstractController {
 		if (!is_null($user)) {
 			return $renderService->react([
 				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
-				"description" => $user->getBio(),
+				"description" => Util::limitString("Check the latest posts from " . $user->getDisplayName() . " (@" . $user->getUsername() . "). " . $user->getBio(), MiscConstants::META_DESCRIPTION_LENGTH, true),
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $user->getAvatarURL(),
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL)

@@ -35,4 +35,9 @@ class MiscConstants {
 	 * @var int RESULT_CACHE_LIFETIME
 	 */
 	public const RESULT_CACHE_LIFETIME = 180;
+
+	/**
+	 * @var int META_DESCRIPTION_LENGTH
+	 */
+	public const META_DESCRIPTION_LENGTH = 160;
 }
