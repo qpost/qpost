@@ -40,4 +40,9 @@ class MiscConstants {
 	 * @var int META_DESCRIPTION_LENGTH
 	 */
 	public const META_DESCRIPTION_LENGTH = 160;
+
+	/**
+	 * @var int META_TITLE_LENGTH
+	 */
+	public const META_TITLE_LENGTH = 60;
 }

@@ -36,6 +36,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function is_null;
+use function sprintf;
+use function strlen;
 use function trim;
 
 class PageController extends AbstractController {
@@ -58,12 +60,14 @@ class PageController extends AbstractController {
 
 		if (!is_null($feedEntry) && $apiService->mayView($feedEntry)) {
 			$user = $feedEntry->getUser();
-
-			$title = $user->getDisplayName() . " on qpost";
-
 			$text = $feedEntry->getText();
+
+			$title = $user->getDisplayName() . " on qpost" . ($text ? ": \"%s\"" : "");
+
 			if ($text) {
-				$title .= ": \"" . Util::limitString($text, 40, true) . "\"";
+				$reservedTitleLength = strlen(sprintf($title, ""));
+
+				$title = sprintf($title, Util::limitString($text, MiscConstants::META_TITLE_LENGTH-$reservedTitleLength, true));
 			}
 
 			$bigSocialImage = $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png";
