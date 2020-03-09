@@ -1,13 +1,8 @@
 User-agent: *
-Disallow: /account
-Disallow: /account/*
-Disallow: /notifications
-Disallow: /messages
+Disallow: /account/
+Disallow: /settings/
 Disallow: /profile/
-Disallow: /edit
-Disallow: /logout
-Disallow: /nightmode
-Disallow: /goodbye
+Disallow: /goodbye/
 Disallow: /verify-email/
 Disallow: /login/callback
 Disallow: /login/gigadrive

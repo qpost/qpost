@@ -35,6 +35,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function is_null;
+use function sprintf;
+use function strlen;
+use function trim;
 
 class PageController extends AbstractController {
 	/**
@@ -56,12 +60,14 @@ class PageController extends AbstractController {
 
 		if (!is_null($feedEntry) && $apiService->mayView($feedEntry)) {
 			$user = $feedEntry->getUser();
-
-			$title = $user->getDisplayName() . " on qpost";
-
 			$text = $feedEntry->getText();
+
+			$title = $user->getDisplayName() . " on qpost" . ($text ? ": \"%s\"" : "");
+
 			if ($text) {
-				$title .= ": \"" . Util::limitString($text, 40, true) . "\"";
+				$reservedTitleLength = strlen(sprintf($title, ""));
+
+				$title = sprintf($title, Util::limitString($text, MiscConstants::META_TITLE_LENGTH-$reservedTitleLength, true));
 			}
 
 			$bigSocialImage = $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png";
@@ -77,11 +83,17 @@ class PageController extends AbstractController {
 				$bigSocialImage = $mediaFile->getURL();
 			}
 
+			$emptyText = is_null($text) || empty($text) || trim($text) === "";
+
+			$replies = $feedEntry->getReplyCount();
+			$shares = $feedEntry->getShareCount();
+			$favorites = $feedEntry->getFavoriteCount();
+
 			return $renderService->react([
 				"title" => $title,
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $bigSocialImage,
-				"description" => $feedEntry->getText(),
+				"description" => Util::limitString(($emptyText ? "" : ($text . ". ")) . " Post by " . $user->getDisplayName() . "(@" . $user->getUsername() . "). " . $replies . " repl" . ($replies === 1 ? "y" : "ies") . ", " . $shares . " share" . ($shares === 1 ? "" : "s") . " and " . $favorites . " favorite" . ($favorites === 1 ? "" : "s") . ".", MiscConstants::META_DESCRIPTION_LENGTH, true),
 				"twitterCardType" => $twitterCardType,
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL)
 			]);
@@ -184,7 +196,7 @@ class PageController extends AbstractController {
 		if (!is_null($user)) {
 			return $renderService->react([
 				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
-				"description" => $user->getBio(),
+				"description" => Util::limitString("Check the latest posts from " . $user->getDisplayName() . " (@" . $user->getUsername() . "). " . $user->getBio(), MiscConstants::META_DESCRIPTION_LENGTH, true),
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $user->getAvatarURL(),
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL)
