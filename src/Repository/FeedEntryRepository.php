@@ -234,8 +234,10 @@ LIMIT ?", $rsm);
 		$query = $this->_em->createNativeQuery("SELECT f.id AS id
 FROM feed_entry AS f
          INNER JOIN user AS u ON u.id = f.user_id
+		 LEFT JOIN suspension s on u.id = s.target_id
 WHERE (f.type = 'POST' OR f.type = 'REPLY')
   AND u.privacy_level = 'PUBLIC'
+  AND s.id IS NULL
 ORDER BY f.time
 LIMIT ? OFFSET ?", $rsm);
 
