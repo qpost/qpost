@@ -16,7 +16,7 @@
 	"bugs": {
 		"url": "https://gitlab.com/Zeryther/qpost/issues"
 	},
-	"homepage": "https://qpo.st",
+	"homepage": "https://qpostapp.com",
 	"dependencies": {
 		"@sentry/browser": "^5.7.1",
 		"@types/bootstrap": "^4.3.1",

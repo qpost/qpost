@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,20 +50,10 @@ class HomeController extends AbstractController {
 
 			$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
 
-			$availableHeadlines = [
-				"A social microblogging network that helps you share your thoughts online, protected by freedom of speech",
-				"The social network with actual free speech",
-				"The Twitter alternative is here!",
-				"Time to get rid of Twitter and Mastodon."
-			];
-
-			$headline = $availableHeadlines[rand(0, count($availableHeadlines) - 1)];
-
 			return $this->render($isMobile === false ? "pages/home/index.html.twig" : "pages/mobile/register.html.twig", Twig::param([
 				"description" => "A social microblogging network that helps you share your thoughts online, protected by freedom of speech.",
 				"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 				"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
-				"headline" => $headline,
 				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
 			]));
 		}
