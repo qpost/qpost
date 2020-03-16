@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import "antd/es/button/style";
 import {Method} from "axios";
 import LoginSuggestionModal from "./LoginSuggestionModal";
 import Storage from "../Util/Storage";
+import Follower from "../Entity/Account/Follower";
 
 export default class FollowButton extends Component<{
 	target: User,
@@ -126,27 +127,24 @@ export default class FollowButton extends Component<{
 
 			if (Auth.isLoggedIn()) {
 				if (!this.isCurrentUser()) {
-					API.handleRequest("/follow", "GET", {
-						from: window["CURRENT_USER_ID"],
-						to: this.props.target.getId()
-					}, data => {
-						if (data.status) {
-							this.setState({
-								followStatus: data.status,
-								loading: false
-							});
-						} else {
+					API.follow.get(window["CURRENT_USER_ID"], this.props.target).then(value => {
+						if (value instanceof Follower) {
 							this.setState({
 								followStatus: FollowStatus.FOLLOWING,
 								loading: false
 							});
+						} else {
+							this.setState({
+								followStatus: value,
+								loading: false
+							});
 						}
-					}, error => {
+					}).catch(reason => {
 						this.setState({
 							followStatus: FollowStatus.NOT_FOLLOWING,
 							loading: false
 						});
-					})
+					});
 				}
 			} else {
 				// Default to not following if user is not logged in

@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -126,7 +126,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 		$rsm->addScalarResult("shared", "shared", "boolean");
 
 		$ownerWhere = is_null($target) ? "(EXISTS (SELECT 1 FROM follower AS ff WHERE ff.sender_id = ? AND ff.receiver_id = u.id) OR u.id = ?)" : "f.user_id = ?";
-		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL AND f.text NOT LIKE '@%') OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY' OR (f.type = 'POST' AND f.text LIKE '@%'))";
+		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL AND (f.text IS NULL OR f.text NOT LIKE '@%')) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY' OR (f.type = 'POST' AND f.text LIKE '@%'))";
 
 		$parameters[] = is_null($from) ? 0 : $from->getId();
 		$parameters[] = is_null($from) ? 0 : $from->getId();
@@ -234,8 +234,10 @@ LIMIT ?", $rsm);
 		$query = $this->_em->createNativeQuery("SELECT f.id AS id
 FROM feed_entry AS f
          INNER JOIN user AS u ON u.id = f.user_id
+		 LEFT JOIN suspension s on u.id = s.target_id
 WHERE (f.type = 'POST' OR f.type = 'REPLY')
   AND u.privacy_level = 'PUBLIC'
+  AND s.id IS NULL
 ORDER BY f.time
 LIMIT ? OFFSET ?", $rsm);
 

@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -407,7 +407,7 @@ class FeedEntry {
 			return $this->shareCount;
 		}
 
-		if ($this->type == FeedEntryType::POST || $this->type == FeedEntryType::SHARE) {
+		if ($this->type == FeedEntryType::POST || $this->type == FeedEntryType::REPLY) {
 			$i = 0;
 
 			foreach ($this->getChildren() as $child) {

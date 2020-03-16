@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,4 +35,14 @@ class MiscConstants {
 	 * @var int RESULT_CACHE_LIFETIME
 	 */
 	public const RESULT_CACHE_LIFETIME = 180;
+
+	/**
+	 * @var int META_DESCRIPTION_LENGTH
+	 */
+	public const META_DESCRIPTION_LENGTH = 160;
+
+	/**
+	 * @var int META_TITLE_LENGTH
+	 */
+	public const META_TITLE_LENGTH = 60;
 }

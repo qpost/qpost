@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ import TrendingHashtagData from "../Entity/Feed/TrendingHashtagData";
 import Spin from "antd/es/spin";
 import API from "../API/API";
 import {Card, message} from "antd";
-import BaseObject from "../Serialization/BaseObject";
 import {Link} from "react-router-dom";
 import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
@@ -53,33 +52,20 @@ export default class TrendingTopics extends Component<{
 			return;
 		}
 
-		API.handleRequest("/trends", "GET", {
-			limit: 20
-		}, data => {
-			if (data.results) {
-				this.load(data.results);
+		API.trends.get(this.props.limit || 20).then(topics => {
+			this.load(topics);
 
-				if (this.state.trends) {
-					Storage.sessionSet(Storage.SESSION_TRENDING_TOPICS, JSON.stringify(this.state.trends));
-				}
-			} else {
-				this.setState({loading: false});
-				message.error("An error occurred.");
+			if (this.state.trends) {
+				Storage.sessionSet(Storage.SESSION_TRENDING_TOPICS, JSON.stringify(this.state.trends));
 			}
-		}, error => {
+		}).catch(reason => {
 			this.setState({loading: false});
-			message.error(error);
+			message.error(reason);
 		});
 	}
 
 	load = (results) => {
-		const trends: TrendingHashtagData[] = [];
-
-		results.forEach(result => {
-			trends.push(BaseObject.convertObject(TrendingHashtagData, result));
-		});
-
-		this.setState({loading: false, trends});
+		this.setState({loading: false, trends: results});
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

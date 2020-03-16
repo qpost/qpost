@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -153,14 +153,10 @@ export default class FeedEntryList extends Component<{
 		parameters["min"] = this.state.entries[0].getId();
 		parameters["type"] = this.props.type || "posts";
 
-		API.handleRequest("/feed", "GET", parameters, data => {
+		API.feed.get(this.props.type || "posts", this.props.userID, undefined, this.state.entries[0].getId()).then(value => {
 			let entries: FeedEntry[] = [];
 
-			data.results.forEach(result => {
-				const feedEntry: FeedEntry = BaseObject.convertObject(FeedEntry, result);
-
-				console.log("asd", this.state.entries, this.hasEntry(feedEntry, this.state.entries));
-
+			value.forEach(feedEntry => {
 				if (!(this.hasEntry(feedEntry, entries) || (this.state.entries && this.hasEntry(feedEntry, this.state.entries)))) {
 					entries.push(feedEntry);
 				}
@@ -181,13 +177,10 @@ export default class FeedEntryList extends Component<{
 				loadingMore: false
 			});
 
-			console.log("3 - ", this.state.entries.length);
-
 			this.saveToStorage();
-
 			this.loadNewTask();
-		}, error => {
-			this.setState({error, loadingMore: false});
+		}).catch(reason => {
+			this.setState({error: reason, loadingMore: false});
 			this.loadNewTask();
 		});
 	}
@@ -209,7 +202,7 @@ export default class FeedEntryList extends Component<{
 		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = (this.state.entries && max ? this.state.entries : null) || [];
 
-			data.results.forEach(result => {
+			data.forEach(result => {
 				const feedEntry: FeedEntry = BaseObject.convertObject(FeedEntry, result);
 
 				if (this.hasEntry(feedEntry, entries)) {
@@ -222,10 +215,8 @@ export default class FeedEntryList extends Component<{
 			this.setState({
 				entries,
 				loadingMore: false,
-				hasMore: data.results.length === 0 ? false : this.state.hasMore
+				hasMore: data.length === 0 ? false : this.state.hasMore
 			});
-
-			console.log("asd", this.state.entries.length);
 
 			this.saveToStorage();
 

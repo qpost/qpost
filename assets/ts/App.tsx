@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,7 @@ import NightMode from "./NightMode/NightMode";
 import LoadingScreen from "./Component/LoadingScreen";
 import API from "./API/API";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import BaseObject from "./Serialization/BaseObject";
 import Auth from "./Auth/Auth";
-import User from "./Entity/Account/User";
 import Header from "./Parts/Header";
 import Home from "./Pages/Home/Home";
 import HomeFeed from "./Pages/Home/HomeFeed";
@@ -122,30 +120,24 @@ export default class App extends Component<any, {
 	componentDidMount(): void {
 		if (Auth.isLoggedIn()) {
 			// TODO: Pre-load home page data and pass it to the HomeFeed component
-			API.handleRequest("/token/verify", "POST", {}, (data => {
-				if (data.status && data.status === "Token valid" && data.user) {
-					Auth.setCurrentUser(BaseObject.convertObject(User, data.user));
+			API.token.verify().then(user => {
+				Auth.setCurrentUser(user);
 
-					BadgeStatus.update(() => {
-						PushNotificationsManager.init();
-						BadgeUpdater.init();
+				BadgeStatus.update(() => {
+					PushNotificationsManager.init();
+					BadgeUpdater.init();
 
-						this.setState({
-							validatedLogin: true
-						});
-					});
-				} else {
 					this.setState({
-						error: "Authentication failed."
-					})
-				}
-			}), (error => {
+						validatedLogin: true
+					});
+				});
+			}).catch(error => {
 				this.setState({
 					error
 				});
 
 				Auth.logout(false, true);
-			}));
+			});
 		}
 	}
 

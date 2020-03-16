@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,115 +21,89 @@
 namespace qpost\Controller\API;
 
 use DateTime;
-use Exception;
+use qpost\Constants\APIParameterType;
 use qpost\Entity\Token;
-use qpost\Service\APIService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
+use qpost\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function is_null;
-use function is_string;
 
-class TokenController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class TokenController extends APIController {
 	/**
-	 * @Route("/api/token", methods={"GET"})
+	 * @Route("/token", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidTokenException
 	 */
-	public function tokens(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function tokens() {
+		$this->validateAuth();
 
-		$user = $apiService->getUser();
-
-		$results = [];
-
-		/**
-		 * @var Token[] $tokens
-		 */
-		$tokens = $apiService->getEntityManager()->getRepository(Token::class)->getTokens($user);
-
-		foreach ($tokens as $token) {
-			if (!$token->isExpired()) {
-				$results[] = $apiService->serialize($token);
-			}
-		}
-
-		return $apiService->json(["results" => $results]);
+		return $this->response(
+			$this->filterTokens(
+				$this->entityManager->getRepository(Token::class)->getTokens($this->getUser())
+			)
+		);
 	}
 
 	/**
-	 * @Route("/api/token", methods={"DELETE"})
+	 * @Route("/token", methods={"DELETE"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
-	 * @throws Exception
+	 * @throws InvalidTokenException
+	 * @throws ResourceNotFoundException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
 	 */
-	public function logout(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function logout() {
+		$this->validateAuth();
+		$this->validateParameterType("id", APIParameterType::STRING);
+		$user = $this->getUser();
+		$parameters = $this->parameters();
+		$token = $this->entityManager->getRepository(Token::class)->getTokenById($parameters->get("id"));
 
-		$user = $apiService->getUser();
+		if ($token && $token->getUser()->getId() === $user->getId() && !$token->isExpired()) {
+			$token->setExpiry(new DateTime("now"));
+			$this->entityManager->persist($token);
 
-		$parameters = $apiService->parameters();
-
-		if ($parameters->has("id")) {
-			$id = $parameters->get("id");
-
-			if (is_string($id)) {
-				$entityManager = $apiService->getEntityManager();
-
-				/**
-				 * @var Token $token
-				 */
-				$token = $entityManager->getRepository(Token::class)->getTokenById($id);
-
-				if ($token && $token->getUser()->getId() === $user->getId() && !$token->isExpired()) {
-					$token->setExpiry(new DateTime("now"));
-					$entityManager->persist($token);
-
-					foreach ($token->getPushSubscriptions() as $subscription) {
-						$entityManager->remove($subscription);
-					}
-
-					$entityManager->flush();
-
-					return $apiService->noContent();
-				} else {
-					return $apiService->json(["error" => "The requested resource could not be found."], 404);
-				}
-			} else {
-				return $apiService->json(["error" => "'id' has to be a string."], 400);
+			foreach ($token->getPushSubscriptions() as $subscription) {
+				$this->entityManager->remove($subscription);
 			}
+
+			$this->entityManager->flush();
+
+			return $this->response();
 		} else {
-			return $apiService->json(["error" => "'id' is required."], 400);
+			throw new ResourceNotFoundException();
 		}
 	}
 
 	/**
-	 * @Route("/api/token/verify", methods={"POST"})
+	 * @Route("/token/verify", methods={"POST"})
 	 *
 	 * @return Response
+	 * @throws InvalidTokenException
 	 */
-	public function verify(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
-
-		$token = $apiService->getToken();
-		$user = $apiService->getUser();
+	public function verify() {
+		$this->validateAuth();
+		$token = $this->apiService->getToken();
+		$user = $this->getUser();
 
 		if (!$user->isSuspended()) {
 			if (!$token->isExpired()) {
-				return $apiService->json([
+				return $this->apiService->json([
 					"status" => "Token valid",
-					"user" => $apiService->serialize($user)
+					"user" => $this->apiService->serialize($user)
 				]);
 			} else {
-				return $apiService->json(["error" => "Token expired"], 403);
+				return $this->error("Token expired", Response::HTTP_FORBIDDEN);
 			}
 		} else {
-			return $apiService->json(["error" => "User suspended"], 403);
+			return $this->error("User suspended", Response::HTTP_FORBIDDEN);
 		}
 	}
 }

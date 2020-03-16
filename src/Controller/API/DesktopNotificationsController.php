@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,23 +21,25 @@
 namespace qpost\Controller\API;
 
 use qpost\Entity\Notification;
+use qpost\Exception\InvalidTokenException;
 use qpost\Service\APIService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function is_null;
 
-class DesktopNotificationsController extends AbstractController {
+/**
+ * @Route("/api")
+ * @deprecated
+ */
+class DesktopNotificationsController extends APIController {
 	/**
-	 * @Route("/api/desktopNotifications", methods={"GET"})
+	 * @Route("/desktopNotifications", methods={"GET"})
 	 *
 	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidTokenException
 	 */
 	public function notifications(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
-
+		$this->validateAuth();
 		$user = $apiService->getUser();
 		$entityManager = $apiService->getEntityManager();
 

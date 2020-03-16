@@ -2,7 +2,7 @@
 <!--
   ~ Copyright (C) 2018-2020 Gigadrive - All rights reserved.
   ~ https://gigadrivegroup.com
-  ~ https://qpo.st
+  ~ https://qpostapp.com
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -20,127 +20,127 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
-		<loc>https://qpo.st/</loc>
+		<loc>https://qpostapp.com/</loc>
 		<lastmod>2019-10-31</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/about</loc>
+		<loc>https://qpostapp.com/about</loc>
 		<lastmod>2019-11-02</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/download</loc>
+		<loc>https://qpostapp.com/download</loc>
 		<lastmod>2019-12-13</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/search</loc>
+		<loc>https://qpostapp.com/search</loc>
 		<lastmod>2019-10-31</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs</loc>
+		<loc>https://qpostapp.com/apidocs</loc>
 		<lastmod>2020-01-19</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/introduction</loc>
+		<loc>https://qpostapp.com/apidocs/introduction</loc>
+		<lastmod>2020-03-15</lastmod>
+	</url>
+
+	<url>
+		<loc>https://qpostapp.com/apidocs/authentication</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/authentication</loc>
+		<loc>https://qpostapp.com/apidocs/errors</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/errors</loc>
+		<loc>https://qpostapp.com/apidocs/accountdata</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/accountdata</loc>
+		<loc>https://qpostapp.com/apidocs/badgestatus</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/badgestatus</loc>
+		<loc>https://qpostapp.com/apidocs/birthday</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/birthday</loc>
+		<loc>https://qpostapp.com/apidocs/block</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/block</loc>
+		<loc>https://qpostapp.com/apidocs/favorite</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/favorite</loc>
+		<loc>https://qpostapp.com/apidocs/feed</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/feed</loc>
+		<loc>https://qpostapp.com/apidocs/follow</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/follow</loc>
+		<loc>https://qpostapp.com/apidocs/followersyouknow</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/followersyouknow</loc>
+		<loc>https://qpostapp.com/apidocs/followRequest</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/followRequest</loc>
+		<loc>https://qpostapp.com/apidocs/notifications</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/notifications</loc>
+		<loc>https://qpostapp.com/apidocs/reply</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/reply</loc>
+		<loc>https://qpostapp.com/apidocs/search</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/search</loc>
+		<loc>https://qpostapp.com/apidocs/share</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/share</loc>
+		<loc>https://qpostapp.com/apidocs/status</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/status</loc>
+		<loc>https://qpostapp.com/apidocs/token</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/token</loc>
+		<loc>https://qpostapp.com/apidocs/trends</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 
 	<url>
-		<loc>https://qpo.st/apidocs/trends</loc>
-		<lastmod>2019-12-12</lastmod>
-	</url>
-
-	<url>
-		<loc>https://qpo.st/apidocs/user</loc>
+		<loc>https://qpostapp.com/apidocs/user</loc>
 		<lastmod>2019-12-12</lastmod>
 	</url>
 </urlset>
