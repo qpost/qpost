@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,171 +21,127 @@
 namespace qpost\Controller\API;
 
 use DateTime;
-use Exception;
 use qpost\Entity\Block;
-use qpost\Entity\User;
-use qpost\Service\APIService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Exception\InvalidParameterIntegerRangeException;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
+use qpost\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function array_push;
 use function is_null;
-use function is_numeric;
 
-class BlockController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class BlockController extends APIController {
 	/**
-	 * @Route("/api/block", methods={"POST"})
+	 * @Route("/block", methods={"POST"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
-	 * @throws Exception
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
+	 * @throws InvalidTokenException
 	 */
-	public function block(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function block() {
+		$this->validateAuth();
+		$user = $this->getUser();
+		$target = $this->user("target");
 
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
-
-		if ($parameters->has("target")) {
-			$entityManager = $apiService->getEntityManager();
-
-			$target = $entityManager->getRepository(User::class)->getUserById($parameters->get("target"));
-
-			if ($target && $apiService->mayView($target)) {
-				$block = $entityManager->getRepository(Block::class)->findOneBy([
-					"user" => $user,
-					"target" => $target
-				]);
-
-				if (!$block) {
-					$apiService->unfollow($user, $target);
-					$apiService->unfollow($target, $user);
-
-					$block = (new Block())
-						->setUser($user)
-						->setTarget($target)
-						->setTime(new DateTime("now"));
-
-					$entityManager->persist($block);
-					$entityManager->flush();
-
-					return $apiService->json(["result" => $apiService->serialize($block)]);
-				} else {
-					return $apiService->json(["error" => "You have already blocked this user."], 409);
-				}
-			} else {
-				return $apiService->json(["error" => "The requested resource could not be found."], 404);
-			}
-		} else {
-			return $apiService->json(["error" => "'target' is required."], 400);
+		if ($user->getId() === $target->getId()) {
+			return $this->error("You may not block yourself.", Response::HTTP_BAD_REQUEST);
 		}
+
+		$block = $this->entityManager->getRepository(Block::class)->findOneBy([
+			"user" => $user,
+			"target" => $target
+		]);
+
+		if (!is_null($block)) {
+			return $this->error("You have already blocked this user.", Response::HTTP_CONFLICT);
+		}
+
+		$this->apiService->unfollow($user, $target);
+		$this->apiService->unfollow($target, $user);
+
+		$block = (new Block())
+			->setUser($user)
+			->setTarget($target)
+			->setTime(new DateTime("now"));
+
+		$this->entityManager->persist($block);
+		$this->entityManager->flush();
+
+		return $this->response($block);
 	}
 
 	/**
-	 * @Route("/api/block", methods={"DELETE"})
+	 * @Route("/block", methods={"DELETE"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws ResourceNotFoundException
+	 * @throws MissingParameterException
+	 * @throws InvalidTokenException
 	 */
-	public function unblock(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function unblock() {
+		$this->validateAuth();
+		$user = $this->getUser();
+		$target = $this->user("target");
 
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
+		$block = $this->entityManager->getRepository(Block::class)->getBlock($user, $target);
 
-		if ($parameters->has("target")) {
-			$entityManager = $apiService->getEntityManager();
-
-			$target = $entityManager->getRepository(User::class)->getUserById($parameters->get("target"));
-
-			if ($target) {
-				$block = $entityManager->getRepository(Block::class)->getBlock($user, $target);
-
-				if ($block) {
-					$entityManager->remove($block);
-					$entityManager->flush();
-
-					return $apiService->noContent();
-				} else {
-					return $apiService->json(["error" => "The requested resource could not be found."], 404);
-				}
-			} else {
-				return $apiService->json(["error" => "The requested resource could not be found."], 404);
-			}
-		} else {
-			return $apiService->json(["error" => "'target' is required."], 400);
+		if (is_null($block)) {
+			throw new ResourceNotFoundException();
 		}
+
+		$this->entityManager->remove($block);
+		$this->entityManager->flush();
+
+		return $this->response();
 	}
 
 	/**
-	 * @Route("/api/block", methods={"GET"})
+	 * @Route("/block", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
+	 * @throws InvalidTokenException
 	 */
-	public function info(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function info() {
+		$this->validateAuth();
+		$user = $this->getUser();
+		$target = $this->user("target");
 
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
+		$block = $this->entityManager->getRepository(Block::class)->getBlock($user, $target);
 
-		if ($parameters->has("target")) {
-			$entityManager = $apiService->getEntityManager();
-
-			$target = $entityManager->getRepository(User::class)->getUserById($parameters->get("target"));
-
-			if ($target) {
-				$block = $entityManager->getRepository(Block::class)->getBlock($user, $target);
-
-				if ($block) {
-					return $apiService->json(["result" => $apiService->serialize($block)]);
-				} else {
-					return $apiService->json(["error" => "The requested resource could not be found."], 404);
-				}
-			} else {
-				return $apiService->json(["error" => "The requested resource could not be found."], 404);
-			}
-		} else {
-			return $apiService->json(["error" => "'target' is required."], 400);
+		if (is_null($block)) {
+			throw new ResourceNotFoundException();
 		}
+
+		return $this->response($block);
 	}
 
 	/**
-	 * @Route("/api/blocks", methods={"GET"})
+	 * @Route("/blocks", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws InvalidTokenException
 	 */
-	public function blocks(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function blocks() {
+		$this->validateAuth();
 
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
-
-		$max = null;
-		if ($parameters->has("max")) {
-			$max = $parameters->get("max");
-			if (!is_numeric($max)) {
-				return $apiService->json(["error" => "'max' has to be an integer."], 400);
-			}
-		}
-
-		$entityManager = $apiService->getEntityManager();
-		$results = [];
-
-		/**
-		 * @var Block[] $blocks
-		 */
-		$blocks = $entityManager->getRepository(Block::class)->getBlocks($user, $max);
-
-		foreach ($blocks as $block) {
-			array_push($results, $apiService->serialize($block));
-		}
-
-		return $apiService->json(["results" => $results]);
+		return $this->response(
+			$this->entityManager->getRepository(Block::class)->getBlocks($this->getUser(), $this->max())
+		);
 	}
 }

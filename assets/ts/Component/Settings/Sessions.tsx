@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import {Alert, Button, Card, Col, message, Row, Spin} from "antd";
 import API from "../../API/API";
 import React, {Component} from "react";
 import Token from "../../Entity/Account/Token";
-import BaseObject from "../../Serialization/BaseObject";
 import IpStackResult from "../../Entity/Account/IpStackResult";
 import {UAParser} from "ua-parser-js";
 import Auth from "../../Auth/Auth";
@@ -46,20 +45,10 @@ export default class Sessions extends Component<any, {
 	}
 
 	componentDidMount(): void {
-		API.handleRequest("/token", "GET", {}, data => {
-			const tokens = this.state.tokens;
-
-			data.results.forEach(token => {
-				tokens.push(BaseObject.convertObject(Token, token));
-			});
-
+		API.token.list().then(tokens => {
 			this.setState({
 				loading: false,
 				tokens
-			});
-		}, error => {
-			this.setState({
-				error
 			});
 		});
 	}
@@ -148,13 +137,11 @@ export default class Sessions extends Component<any, {
 										if (!current && !this.isLoading(token.getId())) {
 											this.setLoading(token.getId(), true);
 
-											API.handleRequest("/token", "DELETE", {
-												id: token.getId()
-											}, data => {
+											API.token.delete(token.getId()).then(() => {
 												message.success("The session has been killed.");
 												this.setLoading(token.getId(), false, true);
-											}, error => {
-												message.error(error);
+											}).catch(reason => {
+												message.error(reason);
 												this.setLoading(token.getId(), false);
 											});
 										}

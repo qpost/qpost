@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import AntMessage from "antd/es/message";
 import WindowSizeListener from "react-window-size-listener";
 import $ from "jquery";
 import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
 import FeedEntryList from "../FeedEntry/FeedEntryList";
 import Upload, {RcFile, UploadChangeParam} from "antd/es/upload";
 import Spin from "antd/es/spin";
@@ -221,32 +220,24 @@ export default class PostForm extends Component<any, {
 
 			if (this.state.replyTo) parameters["parent"] = this.state.replyTo.getId();
 
-			API.handleRequest("/status", "POST", parameters, data => {
-				if (data.hasOwnProperty("post")) {
-					const post: FeedEntry = BaseObject.convertObject(FeedEntry, data.post);
-					const entryList: FeedEntryList | null = FeedEntryList.instance;
-					const replyList: ReplyList | null = ReplyList.instance;
+			API.status.post(message, nsfw, attachments, this.state.replyTo).then(post => {
+				const entryList: FeedEntryList | null = FeedEntryList.instance;
+				const replyList: ReplyList | null = ReplyList.instance;
 
-					AntMessage.success("Your post has been sent.");
+				AntMessage.success("Your post has been sent.");
 
-					if (entryList && post.getType() === FeedEntryType.POST && ((!post.getText()) || (post.getText() && !post.getText().startsWith("@")))) {
-						entryList.prependEntry(post);
-					} else if (replyList && post.getType() === FeedEntryType.REPLY) {
-						replyList.prependEntry(post);
-					}
-
-					this.close();
-					this.reset();
-
-					FirstPostEncouragement.hide();
-				} else {
-					AntMessage.error("An error occurred.");
-					this.setState({
-						posting: false
-					});
+				if (entryList && post.getType() === FeedEntryType.POST && ((!post.getText()) || (post.getText() && !post.getText().startsWith("@")))) {
+					entryList.prependEntry(post);
+				} else if (replyList && post.getType() === FeedEntryType.REPLY) {
+					replyList.prependEntry(post);
 				}
-			}, error => {
-				AntMessage.error(error);
+
+				this.close();
+				this.reset();
+
+				FirstPostEncouragement.hide();
+			}).catch(reason => {
+				AntMessage.error(reason);
 				this.setState({
 					posting: false
 				});
@@ -363,27 +354,9 @@ export default class PostForm extends Component<any, {
 						loadingUsers: true
 					});
 
-					API.handleRequest("/search", "GET", {
-						query: text,
-						type: "user",
-						limit: 10
-					}, data => {
-						const results = [];
-
-						if (data.hasOwnProperty("results")) {
-							data.results.forEach(entry => {
-								results.push(BaseObject.convertObject(User, entry));
-							});
-						}
-
+					API.search.get("user", text, 10).then(result => {
 						this.setState({
-							suggestedUsers: results,
-							loadingUsers: false
-						});
-					}, error => {
-						AntMessage.error(error);
-
-						this.setState({
+							suggestedUsers: result.users,
 							loadingUsers: false
 						});
 					});

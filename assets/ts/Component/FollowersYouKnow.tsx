@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import Spin from "antd/es/spin";
 import {Alert, Card, Tooltip} from "antd";
 import {Link} from "react-router-dom";
 import API from "../API/API";
-import BaseObject from "../Serialization/BaseObject";
 
 export default class FollowersYouKnow extends Component<{
 	user: User
@@ -42,23 +41,12 @@ export default class FollowersYouKnow extends Component<{
 	}
 
 	componentDidMount(): void {
-		API.handleRequest("/followersyouknow", "GET", {
-			target: this.props.user.getId(),
-			limit: 4 * 3
-		}, data => {
-			if (data.results) {
-				const users: User[] = this.state.users || [];
-
-				data.results.forEach(result => users.push(BaseObject.convertObject(User, result)));
-
-				this.setState({users});
-			} else {
-				this.setState({
-					error: "An error occurred."
-				});
-			}
-		}, error => {
-			this.setState({error});
+		API.followersYouKnow.get(this.props.user, 4 * 3).then(users => {
+			this.setState({users});
+		}).catch(reason => {
+			this.setState({
+				error: reason
+			});
 		});
 	}
 

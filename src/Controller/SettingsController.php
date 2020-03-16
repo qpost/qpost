@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ class SettingsController extends AbstractController {
 	 * @param ProfileImageService $imageService
 	 * @param EntityManagerInterface $entityManager
 	 * @return Response
+	 * @throws Exception
 	 */
 	public function profileAppearance(Request $request, ProfileImageService $imageService, EntityManagerInterface $entityManager) {
 		if ($this->validate($request)) {

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import User from "../Entity/Account/User";
 import API from "../API/API";
-import BaseObject from "../Serialization/BaseObject";
 import VerifiedBadge from "./VerifiedBadge";
 import Spin from "antd/es/spin";
 import "antd/es/spin/style";
@@ -52,28 +51,18 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 
 			const now = new Date();
 
-			API.handleRequest("/birthdays", "GET", {
-				date: now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDate())
-			}, (data => {
-				if (data["results"]) {
-					this.load(data["results"]);
+			API.birthdays.get(now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDate())).then(users => {
+				this.load(users);
 
-					if (this.state.results) {
-						Storage.sessionSet(Storage.SESSION_UPCOMING_BIRTHDAYS, JSON.stringify(this.state.results));
-					}
+				if (this.state.results) {
+					Storage.sessionSet(Storage.SESSION_UPCOMING_BIRTHDAYS, JSON.stringify(this.state.results));
 				}
-			}));
+			});
 		}
 	}
 
 	load = (results) => {
-		const birthdays: User[] = [];
-
-		results.forEach(userData => {
-			birthdays.push(BaseObject.convertObject(User, userData));
-		});
-
-		this.setState({results: birthdays, loading: false});
+		this.setState({results, loading: false});
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

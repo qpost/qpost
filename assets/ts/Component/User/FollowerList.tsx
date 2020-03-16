@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,22 +102,22 @@ export default class FollowerList extends Component<{
 			if (this.props.mode !== "search") {
 				let followers: Follower[] = this.state.followers || [];
 
-				data.results.forEach(result => followers.push(BaseObject.convertObject(Follower, result)));
+				data.forEach(result => followers.push(BaseObject.convertObject(Follower, result)));
 
 				this.setState({
 					followers,
 					loadingMore: false,
-					hasMore: data.results.length === 0 ? false : this.state.hasMore
+					hasMore: data.length === 0 ? false : this.state.hasMore
 				});
 			} else {
 				let users: User[] = this.state.users || [];
 
-				data.results.forEach(result => users.push(BaseObject.convertObject(User, result)));
+				data.forEach(result => users.push(BaseObject.convertObject(User, result)));
 
 				this.setState({
 					users,
 					loadingMore: false,
-					hasMore: data.results.length === 0 ? false : this.state.hasMore
+					hasMore: data.length === 0 ? false : this.state.hasMore
 				});
 			}
 		}, error => {

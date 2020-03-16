@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ import {Alert} from "reactstrap";
 import FeedEntryListItem from "./FeedEntryListItem";
 import User from "../../Entity/Account/User";
 import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
 import Empty from "antd/es/empty";
 import "antd/es/empty/style";
@@ -69,24 +68,16 @@ export default class FavoriteList extends Component<{
 	}
 
 	load(max?: number) {
-		const parameters = this.props.user ? {
-			user: this.props.user.getId()
-		} : {};
-
-		if (max) parameters["max"] = max;
-
-		API.handleRequest("/favorites", "GET", parameters, data => {
-			let favorites: Favorite[] = this.state.favorites || [];
-
-			data.results.forEach(result => favorites.push(BaseObject.convertObject(Favorite, result)));
+		API.favorite.list(this.props.user, max).then(favorites => {
+			favorites.forEach(result => favorites.push(result));
 
 			this.setState({
 				favorites,
 				loadingMore: false,
-				hasMore: data.results.length === 0 ? false : this.state.hasMore
+				hasMore: favorites.length === 0 ? false : this.state.hasMore
 			});
-		}, error => {
-			this.setState({error, loadingMore: false, hasMore: false});
+		}).catch(reason => {
+			this.setState({error: reason, loadingMore: false, hasMore: false});
 		});
 	}
 

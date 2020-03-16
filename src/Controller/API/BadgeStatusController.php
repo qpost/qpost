@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,94 +20,78 @@
 
 namespace qpost\Controller\API;
 
-use Exception;
+use qpost\Constants\APIParameterType;
 use qpost\Entity\Notification;
-use qpost\Service\APIService;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function is_null;
-use function is_string;
 
-class BadgeStatusController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class BadgeStatusController extends APIController {
 	/**
-	 * @Route("/api/badgestatus", methods={"GET"})
+	 * @Route("/badgestatus", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
-	 * @throws Exception
+	 * @throws InvalidTokenException
 	 */
-	public function info(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function info() {
+		$this->validateAuth();
+		$user = $this->apiService->getUser();
 
-		$user = $apiService->getUser();
-		$entityManager = $apiService->getEntityManager();
-
-		return $apiService->json([
-			"notifications" => $entityManager->getRepository(Notification::class)->getUnseenNotificationsCount($user),
+		return $this->apiService->json([
+			"notifications" => $this->entityManager->getRepository(Notification::class)->getUnseenNotificationsCount($user),
 			"messages" => 0 // TODO
 		]);
 	}
 
 	/**
-	 * @Route("/api/badgestatus", methods={"DELETE"})
+	 * @Route("/badgestatus", methods={"DELETE"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws InvalidTokenException
 	 */
-	public function clear(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function clear() {
+		$this->validateAuth();
+		$this->validateParameterType("type", APIParameterType::STRING);
 
-		$parameters = $apiService->parameters();
-		$user = $apiService->getUser();
+		$user = $this->getUser();
+		$type = $this->parameters()->get("type");
 
-		if ($parameters->has("type")) {
-			$type = $parameters->get("type");
+		switch ($type) {
+			case "notifications":
+				/**
+				 * @var Notification[] $notifications
+				 */
+				$notifications = $this->entityManager->getRepository(Notification::class)->getUnseenNotifcations($user);
 
-			if (!Util::isEmpty($type)) {
-				if (is_string($type)) {
-					$entityManager = $apiService->getEntityManager();
+				foreach ($notifications as $notification) {
+					$notification->setSeen(true)
+						->setNotified(true);
 
-					switch ($type) {
-						case "notifications":
-							/**
-							 * @var Notification[] $notifications
-							 */
-							$notifications = $entityManager->getRepository(Notification::class)->getUnseenNotifcations($user);
-
-							foreach ($notifications as $notification) {
-								$notification->setSeen(true)
-									->setNotified(true);
-								$entityManager->persist($notification);
-							}
-
-							$entityManager->flush();
-
-							return $apiService->noContent();
-
-							break;
-						case "messages":
-							// TODO
-
-							return $apiService->noContent();
-
-							break;
-						default:
-							return $apiService->json(["error" => "'type' has to be either 'notifications' or 'messages'."], 400);
-
-							break;
-					}
-				} else {
-					return $apiService->json(["error" => "'type' has to be a string."], 400);
+					$this->entityManager->persist($notification);
 				}
-			} else {
-				return $apiService->json(["error" => "'type' is required."], 400);
-			}
-		} else {
-			return $apiService->json(["error" => "'type' is required."], 400);
+
+				$this->entityManager->flush();
+
+				return $this->response();
+
+				break;
+			case "messages":
+				// TODO
+
+				return $this->response();
+
+				break;
+			default:
+				return $this->error("'type' has to be either 'notifications' or 'messages'.", Response::HTTP_BAD_REQUEST);
+
+				break;
 		}
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import {formatNumberShort} from "../../../Util/Format";
 import {message, Spin} from "antd";
 import "antd/es/spin/style";
 import API from "../../../API/API";
-import BaseObject from "../../../Serialization/BaseObject";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import Auth from "../../../Auth/Auth";
 import LoginSuggestionModal from "../../LoginSuggestionModal";
@@ -55,22 +54,39 @@ export default class FavoriteButton extends Component<{
 			if (!this.state.loading) {
 				this.setState({loading: true});
 
-				API.handleRequest("/favorite", this.state.favorited ? "DELETE" : "POST", {
-					post: this.props.entry.getId()
-				}, data => {
-					this.setState({
-						favorited: !this.state.favorited,
-						loading: false,
-						entry: BaseObject.convertObject(FeedEntry, data.result.feedEntry)
-					});
+				if (this.state.favorited) {
+					API.favorite.delete(this.props.entry).then(feedEntry => {
+						this.setState({
+							favorited: !this.state.favorited,
+							loading: false,
+							entry: feedEntry
+						});
 
-					if (this.props.onEntryUpdate) {
-						this.props.onEntryUpdate(this.state.entry);
-					}
-				}, error => {
-					message.error(error);
-					this.setState({loading: false});
-				})
+						if (this.props.onEntryUpdate) {
+							this.props.onEntryUpdate(this.state.entry);
+						}
+					}).catch(reason => {
+						message.error(reason);
+						this.setState({loading: false});
+					});
+				} else {
+					API.favorite.post(this.props.entry).then(favorite => {
+						console.log("fav", favorite.getFeedEntry());
+
+						this.setState({
+							favorited: !this.state.favorited,
+							loading: false,
+							entry: favorite.getFeedEntry()
+						});
+
+						if (this.props.onEntryUpdate) {
+							this.props.onEntryUpdate(this.state.entry);
+						}
+					}).catch(reason => {
+						message.error(reason);
+						this.setState({loading: false});
+					});
+				}
 			}
 		} else {
 			LoginSuggestionModal.open();

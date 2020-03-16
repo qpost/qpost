@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,48 +21,28 @@
 namespace qpost\Controller\API;
 
 use qpost\Entity\TrendingHashtagData;
-use qpost\Service\APIService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Exception\InvalidParameterIntegerRangeException;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\MissingParameterException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function intval;
-use function is_null;
-use function is_numeric;
 
-class TrendsController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class TrendsController extends APIController {
 	/**
-	 * @Route("/api/trends", methods={"GET"})
+	 * @Route("/trends", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
 	 */
-	public function info(APIService $apiService) {
-		$response = $apiService->validate(false);
-		if (!is_null($response)) return $response;
-
-		$parameters = $apiService->parameters();
-
-		$limit = 10;
-		if ($parameters->has("limit")) {
-			$limit = $parameters->get("limit");
-
-			if (!is_numeric($limit)) {
-				return $apiService->json(["error" => "'limit' has to be an integer."], 400);
-			} else {
-				$limit = intval($limit);
-			}
-
-			if (!($limit >= 1 && $limit <= 20)) {
-				return $apiService->json(["error" => "'limit' has to be between 1 and 20."], 400);
-			}
-		}
-
-		$results = [];
-
-		foreach ($apiService->getEntityManager()->getRepository(TrendingHashtagData::class)->getTrends($limit) as $trend) {
-			$results[] = $apiService->serialize($trend);
-		}
-
-		return $apiService->json(["results" => $results], 200);
+	public function info() {
+		return $this->response(
+			$this->entityManager->getRepository(TrendingHashtagData::class)
+				->getTrends($this->limit(20))
+		);
 	}
 }

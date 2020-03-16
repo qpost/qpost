@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,41 +21,40 @@
 namespace qpost\Controller\API;
 
 use qpost\Entity\Notification;
-use qpost\Service\APIService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Exception\InvalidParameterIntegerRangeException;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function is_null;
 
-class NotificationsController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class NotificationsController extends APIController {
 	/**
-	 * @Route("/api/notifications", methods={"GET"})
+	 * @Route("/notifications", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws InvalidTokenException
 	 */
-	public function info(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function info() {
+		$this->validateAuth();
+		$user = $this->getUser();
 
-		$entityManager = $apiService->getEntityManager();
-		$user = $apiService->getUser();
-
-		$parameters = $apiService->parameters();
-
-		$query = $entityManager->getRepository(Notification::class)->createQueryBuilder("n")
+		$query = $this->entityManager->getRepository(Notification::class)->createQueryBuilder("n")
 			->where("n.user = :user")
 			->setParameter("user", $user)
 			->orderBy("n.time", "DESC");
 
-		if ($parameters->has("max")) {
-			$max = $parameters->get("max");
-
-			if (is_numeric($max) && $max > 0) {
-				$query->andWhere("n.id < :max")
-					->setParameter("max", $max);
-			} else {
-				return $apiService->json(["error" => "'max' has to be an integer."], 400);
-			}
+		$max = $this->max();
+		if (!is_null($max)) {
+			$query->andWhere("n.id < :max")
+				->setParameter("max", $max);
 		}
 
 		$query->setMaxResults(30);
@@ -63,21 +62,20 @@ class NotificationsController extends AbstractController {
 		/**
 		 * @var Notification[] $notifications
 		 */
-		$notifications = $query->getQuery()->useQueryCache(true)->getResult();
+		$notifications = $query
+			->getQuery()
+			->useQueryCache(true)
+			->getResult();
 
-		$results = [];
 		foreach ($notifications as $notification) {
-			$referencedUser = $notification->getReferencedUser();
-			if ($referencedUser && $apiService->mayView($referencedUser)) {
-				$results[] = $apiService->serialize($notification);
-			}
-
 			$notification->setSeen(true);
-			$entityManager->persist($notification);
+			$this->entityManager->persist($notification);
 		}
 
-		$entityManager->flush();
+		$this->entityManager->flush();
 
-		return $apiService->json(["results" => $results]);
+		return $this->response(
+			$this->filterNotifications($notifications)
+		);
 	}
 }

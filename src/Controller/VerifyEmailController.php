@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ use qpost\Constants\MiscConstants;
 use qpost\Entity\User;
 use qpost\Twig\Twig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -35,6 +36,7 @@ class VerifyEmailController extends AbstractController {
 	 * @param int $userId
 	 * @param string $activationToken
 	 * @param EntityManagerInterface $entityManager
+	 * @return Response
 	 */
 	public function verifyEmail(int $userId, string $activationToken, EntityManagerInterface $entityManager) {
 		/**

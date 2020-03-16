@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\ResetPasswordToken;
@@ -126,6 +127,7 @@ class ResetPasswordController extends AbstractController {
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @return RedirectResponse|Response
+	 * @throws Exception
 	 */
 	public function resetPasswordResponse(Request $request, EntityManagerInterface $entityManager) {
 		$user = $this->getUser();

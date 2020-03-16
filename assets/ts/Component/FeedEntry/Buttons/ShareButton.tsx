@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import Auth from "../../../Auth/Auth";
 import {formatNumberShort} from "../../../Util/Format";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import {message, Spin} from "antd";
-import BaseObject from "../../../Serialization/BaseObject";
 import API from "../../../API/API";
 import LoginSuggestionModal from "../../LoginSuggestionModal";
 import PrivacyLevel from "../../../Entity/Account/PrivacyLevel";
@@ -56,22 +55,37 @@ export default class ShareButton extends Component<{
 				if (!this.state.loading) {
 					this.setState({loading: true});
 
-					API.handleRequest("/share", this.state.shared ? "DELETE" : "POST", {
-						post: this.props.entry.getId()
-					}, data => {
-						this.setState({
-							shared: !this.state.shared,
-							loading: false,
-							entry: BaseObject.convertObject(FeedEntry, data.result.parent)
-						});
+					if (this.state.shared) {
+						API.share.delete(this.props.entry).then(feedEntry => {
+							this.setState({
+								shared: !this.state.shared,
+								loading: false,
+								entry: feedEntry
+							});
 
-						if (this.props.onEntryUpdate) {
-							this.props.onEntryUpdate(this.state.entry);
-						}
-					}, error => {
-						message.error(error);
-						this.setState({loading: false});
-					})
+							if (this.props.onEntryUpdate) {
+								this.props.onEntryUpdate(this.state.entry);
+							}
+						}).catch(reason => {
+							message.error(reason);
+							this.setState({loading: false});
+						});
+					} else {
+						API.share.post(this.props.entry).then(feedEntry => {
+							this.setState({
+								shared: !this.state.shared,
+								loading: false,
+								entry: feedEntry.getParent()
+							});
+
+							if (this.props.onEntryUpdate) {
+								this.props.onEntryUpdate(this.state.entry);
+							}
+						}).catch(reason => {
+							message.error(reason);
+							this.setState({loading: false});
+						});
+					}
 				}
 			}
 		} else {

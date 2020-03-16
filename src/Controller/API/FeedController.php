@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,99 +20,79 @@
 
 namespace qpost\Controller\API;
 
+use qpost\Constants\APIParameterType;
 use qpost\Constants\PrivacyLevel;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
+use qpost\Exception\AccessNotAllowedException;
+use qpost\Exception\InvalidParameterIntegerRangeException;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
+use qpost\Exception\ResourceNotFoundException;
 use qpost\Service\APIService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function array_push;
 use function is_null;
-use function is_numeric;
 
-class FeedController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class FeedController extends APIController {
 	/**
-	 * @Route("/api/feed", methods={"GET"})
+	 * @Route("/feed", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws AccessNotAllowedException
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
+	 * @throws InvalidTokenException
 	 */
-	public function feed(APIService $apiService) {
-		$entityManager = $apiService->getEntityManager();
-		$entryRepository = $entityManager->getRepository(FeedEntry::class);
-		$userRepository = $entityManager->getRepository(User::class);
+	public function feed() {
+		$parameters = $this->parameters();
+		$user = $this->getUser();
 
-		$parameters = $apiService->parameters();
-		$apiService->getLogger()->info("param", ["param" => $parameters]);
-
-		$user = $apiService->getUser();
 		$target = null;
-		$max = null;
-		$min = null;
+		$max = $this->max();
+		$min = $this->min();
 		$type = "posts";
 
 		// verify target
 		if ($parameters->has("user")) {
-			$target = $userRepository->getUserById($parameters->get("user"));
+			$target = $this->user("user");
 
-			if (is_null($target) || !$apiService->mayView($target)) {
-				return $apiService->json(["error" => "The requested user could not be found."], 404);
-			} else if (!$this->privacyLevelCheck($apiService, $user, $target)) {
-				return $apiService->json(["error" => "You are not allowed to view this resource."], 403);
+			if (!$this->privacyLevelCheck($this->apiService, $user, $target)) {
+				throw new AccessNotAllowedException();
 			}
 		}
 
 		// verify authorization
 		if (is_null($target)) {
-			$response = $apiService->validate(true);
-			if (!is_null($response)) return $response;
+			$this->validateAuth();
 		}
 
-		// verify max entry id
-		if ($parameters->has("max")) {
-			$max = $parameters->get("max");
-
-			if (!is_numeric($max)) {
-				return $apiService->json(["error" => "'max' has to be an integer."], 400);
-			}
+		if (!is_null($max) && !is_null($min)) {
+			return $this->error("'min' and 'max' may not be used together.", Response::HTTP_BAD_REQUEST);
 		}
 
-		// verify min entry id
-		if ($parameters->has("min")) {
-			if (!is_null($max)) {
-				return $apiService->json(["error" => "'min' and 'max' may not be used together."], 400);
-			}
-
-			$min = $parameters->get("min");
-
-			if (!is_numeric($min)) {
-				return $apiService->json(["error" => "'min' has to be an integer."], 400);
-			}
-		}
+		$this->validateParameterType("type", APIParameterType::STRING, false);
 
 		// verify type
 		if ($parameters->has("type")) {
 			$type = $parameters->get("type");
 
 			if (!($type === "posts" || $type === "replies")) {
-				return $apiService->json(["error" => "'type' has to be either 'posts' or 'replies'."], 400);
+				return $this->error("'type' has to be either 'posts' or 'replies'.", Response::HTTP_BAD_REQUEST);
 			}
 		}
 
-		$results = [];
-
-		/**
-		 * @var FeedEntry[] $feedEntries
-		 */
-		$feedEntries = $entryRepository->getFeed($user, $target, $min, $max, $type);
-
-		foreach ($feedEntries as $feedEntry) {
-			if (!$apiService->mayView($feedEntry)) continue;
-			array_push($results, $apiService->serialize($feedEntry));
-		}
-
-		return $apiService->json(["results" => $results]);
+		return $this->response(
+			$this->filterFeedEntries(
+				$this->entityManager->getRepository(FeedEntry::class)->getFeed($user, $target, $min, $max, $type)
+			)
+		);
 	}
 
 	private function privacyLevelCheck(APIService $apiService, ?User $from, User $to): bool {

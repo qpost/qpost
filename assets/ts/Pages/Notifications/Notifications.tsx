@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import Notification from "../../Entity/Feed/Notification";
 import Alert from "antd/es/alert";
 import Spin from "antd/es/spin";
 import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
 import Empty from "antd/es/empty";
 import InfiniteScroll from "react-infinite-scroller";
 import NotificationType from "../../Entity/Feed/NotificationType";
@@ -71,20 +70,18 @@ export default class Notifications extends Component<any, {
 	}
 
 	load(max?: number) {
-		API.handleRequest("/notifications", "GET", max ? {max} : {}, data => {
+		API.notifications.get(max).then(value => {
 			let notifications: Notification[] = this.state.notifications || [];
 
-			data.results.forEach(result => notifications.push(BaseObject.convertObject(Notification, result)));
+			value.forEach(notification => notifications.push(notification));
 
 			this.setState({
 				notifications,
 				loadingMore: false,
-				hasMore: data.results.length === 0 ? false : this.state.hasMore
+				hasMore: value.length === 0 ? false : this.state.hasMore
 			});
 
 			BadgeStatus.update();
-		}, error => {
-			this.setState({error, loadingMore: false, hasMore: false});
 		});
 	}
 
