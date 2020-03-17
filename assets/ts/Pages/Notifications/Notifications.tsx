@@ -147,6 +147,7 @@ export default class Notifications extends Component<any, {
 									case NotificationType.SHARE:
 										content =
 											<ShareNotification key={notification.getId()} notification={notification}/>;
+										break;
 									case NotificationType.FOLLOW_REQUEST:
 										content =
 											<FollowRequestNotification key={notification.getId()}
