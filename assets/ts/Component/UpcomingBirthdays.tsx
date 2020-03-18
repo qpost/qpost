@@ -30,6 +30,7 @@ import TimeAgo from "./TimeAgo";
 import {placeZeroBelowTen} from "../Util/Format";
 import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
+import BaseObject from "../Serialization/BaseObject";
 
 export default class UpcomingBirthdays extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -45,7 +46,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 		if (Auth.isLoggedIn() && AppearanceSettings.showUpcomingBirthdays()) {
 			const storedBirthdays = Storage.sessionGet(Storage.SESSION_UPCOMING_BIRTHDAYS);
 			if (storedBirthdays) {
-				this.load(JSON.parse(storedBirthdays));
+				this.load(BaseObject.convertArray(User, JSON.parse(storedBirthdays)));
 				return;
 			}
 
