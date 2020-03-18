@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,313 +25,192 @@ use qpost\Constants\FollowStatus;
 use qpost\Constants\PrivacyLevel;
 use qpost\Entity\Follower;
 use qpost\Entity\FollowRequest;
-use qpost\Entity\User;
-use qpost\Repository\FollowerRepository;
-use qpost\Repository\FollowRequestRepository;
-use qpost\Repository\UserRepository;
-use qpost\Service\APIService;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Entity\Notification;
+use qpost\Exception\GeneralErrorException;
+use qpost\Exception\InvalidParameterIntegerRangeException;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
+use qpost\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function array_push;
 use function is_null;
-use function is_numeric;
 
-class FollowController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class FollowController extends APIController {
 	/**
-	 * @Route("/api/follow", methods={"GET"})
+	 * @Route("/follow", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
 	 */
-	public function info(APIService $apiService) {
-		$response = $apiService->validate(false);
-		if (!is_null($response)) return $response;
+	public function info() {
+		$from = $this->user("from");
+		$to = $this->user("to");
 
-		$parameters = $apiService->parameters();
+		/**
+		 * @var Follower $follower
+		 */
+		$follower = $this->entityManager->getRepository(Follower::class)->findOneBy([
+			"sender" => $from,
+			"receiver" => $to
+		]);
 
-		if ($parameters->has("from")) {
-			$fromId = $parameters->get("from");
-
-			if (!Util::isEmpty($fromId)) {
-				if (is_numeric($fromId)) {
-					$entityManager = $apiService->getEntityManager();
-
-					/**
-					 * @var UserRepository $userRepository
-					 */
-					$userRepository = $entityManager->getRepository(User::class);
-					$from = $userRepository->getUserById($fromId);
-
-					if (!is_null($from) && $apiService->mayView($from)) {
-						if ($parameters->has("to")) {
-							$toId = $parameters->get("to");
-
-							if (!Util::isEmpty($toId)) {
-								if (is_numeric($toId)) {
-									/**
-									 * @var UserRepository $userRepository
-									 */
-									$to = $userRepository->getUserById($toId);
-
-									if (!is_null($to) && $apiService->mayView($to)) {
-										/**
-										 * @var Follower $follower
-										 */
-										$follower = $entityManager->getRepository(Follower::class)->findOneBy([
-											"sender" => $from,
-											"receiver" => $to
-										]);
-
-										if (!is_null($follower)) {
-											return $apiService->json($apiService->serialize($follower));
-										} else {
-											return $to->getPrivacyLevel() === PrivacyLevel::PRIVATE &&
-											$entityManager->getRepository(FollowRequest::class)->hasSentFollowRequest($from, $to) ?
-												$apiService->json(["status" => FollowStatus::PENDING]) :
-												$apiService->json(["error" => "The requested resource could not be found."], 404);
-										}
-									} else {
-										return $apiService->json(["error" => "The requested user could not be found."], 404);
-									}
-								} else {
-									return $apiService->json(["error" => "'to' has to be an integer."], 400);
-								}
-							} else {
-								return $apiService->json(["error" => "'to' is required."], 400);
-							}
-						} else {
-							return $apiService->json(["error" => "'to' is required."], 400);
-						}
-					} else {
-						return $apiService->json(["error" => "The requested user could not be found."], 404);
-					}
-				} else {
-					return $apiService->json(["error" => "'from' has to be an integer."], 400);
-				}
-			} else {
-				return $apiService->json(["error" => "'from' is required."], 400);
-			}
+		if (!is_null($follower)) {
+			return $this->response($follower);
 		} else {
-			return $apiService->json(["error" => "'from' is required."], 400);
+			if ($to->getPrivacyLevel() === PrivacyLevel::PRIVATE && $this->entityManager->getRepository(FollowRequest::class)->hasSentFollowRequest($from, $to)) {
+				return $this->apiService->json(["status" => FollowStatus::PENDING]);
+			}
+
+			throw new ResourceNotFoundException();
 		}
 	}
 
 	/**
-	 * @Route("/api/follow", methods={"POST"})
+	 * @Route("/follow", methods={"POST"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws GeneralErrorException
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
+	 * @throws InvalidTokenException
 	 */
-	public function follow(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function follow() {
+		$this->validateAuth();
+		$user = $this->getUser();
+		$to = $this->user("to");
 
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
+		if ($user->getId() === $to->getId()) {
+			return $this->error("You can not follow yourself.", Response::HTTP_CONFLICT);
+		}
 
-		if ($parameters->has("to")) {
-			$toId = $parameters->get("to");
+		$followerRepository = $this->entityManager->getRepository(Follower::class);
+		$followRequestRepository = $this->entityManager->getRepository(FollowRequest::class);
 
-			if (!Util::isEmpty($toId)) {
-				if (is_numeric($toId)) {
-					$entityManager = $apiService->getEntityManager();
-
-					/**
-					 * @var UserRepository $userRepository
-					 */
-					$userRepository = $entityManager->getRepository(User::class);
-
-					/**
-					 * @var UserRepository $userRepository
-					 */
-					$to = $userRepository->getUserById($toId);
-
-					if (!is_null($to) && $to->getPrivacyLevel() !== PrivacyLevel::CLOSED && $apiService->mayView($to)) {
-						/**
-						 * @var FollowerRepository $followerRepository
-						 */
-						$followerRepository = $entityManager->getRepository(Follower::class);
-
-						/**
-						 * @var FollowRequestRepository $followRequestRepository
-						 */
-						$followRequestRepository = $entityManager->getRepository(FollowRequest::class);
-
-						if (!$followerRepository->isFollowing($user, $to)) {
-							if ($to->getPrivacyLevel() === PrivacyLevel::PUBLIC) {
-								if ($apiService->follow($user, $to)) {
-									return $apiService->json(["status" => FollowStatus::FOLLOWING]);
-								} else {
-									return $apiService->json(["error" => "An error occurred."], 500);
-								}
-							} else if ($to->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
-								if (!$followRequestRepository->hasSentFollowRequest($user, $to)) {
-									if ($apiService->follow($user, $to)) {
-										return $apiService->json(["status" => FollowStatus::PENDING]);
-									} else {
-										return $apiService->json(["error" => "An error occurred."], 500);
-									}
-								} else {
-									return $apiService->json(["error" => "You have already sent a request to this user."], 400);
-								}
-							} else {
-								// should not happen
-								return $apiService->json(["error" => "An error occurred."], 500);
-							}
-						} else {
-							return $apiService->json(["error" => "You are already following this user."], 409);
-						}
+		if (!$followerRepository->isFollowing($user, $to)) {
+			if ($to->getPrivacyLevel() === PrivacyLevel::PUBLIC) {
+				if ($this->apiService->follow($user, $to)) {
+					return $this->apiService->json(["status" => FollowStatus::FOLLOWING]);
+				} else {
+					throw new GeneralErrorException();
+				}
+			} else if ($to->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
+				if (!$followRequestRepository->hasSentFollowRequest($user, $to)) {
+					if ($this->apiService->follow($user, $to)) {
+						return $this->apiService->json(["status" => FollowStatus::PENDING]);
 					} else {
-						return $apiService->json(["error" => "The requested user could not be found."], 404);
+						throw new GeneralErrorException();
 					}
 				} else {
-					return $apiService->json(["error" => "'to' has to be an integer."], 400);
+					return $this->error("You have already sent a request to this user.", Response::HTTP_CONFLICT);
 				}
 			} else {
-				return $apiService->json(["error" => "'to' is required."], 400);
+				// should not happen
+				throw new GeneralErrorException();
 			}
 		} else {
-			return $apiService->json(["error" => "'to' is required."], 400);
+			return $this->error("You are already following this user.", Response::HTTP_CONFLICT);
 		}
 	}
 
 	/**
-	 * @Route("/api/follow", methods={"DELETE"})
+	 * @Route("/follow", methods={"DELETE"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws GeneralErrorException
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
+	 * @throws InvalidTokenException
 	 */
-	public function unfollow(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function unfollow() {
+		$this->validateAuth();
 
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
+		$user = $this->getUser();
+		$to = $this->user("to");
 
-		if ($parameters->has("to")) {
-			$toId = $parameters->get("to");
+		$followerRepository = $this->entityManager->getRepository(Follower::class);
+		$followRequestRepository = $this->entityManager->getRepository(FollowRequest::class);
 
-			if (!Util::isEmpty($toId)) {
-				if (is_numeric($toId)) {
-					$entityManager = $apiService->getEntityManager();
+		if ($followerRepository->isFollowing($user, $to)) {
+			if ($this->apiService->unfollow($user, $to)) { // TODO
+				return $this->apiService->json(["status" => FollowStatus::NOT_FOLLOWING]);
+			} else {
+				throw new GeneralErrorException();
+			}
+		} else if ($to->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
+			if ($followRequestRepository->hasSentFollowRequest($user, $to)) {
+				/**
+				 * @var FollowRequest $followRequest
+				 */
+				$followRequest = $followRequestRepository->findOneBy([
+					"sender" => $user,
+					"receiver" => $to
+				]);
 
-					/**
-					 * @var UserRepository $userRepository
-					 */
-					$userRepository = $entityManager->getRepository(User::class);
+				if (!is_null($followRequest)) {
+					$notification = $this->entityManager->getRepository(Notification::class)->findOneBy([
+						"referencedFollowRequest" => $followRequest
+					]);
 
-					/**
-					 * @var UserRepository $userRepository
-					 */
-					$to = $userRepository->getUserById($toId);
-
-					if (!is_null($to) && $to->getPrivacyLevel() !== PrivacyLevel::CLOSED && $apiService->mayView($to)) {
-						$entityManager = $apiService->getEntityManager();
-
-						/**
-						 * @var FollowerRepository $followerRepository
-						 */
-						$followerRepository = $entityManager->getRepository(Follower::class);
-
-						/**
-						 * @var FollowRequestRepository $followRequestRepository
-						 */
-						$followRequestRepository = $entityManager->getRepository(FollowRequest::class);
-
-						if ($followerRepository->isFollowing($user, $to)) {
-							if ($apiService->unfollow($user, $to)) { // TODO
-								return $apiService->json(["status" => FollowStatus::NOT_FOLLOWING]);
-							} else {
-								return $apiService->json(["error" => "An error occurred."], 500);
-							}
-						} else if ($to->getPrivacyLevel() === PrivacyLevel::PRIVATE) {
-							if ($followRequestRepository->hasSentFollowRequest($user, $to)) {
-								/**
-								 * @var FollowRequest $followRequest
-								 */
-								$followRequest = $followRequestRepository->findOneBy([
-									"sender" => $user,
-									"receiver" => $to
-								]);
-
-								if (!is_null($followRequest)) {
-									$entityManager->remove($followRequest);
-									$entityManager->flush();
-
-									return $apiService->json(["status" => FollowStatus::NOT_FOLLOWING]);
-								} else {
-									return $apiService->json(["error" => "An error occurred."], 500);
-								}
-							} else {
-								return $apiService->json(["error" => "The requested resource could not be found."], 404);
-							}
-						} else {
-							return $apiService->json(["error" => "The requested resource could not be found."], 404);
-						}
-					} else {
-						return $apiService->json(["error" => "The requested user could not be found."], 404);
+					if (!is_null($notification)) {
+						$this->entityManager->remove($notification);
 					}
+
+					$this->entityManager->remove($followRequest);
+					$this->entityManager->flush();
+
+					return $this->apiService->json(["status" => FollowStatus::NOT_FOLLOWING]);
 				} else {
-					return $apiService->json(["error" => "'to' has to be an integer."], 400);
+					throw new GeneralErrorException();
 				}
 			} else {
-				return $apiService->json(["error" => "'to' is required."], 400);
+				throw new ResourceNotFoundException();
 			}
 		} else {
-			return $apiService->json(["error" => "'to' is required."], 400);
+			throw new ResourceNotFoundException();
 		}
 	}
 
 	/**
-	 * @Route("/api/follows", methods={"GET"})
+	 * @Route("/follows", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
 	 */
-	public function follows(APIService $apiService) {
-		$response = $apiService->validate(false);
-		if (!is_null($response)) return $response;
-
-		$parameters = $apiService->parameters();
+	public function follows() {
+		$parameters = $this->parameters();
 
 		if ($parameters->has("from") || $parameters->has("to")) {
-			$max = null;
-			if ($parameters->has("max")) {
-				$max = $parameters->get("max");
-				if (!is_numeric($max)) {
-					return $apiService->json(["error" => "'max' has to be an integer."], 400);
-				}
-			}
+			$max = $this->max();
 
-			$entityManager = $apiService->getEntityManager();
 			$user = null;
 
-			$builder = $entityManager->getRepository(Follower::class)->createQueryBuilder("f");
+			$builder = $this->entityManager->getRepository(Follower::class)
+				->createQueryBuilder("f");
 
 			if ($parameters->has("from")) {
-				$user = $entityManager->getRepository(User::class)->findOneBy([
-					"id" => $parameters->get("from")
-				]);
+				$user = $this->user("from");
 
-				if ($user && $apiService->mayView($user)) {
-					$builder->where("f.sender = :user")
-						->setParameter("user", $user);
-				} else {
-					return $apiService->json(["error" => "The requested resource could not be found."], 404);
-				}
+				$builder->where("f.sender = :user")
+					->setParameter("user", $user);
 			} else if ($parameters->has("to")) {
-				$user = $entityManager->getRepository(User::class)->findOneBy([
-					"id" => $parameters->get("to")
-				]);
+				$user = $this->user("to");
 
-				if ($user && $apiService->mayView($user)) {
-					$builder->where("f.receiver = :user")
-						->setParameter("user", $user);
-				} else {
-					return $apiService->json(["error" => "The requested resource could not be found."], 404);
-				}
+				$builder->where("f.receiver = :user")
+					->setParameter("user", $user);
 			}
 
 			if ($max) {
@@ -339,25 +218,17 @@ class FollowController extends AbstractController {
 					->setParameter("id", $max, Type::INTEGER);
 			}
 
-			$results = [];
-
-			/**
-			 * @var Follower[] $followers
-			 */
-			$followers = $builder->orderBy("f.time", "DESC")
-				->setMaxResults(30)
-				->getQuery()
-				->useQueryCache(true)
-				->getResult();
-
-			foreach ($followers as $follower) {
-				if (!$apiService->mayView($parameters->has("from") ? $follower->getReceiver() : $follower->getSender())) continue;
-				array_push($results, $apiService->serialize($follower));
-			}
-
-			return $apiService->json(["results" => $results]);
+			return $this->response(
+				$this->filterFollowers(
+					$builder->orderBy("f.time", "DESC")
+						->setMaxResults(30)
+						->getQuery()
+						->useQueryCache(true)
+						->getResult()
+				)
+			);
 		} else {
-			return $apiService->json(["error" => "'from' or 'to' are required."], 400);
+			return $this->error("'from' or 'to' are required.", Response::HTTP_BAD_REQUEST);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,9 +116,7 @@ export default class DeleteButton extends Component<{
 															loading: true
 														});
 
-														API.handleRequest("/status", "DELETE", {
-															id: entry.getId()
-														}, data => {
+														API.status.delete(entry).then(() => {
 															message.success("The post has been deleted.");
 
 															entries.splice(index, 1);
@@ -131,8 +129,8 @@ export default class DeleteButton extends Component<{
 																loading: false,
 																modalVisible: false
 															});
-														}, error => {
-															message.error(error);
+														}).catch(reason => {
+															message.error(reason);
 
 															this.setState({
 																loading: false,
@@ -150,9 +148,7 @@ export default class DeleteButton extends Component<{
 											loading: true
 										});
 
-										API.handleRequest("/status", "DELETE", {
-											id: this.props.entry.getId()
-										}, data => {
+										API.status.delete(this.props.entry).then(() => {
 											message.success("The post has been deleted.");
 
 											this.setState({
@@ -160,8 +156,8 @@ export default class DeleteButton extends Component<{
 												modalVisible: false,
 												redirect: true
 											});
-										}, error => {
-											message.error(error);
+										}).catch(reason => {
+											message.error(reason);
 
 											this.setState({
 												loading: false,

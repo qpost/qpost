@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@ import React, {Component} from "react";
 import User from "../Entity/Account/User";
 import {message, Modal} from "antd";
 import API from "../API/API";
-import BaseObject from "../Serialization/BaseObject";
-import Block from "../Entity/Account/Block";
 import FollowButton from "./FollowButton";
 import FollowStatus from "../Util/FollowStatus";
 
@@ -86,35 +84,24 @@ export default class BlockModal extends Component<any, {
 					loading: true
 				});
 
-				API.handleRequest("/block", "POST", {
-					target: user.getId()
-				}, data => {
+				API.block.post(user).then(block => {
+					const newUser = block.getTarget();
+
+					message.success("You have successfully blocked @" + user.getUsername());
+
+					FollowButton.INSTANCES.forEach(followButton => {
+						if (followButton.props.target.getId() === newUser.getId()) {
+							followButton.setState({
+								followStatus: FollowStatus.BLOCKED
+							});
+						}
+					});
+
 					this.setState({
 						open: false,
 						loading: false
 					});
-
-					if (data.result) {
-						const block = BaseObject.convertObject(Block, data.result);
-						if (block) {
-							const newUser = block.getTarget();
-
-							message.success("You have successfully blocked @" + user.getUsername());
-
-							FollowButton.INSTANCES.forEach(followButton => {
-								if (followButton.props.target.getId() === newUser.getId()) {
-									followButton.setState({
-										followStatus: FollowStatus.BLOCKED
-									});
-								}
-							});
-						} else {
-							message.error("An error occurred.");
-						}
-					} else {
-						message.error("An error occurred.");
-					}
-				}, error => {
+				}).catch(error => {
 					this.setState({
 						open: false,
 						loading: false

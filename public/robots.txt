@@ -11,4 +11,4 @@ Disallow: /download/windows
 Disallow: /download/android
 
 Crawl-delay: 10
-Sitemap: https://qpo.st/sitemap.xml
+Sitemap: https://qpostapp.com/sitemap.xml

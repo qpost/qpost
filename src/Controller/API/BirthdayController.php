@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,50 +20,34 @@
 
 namespace qpost\Controller\API;
 
-use Exception;
+use qpost\Constants\APIParameterType;
 use qpost\Entity\User;
-use qpost\Service\APIService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function is_null;
-use function strtotime;
 
-class BirthdayController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class BirthdayController extends APIController {
 	/**
-	 * @Route("/api/birthdays", methods={"GET"})
+	 * @Route("/birthdays", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
-	 * @throws Exception
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws InvalidTokenException
 	 */
-	public function birthdays(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function birthdays() {
+		$this->validateAuth();
+		$this->validateParameterType("date", APIParameterType::DATE);
 
-		$user = $apiService->getUser();
-		$entityManager = $apiService->getEntityManager();
-		$parameters = $apiService->parameters();
-
-		if ($parameters->has("date")) {
-			$dateString = $parameters->get("date");
-
-			if (strtotime($dateString)) {
-				$results = [];
-
-				$users = $entityManager->getRepository(User::class)->getUpcomingBirthdays($user, $dateString);
-
-				foreach ($users as $u) {
-					if (!$apiService->mayView($u)) continue;
-					$results[] = $apiService->serialize($u);
-				}
-
-				return $apiService->json(["results" => $results]);
-			} else {
-				return $apiService->json(["error" => "The date must be a valid date."], 400);
-			}
-		} else {
-			return $apiService->json(["error" => "'date' is required."], 400);
-		}
+		return $this->response(
+			$this->filterUsers(
+				$this->entityManager->getRepository(User::class)->getUpcomingBirthdays($this->getUser(), $this->parameters()->get("date"))
+			)
+		);
 	}
 }

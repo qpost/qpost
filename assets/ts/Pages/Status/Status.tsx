@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,34 +70,26 @@ export default class Status extends Component<any, {
 		const id = this.props.match.params.id;
 
 		if (id) {
-			API.handleRequest("/status", "GET", {id: id}, (data) => {
-				if (data.result) {
-					const feedEntry = BaseObject.convertObject(FeedEntry, data.result);
-
-					this.setState({
-						status: feedEntry,
-						loadingFinished: true
-					});
-
-					document.querySelector(".statusPageBox").scrollIntoView();
-					window.scrollBy(0, -68);
-
-					let title = feedEntry.getUser().getDisplayName() + " on qpost";
-
-					const text = feedEntry.getText();
-					if (text) {
-						title += ": \"" + limitString(text, 40, true) + "\"";
-					}
-
-					setPageTitle(title);
-				} else {
-					this.setState({
-						error: "An error occurred."
-					});
-				}
-			}, (error) => {
+			API.status.get(id).then(feedEntry => {
 				this.setState({
-					error
+					status: feedEntry,
+					loadingFinished: true
+				});
+
+				document.querySelector(".statusPageBox").scrollIntoView();
+				window.scrollBy(0, -68);
+
+				let title = feedEntry.getUser().getDisplayName() + " on qpost";
+
+				const text = feedEntry.getText();
+				if (text) {
+					title += ": \"" + limitString(text, 40, true) + "\"";
+				}
+
+				setPageTitle(title);
+			}).catch(reason => {
+				this.setState({
+					error: reason
 				});
 			});
 		} else {

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,10 +59,7 @@ export default class FollowerListItem extends Component<{
 			});
 		}
 
-		API.handleRequest("/followRequest", "DELETE", {
-			id: this.props.requestId,
-			action: accept ? "accept" : "decline"
-		});
+		API.followRequest.delete(this.props.requestId, accept ? "accept" : "decline");
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

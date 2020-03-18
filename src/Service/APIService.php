@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ namespace qpost\Service;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\SerializationContext;
@@ -42,11 +43,13 @@ use qpost\Repository\FollowerRepository;
 use qpost\Repository\FollowRequestRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
+use function is_null;
 use function is_string;
 use function json_decode;
 use function json_encode;
@@ -195,26 +198,11 @@ class APIService {
 	}
 
 	/**
-	 * @param bool $requireAuthorization Whether or not the request has to be authorized.
-	 * @return Response|null
-	 */
-	public function validate(bool $requireAuthorization): ?Response {
-		if ($requireAuthorization && !$this->isAuthorized()) {
-			$response = new JsonResponse();
-			$response->setContent(json_encode(["error" => "Invalid token"]));
-			$response->setStatusCode(401);
-
-			return $response;
-		}
-
-		return null;
-	}
-
-	/**
 	 * @param $content
+	 * @param int $httpCode
 	 * @return Response
 	 */
-	public function json($content, int $httpCode = 200): Response {
+	public function json($content, int $httpCode = Response::HTTP_OK): Response {
 		$response = new JsonResponse();
 		$response->setContent(json_encode($content));
 		$response->setStatusCode($httpCode);
@@ -223,11 +211,43 @@ class APIService {
 	}
 
 	/**
+	 * @param Request $request
+	 * @param null $data
+	 * @param null $httpCode
+	 * @return Response
+	 */
+	public function response(Request $request, $data = null, $httpCode = null): Response {
+		if (is_null($httpCode)) {
+			$httpCode = Response::HTTP_NOT_FOUND;
+
+			switch ($request->getMethod()) {
+				case "GET":
+					$httpCode = Response::HTTP_OK;
+					break;
+				case "POST":
+				case "PUT":
+				case "PATCH":
+					$httpCode = Response::HTTP_CREATED;
+					break;
+				case "DELETE":
+					$httpCode = is_null($data) ? Response::HTTP_NO_CONTENT : Response::HTTP_OK;
+					break;
+			}
+		}
+
+		return $this->json($httpCode === Response::HTTP_NOT_FOUND || is_null($data) ? "" : $this->serialize($data), $httpCode);
+	}
+
+	public function error(string $message, $httpCode = Response::HTTP_NOT_FOUND): Response {
+		return $this->json(["error" => $message], $httpCode);
+	}
+
+	/**
 	 * @return Response
 	 */
 	public function noContent(): Response {
 		return (new Response())
-			->setStatusCode(204)
+			->setStatusCode(Response::HTTP_NO_CONTENT)
 			->setContent("");
 	}
 
@@ -356,6 +376,7 @@ class APIService {
 	 * @param User $from
 	 * @param User $to
 	 * @return bool
+	 * @throws Exception
 	 */
 	public function follow(User $from, User $to): bool {
 		if ($from->getId() === $to->getId()) return false;

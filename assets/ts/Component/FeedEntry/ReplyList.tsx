@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 import React, {Component} from "react";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
 import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
 import FeedEntryListItem from "./FeedEntryListItem";
@@ -62,17 +61,14 @@ export default class ReplyList extends Component<{
 	}
 
 	load() {
-		API.handleRequest("/replies", "GET", {
-			feedEntry: this.props.feedEntry.getId(),
-			page: this.state.page
-		}, data => {
+		API.replies.get(this.props.feedEntry, this.state.page).then(batches => {
 			const entries = this.state.entries || [];
 
-			data.results.forEach(replyBatch => {
+			batches.forEach(replyBatch => {
 				const finalReplyBatch: FeedEntry[] = [];
 
 				replyBatch.forEach(reply => {
-					finalReplyBatch.push(BaseObject.convertObject(FeedEntry, reply));
+					finalReplyBatch.push(reply);
 				});
 
 				entries.push(finalReplyBatch);
@@ -81,11 +77,9 @@ export default class ReplyList extends Component<{
 			this.setState({
 				entries,
 				loadingMore: false,
-				hasMore: data.results.length === 0 ? false : this.state.hasMore,
+				hasMore: batches.length === 0 ? false : this.state.hasMore,
 				page: this.state.page + 1
 			});
-		}, error => {
-			this.setState({error, loadingMore: false, hasMore: false});
 		});
 	}
 

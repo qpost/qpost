@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import User from "../Entity/Account/User";
 import API from "../API/API";
-import BaseObject from "../Serialization/BaseObject";
 import FollowButton from "./FollowButton";
 import VerifiedBadge from "./VerifiedBadge";
 import Spin from "antd/es/spin";
@@ -31,6 +30,7 @@ import {Card} from "antd";
 import Auth from "../Auth/Auth";
 import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
+import BaseObject from "../Serialization/BaseObject";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -46,30 +46,22 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 		if (Auth.isLoggedIn() && AppearanceSettings.showSuggestedUsers()) {
 			const storedUsers = Storage.sessionGet(Storage.SESSION_SUGGESTED_USERS);
 			if (storedUsers) {
-				this.load(JSON.parse(storedUsers));
+				this.load(BaseObject.convertArray(User, JSON.parse(storedUsers)));
 				return;
 			}
 
-			API.handleRequest("/user/suggested", "GET", {}, (data => {
-				if (data["results"]) {
-					this.load(data["results"]);
+			API.suggestedUsers.get().then(users => {
+				this.load(users);
 
-					if (this.state.results) {
-						Storage.sessionSet(Storage.SESSION_SUGGESTED_USERS, JSON.stringify(this.state.results));
-					}
+				if (this.state.results) {
+					Storage.sessionSet(Storage.SESSION_SUGGESTED_USERS, JSON.stringify(this.state.results));
 				}
-			}));
+			});
 		}
 	}
 
 	load = (results) => {
-		const users: User[] = [];
-
-		results.forEach(userData => {
-			users.push(BaseObject.convertObject(User, userData));
-		});
-
-		this.setState({results: users, loading: false});
+		this.setState({results, loading: false});
 	};
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

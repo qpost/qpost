@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,46 +22,39 @@ namespace qpost\Controller\API;
 
 use DateTime;
 use Doctrine\DBAL\Types\Type;
-use Exception;
+use qpost\Constants\APIParameterType;
 use qpost\Constants\NotificationType;
 use qpost\Entity\Follower;
 use qpost\Entity\FollowRequest;
 use qpost\Entity\Notification;
-use qpost\Service\APIService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Exception\InvalidParameterIntegerRangeException;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
+use qpost\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function array_push;
-use function is_int;
 use function is_null;
-use function is_numeric;
 
-class FollowRequestController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class FollowRequestController extends APIController {
 	/**
-	 * @Route("/api/followRequest", methods={"GET"})
+	 * @Route("/followRequest", methods={"GET"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws InvalidTokenException
 	 */
-	public function requests(APIService $apiService): Response {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function requests(): Response {
+		$this->validateAuth();
+		$user = $this->getUser();
+		$max = $this->max();
 
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
-
-		$max = null;
-		if ($parameters->has("max")) {
-			$max = $parameters->get("max");
-			if (!is_numeric($max)) {
-				return $apiService->json(["error" => "'max' has to be an integer."], 400);
-			}
-		}
-
-		$entityManager = $apiService->getEntityManager();
-		$results = [];
-
-		$builder = $entityManager->getRepository(FollowRequest::class)->createQueryBuilder("r")
+		$builder = $this->entityManager->getRepository(FollowRequest::class)->createQueryBuilder("r")
 			->where("r.receiver = :user")
 			->setParameter("user", $user)
 			->orderBy("r.time", "DESC")
@@ -73,97 +66,80 @@ class FollowRequestController extends AbstractController {
 				->setParameter("id", $max, Type::INTEGER);
 		}
 
-		/**
-		 * @var FollowRequest[] $requests
-		 */
-		$requests = $builder
+		return $this->response($builder
 			->getQuery()
 			->useQueryCache(true)
-			->getResult();
-
-		foreach ($requests as $request) {
-			array_push($results, $apiService->serialize($request));
-		}
-
-		return $apiService->json(["results" => $results]);
+			->getResult());
 	}
 
 	/**
-	 * @Route("/api/followRequest", methods={"DELETE"})
+	 * @Route("/followRequest", methods={"DELETE"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response
-	 * @throws Exception
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws InvalidTokenException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
 	 */
-	public function delete(APIService $apiService): Response {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function delete(): Response {
+		$this->validateAuth();
+		$user = $this->getUser();
+		$parameters = $this->parameters();
 
-		$user = $apiService->getUser();
-		$parameters = $apiService->parameters();
+		$this->validateParameterType("id", APIParameterType::INTEGER);
+		$this->validateParameterIntegerRange("id", 0);
+		$this->validateParameterType("action", APIParameterType::STRING);
 
-		if ($parameters->has("id")) {
-			$id = $parameters->get("id");
+		$id = $parameters->get("id");
+		$action = $parameters->get("action");
 
-			if (is_int($id)) {
-				if ($parameters->has("action")) {
-					$action = $parameters->get("action");
-
-					if ($action === "accept" || $action === "decline") {
-						$accept = $action === "accept";
-						$entityManager = $apiService->getEntityManager();
-
-						$followRequest = $entityManager->getRepository(FollowRequest::class)->findOneBy([
-							"id" => $id
-						]);
-
-						if ($followRequest) {
-							$from = $followRequest->getSender();
-							$to = $followRequest->getReceiver();
-
-							$notification = $entityManager->getRepository(Notification::class)->findOneBy([
-								"referencedFollowRequest" => $followRequest
-							]);
-
-							if ($notification) {
-								$entityManager->remove($notification);
-							}
-
-							if ($accept) {
-								// create follower data
-								$entityManager->persist((new Follower())
-									->setSender($from)
-									->setReceiver($to)
-									->setTime(new DateTime("now")));
-
-								// create notification
-								$entityManager->persist((new Notification())
-									->setUser($to)
-									->setType(NotificationType::NEW_FOLLOWER)
-									->setReferencedUser($from)
-									->setSeen(false)
-									->setNotified(false)
-									->setTime(new DateTime("now")));
-							}
-
-							$entityManager->remove($followRequest);
-							$entityManager->flush();
-
-							return $apiService->noContent();
-						} else {
-							return $apiService->json(["error" => "The requested resource could not be found."], 404);
-						}
-					} else {
-						return $apiService->json(["error" => "'action' has to be 'accept' or 'decline'."], 400);
-					}
-				} else {
-					return $apiService->json(["error" => "'action' is required."], 400);
-				}
-			} else {
-				return $apiService->json(["error" => "'id' has to be an integer."], 400);
-			}
-		} else {
-			return $apiService->json(["error" => "'id' is required."], 400);
+		if ($action !== "accept" && $action !== "decline") {
+			return $this->error("'action' has to be 'accept' or 'decline'.", Response::HTTP_BAD_REQUEST);
 		}
+
+		$accept = $action === "accept";
+
+		$followRequest = $this->entityManager->getRepository(FollowRequest::class)->findOneBy([
+			"id" => $id,
+			"receiver" => $user
+		]);
+
+		if (is_null($followRequest)) {
+			throw new ResourceNotFoundException();
+		}
+
+		$from = $followRequest->getSender();
+		$to = $followRequest->getReceiver();
+
+		$notification = $this->entityManager->getRepository(Notification::class)->findOneBy([
+			"referencedFollowRequest" => $followRequest
+		]);
+
+		if ($notification) {
+			$this->entityManager->remove($notification);
+		}
+
+		if ($accept) {
+			// create follower data
+			$this->entityManager->persist((new Follower())
+				->setSender($from)
+				->setReceiver($to)
+				->setTime(new DateTime("now")));
+
+			// create notification
+			$this->entityManager->persist((new Notification())
+				->setUser($to)
+				->setType(NotificationType::NEW_FOLLOWER)
+				->setReferencedUser($from)
+				->setSeen(false)
+				->setNotified(false)
+				->setTime(new DateTime("now")));
+		}
+
+		$this->entityManager->remove($followRequest);
+		$this->entityManager->flush();
+
+		return $this->response();
 	}
 }

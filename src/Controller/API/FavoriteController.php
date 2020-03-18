@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,223 +22,156 @@ namespace qpost\Controller\API;
 
 use DateTime;
 use Doctrine\DBAL\Types\Type;
-use Exception;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\NotificationType;
 use qpost\Entity\Favorite;
-use qpost\Entity\FeedEntry;
 use qpost\Entity\Notification;
-use qpost\Entity\User;
-use qpost\Service\APIService;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use qpost\Exception\InvalidParameterIntegerRangeException;
+use qpost\Exception\InvalidParameterTypeException;
+use qpost\Exception\InvalidTokenException;
+use qpost\Exception\MissingParameterException;
+use qpost\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function array_push;
 use function is_null;
-use function is_numeric;
 
-class FavoriteController extends AbstractController {
+/**
+ * @Route("/api")
+ */
+class FavoriteController extends APIController {
 	/**
-	 * @Route("/api/favorite", methods={"POST"})
+	 * @Route("/favorite", methods={"POST"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
-	 * @throws Exception
+	 * @throws ResourceNotFoundException
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws InvalidTokenException
 	 */
-	public function favorite(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function favorite() {
+		$this->validateAuth();
+		$user = $this->getUser();
+		$feedEntry = $this->feedEntry("post");
 
-		$parameters = $apiService->parameters();
-		$user = $apiService->getUser();
+		if ($feedEntry->getType() !== FeedEntryType::POST && $feedEntry->getType() !== FeedEntryType::REPLY) {
+			throw new ResourceNotFoundException();
+		}
 
-		if ($parameters->has("post")) {
-			$postId = $parameters->get("post");
+		$owner = $feedEntry->getUser();
 
-			if (!Util::isEmpty($postId)) {
-				if (is_numeric($postId)) {
-					$entityManager = $apiService->getEntityManager();
+		$favorite = $this->entityManager->getRepository(Favorite::class)->findOneBy([
+			"user" => $user,
+			"feedEntry" => $feedEntry
+		]);
 
-					$feedEntry = $entityManager->getRepository(FeedEntry::class)->getEntryById($postId);
+		if (is_null($favorite)) {
+			$favorite = (new Favorite())
+				->setUser($user)
+				->setFeedEntry($feedEntry)
+				->setTime(new DateTime("now"));
 
-					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY) && $apiService->mayView($feedEntry)) {
-						$owner = $feedEntry->getUser();
-
-						$favorite = $entityManager->getRepository(Favorite::class)->findOneBy([
-							"user" => $user,
-							"feedEntry" => $feedEntry
-						]);
-
-						if (is_null($favorite)) {
-							$favorite = (new Favorite())
-								->setUser($user)
-								->setFeedEntry($feedEntry)
-								->setTime(new DateTime("now"));
-
-							if ($owner->getId() !== $user->getId() && $apiService->maySendNotifications($owner, $user)) {
-								$notification = (new Notification())
-									->setUser($owner)
-									->setReferencedUser($user)
-									->setReferencedFeedEntry($feedEntry)
-									->setType(NotificationType::FAVORITE)
-									->setTime(new DateTime("now"));
-							}
-
-							$entityManager->persist($favorite);
-
-							if (isset($notification)) {
-								$entityManager->persist($notification);
-							}
-
-							$entityManager->flush();
-
-							return $apiService->json(["result" => $apiService->serialize($favorite)]);
-						} else {
-							return $apiService->json(["error" => "You have already favorited this post."], 409);
-						}
-					} else {
-						return $apiService->json(["error" => "The requested post could not be found."], 404);
-					}
-				} else {
-					return $apiService->json(["error" => "'post' has to be an integer."], 400);
-				}
-			} else {
-				return $apiService->json(["error" => "'post' is required."], 400);
+			if ($owner->getId() !== $user->getId() && $this->apiService->maySendNotifications($owner, $user)) {
+				$notification = (new Notification())
+					->setUser($owner)
+					->setReferencedUser($user)
+					->setReferencedFeedEntry($feedEntry)
+					->setType(NotificationType::FAVORITE)
+					->setTime(new DateTime("now"));
 			}
+
+			$this->entityManager->persist($favorite);
+
+			if (isset($notification)) {
+				$this->entityManager->persist($notification);
+			}
+
+			$this->entityManager->flush();
+
+			return $this->response($favorite);
 		} else {
-			return $apiService->json(["error" => "'post' is required."], 400);
+			return $this->error("You have already favorited this post.", Response::HTTP_CONFLICT);
 		}
 	}
 
 	/**
-	 * @Route("/api/favorite", methods={"DELETE"})
+	 * @Route("/favorite", methods={"DELETE"})
 	 *
-	 * @param APIService $apiService
 	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
+	 * @throws InvalidTokenException
 	 */
-	public function unfavorite(APIService $apiService) {
-		$response = $apiService->validate(true);
-		if (!is_null($response)) return $response;
+	public function unfavorite() {
+		$this->validateAuth();
+		$user = $this->getUser();
+		$feedEntry = $this->feedEntry("post");
 
-		$parameters = $apiService->parameters();
-		$user = $apiService->getUser();
-
-		if ($parameters->has("post")) {
-			$postId = $parameters->get("post");
-
-			if (!Util::isEmpty($postId)) {
-				if (is_numeric($postId)) {
-					$entityManager = $apiService->getEntityManager();
-
-					$feedEntry = $entityManager->getRepository(FeedEntry::class)->getEntryById($postId);
-
-					if (!is_null($feedEntry) && ($feedEntry->getType() === FeedEntryType::POST || $feedEntry->getType() === FeedEntryType::REPLY)) {
-						$favorite = $entityManager->getRepository(Favorite::class)->findOneBy([
-							"user" => $user,
-							"feedEntry" => $feedEntry
-						]);
-
-						if (!is_null($favorite)) {
-							$entityManager->remove($favorite);
-
-							$notification = $entityManager->getRepository(Notification::class)->findOneBy([
-								"user" => $feedEntry->getUser(),
-								"referencedFeedEntry" => $feedEntry,
-								"referencedUser" => $user,
-								"type" => NotificationType::FAVORITE
-							]);
-
-							if (!is_null($notification)) {
-								$entityManager->remove($notification);
-							}
-
-							$entityManager->flush();
-
-							return $apiService->json(["result" => [
-								"feedEntry" => $apiService->serialize($feedEntry)
-							]]);
-						} else {
-							return $apiService->json(["error" => "The requested resource could not be found."], 404);
-						}
-					} else {
-						return $apiService->json(["error" => "The requested post could not be found."], 404);
-					}
-				} else {
-					return $apiService->json(["error" => "'post' has to be an integer."], 400);
-				}
-			} else {
-				return $apiService->json(["error" => "'post' is required."], 400);
-			}
-		} else {
-			return $apiService->json(["error" => "'post' is required."], 400);
+		if ($feedEntry->getType() !== FeedEntryType::POST && $feedEntry->getType() !== FeedEntryType::REPLY) {
+			throw new ResourceNotFoundException();
 		}
-	}
 
-	/**
-	 * @Route("/api/favorites", methods={"GET"})
-	 *
-	 * @param APIService $apiService
-	 * @return Response|null
-	 */
-	public function favorites(APIService $apiService) {
-		$response = $apiService->validate(false);
-		if (!is_null($response)) return $response;
+		$favorite = $this->entityManager->getRepository(Favorite::class)->findOneBy([
+			"user" => $user,
+			"feedEntry" => $feedEntry
+		]);
 
-		$parameters = $apiService->parameters();
+		if (!is_null($favorite)) {
+			$this->entityManager->remove($favorite);
 
-		if ($parameters->has("user")) {
-			$entityManager = $apiService->getEntityManager();
-
-			/**
-			 * @var User $user
-			 */
-			$user = $entityManager->getRepository(User::class)->findOneBy([
-				"id" => $parameters->get("user")
+			$notification = $this->entityManager->getRepository(Notification::class)->findOneBy([
+				"user" => $feedEntry->getUser(),
+				"referencedFeedEntry" => $feedEntry,
+				"referencedUser" => $user,
+				"type" => NotificationType::FAVORITE
 			]);
 
-			if ($user && $apiService->mayView($user)) {
-				$max = null;
-				if ($parameters->has("max")) {
-					$max = $parameters->get("max");
-					if (!is_numeric($max)) {
-						return $apiService->json(["error" => "'max' has to be an integer."], 400);
-					}
-				}
+			if (!is_null($notification)) {
+				$this->entityManager->remove($notification);
+			}
 
-				$results = [];
+			$this->entityManager->flush();
 
-				$builder = $entityManager->getRepository(Favorite::class)->createQueryBuilder("f")
-					->where("f.user = :user")
-					->setParameter("user", $user)
-					->orderBy("f.time", "DESC")
-					->setMaxResults(30)
-					->setCacheable(false);
+			return $this->response($feedEntry);
+		} else {
+			throw new ResourceNotFoundException();
+		}
+	}
 
-				if ($max) {
-					$builder->andWhere("f.id < :id")
-						->setParameter("id", $max, Type::INTEGER);
-				}
+	/**
+	 * @Route("/favorites", methods={"GET"})
+	 *
+	 * @return Response|null
+	 * @throws InvalidParameterIntegerRangeException
+	 * @throws InvalidParameterTypeException
+	 * @throws MissingParameterException
+	 * @throws ResourceNotFoundException
+	 */
+	public function favorites() {
+		$user = $this->user();
+		$max = $this->max();
 
-				/**
-				 * @var Favorite[] $favorites
-				 */
+		$builder = $this->entityManager->getRepository(Favorite::class)->createQueryBuilder("f")
+			->where("f.user = :user")
+			->setParameter("user", $user)
+			->orderBy("f.time", "DESC")
+			->setMaxResults(30)
+			->setCacheable(false);
+
+		if ($max) {
+			$builder->andWhere("f.id < :id")
+				->setParameter("id", $max, Type::INTEGER);
+		}
+
+		return $this->response(
+			$this->filterFavorites(
 				$favorites = $builder
 					->getQuery()
 					->useQueryCache(true)
-					->getResult();
-
-				foreach ($favorites as $favorite) {
-					if (!$apiService->mayView($favorite->getFeedEntry())) continue;
-					array_push($results, $apiService->serialize($favorite));
-				}
-
-				return $apiService->json(["results" => $results]);
-			} else {
-				return $apiService->json(["error" => "The requested resource could not be found."], 404);
-			}
-		} else {
-			return $apiService->json(["error" => "'user' is required."], 400);
-		}
+					->getResult()
+			)
+		);
 	}
 }

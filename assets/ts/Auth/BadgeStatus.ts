@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,9 +33,9 @@ export default class BadgeStatus {
 		if (!this.updating || ignoreUpdatingFlag) {
 			this.updating = true;
 
-			API.handleRequest("/badgestatus", "GET", {}, (data => {
-				this.notifications = data.notifications;
-				this.messages = data.messages;
+			API.badgeStatus.get().then(status => {
+				this.notifications = status.notifications;
+				this.messages = status.messages;
 				this.updating = false;
 
 				Header.update();
@@ -45,7 +45,7 @@ export default class BadgeStatus {
 				}
 
 				if (callback) callback();
-			}), error => {
+			}).catch(reason => {
 				message.error("Failed to fetch notification info.");
 
 				this.updating = false;
@@ -58,18 +58,14 @@ export default class BadgeStatus {
 		this.notifications = 0;
 		Header.update();
 
-		API.handleRequest("/badgestatus", "DELETE", {
-			type: "notifications"
-		});
+		API.badgeStatus.delete("notifications");
 	}
 
 	public static clearMessages(): void {
 		this.messages = 0;
 		Header.update();
 
-		API.handleRequest("/badgestatus", "DELETE", {
-			type: "notifications"
-		});
+		API.badgeStatus.delete("messages");
 	}
 
 	public static getNotifications(): number {

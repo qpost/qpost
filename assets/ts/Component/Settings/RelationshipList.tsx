@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 import React, {Component} from "react";
 import API from "../../API/API";
 import Block from "../../Entity/Account/Block";
-import BaseObject from "../../Serialization/BaseObject";
 import Follower from "../../Entity/Account/Follower";
 import Spin from "antd/es/spin";
 import {Empty, Typography} from "antd";
@@ -71,16 +70,16 @@ export default class RelationshipList extends Component<{
 				param["max"] = lastUser.getId();
 			}
 
-			API.handleRequest("/blocks", "GET", {}, data => {
+			API.block.list().then(value => {
 				const blocks: Block[] = this.state.blocks || [];
 
-				BaseObject.convertArray(Block, data.results).forEach(block => blocks.push(block));
+				value.forEach(block => blocks.push(block));
 
 				this.setState({
 					blocks,
 					loading: false
 				});
-			})
+			});
 		} else {
 			const param = {
 				[this.props.type === "FOLLOWING" ? "from" : "to"]: window["CURRENT_USER_ID"]
@@ -92,16 +91,16 @@ export default class RelationshipList extends Component<{
 				param["max"] = lastUser.getId();
 			}
 
-			API.handleRequest("/follows", "GET", param, data => {
+			API.follow.list(this.props.type === "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.props.type !== "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.state.followers && this.state.followers.length ? this.state.followers[this.state.followers.length - 1].getId() : undefined).then(value => {
 				const followers: Follower[] = this.state.followers || [];
 
-				BaseObject.convertArray(Follower, data.results).forEach(follower => followers.push(follower));
+				value.forEach(follower => followers.push(follower));
 
 				this.setState({
 					followers,
 					loading: false
 				});
-			})
+			});
 		}
 	};
 
