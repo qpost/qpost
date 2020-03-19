@@ -20,7 +20,6 @@
 import APIEndpoint from "./APIEndpoint";
 import Favorite from "../../Entity/Feed/Favorite";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 import User from "../../Entity/Account/User";
 
@@ -33,7 +32,7 @@ export default class FavoriteEndpoint extends APIEndpoint {
 	 */
 	public post(post: FeedEntry | number): Promise<Favorite> {
 		return new Promise<Favorite>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "POST", {
+			this.api.handleRequestWithPromise(this.path, "POST", {
 				post: (post instanceof FeedEntry) ? post.getId() : post
 			}).then(value => {
 				return resolve(BaseObject.convertObject(Favorite, value));
@@ -49,7 +48,7 @@ export default class FavoriteEndpoint extends APIEndpoint {
 	 */
 	public delete(post: FeedEntry | number): Promise<FeedEntry> {
 		return new Promise<FeedEntry>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "DELETE", {
+			this.api.handleRequestWithPromise(this.path, "DELETE", {
 				post: (post instanceof FeedEntry) ? post.getId() : post
 			}).then(value => {
 				return resolve(BaseObject.convertObject(FeedEntry, value));
@@ -72,7 +71,7 @@ export default class FavoriteEndpoint extends APIEndpoint {
 		data["max"] = max;
 
 		return new Promise<Favorite[]>((resolve, reject) => {
-			API.handleRequestWithPromise("/favorites", "GET", data).then(value => {
+			this.api.handleRequestWithPromise("/favorites", "GET", data).then(value => {
 				return resolve(BaseObject.convertArray(Favorite, value));
 			}).catch(reason => {
 				return reject(reason);

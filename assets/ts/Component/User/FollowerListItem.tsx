@@ -59,7 +59,7 @@ export default class FollowerListItem extends Component<{
 			});
 		}
 
-		API.followRequest.delete(this.props.requestId, accept ? "accept" : "decline");
+		API.i.followRequest.delete(this.props.requestId, accept ? "accept" : "decline");
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

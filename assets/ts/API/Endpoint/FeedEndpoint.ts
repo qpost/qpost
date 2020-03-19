@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 import User from "../../Entity/Account/User";
 
@@ -42,7 +41,7 @@ export default class FeedEndpoint extends APIEndpoint {
 		if (min) data["min"] = min;
 
 		return new Promise<FeedEntry[]>((resolve, reject) => {
-			return API.handleRequestWithPromise(this.path, "GET", data).then(value => {
+			return this.api.handleRequestWithPromise(this.path, "GET", data).then(value => {
 				return resolve(BaseObject.convertArray(FeedEntry, value));
 			}).catch(reason => {
 				return reject(reason);

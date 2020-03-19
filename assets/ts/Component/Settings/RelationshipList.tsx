@@ -70,7 +70,7 @@ export default class RelationshipList extends Component<{
 				param["max"] = lastUser.getId();
 			}
 
-			API.block.list().then(value => {
+			API.i.block.list().then(value => {
 				const blocks: Block[] = this.state.blocks || [];
 
 				value.forEach(block => blocks.push(block));
@@ -91,7 +91,7 @@ export default class RelationshipList extends Component<{
 				param["max"] = lastUser.getId();
 			}
 
-			API.follow.list(this.props.type === "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.props.type !== "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.state.followers && this.state.followers.length ? this.state.followers[this.state.followers.length - 1].getId() : undefined).then(value => {
+			API.i.follow.list(this.props.type === "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.props.type !== "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.state.followers && this.state.followers.length ? this.state.followers[this.state.followers.length - 1].getId() : undefined).then(value => {
 				const followers: Follower[] = this.state.followers || [];
 
 				value.forEach(follower => followers.push(follower));

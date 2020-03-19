@@ -70,7 +70,7 @@ io.on("connection", socket => {
 
 		const connection = ConnectionManager.getConnection(socket.id);
 
-		if (connection.idleTimer) {
+		if (connection.idleTimer && typeof connection.idleTimer === "number") {
 			clearTimeout(connection.idleTimer);
 			connection.idleTimer = undefined;
 		}

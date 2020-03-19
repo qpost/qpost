@@ -55,7 +55,7 @@ export default class FavoriteButton extends Component<{
 				this.setState({loading: true});
 
 				if (this.state.favorited) {
-					API.favorite.delete(this.props.entry).then(feedEntry => {
+					API.i.favorite.delete(this.props.entry).then(feedEntry => {
 						this.setState({
 							favorited: !this.state.favorited,
 							loading: false,
@@ -70,7 +70,7 @@ export default class FavoriteButton extends Component<{
 						this.setState({loading: false});
 					});
 				} else {
-					API.favorite.post(this.props.entry).then(favorite => {
+					API.i.favorite.post(this.props.entry).then(favorite => {
 						console.log("fav", favorite.getFeedEntry());
 
 						this.setState({

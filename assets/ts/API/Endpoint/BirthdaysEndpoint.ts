@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import User from "../../Entity/Account/User";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class BirthdaysEndpoint extends APIEndpoint {
@@ -31,7 +30,7 @@ export default class BirthdaysEndpoint extends APIEndpoint {
 	 */
 	public get(date: string): Promise<User[]> {
 		return new Promise<User[]>((resolve, reject) => {
-			return API.handleRequestWithPromise(this.path, "GET", {date}).then(value => {
+			return this.api.handleRequestWithPromise(this.path, "GET", {date}).then(value => {
 				return resolve(BaseObject.convertArray(User, value));
 			}).catch(reason => {
 				return reject(reason);

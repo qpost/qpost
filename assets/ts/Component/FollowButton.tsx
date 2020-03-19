@@ -74,7 +74,7 @@ export default class FollowButton extends Component<{
 						loading: true
 					});
 
-					API.handleRequest(followStatus === FollowStatus.BLOCKED ? "/block" : "/follow", method, {[followStatus === FollowStatus.BLOCKED ? "target" : "to"]: this.props.target.getId()}, data => {
+					API.i.handleRequest(followStatus === FollowStatus.BLOCKED ? "/block" : "/follow", method, {[followStatus === FollowStatus.BLOCKED ? "target" : "to"]: this.props.target.getId()}, data => {
 						if (followStatus === FollowStatus.BLOCKED) {
 							this.setState({
 								followStatus: FollowStatus.NOT_FOLLOWING,
@@ -127,7 +127,7 @@ export default class FollowButton extends Component<{
 
 			if (Auth.isLoggedIn()) {
 				if (!this.isCurrentUser()) {
-					API.follow.get(window["CURRENT_USER_ID"], this.props.target).then(value => {
+					API.i.follow.get(window["CURRENT_USER_ID"], this.props.target).then(value => {
 						if (value instanceof Follower) {
 							this.setState({
 								followStatus: FollowStatus.FOLLOWING,

@@ -52,7 +52,7 @@ export default class TrendingTopics extends Component<{
 			return;
 		}
 
-		API.trends.get(this.props.limit || 20).then(topics => {
+		API.i.trends.get(this.props.limit || 20).then(topics => {
 			this.load(topics);
 
 			if (this.state.trends) {

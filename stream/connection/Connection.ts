@@ -18,11 +18,12 @@
  */
 
 import ConnectionStatus from "./ConnectionStatus";
+import Timeout = NodeJS.Timeout;
 
 export default class Connection {
 	public id: string;
 	public status: ConnectionStatus;
-	public idleTimer: number;
+	public idleTimer: Timeout | number;
 	public timeConnected: number;
 
 	constructor(id: string) {

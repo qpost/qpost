@@ -70,7 +70,7 @@ export default class Notifications extends Component<any, {
 	}
 
 	load(max?: number) {
-		API.notifications.get(max).then(value => {
+		API.i.notifications.get(max).then(value => {
 			let notifications: Notification[] = this.state.notifications || [];
 
 			value.forEach(notification => notifications.push(notification));

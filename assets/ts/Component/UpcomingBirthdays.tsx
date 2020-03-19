@@ -52,7 +52,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 
 			const now = new Date();
 
-			API.birthdays.get(now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDate())).then(users => {
+			API.i.birthdays.get(now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDate())).then(users => {
 				this.load(users);
 
 				if (this.state.results) {

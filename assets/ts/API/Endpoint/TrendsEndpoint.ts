@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import TrendingHashtagData from "../../Entity/Feed/TrendingHashtagData";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class TrendsEndpoint extends APIEndpoint {
@@ -31,7 +30,7 @@ export default class TrendsEndpoint extends APIEndpoint {
 	 */
 	public get(limit: number): Promise<TrendingHashtagData[]> {
 		return new Promise<TrendingHashtagData[]>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "GET", {limit}).then(value => {
+			this.api.handleRequestWithPromise(this.path, "GET", {limit}).then(value => {
 				return resolve(BaseObject.convertArray(TrendingHashtagData, value));
 			}).catch(reason => {
 				return reject(reason);

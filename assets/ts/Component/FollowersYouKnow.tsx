@@ -41,7 +41,7 @@ export default class FollowersYouKnow extends Component<{
 	}
 
 	componentDidMount(): void {
-		API.followersYouKnow.get(this.props.user, 4 * 3).then(users => {
+		API.i.followersYouKnow.get(this.props.user, 4 * 3).then(users => {
 			this.setState({users});
 		}).catch(reason => {
 			this.setState({

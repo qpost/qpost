@@ -220,7 +220,7 @@ export default class PostForm extends Component<any, {
 
 			if (this.state.replyTo) parameters["parent"] = this.state.replyTo.getId();
 
-			API.status.post(message, nsfw, attachments, this.state.replyTo).then(post => {
+			API.i.status.post(message, nsfw, attachments, this.state.replyTo).then(post => {
 				const entryList: FeedEntryList | null = FeedEntryList.instance;
 				const replyList: ReplyList | null = ReplyList.instance;
 
@@ -354,7 +354,7 @@ export default class PostForm extends Component<any, {
 						loadingUsers: true
 					});
 
-					API.search.get("user", text, 10).then(result => {
+					API.i.search.get("user", text, 10).then(result => {
 						this.setState({
 							suggestedUsers: result.users,
 							loadingUsers: false

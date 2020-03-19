@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class StatusEndpoint extends APIEndpoint {
@@ -31,7 +30,7 @@ export default class StatusEndpoint extends APIEndpoint {
 	 */
 	public get(id: number): Promise<FeedEntry> {
 		return new Promise<FeedEntry>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "GET", {id}).then(value => {
+			this.api.handleRequestWithPromise(this.path, "GET", {id}).then(value => {
 				return resolve(BaseObject.convertObject(FeedEntry, value));
 			}).catch(reason => {
 				return reject(reason);
@@ -52,7 +51,7 @@ export default class StatusEndpoint extends APIEndpoint {
 		if (parent) data["parent"] = (parent instanceof FeedEntry) ? parent.getId() : parent;
 
 		return new Promise<FeedEntry>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "POST", data).then(value => {
+			this.api.handleRequestWithPromise(this.path, "POST", data).then(value => {
 				return resolve(BaseObject.convertObject(FeedEntry, value));
 			}).catch(reason => {
 				return reject(reason);
@@ -66,9 +65,9 @@ export default class StatusEndpoint extends APIEndpoint {
 	 */
 	public delete(id: FeedEntry | number): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "DELETE", {
+			this.api.handleRequestWithPromise(this.path, "DELETE", {
 				id: (id instanceof FeedEntry) ? id.getId() : id
-			}).then(value => {
+			}).then(() => {
 				return resolve();
 			}).catch(reason => {
 				return reject(reason);

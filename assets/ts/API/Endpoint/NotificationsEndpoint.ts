@@ -18,7 +18,6 @@
  */
 
 import APIEndpoint from "./APIEndpoint";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 import Notification from "../../Entity/Feed/Notification";
 
@@ -31,7 +30,7 @@ export default class NotificationsEndpoint extends APIEndpoint {
 	 */
 	public get(max?: number): Promise<Notification[]> {
 		return new Promise<Notification[]>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "GET", max ? {max} : {}).then(value => {
+			this.api.handleRequestWithPromise(this.path, "GET", max ? {max} : {}).then(value => {
 				return resolve(BaseObject.convertArray(Notification, value));
 			}).catch(reason => {
 				return reject(reason);

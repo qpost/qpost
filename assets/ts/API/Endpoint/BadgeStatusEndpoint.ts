@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import BadgeStatus from "../../Entity/BadgeStatus";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class BadgeStatusEndpoint extends APIEndpoint {
@@ -30,7 +29,7 @@ export default class BadgeStatusEndpoint extends APIEndpoint {
 	 */
 	public get(): Promise<BadgeStatus> {
 		return new Promise<BadgeStatus>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path).then(value => {
+			this.api.handleRequestWithPromise(this.path).then(value => {
 				return resolve(BaseObject.convertObject(BadgeStatus, value));
 			}).catch(reason => {
 				return reject(reason);
@@ -44,7 +43,7 @@ export default class BadgeStatusEndpoint extends APIEndpoint {
 	 */
 	public delete(type: "notifications" | "messages"): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "DELETE", {type}).then(() => {
+			this.api.handleRequestWithPromise(this.path, "DELETE", {type}).then(() => {
 				return resolve();
 			}).catch(reason => {
 				return reject(reason);

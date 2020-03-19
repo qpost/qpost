@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class RepliesEndpoint extends APIEndpoint {
@@ -32,7 +31,7 @@ export default class RepliesEndpoint extends APIEndpoint {
 	 */
 	public get(feedEntry: FeedEntry | number, page: number): Promise<FeedEntry[][]> {
 		return new Promise<FeedEntry[][]>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "GET", {
+			this.api.handleRequestWithPromise(this.path, "GET", {
 				feedEntry: (feedEntry instanceof FeedEntry) ? feedEntry.getId() : feedEntry,
 				page
 			}).then(value => {

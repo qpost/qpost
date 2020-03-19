@@ -56,7 +56,7 @@ export default class ShareButton extends Component<{
 					this.setState({loading: true});
 
 					if (this.state.shared) {
-						API.share.delete(this.props.entry).then(feedEntry => {
+						API.i.share.delete(this.props.entry).then(feedEntry => {
 							this.setState({
 								shared: !this.state.shared,
 								loading: false,
@@ -71,7 +71,7 @@ export default class ShareButton extends Component<{
 							this.setState({loading: false});
 						});
 					} else {
-						API.share.post(this.props.entry).then(feedEntry => {
+						API.i.share.post(this.props.entry).then(feedEntry => {
 							this.setState({
 								shared: !this.state.shared,
 								loading: false,

@@ -18,7 +18,7 @@
  */
 
 const merge = require("webpack-merge");
-const common = require("./webpack.common");
+const common = require("./webpack.common.cjs");
 const {resolve} = require("path");
 
 module.exports = merge(common, {

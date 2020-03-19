@@ -20,7 +20,6 @@
 import APIEndpoint from "./APIEndpoint";
 import FeedEntry from "../../Entity/Feed/FeedEntry";
 import User from "../../Entity/Account/User";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 import SearchResult from "../../Entity/SearchResult";
 
@@ -37,7 +36,7 @@ export default class SearchEndpoint extends APIEndpoint {
 		limit = limit || 15;
 
 		return new Promise<SearchResult>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "GET", {
+			this.api.handleRequestWithPromise(this.path, "GET", {
 				type, query, limit
 			}).then(value => {
 				const result = new SearchResult();

@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import Token from "../../Entity/Account/Token";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 import User from "../../Entity/Account/User";
 
@@ -31,7 +30,7 @@ export default class TokenEndpoint extends APIEndpoint {
 	 */
 	public list(): Promise<Token[]> {
 		return new Promise<Token[]>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path).then(value => {
+			this.api.handleRequestWithPromise(this.path).then(value => {
 				return resolve(BaseObject.convertArray(Token, value));
 			}).catch(reason => {
 				return reject(reason);
@@ -45,7 +44,7 @@ export default class TokenEndpoint extends APIEndpoint {
 	 */
 	public delete(id: string): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "DELETE", {id}).then(value => {
+			this.api.handleRequestWithPromise(this.path, "DELETE", {id}).then(value => {
 				return resolve();
 			}).catch(reason => {
 				return reject(reason);
@@ -58,7 +57,7 @@ export default class TokenEndpoint extends APIEndpoint {
 	 */
 	public verify(): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path + "/verify", "POST").then(value => {
+			this.api.handleRequestWithPromise(this.path + "/verify", "POST").then(value => {
 				return resolve(BaseObject.convertObject(User, value.user));
 			}).catch(reason => {
 				return reject(reason);

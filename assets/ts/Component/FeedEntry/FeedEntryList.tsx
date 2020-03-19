@@ -153,7 +153,7 @@ export default class FeedEntryList extends Component<{
 		parameters["min"] = this.state.entries[0].getId();
 		parameters["type"] = this.props.type || "posts";
 
-		API.feed.get(this.props.type || "posts", this.props.userID, undefined, this.state.entries[0].getId()).then(value => {
+		API.i.feed.get(this.props.type || "posts", this.props.userID, undefined, this.state.entries[0].getId()).then(value => {
 			let entries: FeedEntry[] = [];
 
 			value.forEach(feedEntry => {
@@ -199,7 +199,7 @@ export default class FeedEntryList extends Component<{
 			parameters["type"] = this.props.type || "posts";
 		}
 
-		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
+		API.i.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = (this.state.entries && max ? this.state.entries : null) || [];
 
 			data.forEach(result => {

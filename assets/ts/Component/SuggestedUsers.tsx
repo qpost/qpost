@@ -50,7 +50,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 				return;
 			}
 
-			API.suggestedUsers.get().then(users => {
+			API.i.suggestedUsers.get().then(users => {
 				this.load(users);
 
 				if (this.state.results) {

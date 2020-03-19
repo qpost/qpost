@@ -120,7 +120,7 @@ export default class App extends Component<any, {
 	componentDidMount(): void {
 		if (Auth.isLoggedIn()) {
 			// TODO: Pre-load home page data and pass it to the HomeFeed component
-			API.token.verify().then(user => {
+			API.i.token.verify().then(user => {
 				Auth.setCurrentUser(user);
 
 				BadgeStatus.update(() => {

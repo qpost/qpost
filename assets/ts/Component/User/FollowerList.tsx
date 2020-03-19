@@ -98,7 +98,7 @@ export default class FollowerList extends Component<{
 		}
 		if (this.props.query) parameters["query"] = this.props.query;
 
-		API.handleRequest(this.props.mode === "search" ? "/search" : "/follows", "GET", parameters, data => {
+		API.i.handleRequest(this.props.mode === "search" ? "/search" : "/follows", "GET", parameters, data => {
 			if (this.props.mode !== "search") {
 				let followers: Follower[] = this.state.followers || [];
 

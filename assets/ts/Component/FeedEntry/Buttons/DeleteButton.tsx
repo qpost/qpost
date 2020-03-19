@@ -116,7 +116,7 @@ export default class DeleteButton extends Component<{
 															loading: true
 														});
 
-														API.status.delete(entry).then(() => {
+														API.i.status.delete(entry).then(() => {
 															message.success("The post has been deleted.");
 
 															entries.splice(index, 1);
@@ -148,7 +148,7 @@ export default class DeleteButton extends Component<{
 											loading: true
 										});
 
-										API.status.delete(this.props.entry).then(() => {
+										API.i.status.delete(this.props.entry).then(() => {
 											message.success("The post has been deleted.");
 
 											this.setState({

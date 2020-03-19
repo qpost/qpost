@@ -68,7 +68,7 @@ export default class FavoriteList extends Component<{
 	}
 
 	load(max?: number) {
-		API.favorite.list(this.props.user, max).then(favorites => {
+		API.i.favorite.list(this.props.user, max).then(favorites => {
 			favorites.forEach(result => favorites.push(result));
 
 			this.setState({

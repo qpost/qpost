@@ -70,7 +70,7 @@ export default class Status extends Component<any, {
 		const id = this.props.match.params.id;
 
 		if (id) {
-			API.status.get(id).then(feedEntry => {
+			API.i.status.get(id).then(feedEntry => {
 				this.setState({
 					status: feedEntry,
 					loadingFinished: true

@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import FollowRequest from "../../Entity/Account/FollowRequest";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class FollowRequestEndpoint extends APIEndpoint {
@@ -31,7 +30,7 @@ export default class FollowRequestEndpoint extends APIEndpoint {
 	 */
 	public list(max?: number): Promise<FollowRequest[]> {
 		return new Promise<FollowRequest[]>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "GET", max ? {max} : {}).then(value => {
+			this.api.handleRequestWithPromise(this.path, "GET", max ? {max} : {}).then(value => {
 				return resolve(BaseObject.convertArray(FollowRequest, value));
 			}).catch(reason => {
 				return reject(reason);
@@ -46,7 +45,7 @@ export default class FollowRequestEndpoint extends APIEndpoint {
 	 */
 	public delete(id: FollowRequest | number, action: "accept" | "decline"): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "DELETE", {
+			this.api.handleRequestWithPromise(this.path, "DELETE", {
 				id: (id instanceof FollowRequest) ? id.getId() : id,
 				action
 			}).then(() => {

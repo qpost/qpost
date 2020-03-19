@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import User from "../../Entity/Account/User";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class FollowersYouKnowEndpoint extends APIEndpoint {
@@ -32,7 +31,7 @@ export default class FollowersYouKnowEndpoint extends APIEndpoint {
 	 */
 	public get(target: User | number, limit: number): Promise<User[]> {
 		return new Promise<User[]>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "GET", {
+			this.api.handleRequestWithPromise(this.path, "GET", {
 				target: (target instanceof User) ? target.getId() : target,
 				limit
 			}).then(value => {

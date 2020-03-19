@@ -38,31 +38,39 @@ import FollowersYouKnowEndpoint from "./Endpoint/FollowersYouKnowEndpoint";
 import FollowRequestEndpoint from "./Endpoint/FollowRequestEndpoint";
 
 export default class API {
-	public static readonly badgeStatus: BadgeStatusEndpoint = new BadgeStatusEndpoint();
-	public static readonly birthdays: BirthdaysEndpoint = new BirthdaysEndpoint();
-	public static readonly block: BlockEndpoint = new BlockEndpoint();
-	public static readonly favorite: FavoriteEndpoint = new FavoriteEndpoint();
-	public static readonly feed: FeedEndpoint = new FeedEndpoint();
-	public static readonly follow: FollowEndpoint = new FollowEndpoint();
-	public static readonly followersYouKnow: FollowersYouKnowEndpoint = new FollowersYouKnowEndpoint();
-	public static readonly followRequest: FollowRequestEndpoint = new FollowRequestEndpoint();
-	public static readonly notifications: NotificationsEndpoint = new NotificationsEndpoint();
-	public static readonly replies: RepliesEndpoint = new RepliesEndpoint();
-	public static readonly search: SearchEndpoint = new SearchEndpoint();
-	public static readonly share: ShareEndpoint = new ShareEndpoint();
-	public static readonly status: StatusEndpoint = new StatusEndpoint();
-	public static readonly suggestedUsers: SuggestedUsersEndpoint = new SuggestedUsersEndpoint();
-	public static readonly token: TokenEndpoint = new TokenEndpoint();
-	public static readonly trends: TrendsEndpoint = new TrendsEndpoint();
-	public static readonly user: UserEndpoint = new UserEndpoint();
-
+	public static readonly i: API = API.createDefaultInstance();
+	public readonly badgeStatus: BadgeStatusEndpoint = new BadgeStatusEndpoint(this);
+	public readonly birthdays: BirthdaysEndpoint = new BirthdaysEndpoint(this);
+	public readonly block: BlockEndpoint = new BlockEndpoint(this);
+	public readonly favorite: FavoriteEndpoint = new FavoriteEndpoint(this);
+	public readonly feed: FeedEndpoint = new FeedEndpoint(this);
+	public readonly follow: FollowEndpoint = new FollowEndpoint(this);
+	public readonly followersYouKnow: FollowersYouKnowEndpoint = new FollowersYouKnowEndpoint(this);
+	public readonly followRequest: FollowRequestEndpoint = new FollowRequestEndpoint(this);
+	public readonly notifications: NotificationsEndpoint = new NotificationsEndpoint(this);
+	public readonly replies: RepliesEndpoint = new RepliesEndpoint(this);
+	public readonly search: SearchEndpoint = new SearchEndpoint(this);
+	public readonly share: ShareEndpoint = new ShareEndpoint(this);
+	public readonly status: StatusEndpoint = new StatusEndpoint(this);
+	public readonly suggestedUsers: SuggestedUsersEndpoint = new SuggestedUsersEndpoint(this);
+	public readonly token: TokenEndpoint = new TokenEndpoint(this);
+	public readonly trends: TrendsEndpoint = new TrendsEndpoint(this);
+	public readonly user: UserEndpoint = new UserEndpoint(this);
 	/**
 	 * The axios instance to be used.
 	 */
-	public static readonly http: AxiosInstance = axios.create({
-		baseURL: window.location.protocol + "//" + window.location.host + "/api",
-		headers: Auth.isLoggedIn() ? {"Authorization": "Bearer " + Auth.getToken()} : {}
-	});
+	private http: AxiosInstance;
+
+	constructor(baseURL?: string, token?: string) {
+		this.http = axios.create({
+			baseURL,
+			headers: token ? {"Authorization": "Bearer " + token} : {}
+		});
+	}
+
+	private static createDefaultInstance(): API {
+		return new API(window.location.protocol + "//" + window.location.host + "/api", Auth.isLoggedIn() ? Auth.getToken() : undefined);
+	}
 
 	/**
 	 * Creates a request to the qpost API server.
@@ -74,7 +82,7 @@ export default class API {
 	 * @param errorCallback The callback to be executed if the request fails.
 	 * @deprecated
 	 */
-	public static handleRequest(url: string, method?: Method, data?: any, callback?: (data: any) => void, errorCallback?: (error: string) => void): void {
+	public handleRequest(url: string, method?: Method, data?: any, callback?: (data: any) => void, errorCallback?: (error: string) => void): void {
 		this.handleRequestWithPromise(url, method, data).then(value => {
 			if (callback) {
 				callback(value);
@@ -93,7 +101,7 @@ export default class API {
 	 * @param method The HTTP method to be used.
 	 * @param data The request data as an object.
 	 */
-	public static handleRequestWithPromise(url: string, method?: Method, data?: any): Promise<any> {
+	public handleRequestWithPromise(url: string, method?: Method, data?: any): Promise<any> {
 		method = method || "GET";
 		data = data || {};
 

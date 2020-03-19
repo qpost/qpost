@@ -45,7 +45,7 @@ export default class Sessions extends Component<any, {
 	}
 
 	componentDidMount(): void {
-		API.token.list().then(tokens => {
+		API.i.token.list().then(tokens => {
 			this.setState({
 				loading: false,
 				tokens
@@ -137,7 +137,7 @@ export default class Sessions extends Component<any, {
 										if (!current && !this.isLoading(token.getId())) {
 											this.setLoading(token.getId(), true);
 
-											API.token.delete(token.getId()).then(() => {
+											API.i.token.delete(token.getId()).then(() => {
 												message.success("The session has been killed.");
 												this.setLoading(token.getId(), false, true);
 											}).catch(reason => {

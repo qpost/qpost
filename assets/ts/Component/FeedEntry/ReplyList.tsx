@@ -61,7 +61,7 @@ export default class ReplyList extends Component<{
 	}
 
 	load() {
-		API.replies.get(this.props.feedEntry, this.state.page).then(batches => {
+		API.i.replies.get(this.props.feedEntry, this.state.page).then(batches => {
 			const entries = this.state.entries || [];
 
 			batches.forEach(replyBatch => {

@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import User from "../../Entity/Account/User";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class SuggestedUsersEndpoint extends APIEndpoint {
@@ -30,7 +29,7 @@ export default class SuggestedUsersEndpoint extends APIEndpoint {
 	 */
 	public get(): Promise<User[]> {
 		return new Promise<User[]>((resolve, reject) => {
-			return API.handleRequestWithPromise(this.path, "GET").then(value => {
+			return this.api.handleRequestWithPromise(this.path, "GET").then(value => {
 				resolve(BaseObject.convertArray(User, value));
 			}).catch(reason => {
 				reject(reason);

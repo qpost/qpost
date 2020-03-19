@@ -85,7 +85,7 @@ export default class Profile extends Component<any, {
 				user: BaseObject.convertObject(User, JSON.parse(stored))
 			});
 
-			API.user.get(username).then(user => {
+			API.i.user.get(username).then(user => {
 				this.setState({
 					user
 				});

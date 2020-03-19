@@ -80,7 +80,7 @@ export default class Auth {
 		} else {
 			this.killPushSubscription(() => {
 				if (this.getToken()) {
-					API.token.delete(this.getToken()).then(() => {
+					API.i.token.delete(this.getToken()).then(() => {
 						this.setToken(undefined);
 						this.setCurrentUser(undefined);
 

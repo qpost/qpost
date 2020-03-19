@@ -19,7 +19,6 @@
 
 import APIEndpoint from "./APIEndpoint";
 import Follower from "../../Entity/Account/Follower";
-import API from "../API";
 import User from "../../Entity/Account/User";
 import BaseObject from "../../Serialization/BaseObject";
 
@@ -33,7 +32,7 @@ export default class FollowEndpoint extends APIEndpoint {
 	 */
 	public get(from: User | number, to: User | number): Promise<Follower | number> {
 		return new Promise<Follower | number>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "GET", {
+			this.api.handleRequestWithPromise(this.path, "GET", {
 				from: (from instanceof User) ? from.getId() : from,
 				to: (to instanceof User) ? to.getId() : to
 			}).then(value => {
@@ -54,7 +53,7 @@ export default class FollowEndpoint extends APIEndpoint {
 	 */
 	public post(to: User | number): Promise<number> {
 		return new Promise<number>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "POST", {
+			this.api.handleRequestWithPromise(this.path, "POST", {
 				to: (to instanceof User) ? to.getId() : to
 			}).then(value => {
 				return resolve(value.status);
@@ -70,7 +69,7 @@ export default class FollowEndpoint extends APIEndpoint {
 	 */
 	public delete(to: User | number): Promise<number> {
 		return new Promise<number>((resolve, reject) => {
-			API.handleRequestWithPromise(this.path, "DELETE", {
+			this.api.handleRequestWithPromise(this.path, "DELETE", {
 				to: (to instanceof User) ? to.getId() : to
 			}).then(value => {
 				return resolve(value.status);
@@ -93,7 +92,7 @@ export default class FollowEndpoint extends APIEndpoint {
 		if (max) data["max"] = max;
 
 		return new Promise<Follower[]>((resolve, reject) => {
-			API.handleRequestWithPromise("/follows", "GET", data).then(value => {
+			this.api.handleRequestWithPromise("/follows", "GET", data).then(value => {
 				return resolve(BaseObject.convertArray(Follower, value));
 			}).catch(reason => {
 				return reject(reason);

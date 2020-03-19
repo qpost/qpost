@@ -17,6 +17,12 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-export default class APIEndpoint {
+import API from "../API";
 
+export default class APIEndpoint {
+	protected api: API;
+
+	constructor(api: API) {
+		this.api = api;
+	}
 }

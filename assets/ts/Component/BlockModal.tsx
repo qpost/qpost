@@ -84,7 +84,7 @@ export default class BlockModal extends Component<any, {
 					loading: true
 				});
 
-				API.block.post(user).then(block => {
+				API.i.block.post(user).then(block => {
 					const newUser = block.getTarget();
 
 					message.success("You have successfully blocked @" + user.getUsername());

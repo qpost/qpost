@@ -20,7 +20,6 @@
 import APIEndpoint from "./APIEndpoint";
 import Block from "../../Entity/Account/Block";
 import User from "../../Entity/Account/User";
-import API from "../API";
 import BaseObject from "../../Serialization/BaseObject";
 
 export default class BlockEndpoint extends APIEndpoint {
@@ -32,7 +31,7 @@ export default class BlockEndpoint extends APIEndpoint {
 	 */
 	public get(target: User | number): Promise<Block> {
 		return new Promise<Block>((resolve, reject) => {
-			return API.handleRequestWithPromise(this.path, "GET", {
+			return this.api.handleRequestWithPromise(this.path, "GET", {
 				target: target instanceof User ? target.getId() : target
 			}).then(value => {
 				return resolve(BaseObject.convertObject(Block, value));
@@ -48,7 +47,7 @@ export default class BlockEndpoint extends APIEndpoint {
 	 */
 	public post(target: User | number): Promise<Block> {
 		return new Promise<Block>((resolve, reject) => {
-			return API.handleRequestWithPromise(this.path, "POST", {
+			return this.api.handleRequestWithPromise(this.path, "POST", {
 				target: target instanceof User ? target.getId() : target
 			}).then(value => {
 				return resolve(BaseObject.convertObject(Block, value));
@@ -64,7 +63,7 @@ export default class BlockEndpoint extends APIEndpoint {
 	 */
 	public delete(target: User | number): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			return API.handleRequestWithPromise(this.path, "DELETE", {
+			return this.api.handleRequestWithPromise(this.path, "DELETE", {
 				target: target instanceof User ? target.getId() : target
 			}).then(() => {
 				return resolve();
@@ -80,7 +79,7 @@ export default class BlockEndpoint extends APIEndpoint {
 	 */
 	public list(max?: number): Promise<Block[]> {
 		return new Promise<Block[]>((resolve, reject) => {
-			return API.handleRequestWithPromise("/blocks", "GET", max ? {max} : {}).then(value => {
+			return this.api.handleRequestWithPromise("/blocks", "GET", max ? {max} : {}).then(value => {
 				return resolve(BaseObject.convertArray(Block, value));
 			}).catch(reason => {
 				return reject(reason);
