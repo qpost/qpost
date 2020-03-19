@@ -52,17 +52,29 @@ const server = http.listen(port, () => {
 
 // Connection listener
 io.on("connection", socket => {
-	log.info("Incoming connection");
+	log.debug("Connected: " + socket.id);
 
 	const connection = ConnectionManager.getConnection(socket.id);
 	connection.idleTimer = setTimeout(() => {
 		if (connection.status === ConnectionStatus.UNAUTHORIZED) {
 			socket.disconnect(true);
-			ConnectionManager.unregister(connection);
 		}
 	}, 3000);
 
 	socket.on("message", message => {
 		log.debug("Incoming message: " + message);
+	});
+
+	socket.on("disconnect", reason => {
+		log.debug("Disconnected: " + socket.id + " (" + reason + ")");
+
+		const connection = ConnectionManager.getConnection(socket.id);
+
+		if (connection.idleTimer) {
+			clearTimeout(connection.idleTimer);
+			connection.idleTimer = undefined;
+		}
+
+		ConnectionManager.unregister(connection);
 	});
 });
