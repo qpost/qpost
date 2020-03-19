@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +18,23 @@
  */
 
 // Load environment variables
-const path = require("path");
-require("dotenv").config({
+import path from "path";
+import dotenv from "dotenv";
+import log from "./logger";
+import express from "express";
+import {Server} from "http";
+import SocketIO from "socket.io";
+import ConnectionManager from "./connection/ConnectionManager";
+import ConnectionStatus from "./connection/ConnectionStatus";
+
+const __dirname = path.resolve('');
+
+dotenv.config({
 	path: path.resolve(__dirname, "../.env.local")
 });
 
 // Load constants
-const version = require(path.resolve(__dirname, "../package.json")).version || "1.0.0";
-const log = require("./logger");
-const express = require("express");
+const version = process.env.VERSION || "1.0.0";
 const port = process.env.PORT || 8993;
 
 log.info("Starting Stream API for qpost v" + version);
@@ -35,8 +43,8 @@ log.info("Starting Stream API for qpost v" + version);
 const app = express();
 app.set("port", port);
 
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
+const http = new Server(app);
+const io: SocketIO.Server = SocketIO(http);
 
 const server = http.listen(port, () => {
 	log.info("Listening on port " + port);
@@ -45,6 +53,14 @@ const server = http.listen(port, () => {
 // Connection listener
 io.on("connection", socket => {
 	log.info("Incoming connection");
+
+	const connection = ConnectionManager.getConnection(socket.id);
+	connection.idleTimer = setTimeout(() => {
+		if (connection.status === ConnectionStatus.UNAUTHORIZED) {
+			socket.disconnect(true);
+			ConnectionManager.unregister(connection);
+		}
+	}, 3000);
 
 	socket.on("message", message => {
 		log.debug("Incoming message: " + message);

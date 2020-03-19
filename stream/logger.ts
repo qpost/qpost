@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,15 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-const winston = require("winston");
-const consoleFormat = require("winston-console-format").consoleFormat;
+import winston from "winston";
+import {consoleFormat} from "winston-console-format";
 
 // Init logger
-module.exports = winston.createLogger({
+export default winston.createLogger({
 	level: (process.env.APP_ENV || "dev") === "dev" ? "debug" : "info",
 	format: winston.format.combine(
 		winston.format.timestamp(),
-		winston.format.errors({ stack: true }),
+		winston.format.errors({stack: true}),
 		winston.format.splat(),
 		winston.format.json()
 	),
