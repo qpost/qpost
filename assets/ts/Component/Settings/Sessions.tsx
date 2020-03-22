@@ -18,14 +18,14 @@
  */
 
 import {Alert, Button, Card, Col, message, Row, Spin} from "antd";
-import API from "../../API/API";
+import API from "../../API";
 import React, {Component} from "react";
-import Token from "../../Entity/Account/Token";
-import IpStackResult from "../../Entity/Account/IpStackResult";
 import {UAParser} from "ua-parser-js";
 import Auth from "../../Auth/Auth";
 import {convertUserAgentToIconClass} from "../../Util/Format";
 import TimeAgo from "../TimeAgo";
+import Token from "../../api/src/Entity/Token";
+import IPStackResult from "../../api/src/Entity/IPStackResult";
 
 export default class Sessions extends Component<any, {
 	loading: boolean,
@@ -99,7 +99,7 @@ export default class Sessions extends Component<any, {
 					const userAgentString = token.getUserAgent();
 					const userAgent: UAParser = userAgentString ? new UAParser(token.getUserAgent()) : null;
 
-					const location: IpStackResult | null = token.getIPStackResult();
+					const location: IPStackResult | null = token.getIPStackResult();
 
 					const current: boolean = token.getId() === Auth.getToken();
 

@@ -18,16 +18,16 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import Auth from "../../../Auth/Auth";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import Modal from "antd/es/modal";
 import "antd/es/modal/style";
 import {Button, message} from "antd";
 import "antd/es/button/style";
-import API from "../../../API/API";
+import API from "../../../API";
 import {Redirect} from "react-router";
 import FeedEntryList from "../FeedEntryList";
+import FeedEntry from "../../../api/src/Entity/FeedEntry";
 
 export default class DeleteButton extends Component<{
 	entry: FeedEntry,

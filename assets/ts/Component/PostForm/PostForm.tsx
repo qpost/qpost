@@ -18,7 +18,6 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
 import Tooltip from "antd/es/tooltip";
 import "antd/es/tooltip/style";
 import Button from "antd/es/button";
@@ -29,7 +28,7 @@ import "antd/es/modal/style";
 import AntMessage from "antd/es/message";
 import WindowSizeListener from "react-window-size-listener";
 import $ from "jquery";
-import API from "../../API/API";
+import API from "../../API";
 import FeedEntryList from "../FeedEntry/FeedEntryList";
 import Upload, {RcFile, UploadChangeParam} from "antd/es/upload";
 import Spin from "antd/es/spin";
@@ -38,13 +37,14 @@ import {Mentions, message, Switch} from "antd";
 import "antd/es/switch/style";
 import "antd/es/icon/style";
 import "antd/es/mentions/style";
-import User from "../../Entity/Account/User";
 import Auth from "../../Auth/Auth";
 import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryListItem from "../FeedEntry/FeedEntryListItem";
 import ReplyList from "../FeedEntry/ReplyList";
-import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import FirstPostEncouragement from "../FirstPostEncouragement";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import FeedEntryType from "../../api/src/Entity/FeedEntryType";
+import User from "../../api/src/Entity/User";
 
 export default class PostForm extends Component<any, {
 	mobile: boolean,

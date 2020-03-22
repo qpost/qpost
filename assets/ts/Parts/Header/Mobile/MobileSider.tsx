@@ -26,7 +26,7 @@ import Menu from "antd/es/menu";
 import "antd/es/menu/style";
 import NightMode from "../../../NightMode/NightMode";
 import Auth from "../../../Auth/Auth";
-import User from "../../../Entity/Account/User";
+import User from "../../../api/src/Entity/User";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../../Component/VerifiedBadge";
 import ClickEvent = JQuery.ClickEvent;

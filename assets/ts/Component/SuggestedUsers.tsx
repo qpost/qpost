@@ -19,8 +19,7 @@
 
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import User from "../Entity/Account/User";
-import API from "../API/API";
+import API from "../API";
 import FollowButton from "./FollowButton";
 import VerifiedBadge from "./VerifiedBadge";
 import Spin from "antd/es/spin";
@@ -30,7 +29,8 @@ import {Card} from "antd";
 import Auth from "../Auth/Auth";
 import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
-import BaseObject from "../Serialization/BaseObject";
+import BaseObject from "../api/src/BaseObject";
+import User from "../api/src/Entity/User";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {

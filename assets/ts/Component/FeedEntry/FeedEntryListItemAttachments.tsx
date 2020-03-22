@@ -18,13 +18,13 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import MediaFile from "../../Entity/Media/MediaFile";
-import MediaFileType from "../../Entity/Media/MediaFileType";
 import ImageViewer from "../ImageViewer";
 import GifPlayer from "react-gif-player";
 import {stillGIFURL} from "../../Util/Format";
 import AppearanceSettings from "../../Util/AppearanceSettings";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import MediaFile from "../../api/src/Entity/MediaFile";
+import MediaFileType from "../../api/src/Entity/MediaFileType";
 
 export default class FeedEntryListItemAttachments extends Component<{
 	entry: FeedEntry

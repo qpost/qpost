@@ -18,7 +18,7 @@
  */
 
 import React, {Component} from "react";
-import Notification from "../../Entity/Feed/Notification";
+import Notification from "../../api/src/Entity/Notification";
 import {Card} from "antd";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";

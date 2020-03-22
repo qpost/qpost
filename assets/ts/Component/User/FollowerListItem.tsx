@@ -18,14 +18,14 @@
  */
 
 import React, {Component} from "react";
-import User from "../../Entity/Account/User";
 import {Button, Card} from "antd";
 import {Link} from "react-router-dom";
 import FollowButton from "../FollowButton";
 import Biography from "../Biography";
 import VerifiedBadge from "../VerifiedBadge";
-import API from "../../API/API";
+import API from "../../API";
 import FollowRequestNotification from "../../Pages/Notifications/FollowRequestNotification";
+import User from "../../api/src/Entity/User";
 
 const FollowerListItemColProps = {
 	sm: 12

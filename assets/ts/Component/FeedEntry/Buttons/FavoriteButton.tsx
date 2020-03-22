@@ -18,14 +18,14 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import {formatNumberShort} from "../../../Util/Format";
 import {message, Spin} from "antd";
 import "antd/es/spin/style";
-import API from "../../../API/API";
+import API from "../../../API";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import Auth from "../../../Auth/Auth";
 import LoginSuggestionModal from "../../LoginSuggestionModal";
+import FeedEntry from "../../../api/src/Entity/FeedEntry";
 
 export default class FavoriteButton extends Component<{
 	entry: FeedEntry,

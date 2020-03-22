@@ -18,12 +18,12 @@
  */
 
 import React, {Component} from "react";
-import Notification from "../../Entity/Feed/Notification";
 import {Card} from "antd";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 import TimeAgo from "../../Component/TimeAgo";
+import Notification from "../../api/src/Entity/Notification";
 
 export default class FavoriteNotification extends Component<{
 	notification: Notification

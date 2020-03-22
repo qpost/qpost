@@ -18,10 +18,8 @@
  */
 
 import React, {Component} from "react";
-import User from "../../Entity/Account/User";
-import Follower from "../../Entity/Account/Follower";
-import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
+import API from "../../API";
+import BaseObject from "../../api/src/BaseObject";
 import InfiniteScroll from "react-infinite-scroller";
 import {Col, Row, Spin} from "antd";
 import Empty from "antd/es/empty";
@@ -29,6 +27,8 @@ import {Alert} from "reactstrap";
 import FollowerListItem, {FollowerListItemColProps} from "./FollowerListItem";
 import LoadingFollowerListItem from "./LoadingFollowerListItem";
 import {isEven, isOdd} from "../../Util/Format";
+import Follower from "../../api/src/Entity/Follower";
+import User from "../../api/src/Entity/User";
 
 export default class FollowerList extends Component<{
 	user?: User,

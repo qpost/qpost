@@ -18,7 +18,7 @@
  */
 
 import React, {Component} from "react";
-import User from "../../Entity/Account/User";
+import User from "../../api/src/Entity/User";
 import {stillGIFURL} from "../../Util/Format";
 
 export default class ProfileHeader extends Component<{

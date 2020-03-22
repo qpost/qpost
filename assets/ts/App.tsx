@@ -21,7 +21,7 @@ import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import NightMode from "./NightMode/NightMode";
 import LoadingScreen from "./Component/LoadingScreen";
-import API from "./API/API";
+import API from "./API";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Auth from "./Auth/Auth";
 import Header from "./Parts/Header";

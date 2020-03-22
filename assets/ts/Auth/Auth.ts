@@ -18,11 +18,11 @@
  */
 
 import Cookies from "js-cookie";
-import User from "../Entity/Account/User";
 import Header from "../Parts/Header";
-import API from "../API/API";
+import API from "../API";
 import {message} from "antd";
 import PushNotificationsManager from "../PushNotificationsManager";
+import User from "../api/src/Entity/User";
 
 export default class Auth {
 	private static currentUser?: User;

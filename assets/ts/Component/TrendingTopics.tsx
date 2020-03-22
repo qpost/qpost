@@ -18,13 +18,13 @@
  */
 
 import React, {Component} from "react";
-import TrendingHashtagData from "../Entity/Feed/TrendingHashtagData";
 import Spin from "antd/es/spin";
-import API from "../API/API";
+import API from "../API";
 import {Card, message} from "antd";
 import {Link} from "react-router-dom";
 import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
+import TrendingHashtagData from "../api/src/Entity/TrendingHashtagData";
 
 export default class TrendingTopics extends Component<{
 	limit?: number

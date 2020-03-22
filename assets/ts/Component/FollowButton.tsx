@@ -18,10 +18,9 @@
  */
 
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
 import FollowStatus from "../Util/FollowStatus";
 import Auth from "../Auth/Auth";
-import API from "../API/API";
+import API from "../API";
 import message from "antd/es/message";
 import "antd/es/message/style";
 import Spin from "antd/es/spin";
@@ -31,7 +30,8 @@ import "antd/es/button/style";
 import {Method} from "axios";
 import LoginSuggestionModal from "./LoginSuggestionModal";
 import Storage from "../Util/Storage";
-import Follower from "../Entity/Account/Follower";
+import User from "../api/src/Entity/User";
+import Follower from "../api/src/Entity/Follower";
 
 export default class FollowButton extends Component<{
 	target: User,

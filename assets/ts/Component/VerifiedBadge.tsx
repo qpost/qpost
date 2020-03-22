@@ -17,9 +17,9 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import User from "../Entity/Account/User";
 import React, {Component} from "react";
 import {Tooltip} from "antd";
+import User from "../api/src/Entity/User";
 
 export default class VerifiedBadge extends Component<{ target: User }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {

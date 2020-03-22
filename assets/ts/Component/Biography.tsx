@@ -18,8 +18,8 @@
  */
 
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
 import BioText from "./BioText";
+import User from "../api/src/Entity/User";
 
 export default class Biography extends Component<{
 	user: User

@@ -17,23 +17,9 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import APIEndpoint from "./APIEndpoint";
-import User from "../../Entity/Account/User";
-import BaseObject from "../../Serialization/BaseObject";
+import Auth from "./Auth/Auth";
+import qpostAPI from "./api/src/API/qpostAPI";
 
-export default class SuggestedUsersEndpoint extends APIEndpoint {
-	private path: string = "/user/suggested";
-
-	/**
-	 * Gets the currently logged in user's suggestions.
-	 */
-	public get(): Promise<User[]> {
-		return new Promise<User[]>((resolve, reject) => {
-			return this.api.handleRequestWithPromise(this.path, "GET").then(value => {
-				resolve(BaseObject.convertArray(User, value));
-			}).catch(reason => {
-				reject(reason);
-			});
-		});
-	}
+export default class API {
+	public static readonly i: qpostAPI = new qpostAPI(window.location.protocol + "//" + window.location.host + "/api", Auth.isLoggedIn() ? Auth.getToken() : undefined);
 }

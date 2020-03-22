@@ -20,7 +20,7 @@
 import React, {Component} from "react";
 import {Button, Dropdown, Icon, Menu, message} from "antd";
 import "antd/es/dropdown/style";
-import User from "../../Entity/Account/User";
+import User from "../../api/src/Entity/User";
 import BlockModal from "../../Component/BlockModal";
 import Auth from "../../Auth/Auth";
 import {copyToClipboard} from "../../Util/Clipboard";

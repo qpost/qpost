@@ -18,12 +18,12 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import ReplyButton from "./ReplyButton";
 import ShareButton from "./ShareButton";
 import FavoriteButton from "./FavoriteButton";
 import DeleteButton from "./DeleteButton";
 import FeedEntryListItem from "../FeedEntryListItem";
+import FeedEntry from "../../../api/src/Entity/FeedEntry";
 
 export default class FeedEntryActionButtons extends Component<{
 	entry: FeedEntry,

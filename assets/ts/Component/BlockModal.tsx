@@ -18,11 +18,11 @@
  */
 
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
 import {message, Modal} from "antd";
-import API from "../API/API";
+import API from "../API";
 import FollowButton from "./FollowButton";
 import FollowStatus from "../Util/FollowStatus";
+import User from "../api/src/Entity/User";
 
 export default class BlockModal extends Component<any, {
 	open: boolean,

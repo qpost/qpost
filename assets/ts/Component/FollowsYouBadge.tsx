@@ -18,7 +18,7 @@
  */
 
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
+import User from "../api/src/Entity/User";
 
 export default class FollowsYouBadge extends Component<{
 	target: User

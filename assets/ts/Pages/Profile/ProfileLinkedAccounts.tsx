@@ -18,9 +18,9 @@
  */
 
 import React, {Component} from "react";
-import User from "../../Entity/Account/User";
-import LinkedAccount from "../../Entity/Account/LinkedAccount";
-import LinkedAccountService from "../../Entity/Account/LinkedAccountService";
+import User from "../../api/src/Entity/User";
+import LinkedAccount from "../../api/src/Entity/LinkedAccount";
+import LinkedAccountService from "../../api/src/Entity/LinkedAccountService";
 import {message, Tooltip} from "antd";
 import {copyToClipboard} from "../../Util/Clipboard";
 

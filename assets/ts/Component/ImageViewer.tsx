@@ -18,9 +18,9 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../Entity/Feed/FeedEntry";
 import ImgsViewer from "react-images-viewer";
 import {Spin} from "antd";
+import FeedEntry from "../api/src/Entity/FeedEntry";
 
 export default class ImageViewer extends Component<any, {
 	visible: boolean,

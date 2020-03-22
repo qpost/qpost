@@ -21,9 +21,6 @@ import React, {Component, MouseEventHandler} from "react";
 import $ from "jquery";
 import {Row} from "reactstrap";
 import {Link, Redirect} from "react-router-dom";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import User from "../../Entity/Account/User";
-import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryActionButtons from "./Buttons/FeedEntryActionButtons";
 import TimeAgo from "../TimeAgo";
@@ -34,6 +31,9 @@ import {Alert, Icon} from "antd";
 import FavoriteList from "./FavoriteList";
 import ReplyList from "./ReplyList";
 import AppearanceSettings from "../../Util/AppearanceSettings";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import FeedEntryType from "../../api/src/Entity/FeedEntryType";
+import User from "../../api/src/Entity/User";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,

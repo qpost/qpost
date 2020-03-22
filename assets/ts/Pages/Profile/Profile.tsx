@@ -18,9 +18,9 @@
  */
 
 import React, {Component} from "react";
-import User from "../../Entity/Account/User";
-import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
+import User from "../../api/src/Entity/User";
+import API from "../../API";
+import BaseObject from "../../api/src/BaseObject";
 import ContentBase from "../../Component/Layout/ContentBase";
 import PageContent from "../../Component/Layout/PageContent";
 import RightSidebar from "../../Component/Layout/RightSidebar";

@@ -18,9 +18,9 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import API from "../../API";
+import BaseObject from "../../api/src/BaseObject";
 import ContentBase from "../../Component/Layout/ContentBase";
 import PageContent from "../../Component/Layout/PageContent";
 import RightSidebar from "../../Component/Layout/RightSidebar";
@@ -30,7 +30,7 @@ import Card from "antd/es/card";
 import "antd/es/card/style";
 import Skeleton from "antd/es/skeleton";
 import "antd/es/skeleton/style";
-import User from "../../Entity/Account/User";
+import User from "../../api/src/Entity/User";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import FollowButton from "../../Component/FollowButton";
@@ -42,7 +42,7 @@ import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
 import {limitString} from "../../Util/Format";
 import ReplyList from "../../Component/FeedEntry/ReplyList";
-import FeedEntryType from "../../Entity/Feed/FeedEntryType";
+import FeedEntryType from "../../api/src/Entity/FeedEntryType";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 import PostUnavailableAlert from "../../Component/PostUnavailableAlert";
 import LeftSidebar from "../../Component/Layout/LeftSidebar";

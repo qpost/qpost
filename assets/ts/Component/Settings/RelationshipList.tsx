@@ -18,18 +18,18 @@
  */
 
 import React, {Component} from "react";
-import API from "../../API/API";
-import Block from "../../Entity/Account/Block";
-import Follower from "../../Entity/Account/Follower";
+import API from "../../API";
 import Spin from "antd/es/spin";
 import {Empty, Typography} from "antd";
 import "antd/es/typography/style";
-import User from "../../Entity/Account/User";
 import {formatNumberShort} from "../../Util/Format";
 import FollowButton from "../FollowButton";
 import FollowStatus from "../../Util/FollowStatus";
 import VerifiedBadge from "../VerifiedBadge";
 import InfiniteScroll from "react-infinite-scroller";
+import Follower from "../../api/src/Entity/Follower";
+import Block from "../../api/src/Entity/Block";
+import User from "../../api/src/Entity/User";
 
 export default class RelationshipList extends Component<{
 	type: "BLOCKED" | "FOLLOWERS" | "FOLLOWING"

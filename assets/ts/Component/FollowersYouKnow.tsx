@@ -18,12 +18,12 @@
  */
 
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
 import Auth from "../Auth/Auth";
 import Spin from "antd/es/spin";
 import {Alert, Card, Tooltip} from "antd";
 import {Link} from "react-router-dom";
-import API from "../API/API";
+import API from "../API";
+import User from "../api/src/Entity/User";
 
 export default class FollowersYouKnow extends Component<{
 	user: User

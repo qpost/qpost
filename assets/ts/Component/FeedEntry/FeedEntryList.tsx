@@ -20,16 +20,16 @@
 import React, {Component} from "react";
 import {Alert} from "reactstrap";
 import FeedEntryListItem from "./FeedEntryListItem";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
+import API from "../../API";
+import BaseObject from "../../api/src/BaseObject";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
 import Empty from "antd/es/empty";
 import "antd/es/empty/style";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
 import Storage from "../../Util/Storage";
-import FeedEntryType from "../../Entity/Feed/FeedEntryType";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import FeedEntryType from "../../api/src/Entity/FeedEntryType";
 
 export default class FeedEntryList extends Component<{
 	userID?: number,

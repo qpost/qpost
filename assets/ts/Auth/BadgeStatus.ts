@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import API from "../API/API";
+import API from "../API";
 import {message} from "antd";
 import Header from "../Parts/Header";
 

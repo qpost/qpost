@@ -20,14 +20,14 @@
 import React, {Component} from "react";
 import {Alert} from "reactstrap";
 import FeedEntryListItem from "./FeedEntryListItem";
-import User from "../../Entity/Account/User";
-import API from "../../API/API";
+import API from "../../API";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
 import Empty from "antd/es/empty";
 import "antd/es/empty/style";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
-import Favorite from "../../Entity/Feed/Favorite";
+import User from "../../api/src/Entity/User";
+import Favorite from "../../api/src/Entity/Favorite";
 
 export default class FavoriteList extends Component<{
 	user?: User
