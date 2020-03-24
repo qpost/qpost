@@ -22,6 +22,7 @@ import ServerStreamListener from "./ServerStreamListener";
 import qpostAPI from "../../assets/ts/api/src/API/qpostAPI";
 import log from "../logger";
 import ConnectionStatus from "../connection/ConnectionStatus";
+import AuthorizationResponseMessage from "../../assets/ts/api/src/Stream/Message/AuthorizationRequestResponse";
 
 export default class AuthorizationRequestListener extends ServerStreamListener {
 	onAuthorizationRequestMessage(message: AuthorizationRequestMessage): void {
@@ -35,13 +36,32 @@ export default class AuthorizationRequestListener extends ServerStreamListener {
 				connection.status = ConnectionStatus.CLIENT_AUTHORIZED;
 				connection.user = user;
 				connection.token = message.token;
+
+				const response = new AuthorizationResponseMessage();
+				response.ok = true;
+				response.message = "Authorization successful";
+				response.user = user;
+
+				connection.sendMessage(response);
 			}).catch(reason => {
 				log.error("Connection " + this.getConnection().id + " failed to authenticate (" + reason + ").");
 
 				connection.startIdleTimer();
+
+				const response = new AuthorizationResponseMessage();
+				response.ok = false;
+				response.message = reason;
+
+				connection.sendMessage(response);
 			});
-		} else {
+		} else if (message.type === "server") {
 			// TODO
+		} else {
+			const response = new AuthorizationResponseMessage();
+			response.ok = false;
+			response.message = "Invalid 'type' parameter value";
+
+			connection.sendMessage(response);
 		}
 	}
 }
