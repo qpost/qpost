@@ -18,20 +18,17 @@
  */
 
 // Load environment variables
-import path from "path";
-import dotenv from "dotenv";
 import log from "./logger";
+import path from "path";
+import dotenv from "dotenv-flow";
 import express from "express";
 import {Server} from "http";
 import SocketIO from "socket.io";
 import ConnectionManager from "./connection/ConnectionManager";
-import ConnectionStatus from "./connection/ConnectionStatus";
 
 const __dirname = path.resolve('');
 
-dotenv.config({
-	path: path.resolve(__dirname, "../.env.local")
-});
+dotenv.config();
 
 // Load constants
 const version = process.env.VERSION || "1.0.0";
@@ -46,7 +43,7 @@ app.set("port", port);
 const http = new Server(app);
 const io: SocketIO.Server = SocketIO(http);
 
-const server = http.listen(port, () => {
+http.listen(port, () => {
 	log.info("Listening on port " + port);
 });
 
@@ -55,25 +52,21 @@ io.on("connection", socket => {
 	log.debug("Connected: " + socket.id);
 
 	const connection = ConnectionManager.getConnection(socket.id);
-	connection.idleTimer = setTimeout(() => {
-		if (connection.status === ConnectionStatus.UNAUTHORIZED) {
-			socket.disconnect(true);
-		}
-	}, 3000);
+	connection.socket = socket;
 
 	socket.on("message", message => {
+		if (typeof message === "object") message = JSON.stringify(message);
+
 		log.debug("Incoming message: " + message);
+
+		connection.listenerManager.handleMessage(message);
 	});
 
 	socket.on("disconnect", reason => {
 		log.debug("Disconnected: " + socket.id + " (" + reason + ")");
 
 		const connection = ConnectionManager.getConnection(socket.id);
-
-		if (connection.idleTimer && typeof connection.idleTimer === "number") {
-			clearTimeout(connection.idleTimer);
-			connection.idleTimer = undefined;
-		}
+		connection.stopIdleTimer();
 
 		ConnectionManager.unregister(connection);
 	});

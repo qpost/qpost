@@ -18,18 +18,50 @@
  */
 
 import ConnectionStatus from "./ConnectionStatus";
-import Timeout = NodeJS.Timeout;
+import StreamListenerManager from "../../assets/ts/api/src/Stream/Listener/StreamListenerManager";
+import AuthorizationRequestListener from "../listener/AuthorizationRequestListener";
+import {Socket} from "socket.io";
+import User from "../../assets/ts/api/src/Entity/User";
 
 export default class Connection {
 	public id: string;
 	public status: ConnectionStatus;
-	public idleTimer: Timeout | number;
+	public idleTimer: number;
 	public timeConnected: number;
+	public listenerManager: StreamListenerManager;
+	public socket: Socket;
+	public token: string;
+	public user: User;
 
 	constructor(id: string) {
 		this.id = id;
 		this.status = ConnectionStatus.UNAUTHORIZED;
 		this.idleTimer = undefined;
 		this.timeConnected = new Date().getTime();
+		this.listenerManager = new StreamListenerManager();
+
+		this.registerListeners();
+		this.startIdleTimer();
+	}
+
+	public startIdleTimer(): void {
+		this.stopIdleTimer();
+
+		this.idleTimer = setTimeout(() => {
+			if (this.status === ConnectionStatus.UNAUTHORIZED) {
+				this.socket.disconnect(true);
+			}
+		}, 5000);
+	}
+
+	public stopIdleTimer(): void {
+		if (this.idleTimer) {
+			clearTimeout(this.idleTimer);
+			this.idleTimer = undefined;
+		}
+	}
+
+	private registerListeners(): void {
+		this.listenerManager.registerListener(new AuthorizationRequestListener(this));
 	}
 }

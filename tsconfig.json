@@ -15,11 +15,11 @@
 		"jsx": "react",
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": true,
-		"noImplicitThis": true,
+		"noImplicitThis": false,
 		"noImplicitAny": false,
 		"importHelpers": true,
 		"suppressImplicitAnyIndexErrors": true,
-		"noUnusedLocals": true,
+		"noUnusedLocals": false,
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
@@ -37,12 +37,12 @@
 		"config",
 		"public",
 		"express.js",
-		"clean.js",
+		"clean.cjs",
 		"vendor",
 		"web",
 		"tsconfig.json",
-		"webpack.common.js",
-		"webpack.dev.js",
-		"webpack.prod.js"
+		"webpack.common.cjs",
+		"webpack.dev.cjs",
+		"webpack.prod.cjs"
 	]
 }

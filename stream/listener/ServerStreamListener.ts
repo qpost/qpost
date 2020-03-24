@@ -17,35 +17,20 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import Connection from "./Connection";
+import StreamListener from "../../assets/ts/api/src/Stream/Listener/StreamListener";
+import Connection from "../connection/Connection";
+import ConnectionManager from "../connection/ConnectionManager";
 
-export default class ConnectionManager {
-	private static connections: Connection[] = [];
+export default class ServerStreamListener extends StreamListener {
+	private readonly connectionId: string;
 
-	public static getConnection(id: string): Connection {
-		for (let connection of this.connections) {
-			if (connection.id === id) {
-				return connection;
-			}
-		}
+	constructor(connection: Connection) {
+		super();
 
-		const connection = new Connection(id);
-		this.connections.push(connection);
-
-		return connection;
+		this.connectionId = connection.id;
 	}
 
-	public static getConnections(): Connection[] {
-		return this.connections;
-	}
-
-	public static unregister(connection: Connection): void {
-		if (connection.socket) connection.socket.disconnect(true);
-
-		// https://stackoverflow.com/a/15295806/4117923
-		const index = this.connections.indexOf(connection, 0);
-		if (index > -1) {
-			this.connections.splice(index, 1);
-		}
+	public getConnection(): Connection {
+		return ConnectionManager.getConnection(this.connectionId);
 	}
 }
