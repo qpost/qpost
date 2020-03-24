@@ -68,6 +68,10 @@ io.on("connection", socket => {
 		const connection = ConnectionManager.getConnection(socket.id);
 		connection.stopIdleTimer();
 
+		if (connection.user) {
+			log.info("User disconnected: @" + connection.user.getUsername() + " (ID " + connection.user.getId() + ")");
+		}
+
 		ConnectionManager.unregister(connection);
 	});
 });
