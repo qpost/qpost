@@ -22,6 +22,8 @@ import StreamListenerManager from "../../assets/ts/api/src/Stream/Listener/Strea
 import AuthorizationRequestListener from "../listener/AuthorizationRequestListener";
 import {Socket} from "socket.io";
 import User from "../../assets/ts/api/src/Entity/User";
+import StreamMessage from "../../assets/ts/api/src/Stream/Message/StreamMessage";
+import BaseObject from "../../assets/ts/api/src/BaseObject";
 
 export default class Connection {
 	public id: string;
@@ -59,6 +61,10 @@ export default class Connection {
 			clearTimeout(this.idleTimer);
 			this.idleTimer = undefined;
 		}
+	}
+
+	public sendMessage(message: StreamMessage): void {
+		this.socket.write(BaseObject.serializeObject(message));
 	}
 
 	private registerListeners(): void {
