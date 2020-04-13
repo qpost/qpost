@@ -40,5 +40,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
+    Doctrine\DBAL\Event\Listeners\SQLSessionInit:
+        class: Doctrine\DBAL\Event\Listeners\SQLSessionInit
+        arguments:
+            - "SET SESSION sql_mode = 'TRADITIONAL'"
+        tags:
+            - { name: doctrine.event_listener, event: postConnect, method: postConnect }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
