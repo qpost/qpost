@@ -44,6 +44,7 @@ class TwitchIntegration extends ThirdPartyIntegration {
 
 		$response = $this->httpClient->get($this->apiBaseURL . "/users", [
 			"headers" => [
+				"Client-ID" => $this->getClientId(),
 				"Authorization" => "Bearer " . $token
 			]
 		]);

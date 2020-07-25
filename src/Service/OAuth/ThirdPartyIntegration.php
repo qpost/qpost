@@ -171,9 +171,9 @@ class ThirdPartyIntegration {
 	/**
 	 * The URL at which the user authenticates with this service.
 	 * @param User $user
-	 * @return string
+	 * @return string|null
 	 */
-	public function getAuthenticationURL(User $user): string {
+	public function getAuthenticationURL(User $user): ?string {
 		$baseURL = $this->getBaseURL();
 		$clientId = $this->getClientId();
 		$scopes = $this->getScopes();
