@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
- * https://qpo.st
+ * https://qpostapp.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ return [
 	Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
 	Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
 	Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
-	Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class => ['all' => true],
 	Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
 	Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
 	Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
@@ -31,8 +30,7 @@ return [
 	Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
 	Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
 	Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
-	Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
 	Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
 	BenTools\WebPushBundle\WebPushBundle::class => ['all' => true],
-	Nmure\CrawlerDetectBundle\CrawlerDetectBundle::class => ['all' => true],
+	Gigadrive\Bundle\SymfonyExtensionsBundle\GigadriveSymfonyExtensionsBundle::class => ['all' => true],
 ];
