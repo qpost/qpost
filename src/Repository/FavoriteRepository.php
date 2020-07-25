@@ -21,7 +21,7 @@
 namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\Favorite;
 use qpost\Entity\User;
@@ -44,8 +44,7 @@ class FavoriteRepository extends ServiceEntityRepository {
 			->setParameter("user", $user)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 }

@@ -21,7 +21,7 @@
 namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\TrendingHashtagData;
 
@@ -46,8 +46,7 @@ class TrendingHashtagDataRepository extends ServiceEntityRepository {
 			->setMaxResults($limit)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME)
 			->getResult();
 	}
 }

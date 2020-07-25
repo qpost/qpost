@@ -21,8 +21,8 @@
 namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
@@ -56,8 +56,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("type", FeedEntryType::POST, Type::STRING)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -70,8 +69,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("type", FeedEntryType::REPLY, Type::STRING)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -84,8 +82,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("type", FeedEntryType::SHARE, Type::STRING)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -98,8 +95,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("type", FeedEntryType::NEW_FOLLOWING, Type::STRING)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -110,8 +106,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("user", $user)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 

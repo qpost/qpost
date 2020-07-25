@@ -20,9 +20,9 @@
 
 namespace qpost\Service;
 
+use Exception;
 use GuzzleHttp\Exception\ConnectException;
-use Nmure\CrawlerDetectBundle\CrawlerDetect\CrawlerDetect;
-use PHPUnit\Runner\Exception;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use qpost\Cache\CacheHandler;
 use qpost\Constants\MiscConstants;
 use qpost\Factory\HttpClientFactory;
@@ -56,12 +56,15 @@ class RenderService {
 	 */
 	private $prerenderKey;
 
+	/**
+	 * @var CrawlerDetect $crawlerDetect
+	 */
 	private $crawlerDetect;
 
-	public function __construct(Environment $twig, RequestStack $requestStack, CrawlerDetect $crawlerDetect) {
+	public function __construct(Environment $twig, RequestStack $requestStack) {
 		$this->twig = $twig;
 		$this->requestStack = $requestStack;
-		$this->crawlerDetect = $crawlerDetect;
+		$this->crawlerDetect = new CrawlerDetect();
 
 		$this->prerenderKey = $_ENV["PRERENDER_API_KEY"];
 		$this->currentRequest = $requestStack->getCurrentRequest();

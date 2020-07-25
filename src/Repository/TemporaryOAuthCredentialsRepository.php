@@ -21,7 +21,7 @@
 namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Entity\TemporaryOAuthCredentials;
 use qpost\Entity\User;
 

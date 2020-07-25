@@ -35,7 +35,7 @@ class RestAPIErrorListener {
 	}
 
 	public function onKernelException(ExceptionEvent $event) {
-		$exception = $event->getException();
+		$exception = $event->getThrowable();
 
 		if (!$exception instanceof RestAPIErrorException) {
 			return;

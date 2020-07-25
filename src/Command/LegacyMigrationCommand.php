@@ -367,6 +367,8 @@ class LegacyMigrationCommand extends Command {
 		}
 
 		$output->writeln("Done.");
+
+		return 0;
 	}
 
 	private function db(): mysqli {

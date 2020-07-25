@@ -98,5 +98,7 @@ class HashtagMigrationCommand extends Command {
 		}
 
 		$output->writeln("Done.");
+
+		return 0;
 	}
 }
