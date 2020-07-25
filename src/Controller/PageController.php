@@ -21,6 +21,8 @@
 namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
@@ -29,8 +31,6 @@ use qpost\Service\APIService;
 use qpost\Service\AuthorizationService;
 use qpost\Service\RenderService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,7 +40,7 @@ use function sprintf;
 use function strlen;
 use function trim;
 
-class PageController extends AbstractController {
+class PageController extends GigadriveController {
 	/**
 	 * @Route("/status/{id}")
 	 *

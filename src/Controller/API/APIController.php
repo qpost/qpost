@@ -21,6 +21,9 @@
 namespace qpost\Controller\API;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\Database\Pagination\PaginationService;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\GigadriveGeneralService;
 use Psr\Log\LoggerInterface;
 use qpost\Constants\APIParameterType;
 use qpost\Entity\Favorite;
@@ -38,7 +41,6 @@ use qpost\Exception\ResourceNotFoundException;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
 use qpost\Service\StorageService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +59,7 @@ use function strtotime;
 use function strval;
 use const PHP_INT_MAX;
 
-class APIController extends AbstractController {
+class APIController extends GigadriveController {
 	protected $apiService;
 	protected $entityManager;
 	protected $logger;
@@ -65,12 +67,16 @@ class APIController extends AbstractController {
 	protected $storageService;
 
 	public function __construct(
+		GigadriveGeneralService $generalService,
+		PaginationService $paginationService,
 		APIService $apiService,
 		EntityManagerInterface $entityManager,
 		LoggerInterface $logger,
 		DataDeletionService $dataDeletionService,
 		StorageService $storageService
 	) {
+		parent::__construct($generalService, $paginationService);
+
 		$this->apiService = $apiService;
 		$this->entityManager = $entityManager;
 		$this->logger = $logger;

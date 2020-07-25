@@ -21,13 +21,13 @@
 namespace qpost\Service;
 
 use Exception;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use GuzzleHttp\Exception\ConnectException;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use qpost\Cache\CacheHandler;
 use qpost\Constants\MiscConstants;
 use qpost\Factory\HttpClientFactory;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;

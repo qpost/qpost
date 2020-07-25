@@ -28,8 +28,8 @@
 		at all.
 	</p>
 
-	<form action="{{ path("qpost_settings_accountdelete") }}" method="post">
-		{% include "parts/csrf.html.twig" %}
+	<form action="{{ currentPath() }}" method="post">
+		{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 
 		<div class="form-group">
 			<input type="password" class="form-control" id="password" name="password"

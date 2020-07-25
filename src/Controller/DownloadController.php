@@ -20,10 +20,10 @@
 
 namespace qpost\Controller;
 
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use qpost\Cache\CacheHandler;
 use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Yaml\Yaml;
 use function file_get_contents;
 
-class DownloadController extends AbstractController {
+class DownloadController extends GigadriveController {
 	/**
 	 * @Route("/download")
 	 * @return Response

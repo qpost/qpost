@@ -22,6 +22,7 @@ namespace qpost\Controller\API;
 
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use MediaEmbed\MediaEmbed;
 use qpost\Constants\APIParameterType;
 use qpost\Constants\Feature;
@@ -40,7 +41,6 @@ use qpost\Exception\InvalidParameterTypeException;
 use qpost\Exception\InvalidTokenException;
 use qpost\Exception\MissingParameterException;
 use qpost\Exception\ResourceNotFoundException;
-use qpost\Util\Util;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function array_key_exists;

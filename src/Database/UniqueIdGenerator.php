@@ -22,7 +22,7 @@ namespace qpost\Database;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Id\AbstractIdGenerator;
-use qpost\Util\Util;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 
 class UniqueIdGenerator extends AbstractIdGenerator {
 	/**

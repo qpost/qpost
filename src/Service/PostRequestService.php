@@ -22,11 +22,11 @@ namespace qpost\Service;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
 use qpost\Entity\Follower;
 use qpost\Entity\User;
 use qpost\Repository\UserRepository;
-use qpost\Util\Util;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;

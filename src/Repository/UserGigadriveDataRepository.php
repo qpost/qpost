@@ -22,10 +22,10 @@ namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Cache\CacheHandler;
 use qpost\Entity\UserGigadriveData;
 use qpost\Factory\HttpClientFactory;
-use qpost\Util\Util;
 use function is_null;
 use function json_decode;
 

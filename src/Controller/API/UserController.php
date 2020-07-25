@@ -20,13 +20,13 @@
 
 namespace qpost\Controller\API;
 
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\APIParameterType;
 use qpost\Entity\User;
 use qpost\Exception\InvalidParameterTypeException;
 use qpost\Exception\InvalidTokenException;
 use qpost\Exception\MissingParameterException;
 use qpost\Exception\ResourceNotFoundException;
-use qpost\Util\Util;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function array_slice;

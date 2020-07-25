@@ -39,8 +39,7 @@
 						</div>
 
 						<form class="mt-3" method="post" action="/">
-							{% include "parts/csrf.html.twig" %}
-
+							{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 							{% include "parts/flash.html.twig" %}
 
 							<input type="email" class="form-control mb-2" name="email" placeholder="Email"/>

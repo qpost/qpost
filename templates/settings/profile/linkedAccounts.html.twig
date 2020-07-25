@@ -41,8 +41,8 @@
 						</div>
 
 						<div class="float-right">
-							<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
-								{% include "parts/csrf.html.twig" %}
+							<form action="{{ currentPath() }}" method="post">
+								{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 								<input type="hidden" name="action" value="delete"/>
 								<input type="hidden" name="id" value="{{ link.id }}"/>
 								<button type="submit" class="ant-btn ant-btn-link deleteLinkedAccountButton">
@@ -54,8 +54,8 @@
 				</div>
 
 				<div class="body">
-					<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
-						{% include "parts/csrf.html.twig" %}
+					<form action="{{ currentPath() }}" method="post">
+						{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 						<input type="hidden" name="action" value="update"/>
 						<input type="hidden" name="id" value="{{ link.id }}"/>
 

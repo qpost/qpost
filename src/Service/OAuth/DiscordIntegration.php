@@ -20,8 +20,8 @@
 
 namespace qpost\Service\OAuth;
 
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\LinkedAccountService;
-use qpost\Util\Util;
 use function is_null;
 use function json_decode;
 

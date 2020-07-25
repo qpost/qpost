@@ -23,6 +23,8 @@ namespace qpost\Controller;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
@@ -36,9 +38,6 @@ use qpost\Service\GigadriveService;
 use qpost\Service\NameHistoryService;
 use qpost\Service\ProfileImageService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,7 +53,7 @@ use function strtoupper;
 use function time;
 use const PASSWORD_BCRYPT;
 
-class SettingsController extends AbstractController {
+class SettingsController extends GigadriveController {
 	/**
 	 * @Route("/settings/profile/appearance")
 	 * @param Request $request
@@ -64,7 +63,7 @@ class SettingsController extends AbstractController {
 	 * @throws Exception
 	 */
 	public function profileAppearance(Request $request, ProfileImageService $imageService, EntityManagerInterface $entityManager) {
-		if ($this->validate($request)) {
+		if ($this->csrf()) {
 			$parameters = $request->request;
 
 			/**
@@ -183,7 +182,7 @@ class SettingsController extends AbstractController {
 	 * @return Response
 	 */
 	public function profileLinkedAccounts(Request $request, EntityManagerInterface $entityManager) {
-		if ($this->validate($request)) {
+		if ($this->csrf()) {
 			$parameters = $request->request;
 
 			if ($parameters->has("action")) {
@@ -213,7 +212,7 @@ class SettingsController extends AbstractController {
 						]);
 
 						if ($linkedAccount) {
-							$linkedAccount->setOnProfile($this->readCheckbox($parameters, "onProfile"));
+							$linkedAccount->setOnProfile($this->readCheckbox("onProfile"));
 
 							$entityManager->persist($linkedAccount);
 							$entityManager->flush();
@@ -237,7 +236,7 @@ class SettingsController extends AbstractController {
 	 * @return Response
 	 */
 	public function preferencesAppearance(Request $request, EntityManagerInterface $entityManager) {
-		if ($this->validate($request)) {
+		if ($this->csrf()) {
 			$parameters = $request->request;
 
 			/**
@@ -246,12 +245,12 @@ class SettingsController extends AbstractController {
 			$user = $this->getUser();
 
 			$entityManager->persist($user->getAppearanceSettings()
-				->setNightMode($this->readCheckbox($parameters, "nightMode"))
-				->setAutoplayGifs($this->readCheckbox($parameters, "autoplayGifs"))
-				->setShowTrends($this->readCheckbox($parameters, "showTrends"))
-				->setShowSuggestedUsers($this->readCheckbox($parameters, "showSuggestedUsers"))
-				->setShowBirthdays($this->readCheckbox($parameters, "showBirthdays"))
-				->setShowMatureWarning($this->readCheckbox($parameters, "showMatureWarning")));
+				->setNightMode($this->readCheckbox("nightMode"))
+				->setAutoplayGifs($this->readCheckbox("autoplayGifs"))
+				->setShowTrends($this->readCheckbox("showTrends"))
+				->setShowSuggestedUsers($this->readCheckbox("showSuggestedUsers"))
+				->setShowBirthdays($this->readCheckbox("showBirthdays"))
+				->setShowMatureWarning($this->readCheckbox("showMatureWarning")));
 
 			$entityManager->flush();
 
@@ -316,7 +315,7 @@ class SettingsController extends AbstractController {
 	 * @throws Exception
 	 */
 	public function accountUsername(Request $request, EntityManagerInterface $entityManager, NameHistoryService $nameHistoryService) {
-		if ($this->validate($request)) {
+		if ($this->csrf()) {
 			$parameters = $request->request;
 
 			if ($parameters->has("username")) {
@@ -395,7 +394,7 @@ class SettingsController extends AbstractController {
 			return $this->redirectToRoute("qpost_settings_accountinformation");
 		}
 
-		if ($this->validate($request)) {
+		if ($this->csrf()) {
 			$parameters = $request->request;
 
 			if ($parameters->has("oldPassword")) {
@@ -470,7 +469,7 @@ class SettingsController extends AbstractController {
 	 * @return Response
 	 */
 	public function accountDelete(Request $request, DataDeletionService $deletionService, GigadriveService $gigadriveService) {
-		if ($this->validate($request)) {
+		if ($this->csrf()) {
 			$parameters = $request->request;
 
 			/**
@@ -512,7 +511,7 @@ class SettingsController extends AbstractController {
 	 * @return Response
 	 */
 	public function privacy(Request $request, EntityManagerInterface $entityManager) {
-		if ($this->validate($request)) {
+		if ($this->csrf()) {
 			$parameters = $request->request;
 
 			if ($parameters->has("privacyLevel")) {
@@ -543,25 +542,11 @@ class SettingsController extends AbstractController {
 		));
 	}
 
-	private function validate(Request $request): bool {
-		if ($request->isMethod("POST")) {
-			$parameters = $request->request;
-
-			return $parameters->has("_csrf_token") && $this->isCsrfTokenValid("csrf", $parameters->get("_csrf_token"));
-		}
-
-		return false;
-	}
-
 	private function renderAction(string $headline, string $template, ?string $activeMenuPoint, string $canonicalURL, array $additionalParameters = []) {
 		return $this->render($template, array_merge(Twig::param([
 			"title" => $headline,
 			MiscConstants::CANONICAL_URL => $canonicalURL,
 			SettingsNavigationPoint::VARIABLE_NAME => $activeMenuPoint
 		]), $additionalParameters));
-	}
-
-	private function readCheckbox(ParameterBag $parameterBag, string $key): bool {
-		return $parameterBag->has($key) && $parameterBag->get($key) === "on";
 	}
 }
