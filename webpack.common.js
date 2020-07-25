@@ -18,12 +18,13 @@
  */
 
 const {resolve} = require("path");
+const glob = require("glob");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const optimizeCss = require("optimize-css-assets-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
 	entry: "./assets/ts/index.tsx",
-	context: resolve("./"),
 	devtool: false,
 	module: {
 		rules: [
@@ -31,6 +32,34 @@ module.exports = {
 				test: /\.tsx?$/,
 				use: "ts-loader",
 				exclude: /node_modules/
+			},
+			{
+				test: /\.css$/,
+				use: [
+					{
+						loader: MiniCssExtractPlugin.loader,
+						options: {
+							hmr: process.env.NODE_ENV === "development"
+						}
+					},
+					{loader: "css-loader"}
+				]
+			},
+			{
+				test: /\.scss$/,
+				use: [
+					{
+						loader: MiniCssExtractPlugin.loader
+					},
+					{loader: "css-loader"},
+					{
+						loader: "sass-loader", options: {
+							includePaths: [
+								resolve(__dirname, "node_modules")
+							]
+						}
+					}
+				]
 			},
 			{
 				test: /\.png$/,
@@ -58,13 +87,14 @@ module.exports = {
 			}
 		]
 	},
-	/*optimization: {
+	optimization: {
 		minimizer: [
 			new UglifyJsPlugin({
-				extractComments: "all"
+				extractComments: "all",
+				test: [/\.tsx?$/, /\.jsx?$/]
 			})
 		]
-	},*/
+	},
 	plugins: [
 		new optimizeCss({
 			cssProcessorOptions: {
@@ -73,10 +103,19 @@ module.exports = {
 					removeAll: true,
 				},
 			}
+		}),
+		new MiniCssExtractPlugin({
+			filename: "main.css",
+			chunkFilename: "[id].[hash].css",
+			ignoreOrder: false
 		})
 	],
 	resolve: {
 		extensions: [".tsx", ".ts", ".js", ".jsx"]
+	},
+	output: {
+		path: resolve(__dirname, "public/build/"),
+		filename: "bundle.js"
 	},
 	node: {
 		console: true,
@@ -88,5 +127,8 @@ module.exports = {
 		hints: false,
 		maxEntrypointSize: 512000,
 		maxAssetSize: 512000
+	},
+	externals: {
+		jquery: "jQuery"
 	}
 };
