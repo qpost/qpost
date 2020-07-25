@@ -3,9 +3,9 @@
 	"version": "2.9.1",
 	"description": "A social microblogging website written in PHP and TypeScript.",
 	"scripts": {
-		"build": "npm run clean && webpack --config=webpack.prod.js",
-		"watch": "npm run clean && webpack --config=webpack.dev.js",
-		"clean": "node clean.js"
+		"build": "npm run clean && webpack --config=webpack.prod.cjs",
+		"watch": "npm run clean && webpack --config=webpack.dev.cjs",
+		"clean": "node clean.cjs"
 	},
 	"repository": {
 		"type": "git",
