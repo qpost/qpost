@@ -25,6 +25,8 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\Follower;
@@ -36,10 +38,8 @@ use qpost\Repository\UserRepository;
 use qpost\Service\AuthorizationService;
 use qpost\Service\IpStackService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
 use Swift_Mailer;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +49,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function filter_var;
 use function strlen;
 
-class RegisterController extends AbstractController {
+class RegisterController extends GigadriveController {
 	/**
 	 * @Route("/register")
 	 *

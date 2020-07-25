@@ -25,6 +25,8 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
@@ -35,8 +37,6 @@ use qpost\Repository\UserGigadriveDataRepository;
 use qpost\Service\AuthorizationService;
 use qpost\Service\IpStackService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +47,7 @@ use function is_null;
 use function password_verify;
 use function trim;
 
-class LoginController extends AbstractController {
+class LoginController extends GigadriveController {
 	/**
 	 * @Route("/login")
 	 *

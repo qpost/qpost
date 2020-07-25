@@ -22,6 +22,7 @@ namespace qpost\Service;
 
 use BenTools\WebPushBundle\Model\Subscription\UserSubscriptionInterface;
 use BenTools\WebPushBundle\Model\Subscription\UserSubscriptionManagerInterface;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\PushSubscription;
@@ -46,8 +47,8 @@ class PushSubscriptionService implements UserSubscriptionManagerInterface {
 	 */
 	private $tokenService;
 
-	public function __construct(RegistryInterface $registry, LoggerInterface $logger, TokenService $tokenService) {
-		$this->entityManager = $registry->getEntityManager();
+	public function __construct(Registry $registry, LoggerInterface $logger, TokenService $tokenService) {
+		$this->entityManager = $registry->getManager();
 		$this->logger = $logger;
 		$this->tokenService = $tokenService;
 	}

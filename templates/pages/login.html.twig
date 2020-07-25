@@ -10,7 +10,7 @@
 						<h3 class="text-center mb-2 text-white">Log in</h3>
 
 						<form action="{{ path("qpost_login_index") }}" method="post">
-							{% include "parts/csrf.html.twig" %}
+							{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 							<input type="text" class="form-control mb-2" name="email"
 								   placeholder="Email address or username"
 								   value="{{ _POST['email'] is defined ? _POST['email'] }}"/>

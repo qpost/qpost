@@ -21,8 +21,8 @@
 namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\LinkedAccount;
 use qpost\Entity\User;
@@ -50,8 +50,7 @@ class LinkedAccountRepository extends ServiceEntityRepository {
 			->setParameter("onProfile", true, Type::BOOLEAN)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getResult();
 	}
 }

@@ -74,5 +74,7 @@ class FollowRequestMigrationCommand extends Command {
 		$this->entityManager->flush();
 
 		$output->writeln("Done.");
+
+		return 0;
 	}
 }

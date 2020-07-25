@@ -23,10 +23,10 @@ namespace qpost\Command;
 use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Hashtag;
-use qpost\Util\Util;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -98,5 +98,7 @@ class HashtagMigrationCommand extends Command {
 		}
 
 		$output->writeln("Done.");
+
+		return 0;
 	}
 }

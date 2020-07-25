@@ -24,6 +24,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use League\OAuth1\Client\Credentials\TemporaryCredentials;
 use qpost\Constants\LinkedAccountService;
 use qpost\Entity\LinkedAccount;
@@ -31,7 +32,6 @@ use qpost\Entity\TemporaryOAuthCredentials;
 use qpost\Entity\User;
 use qpost\Service\OAuth\ThirdPartyIntegrationManagerService;
 use qpost\Service\OAuth\TwitterIntegration;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,7 +40,7 @@ use function serialize;
 use function strtoupper;
 use function unserialize;
 
-class ThirdPartyAuthController extends AbstractController {
+class ThirdPartyAuthController extends GigadriveController {
 	/**
 	 * @Route("/tpauth/{service}")
 	 * @param string $service

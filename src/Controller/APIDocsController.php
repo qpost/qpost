@@ -20,15 +20,15 @@
 
 namespace qpost\Controller;
 
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class APIDocsController extends AbstractController {
+class APIDocsController extends GigadriveController {
 	/**
 	 * @Route("/apidocs")
 	 * @return Response

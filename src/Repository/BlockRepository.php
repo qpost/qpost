@@ -21,8 +21,8 @@
 namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\Block;
 use qpost\Entity\User;
@@ -52,8 +52,7 @@ class BlockRepository extends ServiceEntityRepository {
 				->setParameter("target", $target)
 				->getQuery()
 				->useQueryCache(true)
-				->useResultCache(true)
-				->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+				->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 				->getSingleScalarResult() > 0;
 	}
 

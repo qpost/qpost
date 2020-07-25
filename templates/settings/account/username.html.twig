@@ -15,8 +15,8 @@
 		{% endif %}
 	</p>
 
-	<form action="{{ path("qpost_settings_accountusername") }}" method="post">
-		{% include "parts/csrf.html.twig" %}
+	<form action="{{ currentPath() }}" method="post">
+		{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 
 		<div class="form-group">
 			<div class="input-group">

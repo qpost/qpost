@@ -45,7 +45,7 @@ class IpStackResult {
 	private $type;
 
 	/**
-	 * @ORM\Column(type="string", length=4, nullable=true)
+	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
 	private $continentCode;
 
@@ -55,7 +55,7 @@ class IpStackResult {
 	private $continentName;
 
 	/**
-	 * @ORM\Column(type="string", length=2, nullable=true)
+	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
 	private $countryCode;
 
@@ -65,7 +65,7 @@ class IpStackResult {
 	private $countryName;
 
 	/**
-	 * @ORM\Column(type="string", length=2, nullable=true)
+	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
 	private $regionCode;
 

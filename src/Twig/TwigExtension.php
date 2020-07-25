@@ -20,8 +20,8 @@
 
 namespace qpost\Twig;
 
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Service\APIService;
-use qpost\Util\Util;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;

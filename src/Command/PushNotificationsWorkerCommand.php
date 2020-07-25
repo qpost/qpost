@@ -94,5 +94,7 @@ class PushNotificationsWorkerCommand extends Command {
 		}
 
 		$output->writeln("Done.");
+
+		return 0;
 	}
 }

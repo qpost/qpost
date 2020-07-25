@@ -20,15 +20,15 @@
 
 namespace qpost\Controller;
 
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function strcmp;
 use function strtoupper;
 
-class AboutController extends AbstractController {
+class AboutController extends GigadriveController {
 	/**
 	 * @Route("/about")
 	 */

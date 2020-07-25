@@ -4,7 +4,7 @@
 	<img src="/assets/img/qpost-white-small.png" height="60" alt="qpost" title="qpost Logo" class="logo"/>
 
 	<form action="{{ path("qpost_login_index") }}" method="post" id="loginForm">
-		{% include "parts/csrf.html.twig" %}
+		{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 		<input type="text" class="form-control" name="email"
 			   placeholder="Email address or username"
 			   value="{{ _POST['email'] is defined ? _POST['email'] }}"/>

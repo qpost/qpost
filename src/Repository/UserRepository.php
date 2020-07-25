@@ -23,8 +23,8 @@ namespace qpost\Repository;
 use DateInterval;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
 use qpost\Entity\User;
@@ -60,8 +60,7 @@ class UserRepository extends ServiceEntityRepository {
 			->setCacheable(true)
 			->getQuery()
 			->useQueryCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
-			->useResultCache(true)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME)
 			->getResult();
 	}
 
@@ -88,8 +87,7 @@ class UserRepository extends ServiceEntityRepository {
 			->setMaxResults(10)
 			->getQuery()
 			->useQueryCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
-			->useResultCache(true)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME)
 			->getResult();
 	}
 

@@ -21,7 +21,7 @@
 namespace qpost\Twig;
 
 use qpost\Constants\LinkedAccountService;
-use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Locales;
 use function array_merge;
 use function basename;
 use function count;
@@ -43,7 +43,7 @@ class Twig {
 				$code = explode(".", substr($name, strlen("messages.")))[0];
 
 				if ($code) {
-					$name = Intl::getLocaleBundle()->getLocaleName($code, $code);
+					$name = Locales::getName($code, $code);
 					$flag = $code;
 
 					switch ($code) {
