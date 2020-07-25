@@ -30,8 +30,13 @@ module.exports = {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				use: "ts-loader",
-				exclude: /node_modules/
+				loader: "ts-loader",
+				exclude: [
+					/node_modules/
+				],
+				options: {
+					configFile: 'tsconfig.webpack.json'
+				}
 			},
 			{
 				test: /\.css$/,
@@ -57,6 +62,38 @@ module.exports = {
 							includePaths: [
 								resolve(__dirname, "node_modules")
 							]
+						}
+					}
+				]
+			},
+			{
+				test: /\.less$/,
+				use: [
+					{
+						loader: MiniCssExtractPlugin.loader,
+						options: {
+							hmr: process.env.NODE_ENV === "development"
+						}
+					},
+					{
+						loader: "css-loader",
+						options: {
+							sourceMap: true,
+							importLoaders: 1
+						}
+					},
+					{
+						loader: "less-loader",
+						options: {
+							javascriptEnabled: true,
+							modifyVars: {
+								"primary-color": "#007bff",
+								"screen-xs": "0",
+								"screen-sm": "676px",
+								"screen-md": "868px",
+								"screen-lg": "1092px",
+								"screen-xl": "1500px"
+							}
 						}
 					}
 				]
