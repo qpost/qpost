@@ -29,11 +29,34 @@ import NightMode from "../../../NightMode/NightMode";
 import {Link} from "react-router-dom";
 import Auth from "../../../Auth/Auth";
 import BadgeStatus from "../../../Auth/BadgeStatus";
+import DesktopHeaderAccountDropdown from "./DesktopHeaderAccountDropdown";
+import $ from "jquery";
+import ClickEvent = JQuery.ClickEvent;
 
 export default class DesktopHeader extends Component<{
 	mobile: boolean,
 	key: any
-}, any> {
+}, {
+	accountDropdownOpen: boolean
+}> {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			accountDropdownOpen: false
+		};
+
+		$(document).on("click", (e: ClickEvent) => {
+			const $target = $(e.target);
+
+			if (!$target.closest(".desktopHeaderAccountDropdown,.desktopHeaderUser").length) {
+				this.setState({
+					accountDropdownOpen: false
+				});
+			}
+		});
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		const currentUser = Auth.getCurrentUser();
 		const notifications = BadgeStatus.getNotifications();
@@ -96,18 +119,20 @@ export default class DesktopHeader extends Component<{
 							</Link>
 						</Menu.Item>,
 
-						<Menu.Item key={4} className={"desktopHeaderUser"}>
-							<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
+						<Menu.Item key={4} style={{paddingRight: "0px"}}>
+							<a className={"desktopHeaderUser d-inline-block clearUnderline"} onClick={e => {
+								e.preventDefault();
+								e.stopPropagation();
+
+								this.setState({
+									accountDropdownOpen: !this.state.accountDropdownOpen
+								});
+							}}>
 								<img src={currentUser.getAvatarURL()} width={24} height={24}
 									 alt={currentUser.getUsername()}
 									 className={"rounded"}/><span className={"ml-2"}>{currentUser.getUsername()}</span>
-							</Link>
-						</Menu.Item>,
-
-						<Menu.Item key={5} className={"desktopHeaderSettings"}>
-							<a href={"/settings/preferences/appearance"} className={"clearUnderline"}>
-								<i className="fas fa-cog"/>
 							</a>
+							<DesktopHeaderAccountDropdown open={this.state.accountDropdownOpen} parent={this}/>
 						</Menu.Item>] : <Menu.Item>
 						<a href={"/login"} className={"clearUnderline"}>
 							log in
