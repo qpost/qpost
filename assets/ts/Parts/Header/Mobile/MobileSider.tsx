@@ -29,6 +29,7 @@ import Auth from "../../../Auth/Auth";
 import User from "../../../api/src/Entity/User";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../../Component/VerifiedBadge";
+import AccountSwitcher from "../../../Component/AccountSwitcher";
 import ClickEvent = JQuery.ClickEvent;
 
 export default class MobileSider extends Component<{
@@ -121,6 +122,16 @@ export default class MobileSider extends Component<{
 							</a>
 						</Menu.Item>,
 						<Menu.Item key="3">
+							<Link to={"#"} onClick={(e) => {
+								e.preventDefault();
+								AccountSwitcher.open();
+								this.toggle();
+							}} className={"clearUnderline"}>
+								<i className={"fas fa-user-friends iconMargin-10"}/>
+								<span className="nav-text">Switch account</span>
+							</Link>
+						</Menu.Item>,
+						<Menu.Item key="4">
 							<Link to={"#"} onClick={(e) => {
 								e.preventDefault();
 								Auth.logout();

@@ -19,10 +19,11 @@
 
 html.nightMode, html.nightMode > body {
 	&, .ant-layout {
-		background: #000b17;
+		background: #000B17;
 		color: #FFF;
 	}
 
+	@import "account-switcher";
 	@import "alerts";
 	@import "base";
 	@import "buttons";

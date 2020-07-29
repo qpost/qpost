@@ -54,6 +54,8 @@ import Sessions from "./Component/Settings/Sessions";
 import BirthdaySelector from "./Component/Settings/BirthdaySelector";
 import HeaderSelector from "./Component/Settings/HeaderSelector";
 import AvatarSelector from "./Component/Settings/AvatarSelector";
+import TokenStorage from "./Auth/TokenStorage";
+import AccountSwitcher from "./Component/AccountSwitcher";
 
 export default class App extends Component<any, {
 	validatedLogin: boolean,
@@ -119,25 +121,32 @@ export default class App extends Component<any, {
 
 	componentDidMount(): void {
 		if (Auth.isLoggedIn()) {
-			// TODO: Pre-load home page data and pass it to the HomeFeed component
-			API.i.token.verify().then(user => {
-				Auth.setCurrentUser(user);
+			(async () => {
+				try {
+					// load user info
+					const user = await API.i.token.verify();
+					Auth.setCurrentUser(user);
 
-				BadgeStatus.update(() => {
-					PushNotificationsManager.init();
-					BadgeUpdater.init();
+					// load TokenStorage
+					await TokenStorage.loadTokens();
 
-					this.setState({
-						validatedLogin: true
+					// load badge status
+					BadgeStatus.update(() => {
+						PushNotificationsManager.init();
+						BadgeUpdater.init();
+
+						this.setState({
+							validatedLogin: true
+						});
 					});
-				});
-			}).catch(error => {
-				this.setState({
-					error
-				});
+				} catch (err) {
+					this.setState({
+						error: err
+					});
 
-				Auth.logout(false, true);
-			});
+					Auth.logout(false, true);
+				}
+			})();
 		}
 	}
 
@@ -166,6 +175,7 @@ export default class App extends Component<any, {
 												<LoginSuggestionModal/>
 												<PostForm/>
 												<BlockModal/>
+												<AccountSwitcher/>
 
 												<Switch>
 													{Auth.isLoggedIn() ?

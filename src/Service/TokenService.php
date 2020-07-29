@@ -20,13 +20,21 @@
 
 namespace qpost\Service;
 
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\Token;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use function array_merge;
+use function array_slice;
 use function is_string;
+use function json_decode;
+use function json_encode;
 use function strlen;
 use function substr;
 
@@ -46,6 +54,8 @@ class TokenService {
 	 */
 	private $requestStack;
 
+	public const TOKEN_COOKIE_IDENTIFIER = "qpoststoredtokens";
+
 	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack) {
 		$this->logger = $logger;
 		$this->entityManager = $entityManager;
@@ -60,9 +70,7 @@ class TokenService {
 
 	public function getTokenFromRequest(Request $request): ?Token {
 		$token = null;
-		if ($request->cookies->has("sesstoken")) {
-			$token = $request->cookies->get("sesstoken");
-		} else if ((Util::startsWith($request->getPathInfo(), "/api") || Util::startsWith($request->getPathInfo(), "/webpush")) && $request->headers->has("Authorization")) {
+		if ((Util::startsWith($request->getPathInfo(), "/api") || Util::startsWith($request->getPathInfo(), "/webpush")) && $request->headers->has("Authorization")) {
 			$authorization = $request->headers->get("Authorization");
 
 			if ($authorization && is_string($authorization)) {
@@ -73,6 +81,10 @@ class TokenService {
 					$token = substr($authorization, strlen($prefix));
 				}
 			}
+		} else if ($request->cookies->has(self::TOKEN_COOKIE_IDENTIFIER)) {
+			$cookieTokens = $this->getCookieTokens($request);
+
+			if (count($cookieTokens) > 0) $token = $cookieTokens[0];
 		}
 
 		$token = $this->entityManager->getRepository(Token::class)->getTokenById($token);
@@ -85,6 +97,16 @@ class TokenService {
 		}
 
 		return $token;
+	}
+
+	public function getCookieTokens(Request $request): array {
+		if (!$request->cookies->has(self::TOKEN_COOKIE_IDENTIFIER)) return [];
+
+		return json_decode($request->cookies->get(self::TOKEN_COOKIE_IDENTIFIER));
+	}
+
+	public function addToken(string $token, Request $request, Response $response): void {
+		$response->headers->setCookie(Cookie::create(self::TOKEN_COOKIE_IDENTIFIER, json_encode(array_slice(array_merge([$token], $this->getCookieTokens($request)), 0, 10)), (new DateTime("now"))->add(DateInterval::createFromDateString("1 year")), "/", null, null, false));
 	}
 
 	/**

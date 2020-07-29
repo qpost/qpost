@@ -17,13 +17,26 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import Auth from "./Auth/Auth";
-import qpostAPI from "./api/src/API/qpostAPI";
+import User from "../api/src/Entity/User";
 
-export default class API {
-	public static readonly i: qpostAPI = new qpostAPI(API.getBaseURL(), Auth.isLoggedIn() ? Auth.getToken() : undefined);
+export default class StoredToken {
+	private readonly id: string;
+	private user: User;
 
-	public static getBaseURL(): string {
-		return window.location.protocol + "//" + window.location.host + "/api";
+	constructor(id: string, user: User) {
+		this.id = id;
+		this.user = user;
+	}
+
+	public getId(): string {
+		return this.id;
+	}
+
+	public getUser(): User {
+		return this.user;
+	}
+
+	public setUser(user: User): void {
+		this.user = user;
 	}
 }

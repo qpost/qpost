@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -17,13 +17,41 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import Auth from "./Auth/Auth";
-import qpostAPI from "./api/src/API/qpostAPI";
+.accountSwitcher {
+	.account {
+		$bg: lighten(#001529, 2%);
+		$border: lighten($bg, 20%);
 
-export default class API {
-	public static readonly i: qpostAPI = new qpostAPI(API.getBaseURL(), Auth.isLoggedIn() ? Auth.getToken() : undefined);
+		@include darkButton();
 
-	public static getBaseURL(): string {
-		return window.location.protocol + "//" + window.location.host + "/api";
+		&:hover {
+
+		}
+
+		&.active {
+			border-color: $border !important;
+		}
+
+		&.logout {
+			$bg: #380002;
+			$border: #230002;
+
+			background-color: $bg !important;
+			border-color: $border !important;
+
+			&:hover {
+				background-color: lighten($bg, 10%) !important;
+			}
+		}
+
+		.info {
+			.displayName {
+
+			}
+
+			.userName {
+				color: darken(#FFF, 20%);
+			}
+		}
 	}
 }

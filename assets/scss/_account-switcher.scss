@@ -1,0 +1,94 @@
+/*!
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
+ * https://gigadrivegroup.com
+ * https://qpostapp.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://gnu.org/licenses/>
+ */
+
+.accountSwitcher {
+	.account {
+		$avatarSize: 48px;
+		$avatarMargin: 10px;
+
+		@include clearfix();
+		@include transition(background-color .3s ease-in-out);
+		cursor: pointer;
+		padding: 10px;
+
+		$border: lighten($primary, 10%);
+		$bg: lighten($border, 30%);
+
+		@extend .rounded;
+		border: 3px solid transparent;
+		background-color: $bg;
+		margin-bottom: 10px;
+
+		&.addNew, &.logout {
+			text-align: center;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		&:hover {
+			background-color: darken($bg, 10%);
+		}
+
+		&.active {
+			border-color: $border;
+		}
+
+		&.logout {
+			$border: lighten($danger, 10%);
+			$bg: lighten($border, 30%);
+			//border-color: $border;
+			background-color: $bg;
+
+			&:hover {
+				background-color: darken($bg, 10%);
+			}
+		}
+
+		.avatar {
+			float: left;
+			margin-right: $avatarMargin;
+
+			img {
+				@extend .rounded;
+				width: $avatarSize;
+				height: $avatarSize;
+			}
+		}
+
+		.info {
+			float: left;
+			max-width: calc(100% - #{$avatarSize} - #{$avatarMargin});
+
+			.displayName {
+				font-size: 18px;
+				font-weight: bold;
+			}
+
+			.userName {
+				color: lighten(#000, 20%);
+			}
+
+			.displayName, .userName {
+				@include cutText();
+			}
+		}
+	}
+}

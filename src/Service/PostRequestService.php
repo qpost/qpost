@@ -51,7 +51,7 @@ class PostRequestService {
 		if ($request->isMethod("POST")) {
 			$parameters = $request->request;
 
-			if ($parameters->has("_csrf_token") && $_this->csrf("csrf", $parameters->get("_csrf_token"))) {
+			if ($_this->csrf()) {
 				if ($parameters->has("email") && $parameters->has("displayName") && $parameters->has("username") && $parameters->has("password")) {
 					$email = trim(Util::fixString($parameters->get("email")));
 					$displayName = trim(Util::fixString($parameters->get("displayName")));
