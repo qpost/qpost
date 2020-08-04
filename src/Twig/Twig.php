@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,50 +21,16 @@
 namespace qpost\Twig;
 
 use qpost\Constants\LinkedAccountService;
-use Symfony\Component\Intl\Locales;
 use function array_merge;
-use function basename;
-use function explode;
-use function glob;
-use function strlen;
-use function substr;
 
 class Twig {
 	public static function param($parameters = []): array {
-		$availableLocales = [];
-
-		$results = glob(__DIR__ . "/../../translations/messages.*.json");
-		if ($results) {
-			foreach ($results as $path) {
-				$name = basename($path);
-				$code = explode(".", substr($name, strlen("messages.")))[0];
-
-				if ($code) {
-					$name = Locales::getName($code, $code);
-					$flag = $code;
-
-					switch ($code) {
-						case "en":
-							$flag = "gb";
-							break;
-					}
-
-					$availableLocales[] = [
-						"name" => $name,
-						"code" => $code,
-						"flag" => $flag
-					];
-				}
-			}
-		}
-
 		$twigGlobals = [
 			"siteName" => "qpost",
 			"defaultDescription" => isset($_ENV["DEFAULT_DESCRIPTION"]) ? $_ENV["DEFAULT_DESCRIPTION"] : "",
 			"defaultTwitterImage" => isset($_ENV["DEFAULT_TWITTER_IMAGE"]) ? $_ENV["DEFAULT_TWITTER_IMAGE"] : "",
 			"postCharacterLimit" => $_ENV["POST_CHARACTER_LIMIT"],
 			"increasedPostCharacterLimit" => $_ENV["INCREASED_POST_CHARACTER_LIMIT"],
-			"availableLocales" => $availableLocales,
 			"linkedAccountServices" => LinkedAccountService::all(),
 			"_POST" => isset($_POST) ? $_POST : [],
 			"_GET" => isset($_GET) ? $_GET : [],
