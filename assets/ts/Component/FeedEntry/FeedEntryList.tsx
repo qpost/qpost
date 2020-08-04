@@ -30,6 +30,7 @@ import {Spin} from "antd";
 import Storage from "../../Util/Storage";
 import FeedEntry from "../../api/src/Entity/FeedEntry";
 import FeedEntryType from "../../api/src/Entity/FeedEntryType";
+import __ from "../../i18n/i18n";
 
 export default class FeedEntryList extends Component<{
 	userID?: number,
@@ -271,9 +272,9 @@ export default class FeedEntryList extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.privateWarning) {
 			return <div className={"text-center my-5"}>
-				<h4>This user has set their profile private.</h4>
+				<h4>{__("entryList.private.headline")}</h4>
 
-				<p>You need to be a follower to view their posts.</p>
+				<p>{__("entryList.private.description")}</p>
 			</div>;
 		}
 
@@ -298,7 +299,7 @@ export default class FeedEntryList extends Component<{
 					</ul>
 				</InfiniteScroll>;
 			} else {
-				return <Empty description={"No posts found."}/>;
+				return <Empty description={__("entryList.empty")}/>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;

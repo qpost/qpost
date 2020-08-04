@@ -33,7 +33,7 @@ class RedirectController extends qpostController {
 	 */
 	public function terms() {
 		return $this->render("pages/terms.html.twig", Twig::param([
-			"title" => "Terms of Service"
+			"title" => __("landing.footer.legal.terms")
 		]));
 //		return $this->redirect("https://go.qpo.st/terms");
 	}
@@ -58,7 +58,7 @@ class RedirectController extends qpostController {
 	 */
 	public function disclaimer() {
 		return $this->render("pages/disclaimer.html.twig", Twig::param([
-			"title" => "Disclaimer"
+			"title" => __("landing.footer.legal.disclaimer")
 		]));
 //		return $this->redirect("https://go.qpo.st/disclaimer");
 	}
@@ -70,7 +70,7 @@ class RedirectController extends qpostController {
 	 */
 	public function rules() {
 		return $this->render("pages/rules.html.twig", Twig::param([
-			"title" => "Rules and Guidelines"
+			"title" => __("landing.footer.legal.rules")
 		]));
 //		return $this->redirect("https://go.qpo.st/rules");
 	}

@@ -25,6 +25,8 @@ import {Link} from "react-router-dom";
 import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
 import TrendingHashtagData from "../api/src/Entity/TrendingHashtagData";
+import __ from "../i18n/i18n";
+import {formatNumberShort} from "../Util/Format";
 
 export default class TrendingTopics extends Component<{
 	limit?: number
@@ -78,7 +80,8 @@ export default class TrendingTopics extends Component<{
 				<Spin size={"large"}/>
 			</div>;
 		} else if (this.state.trends !== null && this.state.trends.length > 0) {
-			return <Card size={"small"} title={"Trending topics"} className={"card-nopadding trending-topics mb-3"}>
+			return <Card size={"small"} title={__("trendingTopics.headline")}
+						 className={"card-nopadding trending-topics mb-3"}>
 				<ul className={"list-group feedContainer"}>
 					{this.state.trends.map((trend: TrendingHashtagData, index: number) => {
 						if (index >= this.props.limit) return "";
@@ -90,8 +93,7 @@ export default class TrendingTopics extends Component<{
 								<div className={"px-4 py-2"}>
 									<p className={"mb-0 text-muted small"}>#{index + 1}</p>
 									<p className={"mb-0 font-weight-bold"}>#{tag}</p>
-									<p className={"mb-0 text-muted"}>{trend.getPostsThisWeek()} post{trend.getPostsThisWeek() !== 1 ? "s" : ""} this
-										week</p>
+									<p className={"mb-0 text-muted"}>{__("trendingTopics.postsThisWeek", {"%num%": formatNumberShort(trend.getPostsThisWeek())})}</p>
 								</div>
 							</li>
 						</Link>;

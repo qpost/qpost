@@ -21,6 +21,7 @@ import React, {Component} from "react";
 import Auth from "../Auth/Auth";
 import {Button, Card} from "antd";
 import PostForm from "./PostForm/PostForm";
+import __ from "../i18n/i18n";
 
 export default class FirstPostEncouragement extends Component<any, {
 	show: boolean
@@ -71,12 +72,12 @@ export default class FirstPostEncouragement extends Component<any, {
 				<Button type={"primary"} className={"float-right"} onClick={(e) => {
 					e.preventDefault();
 
-					PostForm.open("Hey, I'm currently setting up my qpost profile! #myFirstPost");
+					PostForm.open(__("firstPost.text"));
 				}}>
-					Create your first post
+					{__("firstPost.button")}
 				</Button>
 
-				<h4 className={"mb-0"}>Welcome to qpost!</h4>
+				<h4 className={"mb-0"}>{__("firstPost.headline")}</h4>
 			</Card>
 		</div>;
 	}

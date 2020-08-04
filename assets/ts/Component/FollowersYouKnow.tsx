@@ -24,6 +24,7 @@ import {Alert, Card, Tooltip} from "antd";
 import {Link} from "react-router-dom";
 import API from "../API";
 import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
 
 export default class FollowersYouKnow extends Component<{
 	user: User
@@ -54,7 +55,7 @@ export default class FollowersYouKnow extends Component<{
 		if (Auth.isLoggedIn() && Auth.getCurrentUser().getId() !== this.props.user.getId()) {
 			if (this.state.users !== null) {
 				if (this.state.users.length > 0) {
-					return <Card title={"Followers you know"} size={"small"} className={"mb-3"}>
+					return <Card title={__("followersYouKnow.headline")} size={"small"} className={"mb-3"}>
 						<div className="tab-content" id="users-tablist-content">
 							{this.state.users.map((user, i) => {
 								return <Tooltip placement={"top"}

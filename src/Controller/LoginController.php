@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function __;
 use function is_null;
 use function password_verify;
 use function trim;
@@ -117,19 +118,19 @@ class LoginController extends qpostController {
 
 										return $response;
 									} else {
-										$this->addFlash(FlashMessageType::ERROR, "Your account has been suspended.");
+										$this->addFlash(FlashMessageType::ERROR, __("login.error.suspended"));
 									}
 								} else {
-									$this->addFlash(FlashMessageType::ERROR, "Please activate your email address before logging in.");
+									$this->addFlash(FlashMessageType::ERROR, __("login.error.emailNotActivated"));
 								}
 							} else {
-								$this->addFlash(FlashMessageType::ERROR, "Invalid credentials.");
+								$this->addFlash(FlashMessageType::ERROR, __("login.error.invalidCredentials"));
 							}
 						} else {
-							$this->addFlash(FlashMessageType::ERROR, "Invalid credentials.");
+							$this->addFlash(FlashMessageType::ERROR, __("login.error.invalidCredentials"));
 						}
 					} else {
-						$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+						$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 					}
 				}
 			}
@@ -216,19 +217,19 @@ class LoginController extends qpostController {
 
 								return $response;
 							} else {
-								$this->addFlash(FlashMessageType::ERROR, "Your account has been suspended.");
+								$this->addFlash(FlashMessageType::ERROR, __("login.error.suspended"));
 							}
 						} else {
 							return $this->redirect($this->generateUrl("qpost_register_index", ["code" => $code]));
 						}
 					} else {
-						$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+						$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 					}
 				} else {
-					$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+					$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 				}
 			} else {
-				$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+				$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 			}
 		}
 

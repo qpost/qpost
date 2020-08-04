@@ -24,6 +24,7 @@ import FollowButton from "../../Component/FollowButton";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import {formatNumberShort} from "../../Util/Format";
 import {Card} from "antd";
+import __ from "../../i18n/i18n";
 
 export default class HomeFeedProfileBox extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -95,7 +96,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 				<Link to={"/" + currentUser.getUsername()} className="clearUnderline mb-1">
 					<div style={{height: "24px"}}>
 						<div className="text-muted text-uppercase small float-left pt-1">
-							Posts
+							{__("profile.posts")}
 						</div>
 
 						<div className="font-weight-bold text-uppercase float-right">
@@ -107,7 +108,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 				<Link to={"/" + currentUser.getUsername() + "/following"} className="clearUnderline mb-1">
 					<div style={{height: "24px"}}>
 						<div className="text-muted text-uppercase small float-left pt-1">
-							Following
+							{__("profile.following")}
 						</div>
 
 						<div className="font-weight-bold text-uppercase float-right">
@@ -119,7 +120,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 				<Link to={"/" + currentUser.getUsername() + "/followers"} className="clearUnderline mb-1">
 					<div style={{height: "24px"}}>
 						<div className="text-muted text-uppercase small float-left pt-1">
-							Followers
+							{__("profile.followers")}
 						</div>
 
 						<div className="font-weight-bold text-uppercase float-right">

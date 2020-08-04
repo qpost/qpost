@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function __;
 use function is_null;
 use function password_hash;
 use const PASSWORD_BCRYPT;
@@ -104,7 +105,7 @@ class ResetPasswordController extends qpostController {
 								$this->addSuccessfulFlash();
 							}
 						} else {
-							$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+							$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 						}
 					}
 				}
@@ -162,34 +163,34 @@ class ResetPasswordController extends qpostController {
 									$entityManager->persist($token->setActive(false)->setTimeAccessed(new DateTime("now")));
 									$entityManager->flush();
 
-									$this->addFlash(FlashMessageType::SUCCESS, "Your password has been changed.");
+									$this->addFlash(FlashMessageType::SUCCESS, __("resetPassword.success"));
 									$renderForm = false;
 								} else {
-									$this->addFlash(FlashMessageType::ERROR, "The passwords do not match.");
+									$this->addFlash(FlashMessageType::ERROR, __("resetPassword.error.noMatch"));
 								}
 							}
 						}
 					}
 
 					return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
-						"title" => "Reset your password",
+						"title" => __("resetPassword.headline"),
 						"renderForm" => $renderForm,
 						"user" => $user,
 						"token" => $token
 					]));
 				} else {
-					$this->addFlash(FlashMessageType::ERROR, "Invalid token.");
+					$this->addFlash(FlashMessageType::ERROR, __("error.invalidToken"));
 
 					return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
-						"title" => "Reset your password",
+						"title" => __("resetPassword.headline"),
 						"renderForm" => false
 					]));
 				}
 			} else {
-				$this->addFlash(FlashMessageType::ERROR, "Invalid token.");
+				$this->addFlash(FlashMessageType::ERROR, __("error.invalidToken"));
 
 				return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
-					"title" => "Reset your password",
+					"title" => __("resetPassword.headline"),
 					"renderForm" => false
 				]));
 			}
@@ -199,6 +200,6 @@ class ResetPasswordController extends qpostController {
 	}
 
 	private function addSuccessfulFlash(): void {
-		$this->addFlash(FlashMessageType::SUCCESS, "An email has been sent to you, that contains a link to reset your password.");
+		$this->addFlash(FlashMessageType::SUCCESS, __("resetPassword.emailSent"));
 	}
 }

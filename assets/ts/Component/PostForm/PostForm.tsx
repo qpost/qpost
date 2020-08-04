@@ -45,6 +45,7 @@ import FirstPostEncouragement from "../FirstPostEncouragement";
 import FeedEntry from "../../api/src/Entity/FeedEntry";
 import FeedEntryType from "../../api/src/Entity/FeedEntryType";
 import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
 
 export default class PostForm extends Component<any, {
 	mobile: boolean,
@@ -137,7 +138,7 @@ export default class PostForm extends Component<any, {
 
 									this.addFile(uploadItem);
 								} else {
-									message.error("An error occurred.");
+									message.error(__("error.general"));
 								}
 							};
 
@@ -224,7 +225,7 @@ export default class PostForm extends Component<any, {
 				const entryList: FeedEntryList | null = FeedEntryList.instance;
 				const replyList: ReplyList | null = ReplyList.instance;
 
-				AntMessage.success("Your post has been sent.");
+				AntMessage.success(__("postForm.success"));
 
 				if (entryList && post.getType() === FeedEntryType.POST && ((!post.getText()) || (post.getText() && !post.getText().startsWith("@")))) {
 					entryList.prependEntry(post);
@@ -281,8 +282,12 @@ export default class PostForm extends Component<any, {
 			return;
 		}
 
-		if (!(size / 1024 / 1024 < 10)) {
-			AntMessage.error("Images must be smaller than 10MB.");
+		const limit = 10;
+
+		if (!(size / 1024 / 1024 < limit)) {
+			AntMessage.error(__("postForm.imageTooBig", {
+				"%size%": limit + "MB"
+			}));
 			return;
 		}
 
@@ -291,7 +296,7 @@ export default class PostForm extends Component<any, {
 		if (photos.length > 0) {
 			for (const photo of photos) {
 				if (photo.type === "image/gif") {
-					AntMessage.error("You can not add more attachments.");
+					AntMessage.error(__("postForm.maxAttachmentsReached"));
 
 					return;
 				}
@@ -328,7 +333,7 @@ export default class PostForm extends Component<any, {
 					<Button type={"primary"} onClick={(e) => {
 						this.send(e);
 					}} className={"float-right"}>
-						Send
+						{__("postForm.sendButton")}
 					</Button>
 				</div>
 				<hr/>
@@ -339,7 +344,7 @@ export default class PostForm extends Component<any, {
 						});
 					}}/> : ""}
 				<Mentions rows={3} style={{resize: "none", width: "100%"}} id={"postFormTextarea"}
-						  placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
+						  placeholder={__("postForm.placeholder")} onChange={(e) => this.change(e)}
 						  value={this.state.message} loading={this.state.loadingUsers} onSearch={text => {
 					if (!text) {
 						this.setState({
@@ -414,7 +419,7 @@ export default class PostForm extends Component<any, {
 							disabled={this.state.photos.length >= 4}
 							multiple={true}
 						>
-							<Tooltip placement={"top"} title={"Add photos"}>
+							<Tooltip placement={"top"} title={__("postForm.addPhotosButton")}>
 								<Button type={"link"} className={"actionButton"}
 										disabled={canAddPhoto}>
 									<i className="fas fa-images"/>

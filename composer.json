@@ -64,6 +64,9 @@
 		"sort-packages": true
 	},
 	"autoload": {
+		"files": [
+			"src/global_functions.php"
+		],
 		"psr-4": {
 			"qpost\\": "src/"
 		}

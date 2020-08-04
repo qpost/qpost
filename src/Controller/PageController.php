@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function __;
 use function is_null;
 use function sprintf;
 use function strlen;
@@ -61,12 +62,12 @@ class PageController extends qpostController {
 			$user = $feedEntry->getUser();
 			$text = $feedEntry->getText();
 
-			$title = $user->getDisplayName() . " on qpost" . ($text ? ": \"%s\"" : "");
+			$title = __("status.headline", ["%displayName%" => $user->getDisplayName()]) . ($text ? ": \"%s\"" : "");
 
 			if ($text) {
 				$reservedTitleLength = strlen(sprintf($title, ""));
 
-				$title = sprintf($title, Util::limitString($text, MiscConstants::META_TITLE_LENGTH-$reservedTitleLength, true));
+				$title = sprintf($title, Util::limitString($text, MiscConstants::META_TITLE_LENGTH - $reservedTitleLength, true));
 			}
 
 			$bigSocialImage = $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png";
@@ -108,7 +109,7 @@ class PageController extends qpostController {
 	 */
 	public function goodbye(RenderService $renderService) {
 		return $renderService->react([
-			"title" => "Goodbye",
+			"title" => __("goodbye.headline"),
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
 		]);
@@ -122,7 +123,7 @@ class PageController extends qpostController {
 	 */
 	public function search(RenderService $renderService) {
 		return $renderService->react([
-			"title" => "Search",
+			"title" => __("search.headline"),
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
 		]);
@@ -135,7 +136,7 @@ class PageController extends qpostController {
 	 */
 	public function offline() {
 		return $this->render("pages/offline.html.twig", Twig::param([
-			"title" => "Offline"
+			"title" => __("offline.headline")
 		]));
 	}
 

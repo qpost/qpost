@@ -31,6 +31,7 @@ import Auth from "../../../Auth/Auth";
 import BadgeStatus from "../../../Auth/BadgeStatus";
 import DesktopHeaderAccountDropdown from "./DesktopHeaderAccountDropdown";
 import $ from "jquery";
+import __ from "../../../i18n/i18n";
 import ClickEvent = JQuery.ClickEvent;
 
 export default class DesktopHeader extends Component<{
@@ -90,32 +91,33 @@ export default class DesktopHeader extends Component<{
 					}}>
 					{currentUser ? [<Menu.Item key={0}>
 						<Link to={"/"} className={"clearUnderline"}>
-							home
+							{__("navigation.home")}
 						</Link>
 					</Menu.Item>,
 
 						<Menu.Item key={1} className={"d-none d-lg-inline-block"}>
 							<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}>
-								my profile
+								{__("navigation.myprofile")}
 							</Link>
 						</Menu.Item>,
 
 						<Menu.Item key={2}>
 							<Link to={"/notifications"} className={"clearUnderline"}>
-								notifications{notifications > 0 ?
+								{__("navigation.notifications")}{notifications > 0 ?
 								<Badge count={notifications} className={"ml-2"}/> : ""}
 							</Link>
 						</Menu.Item>,
 
 						<Menu.Item key={3}>
 							<Link to={"/messages"} className={"clearUnderline"}>
-								messages{messages > 0 ? <Badge count={messages} className={"ml-2"}/> : ""}
+								{__("navigation.messages")}{messages > 0 ?
+								<Badge count={messages} className={"ml-2"}/> : ""}
 							</Link>
 						</Menu.Item>,
 
 						<Menu.Item key={4}>
 							<Link to={"/search"} className={"clearUnderline"}>
-								search
+								{__("navigation.search")}
 							</Link>
 						</Menu.Item>,
 
@@ -135,7 +137,7 @@ export default class DesktopHeader extends Component<{
 							<DesktopHeaderAccountDropdown open={this.state.accountDropdownOpen} parent={this}/>
 						</Menu.Item>] : <Menu.Item>
 						<a href={"/login"} className={"clearUnderline"}>
-							log in
+							{__("landing.navigation.login")}
 						</a>
 					</Menu.Item>}
 				</Menu>

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -55,6 +55,10 @@ class TwigExtension extends AbstractExtension {
 
 			new TwigFunction("jsBundle", function () {
 				return $this->asset->getBundleFile(__DIR__ . "/../../public/build/bundle.js", true);
+			}),
+
+			new TwigFunction("__", function ($identifier, $parameters = []) {
+				return __($identifier, $parameters);
 			})
 		];
 	}

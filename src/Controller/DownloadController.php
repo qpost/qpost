@@ -36,8 +36,8 @@ class DownloadController extends qpostController {
 	 */
 	public function indexAction() {
 		return $this->render("pages/download.html.twig", Twig::param([
-			"title" => "Download",
-			"description" => "Get qpost - the open-source Twitter alternative for your device of choice.",
+			"title" => __("landing.download.headline"),
+			"description" => __("landing.download.description"),
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
 		]));

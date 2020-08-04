@@ -19,7 +19,7 @@
 
 import PhraseStorage from "./PhraseStorage";
 
-export default function _(identifier: string, parameters?: {}): string {
+export default function __(identifier: string, parameters?: {}): string {
 	if (!PhraseStorage.phrases.hasOwnProperty(identifier)) return identifier;
 
 	let value: string = PhraseStorage.phrases[identifier];

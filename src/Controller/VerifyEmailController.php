@@ -51,7 +51,7 @@ class VerifyEmailController extends qpostController {
 			$entityManager->flush();
 
 			return $this->render("pages/verifyEmail.html.twig", Twig::param([
-				"title" => "Verify your email address"
+				"title" => __("verifyEmail.headline")
 			]));
 		} else {
 			throw $this->createNotFoundException("Invalid token-user combination.");

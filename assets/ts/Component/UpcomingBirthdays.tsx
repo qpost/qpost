@@ -31,6 +31,7 @@ import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
 import BaseObject from "../api/src/BaseObject";
 import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
 
 export default class UpcomingBirthdays extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -76,7 +77,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 		} else if (this.state.results.length > 0) {
 			const now = new Date();
 
-			return <Card title={"Upcoming birthdays"} size={"small"} className={"mb-3"}>
+			return <Card title={__("birthdays.headline")} size={"small"} className={"mb-3"}>
 				<div className="tab-content" id="users-tablist-content">
 					{this.state.results.map((user, i) => {
 						const birthday = new Date(user.getBirthday());
@@ -116,7 +117,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 									marginTop: "8px"
 								}}>
 									<i className={"far fa-clock"}/> {today ?
-									<span className={"text-danger font-weight-bold"}>Today</span> :
+									<span className={"text-danger font-weight-bold"}>{__("birthdays.today")}</span> :
 									<TimeAgo time={birthday.toUTCString()}
 											 short={true}/>}
 								</div>

@@ -32,10 +32,11 @@ import {setPageTitle} from "../../Util/Page";
 import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
 import TrendingTopics from "../../Component/TrendingTopics";
 import PageHeader from "../../Component/PageHeader";
+import __ from "../../i18n/i18n";
 
 export default class HomeFeed extends Component<any, any> {
 	componentDidMount(): void {
-		setPageTitle("Home");
+		setPageTitle(__("home.headline"));
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -50,7 +51,7 @@ export default class HomeFeed extends Component<any, any> {
 				</LeftSidebar>
 
 				<PageContent leftSidebar rightSidebar>
-					<PageHeader title={"Home feed"} iconClass={"fas fa-home"}/>
+					<PageHeader title={__("home.headline")} iconClass={"fas fa-home"}/>
 					<DummyPostForm/>
 
 					<FeedEntryList/>

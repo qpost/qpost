@@ -28,6 +28,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
 import User from "../../api/src/Entity/User";
 import Favorite from "../../api/src/Entity/Favorite";
+import __ from "../../i18n/i18n";
 
 export default class FavoriteList extends Component<{
 	user?: User
@@ -115,7 +116,7 @@ export default class FavoriteList extends Component<{
 					</ul>
 				</InfiniteScroll>;
 			} else {
-				return <Empty description={"No posts found."}/>;
+				return <Empty description={__("entryList.empty")}/>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;

@@ -1,3 +1,4 @@
+<?php
 /*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
@@ -17,12 +18,10 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React, {Component} from "react";
-import {Alert} from "antd";
-import __ from "../i18n/i18n";
+use qpost\Service\TranslationService;
 
-export default class PostUnavailableAlert extends Component {
-	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <Alert type={"error"} showIcon message={__("status.unavailable")}/>;
+if (!function_exists("__")) {
+	function __(string $identifier, array $parameters = []): string {
+		return TranslationService::$I->__($identifier, $parameters);
 	}
 }

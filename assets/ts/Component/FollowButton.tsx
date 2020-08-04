@@ -32,6 +32,7 @@ import LoginSuggestionModal from "./LoginSuggestionModal";
 import Storage from "../Util/Storage";
 import User from "../api/src/Entity/User";
 import Follower from "../api/src/Entity/Follower";
+import __ from "../i18n/i18n";
 
 export default class FollowButton extends Component<{
 	target: User,
@@ -91,7 +92,7 @@ export default class FollowButton extends Component<{
 									loading: false
 								});
 
-								message.error("An error occurred.");
+								message.error(__("error.general"));
 							}
 						}
 					}, error => {
@@ -177,23 +178,23 @@ export default class FollowButton extends Component<{
 		let text: string = "";
 
 		if (this.isCurrentUser()) {
-			text = "Edit profile";
+			text = __("followButton.edit");
 		} else {
 			switch (this.followStatus()) {
 				case FollowStatus.FOLLOWING:
-					text = "Unfollow";
+					text = __("followButton.unfollow");
 					break;
 
 				case FollowStatus.PENDING:
-					text = "Pending";
+					text = __("followButton.pending");
 					break;
 
 				case FollowStatus.BLOCKED:
-					text = "Blocked";
+					text = __("followButton.blocked");
 					break;
 
 				default:
-					text = "Follow";
+					text = __("followButton.follow");
 					break;
 			}
 		}
@@ -201,7 +202,7 @@ export default class FollowButton extends Component<{
 		return <Button
 			className={"followButton" + (this.props.className ? " " + this.props.className : "")}
 			size={this.props.size || "default"}
-			type={!this.state.loading && !this.isCurrentUser() && text === "Follow" ? "primary" : "default"}
+			type={!this.state.loading && !this.isCurrentUser() && text === __("followButton.follow") ? "primary" : "default"}
 			data-follow-status={!this.state.loading ? (this.props.followStatus ? this.props.followStatus : this.state.followStatus ? this.state.followStatus : -1) : -1}
 			block={this.props.block}
 			onClick={(e) => this.click(e)} shape={"round"}>

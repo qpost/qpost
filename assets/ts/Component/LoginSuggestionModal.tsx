@@ -19,6 +19,7 @@
 
 import React, {Component} from "react";
 import {Modal} from "antd";
+import __ from "../i18n/i18n";
 
 export default class LoginSuggestionModal extends Component<any, {
 	open: boolean
@@ -55,7 +56,7 @@ export default class LoginSuggestionModal extends Component<any, {
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <Modal
-			title={"Please log in"}
+			title={__("loginPrompt.headline")}
 			visible={this.state.open}
 			onOk={() => {
 				window.location.href = "/login";
@@ -71,7 +72,7 @@ export default class LoginSuggestionModal extends Component<any, {
 			</h4>
 
 			<h4 className={"text-center mb-0"}>
-				Join qpost to interact with posts and create your own.
+				{__("loginPrompt.description")}
 			</h4>
 		</Modal>;
 	}

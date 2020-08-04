@@ -263,8 +263,8 @@ class AboutController extends qpostController {
 		return $this->render("pages/about.html.twig", Twig::param([
 			"lastUpdate" => $lastUpdate,
 			"thirdPartySoftware" => $thirdPartySoftware,
-			"title" => "About",
-			"description" => "Basic information about qpost",
+			"title" => __("landing.footer.company.about"),
+			"description" => __("about.description"),
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png"
 		]));

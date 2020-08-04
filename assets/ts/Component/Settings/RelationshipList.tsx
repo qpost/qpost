@@ -30,6 +30,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import Follower from "../../api/src/Entity/Follower";
 import Block from "../../api/src/Entity/Block";
 import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
 
 export default class RelationshipList extends Component<{
 	type: "BLOCKED" | "FOLLOWERS" | "FOLLOWING"
@@ -112,7 +113,7 @@ export default class RelationshipList extends Component<{
 		}
 
 		if ((this.state.followers || this.state.blocks).length === 0) {
-			return <Empty description={"Nothing found."}/>
+			return <Empty description={__("relationshipList.empty")}/>
 		}
 
 		return <InfiniteScroll
@@ -168,12 +169,12 @@ export default class RelationshipList extends Component<{
 
 			<td className={"text-center d-none d-lg-table-cell"}>
 				<p className={"mb-0 font-weight-bold"}>{formatNumberShort(user.getTotalPostCount())}</p>
-				<p className={"mb-0 small text-muted text-uppercase"}>posts</p>
+				<p className={"mb-0 small text-muted text-uppercase"}>{__("profile.posts")}</p>
 			</td>
 
 			<td className={"text-center d-none d-md-table-cell"}>
 				<p className={"mb-0 font-weight-bold"}>{formatNumberShort(user.getFollowerCount())}</p>
-				<p className={"mb-0 small text-muted text-uppercase"}>followers</p>
+				<p className={"mb-0 small text-muted text-uppercase"}>{__("profile.followers")}</p>
 			</td>
 
 			<td style={{

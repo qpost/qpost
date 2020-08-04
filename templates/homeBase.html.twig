@@ -15,14 +15,17 @@
 				</div>
 
 				<div class="navPoints">
-					<a href="{{ path("qpost_about_about") }}" class="btn btn-link text-white mb-2 mr-3">about</a>
+					<a href="{{ path("qpost_about_about") }}"
+					   class="btn btn-link text-white mb-2 mr-3">{{ "landing.navigation.about"|trans }}</a>
 
-					<a href="{{ path("qpost_download_index") }}" class="btn btn-link text-white mb-2 mr-3">download</a>
+					<a href="{{ path("qpost_download_index") }}"
+					   class="btn btn-link text-white mb-2 mr-3">{{ "landing.navigation.download"|trans }}</a>
 
 					<a href="https://gigadrivegroup.com/advertise" target="_blank"
-					   class="btn btn-link text-white mb-2 mr-3">advertise</a>
+					   class="btn btn-link text-white mb-2 mr-3">{{ "landing.navigation.advertise"|trans }}</a>
 
-					<a href="{{ path("qpost_login_index") }}" class="btn btn-link text-white mb-2">log in</a>
+					<a href="{{ path("qpost_login_index") }}"
+					   class="btn btn-link text-white mb-2">{{ "landing.navigation.login"|trans }}</a>
 				</div>
 			</div>
 		</div>
@@ -36,59 +39,64 @@
 		<div class="container container-fluid">
 			<div class="row">
 				<div class="column">
-					<p class="headline">Product</p>
+					<p class="headline">{{ "landing.footer.product"|trans }}</p>
 
 					<ul>
 						<li>
-							<a href="{{ path("qpost_download_index") }}">Download</a>
+							<a href="{{ path("qpost_download_index") }}">{{ "landing.footer.product.download"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="{{ path("qpost_home_index") }}">Register</a>
+							<a href="{{ path("qpost_home_index") }}">{{ "landing.footer.product.register"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="https://status.gigadrivegroup.com" target="_blank">Status</a>
+							<a href="https://status.gigadrivegroup.com"
+							   target="_blank">{{ "landing.footer.product.status"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="mailto:support@gigadrivegroup.com">Support</a>
+							<a href="mailto:support@gigadrivegroup.com">{{ "landing.footer.product.support"|trans }}</a>
 						</li>
 					</ul>
 				</div>
 
 				<div class="column">
-					<p class="headline">Developers</p>
+					<p class="headline">{{ "landing.footer.developers"|trans }}</p>
 
 					<ul>
 						<li>
-							<a href="{{ path("qpost_apidocs_index") }}">API documentation</a>
+							<a href="{{ path("qpost_apidocs_index") }}">{{ "landing.footer.developers.apidocumentation"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="https://gitlab.com/Gigadrive/qpost">Source Code</a>
+							<a href="https://gitlab.com/Gigadrive/qpost">{{ "landing.footer.developers.sourcecode"|trans }}</a>
 						</li>
 					</ul>
 				</div>
 
 				<div class="column">
-					<p class="headline">Company</p>
+					<p class="headline">{{ "landing.footer.company"|trans }}</p>
 
 					<ul>
 						<li>
-							<a href="{{ path("qpost_about_about") }}">About</a>
+							<a href="{{ path("qpost_about_about") }}">{{ "landing.footer.company.about"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="#" onclick="event.preventDefault();">Branding</a> <span class="text-muted">(under construction)</span>
+							<a href="#"
+							   onclick="event.preventDefault();">{{ "landing.footer.company.branding"|trans }}</a> <span
+									class="text-muted">({{ "landing.footer.company.branding.underconstruction"|trans }})</span>
 						</li>
 
 						<li>
-							<a href="https://blog.gigadrivegroup.com" target="_blank">Blog</a>
+							<a href="https://blog.gigadrivegroup.com"
+							   target="_blank">{{ "landing.footer.company.blog"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="{{ path("qpost_redirect_advertise") }}" target="_blank">Advertise</a>
+							<a href="{{ path("qpost_redirect_advertise") }}"
+							   target="_blank">{{ "landing.footer.company.advertise"|trans }}</a>
 						</li>
 
 						<li>
@@ -98,27 +106,28 @@
 				</div>
 
 				<div class="column">
-					<p class="headline">Legal</p>
+					<p class="headline">{{ "landing.footer.legal"|trans }}</p>
 
 					<ul>
 						<li>
-							<a href="{{ path("qpost_redirect_contact") }}" target="_blank">Contact Information</a>
+							<a href="{{ path("qpost_redirect_contact") }}"
+							   target="_blank">{{ "landing.footer.legal.contact"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="{{ path("qpost_redirect_terms") }}">Terms</a>
+							<a href="{{ path("qpost_redirect_terms") }}">{{ "landing.footer.legal.terms"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="{{ path("qpost_redirect_rules") }}">Rules &amp; Guidelines</a>
+							<a href="{{ path("qpost_redirect_rules") }}">{{ "landing.footer.legal.rules"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="{{ path("qpost_redirect_privacy") }}">Privacy</a>
+							<a href="{{ path("qpost_redirect_privacy") }}">{{ "landing.footer.legal.privacy"|trans }}</a>
 						</li>
 
 						<li>
-							<a href="{{ path("qpost_redirect_disclaimer") }}">Disclaimer</a>
+							<a href="{{ path("qpost_redirect_disclaimer") }}">{{ "landing.footer.legal.disclaimer"|trans }}</a>
 						</li>
 					</ul>
 				</div>

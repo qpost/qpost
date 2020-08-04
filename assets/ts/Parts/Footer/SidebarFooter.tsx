@@ -18,6 +18,7 @@
  */
 
 import React, {Component} from "react";
+import __ from "../../i18n/i18n";
 
 export default class SidebarFooter extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -29,13 +30,13 @@ export default class SidebarFooter extends Component<any, any> {
 			<ul>
 				<li>
 					<a href={"/about"}>
-						About
+						{__("landing.footer.company.about")}
 					</a>
 				</li>
 
 				<li>
 					<a href={"/advertise"} target={"_blank"}>
-						Advertise
+						{__("landing.footer.company.advertise")}
 					</a>
 				</li>
 
@@ -47,31 +48,31 @@ export default class SidebarFooter extends Component<any, any> {
 
 				<li>
 					<a href={"/contact"} target={"_blank"}>
-						Contact
+						{__("footer.contact")}
 					</a>
 				</li>
 
 				<li>
 					<a href={"/terms"}>
-						Terms
+						{__("landing.footer.legal.terms")}
 					</a>
 				</li>
 
 				<li>
 					<a href={"/privacy"}>
-						Privacy
+						{__("landing.footer.legal.privacy")}
 					</a>
 				</li>
 
 				<li>
 					<a href={"/disclaimer"}>
-						Disclaimer
+						{__("landing.footer.legal.disclaimer")}
 					</a>
 				</li>
 
 				<li>
 					<a href={"/apidocs"}>
-						Developers
+						{__("footer.developers")}
 					</a>
 				</li>
 			</ul>

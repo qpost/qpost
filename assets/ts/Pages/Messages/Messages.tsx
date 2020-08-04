@@ -20,6 +20,7 @@
 import React, {Component} from "react";
 import {Alert} from "antd";
 import {setPageTitle} from "../../Util/Page";
+import __ from "../../i18n/i18n";
 
 export default class Messages extends Component<any, any> {
 	componentDidMount(): void {
@@ -27,6 +28,6 @@ export default class Messages extends Component<any, any> {
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <Alert message={"Messages are still being worked on! Please be patient."} type={"info"} showIcon/>;
+		return <Alert message={__("messages.workInProgress")} type={"info"} showIcon/>;
 	}
 }

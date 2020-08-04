@@ -19,6 +19,7 @@
 
 import React, {Component} from "react";
 import {Button} from "antd";
+import __ from "../i18n/i18n";
 
 export default class ReturnHeader extends Component<{
 	className?: string
@@ -31,7 +32,7 @@ export default class ReturnHeader extends Component<{
 					window.history.back();
 				}}>
 					<i className={"fas fa-arrow-left"}/>
-				</Button>Go back
+				</Button>{__("goBack.headline")}
 			</div>
 		</div>;
 	}

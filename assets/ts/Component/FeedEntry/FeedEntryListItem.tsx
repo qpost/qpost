@@ -34,6 +34,7 @@ import AppearanceSettings from "../../Util/AppearanceSettings";
 import FeedEntry from "../../api/src/Entity/FeedEntry";
 import FeedEntryType from "../../api/src/Entity/FeedEntryType";
 import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
@@ -162,8 +163,8 @@ export default class FeedEntryListItem extends Component<{
 											nsfwWarningActive: false
 										});
 									}}>
-										<Alert message={"NSFW content"} type={"error"}
-											   description={"This post was marked as NSFW and may contain inappropriate content. Click to reveal it."}
+										<Alert message={__("status.nsfw.headline")} type={"error"}
+											   description={__("status.nsfw.description")}
 											   showIcon icon={<Icon type="warning"/>} className={"mb-3"}/>
 									</div> : <div className={"w-100"}>
 										{this.props.showParentInfo && entry.getType() === FeedEntryType.REPLY ?

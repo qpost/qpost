@@ -5,23 +5,23 @@
 		<div class="container mt-5">
 			<div class="text-center">
 				<h1 class="homeDescriptionText">
-					Time to get rid of Twitter and Mastodon.
+					{{ "landing.home.headline"|trans }}
 				</h1>
 
 				<h2 class="homeDescriptionText">
-					Free and open-source social network for all of your devices.<br/>
-					Take social networking back into your own hands, without the fear of censorship!
+					{{ "landing.home.subtitle.1"|trans }}<br/>
+					{{ "landing.home.subtitle.2"|trans }}
 				</h2>
 
 				<div class="homeDownloadButton">
 					<a href="{{ path("qpost_download_index") }}" class="btn btn-light px-3 py-2 bootstrapButton">
-						Download the app
+						{{ "landing.home.downloadButton"|trans }}
 					</a>
 				</div>
 
 				<div class="homeLoginButton">
 					<a href="{{ path("qpost_login_index") }}" class="btn btn-primary px-3 py-2 bootstrapButton">
-						Log in
+						{{ "landing.home.loginButton"|trans }}
 					</a>
 				</div>
 			</div>
@@ -42,24 +42,30 @@
 							{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 							{% include "parts/flash.html.twig" %}
 
-							<input type="email" class="form-control mb-2" name="email" placeholder="Email"/>
-							<input type="text" class="form-control mb-2" name="displayName" placeholder="Full Name"/>
-							<input type="text" class="form-control mb-2" name="username" placeholder="Username"/>
-							<input type="password" class="form-control mb-2" name="password" placeholder="Password"/>
+							<input type="email" class="form-control mb-2" name="email"
+								   placeholder="{{ "landing.home.register.email"|trans }}"/>
+							<input type="text" class="form-control mb-2" name="displayName"
+								   placeholder="{{ "landing.home.register.displayName"|trans }}"/>
+							<input type="text" class="form-control mb-2" name="username"
+								   placeholder="{{ "landing.home.register.username"|trans }}"/>
+							<input type="password" class="form-control mb-2" name="password"
+								   placeholder="{{ "landing.home.register.password"|trans }}"/>
 
 							<hr/>
 
 							<input type="submit" class="btn btn-primary btn-block bootstrapButton"
-								   value="Create Account"/>
+								   value="{{ "landing.home.register.submit"|trans }}"/>
 
-							<div class="homeLoginOr small text-center mb-3 mt-1">OR</div>
+							<div class="homeLoginOr small text-center mb-3 mt-1">{{ "landing.home.register.or"|trans }}</div>
 
-							<a href="{{ path("qpost_login_gigadrive") }}" class="btn btn-success btn-block">Sign in with
-								Gigadrive</a>
+							<a href="{{ path("qpost_login_gigadrive") }}"
+							   class="btn btn-success btn-block">{{ "landing.home.register.gigadriveSignIn"|trans }}</a>
 
 							<p class="small mt-3 mb-0 text-muted">
-								By clicking Create account or Sign in with Gigadrive, you accept our <a
-										href="{{ path("qpost_redirect_terms") }}" target="_blank">terms of service</a>.
+								{{ "landing.home.register.terms"|trans({
+									"%1%": '<a href="' ~ path("qpost_redirect_terms") ~ '">',
+									"%2%": '</a>'
+								})|raw }}
 							</p>
 						</form>
 					</div>
@@ -79,11 +85,10 @@
 							</div>
 
 							<div class="description right">
-								<p class="headline">Share your thoughts</p>
+								<p class="headline">{{ "landing.home.feature.1.headline"|trans }}</p>
 
 								<p class="text">
-									Post what you think in an open-source community, <b>free of censorship</b> - qpost
-									is built with true free speech in mind.
+									{{ "landing.home.feature.1.description"|trans }}
 								</p>
 							</div>
 						</div>
@@ -94,11 +99,10 @@
 							</div>
 
 							<div class="description">
-								<p class="headline">Get started within 60 seconds</p>
+								<p class="headline">{{ "landing.home.feature.2.headline"|trans }}</p>
 
 								<p class="text">
-									No need to find servers or understand confusing systems. Create your account and
-									start posting!
+									{{ "landing.home.feature.2.description"|trans }}
 								</p>
 							</div>
 						</div>
@@ -109,11 +113,10 @@
 							</div>
 
 							<div class="description right">
-								<p class="headline">Enjoy transparency</p>
+								<p class="headline">{{ "landing.home.feature.3.headline"|trans }}</p>
 
 								<p class="text">
-									qpost is <a href="https://gitlab.com/Gigadrive/qpost" target="_blank">completely
-										open-source</a>, meaning you know exactly how it works and data is being used.
+									{{ "landing.home.feature.3.description"|trans }}
 								</p>
 							</div>
 						</div>
@@ -125,7 +128,7 @@
 
 	<div class="container mb-5">
 		<div class="homeSponsors">
-			<h4>Sponsors</h4>
+			<h4>{{ "landing.home.sponsors.headline"|trans }}</h4>
 
 			<div class="mt-3">
 				<a href="https://about.gitlab.com" class="clearUnderline" target="_blank" rel="noreferrer noopener">

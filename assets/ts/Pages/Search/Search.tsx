@@ -25,6 +25,7 @@ import NightMode from "../../NightMode/NightMode";
 import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import FollowerList from "../../Component/User/FollowerList";
 import TrendingTopics from "../../Component/TrendingTopics";
+import __ from "../../i18n/i18n";
 
 export default class Search extends Component<any, {
 	query: string,
@@ -61,13 +62,14 @@ export default class Search extends Component<any, {
 			<PageContent>
 				<Row gutter={24}>
 					<Col md={{span: 12, offset: 6}}>
-						<Input.Search placeholder="enter a query" value={this.state.value} onChange={event => {
-							const value = event.target.value;
+						<Input.Search placeholder={__("search.placeholder")} value={this.state.value}
+									  onChange={event => {
+										  const value = event.target.value;
 
-							this.setState({
-								value
-							});
-						}} onSearch={value => {
+										  this.setState({
+											  value
+										  });
+									  }} onSearch={value => {
 							const query = value.trim();
 
 							this.setState({
@@ -83,11 +85,11 @@ export default class Search extends Component<any, {
 							}} selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"}
 								  theme={NightMode.isActive() ? "dark" : "light"}>
 								<Menu.Item key={"POSTS"}>
-									Posts
+									{__("search.posts")}
 								</Menu.Item>
 
 								<Menu.Item key={"USERS"}>
-									Users
+									{__("search.users")}
 								</Menu.Item>
 							</Menu>
 

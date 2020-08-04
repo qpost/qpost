@@ -24,6 +24,7 @@ import User from "../../api/src/Entity/User";
 import BlockModal from "../../Component/BlockModal";
 import Auth from "../../Auth/Auth";
 import {copyToClipboard} from "../../Util/Clipboard";
+import __ from "../../i18n/i18n";
 
 export default class ProfileDropdown extends Component<{
 	className?: string,
@@ -43,17 +44,19 @@ export default class ProfileDropdown extends Component<{
 						break;
 					case "2":
 						copyToClipboard("https://qpo.st/" + this.props.user.getUsername());
-						message.success("The link has been copied.");
+						message.success(__("profile.linkCopied"));
 						break;
 				}
 			}}>
 				{Auth.isLoggedIn() && this.props.user.getId() !== Auth.getCurrentUser().getId() && !this.props.user.isBlocked() ?
 					<Menu.Item key={"1"}>
-					<i className="fas fa-ban iconMargin-10"/>Block {"@" + this.props.user.getUsername()}
-				</Menu.Item> : ""}
+						<i className="fas fa-ban iconMargin-10"/>{__("profile.block", {
+						"%user%": "@" + this.props.user.getUsername()
+					})}
+					</Menu.Item> : ""}
 
 				<Menu.Item key={"2"}>
-					<i className="fas fa-link iconMargin-10"/>Copy profile link
+					<i className="fas fa-link iconMargin-10"/>{__("profile.copyLink")}
 				</Menu.Item>
 			</Menu>;
 		}}>

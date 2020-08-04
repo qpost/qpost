@@ -35,6 +35,8 @@ use function json_decode;
 use function ksort;
 
 class TranslationService {
+	public static $I;
+
 	/**
 	 * @var TranslatorInterface $translator
 	 */
@@ -61,6 +63,8 @@ class TranslationService {
 	private $container;
 
 	public function __construct(TokenService $tokenService, RequestStack $requestStack, TranslatorInterface $translator, LoggerInterface $logger, ContainerInterface $container) {
+		TranslationService::$I = $this;
+
 		$this->tokenService = $tokenService;
 		$this->requestStack = $requestStack;
 		$this->translator = $translator;
@@ -145,6 +149,10 @@ class TranslationService {
 		ksort($strings);
 
 		return $strings;
+	}
+
+	public function __(string $identifier, array $parameters = []): string {
+		return $this->translator->trans($identifier, $parameters);
 	}
 
 	public function getLocaleFilePath(string $code): string {

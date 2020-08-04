@@ -5,14 +5,14 @@
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md-4 text-center offset-md-2">
-					<p class="downloadMainHeadline">qpost for Windows</p>
+					<p class="downloadMainHeadline">{{ "landing.download.windows.headline"|trans }}</p>
 
 					<a class="btn btn-light btn-lg downloadPageMainButton clearUnderline"
 					   href="{{ path("qpost_download_windows") }}">
-						Download
+						{{ "landing.download.windows.button"|trans }}
 					</a>
 
-					<p class="small text-muted mb-0">Requires Windows 7 or higher</p>
+					<p class="small text-muted mb-0">{{ "landing.download.windows.requirements"|trans }}</p>
 				</div>
 
 				<div class="col-md-4 downloadPageMainImageContainer">
@@ -26,7 +26,7 @@
 	<div class="homeHighlighted py-5">
 		<div class="container">
 			<p class="mb-5 text-white text-center">
-				Your device isn't listed? qpost can be used on any device with a modern web browser installed.
+				{{ "landing.download.browserInfo"|trans }}
 			</p>
 
 			<div class="row text-center">
@@ -49,7 +49,8 @@
 								<h3 class="display-3 text-white"><i class="fab fa-apple"></i></h3>
 
 								<p class="mb-0 font-weight-bold">iOS <span
-											class="small text-muted text-uppercase">Soon!</span></p>
+											class="small text-muted text-uppercase">{{ "landing.download.ios.soon"|trans }}</span>
+								</p>
 							</div>
 						</div>
 					</a>
@@ -61,7 +62,7 @@
 	<div class="py-5 text-center">
 		<a class="btn btn-light btn-lg downloadPageMainButton clearUnderline"
 		   href="https://gitlab.com/Gigadrive/qpost" target="_blank">
-			View source code
+			{{ "landing.download.sourceCode"|trans }}
 		</a>
 	</div>
 {% endblock %}

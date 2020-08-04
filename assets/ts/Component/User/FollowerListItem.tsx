@@ -26,6 +26,7 @@ import VerifiedBadge from "../VerifiedBadge";
 import API from "../../API";
 import FollowRequestNotification from "../../Pages/Notifications/FollowRequestNotification";
 import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
 
 const FollowerListItemColProps = {
 	sm: 12
@@ -101,12 +102,12 @@ export default class FollowerListItem extends Component<{
 				<Button type={"primary"} onClick={(e) => {
 					e.preventDefault();
 					this.respond(true);
-				}}>Accept</Button>
+				}}>{__("followRequest.accept")}</Button>
 
 				<Button type={"danger"} className={"customDangerButton ml-3"} onClick={(e) => {
 					e.preventDefault();
 					this.respond(false);
-				}}>Decline</Button>
+				}}>{__("followRequest.decline")}</Button>
 			</div> : ""}
 
 			<Biography user={user}/>

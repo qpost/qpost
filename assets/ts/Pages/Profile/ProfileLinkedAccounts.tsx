@@ -23,6 +23,7 @@ import LinkedAccount from "../../api/src/Entity/LinkedAccount";
 import LinkedAccountService from "../../api/src/Entity/LinkedAccountService";
 import {message, Tooltip} from "antd";
 import {copyToClipboard} from "../../Util/Clipboard";
+import __ from "../../i18n/i18n";
 
 export default class ProfileLinkedAccounts extends Component<{
 	user: User
@@ -62,7 +63,7 @@ export default class ProfileLinkedAccounts extends Component<{
 						e.preventDefault();
 
 						copyToClipboard(account.getLinkedUserName());
-						message.success("The Discord tag has been copied.");
+						message.success(__("profile.discordTagCopied"));
 					}
 				}}>
 					{account.getService() === LinkedAccountService.DISCORD ?

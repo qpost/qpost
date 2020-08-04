@@ -31,6 +31,7 @@ import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
 import BaseObject from "../api/src/BaseObject";
 import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -72,7 +73,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 				<Spin size={"large"}/>
 			</div>
 		} else if (this.state.results.length > 0) {
-			return <Card title={"Suggested"} size={"small"} className={"mb-3"}>
+			return <Card title={__("suggestedUsers.headline")} size={"small"} className={"mb-3"}>
 				<div className="tab-content" id="users-tablist-content">
 					{this.state.results.map((suggestedUser, i) => {
 						return <div className="my-1" style={{height: "70px"}} key={i}>

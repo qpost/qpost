@@ -22,6 +22,7 @@ import DesktopHeader from "./DesktopHeader";
 import {Link} from "react-router-dom";
 import Auth from "../../../Auth/Auth";
 import AccountSwitcher from "../../../Component/AccountSwitcher";
+import __ from "../../../i18n/i18n";
 
 export default class DesktopHeaderAccountDropdown extends Component<{
 	open: boolean,
@@ -45,21 +46,21 @@ export default class DesktopHeaderAccountDropdown extends Component<{
 			<hr/>
 
 			<Link to={"/profile/" + Auth.getCurrentUser().getUsername()} onClick={this.close}>
-				<i className="fas fa-user iconMargin-10"/>My profile
+				<i className="fas fa-user iconMargin-10"/>{__("navigation.account.myprofile")}
 			</Link>
 
 			<Link to={"/notifications"} onClick={this.close}>
-				<i className="fas fa-bell iconMargin-10"/>Notifications
+				<i className="fas fa-bell iconMargin-10"/>{__("navigation.account.notifications")}
 			</Link>
 
 			<Link to={"/messages"} onClick={this.close}>
-				<i className="fas fa-envelope iconMargin-10"/>Messages
+				<i className="fas fa-envelope iconMargin-10"/>{__("navigation.account.messages")}
 			</Link>
 
 			<hr/>
 
 			<a href={"/settings/preferences/appearance"} onClick={this.close}>
-				<i className="fas fa-wrench iconMargin-10"/>Settings
+				<i className="fas fa-wrench iconMargin-10"/>{__("navigation.account.settings")}
 			</a>
 
 			<Link to={"#"} onClick={(e) => {
@@ -68,7 +69,7 @@ export default class DesktopHeaderAccountDropdown extends Component<{
 				this.close();
 				AccountSwitcher.open();
 			}}>
-				<i className={"fas fa-user-friends iconMargin-10"}/>Switch account
+				<i className={"fas fa-user-friends iconMargin-10"}/>{__("navigation.account.switch")}
 			</Link>
 
 			<Link to={"#"} onClick={(e) => {
@@ -77,7 +78,7 @@ export default class DesktopHeaderAccountDropdown extends Component<{
 				this.close();
 				Auth.logout();
 			}}>
-				<i className="fas fa-sign-out-alt iconMargin-10"/>Log out
+				<i className="fas fa-sign-out-alt iconMargin-10"/>{__("navigation.account.logout")}
 			</Link>
 		</div>;
 	}

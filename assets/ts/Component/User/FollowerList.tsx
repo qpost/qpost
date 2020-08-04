@@ -29,6 +29,7 @@ import LoadingFollowerListItem from "./LoadingFollowerListItem";
 import {isEven, isOdd} from "../../Util/Format";
 import Follower from "../../api/src/Entity/Follower";
 import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
 
 export default class FollowerList extends Component<{
 	user?: User,
@@ -182,7 +183,7 @@ export default class FollowerList extends Component<{
 					</ul>
 				</InfiniteScroll>;
 			} else {
-				return <Empty description={"No users found."}/>;
+				return <Empty description={__("relationshipList.empty")}/>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;

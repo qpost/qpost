@@ -53,6 +53,7 @@ import ProfileHeader from "./ProfileHeader";
 import Replies from "./Replies";
 import Storage from "../../Util/Storage";
 import ProfileLinkedAccounts from "./ProfileLinkedAccounts";
+import __ from "../../i18n/i18n";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -98,7 +99,7 @@ export default class Profile extends Component<any, {
 			});
 		} else {
 			this.setState({
-				error: "An error occurred."
+				error: __("error.general")
 			});
 		}
 	}
@@ -178,9 +179,11 @@ export default class Profile extends Component<any, {
 								<p className={"my-2 text-muted clearfix"}>
 									<div className={"float-left"}>
 										<i className={"fas fa-globe"}/><span
-										style={{marginLeft: "5px"}}>Joined {registerDate.toLocaleString("default", {
-										month: "long",
-										year: "numeric"
+										style={{marginLeft: "5px"}}>{__("profile.joined", {
+										"%date%": registerDate.toLocaleString("default", {
+											month: "long",
+											year: "numeric"
+										})
 									})}</span>
 									</div>
 									{birthDate ? <div className={"float-left ml-2"}>
@@ -245,23 +248,23 @@ export default class Profile extends Component<any, {
 							}
 						}}>
 							<Menu.Item key={"POSTS"}>
-								Posts ({formatNumberShort(user.getTotalPostCount())})
+								{__("profile.posts")} ({formatNumberShort(user.getTotalPostCount())})
 							</Menu.Item>
 
 							<Menu.Item key={"REPLIES"}>
-								Replies
+								{__("profile.replies")}
 							</Menu.Item>
 
 							<Menu.Item key={"FOLLOWING"}>
-								Following ({formatNumberShort(user.getFollowingCount())})
+								{__("profile.following")} ({formatNumberShort(user.getFollowingCount())})
 							</Menu.Item>
 
 							<Menu.Item key={"FOLLOWERS"}>
-								Followers ({formatNumberShort(user.getFollowerCount())})
+								{__("profile.followers")} ({formatNumberShort(user.getFollowerCount())})
 							</Menu.Item>
 
 							<Menu.Item key={"FAVORITES"}>
-								Favorites ({formatNumberShort(user.getFavoritesCount())})
+								{__("profile.favorites")} ({formatNumberShort(user.getFavoritesCount())})
 							</Menu.Item>
 						</Menu>
 
@@ -293,7 +296,7 @@ export default class Profile extends Component<any, {
 		} else if (error !== null) {
 			return <ContentBase>
 				<PageContent>
-					<Alert message="This user could not be found." type="error"/>
+					<Alert message={__("error.userNotFound")} type="error"/>
 				</PageContent>
 			</ContentBase>;
 		} else {

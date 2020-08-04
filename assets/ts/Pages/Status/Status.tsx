@@ -48,6 +48,7 @@ import PostUnavailableAlert from "../../Component/PostUnavailableAlert";
 import LeftSidebar from "../../Component/Layout/LeftSidebar";
 import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
 import BioText from "../../Component/BioText";
+import __ from "../../i18n/i18n";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -79,7 +80,9 @@ export default class Status extends Component<any, {
 				document.querySelector(".statusPageBox").scrollIntoView();
 				window.scrollBy(0, -68);
 
-				let title = feedEntry.getUser().getDisplayName() + " on qpost";
+				let title = __("status.headline", {
+					"%displayName%": feedEntry.getUser().getDisplayName()
+				});
 
 				const text = feedEntry.getText();
 				if (text) {
@@ -94,7 +97,7 @@ export default class Status extends Component<any, {
 			});
 		} else {
 			this.setState({
-				error: "An error occurred."
+				error: __("error.general")
 			});
 		}
 	}

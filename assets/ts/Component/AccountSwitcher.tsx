@@ -22,6 +22,7 @@ import {message, Modal} from "antd";
 import VerifiedBadge from "./VerifiedBadge";
 import TokenStorage from "../Auth/TokenStorage";
 import StoredToken from "../Auth/StoredToken";
+import __ from "../i18n/i18n";
 
 export default class AccountSwitcher extends Component<any, {
 	open: boolean
@@ -56,7 +57,7 @@ export default class AccountSwitcher extends Component<any, {
 		const currentTokenAmount: number = TokenStorage.tokens.length;
 
 		return <Modal
-			title={"Select an account (" + currentTokenAmount + "/" + TokenStorage.LIMIT + ")"}
+			title={__("accountSwitcher.headline") + " (" + currentTokenAmount + "/" + TokenStorage.LIMIT + ")"}
 			visible={this.state.open}
 			okButtonProps={{className: "d-none"}}
 			onCancel={() => {
@@ -75,7 +76,9 @@ export default class AccountSwitcher extends Component<any, {
 									event.preventDefault();
 
 									if (index === 0) {
-										message.error("You are already logged in as @" + user.getUsername());
+										message.error(__("accountSwitcher.alreadyLoggedIn", {
+											"%user%": "@" + user.getUsername()
+										}));
 									} else {
 										TokenStorage.switchUser(token);
 									}
@@ -94,10 +97,10 @@ export default class AccountSwitcher extends Component<any, {
 				{currentTokenAmount < TokenStorage.LIMIT ? <div className={"account addNew"} onClick={event => {
 					event.preventDefault();
 
-					message.info("Redirecting...");
+					message.info(__("accountSwitcher.redirecting"));
 					window.location.href = "/login?addToken=true";
 				}}>
-					Add another account
+					{__("accountSwitcher.addAccount")}
 				</div> : ""}
 
 				<div className={"account logout"} onClick={event => {
@@ -109,7 +112,7 @@ export default class AccountSwitcher extends Component<any, {
 						window.location.href = "/";
 					});
 				}}>
-					Log out of all accounts
+					{__("accountSwitcher.logout")}
 				</div>
 			</div>
 		</Modal>;

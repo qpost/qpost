@@ -45,6 +45,7 @@ import LoadingFeedEntryListItem from "../../Component/FeedEntry/LoadingFeedEntry
 import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
 import LeftSidebar from "../../Component/Layout/LeftSidebar";
 import FollowRequestNotification from "./FollowRequestNotification";
+import __ from "../../i18n/i18n";
 
 export default class Notifications extends Component<any, {
 	notifications: Notification[],
@@ -66,7 +67,7 @@ export default class Notifications extends Component<any, {
 	componentDidMount(): void {
 		this.load();
 
-		setPageTitle("Notifications");
+		setPageTitle(__("notifications.headline"));
 	}
 
 	load(max?: number) {
@@ -112,7 +113,7 @@ export default class Notifications extends Component<any, {
 			</LeftSidebar>
 
 			<PageContent leftSidebar rightSidebar>
-				<PageHeader title={"Notifications"} iconClass={"fas fa-bell"}/>
+				<PageHeader title={__("notifications.headline")} iconClass={"fas fa-bell"}/>
 				{this.state.notifications !== null ?
 					<div>
 						{this.state.notifications.length > 0 ? <InfiniteScroll

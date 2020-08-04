@@ -20,12 +20,13 @@
 import React, {Component} from "react";
 import {Tooltip} from "antd";
 import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
 
 export default class VerifiedBadge extends Component<{ target: User }, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.props.target.isVerified()) {
 			return <Tooltip
-				title={"This account has has been confirmed as an authentic page for this public figure, media company or brand."}
+				title={__("verified.description")}
 				placement={"right"}><span className="ml-1 small"><i
 				className="fas fa-check-circle text-mainColor"/></span></Tooltip>;
 		}

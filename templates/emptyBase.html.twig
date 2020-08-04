@@ -6,10 +6,10 @@
 {% if title != siteName %}
 	{% set title = title ~ " - " ~ siteName %}
 {% else %}
-	{% set title = "The open-source Twitter alternative - qpost" %}
+	{% set title = __("defaultTitle") %}
 {% endif %}
 <!DOCTYPE html>
-<html lang="en" class="{% block additionalHtmlClasses %}{% endblock %}">
+<html lang="{{ app.request.locale }}" class="{% block additionalHtmlClasses %}{% endblock %}">
 <head>
 	<title>{{ title }}</title>
 
