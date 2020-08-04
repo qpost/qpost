@@ -26,7 +26,6 @@ use Exception;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\Exception\Form\FormException;
 use qpost\Constants\FlashMessageType;
-use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
 use qpost\Constants\SettingsNavigationPoint;
 use qpost\Entity\LinkedAccount;
@@ -41,7 +40,6 @@ use qpost\Twig\Twig;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function array_merge;
 use function is_null;
 use function is_string;
@@ -170,9 +168,7 @@ class SettingsController extends qpostController {
 			}
 		}
 
-		return $this->renderAction("Edit profile", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PROFILE_APPEARANCE, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Edit profile", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PROFILE_APPEARANCE);
 	}
 
 	/**
@@ -224,9 +220,7 @@ class SettingsController extends qpostController {
 			}
 		}
 
-		return $this->renderAction("Linked Accounts", "settings/profile/linkedAccounts.html.twig", SettingsNavigationPoint::PROFILE_LINKED_ACCOUNTS, $this->generateUrl(
-			"qpost_settings_profilelinkedaccounts", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Linked Accounts", "settings/profile/linkedAccounts.html.twig", SettingsNavigationPoint::PROFILE_LINKED_ACCOUNTS);
 	}
 
 	/**
@@ -266,9 +260,7 @@ class SettingsController extends qpostController {
 			}
 		}
 
-		return $this->renderAction("Appearance", "settings/preferences/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		), [
+		return $this->renderAction("Appearance", "settings/preferences/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, [
 			"availableLanguages" => $this->i18n->getAvailableLanguages(),
 			"currentLanguage" => $this->i18n->getCurrentLanguage()
 		]);
@@ -280,9 +272,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function relationshipsFollowing(Request $request) {
-		return $this->renderAction("Following", "settings/relationships/following.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWING, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Following", "settings/relationships/following.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWING);
 	}
 
 	/**
@@ -291,9 +281,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function relationshipsFollowers(Request $request) {
-		return $this->renderAction("Followers", "settings/relationships/followers.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWERS, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Followers", "settings/relationships/followers.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWERS);
 	}
 
 	/**
@@ -302,9 +290,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function relationshipsBlocked(Request $request) {
-		return $this->renderAction("Blocked accounts", "settings/relationships/blocked.html.twig", SettingsNavigationPoint::RELATIONSHIP_BLOCKED, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Blocked accounts", "settings/relationships/blocked.html.twig", SettingsNavigationPoint::RELATIONSHIP_BLOCKED);
 	}
 
 	/**
@@ -313,9 +299,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function accountInformation(Request $request) {
-		return $this->renderAction("Account information", "settings/account/information.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Account information", "settings/account/information.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION);
 	}
 
 	/**
@@ -384,9 +368,7 @@ class SettingsController extends qpostController {
 			}
 		}
 
-		return $this->renderAction("Change username", "settings/account/username.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Change username", "settings/account/username.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME);
 	}
 
 	/**
@@ -457,9 +439,7 @@ class SettingsController extends qpostController {
 			}
 		}
 
-		return $this->renderAction("Change password", "settings/account/password.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Change password", "settings/account/password.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD);
 	}
 
 	/**
@@ -468,9 +448,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function accountSessions(Request $request) {
-		return $this->renderAction("Active sessions", "settings/account/sessions.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Active sessions", "settings/account/sessions.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS);
 	}
 
 	/**
@@ -511,9 +489,7 @@ class SettingsController extends qpostController {
 			}
 		}
 
-		return $this->renderAction("Delete your account", "settings/account/delete.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Delete your account", "settings/account/delete.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION);
 	}
 
 	/**
@@ -549,15 +525,12 @@ class SettingsController extends qpostController {
 			}
 		}
 
-		return $this->renderAction("Privacy", "settings/privacy/privacy.html.twig", SettingsNavigationPoint::PRIVACY, $this->generateUrl(
-			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		return $this->renderAction("Privacy", "settings/privacy/privacy.html.twig", SettingsNavigationPoint::PRIVACY);
 	}
 
-	private function renderAction(string $headline, string $template, ?string $activeMenuPoint, string $canonicalURL, array $additionalParameters = []) {
+	private function renderAction(string $headline, string $template, ?string $activeMenuPoint, array $additionalParameters = []) {
 		return $this->render($template, array_merge(Twig::param([
 			"title" => $headline,
-			MiscConstants::CANONICAL_URL => $canonicalURL,
 			SettingsNavigationPoint::VARIABLE_NAME => $activeMenuPoint
 		]), $additionalParameters));
 	}

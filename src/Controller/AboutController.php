@@ -20,7 +20,6 @@
 
 namespace qpost\Controller;
 
-use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -267,8 +266,7 @@ class AboutController extends qpostController {
 			"title" => "About",
 			"description" => "Basic information about qpost",
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_about_about", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png"
 		]));
 	}
 }

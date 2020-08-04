@@ -21,7 +21,6 @@
 namespace qpost\Controller;
 
 use qpost\Cache\CacheHandler;
-use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,8 +39,7 @@ class DownloadController extends qpostController {
 			"title" => "Download",
 			"description" => "Get qpost - the open-source Twitter alternative for your device of choice.",
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_download_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
 		]));
 	}
 

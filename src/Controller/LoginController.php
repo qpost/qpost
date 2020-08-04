@@ -28,7 +28,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Constants\FlashMessageType;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\Token;
 use qpost\Entity\User;
 use qpost\Entity\UserGigadriveData;
@@ -41,7 +40,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function is_null;
 use function password_verify;
 use function trim;
@@ -139,9 +137,7 @@ class LoginController extends qpostController {
 
 		$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
 
-		return $this->render($isMobile === false ? "pages/login.html.twig" : "pages/mobile/login.html.twig", Twig::param([
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_login_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
-		]));
+		return $this->render($isMobile === false ? "pages/login.html.twig" : "pages/mobile/login.html.twig", Twig::param());
 	}
 
 	/**

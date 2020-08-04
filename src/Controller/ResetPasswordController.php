@@ -27,7 +27,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\ResetPasswordToken;
 use qpost\Entity\User;
 use qpost\Service\AuthorizationService;
@@ -112,8 +111,7 @@ class ResetPasswordController extends qpostController {
 			}
 
 			return $this->render("pages/resetPassword.html.twig", Twig::param([
-				"title" => "Reset your password",
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
+				"title" => "Reset your password"
 			]));
 		} else {
 			return $this->redirectToRoute("qpost_home_index");
@@ -177,16 +175,14 @@ class ResetPasswordController extends qpostController {
 						"title" => "Reset your password",
 						"renderForm" => $renderForm,
 						"user" => $user,
-						"token" => $token,
-						MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+						"token" => $token
 					]));
 				} else {
 					$this->addFlash(FlashMessageType::ERROR, "Invalid token.");
 
 					return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
 						"title" => "Reset your password",
-						"renderForm" => false,
-						MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+						"renderForm" => false
 					]));
 				}
 			} else {
@@ -194,8 +190,7 @@ class ResetPasswordController extends qpostController {
 
 				return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
 					"title" => "Reset your password",
-					"renderForm" => false,
-					MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+					"renderForm" => false
 				]));
 			}
 		} else {

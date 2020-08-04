@@ -27,7 +27,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\Follower;
 use qpost\Entity\Token;
 use qpost\Entity\User;
@@ -243,8 +242,7 @@ class RegisterController extends qpostController {
 									"email" => $email,
 									"registerDate" => $registerDate,
 									"token" => $token,
-									"code" => $code,
-									MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_register_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
+									"code" => $code
 								]));
 							} else {
 								$this->addFlash(FlashMessageType::ERROR, "You are already registered.");

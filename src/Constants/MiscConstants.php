@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,11 +21,6 @@
 namespace qpost\Constants;
 
 class MiscConstants {
-	/**
-	 * @var string CANONICAL_URL
-	 */
-	public const CANONICAL_URL = "canonicalURL";
-
 	/**
 	 * @var int RESULT_CACHE_LIFETIME_SHORT
 	 */
