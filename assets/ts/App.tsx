@@ -56,6 +56,7 @@ import HeaderSelector from "./Component/Settings/HeaderSelector";
 import AvatarSelector from "./Component/Settings/AvatarSelector";
 import TokenStorage from "./Auth/TokenStorage";
 import AccountSwitcher from "./Component/AccountSwitcher";
+import PhraseStorage from "./i18n/PhraseStorage";
 
 export default class App extends Component<any, {
 	validatedLogin: boolean,
@@ -129,6 +130,9 @@ export default class App extends Component<any, {
 
 					// load TokenStorage
 					await TokenStorage.loadTokens();
+
+					// load translations
+					await PhraseStorage.loadPhrases();
 
 					// load badge status
 					BadgeStatus.update(() => {
