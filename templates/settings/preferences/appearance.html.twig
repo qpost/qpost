@@ -10,6 +10,15 @@
 		{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 
 		<div class="mb-4">
+			<label for="languageSelector">Interface language</label>
+			<select class="custom-select" id="languageSelector" name="language">
+				{% for code,name in availableLanguages %}
+					<option value="{{ code }}"{{ code == currentLanguage ? " selected" }}>{{ name }}</option>
+				{% endfor %}
+			</select>
+		</div>
+
+		<div class="mb-4">
 			{{ macro.settingsHeadlineSmall("Display") }}
 
 			<div class="custom-control custom-checkbox mb-3">

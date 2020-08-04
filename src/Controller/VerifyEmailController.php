@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,7 +21,6 @@
 namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\User;
 use qpost\Twig\Twig;
@@ -29,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class VerifyEmailController extends GigadriveController {
+class VerifyEmailController extends qpostController {
 	/**
 	 * @Route("/verify-email/{userId}/{activationToken}")
 	 *

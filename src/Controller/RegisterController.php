@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -25,7 +25,6 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
@@ -49,7 +48,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function filter_var;
 use function strlen;
 
-class RegisterController extends GigadriveController {
+class RegisterController extends qpostController {
 	/**
 	 * @Route("/register")
 	 *

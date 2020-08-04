@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -24,7 +24,6 @@ use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use League\OAuth1\Client\Credentials\TemporaryCredentials;
 use qpost\Constants\LinkedAccountService;
 use qpost\Entity\LinkedAccount;
@@ -40,7 +39,7 @@ use function serialize;
 use function strtoupper;
 use function unserialize;
 
-class ThirdPartyAuthController extends GigadriveController {
+class ThirdPartyAuthController extends qpostController {
 	/**
 	 * @Route("/tpauth/{service}")
 	 * @param string $service

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,14 +20,13 @@
 
 namespace qpost\Controller;
 
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class RedirectController extends GigadriveController {
+class RedirectController extends qpostController {
 	/**
 	 * @Route("/terms")
 	 *

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,7 +20,6 @@
 
 namespace qpost\Controller;
 
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,7 +27,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function strcmp;
 use function strtoupper;
 
-class AboutController extends GigadriveController {
+class AboutController extends qpostController {
 	/**
 	 * @Route("/about")
 	 */

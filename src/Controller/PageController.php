@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,7 +21,6 @@
 namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
@@ -40,7 +39,7 @@ use function sprintf;
 use function strlen;
 use function trim;
 
-class PageController extends GigadriveController {
+class PageController extends qpostController {
 	/**
 	 * @Route("/status/{id}")
 	 *

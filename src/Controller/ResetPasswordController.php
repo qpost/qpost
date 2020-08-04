@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -25,7 +25,6 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
@@ -44,7 +43,7 @@ use function is_null;
 use function password_hash;
 use const PASSWORD_BCRYPT;
 
-class ResetPasswordController extends GigadriveController {
+class ResetPasswordController extends qpostController {
 	/**
 	 * @Route("/reset-password")
 	 *

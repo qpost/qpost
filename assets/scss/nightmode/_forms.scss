@@ -32,16 +32,26 @@
 .datepicker-panel > ul[data-view="week"] > li,
 .datepicker-top-left::before, .datepicker-top-right::before,
 .datepicker-panel > ul > li,
-.datepicker-panel > ul > li.disabled, .datepicker-panel > ul > li.disabled:hover {
-	border: 1px solid #001020;
-	background-color: #001d30;
+.datepicker-panel > ul > li.disabled, .datepicker-panel > ul > li.disabled:hover,
+.custom-select {
+	border: 1px solid #001020 !important;
+	background-color: #001D30;
 	color: #FFF !important;
 	box-shadow: none;
 }
 
+.custom-select, .custom-select option {
+	@include customScrollbar();
+	border-color: lighten(#001020, 15%) !important;
+	-webkit-appearance: none;
+	appearance: none;
+	-moz-appearance: none;
+	outline: none;
+}
+
 .ant-calendar-selected-day .ant-calendar-date {
-	border: 1px solid #00397a;
-	background-color: #002f47;
+	border: 1px solid #00397A;
+	background-color: #002F47;
 	color: #FFF !important;
 	box-shadow: none;
 }

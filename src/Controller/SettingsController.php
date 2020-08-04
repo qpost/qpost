@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -23,8 +23,8 @@ namespace qpost\Controller;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Exception\Form\FormException;
 use qpost\Constants\FlashMessageType;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
@@ -53,7 +53,7 @@ use function strtoupper;
 use function time;
 use const PASSWORD_BCRYPT;
 
-class SettingsController extends GigadriveController {
+class SettingsController extends qpostController {
 	/**
 	 * @Route("/settings/profile/appearance")
 	 * @param Request $request
@@ -231,35 +231,47 @@ class SettingsController extends GigadriveController {
 
 	/**
 	 * @Route("/settings/preferences/appearance")
-	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function preferencesAppearance(Request $request, EntityManagerInterface $entityManager) {
+	public function preferencesAppearance(EntityManagerInterface $entityManager) {
 		if ($this->csrf()) {
-			$parameters = $request->request;
+			try {
+				/**
+				 * @var User $user
+				 */
+				$user = $this->getUser();
 
-			/**
-			 * @var User $user
-			 */
-			$user = $this->getUser();
+				// Update language
+				$language = $this->stringParam("language", 2, 5);
+				if ($language !== $this->i18n->getCurrentLanguage()) { // only update when user actually chose a new language
+					if ($this->i18n->isValidLanguage($language)) {
+						$user->setInterfaceLanguage($language);
+					}
+				}
 
-			$entityManager->persist($user->getAppearanceSettings()
-				->setNightMode($this->readCheckbox("nightMode"))
-				->setAutoplayGifs($this->readCheckbox("autoplayGifs"))
-				->setShowTrends($this->readCheckbox("showTrends"))
-				->setShowSuggestedUsers($this->readCheckbox("showSuggestedUsers"))
-				->setShowBirthdays($this->readCheckbox("showBirthdays"))
-				->setShowMatureWarning($this->readCheckbox("showMatureWarning")));
+				$entityManager->persist($user->getAppearanceSettings()
+					->setNightMode($this->readCheckbox("nightMode"))
+					->setAutoplayGifs($this->readCheckbox("autoplayGifs"))
+					->setShowTrends($this->readCheckbox("showTrends"))
+					->setShowSuggestedUsers($this->readCheckbox("showSuggestedUsers"))
+					->setShowBirthdays($this->readCheckbox("showBirthdays"))
+					->setShowMatureWarning($this->readCheckbox("showMatureWarning")));
 
-			$entityManager->flush();
+				$entityManager->flush();
 
-			$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+				$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+			} catch (FormException $e) {
+				$this->addFlash(FlashMessageType::ERROR, $e->getMessage());
+			}
 		}
 
 		return $this->renderAction("Appearance", "settings/preferences/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, $this->generateUrl(
 			"qpost_settings_profileappearance", [], UrlGeneratorInterface::ABSOLUTE_URL
-		));
+		), [
+			"availableLanguages" => $this->i18n->getAvailableLanguages(),
+			"currentLanguage" => $this->i18n->getCurrentLanguage()
+		]);
 	}
 
 	/**

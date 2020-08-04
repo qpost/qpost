@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,11 +21,11 @@
 namespace qpost\Controller\API;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\Database\Pagination\PaginationService;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\GigadriveGeneralService;
 use Psr\Log\LoggerInterface;
 use qpost\Constants\APIParameterType;
+use qpost\Controller\qpostController;
 use qpost\Entity\Favorite;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Follower;
@@ -41,6 +41,7 @@ use qpost\Exception\ResourceNotFoundException;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
 use qpost\Service\StorageService;
+use qpost\Service\TranslationService;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,7 +60,7 @@ use function strtotime;
 use function strval;
 use const PHP_INT_MAX;
 
-class APIController extends GigadriveController {
+class APIController extends qpostController {
 	protected $apiService;
 	protected $entityManager;
 	protected $logger;
@@ -69,13 +70,14 @@ class APIController extends GigadriveController {
 	public function __construct(
 		GigadriveGeneralService $generalService,
 		PaginationService $paginationService,
+		TranslationService $translationService,
 		APIService $apiService,
 		EntityManagerInterface $entityManager,
 		LoggerInterface $logger,
 		DataDeletionService $dataDeletionService,
 		StorageService $storageService
 	) {
-		parent::__construct($generalService, $paginationService);
+		parent::__construct($generalService, $paginationService, $translationService);
 
 		$this->apiService = $apiService;
 		$this->entityManager = $entityManager;

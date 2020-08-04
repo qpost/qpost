@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,7 +20,6 @@
 
 namespace qpost\Controller;
 
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use qpost\Cache\CacheHandler;
 use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
@@ -31,7 +30,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Yaml\Yaml;
 use function file_get_contents;
 
-class DownloadController extends GigadriveController {
+class DownloadController extends qpostController {
 	/**
 	 * @Route("/download")
 	 * @return Response

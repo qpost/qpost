@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -36,7 +36,7 @@ use function is_null;
  * Represents a user.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\UserRepository")
- * @ORM\Table(indexes={@ORM\Index(columns={"display_name"}),@ORM\Index(columns={"email"}),@ORM\Index(columns={"birthday"}),@ORM\Index(columns={"privacy_level"}),@ORM\Index(columns={"verified"})})
+ * @ORM\Table(indexes={@ORM\Index(columns={"display_name"}),@ORM\Index(columns={"email"}),@ORM\Index(columns={"birthday"}),@ORM\Index(columns={"privacy_level"}),@ORM\Index(columns={"verified"}),@ORM\Index(columns={"interface_language"})})
  */
 class User implements UserInterface {
 	/**
@@ -253,6 +253,12 @@ class User implements UserInterface {
 	 * @Serializer\Exclude()
 	 */
 	private $nameHistory;
+
+	/**
+	 * @ORM\Column(type="string", length=5, nullable=true)
+	 * @Serializer\Exclude()
+	 */
+	private $interfaceLanguage;
 
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
@@ -1446,6 +1452,16 @@ class User implements UserInterface {
 				$nameHistory->setUser(null);
 			}
 		}
+
+		return $this;
+	}
+
+	public function getInterfaceLanguage(): ?string {
+		return $this->interfaceLanguage;
+	}
+
+	public function setInterfaceLanguage(?string $interfaceLanguage): self {
+		$this->interfaceLanguage = $interfaceLanguage;
 
 		return $this;
 	}

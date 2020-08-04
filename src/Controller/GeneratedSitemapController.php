@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,7 +20,6 @@
 
 namespace qpost\Controller;
 
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function str_replace;
 
-class GeneratedSitemapController extends GigadriveController {
+class GeneratedSitemapController extends qpostController {
 	private $entryLimit = 5000;
 
 	/**

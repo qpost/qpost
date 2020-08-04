@@ -20,27 +20,24 @@
 
 namespace qpost\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use qpost\Entity\FeedEntry;
-use qpost\Service\APIService;
-use qpost\Twig\Twig;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\Database\Pagination\PaginationService;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\GigadriveGeneralService;
+use qpost\Service\TranslationService;
 
-class DebugController extends qpostController {
+class qpostController extends GigadriveController {
 	/**
-	 * @Route("/debug", condition="'dev' === '%kernel.environment%'")
-	 * @param EntityManagerInterface $entityManager
-	 * @param LoggerInterface $logger
-	 * @param APIService $apiService
-	 * @return Response
+	 * @var TranslationService $i18n
 	 */
-	public function debugAction(EntityManagerInterface $entityManager, LoggerInterface $logger, APIService $apiService) {
-		$value = $entityManager->getRepository(FeedEntry::class)->getSitemapFeedEntries(50);
+	protected $i18n;
 
-		return $this->render("debug.html.twig", Twig::param([
-			"value" => $value
-		]));
+	public function __construct(
+		GigadriveGeneralService $generalService,
+		PaginationService $pagination,
+		TranslationService $i18n
+	) {
+		parent::__construct($generalService, $pagination);
+
+		$this->i18n = $i18n;
 	}
 }

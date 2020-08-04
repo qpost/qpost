@@ -1,4 +1,5 @@
-/*!
+<?php
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -16,8 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
-@import "buttons";
-@import "custom-scrollbar";
-@import "float-animation";
-@import "responsive";
-@import "text";
+
+namespace qpost\EventListener;
+
+use qpost\Service\TranslationService;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+
+class LocaleListener {
+	private $i18n;
+
+	public function __construct(TranslationService $i18n) {
+		$this->i18n = $i18n;
+	}
+
+	public function onKernelRequest(RequestEvent $event) {
+		$event->getRequest()->setLocale($this->i18n->getCurrentLanguage());
+	}
+}

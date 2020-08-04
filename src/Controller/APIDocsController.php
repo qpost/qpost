@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,7 +20,6 @@
 
 namespace qpost\Controller;
 
-use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
@@ -28,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class APIDocsController extends GigadriveController {
+class APIDocsController extends qpostController {
 	/**
 	 * @Route("/apidocs")
 	 * @return Response
