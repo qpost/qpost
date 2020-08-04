@@ -20,7 +20,9 @@
 
 namespace qpost\Service;
 
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Exception\MissingResourceException;
 use Symfony\Component\Intl\Locales;
@@ -30,30 +32,40 @@ use function file_exists;
 use function file_get_contents;
 use function is_null;
 use function json_decode;
+use function ksort;
 
 class TranslationService {
 	/**
 	 * @var TranslatorInterface $translator
 	 */
 	public $translator;
+
 	/**
 	 * @var TokenService $tokenService
 	 */
 	private $tokenService;
+
 	/**
 	 * @var RequestStack $requestStack
 	 */
 	private $requestStack;
+
 	/**
 	 * @var LoggerInterface $logger
 	 */
 	private $logger;
 
-	public function __construct(TokenService $tokenService, RequestStack $requestStack, TranslatorInterface $translator, LoggerInterface $logger) {
+	/**
+	 * @var ContainerInterface $container
+	 */
+	private $container;
+
+	public function __construct(TokenService $tokenService, RequestStack $requestStack, TranslatorInterface $translator, LoggerInterface $logger, ContainerInterface $container) {
 		$this->tokenService = $tokenService;
 		$this->requestStack = $requestStack;
 		$this->translator = $translator;
 		$this->logger = $logger;
+		$this->container = $container;
 	}
 
 	public function getCurrentLanguage(): string {
@@ -109,13 +121,43 @@ class TranslationService {
 		return $languages;
 	}
 
+	public function getFallbackLocaleCode(): string {
+		$locale = $this->container->getParameter("kernel.default_locale");
+
+		return Util::isEmpty($locale) ? "en" : $locale;
+	}
+
+	public function getAllLocaleStrings(?string $code = null): array {
+		if (is_null($code)) $code = $this->getCurrentLanguage();
+
+		$fallbackCode = $this->getFallbackLocaleCode();
+		$strings = $code !== $fallbackCode ? $this->getAllLocaleStrings($fallbackCode) : [];
+
+		// Add actual translated values
+		$path = $this->getLocaleFilePath($code);
+		if (file_exists($path)) {
+			foreach (json_decode(file_get_contents($path), true) as $id => $value) {
+				$strings[$id] = $value;
+			}
+		}
+
+		// Sort by translation ID
+		ksort($strings);
+
+		return $strings;
+	}
+
+	public function getLocaleFilePath(string $code): string {
+		return __DIR__ . "/../../translations/messages." . $code . ".json";
+	}
+
 	public function getLanguageProgress(string $code): int {
-		if ($code === "en") return 100;
+		if ($code === $this->getFallbackLocaleCode()) return 100;
 
 		return 100; // TODO
 	}
 
 	public function getCurrentBrowserLanguage(): string {
-		return "en"; // TODO
+		return $this->getFallbackLocaleCode(); // TODO
 	}
 }
