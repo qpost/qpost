@@ -74,6 +74,8 @@
 		window["APPEARANCE_SETTINGS"] = JSON.parse('{{ app.user.appearanceSettings|jms|raw }}');
 		{% endif %}
 
+		window["TIMEAGO_STRINGS"] = JSON.parse('{{ i18n.timeagoStrings|jms|raw }}');
+
 		window["restoreTitle"] = "{{ profileLoadPost is defined ? originalTitle }}";
 		window["CURRENT_STATUS_MODAL"] = 0;
 

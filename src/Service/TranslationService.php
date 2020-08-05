@@ -151,12 +151,37 @@ class TranslationService {
 		return $strings;
 	}
 
+	public function getTimeagoStrings(?string $code = null): array {
+		if (is_null($code)) $code = $this->getCurrentLanguage();
+
+		$path = $this->getTimeagoFilePath($code);
+		$fallbackPath = $this->getTimeagoFilePath($this->getFallbackLocaleCode());
+
+		$strings = [];
+		if (!file_exists($path)) $path = $fallbackPath;
+		if (!file_exists($path)) return $strings;
+
+		// Add actual translated values
+		foreach (json_decode(file_get_contents($path), true) as $id => $value) {
+			$strings[$id] = $value;
+		}
+
+		// Sort by translation ID
+		ksort($strings);
+
+		return $strings;
+	}
+
 	public function __(string $identifier, array $parameters = []): string {
 		return $this->translator->trans($identifier, $parameters);
 	}
 
 	public function getLocaleFilePath(string $code): string {
 		return __DIR__ . "/../../translations/messages." . $code . ".json";
+	}
+
+	public function getTimeagoFilePath(string $code): string {
+		return __DIR__ . "/../../translations/timeago/" . $code . ".json";
 	}
 
 	public function getLanguageProgress(string $code): int {

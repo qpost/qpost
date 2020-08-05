@@ -19,19 +19,26 @@
 
 import React, {Component} from "react";
 import ReactTimeAgo from "react-timeago";
+import buildFormatter from "react-timeago/lib/formatters/buildFormatter";
 
 export default class TimeAgo extends Component<{
 	time: string,
 	short?: boolean
 }, any> {
+	public static formatter;
+
+	constructor(props) {
+		super(props);
+
+		if (!TimeAgo.formatter) {
+			TimeAgo.formatter = buildFormatter(window["TIMEAGO_STRINGS"]);
+		}
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <ReactTimeAgo date={this.props.time}
-							 formatter={(value: number, unit: string, suffix: string, epochSeconds: number, nextFormatter) => {
-								 if (this.props.short) {
-									 return unit.toLowerCase().startsWith("month") ? value + "mo" : value + unit.substr(0, 1);
-								 } else {
-									 return nextFormatter();
-								 }
-							 }}/>;
+							 formatter={this.props.short ? (value: number, unit: string, suffix: string, epochSeconds: number, nextFormatter) => {
+								 return unit.toLowerCase().startsWith("month") ? value + "mo" : value + unit.substr(0, 1);
+							 } : TimeAgo.formatter}/>;
 	}
 }

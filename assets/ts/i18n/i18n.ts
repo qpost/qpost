@@ -19,8 +19,9 @@
 
 import PhraseStorage from "./PhraseStorage";
 
-export default function __(identifier: string, parameters?: {}): string {
-	if (!PhraseStorage.phrases.hasOwnProperty(identifier)) return identifier;
+export default function __(identifier: string, parameters?: {}, fallback?: string): string {
+	fallback = fallback || identifier;
+	if (!PhraseStorage.phrases.hasOwnProperty(identifier)) return fallback;
 
 	let value: string = PhraseStorage.phrases[identifier];
 
