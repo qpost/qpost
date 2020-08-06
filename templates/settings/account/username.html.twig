@@ -2,15 +2,15 @@
 {% import "settings/macro.html.twig" as macro %}
 
 {% block content %}
-	{{ macro.settingsHeadline("Change username") }}
+	{{ macro.settingsHeadline(__("settings.account.username.headline")) }}
 
 	{% include "parts/flash.html.twig" %}
 
 	<p>
-		<i class="fas fa-info-circle iconMargin-10 text-info"></i>You can only change your username every 30 days.
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>{{ __("settings.account.username.cooldownInfo") }}
 		{% if app.user.verified %}
 			<br/>
-			<i class="fas fa-info-circle iconMargin-10 text-info"></i>Changing your username results in losing your verified status.
+			<i class="fas fa-info-circle iconMargin-10 text-info"></i>{{ __("settings.account.username.verificationInfo") }}
 			<br/>
 		{% endif %}
 	</p>
@@ -29,7 +29,7 @@
 		</div>
 
 		<button type="submit" class="btn btn-primary btn-block bootstrapButton">
-			Save changes
+			{{ __("button.saveChanges") }}
 		</button>
 	</form>
 {% endblock %}

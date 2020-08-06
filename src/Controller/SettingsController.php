@@ -40,6 +40,7 @@ use qpost\Twig\Twig;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function __;
 use function array_merge;
 use function is_null;
 use function is_string;
@@ -78,7 +79,7 @@ class SettingsController extends qpostController {
 
 				if (Util::isEmpty($displayName) || !(strlen($displayName) >= 1 && strlen($displayName) <= 24)) {
 					$save = false;
-					$this->addFlash(FlashMessageType::ERROR, "The display name must be between 1 and 24 characters long.");
+					$this->addFlash(FlashMessageType::ERROR, __("settings.profile.appearance.error.displayNameExceedsLength"));
 				}
 			}
 
@@ -89,7 +90,7 @@ class SettingsController extends qpostController {
 
 				if (!Util::isEmpty($bio) && !(strlen($bio) >= 0 && strlen($bio) <= 200)) {
 					$save = false;
-					$this->addFlash(FlashMessageType::ERROR, "The bio must be between 0 and 200 characters long.");
+					$this->addFlash(FlashMessageType::ERROR, __("settings.profile.appearance.error.bioExceedsLength"));
 				}
 			}
 
@@ -101,11 +102,11 @@ class SettingsController extends qpostController {
 				if ($birthdayTime = strtotime($birthday)) {
 					if ($birthdayTime >= time() - (13 * 365 * 24 * 60 * 60) || $birthdayTime <= time() - (120 * 365 * 24 * 60 * 60)) {
 						$save = false;
-						$this->addFlash(FlashMessageType::ERROR, "You have to be at least 13 years old and at the most 120 years old.");
+						$this->addFlash(FlashMessageType::ERROR, __("settings.profile.appearance.error.birthdayExceedsLength"));
 					}
 				} else {
 					$save = false;
-					$this->addFlash(FlashMessageType::ERROR, "Please enter a valid birthday.");
+					$this->addFlash(FlashMessageType::ERROR, __("settings.profile.appearance.error.invalidBirthday"));
 				}
 			}
 
@@ -117,16 +118,16 @@ class SettingsController extends qpostController {
 
 					if (is_null($header)) {
 						$save = false;
-						$this->addFlash(FlashMessageType::ERROR, "An error occurred trying to upload the header image.");
+						$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 					} else {
 						$user->setHeader($header);
 					}
 				} catch (ProfileImageInvalidException $e) {
 					$save = false;
-					$this->addFlash(FlashMessageType::ERROR, "Please upload a valid header image.");
+					$this->addFlash(FlashMessageType::ERROR, __("error.invalidImage"));
 				} catch (ProfileImageTooBigException $e) {
 					$save = false;
-					$this->addFlash(FlashMessageType::ERROR, "The header image may not be bigger than 5MB.");
+					$this->addFlash(FlashMessageType::ERROR, __("settings.profile.appearance.error.headerTooBig", ["%size%" => "5MB"]));
 				}
 			} else if ($header === "") { // header was deleted
 				$user->setHeader(null);
@@ -140,16 +141,16 @@ class SettingsController extends qpostController {
 
 					if (is_null($avatar)) {
 						$save = false;
-						$this->addFlash(FlashMessageType::ERROR, "An error occurred trying to upload the avatar image.");
+						$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 					} else {
 						$user->setAvatar($avatar);
 					}
 				} catch (ProfileImageInvalidException $e) {
 					$save = false;
-					$this->addFlash(FlashMessageType::ERROR, "Please upload a valid avatar image.");
+					$this->addFlash(FlashMessageType::ERROR, __("error.invalidImage"));
 				} catch (ProfileImageTooBigException $e) {
 					$save = false;
-					$this->addFlash(FlashMessageType::ERROR, "The avatar image may not be bigger than 2MB.");
+					$this->addFlash(FlashMessageType::ERROR, __("settings.profile.appearance.error.avatarTooBig", ["%size%" => "5MB"]));
 				}
 			} else if ($avatar === "") { // header was deleted
 				$user->setAvatar(null);
@@ -164,11 +165,11 @@ class SettingsController extends qpostController {
 				$entityManager->persist($user);
 				$entityManager->flush();
 
-				$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+				$this->addFlash(FlashMessageType::SUCCESS, __("success.changesSaved"));
 			}
 		}
 
-		return $this->renderAction("Edit profile", "settings/profile/appearance.html.twig", SettingsNavigationPoint::PROFILE_APPEARANCE);
+		return $this->renderAction(__("settings.profile.appearance.headline"), "settings/profile/appearance.html.twig", SettingsNavigationPoint::PROFILE_APPEARANCE);
 	}
 
 	/**
@@ -196,7 +197,7 @@ class SettingsController extends qpostController {
 							$entityManager->remove($linkedAccount);
 							$entityManager->flush();
 
-							$this->addFlash(FlashMessageType::SUCCESS, "The account has been unlinked.");
+							$this->addFlash(FlashMessageType::SUCCESS, __("settings.profile.linkedAccounts.unlinked"));
 						}
 					}
 				} else if ($action === "update") {
@@ -213,14 +214,14 @@ class SettingsController extends qpostController {
 							$entityManager->persist($linkedAccount);
 							$entityManager->flush();
 
-							$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+							$this->addFlash(FlashMessageType::SUCCESS, __("success.changesSaved"));
 						}
 					}
 				}
 			}
 		}
 
-		return $this->renderAction("Linked Accounts", "settings/profile/linkedAccounts.html.twig", SettingsNavigationPoint::PROFILE_LINKED_ACCOUNTS);
+		return $this->renderAction(__("settings.profile.linkedAccounts.headline"), "settings/profile/linkedAccounts.html.twig", SettingsNavigationPoint::PROFILE_LINKED_ACCOUNTS);
 	}
 
 	/**
@@ -254,13 +255,13 @@ class SettingsController extends qpostController {
 
 				$entityManager->flush();
 
-				$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+				$this->addFlash(FlashMessageType::SUCCESS, __("success.changesSaved"));
 			} catch (FormException $e) {
 				$this->addFlash(FlashMessageType::ERROR, $e->getMessage());
 			}
 		}
 
-		return $this->renderAction("Appearance", "settings/preferences/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, [
+		return $this->renderAction(__("settings.preferences.appearance.headline"), "settings/preferences/appearance.html.twig", SettingsNavigationPoint::PREFERENCES_APPEARANCE, [
 			"availableLanguages" => $this->i18n->getAvailableLanguages(),
 			"currentLanguage" => $this->i18n->getCurrentLanguage()
 		]);
@@ -272,7 +273,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function relationshipsFollowing(Request $request) {
-		return $this->renderAction("Following", "settings/relationships/following.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWING);
+		return $this->renderAction(__("settings.relationships.following.headline"), "settings/relationships/following.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWING);
 	}
 
 	/**
@@ -281,7 +282,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function relationshipsFollowers(Request $request) {
-		return $this->renderAction("Followers", "settings/relationships/followers.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWERS);
+		return $this->renderAction(__("settings.relationships.followers.headline"), "settings/relationships/followers.html.twig", SettingsNavigationPoint::RELATIONSHIPS_FOLLOWERS);
 	}
 
 	/**
@@ -290,7 +291,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function relationshipsBlocked(Request $request) {
-		return $this->renderAction("Blocked accounts", "settings/relationships/blocked.html.twig", SettingsNavigationPoint::RELATIONSHIP_BLOCKED);
+		return $this->renderAction(__("settings.relationships.blocked.headline"), "settings/relationships/blocked.html.twig", SettingsNavigationPoint::RELATIONSHIP_BLOCKED);
 	}
 
 	/**
@@ -299,7 +300,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function accountInformation(Request $request) {
-		return $this->renderAction("Account information", "settings/account/information.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION);
+		return $this->renderAction(__("settings.account.information.headline"), "settings/account/information.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION);
 	}
 
 	/**
@@ -341,34 +342,34 @@ class SettingsController extends qpostController {
 
 											$nameHistoryService->createEntry($user, $username, $request->getClientIp(), $now);
 
-											$this->addFlash(FlashMessageType::SUCCESS, "Your username has been changed.");
+											$this->addFlash(FlashMessageType::SUCCESS, __("settings.account.username.changed"));
 										} else {
-											$this->addFlash(FlashMessageType::ERROR, "That username is not available anymore.");
+											$this->addFlash(FlashMessageType::ERROR, __("settings.account.username.error.notAvailable"));
 										}
 									} else {
-										$this->addFlash(FlashMessageType::ERROR, "You already have this username.");
+										$this->addFlash(FlashMessageType::ERROR, __("settings.account.username.error.isCurrent"));
 									}
 								} else {
-									$this->addFlash(FlashMessageType::ERROR, "You can only change your username every 30 days.");
+									$this->addFlash(FlashMessageType::ERROR, __("settings.account.username.error.cooldown"));
 								}
 							} else {
-								$this->addFlash(FlashMessageType::ERROR, "The username cannot be longer than 16 characters.");
+								$this->addFlash(FlashMessageType::ERROR, __("settings.account.username.error.tooLong"));
 							}
 						} else {
-							$this->addFlash(FlashMessageType::ERROR, "The username has to be at least 3 characters long.");
+							$this->addFlash(FlashMessageType::ERROR, __("settings.account.username.error.tooShort"));
 						}
 					} else {
-						$this->addFlash(FlashMessageType::ERROR, "The username has to be alphanumeric.");
+						$this->addFlash(FlashMessageType::ERROR, __("settings.account.username.error.invalidCharacters"));
 					}
 				} else {
-					$this->addFlash(FlashMessageType::ERROR, "Please enter a username.");
+					$this->addFlash(FlashMessageType::ERROR, __("settings.account.username.error.enterUsername"));
 				}
 			} else {
-				$this->addFlash(FlashMessageType::ERROR, "Please enter a username.");
+				$this->addFlash(FlashMessageType::ERROR, __("settings.account.username.error.enterUsername"));
 			}
 		}
 
-		return $this->renderAction("Change username", "settings/account/username.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME);
+		return $this->renderAction(__("settings.account.username.headline"), "settings/account/username.html.twig", SettingsNavigationPoint::ACCOUNT_USERNAME);
 	}
 
 	/**
@@ -384,7 +385,7 @@ class SettingsController extends qpostController {
 		$user = $this->getUser();
 
 		if ($user->getGigadriveData()) {
-			$this->addFlash(FlashMessageType::ERROR, "You are not allowed to view that page.");
+			$this->addFlash(FlashMessageType::ERROR, __("error.notAllowed"));
 			return $this->redirectToRoute("qpost_settings_accountinformation");
 		}
 
@@ -412,34 +413,34 @@ class SettingsController extends qpostController {
 											$entityManager->persist($user);
 											$entityManager->flush();
 
-											$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+											$this->addFlash(FlashMessageType::SUCCESS, __("success.changesSaved"));
 										} else {
-											$this->addFlash(FlashMessageType::ERROR, "Your current password is incorrect.");
+											$this->addFlash(FlashMessageType::ERROR, __("settings.account.password.error.currentIncorrect"));
 										}
 									} else {
-										$this->addFlash(FlashMessageType::ERROR, "The new passwords don't match.");
+										$this->addFlash(FlashMessageType::ERROR, __("settings.account.password.error.noMatch"));
 									}
 								} else {
-									$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+									$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 								}
 							} else {
-								$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+								$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 							}
 						} else {
-							$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+							$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 						}
 					} else {
-						$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+						$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 					}
 				} else {
-					$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+					$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 				}
 			} else {
-				$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+				$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 			}
 		}
 
-		return $this->renderAction("Change password", "settings/account/password.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD);
+		return $this->renderAction(__("settings.account.password.headline"), "settings/account/password.html.twig", SettingsNavigationPoint::ACCOUNT_PASSWORD);
 	}
 
 	/**
@@ -448,7 +449,7 @@ class SettingsController extends qpostController {
 	 * @return Response
 	 */
 	public function accountSessions(Request $request) {
-		return $this->renderAction("Active sessions", "settings/account/sessions.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS);
+		return $this->renderAction(__("settings.account.sessions.headline"), "settings/account/sessions.html.twig", SettingsNavigationPoint::ACCOUNT_ACTIVE_SESSIONS);
 	}
 
 	/**
@@ -478,18 +479,18 @@ class SettingsController extends qpostController {
 					$deletionService->deleteUser($user);
 
 					$response = $this->redirectToRoute("qpost_page_goodbye");
-					$response->headers->clearCookie("sesstoken");
+					$response->headers->clearCookie("sesstoken"); // TODO: Update cookie name
 
 					return $response;
 				} else {
-					$this->addFlash(FlashMessageType::ERROR, "Your password is incorrect.");
+					$this->addFlash(FlashMessageType::ERROR, __("login.error.invalidCredentials"));
 				}
 			} else {
-				$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+				$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 			}
 		}
 
-		return $this->renderAction("Delete your account", "settings/account/delete.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION);
+		return $this->renderAction(__("settings.account.delete.headline"), "settings/account/delete.html.twig", SettingsNavigationPoint::ACCOUNT_INFORMATION);
 	}
 
 	/**
@@ -516,16 +517,16 @@ class SettingsController extends qpostController {
 					$entityManager->persist($user);
 					$entityManager->flush();
 
-					$this->addFlash(FlashMessageType::SUCCESS, "Your changes have been saved.");
+					$this->addFlash(FlashMessageType::SUCCESS, __("success.changesSaved"));
 				} else {
-					$this->addFlash(FlashMessageType::ERROR, "Please try again.");
+					$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 				}
 			} else {
-				$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+				$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 			}
 		}
 
-		return $this->renderAction("Privacy", "settings/privacy/privacy.html.twig", SettingsNavigationPoint::PRIVACY);
+		return $this->renderAction(__("settings.account.privacy.headline"), "settings/privacy/privacy.html.twig", SettingsNavigationPoint::PRIVACY);
 	}
 
 	private function renderAction(string $headline, string $template, ?string $activeMenuPoint, array $additionalParameters = []) {

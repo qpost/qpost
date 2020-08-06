@@ -2,24 +2,26 @@
 {% import "settings/macro.html.twig" as macro %}
 
 {% block content %}
-	{{ macro.settingsHeadline("Account information") }}
+	{{ macro.settingsHeadline(__("settings.account.information.headline")) }}
 
 	{% include "parts/flash.html.twig" %}
 
 	<div class="row">
 		<div class="col-md-6">
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Username</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.username") }}</p>
 
 				<div>
 					@{{ app.user.username }}
 
-					<a class="float-right" href="{{ path("qpost_settings_accountusername") }}">(change)</a>
+					<a class="float-right"
+					   href="{{ path("qpost_settings_accountusername") }}">({{ __("settings.account.information.username.change") }}
+						)</a>
 				</div>
 			</div>
 
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Email Address</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.email") }}</p>
 
 				<div>
 					{{ app.user.email }}
@@ -27,7 +29,7 @@
 			</div>
 
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Date joined</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.dateJoined") }}</p>
 
 				<div>
 					{{ app.user.time|date("F jS, Y h:i:s A") }} UTC
@@ -35,17 +37,19 @@
 			</div>
 
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Date of birth</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.dateOfBirth") }}</p>
 
 				<div>
 					{{ app.user.birthday ? app.user.birthday|date("F jS, Y") : "N/A" }}
 
-					<a class="float-right" href="{{ path("qpost_settings_profileappearance") }}">(change)</a>
+					<a class="float-right"
+					   href="{{ path("qpost_settings_profileappearance") }}">({{ __("settings.account.information.username.change") }}
+						)</a>
 				</div>
 			</div>
 
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Account ID</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.id") }}</p>
 
 				<div>
 					#{{ app.user.id }}
@@ -55,34 +59,34 @@
 
 		<div class="col-md-6">
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Accounts following you</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.followers") }}</p>
 
 				<a href="{{ path("qpost_settings_relationshipsfollowers") }}">
-					View All
+					{{ __("settings.account.information.viewAll") }}
 				</a>
 			</div>
 
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Accounts you follow</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.following") }}</p>
 
 				<a href="{{ path("qpost_settings_relationshipsfollowing") }}">
-					View All
+					{{ __("settings.account.information.viewAll") }}
 				</a>
 			</div>
 
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Posts you favorited</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.favorited") }}</p>
 
 				<a href="{{ path("qpost_page_profile_favorites", {"username": app.user.username}) }}">
-					View All
+					{{ __("settings.account.information.viewAll") }}
 				</a>
 			</div>
 
 			<div class="mb-3">
-				<p class="mb-0 font-weight-bold">Accounts you blocked</p>
+				<p class="mb-0 font-weight-bold">{{ __("settings.account.information.blocked") }}</p>
 
-				<a href="{{ path("qpost_redirect_accountprivacyrequests") }}">
-					View All
+				<a href="{{ path("qpost_settings_relationshipsblocked") }}">
+					{{ __("settings.account.information.viewAll") }}
 				</a>
 			</div>
 		</div>
@@ -91,8 +95,9 @@
 	<hr class="settingsHeadlineSeparator mt-5"/>
 
 	<div class="mb-4">
-		<p class="mb-0 font-weight-bold">Delete your account</p>
-		<p class="mb-0 text-muted"><a href="{{ path("qpost_settings_accountdelete") }}">Click here</a> if you wish to
-			delete your account.</p>
+		<p class="mb-0 font-weight-bold"><a
+					href="{{ path("qpost_settings_accountdelete") }}">{{ __("settings.account.delete.headline") }}</a>
+		</p>
+		<p class="mb-0 text-muted">{{ __("settings.account.information.delete") }}</p>
 	</div>
 {% endblock %}

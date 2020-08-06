@@ -2,7 +2,7 @@
 {% import "settings/macro.html.twig" as macro %}
 
 {% block content %}
-	{{ macro.settingsHeadline("Appearance") }}
+	{{ macro.settingsHeadline(__("settings.preferences.appearance.headline")) }}
 
 	{% include "parts/flash.html.twig" %}
 
@@ -10,7 +10,7 @@
 		{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 
 		<div class="mb-4">
-			<label for="languageSelector">Interface language</label>
+			<label for="languageSelector">{{ __("settings.preferences.appearance.interfaceLanguage") }}</label>
 			<select class="custom-select" id="languageSelector" name="language">
 				{% for code,name in availableLanguages %}
 					<option value="{{ code }}"{{ code == currentLanguage ? " selected" }}>{{ name }}</option>
@@ -19,13 +19,13 @@
 		</div>
 
 		<div class="mb-4">
-			{{ macro.settingsHeadlineSmall("Display") }}
+			{{ macro.settingsHeadlineSmall(__("settings.preferences.appearance.display")) }}
 
 			<div class="custom-control custom-checkbox mb-3">
 				<input type="checkbox" class="custom-control-input" id="nightMode"
 					   name="nightMode"{{ app.user.appearanceSettings.nightMode ? "checked" }}/>
 				<label class="custom-control-label" for="nightMode">
-					<b>Enable night mode</b>
+					<b>{{ __("settings.preferences.appearance.display.nightMode") }}</b>
 				</label>
 			</div>
 
@@ -33,19 +33,19 @@
 				<input type="checkbox" class="custom-control-input" id="autoplayGifs"
 					   name="autoplayGifs"{{ app.user.appearanceSettings.autoplayGifs ? "checked" }}/>
 				<label class="custom-control-label" for="autoplayGifs">
-					<b>Auto-play animated GIFs</b>
+					<b>{{ __("settings.preferences.appearance.display.autoplayGifs") }}</b>
 				</label>
 			</div>
 		</div>
 
 		<div class="mb-4">
-			{{ macro.settingsHeadlineSmall("Discovery") }}
+			{{ macro.settingsHeadlineSmall(__("settings.preferences.appearance.discovery")) }}
 
 			<div class="custom-control custom-checkbox mb-3">
 				<input type="checkbox" class="custom-control-input" id="showTrends"
 					   name="showTrends"{{ app.user.appearanceSettings.showTrends ? "checked" }}/>
 				<label class="custom-control-label" for="showTrends">
-					<b>Show trending topics</b>
+					<b>{{ __("settings.preferences.appearance.discovery.showTrends") }}</b>
 				</label>
 			</div>
 
@@ -53,7 +53,7 @@
 				<input type="checkbox" class="custom-control-input" id="showSuggestedUsers"
 					   name="showSuggestedUsers"{{ app.user.appearanceSettings.showSuggestedUsers ? "checked" }}/>
 				<label class="custom-control-label" for="showSuggestedUsers">
-					<b>Show suggested users</b>
+					<b>{{ __("settings.preferences.appearance.discovery.showSuggestedUsers") }}</b>
 				</label>
 			</div>
 
@@ -61,25 +61,25 @@
 				<input type="checkbox" class="custom-control-input" id="showBirthdays"
 					   name="showBirthdays"{{ app.user.appearanceSettings.showBirthdays ? "checked" }}/>
 				<label class="custom-control-label" for="showBirthdays">
-					<b>Show upcoming birthdays</b>
+					<b>{{ __("settings.preferences.appearance.discovery.showBirthdays") }}</b>
 				</label>
 			</div>
 		</div>
 
 		<div class="mb-4">
-			{{ macro.settingsHeadlineSmall("Mature content") }}
+			{{ macro.settingsHeadlineSmall(__("settings.preferences.appearance.matureContent")) }}
 
 			<div class="custom-control custom-checkbox mb-3">
 				<input type="checkbox" class="custom-control-input" id="showMatureWarning"
 					   name="showMatureWarning" {{ app.user.appearanceSettings.showMatureWarning ? "checked" }}/>
 				<label class="custom-control-label" for="showMatureWarning">
-					<b>Show a warning on mature content</b>
+					<b>{{ __("settings.preferences.appearance.matureContent.showMatureWarning") }}</b>
 				</label>
 			</div>
 		</div>
 
 		<button type="submit" class="btn btn-primary btn-block bootstrapButton">
-			Save changes
+			{{ __("button.saveChanges") }}
 		</button>
 	</form>
 {% endblock %}

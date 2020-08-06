@@ -11,68 +11,67 @@
 <div class="clearfix settingsNav navHidden">
 	<ul class="nav flex-column nav-pills">
 		<li class="nav-item">
-			<a class="nav-link" href="{{ path("qpost_home_index") }}"><i class="fas fa-arrow-left iconMargin-10"></i>Back
-				to qpost</a>
+			<a class="nav-link" href="{{ path("qpost_home_index") }}"><i
+						class="fas fa-arrow-left iconMargin-10"></i>{{ __("settings.navigation.back") }}</a>
 		</li>
 
 		<li class="dropdown-divider"></li>
 
 		<li class="nav-item{{ navPoint in ["PROFILE_APPEARANCE","PROFILE_LINKED_ACCOUNTS"] ? " open" }}">
 			<a class="nav-link" href="{{ path("qpost_settings_profileappearance") }}"><i
-						class="fas fa-user-circle iconMargin-10"></i>Profile</a>
+						class="fas fa-user-circle iconMargin-10"></i>{{ __("settings.navigation.profile") }}</a>
 
 			<a class="nav-link child{{ navPoint == "PROFILE_APPEARANCE" ? " active" }}"
-			   href="{{ path("qpost_settings_profileappearance") }}">Appearance</a>
+			   href="{{ path("qpost_settings_profileappearance") }}">{{ __("settings.navigation.profile.appearance") }}</a>
 
 			<a class="nav-link child{{ navPoint == "PROFILE_LINKED_ACCOUNTS" ? " active" }}"
-			   href="{{ path("qpost_settings_profilelinkedaccounts") }}">Linked Accounts</a>
+			   href="{{ path("qpost_settings_profilelinkedaccounts") }}">{{ __("settings.navigation.profile.linkedAccounts") }}</a>
 		</li>
 		<li class="nav-item{{ navPoint in ["PREFERENCES_APPEARANCE"] ? " open" }}">
 			<a class="nav-link" href="{{ path("qpost_settings_preferencesappearance") }}"><i
-						class="fas fa-cog iconMargin-10"></i>Preferences</a>
+						class="fas fa-cog iconMargin-10"></i>{{ __("settings.navigation.preferences") }}</a>
 
 			<a class="nav-link child{{ navPoint == "PREFERENCES_APPEARANCE" ? " active" }}"
-			   href="{{ path("qpost_settings_preferencesappearance") }}">Appearance</a>
+			   href="{{ path("qpost_settings_preferencesappearance") }}">{{ __("settings.navigation.preferences.appearance") }}</a>
 		</li>
 		<li class="nav-item{{ navPoint in ["RELATIONSHIPS_FOLLOWING","RELATIONSHIPS_FOLLOWERS","RELATIONSHIP_BLOCKED"] ? " open" }}">
 			<a class="nav-link" href="{{ path("qpost_settings_relationshipsfollowing") }}"><i
-						class="fas fa-users iconMargin-10"></i>Relationships</a>
+						class="fas fa-users iconMargin-10"></i>{{ __("settings.navigation.relationships") }}</a>
 
 			<a class="nav-link child{{ navPoint == "RELATIONSHIPS_FOLLOWING" ? " active" }}"
-			   href="{{ path("qpost_settings_relationshipsfollowing") }}">Following</a>
+			   href="{{ path("qpost_settings_relationshipsfollowing") }}">{{ __("settings.navigation.relationships.following") }}</a>
 			<a class="nav-link child{{ navPoint == "RELATIONSHIPS_FOLLOWERS" ? " active" }}"
-			   href="{{ path("qpost_settings_relationshipsfollowers") }}">Followers</a>
+			   href="{{ path("qpost_settings_relationshipsfollowers") }}">{{ __("settings.navigation.relationships.followers") }}</a>
 			<a class="nav-link child{{ navPoint == "RELATIONSHIP_BLOCKED" ? " active" }}"
-			   href="{{ path("qpost_settings_relationshipsblocked") }}">Blocked</a>
+			   href="{{ path("qpost_settings_relationshipsblocked") }}">{{ __("settings.navigation.relationships.blocked") }}</a>
 		</li>
 		<li class="nav-item{{ (navPoint in ["ACCOUNT_INFORMATION","ACCOUNT_USERNAME","ACCOUNT_PASSWORD","ACCOUNT_ACTIVE_SESSIONS"]) ? " open" }}">
 			<a class="nav-link" href="{{ path("qpost_settings_accountinformation") }}"><i
-						class="fas fa-user iconMargin-10"></i>Account</a>
+						class="fas fa-user iconMargin-10"></i>{{ __("settings.navigation.account") }}</a>
 
 			<a class="nav-link child{{ navPoint == "ACCOUNT_INFORMATION" ? " active" }}"
-			   href="{{ path("qpost_settings_accountinformation") }}">Information</a>
+			   href="{{ path("qpost_settings_accountinformation") }}">{{ __("settings.navigation.account.information") }}</a>
 			<a class="nav-link child{{ navPoint == "ACCOUNT_USERNAME" ? " active" }}"
-			   href="{{ path("qpost_settings_accountusername") }}">Username</a>
+			   href="{{ path("qpost_settings_accountusername") }}">{{ __("settings.navigation.account.username") }}</a>
 
 			{% if not app.user.gigadriveData %}
 				<a class="nav-link child{{ navPoint == "ACCOUNT_PASSWORD" ? " active" }}"
-				   href="{{ path("qpost_settings_accountpassword") }}">Password</a>
+				   href="{{ path("qpost_settings_accountpassword") }}">{{ __("settings.navigation.account.password") }}</a>
 			{% endif %}
 
 			<a class="nav-link child{{ navPoint == "ACCOUNT_ACTIVE_SESSIONS" ? " active" }}"
-			   href="{{ path("qpost_settings_accountsessions") }}">Active
-				sessions</a>
+			   href="{{ path("qpost_settings_accountsessions") }}">{{ __("settings.navigation.account.sessions") }}</a>
 		</li>
 		<li class="nav-item{{ (navPoint in ["PRIVACY"]) ? " open" }}">
 			<a class="nav-link{{ navPoint == "PRIVACY" ? " active" }}" href="{{ path("qpost_settings_privacy") }}"><i
-						class="fas fa-lock iconMargin-10"></i>Privacy</a>
+						class="fas fa-lock iconMargin-10"></i>{{ __("settings.navigation.privacy") }}</a>
 		</li>
 
 		<li class="dropdown-divider"></li>
 
 		<li class="nav-item">
-			<a class="nav-link" href="#" id="settingsNavLogoutButton"><i class="fas fa-sign-out-alt iconMargin-10"></i>Log
-				out</a>
+			<a class="nav-link" href="#" id="settingsNavLogoutButton"><i
+						class="fas fa-sign-out-alt iconMargin-10"></i>{{ __("settings.navigation.logout") }}</a>
 		</li>
 
 		<li class="dropdown-divider"></li>
