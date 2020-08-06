@@ -26,6 +26,7 @@ import {convertUserAgentToIconClass} from "../../Util/Format";
 import TimeAgo from "../TimeAgo";
 import Token from "../../api/src/Entity/Token";
 import IPStackResult from "../../api/src/Entity/IPStackResult";
+import __ from "../../i18n/i18n";
 
 export default class Sessions extends Component<any, {
 	loading: boolean,
@@ -118,13 +119,13 @@ export default class Sessions extends Component<any, {
 
 							<div className={"my-3"}>
 								<p className={"mb-0"}>
-									Last accessed <TimeAgo time={token.getLastAccessTime()}/>
+									{__("settings.account.sessions.lastAccessed")} <TimeAgo
+									time={token.getLastAccessTime()}/>
 								</p>
 
 								<p className={"mb-0"}>
-									Notifications are {token.hasNotifications() ?
-									<span className={"text-success"}>enabled</span> :
-									<span className={"text-danger"}>disabled</span>}.
+									<span
+										className={token.hasNotifications() ? "text-success" : "text-danger"}>{__("settings.account.sessions.notifications" + (token.hasNotifications() ? "Enabled" : "Disabled"))}</span>
 								</p>
 							</div>
 
@@ -138,7 +139,7 @@ export default class Sessions extends Component<any, {
 											this.setLoading(token.getId(), true);
 
 											API.i.token.delete(token.getId()).then(() => {
-												message.success("The session has been killed.");
+												message.success(__("settings.account.sessions.killed"));
 												this.setLoading(token.getId(), false, true);
 											}).catch(reason => {
 												message.error(reason);
@@ -146,7 +147,7 @@ export default class Sessions extends Component<any, {
 											});
 										}
 									}}>
-								{current ? "Current session" : "Logout"}
+								{current ? __("settings.account.sessions.current") : __("settings.navigation.logout")}
 							</Button>
 						</Card>
 					</Col>;
