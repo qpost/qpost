@@ -242,6 +242,7 @@ class SettingsController extends qpostController {
 				if ($language !== $this->i18n->getCurrentLanguage()) { // only update when user actually chose a new language
 					if ($this->i18n->isValidLanguage($language)) {
 						$user->setInterfaceLanguage($language);
+						$this->i18n->forceLanguageUpdate($language);
 					}
 				}
 

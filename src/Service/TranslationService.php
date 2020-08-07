@@ -22,6 +22,7 @@ namespace qpost\Service;
 
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Exception\MissingResourceException;
@@ -38,7 +39,7 @@ class TranslationService {
 	public static $I;
 
 	/**
-	 * @var TranslatorInterface $translator
+	 * @var Translator $translator
 	 */
 	public $translator;
 
@@ -170,6 +171,13 @@ class TranslationService {
 		ksort($strings);
 
 		return $strings;
+	}
+
+	public function forceLanguageUpdate(?string $code = null): void {
+		if (is_null($code)) $code = $this->getCurrentLanguage();
+
+		$this->requestStack->getCurrentRequest()->setLocale($code);
+		$this->translator->setLocale($code);
 	}
 
 	public function __(string $identifier, array $parameters = []): string {
