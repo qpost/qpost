@@ -16,6 +16,12 @@
 					<option value="{{ code }}"{{ code == currentLanguage ? " selected" }}>{{ name }}</option>
 				{% endfor %}
 			</select>
+
+			<p class="mb-0 mt-2 font-weight-bold">
+				<a href="https://crowdlate.net/organization/gigadrive/qpost" target="_blank" rel="noopener">
+					{{ __("settings.preferences.appearance.translationInfo") }}
+				</a>
+			</p>
 		</div>
 
 		<div class="mb-4">
@@ -43,7 +49,7 @@
 
 			<div class="custom-control custom-checkbox mb-3">
 				<input type="checkbox" class="custom-control-input" id="showTrends"
-					   name="showTrends"{{ app.user.appearanceSettings.showTrends ? "checked" }}/>
+					   name="showTrends" {{ app.user.appearanceSettings.showTrends ? "checked" }}/>
 				<label class="custom-control-label" for="showTrends">
 					<b>{{ __("settings.preferences.appearance.discovery.showTrends") }}</b>
 				</label>
@@ -51,7 +57,7 @@
 
 			<div class="custom-control custom-checkbox mb-3">
 				<input type="checkbox" class="custom-control-input" id="showSuggestedUsers"
-					   name="showSuggestedUsers"{{ app.user.appearanceSettings.showSuggestedUsers ? "checked" }}/>
+					   name="showSuggestedUsers" {{ app.user.appearanceSettings.showSuggestedUsers ? "checked" }}/>
 				<label class="custom-control-label" for="showSuggestedUsers">
 					<b>{{ __("settings.preferences.appearance.discovery.showSuggestedUsers") }}</b>
 				</label>
@@ -59,7 +65,7 @@
 
 			<div class="custom-control custom-checkbox mb-3">
 				<input type="checkbox" class="custom-control-input" id="showBirthdays"
-					   name="showBirthdays"{{ app.user.appearanceSettings.showBirthdays ? "checked" }}/>
+					   name="showBirthdays" {{ app.user.appearanceSettings.showBirthdays ? "checked" }}/>
 				<label class="custom-control-label" for="showBirthdays">
 					<b>{{ __("settings.preferences.appearance.discovery.showBirthdays") }}</b>
 				</label>
