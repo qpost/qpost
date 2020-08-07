@@ -93,7 +93,7 @@ export default class FollowerListItem extends Component<{
 					</div>
 				</div>
 
-				<div className={"float-right mt-2"}>
+				<div className={"float-right mt-2 homeFeedProfileBoxEditButton"}>
 					<FollowButton target={user}/>
 				</div>
 			</div>
