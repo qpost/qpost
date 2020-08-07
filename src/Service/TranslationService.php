@@ -34,6 +34,7 @@ use function file_get_contents;
 use function is_null;
 use function json_decode;
 use function ksort;
+use function preg_split;
 
 class TranslationService {
 	public static $I;
@@ -199,6 +200,19 @@ class TranslationService {
 	}
 
 	public function getCurrentBrowserLanguage(): string {
-		return $this->getFallbackLocaleCode(); // TODO
+		$headers = $this->requestStack->getCurrentRequest()->headers;
+		if (!$headers->has("Accept-Language")) return $this->getFallbackLocaleCode();
+
+		$header = $headers->get("Accept-Language");
+		if ($header === "*") return $this->getFallbackLocaleCode();
+
+		// https://stackoverflow.com/a/4955464/4117923
+		$parts = preg_split("/([;,])/", $header);
+
+		foreach ($parts as $part) {
+			if ($this->isValidLanguage($part)) return $part;
+		}
+
+		return $this->getFallbackLocaleCode();
 	}
 }
