@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -36,7 +36,8 @@ use function is_null;
  * @ORM\Entity(repositoryClass="qpost\Repository\FeedEntryRepository")
  * @ORM\Table(indexes={
  *     @ORM\Index(columns={"type"}),
- *     @ORM\Index(columns={"nsfw"})
+ *     @ORM\Index(columns={"nsfw"}),
+ *     @ORM\Index(columns={"time"})
  * })
  */
 class FeedEntry {
@@ -49,7 +50,7 @@ class FeedEntry {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="feedEntries", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $user;
 
@@ -60,11 +61,13 @@ class FeedEntry {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", fetch="EAGER")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	private $referencedUser;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", inversedBy="children", fetch="EAGER")
+	 * @ORM\JoinColumn(onDelete="SET NULL")
 	 * @Serializer\Exclude()
 	 */
 	private $parent;
@@ -77,6 +80,7 @@ class FeedEntry {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="feedEntries", fetch="EXTRA_LAZY")
+	 * @ORM\JoinColumn(onDelete="SET NULL")
 	 * @Serializer\Exclude()
 	 */
 	private $token;

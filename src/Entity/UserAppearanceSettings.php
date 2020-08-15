@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -37,7 +37,7 @@ class UserAppearanceSettings {
 
 	/**
 	 * @ORM\OneToOne(targetEntity="qpost\Entity\User", inversedBy="appearanceSettings", cascade={"persist", "remove"})
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 * @Serializer\Exclude()
 	 */
 	private $user;

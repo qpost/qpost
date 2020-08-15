@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -27,6 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents the data of a user blocking another user.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\BlockRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"time"})})
  */
 class Block {
 	/**
@@ -38,13 +39,13 @@ class Block {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="blocking", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $user;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="blockedBy", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $target;
 

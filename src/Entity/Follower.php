@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -27,6 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents the data of a user following another.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\FollowerRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"time"})})
  */
 class Follower {
 	/**
@@ -38,13 +39,13 @@ class Follower {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="following", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $sender;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="followers", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $receiver;
 

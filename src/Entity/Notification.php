@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -28,7 +28,7 @@ use qpost\Constants\NotificationType;
  * Represents the data of a notification.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\NotificationRepository")
- * @ORM\Table(indexes={@ORM\Index(columns={"seen"}),@ORM\Index(columns={"notified"})})
+ * @ORM\Table(indexes={@ORM\Index(columns={"seen"}),@ORM\Index(columns={"notified"}),@ORM\Index(columns={"type"}),@ORM\Index(columns={"time"})})
  */
 class Notification {
 	/**
@@ -40,7 +40,7 @@ class Notification {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="notifications", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $user;
 
@@ -51,11 +51,13 @@ class Notification {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", fetch="EAGER")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	private $referencedUser;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", fetch="EAGER")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	private $referencedFeedEntry;
 

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -38,12 +38,14 @@ class Hashtag {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User")
+	 * @ORM\JoinColumn(onDelete="SET NULL")
 	 * @Serializer\Exclude()
 	 */
 	private $creator;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry")
+	 * @ORM\JoinColumn(onDelete="SET NULL")
 	 * @Serializer\Exclude()
 	 */
 	private $creatingEntry;

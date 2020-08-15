@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -54,6 +54,7 @@ class MediaFile {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="uploadedFiles")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 * @Serializer\Exclude()
 	 */
 	private $originalUploader;
