@@ -26,6 +26,7 @@ use qpost\Repository\MediaAttachmentRepository;
 
 /**
  * @ORM\Entity(repositoryClass=MediaAttachmentRepository::class)
+ * @ORM\Table(indexes={@ORM\Index(columns={"position"})})
  */
 class MediaAttachment {
 	/**
@@ -36,14 +37,14 @@ class MediaAttachment {
 	private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity=FeedEntry::class, inversedBy="mediaAttachments")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\ManyToOne(targetEntity=FeedEntry::class, inversedBy="mediaAttachments", cascade={"persist"})
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $feedEntry;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity=MediaFile::class, inversedBy="mediaAttachments")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\ManyToOne(targetEntity=MediaFile::class, inversedBy="mediaAttachments", cascade={"persist"})
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $mediaFile;
 

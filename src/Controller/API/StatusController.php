@@ -273,9 +273,6 @@ class StatusController extends APIController {
 
 					$this->entityManager->persist($attachment);
 
-					$feedEntry->addMediaAttachment($attachment);
-					$mediaFile->addMediaAttachment($attachment);
-
 					$position++;
 				}
 			} else {
@@ -326,9 +323,6 @@ class StatusController extends APIController {
 							->setTime(new DateTime("now"));
 
 						$this->entityManager->persist($attachment);
-
-						$feedEntry->addMediaAttachment($attachment);
-						$mediaFile->addMediaAttachment($attachment);
 					}
 				}
 			}
