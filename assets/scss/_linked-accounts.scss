@@ -24,7 +24,8 @@ $colors: (
 		"mastodon": #2B90D9,
 		"lastfm": #D51007,
 		"spotify": #1DB954,
-		"instagram": #C13584
+		"instagram": #C13584,
+		"reddit": #FF4500
 );
 
 @each $name, $color in $colors {

@@ -57,10 +57,15 @@ class LinkedAccountService {
 	public const INSTAGRAM = "INSTAGRAM";
 
 	/**
+	 * @var string REDDIT
+	 */
+	public const REDDIT = "REDDIT";
+
+	/**
 	 * @return string[]
 	 */
 	public static function all(): array {
-		$services = [self::DISCORD, self::TWITCH, self::TWITTER, self::MASTODON, self::LASTFM, self::SPOTIFY, self::INSTAGRAM];
+		$services = [self::DISCORD, self::TWITCH, self::TWITTER, self::MASTODON, self::LASTFM, self::SPOTIFY, self::INSTAGRAM, self::REDDIT];
 		$result = [];
 
 		foreach ($services as $service) {
