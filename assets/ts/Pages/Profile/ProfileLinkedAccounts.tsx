@@ -24,7 +24,6 @@ import LinkedAccountService from "../../api/src/Entity/LinkedAccountService";
 import {message, Tooltip} from "antd";
 import {copyToClipboard} from "../../Util/Clipboard";
 import __ from "../../i18n/i18n";
-import NightMode from "../../NightMode/NightMode";
 
 export default class ProfileLinkedAccounts extends Component<{
 	user: User
@@ -42,13 +41,10 @@ export default class ProfileLinkedAccounts extends Component<{
 					case LinkedAccountService.TWITTER:
 					case LinkedAccountService.LASTFM:
 					case LinkedAccountService.MASTODON:
+					case LinkedAccountService.SPOTIFY:
 						icon =
 							<i className={"service-" + account.getService().toLowerCase() + "-color fab fa-" + account.getService().toLowerCase()}/>;
 						break;
-					case LinkedAccountService.OSU:
-						icon = <img
-							src={"/assets/img/thirdparty/" + account.getService().toLowerCase() + (!NightMode.isActive() ? "-lightmode" : "") + ".png"}
-							style={{height: "1em"}} alt={account.getService()}/>
 				}
 
 				let link = "";
@@ -62,13 +58,13 @@ export default class ProfileLinkedAccounts extends Component<{
 					case LinkedAccountService.LASTFM:
 						link = "https://www.last.fm/user/" + account.getLinkedUserName();
 						break;
+					case LinkedAccountService.SPOTIFY:
+						link = "https://open.spotify.com/user/" + account.getLinkedUserId();
+						break;
 					case LinkedAccountService.MASTODON:
 						const usernameSplit = account.getLinkedUserName().split("@");
 
 						link = "http://" + usernameSplit[1] + "/@" + usernameSplit[0];
-						break;
-					case LinkedAccountService.OSU:
-						link = "https://osu.ppy.sh/users/" + account.getLinkedUserId();
 						break;
 				}
 

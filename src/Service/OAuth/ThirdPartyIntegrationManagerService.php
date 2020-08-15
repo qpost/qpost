@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -35,20 +35,23 @@ class ThirdPartyIntegrationManagerService {
 	 * @param TwitterIntegration $twitterIntegration
 	 * @param MastodonIntegration $mastodonIntegration
 	 * @param LastFmIntegration $lastFmIntegration
+	 * @param SpotifyIntegration $spotifyIntegration
 	 */
 	public function __construct(
 		DiscordIntegration $discordIntegration,
 		TwitchIntegration $twitchIntegration,
 		TwitterIntegration $twitterIntegration,
 		MastodonIntegration $mastodonIntegration,
-		LastFmIntegration $lastFmIntegration
+		LastFmIntegration $lastFmIntegration,
+		SpotifyIntegration $spotifyIntegration
 	) {
 		$this->integrationServices = [
 			$discordIntegration,
 			$twitchIntegration,
 			$twitterIntegration,
 			$mastodonIntegration,
-			$lastFmIntegration
+			$lastFmIntegration,
+			$spotifyIntegration
 		];
 	}
 
