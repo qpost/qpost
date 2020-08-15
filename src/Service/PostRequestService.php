@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -26,6 +26,7 @@ use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
 use qpost\Entity\Follower;
 use qpost\Entity\User;
+use qpost\Entity\UsernameHistoryEntry;
 use qpost\Repository\UserRepository;
 use Swift_Mailer;
 use Swift_Message;
@@ -90,6 +91,11 @@ class PostRequestService {
 															->setTime(new DateTime("now"));
 
 														$this->entityManager->persist($user);
+														$this->entityManager->persist((new UsernameHistoryEntry())
+															->setUser($user)
+															->setName($user->getUsername())
+															->setIp($ip)
+															->setTime(new DateTime("now")));
 
 														$autoFollowAccountId = $_ENV["AUTOFOLLOW_ACCOUNT_ID"];
 														if ($autoFollowAccountId) {
