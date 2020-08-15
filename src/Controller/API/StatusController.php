@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,7 +21,6 @@
 namespace qpost\Controller\API;
 
 use DateTime;
-use Doctrine\ORM\NonUniqueResultException;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use MediaEmbed\MediaEmbed;
 use qpost\Constants\APIParameterType;
@@ -31,6 +30,7 @@ use qpost\Constants\MediaFileType;
 use qpost\Constants\NotificationType;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Hashtag;
+use qpost\Entity\MediaAttachment;
 use qpost\Entity\MediaFile;
 use qpost\Entity\Notification;
 use qpost\Entity\User;
@@ -118,7 +118,6 @@ class StatusController extends APIController {
 	 * @throws InvalidTokenException
 	 * @throws MissingParameterException
 	 * @throws ResourceNotFoundException
-	 * @throws NonUniqueResultException
 	 * @throws InvalidParameterStringLengthException
 	 */
 	public function post(): Response {
@@ -207,6 +206,7 @@ class StatusController extends APIController {
 
 		$mediaFileRepository = $this->entityManager->getRepository(MediaFile::class);
 
+		$position = 1;
 		foreach ($attachments as $base64) {
 			$file = @base64_decode($base64);
 
@@ -265,10 +265,18 @@ class StatusController extends APIController {
 				}
 
 				if ($mediaFile) {
-					$feedEntry->addAttachment($mediaFile);
-					$mediaFile->addFeedEntry($feedEntry);
+					$attachment = (new MediaAttachment())
+						->setFeedEntry($feedEntry)
+						->setMediaFile($mediaFile)
+						->setPosition($position)
+						->setTime(new DateTime("now"));
 
-					$this->entityManager->persist($mediaFile);
+					$this->entityManager->persist($attachment);
+
+					$feedEntry->addMediaAttachment($attachment);
+					$mediaFile->addMediaAttachment($attachment);
+
+					$position++;
 				}
 			} else {
 				return $this->error("'attachments' has to be an array of base64 strings.", Response::HTTP_BAD_REQUEST);
@@ -311,10 +319,16 @@ class StatusController extends APIController {
 					}
 
 					if ($mediaFile) {
-						$feedEntry->addAttachment($mediaFile);
-						$mediaFile->addFeedEntry($feedEntry);
+						$attachment = (new MediaAttachment())
+							->setFeedEntry($feedEntry)
+							->setMediaFile($mediaFile)
+							->setPosition($position)
+							->setTime(new DateTime("now"));
 
-						$this->entityManager->persist($mediaFile);
+						$this->entityManager->persist($attachment);
+
+						$feedEntry->addMediaAttachment($attachment);
+						$mediaFile->addMediaAttachment($attachment);
 					}
 				}
 			}
