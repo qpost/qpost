@@ -132,7 +132,10 @@ class RedditIntegration extends ThirdPartyIntegration {
 		$data = @json_decode($content, true);
 		if (!$data) return null;
 
-		if (!isset($data["access_token"]) || !isset($data["token_type"])) return null;
+		if (!isset($data["access_token"]) || !isset($data["token_type"])) {
+			$this->logger->info("Invalid reddit response", ["data" => $data]);
+			return null;
+		}
 
 		return new ThirdPartyIntegrationExchangeCodeResult(
 			$data["access_token"],
@@ -184,14 +187,16 @@ class RedditIntegration extends ThirdPartyIntegration {
 		$data = @json_decode($content, true);
 		if (!$data) return null;
 
-		if (!isset($data["access_token"]) || !isset($data["refresh_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"])) return null;
+		if (!isset($data["access_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"])) {
+			$this->logger->info("Invalid reddit response", ["data" => $data]);
+			return null;
+		}
 
 		$expiry = new DateTime("now");
 		$expiry->add(new DateInterval("PT" . $data["expires_in"] . "S"));
 
 		$this->entityManager->persist(
 			$account->setAccessToken($data["access_token"])
-				->setRefreshToken($data["refresh_token"])
 				->setExpiry($expiry)
 		);
 
