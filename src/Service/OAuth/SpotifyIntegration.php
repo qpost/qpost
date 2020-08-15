@@ -20,8 +20,12 @@
 
 namespace qpost\Service\OAuth;
 
+use DateInterval;
+use DateTime;
 use qpost\Constants\LinkedAccountService;
+use qpost\Entity\LinkedAccount;
 use qpost\Entity\User;
+use function base64_encode;
 use function implode;
 use function is_null;
 use function json_decode;
@@ -92,5 +96,60 @@ class SpotifyIntegration extends ThirdPartyIntegration {
 			$username,
 			$avatar
 		);
+	}
+
+	public function refreshToken(LinkedAccount $account): ?LinkedAccount {
+		if (!$account->isExpired()) return $account;
+
+		if ($account->getService() !== $this->getServiceIdentifier()) return $account;
+
+		$refreshToken = $account->getRefreshToken();
+		if (is_null($refreshToken)) return null;
+
+		$baseURL = $this->getBaseURL();
+		if (is_null($baseURL)) return null;
+
+		$clientId = $account->getClientId();
+		if (is_null($clientId)) return null;
+
+		$clientSecret = $account->getClientSecret();
+		if (is_null($clientSecret)) return null;
+
+		$response = $this->httpClient->post($baseURL . "/token", [
+			"form_params" => [
+				"grant_type" => "refresh_token",
+				"refresh_token" => $refreshToken
+			],
+			"headers" => [
+				"Authorization" => "Basic " . base64_encode($clientId . ":" . $clientSecret)
+			]
+		]);
+
+		$body = $response->getBody();
+		if (is_null($body)) return null;
+
+		$content = $body->getContents();
+		$body->close();
+		if (is_null($content)) return null;
+
+		$data = @json_decode($content, true);
+		if (!$data) return null;
+
+		if (!isset($data["access_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"])) {
+			$this->logger->info("Invalid spotify response", ["response" => $data]);
+			return null;
+		}
+
+		$expiry = new DateTime("now");
+		$expiry->add(new DateInterval("PT" . $data["expires_in"] . "S"));
+
+		$this->entityManager->persist(
+			$account->setAccessToken($data["access_token"])
+				->setExpiry($expiry)
+		);
+
+		$this->entityManager->flush();
+
+		return $account;
 	}
 }
