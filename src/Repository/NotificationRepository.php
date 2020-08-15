@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,6 +20,7 @@
 
 namespace qpost\Repository;
 
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ManagerRegistry;
@@ -62,5 +63,15 @@ class NotificationRepository extends ServiceEntityRepository {
 			->getQuery()
 			->useQueryCache(true)
 			->getResult();
+	}
+
+	public function deleteStaleNotifications(): int {
+		return $this->createQueryBuilder("n")
+			->delete()
+			->where("n.seen = true")
+			->andWhere("n.time < :limit")
+			->setParameter("limit", new DateTime("-2 month"))
+			->getQuery()
+			->execute();
 	}
 }

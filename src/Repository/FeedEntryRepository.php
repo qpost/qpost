@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -23,6 +23,7 @@ namespace qpost\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ManagerRegistry;
+use PDO;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
@@ -246,5 +247,19 @@ LIMIT ? OFFSET ?", $rsm);
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * @return int
+	 * @author Mehdi Baaboura <mbaaboura@gigadrivegroup.com>
+	 */
+	public function deleteStaleShares(): int {
+		return $this->createQueryBuilder("f")
+			->delete()
+			->where("f.type = :type")
+			->setParameter("type", FeedEntryType::SHARE, PDO::PARAM_STR)
+			->andWhere("f.parent IS NULL")
+			->getQuery()
+			->execute();
 	}
 }

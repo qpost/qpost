@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -184,5 +184,19 @@ LIMIT ? OFFSET ?", $rsm);
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * @return int
+	 * @author Mehdi Baaboura <mbaaboura@gigadrivegroup.com>
+	 */
+	public function deleteStaleUsers(): int {
+		return $this->createQueryBuilder("u")
+			->delete()
+			->where("u.emailActivated = false")
+			->andWhere("u.time < :limit")
+			->setParameter("limit", new DateTime("-14 days"))
+			->getQuery()
+			->execute();
 	}
 }

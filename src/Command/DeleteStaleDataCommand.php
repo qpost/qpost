@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,18 +20,18 @@
 
 namespace qpost\Command;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use qpost\Entity\FeedEntry;
+use qpost\Entity\Notification;
 use qpost\Entity\User;
 use qpost\Service\DataDeletionService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use function count;
 
-class DeleteStaleUsersCommand extends Command {
-	protected static $defaultName = "qpost:delete-stale-users";
+class DeleteStaleDataCommand extends Command {
+	protected static $defaultName = "qpost:delete-stale-data";
 
 	private $logger;
 	private $entityManager;
@@ -46,25 +46,40 @@ class DeleteStaleUsersCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		/**
-		 * @var User[] $users
-		 */
-		$users = $this->entityManager->getRepository(User::class)->createQueryBuilder("u")
-			->where("u.emailActivated = false")
-			->andWhere("u.time < :limit")
-			->setParameter("limit", new DateTime("-14 days"))
-			->getQuery()
-			->getResult();
-
-		$output->writeln("Results: " . count($users));
-
-		foreach ($users as $user) {
-			$output->writeln("Deleting: #" . $user->getId() . " - @" . $user->getUsername());
-			$this->dataDeletionService->deleteUser($user);
-		}
+		$this->deleteStaleUsers($output);
+		$this->deleteStaleShares($output);
+		$this->deleteStaleNotifications($output);
 
 		$output->writeln("Done.");
 
 		return 0;
+	}
+
+	private function deleteStaleUsers(OutputInterface $output): void {
+		$this->separator($output);
+		$output->writeln("Deleting stale users...");
+
+		$result = $this->entityManager->getRepository(User::class)->deleteStaleUsers();
+		$output->writeln("Deleted: " . $result);
+	}
+
+	private function deleteStaleShares(OutputInterface $output): void {
+		$this->separator($output);
+		$output->writeln("Deleting stale shares...");
+
+		$result = $this->entityManager->getRepository(FeedEntry::class)->deleteStaleShares();
+		$output->writeln("Deleted: " . $result);
+	}
+
+	private function deleteStaleNotifications(OutputInterface $output): void {
+		$this->separator($output);
+		$output->writeln("Deleting stale notifications...");
+
+		$result = $this->entityManager->getRepository(Notification::class)->deleteStaleNotifications();
+		$output->writeln("Deleted: " . $result);
+	}
+
+	private function separator(OutputInterface $output): void {
+		$output->writeln("-----------------------");
 	}
 }
