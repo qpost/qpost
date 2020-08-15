@@ -24,6 +24,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Notification;
+use qpost\Entity\TemporaryOAuthCredentials;
 use qpost\Entity\User;
 use qpost\Service\DataDeletionService;
 use Symfony\Component\Console\Command\Command;
@@ -49,6 +50,7 @@ class DeleteStaleDataCommand extends Command {
 		$this->deleteStaleUsers($output);
 		$this->deleteStaleShares($output);
 		$this->deleteStaleNotifications($output);
+		$this->deleteStaleCredentials($output);
 
 		$output->writeln("Done.");
 
@@ -76,6 +78,14 @@ class DeleteStaleDataCommand extends Command {
 		$output->writeln("Deleting stale notifications...");
 
 		$result = $this->entityManager->getRepository(Notification::class)->deleteStaleNotifications();
+		$output->writeln("Deleted: " . $result);
+	}
+
+	private function deleteStaleCredentials(OutputInterface $output): int {
+		$this->separator($output);
+		$output->writeln("Deleting stale temporary OAuth credentials...");
+
+		$result = $this->entityManager->getRepository(TemporaryOAuthCredentials::class)->deleteStaleCredentials();
 		$output->writeln("Deleted: " . $result);
 	}
 
