@@ -71,7 +71,7 @@ export default class App extends Component<any, {
 		}
 	}
 
-	public static init(): void {
+	public static async init(): Promise<void> {
 		if ($("#root").length) {
 			NightMode.init();
 		} else {
@@ -80,6 +80,8 @@ export default class App extends Component<any, {
 
 				$(".settingsNav").toggleClass("navHidden");
 			});
+
+			await PhraseStorage.loadPhrases();
 		}
 
 		if ($("#relationshipListFollowing").length) {
