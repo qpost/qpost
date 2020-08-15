@@ -28,7 +28,7 @@
 
 		li {
 			@extend .small, .mr-2;
-			display: inline;
+			display: inline-block;
 		}
 	}
 }

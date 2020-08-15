@@ -15,8 +15,7 @@
 					@{{ app.user.username }}
 
 					<a class="float-right"
-					   href="{{ path("qpost_settings_accountusername") }}">({{ __("settings.account.information.username.change") }}
-						)</a>
+					   href="{{ path("qpost_settings_accountusername") }}">{{ __("settings.account.information.username.change") }}</a>
 				</div>
 			</div>
 
@@ -43,8 +42,7 @@
 					{{ app.user.birthday ? app.user.birthday|date("F jS, Y") : "N/A" }}
 
 					<a class="float-right"
-					   href="{{ path("qpost_settings_profileappearance") }}">({{ __("settings.account.information.username.change") }}
-						)</a>
+					   href="{{ path("qpost_settings_profileappearance") }}">{{ __("settings.account.information.username.change") }}</a>
 				</div>
 			</div>
 

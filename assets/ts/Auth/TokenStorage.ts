@@ -22,6 +22,7 @@ import qpostAPI from "../api/src/API/qpostAPI";
 import Auth from "./Auth";
 import API from "../API";
 import Cookies from "js-cookie";
+import User from "../api/src/Entity/User";
 
 export default class TokenStorage {
 	public static tokens: StoredToken[] = [];
@@ -37,8 +38,10 @@ export default class TokenStorage {
 					const api = new qpostAPI(API.getBaseURL(), token);
 					const user = await api.token.verify();
 
-					const storedToken = new StoredToken(token, user);
-					final.push(storedToken);
+					if (!this.hasUser(user, final)) {
+						const storedToken = new StoredToken(token, user);
+						final.push(storedToken);
+					}
 				} catch (err) {
 					console.error("Invalid token: " + token + ", skipping.");
 				}
@@ -49,6 +52,16 @@ export default class TokenStorage {
 
 			return resolve(this.tokens);
 		});
+	}
+
+	private static hasUser(user: User, tokens: StoredToken[]): boolean {
+		for (let token of tokens) {
+			if (token.getUser().getId() === user.getId()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public static getNextToken(remove?: boolean): string | undefined {
