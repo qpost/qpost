@@ -36,6 +36,7 @@ class ThirdPartyIntegrationManagerService {
 	 * @param MastodonIntegration $mastodonIntegration
 	 * @param LastFmIntegration $lastFmIntegration
 	 * @param SpotifyIntegration $spotifyIntegration
+	 * @param InstagramIntegration $instagramIntegration
 	 */
 	public function __construct(
 		DiscordIntegration $discordIntegration,
@@ -43,7 +44,8 @@ class ThirdPartyIntegrationManagerService {
 		TwitterIntegration $twitterIntegration,
 		MastodonIntegration $mastodonIntegration,
 		LastFmIntegration $lastFmIntegration,
-		SpotifyIntegration $spotifyIntegration
+		SpotifyIntegration $spotifyIntegration,
+		InstagramIntegration $instagramIntegration
 	) {
 		$this->integrationServices = [
 			$discordIntegration,
@@ -51,7 +53,8 @@ class ThirdPartyIntegrationManagerService {
 			$twitterIntegration,
 			$mastodonIntegration,
 			$lastFmIntegration,
-			$spotifyIntegration
+			$spotifyIntegration,
+			$instagramIntegration
 		];
 	}
 

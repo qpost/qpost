@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -24,6 +24,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\LinkedAccount;
@@ -165,7 +166,7 @@ class ThirdPartyIntegration {
 	 * @return string|null
 	 */
 	public function getRedirectURL(): ?string {
-		return $this->urlGenerator->generate("qpost_thirdpartyauth_callback", ["service" => strtolower($this->getServiceIdentifier())], UrlGeneratorInterface::ABSOLUTE_URL);
+		return Util::forceSSL($this->urlGenerator->generate("qpost_thirdpartyauth_callback", ["service" => strtolower($this->getServiceIdentifier())], UrlGeneratorInterface::ABSOLUTE_URL));
 	}
 
 	/**

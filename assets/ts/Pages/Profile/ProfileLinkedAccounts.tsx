@@ -42,6 +42,7 @@ export default class ProfileLinkedAccounts extends Component<{
 					case LinkedAccountService.LASTFM:
 					case LinkedAccountService.MASTODON:
 					case LinkedAccountService.SPOTIFY:
+					case LinkedAccountService.INSTAGRAM:
 						icon =
 							<i className={"service-" + account.getService().toLowerCase() + "-color fab fa-" + account.getService().toLowerCase()}/>;
 						break;
@@ -60,6 +61,9 @@ export default class ProfileLinkedAccounts extends Component<{
 						break;
 					case LinkedAccountService.SPOTIFY:
 						link = "https://open.spotify.com/user/" + account.getLinkedUserId();
+						break;
+					case LinkedAccountService.INSTAGRAM:
+						link = "https://instagram.com/" + account.getLinkedUserName();
 						break;
 					case LinkedAccountService.MASTODON:
 						const usernameSplit = account.getLinkedUserName().split("@");
