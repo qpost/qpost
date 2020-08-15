@@ -24,6 +24,7 @@ import LinkedAccountService from "../../api/src/Entity/LinkedAccountService";
 import {message, Tooltip} from "antd";
 import {copyToClipboard} from "../../Util/Clipboard";
 import __ from "../../i18n/i18n";
+import NightMode from "../../NightMode/NightMode";
 
 export default class ProfileLinkedAccounts extends Component<{
 	user: User
@@ -34,8 +35,21 @@ export default class ProfileLinkedAccounts extends Component<{
 
 		return <div className={"profileIdentities"}>
 			{identities.map((account: LinkedAccount) => {
-				const icon = <i
-					className={"service-" + account.getService().toLowerCase() + "-color fab fa-" + account.getService().toLowerCase()}/>;
+				let icon = undefined;
+				switch (account.getService()) {
+					case LinkedAccountService.DISCORD:
+					case LinkedAccountService.TWITCH:
+					case LinkedAccountService.TWITTER:
+					case LinkedAccountService.LASTFM:
+					case LinkedAccountService.MASTODON:
+						icon =
+							<i className={"service-" + account.getService().toLowerCase() + "-color fab fa-" + account.getService().toLowerCase()}/>;
+						break;
+					case LinkedAccountService.OSU:
+						icon = <img
+							src={"/assets/img/thirdparty/" + account.getService().toLowerCase() + (!NightMode.isActive() ? "-lightmode" : "") + ".png"}
+							style={{height: "1em"}} alt={account.getService()}/>
+				}
 
 				let link = "";
 				switch (account.getService()) {
@@ -52,6 +66,9 @@ export default class ProfileLinkedAccounts extends Component<{
 						const usernameSplit = account.getLinkedUserName().split("@");
 
 						link = "http://" + usernameSplit[1] + "/@" + usernameSplit[0];
+						break;
+					case LinkedAccountService.OSU:
+						link = "https://osu.ppy.sh/users/" + account.getLinkedUserId();
 						break;
 				}
 
