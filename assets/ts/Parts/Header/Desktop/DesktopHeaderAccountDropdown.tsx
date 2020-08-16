@@ -28,6 +28,12 @@ export default class DesktopHeaderAccountDropdown extends Component<{
 	open: boolean,
 	parent: DesktopHeader
 }, any> {
+	private static close(parent): void {
+		parent.setState({
+			accountDropdownOpen: false
+		});
+	}
+
 	render() {
 		const user = Auth.getCurrentUser();
 
@@ -45,28 +51,30 @@ export default class DesktopHeaderAccountDropdown extends Component<{
 
 			<hr/>
 
-			<Link to={"/profile/" + Auth.getCurrentUser().getUsername()} onClick={this.close}>
+			<Link to={"/profile/" + Auth.getCurrentUser().getUsername()}
+				  onClick={() => DesktopHeaderAccountDropdown.close(this.props.parent)}>
 				<i className="fas fa-user iconMargin-10"/>{__("navigation.account.myprofile")}
 			</Link>
 
-			<Link to={"/notifications"} onClick={this.close}>
+			<Link to={"/notifications"} onClick={() => DesktopHeaderAccountDropdown.close(this.props.parent)}>
 				<i className="fas fa-bell iconMargin-10"/>{__("navigation.account.notifications")}
 			</Link>
 
-			<Link to={"/messages"} onClick={this.close}>
+			<Link to={"/messages"} onClick={() => DesktopHeaderAccountDropdown.close(this.props.parent)}>
 				<i className="fas fa-envelope iconMargin-10"/>{__("navigation.account.messages")}
 			</Link>
 
 			<hr/>
 
-			<a href={"/settings/preferences/appearance"} onClick={this.close}>
+			<a href={"/settings/preferences/appearance"}
+			   onClick={() => DesktopHeaderAccountDropdown.close(this.props.parent)}>
 				<i className="fas fa-wrench iconMargin-10"/>{__("navigation.account.settings")}
 			</a>
 
 			<Link to={"#"} onClick={(e) => {
 				e.preventDefault();
 
-				this.close();
+				DesktopHeaderAccountDropdown.close(this.props.parent);
 				AccountSwitcher.open();
 			}}>
 				<i className={"fas fa-user-friends iconMargin-10"}/>{__("navigation.account.switch")}
@@ -75,17 +83,11 @@ export default class DesktopHeaderAccountDropdown extends Component<{
 			<Link to={"#"} onClick={(e) => {
 				e.preventDefault();
 
-				this.close();
+				DesktopHeaderAccountDropdown.close(this.props.parent);
 				Auth.logout();
 			}}>
 				<i className="fas fa-sign-out-alt iconMargin-10"/>{__("navigation.account.logout")}
 			</Link>
 		</div>;
-	}
-
-	private close(): void {
-		this.props.parent.setState({
-			accountDropdownOpen: false
-		});
 	}
 }
