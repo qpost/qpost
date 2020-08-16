@@ -67,7 +67,7 @@ export default class App extends Component<any, {
 		super(props);
 
 		this.state = {
-			validatedLogin: !Auth.isLoggedIn(),
+			validatedLogin: false,
 			error: null
 		}
 	}
@@ -124,31 +124,38 @@ export default class App extends Component<any, {
 	}
 
 	componentDidMount(): void {
-		if (Auth.isLoggedIn()) {
 			(async () => {
 				try {
-					// load user info
-					const user = await API.i.token.verify();
-					Auth.setCurrentUser(user);
+					if (Auth.isLoggedIn()) {
+						// load user info
+						const user = await API.i.token.verify();
+						Auth.setCurrentUser(user);
 
-					// load TokenStorage
-					await TokenStorage.loadTokens();
+						// load TokenStorage
+						await TokenStorage.loadTokens();
+					}
 
 					// load translations
 					await PhraseStorage.loadPhrases();
 
-					// load changelog
-					await ChangelogModal.loadChangelog();
+					if (Auth.isLoggedIn()) {
+						// load changelog
+						await ChangelogModal.loadChangelog();
 
-					// load badge status
-					BadgeStatus.update(() => {
-						PushNotificationsManager.init();
-						BadgeUpdater.init();
+						// load badge status
+						BadgeStatus.update(() => {
+							PushNotificationsManager.init();
+							BadgeUpdater.init();
 
+							this.setState({
+								validatedLogin: true
+							});
+						});
+					} else {
 						this.setState({
 							validatedLogin: true
 						});
-					});
+					}
 				} catch (err) {
 					this.setState({
 						error: err
@@ -157,7 +164,7 @@ export default class App extends Component<any, {
 					Auth.logout(false, true);
 				}
 			})();
-		}
+
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
