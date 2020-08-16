@@ -48,6 +48,7 @@ import LeftSidebar from "../../Component/Layout/LeftSidebar";
 import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
 import BioText from "../../Component/BioText";
 import __ from "../../i18n/i18n";
+import PrivacyBadge from "../../Component/PrivacyBadge";
 
 export default class Status extends Component<any, {
 	status: FeedEntry,
@@ -142,7 +143,8 @@ export default class Status extends Component<any, {
 								<div className={"float-left nameContainer"}>
 									<div className={"displayName"}>
 										<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-											{user.getDisplayName()}<VerifiedBadge target={user}/>
+											{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge
+											target={user}/>
 										</Link>
 									</div>
 

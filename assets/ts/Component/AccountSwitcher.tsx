@@ -23,6 +23,7 @@ import VerifiedBadge from "./VerifiedBadge";
 import TokenStorage from "../Auth/TokenStorage";
 import StoredToken from "../Auth/StoredToken";
 import __ from "../i18n/i18n";
+import PrivacyBadge from "./PrivacyBadge";
 
 export default class AccountSwitcher extends Component<any, {
 	open: boolean
@@ -88,7 +89,8 @@ export default class AccountSwitcher extends Component<any, {
 						</div>
 
 						<div className={"info"}>
-							<div className={"displayName"}>{user.getDisplayName()}<VerifiedBadge target={user}/></div>
+							<div className={"displayName"}>{user.getDisplayName()}<VerifiedBadge
+								target={user}/><PrivacyBadge target={user}/></div>
 							<div className={"userName"}>{"@" + user.getUsername()}</div>
 						</div>
 					</div>;

@@ -53,6 +53,7 @@ import Replies from "./Replies";
 import Storage from "../../Util/Storage";
 import ProfileLinkedAccounts from "./ProfileLinkedAccounts";
 import __ from "../../i18n/i18n";
+import PrivacyBadge from "../../Component/PrivacyBadge";
 
 export declare type ProfilePageProps = {
 	user: User,
@@ -125,7 +126,8 @@ export default class Profile extends Component<any, {
 								 }}/>
 						</div>
 
-						<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/><ProfileDropdown
+						<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge
+							target={user}/><ProfileDropdown
 							user={user} className={"float-right"}/></h4>
 						<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge target={user}/>
 						</div>
@@ -164,7 +166,8 @@ export default class Profile extends Component<any, {
 								</div>
 
 								<div className={"float-left"}>
-									<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/></h4>
+									<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge
+										target={user}/><PrivacyBadge target={user}/></h4>
 									<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge
 										target={user}/></div>
 								</div>

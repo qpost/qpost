@@ -35,6 +35,7 @@ import FeedEntry from "../../api/src/Entity/FeedEntry";
 import FeedEntryType from "../../api/src/Entity/FeedEntryType";
 import User from "../../api/src/Entity/User";
 import __ from "../../i18n/i18n";
+import PrivacyBadge from "../PrivacyBadge";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
@@ -83,7 +84,8 @@ export default class FeedEntryListItem extends Component<{
 						<p className={"mb-0 small text-muted"}>
 							<i className={"fas fa-retweet text-primary"}/> <Link to={"/profile/" + user.getUsername()}
 																				 className={"font-weight-bold clearUnderline"}>{user.getDisplayName()}</Link><VerifiedBadge
-							target={user}/> shared &middot; <TimeAgo time={entry.getTime()} short={true}/>
+							target={user}/><PrivacyBadge target={user}/> shared &middot; <TimeAgo time={entry.getTime()}
+																								  short={true}/>
 						</p>
 					</div>;
 
@@ -137,7 +139,8 @@ export default class FeedEntryListItem extends Component<{
 									<p className={"float-left ml-1 mb-0"}>
 										<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
 										<span className={"font-weight-bold convertEmoji mr-2"}>
-											{user.getDisplayName()}<VerifiedBadge target={user}/>
+											{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge
+											target={user}/>
 										</span>
 										</Link>
 

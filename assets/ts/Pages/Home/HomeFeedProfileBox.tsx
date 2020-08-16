@@ -25,6 +25,7 @@ import VerifiedBadge from "../../Component/VerifiedBadge";
 import {formatNumberShort} from "../../Util/Format";
 import {Card} from "antd";
 import __ from "../../i18n/i18n";
+import PrivacyBadge from "../../Component/PrivacyBadge";
 
 export default class HomeFeedProfileBox extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -64,7 +65,8 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 										  wordWrap: "normal",
 										  fontSize: "16px"
 									  }}>
-									{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/>
+									{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/><PrivacyBadge
+									target={currentUser}/>
 								</span>
 						</Link>
 

@@ -31,6 +31,7 @@ import Follower from "../../api/src/Entity/Follower";
 import Block from "../../api/src/Entity/Block";
 import User from "../../api/src/Entity/User";
 import __ from "../../i18n/i18n";
+import PrivacyBadge from "../PrivacyBadge";
 
 export default class RelationshipList extends Component<{
 	type: "BLOCKED" | "FOLLOWERS" | "FOLLOWING"
@@ -156,7 +157,7 @@ export default class RelationshipList extends Component<{
 					<a href={"/" + user.getUsername()} className={"clearUnderline"}>
 						<Typography.Paragraph ellipsis className={"float-left ml-2 mb-0"}>
 							<p className={"text-white font-weight-bold mb-0"}>
-								{user.getDisplayName()}<VerifiedBadge target={user}/>
+								{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge target={user}/>
 							</p>
 
 							<p className={"text-muted mb-0 mt-n1"}>

@@ -32,6 +32,7 @@ import AppearanceSettings from "../Util/AppearanceSettings";
 import BaseObject from "../api/src/BaseObject";
 import User from "../api/src/Entity/User";
 import __ from "../i18n/i18n";
+import PrivacyBadge from "./PrivacyBadge";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -94,7 +95,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 										 }}>
 										<span
 											className={"font-weight-bold"}>{suggestedUser.getDisplayName()}</span><VerifiedBadge
-										target={suggestedUser}/> <span
+										target={suggestedUser}/><PrivacyBadge target={suggestedUser}/> <span
 										className={"text-muted small"}>@{suggestedUser.getUsername()}</span>
 									</div>
 									<br/>

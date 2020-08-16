@@ -27,6 +27,7 @@ import API from "../../API";
 import FollowRequestNotification from "../../Pages/Notifications/FollowRequestNotification";
 import User from "../../api/src/Entity/User";
 import __ from "../../i18n/i18n";
+import PrivacyBadge from "../PrivacyBadge";
 
 const FollowerListItemColProps = {
 	sm: 12
@@ -82,7 +83,7 @@ export default class FollowerListItem extends Component<{
 				<div className={"float-left ml-2 nameContainer"}>
 					<div className={"displayName"}>
 						<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-							{user.getDisplayName()}<VerifiedBadge target={user}/>
+							{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge target={user}/>
 						</Link>
 					</div>
 

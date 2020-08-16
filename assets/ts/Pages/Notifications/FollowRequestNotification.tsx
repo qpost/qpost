@@ -24,6 +24,7 @@ import {Link} from "react-router-dom";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import TimeAgo from "../../Component/TimeAgo";
 import FollowerListItem from "../../Component/User/FollowerListItem";
+import PrivacyBadge from "../../Component/PrivacyBadge";
 
 export default class FollowRequestNotification extends Component<{
 	notification: Notification
@@ -51,7 +52,8 @@ export default class FollowRequestNotification extends Component<{
 					<i className={"fas fa-user-plus text-info"}/> <Link to={"/profile/" + user.getUsername()}
 																		className={"font-weight-bold clearUnderline"}><img
 					src={user.getAvatarURL()} width={24} height={24} className={"rounded mr-1"}
-					alt={user.getUsername()}/>{user.getDisplayName()}</Link><VerifiedBadge target={user}/> requested to
+					alt={user.getUsername()}/>{user.getDisplayName()}</Link><VerifiedBadge target={user}/><PrivacyBadge
+					target={user}/> requested to
 					follow you.<span className={"text-muted ml-2"}><i className="far fa-clock"/> <TimeAgo
 					time={notification.getTime()} short={true}/></span>
 				</p>

@@ -32,6 +32,7 @@ import AppearanceSettings from "../Util/AppearanceSettings";
 import BaseObject from "../api/src/BaseObject";
 import User from "../api/src/Entity/User";
 import __ from "../i18n/i18n";
+import PrivacyBadge from "./PrivacyBadge";
 
 export default class UpcomingBirthdays extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -106,7 +107,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 										 }}>
 										<span
 											className={"font-weight-bold"}>{user.getDisplayName()}</span><VerifiedBadge
-										target={user}/> <span
+										target={user}/><PrivacyBadge target={user}/> <span
 										className={"text-muted small"}>@{user.getUsername()}</span>
 									</div>
 									<br/>

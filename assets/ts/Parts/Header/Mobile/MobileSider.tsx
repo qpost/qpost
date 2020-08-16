@@ -31,6 +31,7 @@ import {Link} from "react-router-dom";
 import VerifiedBadge from "../../../Component/VerifiedBadge";
 import AccountSwitcher from "../../../Component/AccountSwitcher";
 import __ from "../../../i18n/i18n";
+import PrivacyBadge from "../../../Component/PrivacyBadge";
 import ClickEvent = JQuery.ClickEvent;
 
 export default class MobileSider extends Component<{
@@ -98,7 +99,8 @@ export default class MobileSider extends Component<{
 
 					<div style={{float: "left", width: "calc(100% - 40px - 20px)"}}>
 						<div className={"displayName"}>
-							{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/>
+							{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/><PrivacyBadge
+							target={currentUser}/>
 						</div>
 
 						<div className={"username"}>

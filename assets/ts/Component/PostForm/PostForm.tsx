@@ -46,6 +46,7 @@ import FeedEntry from "../../api/src/Entity/FeedEntry";
 import FeedEntryType from "../../api/src/Entity/FeedEntryType";
 import User from "../../api/src/Entity/User";
 import __ from "../../i18n/i18n";
+import PrivacyBadge from "../PrivacyBadge";
 
 export default class PostForm extends Component<any, {
 	mobile: boolean,
@@ -374,7 +375,7 @@ export default class PostForm extends Component<any, {
 
 							<span>
 								<span className={"font-weight-bold"}>
-									{user.getDisplayName()}<VerifiedBadge target={user}/>
+									{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge target={user}/>
 								</span>
 
 								<span className={"text-muted ml-2"}>
