@@ -44,6 +44,9 @@ class ChangelogController extends APIController {
 		$currentVersion = $_ENV["VERSION"];
 		$latestSeenVersion = $this->cutV(Util::def($user->getLatestSeenChangelog(), "1.0.0"));
 
+		// Don't query if latest seen version is the current one
+		if ($currentVersion === $latestSeenVersion) return $this->response(null);
+
 		/**
 		 * @var ChangelogEntry[] $latest
 		 */
