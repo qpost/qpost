@@ -45,5 +45,5 @@ html.nightMode, html.nightMode > body {
 	@import "text";
 	@import "util";
 
-	@include desktopHeaderUserStyle(darken(#001529, 3%));
+	@include desktopHeaderUserStyle(lighten(#001529, 3%));
 }
