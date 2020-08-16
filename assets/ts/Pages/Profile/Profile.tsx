@@ -31,7 +31,6 @@ import Alert from "antd/es/alert";
 import "antd/es/alert/style";
 import FollowButton from "../../Component/FollowButton";
 import VerifiedBadge from "../../Component/VerifiedBadge";
-import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SuggestedUsers from "../../Component/SuggestedUsers";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {Card, Menu} from "antd";
@@ -119,41 +118,39 @@ export default class Profile extends Component<any, {
 					<ProfileHeader user={user}/>
 
 					<LeftSidebar negativeOffset={!!user.getHeaderURL()}>
-						<SidebarStickyContent>
-							<div className={"text-center"}>
-								<img className={"mainAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}
-									 style={{
-										 backgroundColor: "#000"
-									 }}/>
-							</div>
+						<div className={"text-center"}>
+							<img className={"mainAvatar"} src={user.getAvatarURL()} alt={user.getUsername()}
+								 style={{
+									 backgroundColor: "#000"
+								 }}/>
+						</div>
 
-							<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/><ProfileDropdown
-								user={user} className={"float-right"}/></h4>
-							<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge target={user}/>
-							</div>
+						<h4 className={"mb-0"}>{user.getDisplayName()}<VerifiedBadge target={user}/><ProfileDropdown
+							user={user} className={"float-right"}/></h4>
+						<div className={"usernameDisplay"}>@{user.getUsername()}<FollowsYouBadge target={user}/>
+						</div>
 
-							<Biography user={user}/>
+						<Biography user={user}/>
 
-							<p className={"my-2 text-muted"}>
-								<i className={"fas fa-globe"}/><span
-								style={{marginLeft: "5px"}}>Joined {registerDate.toLocaleString("default", {
+						<p className={"my-2 text-muted"}>
+							<i className={"fas fa-globe"}/><span
+							style={{marginLeft: "5px"}}>Joined {registerDate.toLocaleString("default", {
+							month: "long",
+							year: "numeric"
+						})}</span>
+							{birthDate ? <div>
+								<i className={"fas fa-birthday-cake"}/><span
+								style={{marginLeft: "7px"}}>{birthDate.toLocaleString("default", {
 								month: "long",
+								day: "numeric",
 								year: "numeric"
 							})}</span>
-								{birthDate ? <div>
-									<i className={"fas fa-birthday-cake"}/><span
-									style={{marginLeft: "7px"}}>{birthDate.toLocaleString("default", {
-									month: "long",
-									day: "numeric",
-									year: "numeric"
-								})}</span>
-								</div> : ""}
-							</p>
+							</div> : ""}
+						</p>
 
-							<ProfileLinkedAccounts user={user}/>
+						<ProfileLinkedAccounts user={user}/>
 
-							<FollowButton target={user} block/>
-						</SidebarStickyContent>
+						<FollowButton target={user} block/>
 					</LeftSidebar>
 
 					<PageContent leftSidebar rightSidebar>
@@ -283,13 +280,11 @@ export default class Profile extends Component<any, {
 					</PageContent>
 
 					<RightSidebar>
-						<SidebarStickyContent>
-							<FollowersYouKnow user={this.state.user}/>
+						<FollowersYouKnow user={this.state.user}/>
 
-							<SuggestedUsers/>
+						<SuggestedUsers/>
 
-							<SidebarFooter/>
-						</SidebarStickyContent>
+						<SidebarFooter/>
 					</RightSidebar>
 				</ContentBase>
 			</div>;

@@ -20,12 +20,31 @@
 import React, {Component} from "react";
 import Col from "antd/es/col";
 import "antd/es/col/style";
+import LeftSidebar from "./LeftSidebar";
+import SidebarStickyContent from "./SidebarStickyContent";
 
 export default class RightSidebar extends Component<any, any> {
+	public static INSTANCE: RightSidebar | null = null;
+
+	componentDidMount() {
+		RightSidebar.INSTANCE = this;
+		LeftSidebar.update();
+	}
+
+	componentWillUnmount() {
+		if (RightSidebar.INSTANCE === this) {
+			RightSidebar.INSTANCE = null;
+
+			LeftSidebar.update();
+		}
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return (
 			<Col xl={6} className={"d-none d-xl-block"}>
-				{this.props.children}
+				<SidebarStickyContent>
+					{this.props.children}
+				</SidebarStickyContent>
 			</Col>
 		)
 	}

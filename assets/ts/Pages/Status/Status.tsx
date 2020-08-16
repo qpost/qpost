@@ -37,7 +37,6 @@ import FollowButton from "../../Component/FollowButton";
 import FeedEntryListItemAttachments from "../../Component/FeedEntry/FeedEntryListItemAttachments";
 import FeedEntryActionButtons from "../../Component/FeedEntry/Buttons/FeedEntryActionButtons";
 import SuggestedUsers from "../../Component/SuggestedUsers";
-import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
 import {limitString} from "../../Util/Format";
@@ -118,9 +117,7 @@ export default class Status extends Component<any, {
 
 		return <ContentBase>
 			<LeftSidebar>
-				<SidebarStickyContent>
-					<HomeFeedProfileBox/>
-				</SidebarStickyContent>
+				<HomeFeedProfileBox/>
 			</LeftSidebar>
 
 			<PageContent leftSidebar rightSidebar>
@@ -215,11 +212,9 @@ export default class Status extends Component<any, {
 			</PageContent>
 
 			<RightSidebar>
-				<SidebarStickyContent>
-					<SuggestedUsers/>
+				<SuggestedUsers/>
 
-					<SidebarFooter/>
-				</SidebarStickyContent>
+				<SidebarFooter/>
 			</RightSidebar>
 		</ContentBase>;
 	}

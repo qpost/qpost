@@ -20,7 +20,6 @@
 import React, {Component} from "react";
 import ContentBase from "../../Component/Layout/ContentBase";
 import PageContent from "../../Component/Layout/PageContent";
-import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import SuggestedUsers from "../../Component/SuggestedUsers";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import RightSidebar from "../../Component/Layout/RightSidebar";
@@ -106,10 +105,8 @@ export default class Notifications extends Component<any, {
 
 		return <ContentBase>
 			<LeftSidebar>
-				<SidebarStickyContent>
-					<HomeFeedProfileBox/>
-					<TrendingTopics limit={5}/>
-				</SidebarStickyContent>
+				<HomeFeedProfileBox/>
+				<TrendingTopics limit={5}/>
 			</LeftSidebar>
 
 			<PageContent leftSidebar rightSidebar>
@@ -169,13 +166,11 @@ export default class Notifications extends Component<any, {
 			</PageContent>
 
 			<RightSidebar>
-				<SidebarStickyContent>
-					<SuggestedUsers/>
+				<SuggestedUsers/>
 
-					<UpcomingBirthdays/>
+				<UpcomingBirthdays/>
 
-					<SidebarFooter/>
-				</SidebarStickyContent>
+				<SidebarFooter/>
 			</RightSidebar>
 		</ContentBase>;
 	}

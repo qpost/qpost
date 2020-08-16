@@ -25,7 +25,6 @@ import HomeFeedProfileBox from "./HomeFeedProfileBox";
 import SuggestedUsers from "../../Component/SuggestedUsers";
 import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import ContentBase from "../../Component/Layout/ContentBase";
-import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import DummyPostForm from "../../Component/PostForm/DummyPostForm";
 import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
@@ -43,11 +42,9 @@ export default class HomeFeed extends Component<any, any> {
 		return (
 			<ContentBase>
 				<LeftSidebar>
-					<SidebarStickyContent>
-						<HomeFeedProfileBox/>
+					<HomeFeedProfileBox/>
 
-						<TrendingTopics limit={5}/>
-					</SidebarStickyContent>
+					<TrendingTopics limit={5}/>
 				</LeftSidebar>
 
 				<PageContent leftSidebar rightSidebar>
@@ -58,12 +55,10 @@ export default class HomeFeed extends Component<any, any> {
 				</PageContent>
 
 				<RightSidebar>
-					<SidebarStickyContent>
-						<SuggestedUsers/>
-						<UpcomingBirthdays/>
+					<SuggestedUsers/>
+					<UpcomingBirthdays/>
 
-						<SidebarFooter/>
-					</SidebarStickyContent>
+					<SidebarFooter/>
 				</RightSidebar>
 			</ContentBase>
 		)
