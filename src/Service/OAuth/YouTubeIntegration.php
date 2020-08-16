@@ -113,7 +113,8 @@ class YouTubeIntegration extends ThirdPartyIntegration {
 
 		$id = $result["id"];
 		$username = $snippet["title"];
-		$avatar = isset($snippet["thumbnails"]) && isset($snippet["thumbnails"]["medium"]) && isset($snippet["thumbnails"]["medium"]["url"]) ? $snippet["thumbnails"]["medium"]["url"] : null;
+//		$avatar = isset($snippet["thumbnails"]) && isset($snippet["thumbnails"]["medium"]) && isset($snippet["thumbnails"]["medium"]["url"]) ? $snippet["thumbnails"]["medium"]["url"] : null;
+		$avatar = null;
 
 		$this->logger->info("YouTube identification", ["channel" => $channel]);
 
