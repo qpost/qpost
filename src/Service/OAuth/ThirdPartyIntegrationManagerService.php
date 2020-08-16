@@ -38,6 +38,7 @@ class ThirdPartyIntegrationManagerService {
 	 * @param SpotifyIntegration $spotifyIntegration
 	 * @param InstagramIntegration $instagramIntegration
 	 * @param RedditIntegration $redditIntegration
+	 * @param YouTubeIntegration $youTubeIntegration
 	 */
 	public function __construct(
 		DiscordIntegration $discordIntegration,
@@ -47,7 +48,8 @@ class ThirdPartyIntegrationManagerService {
 		LastFmIntegration $lastFmIntegration,
 		SpotifyIntegration $spotifyIntegration,
 		InstagramIntegration $instagramIntegration,
-		RedditIntegration $redditIntegration
+		RedditIntegration $redditIntegration,
+		YouTubeIntegration $youTubeIntegration
 	) {
 		$this->integrationServices = [
 			$discordIntegration,
@@ -57,7 +59,8 @@ class ThirdPartyIntegrationManagerService {
 			$lastFmIntegration,
 			$spotifyIntegration,
 			$instagramIntegration,
-			$redditIntegration
+			$redditIntegration,
+			$youTubeIntegration
 		];
 	}
 

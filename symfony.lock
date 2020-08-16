@@ -114,6 +114,21 @@
     "giggsey/locale": {
         "version": "1.8"
     },
+    "google/apiclient": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "49c5d7a66d863d28513979bf0666dc77599100c0"
+        },
+        "files": [
+            "config/packages/google_apiclient.yaml"
+        ]
+    },
+    "google/apiclient-services": {
+        "version": "v0.142"
+    },
     "google/auth": {
         "version": "v1.6.1"
     },
@@ -233,6 +248,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpseclib/phpseclib": {
+        "version": "2.0.28"
     },
     "psr/cache": {
         "version": "1.0.1"

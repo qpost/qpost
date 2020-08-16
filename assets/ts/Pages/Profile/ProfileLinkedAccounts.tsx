@@ -44,6 +44,7 @@ export default class ProfileLinkedAccounts extends Component<{
 					case LinkedAccountService.SPOTIFY:
 					case LinkedAccountService.INSTAGRAM:
 					case LinkedAccountService.REDDIT:
+					case LinkedAccountService.YOUTUBE:
 						icon =
 							<i className={"service-" + account.getService().toLowerCase() + "-color fab fa-" + account.getService().toLowerCase()}/>;
 						break;
@@ -68,6 +69,9 @@ export default class ProfileLinkedAccounts extends Component<{
 						break;
 					case LinkedAccountService.REDDIT:
 						link = "https://reddit.com/u/" + account.getLinkedUserName();
+						break;
+					case LinkedAccountService.YOUTUBE:
+						link = "https://youtube.com/channel/" + account.getLinkedUserId();
 						break;
 					case LinkedAccountService.MASTODON:
 						const usernameSplit = account.getLinkedUserName().split("@");
