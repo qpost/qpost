@@ -227,7 +227,7 @@ export default class PostForm extends Component<any, {
 
 				AntMessage.success(__("postForm.success"));
 
-				if (entryList && post.getType() === FeedEntryType.POST && ((!post.getText()) || (post.getText() && !post.getText().startsWith("@")))) {
+				if (entryList && post.getType() === FeedEntryType.POST) {
 					entryList.prependEntry(post);
 				} else if (replyList && post.getType() === FeedEntryType.REPLY) {
 					replyList.prependEntry(post);
