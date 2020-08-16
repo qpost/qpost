@@ -260,6 +260,12 @@ class User implements UserInterface {
 	 */
 	private $interfaceLanguage;
 
+	/**
+	 * @ORM\Column(type="string", length=16, nullable=true)
+	 * @Serializer\Exclude()
+	 */
+	private $latestSeenChangelog;
+
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
 		$this->tokens = new ArrayCollection();
@@ -1462,6 +1468,16 @@ class User implements UserInterface {
 
 	public function setInterfaceLanguage(?string $interfaceLanguage): self {
 		$this->interfaceLanguage = $interfaceLanguage;
+
+		return $this;
+	}
+
+	public function getLatestSeenChangelog(): ?string {
+		return $this->latestSeenChangelog;
+	}
+
+	public function setLatestSeenChangelog(?string $latestSeenChangelog): self {
+		$this->latestSeenChangelog = $latestSeenChangelog;
 
 		return $this;
 	}

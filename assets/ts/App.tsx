@@ -57,6 +57,7 @@ import AvatarSelector from "./Component/Settings/AvatarSelector";
 import TokenStorage from "./Auth/TokenStorage";
 import AccountSwitcher from "./Component/AccountSwitcher";
 import PhraseStorage from "./i18n/PhraseStorage";
+import ChangelogModal from "./Component/ChangelogModal";
 
 export default class App extends Component<any, {
 	validatedLogin: boolean,
@@ -136,6 +137,9 @@ export default class App extends Component<any, {
 					// load translations
 					await PhraseStorage.loadPhrases();
 
+					// load changelog
+					await ChangelogModal.loadChangelog();
+
 					// load badge status
 					BadgeStatus.update(() => {
 						PushNotificationsManager.init();
@@ -182,6 +186,7 @@ export default class App extends Component<any, {
 												<PostForm/>
 												<BlockModal/>
 												<AccountSwitcher/>
+												<ChangelogModal/>
 
 												<Switch>
 													{Auth.isLoggedIn() ?

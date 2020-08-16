@@ -96,6 +96,9 @@
     "egulias/email-validator": {
         "version": "2.1.11"
     },
+    "erusev/parsedown": {
+        "version": "1.7.4"
+    },
     "fgrosse/phpasn1": {
         "version": "v2.1.1"
     },

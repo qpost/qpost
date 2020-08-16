@@ -4,3 +4,4 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
         i18n: '@qpost\Service\TranslationService'
+        gitlab: '@qpost\Service\GitLabService'

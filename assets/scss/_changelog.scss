@@ -17,33 +17,25 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-@import "variables";
-@import "~bootstrap/scss/bootstrap";
-@import "util/index";
+.ant-modal-content {
+	.ant-modal-body {
+		.changelogModalBody {
+			h1, h2, h3, h4, h5, h6 {
+				$color: lighten(#001529, 45%) !important;
 
-@import "account-switcher";
-@import "alerts";
-@import "base";
-@import "buttons";
-@import "changelog";
-@import "download";
-@import "emoji";
-@import "feed";
-@import "feedButtons";
-@import "followButtons";
-@import "footer";
-@import "forms";
-@import "gif-player";
-@import "home";
-@import "linked-accounts";
-@import "media";
-@import "mobile";
-@import "navigation";
-@import "notifications";
-@import "post-forms";
-@import "profile";
-@import "status";
-@import "trends";
-@import "user-box";
-@import "nightmode/index";
-@import "settings/index";
+				color: $color;
+				font-size: 16px;
+				font-weight: bold;
+				padding-bottom: 5px;
+				border-bottom: 1px solid $color;
+				text-transform: uppercase;
+			}
+
+			ul {
+				list-style-type: square;
+				padding-left: 20px;
+				margin-bottom: 0;
+			}
+		}
+	}
+}
