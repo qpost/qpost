@@ -188,6 +188,8 @@ class StatusController extends APIController {
 			}
 		}
 
+		$notifications = [];
+
 		// handle reply notification
 		if ($parent && $type === FeedEntryType::REPLY) {
 			$parentUser = $parent->getUser();
@@ -201,6 +203,8 @@ class StatusController extends APIController {
 					->setTime(new DateTime("now"));
 
 				$this->entityManager->persist($notification);
+
+				$notifications[] = $notification;
 			}
 		}
 
@@ -362,11 +366,17 @@ class StatusController extends APIController {
 						->setTime(new DateTime("now"));
 
 					$this->entityManager->persist($notification);
+
+					$notifications[] = $notification;
 				}
 			}
 		}
 
 		$this->entityManager->flush();
+
+		foreach ($notifications as $notification) {
+			$this->messengerService->sendPushNotificationMessage($notification);
+		}
 
 		return $this->response($feedEntry);
 	}

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -97,13 +97,19 @@ class APIService {
 	 */
 	private $urlGenerator;
 
-	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security, UrlGeneratorInterface $urlGenerator) {
+	/**
+	 * @var MessengerService $messengerService
+	 */
+	public $messengerService;
+
+	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security, UrlGeneratorInterface $urlGenerator, MessengerService $messengerService) {
 		$this->logger = $logger;
 		$this->entityManager = $entityManager;
 		$this->requestStack = $requestStack;
 		$this->kernel = $kernel;
 		$this->security = $security;
 		$this->urlGenerator = $urlGenerator;
+		$this->messengerService = $messengerService;
 		$this->serializer = SerializerBuilder::create()
 			->setDebug($kernel->isDebug())
 			->setCacheDir(__DIR__ . "/../../var/cache/" . $kernel->getEnvironment() . "/jms")
@@ -420,6 +426,8 @@ class APIService {
 				$this->entityManager->persist($notification);
 				$this->entityManager->flush();
 
+				$this->messengerService->sendPushNotificationMessage($notification);
+
 				return true;
 			} else {
 				return false;
@@ -446,6 +454,10 @@ class APIService {
 		}
 
 		$this->entityManager->flush();
+
+		if (isset($notification)) {
+			$this->messengerService->sendPushNotificationMessage($notification);
+		}
 
 		return true;
 	}

@@ -66,6 +66,7 @@ class APIController extends qpostController {
 	protected $logger;
 	protected $dataDeletionService;
 	protected $storageService;
+	protected $messengerService;
 
 	public function __construct(
 		GigadriveGeneralService $generalService,
@@ -84,6 +85,7 @@ class APIController extends qpostController {
 		$this->logger = $logger;
 		$this->dataDeletionService = $dataDeletionService;
 		$this->storageService = $storageService;
+		$this->messengerService = $apiService->messengerService;
 	}
 
 	/**

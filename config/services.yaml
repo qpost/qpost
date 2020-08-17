@@ -26,6 +26,10 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    qpost\Messenger\Handler\:
+        resource: '../src/Messenger/Handler'
+        tags: ['messenger.message_handler']
+
     qpost\Service\PushSubscriptionService:
         class: qpost\Service\PushSubscriptionService
         arguments: ["@doctrine", "@logger"]

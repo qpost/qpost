@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -120,6 +120,8 @@ class FollowRequestController extends APIController {
 			$this->entityManager->remove($notification);
 		}
 
+		$newNotification = null;
+
 		if ($accept) {
 			// create follower data
 			$this->entityManager->persist((new Follower())
@@ -128,17 +130,23 @@ class FollowRequestController extends APIController {
 				->setTime(new DateTime("now")));
 
 			// create notification
-			$this->entityManager->persist((new Notification())
+			$newNotification = (new Notification())
 				->setUser($to)
 				->setType(NotificationType::NEW_FOLLOWER)
 				->setReferencedUser($from)
 				->setSeen(false)
 				->setNotified(false)
-				->setTime(new DateTime("now")));
+				->setTime(new DateTime("now"));
+
+			$this->entityManager->persist($newNotification);
 		}
 
 		$this->entityManager->remove($followRequest);
 		$this->entityManager->flush();
+
+		if (!is_null($newNotification)) {
+			$this->messengerService->sendPushNotificationMessage($newNotification);
+		}
 
 		return $this->response();
 	}

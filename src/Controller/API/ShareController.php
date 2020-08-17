@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -103,6 +103,10 @@ class ShareController extends APIController {
 		}
 
 		$this->entityManager->flush();
+
+		if (isset($notification)) {
+			$this->messengerService->sendPushNotificationMessage($notification);
+		}
 
 		return $this->response($share);
 	}
