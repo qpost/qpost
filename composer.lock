@@ -4,8 +4,93 @@
 		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
 		"This file is @generated automatically"
 	],
-	"content-hash": "5fb70ac2bc3ad2b0f563a4a85407bf58",
+	"content-hash": "cb41a5e7f675a0161edf36a35d11d532",
 	"packages": [
+		{
+			"name": "aws/aws-sdk-php",
+			"version": "3.149.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/aws/aws-sdk-php.git",
+				"reference": "8630a2426622d003e27382e2bd129cde5678ae85"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8630a2426622d003e27382e2bd129cde5678ae85",
+				"reference": "8630a2426622d003e27382e2bd129cde5678ae85",
+				"shasum": ""
+			},
+			"require": {
+				"ext-json": "*",
+				"ext-pcre": "*",
+				"ext-simplexml": "*",
+				"guzzlehttp/guzzle": "^5.3.3|^6.2.1|^7.0",
+				"guzzlehttp/promises": "^1.0",
+				"guzzlehttp/psr7": "^1.4.1",
+				"mtdowling/jmespath.php": "^2.5",
+				"php": ">=5.5"
+			},
+			"require-dev": {
+				"andrewsville/php-token-reflection": "^1.4",
+				"aws/aws-php-sns-message-validator": "~1.0",
+				"behat/behat": "~3.0",
+				"doctrine/cache": "~1.4",
+				"ext-dom": "*",
+				"ext-openssl": "*",
+				"ext-pcntl": "*",
+				"ext-sockets": "*",
+				"nette/neon": "^2.3",
+				"paragonie/random_compat": ">= 2",
+				"phpunit/phpunit": "^4.8.35|^5.4.3",
+				"psr/cache": "^1.0",
+				"psr/simple-cache": "^1.0",
+				"sebastian/comparator": "^1.2.3"
+			},
+			"suggest": {
+				"aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
+				"doctrine/cache": "To use the DoctrineCacheAdapter",
+				"ext-curl": "To send requests using cURL",
+				"ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages",
+				"ext-sockets": "To use client-side monitoring"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "3.0-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Aws\\": "src/"
+				},
+				"files": [
+					"src/functions.php"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"Apache-2.0"
+			],
+			"authors": [
+				{
+					"name": "Amazon Web Services",
+					"homepage": "http://aws.amazon.com"
+				}
+			],
+			"description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
+			"homepage": "http://aws.amazon.com/sdkforphp",
+			"keywords": [
+				"amazon",
+				"aws",
+				"cloud",
+				"dynamodb",
+				"ec2",
+				"glacier",
+				"s3",
+				"sdk"
+			],
+			"time": "2020-08-14T18:11:00+00:00"
+		},
 		{
 			"name": "beberlei/doctrineextensions",
 			"version": "v1.2.7",
@@ -1775,6 +1860,374 @@
 				"validator"
 			],
 			"time": "2020-06-16T20:11:17+00:00"
+		},
+		{
+			"name": "enqueue/amqp-tools",
+			"version": "0.10.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-enqueue/amqp-tools.git",
+				"reference": "e41d56966fdd1c7681d342e431e65bccb1962a9e"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-enqueue/amqp-tools/zipball/e41d56966fdd1c7681d342e431e65bccb1962a9e",
+				"reference": "e41d56966fdd1c7681d342e431e65bccb1962a9e",
+				"shasum": ""
+			},
+			"require": {
+				"enqueue/dsn": "^0.10",
+				"php": "^7.1.3",
+				"queue-interop/amqp-interop": "^0.8",
+				"queue-interop/queue-interop": "^0.8"
+			},
+			"require-dev": {
+				"enqueue/null": "0.10.x-dev",
+				"enqueue/test": "0.10.x-dev",
+				"phpunit/phpunit": "~7.5"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.10.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Enqueue\\AmqpTools\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "Message Queue Amqp Tools",
+			"homepage": "https://enqueue.forma-pro.com/",
+			"keywords": [
+				"AMQP",
+				"messaging",
+				"queue"
+			],
+			"time": "2019-12-19T07:01:09+00:00"
+		},
+		{
+			"name": "enqueue/dsn",
+			"version": "0.10.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-enqueue/dsn.git",
+				"reference": "e503546bacc0f2e8d45590b089683140ecf91cd3"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-enqueue/dsn/zipball/e503546bacc0f2e8d45590b089683140ecf91cd3",
+				"reference": "e503546bacc0f2e8d45590b089683140ecf91cd3",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.1.3"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "~7.5"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.10.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Enqueue\\Dsn\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "Parse DSN",
+			"homepage": "https://enqueue.forma-pro.com/",
+			"keywords": [
+				"dsn",
+				"parse"
+			],
+			"time": "2020-01-26T23:45:10+00:00"
+		},
+		{
+			"name": "enqueue/enqueue",
+			"version": "0.10.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-enqueue/enqueue.git",
+				"reference": "c2a32569a6df81c060d9b497b63b6a96b1968ee1"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-enqueue/enqueue/zipball/c2a32569a6df81c060d9b497b63b6a96b1968ee1",
+				"reference": "c2a32569a6df81c060d9b497b63b6a96b1968ee1",
+				"shasum": ""
+			},
+			"require": {
+				"enqueue/dsn": "^0.10",
+				"enqueue/null": "^0.10",
+				"php": "^7.1.3",
+				"psr/container": "^1",
+				"psr/log": "^1",
+				"queue-interop/amqp-interop": "^0.8",
+				"queue-interop/queue-interop": "^0.8",
+				"ramsey/uuid": "^2|^3.5"
+			},
+			"require-dev": {
+				"empi89/php-amqp-stubs": "*@dev",
+				"enqueue/amqp-bunny": "0.10.x-dev",
+				"enqueue/amqp-ext": "0.10.x-dev",
+				"enqueue/amqp-lib": "0.10.x-dev",
+				"enqueue/dbal": "0.10.x-dev",
+				"enqueue/dsn": "0.10.x-dev",
+				"enqueue/fs": "0.10.x-dev",
+				"enqueue/gearman": "0.10.x-dev",
+				"enqueue/gps": "0.10.x-dev",
+				"enqueue/mongodb": "0.10.x-dev",
+				"enqueue/pheanstalk": "0.10.x-dev",
+				"enqueue/rdkafka": "0.10.x-dev",
+				"enqueue/redis": "0.10.x-dev",
+				"enqueue/simple-client": "0.10.x-dev",
+				"enqueue/sqs": "0.10.x-dev",
+				"enqueue/stomp": "0.10.x-dev",
+				"enqueue/test": "0.10.x-dev",
+				"phpunit/phpunit": "~7.5",
+				"symfony/config": "^4.3|^5",
+				"symfony/console": "^4.3|^5",
+				"symfony/dependency-injection": "^4.3|^5",
+				"symfony/event-dispatcher": "^4.3|^5",
+				"symfony/http-kernel": "^4.3|^5",
+				"symfony/yaml": "^4.3|^5"
+			},
+			"suggest": {
+				"enqueue/amqp-ext": "AMQP transport (based on php extension)",
+				"enqueue/dbal": "Doctrine DBAL transport",
+				"enqueue/fs": "Filesystem transport",
+				"enqueue/redis": "Redis transport",
+				"enqueue/sqs": "Amazon AWS SQS transport",
+				"enqueue/stomp": "STOMP transport",
+				"symfony/config": "^4.3|^5",
+				"symfony/console": "^2.8|^3|^4|^5 If you want to use cli commands",
+				"symfony/dependency-injection": "^4.3|^5"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.10.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Enqueue\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "Message Queue Library",
+			"homepage": "https://enqueue.forma-pro.com/",
+			"keywords": [
+				"AMQP",
+				"messaging",
+				"queue",
+				"rabbitmq"
+			],
+			"time": "2020-01-26T23:45:10+00:00"
+		},
+		{
+			"name": "enqueue/enqueue-bundle",
+			"version": "0.10.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-enqueue/enqueue-bundle.git",
+				"reference": "1cfa67f17190b38a271e0d66c29036aed102aa79"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-enqueue/enqueue-bundle/zipball/1cfa67f17190b38a271e0d66c29036aed102aa79",
+				"reference": "1cfa67f17190b38a271e0d66c29036aed102aa79",
+				"shasum": ""
+			},
+			"require": {
+				"enqueue/enqueue": "^0.10",
+				"enqueue/null": "^0.10",
+				"php": "^7.1.3",
+				"queue-interop/amqp-interop": "^0.8",
+				"queue-interop/queue-interop": "^0.8",
+				"symfony/framework-bundle": "^4.3|^5"
+			},
+			"require-dev": {
+				"alcaeus/mongo-php-adapter": "^1.0",
+				"doctrine/doctrine-bundle": "~1.2|^2",
+				"doctrine/mongodb-odm-bundle": "^3.5|^4",
+				"enqueue/amqp-bunny": "0.10.x-dev",
+				"enqueue/amqp-ext": "0.10.x-dev",
+				"enqueue/amqp-lib": "0.10.x-dev",
+				"enqueue/async-command": "0.10.x-dev",
+				"enqueue/async-event-dispatcher": "0.10.x-dev",
+				"enqueue/dbal": "0.10.x-dev",
+				"enqueue/fs": "0.10.x-dev",
+				"enqueue/gps": "0.10.x-dev",
+				"enqueue/job-queue": "0.10.x-dev",
+				"enqueue/redis": "0.10.x-dev",
+				"enqueue/sqs": "0.10.x-dev",
+				"enqueue/stomp": "0.10.x-dev",
+				"enqueue/test": "0.10.x-dev",
+				"php-amqplib/php-amqplib": "^2.7",
+				"phpunit/phpunit": "~7.5",
+				"symfony/browser-kit": "^4.3|^5",
+				"symfony/expression-language": "^4.3|^5",
+				"symfony/yaml": "^4.3|^5"
+			},
+			"suggest": {
+				"enqueue/async-command": "If want to run Symfony command via message queue",
+				"enqueue/async-event-dispatcher": "If you want dispatch and process events asynchronously"
+			},
+			"type": "symfony-bundle",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.10.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Enqueue\\Bundle\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "Message Queue Bundle",
+			"homepage": "https://enqueue.forma-pro.com/",
+			"keywords": [
+				"AMQP",
+				"messaging",
+				"queue",
+				"rabbitmq"
+			],
+			"time": "2020-01-26T23:45:10+00:00"
+		},
+		{
+			"name": "enqueue/null",
+			"version": "0.10.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-enqueue/null.git",
+				"reference": "7fb83a0f87ce3a95645a9aa2c495200e453dd366"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-enqueue/null/zipball/7fb83a0f87ce3a95645a9aa2c495200e453dd366",
+				"reference": "7fb83a0f87ce3a95645a9aa2c495200e453dd366",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.1.3",
+				"queue-interop/queue-interop": "^0.8"
+			},
+			"require-dev": {
+				"enqueue/test": "0.10.x-dev",
+				"phpunit/phpunit": "~7.5",
+				"queue-interop/queue-spec": "^0.6"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.10.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Enqueue\\Null\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "Enqueue Null transport",
+			"homepage": "https://enqueue.forma-pro.com/",
+			"keywords": [
+				"messaging",
+				"queue",
+				"testing"
+			],
+			"time": "2020-01-26T23:45:10+00:00"
+		},
+		{
+			"name": "enqueue/sqs",
+			"version": "0.10.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/php-enqueue/sqs.git",
+				"reference": "e330d64b6274a04f2e7070279bbc002b2c744b4c"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/php-enqueue/sqs/zipball/e330d64b6274a04f2e7070279bbc002b2c744b4c",
+				"reference": "e330d64b6274a04f2e7070279bbc002b2c744b4c",
+				"shasum": ""
+			},
+			"require": {
+				"aws/aws-sdk-php": "~3.26",
+				"enqueue/dsn": "^0.10",
+				"php": "^7.1.3",
+				"queue-interop/queue-interop": "^0.8"
+			},
+			"require-dev": {
+				"enqueue/test": "0.10.x-dev",
+				"phpunit/phpunit": "~7.5",
+				"queue-interop/queue-spec": "^0.6"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.10.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Enqueue\\Sqs\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "Message Queue Amazon SQS Transport",
+			"homepage": "https://enqueue.forma-pro.com/",
+			"keywords": [
+				"amazon",
+				"aws",
+				"messaging",
+				"queue",
+				"sqs"
+			],
+			"time": "2020-01-26T23:45:10+00:00"
 		},
 		{
 			"name": "erusev/parsedown",
@@ -4995,6 +5448,91 @@
 			"time": "2017-10-23T01:57:42+00:00"
 		},
 		{
+			"name": "queue-interop/amqp-interop",
+			"version": "0.8.1",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/queue-interop/amqp-interop.git",
+				"reference": "2029c3b3b9f10cc1c0a219650f66ab68fcfe656d"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/queue-interop/amqp-interop/zipball/2029c3b3b9f10cc1c0a219650f66ab68fcfe656d",
+				"reference": "2029c3b3b9f10cc1c0a219650f66ab68fcfe656d",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.1.3",
+				"queue-interop/queue-interop": "^0.7|^0.8"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "~5.4.0"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.8.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Interop\\Amqp\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"time": "2018-12-13T13:42:47+00:00"
+		},
+		{
+			"name": "queue-interop/queue-interop",
+			"version": "0.8.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/queue-interop/queue-interop.git",
+				"reference": "b43af85f635439fa2c9a6d8fd486489da4869741"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/queue-interop/queue-interop/zipball/b43af85f635439fa2c9a6d8fd486489da4869741",
+				"reference": "b43af85f635439fa2c9a6d8fd486489da4869741",
+				"shasum": ""
+			},
+			"require": {
+				"php": "^7.1.3"
+			},
+			"require-dev": {
+				"phpunit/phpunit": "^5.5",
+				"queue-interop/queue-spec": "^0.6@dev"
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "0.7-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Interop\\Queue\\": "src/"
+				}
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"description": "Promoting the interoperability of MQs objects. Based on Java JMS",
+			"homepage": "https://github.com/queue-interop/queue-interop",
+			"keywords": [
+				"MQ",
+				"jms",
+				"message queue",
+				"messaging",
+				"queue"
+			],
+			"time": "2018-11-22T17:53:21+00:00"
+		},
+		{
 			"name": "ralouphie/getallheaders",
 			"version": "3.0.3",
 			"source": {
@@ -5033,6 +5571,93 @@
 			],
 			"description": "A polyfill for getallheaders.",
 			"time": "2019-03-08T08:55:37+00:00"
+		},
+		{
+			"name": "ramsey/uuid",
+			"version": "3.9.3",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/ramsey/uuid.git",
+				"reference": "7e1633a6964b48589b142d60542f9ed31bd37a92"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/ramsey/uuid/zipball/7e1633a6964b48589b142d60542f9ed31bd37a92",
+				"reference": "7e1633a6964b48589b142d60542f9ed31bd37a92",
+				"shasum": ""
+			},
+			"require": {
+				"ext-json": "*",
+				"paragonie/random_compat": "^1 | ^2 | 9.99.99",
+				"php": "^5.4 | ^7 | ^8",
+				"symfony/polyfill-ctype": "^1.8"
+			},
+			"replace": {
+				"rhumsaa/uuid": "self.version"
+			},
+			"require-dev": {
+				"codeception/aspect-mock": "^1 | ^2",
+				"doctrine/annotations": "^1.2",
+				"goaop/framework": "1.0.0-alpha.2 | ^1 | ^2.1",
+				"jakub-onderka/php-parallel-lint": "^1",
+				"mockery/mockery": "^0.9.11 | ^1",
+				"moontoast/math": "^1.1",
+				"paragonie/random-lib": "^2",
+				"php-mock/php-mock-phpunit": "^0.3 | ^1.1",
+				"phpunit/phpunit": "^4.8 | ^5.4 | ^6.5",
+				"squizlabs/php_codesniffer": "^3.5"
+			},
+			"suggest": {
+				"ext-ctype": "Provides support for PHP Ctype functions",
+				"ext-libsodium": "Provides the PECL libsodium extension for use with the SodiumRandomGenerator",
+				"ext-openssl": "Provides the OpenSSL extension for use with the OpenSslGenerator",
+				"ext-uuid": "Provides the PECL UUID extension for use with the PeclUuidTimeGenerator and PeclUuidRandomGenerator",
+				"moontoast/math": "Provides support for converting UUID to 128-bit integer (in string form).",
+				"paragonie/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
+				"ramsey/uuid-console": "A console application for generating UUIDs with ramsey/uuid",
+				"ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "3.x-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Ramsey\\Uuid\\": "src/"
+				},
+				"files": [
+					"src/functions.php"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Ben Ramsey",
+					"email": "ben@benramsey.com",
+					"homepage": "https://benramsey.com"
+				},
+				{
+					"name": "Marijn Huizendveld",
+					"email": "marijn.huizendveld@gmail.com"
+				},
+				{
+					"name": "Thibaud Fabre",
+					"email": "thibaud@aztech.io"
+				}
+			],
+			"description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
+			"homepage": "https://github.com/ramsey/uuid",
+			"keywords": [
+				"guid",
+				"identifier",
+				"uuid"
+			],
+			"time": "2020-02-21T04:36:14+00:00"
 		},
 		{
 			"name": "riverline/multipart-parser",
@@ -5460,6 +6085,71 @@
 			"time": "2018-08-16T15:44:20+00:00"
 		},
 		{
+			"name": "sroze/messenger-enqueue-transport",
+			"version": "0.5.0",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/sroze/messenger-enqueue-transport.git",
+				"reference": "7d57495367e5691d20fb57042d347d954c684969"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/sroze/messenger-enqueue-transport/zipball/7d57495367e5691d20fb57042d347d954c684969",
+				"reference": "7d57495367e5691d20fb57042d347d954c684969",
+				"shasum": ""
+			},
+			"require": {
+				"enqueue/amqp-tools": "^0.10",
+				"enqueue/enqueue-bundle": "^0.10",
+				"symfony/messenger": "^4.3|^5",
+				"symfony/options-resolver": "^3.4|^4.2|^5"
+			},
+			"replace": {
+				"enqueue/messenger-adapter": ">0.2.2"
+			},
+			"require-dev": {
+				"phpspec/prophecy": "^1.8.0",
+				"phpunit/phpunit": "^7.1",
+				"symfony/yaml": "^3.4|^4.1|^5"
+			},
+			"type": "symfony-bundle",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "1.0-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Enqueue\\MessengerAdapter\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Samuel Roze",
+					"email": "samuel.roze@gmail.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "http://symfony.com/contributors"
+				}
+			],
+			"description": "Enqueue adapter for Symfony Messenger component",
+			"homepage": "http://symfony.com",
+			"keywords": [
+				"Messenger",
+				"enqueue",
+				"symfony"
+			],
+			"time": "2020-02-06T15:12:32+00:00"
+		},
+		{
 			"name": "superbalist/flysystem-google-storage",
 			"version": "7.2.2",
 			"source": {
@@ -5567,6 +6257,62 @@
 				"mailer"
 			],
 			"time": "2019-11-12T09:31:26+00:00"
+		},
+		{
+			"name": "symfony/amqp-messenger",
+			"version": "v5.1.3",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/amqp-messenger.git",
+				"reference": "f8bc975215edd516e25c9ea2b82a3026952bd8bc"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/amqp-messenger/zipball/f8bc975215edd516e25c9ea2b82a3026952bd8bc",
+				"reference": "f8bc975215edd516e25c9ea2b82a3026952bd8bc",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=7.2.5",
+				"symfony/messenger": "^5.1"
+			},
+			"require-dev": {
+				"symfony/event-dispatcher": "^4.4|^5.0",
+				"symfony/process": "^4.4|^5.0",
+				"symfony/property-access": "^4.4|^5.0",
+				"symfony/serializer": "^4.4|^5.0"
+			},
+			"type": "symfony-bridge",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "5.1-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Symfony\\Component\\Messenger\\Bridge\\Amqp\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Fabien Potencier",
+					"email": "fabien@symfony.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony AMQP extension Messenger Bridge",
+			"homepage": "https://symfony.com",
+			"time": "2020-05-20T17:43:50+00:00"
 		},
 		{
 			"name": "symfony/cache",
@@ -6077,6 +6823,66 @@
 				}
 			],
 			"description": "Symfony Doctrine Bridge",
+			"homepage": "https://symfony.com",
+			"time": "2020-07-23T16:55:47+00:00"
+		},
+		{
+			"name": "symfony/doctrine-messenger",
+			"version": "v5.1.3",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/doctrine-messenger.git",
+				"reference": "f794d67fa18f3ef42be9e8273890b5e1ac4e8319"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/f794d67fa18f3ef42be9e8273890b5e1ac4e8319",
+				"reference": "f794d67fa18f3ef42be9e8273890b5e1ac4e8319",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=7.2.5",
+				"symfony/messenger": "^5.1",
+				"symfony/service-contracts": "^1.1|^2"
+			},
+			"conflict": {
+				"doctrine/persistence": "<1.3"
+			},
+			"require-dev": {
+				"doctrine/dbal": "^2.6|^3.0",
+				"doctrine/persistence": "^1.3|^2",
+				"symfony/property-access": "^4.4|^5.0",
+				"symfony/serializer": "^4.4|^5.0"
+			},
+			"type": "symfony-bridge",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "5.1-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Symfony\\Component\\Messenger\\Bridge\\Doctrine\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Fabien Potencier",
+					"email": "fabien@symfony.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony Doctrine Messenger Bridge",
 			"homepage": "https://symfony.com",
 			"time": "2020-07-23T16:55:47+00:00"
 		},
@@ -7030,6 +7836,82 @@
 				"localization"
 			],
 			"time": "2020-06-18T18:24:02+00:00"
+		},
+		{
+			"name": "symfony/messenger",
+			"version": "v5.1.3",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/messenger.git",
+				"reference": "ef33d47aa5bec5f667eb1dfe7164677f94e8149f"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/messenger/zipball/ef33d47aa5bec5f667eb1dfe7164677f94e8149f",
+				"reference": "ef33d47aa5bec5f667eb1dfe7164677f94e8149f",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=7.2.5",
+				"psr/log": "~1.0",
+				"symfony/amqp-messenger": "^5.1",
+				"symfony/deprecation-contracts": "^2.1",
+				"symfony/doctrine-messenger": "^5.1",
+				"symfony/polyfill-php80": "^1.15",
+				"symfony/redis-messenger": "^5.1"
+			},
+			"conflict": {
+				"symfony/event-dispatcher": "<4.4",
+				"symfony/framework-bundle": "<4.4",
+				"symfony/http-kernel": "<4.4"
+			},
+			"require-dev": {
+				"psr/cache": "~1.0",
+				"symfony/console": "^4.4|^5.0",
+				"symfony/dependency-injection": "^4.4|^5.0",
+				"symfony/event-dispatcher": "^4.4|^5.0",
+				"symfony/http-kernel": "^4.4|^5.0",
+				"symfony/process": "^4.4|^5.0",
+				"symfony/property-access": "^4.4|^5.0",
+				"symfony/serializer": "^4.4|^5.0",
+				"symfony/service-contracts": "^1.1|^2",
+				"symfony/stopwatch": "^4.4|^5.0",
+				"symfony/validator": "^4.4|^5.0"
+			},
+			"suggest": {
+				"enqueue/messenger-adapter": "For using the php-enqueue library as a transport."
+			},
+			"type": "library",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "5.1-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Symfony\\Component\\Messenger\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Samuel Roze",
+					"email": "samuel.roze@gmail.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony Messenger Component",
+			"homepage": "https://symfony.com",
+			"time": "2020-07-23T10:40:24+00:00"
 		},
 		{
 			"name": "symfony/monolog-bridge",
@@ -8017,6 +8899,60 @@
 				"validator"
 			],
 			"time": "2020-06-18T21:19:28+00:00"
+		},
+		{
+			"name": "symfony/redis-messenger",
+			"version": "v5.1.3",
+			"source": {
+				"type": "git",
+				"url": "https://github.com/symfony/redis-messenger.git",
+				"reference": "d37c6a267d79b0e0dff5e2b96c5f07886353d7a2"
+			},
+			"dist": {
+				"type": "zip",
+				"url": "https://api.github.com/repos/symfony/redis-messenger/zipball/d37c6a267d79b0e0dff5e2b96c5f07886353d7a2",
+				"reference": "d37c6a267d79b0e0dff5e2b96c5f07886353d7a2",
+				"shasum": ""
+			},
+			"require": {
+				"php": ">=7.2.5",
+				"symfony/messenger": "^5.1"
+			},
+			"require-dev": {
+				"symfony/property-access": "^4.4|^5.0",
+				"symfony/serializer": "^4.4|^5.0"
+			},
+			"type": "symfony-bridge",
+			"extra": {
+				"branch-alias": {
+					"dev-master": "5.1-dev"
+				}
+			},
+			"autoload": {
+				"psr-4": {
+					"Symfony\\Component\\Messenger\\Bridge\\Redis\\": ""
+				},
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
+			},
+			"notification-url": "https://packagist.org/downloads/",
+			"license": [
+				"MIT"
+			],
+			"authors": [
+				{
+					"name": "Fabien Potencier",
+					"email": "fabien@symfony.com"
+				},
+				{
+					"name": "Symfony Community",
+					"homepage": "https://symfony.com/contributors"
+				}
+			],
+			"description": "Symfony Redis extension Messenger Bridge",
+			"homepage": "https://symfony.com",
+			"time": "2020-05-20T17:43:50+00:00"
 		},
 		{
 			"name": "symfony/routing",

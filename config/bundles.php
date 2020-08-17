@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -33,4 +33,6 @@ return [
 	Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
 	BenTools\WebPushBundle\WebPushBundle::class => ['all' => true],
 	Gigadrive\Bundle\SymfonyExtensionsBundle\GigadriveSymfonyExtensionsBundle::class => ['all' => true],
+	Enqueue\Bundle\EnqueueBundle::class => ['all' => true],
+	Enqueue\MessengerAdapter\Bundle\EnqueueAdapterBundle::class => ['all' => true],
 ];
