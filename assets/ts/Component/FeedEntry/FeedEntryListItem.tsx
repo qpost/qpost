@@ -129,7 +129,7 @@ export default class FeedEntryListItem extends Component<{
 							<div className={"col-12 d-flex"} style={{
 								flexWrap: "wrap"
 							}}>
-								<div className={"float-left"}>
+								<div className={"float-left mb-3"}>
 									<Link to={"/profile/" + user.getUsername()} className={"clearUnderline float-left"}>
 										<img className={"rounded mx-1 my-1"} src={entry.getUser().getAvatarURL()}
 											 width={40}
@@ -176,7 +176,7 @@ export default class FeedEntryListItem extends Component<{
 												to={"/profile/" + entry.getParent().getUser().getUsername()}>{"@" + entry.getParent().getUser().getUsername()}</Link> : "..."}
 											</div> : ""}
 
-										{entry.getText() ? <div className="float-left ml-1 my-2 w-100">
+										{entry.getText() ? <div className="float-left ml-1 mb-3 w-100">
 											<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
 												<FeedEntryText feedEntry={entry}/>
 											</p>
