@@ -122,7 +122,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 		$rsm->addScalarResult("shared", "shared", "boolean");
 
 		$ownerWhere = is_null($target) ? "(EXISTS (SELECT 1 FROM follower AS ff WHERE ff.sender_id = ? AND ff.receiver_id = u.id) OR u.id = ?)" : "f.user_id = ?";
-		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY' OR (f.type = 'POST' AND f.text LIKE '@%'))";
+		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY')";
 
 		$parameters[] = is_null($from) ? 0 : $from->getId();
 		$parameters[] = is_null($from) ? 0 : $from->getId();
