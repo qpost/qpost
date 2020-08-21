@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function __;
+use function array_first;
 use function is_null;
 use function sprintf;
 use function strlen;
@@ -77,7 +78,7 @@ class PageController extends qpostController {
 			/**
 			 * @var MediaFile $mediaFile
 			 */
-			$mediaFile = $feedEntry->getAttachments()->first();
+			$mediaFile = array_first($feedEntry->getAttachments());
 			if ($mediaFile) {
 				$twitterCardType = "summary_large_image";
 				$bigSocialImage = $mediaFile->getURL();

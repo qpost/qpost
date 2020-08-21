@@ -25,3 +25,11 @@ if (!function_exists("__")) {
 		return TranslationService::$I->__($identifier, $parameters);
 	}
 }
+
+if (!function_exists("array_first")) {
+	function array_first(array $array) {
+		if (count($array) === 0) return null;
+
+		return $array[0];
+	}
+}
