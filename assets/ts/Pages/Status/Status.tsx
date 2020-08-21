@@ -21,9 +21,6 @@ import React, {Component} from "react";
 import FeedEntry from "../../api/src/Entity/FeedEntry";
 import API from "../../API";
 import BaseObject from "../../api/src/BaseObject";
-import ContentBase from "../../Component/Layout/ContentBase";
-import PageContent from "../../Component/Layout/PageContent";
-import RightSidebar from "../../Component/Layout/RightSidebar";
 import Alert from "antd/es/alert";
 import "antd/es/alert/style";
 import Card from "antd/es/card";
@@ -36,16 +33,12 @@ import VerifiedBadge from "../../Component/VerifiedBadge";
 import FollowButton from "../../Component/FollowButton";
 import FeedEntryListItemAttachments from "../../Component/FeedEntry/FeedEntryListItemAttachments";
 import FeedEntryActionButtons from "../../Component/FeedEntry/Buttons/FeedEntryActionButtons";
-import SuggestedUsers from "../../Component/SuggestedUsers";
-import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
 import {limitString} from "../../Util/Format";
 import ReplyList from "../../Component/FeedEntry/ReplyList";
 import FeedEntryType from "../../api/src/Entity/FeedEntryType";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 import PostUnavailableAlert from "../../Component/PostUnavailableAlert";
-import LeftSidebar from "../../Component/Layout/LeftSidebar";
-import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
 import BioText from "../../Component/BioText";
 import __ from "../../i18n/i18n";
 import PrivacyBadge from "../../Component/PrivacyBadge";
@@ -116,108 +109,96 @@ export default class Status extends Component<any, {
 
 		console.log(parents);
 
-		return <ContentBase>
-			<LeftSidebar>
-				<HomeFeedProfileBox/>
-			</LeftSidebar>
+		return <div>
+			{status !== null && user !== null ? (
+				<div>
+					{parents.map((entry: FeedEntry, index: number) => {
+						return <FeedEntryListItem entry={entry} showParentInfo={true} key={index}/>;
+					})}
 
-			<PageContent leftSidebar rightSidebar>
-				{status !== null && user !== null ? (
-					<div>
-						{parents.map((entry: FeedEntry, index: number) => {
-							return <FeedEntryListItem entry={entry} showParentInfo={true} key={index}/>;
-						})}
+					{this.state.loadingFinished && parents.length === 0 && status.getType() === FeedEntryType.REPLY ?
+						<Card size={"small"}>
+							<PostUnavailableAlert/>
+						</Card> : ""}
 
-						{this.state.loadingFinished && parents.length === 0 && status.getType() === FeedEntryType.REPLY ?
-							<Card size={"small"}>
-								<PostUnavailableAlert/>
-							</Card> : ""}
+					<Card className={"statusPageBox"} size={"small"}>
+						<div className={"clearfix"}>
+							<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+								<img src={user.getAvatarURL()} className={"rounded float-left mr-2"} width={64}
+									 height={64} alt={user.getUsername()}/>
+							</Link>
 
-						<Card className={"statusPageBox"} size={"small"}>
-							<div className={"clearfix"}>
-								<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-									<img src={user.getAvatarURL()} className={"rounded float-left mr-2"} width={64}
-										 height={64} alt={user.getUsername()}/>
-								</Link>
-
-								<div className={"float-left nameContainer"}>
-									<div className={"displayName"}>
-										<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-											{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge
-											target={user}/>
-										</Link>
-									</div>
-
-									<div className={"username"}>
-										<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-											@{user.getUsername()}
-										</Link>
-									</div>
+							<div className={"float-left nameContainer"}>
+								<div className={"displayName"}>
+									<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+										{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge
+										target={user}/>
+									</Link>
 								</div>
 
-								<div className={"float-right"}>
-									<FollowButton target={user}/>
+								<div className={"username"}>
+									<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
+										@{user.getUsername()}
+									</Link>
 								</div>
 							</div>
 
-							{status.getText() !== null ? <div className={"text"}>
-								{status.getType() === FeedEntryType.REPLY ?
-									<div className={"text-muted small specialLinkColor"}>
-										Replying to {parent ? <Link
-										to={"/profile/" + parent.getUser().getUsername()}>{"@" + parent.getUser().getUsername()}</Link> : "..."}
-									</div> : ""}
-
-								<div className={"specialLinkColor"}>
-									<BioText text={status.getText()}/>
-								</div>
-							</div> : ""}
-
-							{status.getAttachments().length > 0 ? <div className={"attachments"}>
-								<FeedEntryListItemAttachments entry={status}/>
-							</div> : ""}
-
-							<p className={"timestamp"}>
-								<i className={"far fa-clock"}/> {new Date(status.getTime()).toLocaleString()}
-							</p>
-
-							<hr className={"mb-0"}/>
-
-							<div className={"actionButtons"}>
-								<FeedEntryActionButtons entry={status} reduceMargin={true} onEntryUpdate={(e) => {
-									this.setState({
-										status: e
-									});
-								}}/>
+							<div className={"float-right"}>
+								<FollowButton target={user}/>
 							</div>
-						</Card>
+						</div>
 
-						<ReplyList feedEntry={status}/>
-					</div>
-				) : this.state.error !== null ? (
-					<Alert
-						message="Error"
-						description={this.state.error}
-						type="error"
-						showIcon
-					/>
-				) : (
-					<Card className={"statusPageBox"}>
-						<Skeleton loading active avatar={{
-							size: "large",
-							shape: "square"
-						}}
-								  paragraph={{
-									  rows: 4
-								  }}/>
+						{status.getText() !== null ? <div className={"text"}>
+							{status.getType() === FeedEntryType.REPLY ?
+								<div className={"text-muted small specialLinkColor"}>
+									Replying to {parent ? <Link
+									to={"/profile/" + parent.getUser().getUsername()}>{"@" + parent.getUser().getUsername()}</Link> : "..."}
+								</div> : ""}
+
+							<div className={"specialLinkColor"}>
+								<BioText text={status.getText()}/>
+							</div>
+						</div> : ""}
+
+						{status.getAttachments().length > 0 ? <div className={"attachments"}>
+							<FeedEntryListItemAttachments entry={status}/>
+						</div> : ""}
+
+						<p className={"timestamp"}>
+							<i className={"far fa-clock"}/> {new Date(status.getTime()).toLocaleString()}
+						</p>
+
+						<hr className={"mb-0"}/>
+
+						<div className={"actionButtons"}>
+							<FeedEntryActionButtons entry={status} reduceMargin={true} onEntryUpdate={(e) => {
+								this.setState({
+									status: e
+								});
+							}}/>
+						</div>
 					</Card>
-				)}
-			</PageContent>
 
-			<RightSidebar>
-				<SuggestedUsers/>
-
-				<SidebarFooter/>
-			</RightSidebar>
-		</ContentBase>;
+					<ReplyList feedEntry={status}/>
+				</div>
+			) : this.state.error !== null ? (
+				<Alert
+					message="Error"
+					description={this.state.error}
+					type="error"
+					showIcon
+				/>
+			) : (
+				<Card className={"statusPageBox"}>
+					<Skeleton loading active avatar={{
+						size: "large",
+						shape: "square"
+					}}
+							  paragraph={{
+								  rows: 4
+							  }}/>
+				</Card>
+			)}
+		</div>;
 	}
 }

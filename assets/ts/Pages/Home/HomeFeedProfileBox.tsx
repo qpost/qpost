@@ -23,7 +23,7 @@ import {Link} from "react-router-dom";
 import FollowButton from "../../Component/FollowButton";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import {formatNumberShort} from "../../Util/Format";
-import {Card} from "antd";
+import {Button, Card} from "antd";
 import __ from "../../i18n/i18n";
 import PrivacyBadge from "../../Component/PrivacyBadge";
 
@@ -33,7 +33,22 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 
 		if (!currentUser) {
 			Auth.logout();
-			return null;
+			return <Card>
+				<h4 className={"text-center text-primary"}>
+					<i className="fas fa-user-plus"/>
+				</h4>
+
+				<h4 className={"text-center mb-0"}>
+					{__("loginPrompt.description")}
+				</h4>
+
+				<div className={"text-center mt-3"}>
+					<a href={"/login"} className={"clearUnderline"}>
+						<Button type={"primary"} size={"large"}
+								shape={"round"}>{__("landing.home.loginButton")}</Button>
+					</a>
+				</div>
+			</Card>;
 		}
 
 		return <Card className="homeFeedProfileBox mb-3" size={"small"}>

@@ -18,9 +18,7 @@
  */
 
 import React, {Component} from "react";
-import ContentBase from "../../Component/Layout/ContentBase";
-import PageContent from "../../Component/Layout/PageContent";
-import {Col, Input, Menu, Row} from "antd";
+import {Input, Menu} from "antd";
 import NightMode from "../../NightMode/NightMode";
 import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
 import FollowerList from "../../Component/User/FollowerList";
@@ -58,48 +56,42 @@ export default class Search extends Component<any, {
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <ContentBase>
-			<PageContent>
-				<Row gutter={24}>
-					<Col md={{span: 12, offset: 6}}>
-						<Input.Search placeholder={__("search.placeholder")} value={this.state.value}
-									  onChange={event => {
-										  const value = event.target.value;
+		return <div>
+			<Input.Search placeholder={__("search.placeholder")} value={this.state.value}
+						  onChange={event => {
+							  const value = event.target.value;
 
-										  this.setState({
-											  value
-										  });
-									  }} onSearch={value => {
-							const query = value.trim();
+							  this.setState({
+								  value
+							  });
+						  }} onSearch={value => {
+				const query = value.trim();
 
-							this.setState({
-								query
-							});
-						}} enterButton size={"large"} className={"mb-3"}/>
+				this.setState({
+					query
+				});
+			}} enterButton size={"large"} className={"mb-3"}/>
 
-						{this.state.query !== "" ? <div>
-							<Menu onClick={(e) => {
-								this.setState({
-									activeMenuPoint: e.key
-								});
-							}} selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"}
-								  theme={NightMode.isActive() ? "dark" : "light"}>
-								<Menu.Item key={"POSTS"}>
-									{__("search.posts")}
-								</Menu.Item>
+			{this.state.query !== "" ? <div>
+				<Menu onClick={(e) => {
+					this.setState({
+						activeMenuPoint: e.key
+					});
+				}} selectedKeys={[this.state.activeMenuPoint]} mode={"horizontal"}
+					  theme={NightMode.isActive() ? "dark" : "light"}>
+					<Menu.Item key={"POSTS"}>
+						{__("search.posts")}
+					</Menu.Item>
 
-								<Menu.Item key={"USERS"}>
-									{__("search.users")}
-								</Menu.Item>
-							</Menu>
+					<Menu.Item key={"USERS"}>
+						{__("search.users")}
+					</Menu.Item>
+				</Menu>
 
-							{this.state.activeMenuPoint === "POSTS" ?
-								<FeedEntryList searchQuery={this.state.query} disableTask={true}/> :
-								<FollowerList mode={"search"} query={this.state.query}/>}
-						</div> : <TrendingTopics/>}
-					</Col>
-				</Row>
-			</PageContent>
-		</ContentBase>;
+				{this.state.activeMenuPoint === "POSTS" ?
+					<FeedEntryList searchQuery={this.state.query} disableTask={true}/> :
+					<FollowerList mode={"search"} query={this.state.query}/>}
+			</div> : <TrendingTopics/>}
+		</div>;
 	}
 }

@@ -18,11 +18,6 @@
  */
 
 import React, {Component} from "react";
-import ContentBase from "../../Component/Layout/ContentBase";
-import PageContent from "../../Component/Layout/PageContent";
-import SuggestedUsers from "../../Component/SuggestedUsers";
-import SidebarFooter from "../../Parts/Footer/SidebarFooter";
-import RightSidebar from "../../Component/Layout/RightSidebar";
 import Notification from "../../api/src/Entity/Notification";
 import Alert from "antd/es/alert";
 import Spin from "antd/es/spin";
@@ -37,12 +32,8 @@ import ReplyNotification from "./ReplyNotification";
 import ShareNotification from "./ShareNotification";
 import BadgeStatus from "../../Auth/BadgeStatus";
 import {setPageTitle} from "../../Util/Page";
-import HomeFeedProfileBox from "../Home/HomeFeedProfileBox";
-import TrendingTopics from "../../Component/TrendingTopics";
 import PageHeader from "../../Component/PageHeader";
 import LoadingFeedEntryListItem from "../../Component/FeedEntry/LoadingFeedEntryListItem";
-import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
-import LeftSidebar from "../../Component/Layout/LeftSidebar";
 import FollowRequestNotification from "./FollowRequestNotification";
 import __ from "../../i18n/i18n";
 
@@ -103,75 +94,60 @@ export default class Notifications extends Component<any, {
 			rows.push(<LoadingFeedEntryListItem key={i}/>);
 		}
 
-		return <ContentBase>
-			<LeftSidebar>
-				<HomeFeedProfileBox/>
-				<TrendingTopics limit={5}/>
-			</LeftSidebar>
-
-			<PageContent leftSidebar rightSidebar>
-				<PageHeader title={__("notifications.headline")} iconClass={"fas fa-bell"}/>
-				{this.state.notifications !== null ?
-					<div>
-						{this.state.notifications.length > 0 ? <InfiniteScroll
-							pageStart={1}
-							loadMore={() => {
-								this.loadMore();
-							}}
-							hasMore={this.state.hasMore}
-							loader={<div className={"text-center my-3" + (!this.state.loadingMore ? " d-none" : "")}>
-								<Spin size={"large"}/>
-							</div>}
-							initialLoad={false}>
-							{this.state.notifications.map((notification: Notification, i: number) => {
-								let content = null;
-								switch (notification.getType()) {
-									case NotificationType.NEW_FOLLOWER:
-										content = <NewFollowerNotification key={notification.getId()}
-																		   notification={notification}/>;
-										break;
-									case NotificationType.FAVORITE:
-										content = <FavoriteNotification key={notification.getId()}
-																		notification={notification}/>;
-										break;
-									case NotificationType.MENTION:
-										content = <MentionNotification key={notification.getId()}
+		return <div>
+			<PageHeader title={__("notifications.headline")} iconClass={"fas fa-bell"}/>
+			{this.state.notifications !== null ?
+				<div>
+					{this.state.notifications.length > 0 ? <InfiniteScroll
+						pageStart={1}
+						loadMore={() => {
+							this.loadMore();
+						}}
+						hasMore={this.state.hasMore}
+						loader={<div className={"text-center my-3" + (!this.state.loadingMore ? " d-none" : "")}>
+							<Spin size={"large"}/>
+						</div>}
+						initialLoad={false}>
+						{this.state.notifications.map((notification: Notification, i: number) => {
+							let content = null;
+							switch (notification.getType()) {
+								case NotificationType.NEW_FOLLOWER:
+									content = <NewFollowerNotification key={notification.getId()}
 																	   notification={notification}/>;
-										break;
-									case NotificationType.REPLY:
-										content =
-											<ReplyNotification key={notification.getId()} notification={notification}/>;
-										break;
-									case NotificationType.SHARE:
-										content =
-											<ShareNotification key={notification.getId()} notification={notification}/>;
-										break;
-									case NotificationType.FOLLOW_REQUEST:
-										content =
-											<FollowRequestNotification key={notification.getId()}
-																	   notification={notification}/>;
-										break;
-								}
+									break;
+								case NotificationType.FAVORITE:
+									content = <FavoriteNotification key={notification.getId()}
+																	notification={notification}/>;
+									break;
+								case NotificationType.MENTION:
+									content = <MentionNotification key={notification.getId()}
+																   notification={notification}/>;
+									break;
+								case NotificationType.REPLY:
+									content =
+										<ReplyNotification key={notification.getId()} notification={notification}/>;
+									break;
+								case NotificationType.SHARE:
+									content =
+										<ShareNotification key={notification.getId()} notification={notification}/>;
+									break;
+								case NotificationType.FOLLOW_REQUEST:
+									content =
+										<FollowRequestNotification key={notification.getId()}
+																   notification={notification}/>;
+									break;
+							}
 
-								return content || "";
-							})}
-						</InfiniteScroll> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
-					</div> :
-					this.state.error !== null ? <Alert message={this.state.error} type="error"/> :
-						<ul className={"list-group feedContainer"}>
-							{rows.map((item, i) => {
-								return item;
-							})}
-						</ul>}
-			</PageContent>
-
-			<RightSidebar>
-				<SuggestedUsers/>
-
-				<UpcomingBirthdays/>
-
-				<SidebarFooter/>
-			</RightSidebar>
-		</ContentBase>;
+							return content || "";
+						})}
+					</InfiniteScroll> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
+				</div> :
+				this.state.error !== null ? <Alert message={this.state.error} type="error"/> :
+					<ul className={"list-group feedContainer"}>
+						{rows.map((item, i) => {
+							return item;
+						})}
+					</ul>}
+		</div>;
 	}
 }

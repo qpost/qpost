@@ -22,9 +22,20 @@ import Col from "antd/es/col";
 import "antd/es/col/style";
 import LeftSidebar from "./LeftSidebar";
 import SidebarStickyContent from "./SidebarStickyContent";
+import RightSidebarContent from "./RightSidebarContent";
 
-export default class RightSidebar extends Component<any, any> {
+export default class RightSidebar extends Component<any, {
+	randomizer: number
+}> {
 	public static INSTANCE: RightSidebar | null = null;
+
+	public static update(): void {
+		if (this.INSTANCE !== null) {
+			this.INSTANCE.setState({
+				randomizer: Math.random()
+			});
+		}
+	}
 
 	componentDidMount() {
 		RightSidebar.INSTANCE = this;
@@ -43,6 +54,7 @@ export default class RightSidebar extends Component<any, any> {
 		return (
 			<Col xl={6} className={"d-none d-xl-block"}>
 				<SidebarStickyContent>
+					{RightSidebarContent.INSTANCE ? RightSidebarContent.INSTANCE.props.children : ""}
 					{this.props.children}
 				</SidebarStickyContent>
 			</Col>

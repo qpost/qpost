@@ -18,25 +18,25 @@
  */
 
 import React, {Component} from "react";
-import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
-import DummyPostForm from "../../Component/PostForm/DummyPostForm";
-import {setPageTitle} from "../../Util/Page";
-import PageHeader from "../../Component/PageHeader";
-import __ from "../../i18n/i18n";
 
-export default class HomeFeed extends Component<any, any> {
-	componentDidMount(): void {
-		setPageTitle(__("home.headline"));
-	}
-
-	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return (
-			<div>
-				<PageHeader title={__("home.headline")} iconClass={"fas fa-home"}/>
-				<DummyPostForm/>
-
-				<FeedEntryList/>
+export default class SizeTestComponent extends Component<any, any> {
+	render() {
+		return [
+			<div className={"d-xs-block d-sm-none"}>
+				xs
+			</div>,
+			<div className={"d-none d-sm-block d-md-none"}>
+				sm
+			</div>,
+			<div className={"d-none d-md-block d-lg-none"}>
+				md
+			</div>,
+			<div className={"d-none d-lg-block d-xl-none"}>
+				lg
+			</div>,
+			<div className={"d-none d-xl-block"}>
+				xl
 			</div>
-		)
+		];
 	}
 }

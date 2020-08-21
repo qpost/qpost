@@ -87,12 +87,12 @@ module.exports = {
 						options: {
 							javascriptEnabled: true,
 							modifyVars: {
-								"primary-color": "#007bff",
+								"primary-color": "#007BFF",
 								"screen-xs": "0",
 								"screen-sm": "676px",
 								"screen-md": "868px",
 								"screen-lg": "1092px",
-								"screen-xl": "1500px"
+								"screen-xl": "1370px"
 							}
 						}
 					}

@@ -22,6 +22,7 @@ import Col from "antd/es/col";
 import "antd/es/col/style";
 import RightSidebar from "./RightSidebar";
 import SidebarStickyContent from "./SidebarStickyContent";
+import RightSidebarContent from "./RightSidebarContent";
 
 export default class LeftSidebar extends Component<{
 	negativeOffset?: boolean
@@ -65,6 +66,7 @@ export default class LeftSidebar extends Component<{
 					{this.props.children}
 
 					{rightSidebarContent ? <div className={"d-none d-lg-block d-xl-none mt-3"}>
+						{RightSidebarContent.INSTANCE ? RightSidebarContent.INSTANCE.props.children : ""}
 						{rightSidebarContent}
 					</div> : ""}
 				</SidebarStickyContent>

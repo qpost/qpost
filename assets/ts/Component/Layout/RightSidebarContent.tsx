@@ -17,26 +17,29 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import React, {Component} from "react";
-import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
-import DummyPostForm from "../../Component/PostForm/DummyPostForm";
-import {setPageTitle} from "../../Util/Page";
-import PageHeader from "../../Component/PageHeader";
-import __ from "../../i18n/i18n";
+import {Component} from "react";
+import RightSidebar from "./RightSidebar";
+import LeftSidebar from "./LeftSidebar";
 
-export default class HomeFeed extends Component<any, any> {
-	componentDidMount(): void {
-		setPageTitle(__("home.headline"));
+export default class RightSidebarContent extends Component<any, any> {
+	public static INSTANCE: RightSidebarContent | null = null;
+
+	componentDidMount() {
+		RightSidebarContent.INSTANCE = this;
+		RightSidebar.update();
+		LeftSidebar.update();
 	}
 
-	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return (
-			<div>
-				<PageHeader title={__("home.headline")} iconClass={"fas fa-home"}/>
-				<DummyPostForm/>
+	componentWillUnmount() {
+		if (RightSidebarContent.INSTANCE === this) {
+			RightSidebarContent.INSTANCE = null;
 
-				<FeedEntryList/>
-			</div>
-		)
+			RightSidebar.update();
+			LeftSidebar.update();
+		}
+	}
+
+	render() {
+		return "";
 	}
 }

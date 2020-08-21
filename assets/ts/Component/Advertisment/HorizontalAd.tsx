@@ -18,25 +18,22 @@
  */
 
 import React, {Component} from "react";
-import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
-import DummyPostForm from "../../Component/PostForm/DummyPostForm";
-import {setPageTitle} from "../../Util/Page";
-import PageHeader from "../../Component/PageHeader";
-import __ from "../../i18n/i18n";
 
-export default class HomeFeed extends Component<any, any> {
-	componentDidMount(): void {
-		setPageTitle(__("home.headline"));
-	}
-
-	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return (
-			<div>
-				<PageHeader title={__("home.headline")} iconClass={"fas fa-home"}/>
-				<DummyPostForm/>
-
-				<FeedEntryList/>
-			</div>
-		)
+export default class HorizontalAd extends Component<{
+	marginDirection?: "t" | "y" | "b"
+}, any> {
+	render() {
+		return <div className={"text-center m" + (this.props.marginDirection || "b") + "-3"}>
+			<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<ins className="adsbygoogle"
+				 style={{display: "block"}}
+				 data-ad-client="ca-pub-6156128043207415"
+				 data-ad-slot="6586969436"
+				 data-ad-format="auto"
+				 data-full-width-responsive="true"></ins>
+			<script>
+				(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+		</div>;
 	}
 }

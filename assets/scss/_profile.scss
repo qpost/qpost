@@ -19,19 +19,18 @@
 
 .profile {
 	.profileHeader {
-		@extend .rounded;
+		@extend .rounded-top;
 		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: center center;
-		height: 20vw;
+		height: 10vw;
 		min-height: 150px;
-		margin-bottom: 10px;
 	}
 
 	.mobilePart {
-		@media only screen and (min-width: 1091px) {
+		/*@media only screen and (min-width: 1091px) {
 			display: none !important;
-		}
+		}*/
 
 		.ant-card-body {
 			@extend .px-3;

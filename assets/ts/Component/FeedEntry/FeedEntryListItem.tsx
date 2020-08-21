@@ -123,7 +123,7 @@ export default class FeedEntryListItem extends Component<{
 						setTimeout(() => this.props.onClick(e), 100);
 					}
 				}}>
-					<div className={"px-3 py-2"}>
+					<div className={"px-3 pb-2 pt-3"}>
 						{shareHeader ? shareHeader : ""}
 						<Row>
 							<div className={"col-12 d-flex"} style={{

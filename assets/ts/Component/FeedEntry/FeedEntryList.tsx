@@ -31,6 +31,7 @@ import Storage from "../../Util/Storage";
 import FeedEntry from "../../api/src/Entity/FeedEntry";
 import FeedEntryType from "../../api/src/Entity/FeedEntryType";
 import __ from "../../i18n/i18n";
+import HorizontalAd from "../Advertisment/HorizontalAd";
 
 export default class FeedEntryList extends Component<{
 	userID?: number,
@@ -293,13 +294,29 @@ export default class FeedEntryList extends Component<{
 				>
 					<ul className={"list-group feedContainer"}>
 						{this.state.entries.map((entry, i) => {
-							return <FeedEntryListItem key={entry.getId()} entry={entry} parent={this}
-													  showParentInfo={true}/>
+							const maxAds = 10;
+							const adIndexes: number[] = [];
+							for (let j = 0; j < maxAds; j++) {
+								adIndexes.push(15 * j + 5);
+							}
+
+							const components = [];
+
+							if (adIndexes.indexOf(i) !== -1) {
+								components.push(<HorizontalAd marginDirection={"y"}/>);
+							}
+
+							components.push(<FeedEntryListItem key={entry.getId()} entry={entry} parent={this}
+															   showParentInfo={true}/>);
+
+							return components;
 						})}
 					</ul>
 				</InfiniteScroll>;
 			} else {
-				return <Empty description={__("entryList.empty")}/>;
+				return <div className={"mt-3"}>
+					<Empty description={__("entryList.empty")}/>
+				</div>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;

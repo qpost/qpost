@@ -58,6 +58,16 @@ import TokenStorage from "./Auth/TokenStorage";
 import AccountSwitcher from "./Component/AccountSwitcher";
 import PhraseStorage from "./i18n/PhraseStorage";
 import ChangelogModal from "./Component/ChangelogModal";
+import ContentBase from "./Component/Layout/ContentBase";
+import LeftSidebar from "./Component/Layout/LeftSidebar";
+import PageContent from "./Component/Layout/PageContent";
+import RightSidebar from "./Component/Layout/RightSidebar";
+import HomeFeedProfileBox from "./Pages/Home/HomeFeedProfileBox";
+import TrendingTopics from "./Component/TrendingTopics";
+import SuggestedUsers from "./Component/SuggestedUsers";
+import UpcomingBirthdays from "./Component/UpcomingBirthdays";
+import SidebarFooter from "./Parts/Footer/SidebarFooter";
+import SquareAd from "./Component/Advertisment/SquareAd";
 
 export default class App extends Component<any, {
 	validatedLogin: boolean,
@@ -195,22 +205,43 @@ export default class App extends Component<any, {
 												<AccountSwitcher/>
 												<ChangelogModal/>
 
-												<Switch>
-													{Auth.isLoggedIn() ?
-														<Route path={"/"} exact component={HomeFeed}/> :
-														<Route path={"/"} exact component={Home}/>}
+												<ContentBase>
+													<LeftSidebar>
+														<HomeFeedProfileBox/>
 
-													<PrivateRoute path={"/notifications"} exact
-																  component={Notifications}/>
-													<PrivateRoute path={"/messages"} exact component={Messages}/>
-													<Route path={"/search"} exact component={Search}/>
-													<Route path={"/hashtag/:query"} exact component={SearchRedirect}/>
-													<Route path={"/goodbye"} exact component={Goodbye}/>
-													<Route path={"/r/status/:id"} exact component={StatusRedirect}/>
-													<Route path={"/status/:id"} exact component={Status}/>
-													<Route path={"/profile/:username"} component={ProfileRedirect}/>
-													<Route path={"/:username"} component={Profile}/>
-												</Switch>
+														<TrendingTopics limit={5}/>
+													</LeftSidebar>
+
+													<PageContent leftSidebar rightSidebar>
+														<Switch>
+															{Auth.isLoggedIn() ?
+																<Route path={"/"} exact component={HomeFeed}/> :
+																<Route path={"/"} exact component={Home}/>}
+
+															<PrivateRoute path={"/notifications"} exact
+																		  component={Notifications}/>
+															<PrivateRoute path={"/messages"} exact
+																		  component={Messages}/>
+															<Route path={"/search"} exact component={Search}/>
+															<Route path={"/hashtag/:query"} exact
+																   component={SearchRedirect}/>
+															<Route path={"/goodbye"} exact component={Goodbye}/>
+															<Route path={"/r/status/:id"} exact
+																   component={StatusRedirect}/>
+															<Route path={"/status/:id"} exact component={Status}/>
+															<Route path={"/profile/:username"}
+																   component={ProfileRedirect}/>
+															<Route path={"/:username"} component={Profile}/>
+														</Switch>
+													</PageContent>
+
+													<RightSidebar>
+														<SuggestedUsers/>
+														<UpcomingBirthdays/>
+														<SquareAd/>
+														<SidebarFooter/>
+													</RightSidebar>
+												</ContentBase>
 											</div>
 										</div>
 									</div>
