@@ -42,6 +42,14 @@
 					<b>{{ __("settings.preferences.appearance.display.autoplayGifs") }}</b>
 				</label>
 			</div>
+
+			<div class="custom-control custom-checkbox mb-3">
+				<input type="checkbox" class="custom-control-input" id="showChangelogs"
+					   name="showChangelogs"{{ app.user.appearanceSettings.showChangelogs ? "checked" }}/>
+				<label class="custom-control-label" for="showChangelogs">
+					<b>{{ __("settings.preferences.appearance.display.showChangelogs") }}</b>
+				</label>
+			</div>
 		</div>
 
 		<div class="mb-4">

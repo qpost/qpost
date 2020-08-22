@@ -37,11 +37,14 @@ final class Version20200816155156 extends AbstractMigration {
 		// this up() migration is auto-generated, please modify it to your needs
 		$this->addSql('CREATE TABLE changelog_entry (tag VARCHAR(16) NOT NULL, description LONGTEXT NOT NULL, time DATETIME NOT NULL, INDEX IDX_8A652FA36F949845 (time), PRIMARY KEY(tag)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
 		$this->addSql('ALTER TABLE user ADD latest_seen_changelog VARCHAR(16) DEFAULT NULL');
+		$this->addSql('ALTER TABLE user_appearance_settings ADD show_changelogs TINYINT(1) NOT NULL');
+		$this->addSql('UPDATE user_appearance_settings SET show_changelogs = 1');
 	}
 
 	public function down(Schema $schema): void {
 		// this down() migration is auto-generated, please modify it to your needs
 		$this->addSql('DROP TABLE changelog_entry');
 		$this->addSql('ALTER TABLE user DROP latest_seen_changelog');
+		$this->addSql('ALTER TABLE user_appearance_settings DROP show_changelogs');
 	}
 }

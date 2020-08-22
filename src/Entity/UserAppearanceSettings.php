@@ -72,6 +72,11 @@ class UserAppearanceSettings {
 	 */
 	private $showMatureWarning = true;
 
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $showChangelogs = true;
+
 	public function getId(): ?int {
 		return $this->id;
 	}
@@ -142,6 +147,16 @@ class UserAppearanceSettings {
 
 	public function setShowMatureWarning(bool $showMatureWarning): self {
 		$this->showMatureWarning = $showMatureWarning;
+
+		return $this;
+	}
+
+	public function getShowChangelogs(): ?bool {
+		return $this->showChangelogs;
+	}
+
+	public function setShowChangelogs(bool $showChangelogs): self {
+		$this->showChangelogs = $showChangelogs;
 
 		return $this;
 	}

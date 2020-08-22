@@ -42,6 +42,10 @@ export default class AppearanceSettings {
 		return this.readValue("showMatureWarning", true);
 	}
 
+	public static showChangelogs(): boolean {
+		return this.readValue("showChangelogs", true);
+	}
+
 	private static data() {
 		return window["APPEARANCE_SETTINGS"] || {};
 	}

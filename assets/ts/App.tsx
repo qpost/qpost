@@ -68,6 +68,7 @@ import SuggestedUsers from "./Component/SuggestedUsers";
 import UpcomingBirthdays from "./Component/UpcomingBirthdays";
 import SidebarFooter from "./Parts/Footer/SidebarFooter";
 import SquareAd from "./Component/Advertisment/SquareAd";
+import AppearanceSettings from "./Util/AppearanceSettings";
 
 export default class App extends Component<any, {
 	validatedLogin: boolean,
@@ -149,8 +150,10 @@ export default class App extends Component<any, {
 					await PhraseStorage.loadPhrases();
 
 					if (Auth.isLoggedIn()) {
-						// load changelog
-						await ChangelogModal.loadChangelog();
+						if (AppearanceSettings.showChangelogs()) {
+							// load changelog
+							await ChangelogModal.loadChangelog();
+						}
 
 						// load badge status
 						BadgeStatus.update(() => {
