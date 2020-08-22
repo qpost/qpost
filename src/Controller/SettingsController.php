@@ -252,7 +252,8 @@ class SettingsController extends qpostController {
 					->setShowTrends($this->readCheckbox("showTrends"))
 					->setShowSuggestedUsers($this->readCheckbox("showSuggestedUsers"))
 					->setShowBirthdays($this->readCheckbox("showBirthdays"))
-					->setShowMatureWarning($this->readCheckbox("showMatureWarning")));
+					->setShowMatureWarning($this->readCheckbox("showMatureWarning"))
+					->setShowChangelogs($this->readCheckbox("showChangelogs")));
 
 				$entityManager->flush();
 
