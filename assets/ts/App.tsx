@@ -84,6 +84,9 @@ export default class App extends Component<any, {
 	}
 
 	public static async init(): Promise<void> {
+		// initialize API
+		API.i;
+
 		if ($("#root").length) {
 			NightMode.init();
 		} else {
@@ -138,10 +141,6 @@ export default class App extends Component<any, {
 			(async () => {
 				try {
 					if (Auth.isLoggedIn()) {
-						// load user info
-						const user = await API.i.token.verify();
-						Auth.setCurrentUser(user);
-
 						// load TokenStorage
 						await TokenStorage.loadTokens();
 					}

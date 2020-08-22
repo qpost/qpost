@@ -33,6 +33,8 @@ export default class TokenStorage {
 			const tokens: string[] = this.getCurrentTokens();
 			const final: StoredToken[] = [];
 
+			let first = true;
+
 			for (const token of tokens) {
 				try {
 					const api = new qpostAPI(API.getBaseURL(), token);
@@ -41,6 +43,11 @@ export default class TokenStorage {
 					if (!this.hasUser(user, final)) {
 						const storedToken = new StoredToken(token, user);
 						final.push(storedToken);
+					}
+
+					if (first) {
+						Auth.setCurrentUser(user);
+						first = false;
 					}
 				} catch (err) {
 					console.error("Invalid token: " + token + ", skipping.");
