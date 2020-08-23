@@ -18,8 +18,6 @@
  */
 
 const {resolve} = require("path");
-const glob = require("glob");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const optimizeCss = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -122,14 +120,6 @@ module.exports = {
 				test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
 				use: [{loader: "url-loader?limit=10000&mimetype=image/svg+xml"}]
 			}
-		]
-	},
-	optimization: {
-		minimizer: [
-			new UglifyJsPlugin({
-				extractComments: "all",
-				test: [/\.tsx?$/, /\.jsx?$/]
-			})
 		]
 	},
 	plugins: [
