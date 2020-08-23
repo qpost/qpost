@@ -52,5 +52,8 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postConnect, method: postConnect }
 
+    # Fixed Sentry crashing
+    Sentry\Monolog\Handler: ~
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
