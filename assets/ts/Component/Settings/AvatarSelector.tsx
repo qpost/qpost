@@ -25,6 +25,7 @@ import PostFormUploadItem from "../PostForm/PostFormUploadItem";
 import $ from "jquery";
 import {RcFile, UploadChangeParam} from "antd/es/upload";
 import AntMessage from "antd/es/message";
+import __ from "../../i18n/i18n";
 
 export default class AvatarSelector extends Component<any, {
 	avatar: string | PostFormUploadItem | undefined,
@@ -59,8 +60,12 @@ export default class AvatarSelector extends Component<any, {
 			return false;
 		}
 
-		if (!(size / 1024 / 1024 < 2)) {
-			AntMessage.error("Images must be smaller than 2MB.");
+		const limit = 2;
+
+		if (!(size / 1024 / 1024 < limit)) {
+			AntMessage.error(__("Images must be smaller than %size%.", {
+				"%size%": limit + "MB"
+			}));
 			return false;
 		}
 
@@ -114,7 +119,7 @@ export default class AvatarSelector extends Component<any, {
 					backgroundSize: "cover"
 				}}/> : <div>
 					<Icon type={"plus"}/>
-					<div className="ant-upload-text">Upload</div>
+					<div className="ant-upload-text">{__("avatarSelector.upload")}</div>
 				</div>}
 			</Upload>
 
@@ -130,7 +135,7 @@ export default class AvatarSelector extends Component<any, {
 
 							$(AvatarSelector.inputSelector).val("");
 						}}>
-					Delete profile picture
+					{__("avatarSelector.delete")}
 				</Button> : ""}
 		</div>;
 	}

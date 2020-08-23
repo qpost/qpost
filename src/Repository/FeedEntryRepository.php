@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,8 +21,9 @@
 namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Persistence\ManagerRegistry;
+use PDO;
 use qpost\Constants\FeedEntryType;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
@@ -56,8 +57,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("type", FeedEntryType::POST, Type::STRING)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -70,8 +70,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("type", FeedEntryType::REPLY, Type::STRING)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -84,8 +83,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("type", FeedEntryType::SHARE, Type::STRING)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -98,8 +96,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("type", FeedEntryType::NEW_FOLLOWING, Type::STRING)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -110,8 +107,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 			->setParameter("user", $user)
 			->getQuery()
 			->useQueryCache(true)
-			->useResultCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getSingleScalarResult();
 	}
 
@@ -126,7 +122,7 @@ class FeedEntryRepository extends ServiceEntityRepository {
 		$rsm->addScalarResult("shared", "shared", "boolean");
 
 		$ownerWhere = is_null($target) ? "(EXISTS (SELECT 1 FROM follower AS ff WHERE ff.sender_id = ? AND ff.receiver_id = u.id) OR u.id = ?)" : "f.user_id = ?";
-		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL AND (f.text IS NULL OR f.text NOT LIKE '@%')) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY' OR (f.type = 'POST' AND f.text LIKE '@%'))";
+		$typeWhere = $type === "posts" ? "((f.type = 'POST' AND f.parent_id IS NULL) OR (f.type = 'SHARE' AND f.parent_id IS NOT NULL))" : "(f.type = 'REPLY')";
 
 		$parameters[] = is_null($from) ? 0 : $from->getId();
 		$parameters[] = is_null($from) ? 0 : $from->getId();
@@ -251,5 +247,19 @@ LIMIT ? OFFSET ?", $rsm);
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * @return int
+	 * @author Mehdi Baaboura <mbaaboura@gigadrivegroup.com>
+	 */
+	public function deleteStaleShares(): int {
+		return $this->createQueryBuilder("f")
+			->delete()
+			->where("f.type = :type")
+			->setParameter("type", FeedEntryType::SHARE, PDO::PARAM_STR)
+			->andWhere("f.parent IS NULL")
+			->getQuery()
+			->execute();
 	}
 }

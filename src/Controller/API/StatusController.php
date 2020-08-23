@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,7 +21,7 @@
 namespace qpost\Controller\API;
 
 use DateTime;
-use Doctrine\ORM\NonUniqueResultException;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use MediaEmbed\MediaEmbed;
 use qpost\Constants\APIParameterType;
 use qpost\Constants\Feature;
@@ -30,6 +30,7 @@ use qpost\Constants\MediaFileType;
 use qpost\Constants\NotificationType;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\Hashtag;
+use qpost\Entity\MediaAttachment;
 use qpost\Entity\MediaFile;
 use qpost\Entity\Notification;
 use qpost\Entity\User;
@@ -40,7 +41,6 @@ use qpost\Exception\InvalidParameterTypeException;
 use qpost\Exception\InvalidTokenException;
 use qpost\Exception\MissingParameterException;
 use qpost\Exception\ResourceNotFoundException;
-use qpost\Util\Util;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use function array_key_exists;
@@ -118,7 +118,6 @@ class StatusController extends APIController {
 	 * @throws InvalidTokenException
 	 * @throws MissingParameterException
 	 * @throws ResourceNotFoundException
-	 * @throws NonUniqueResultException
 	 * @throws InvalidParameterStringLengthException
 	 */
 	public function post(): Response {
@@ -189,6 +188,8 @@ class StatusController extends APIController {
 			}
 		}
 
+		$notifications = [];
+
 		// handle reply notification
 		if ($parent && $type === FeedEntryType::REPLY) {
 			$parentUser = $parent->getUser();
@@ -202,11 +203,14 @@ class StatusController extends APIController {
 					->setTime(new DateTime("now"));
 
 				$this->entityManager->persist($notification);
+
+				$notifications[] = $notification;
 			}
 		}
 
 		$mediaFileRepository = $this->entityManager->getRepository(MediaFile::class);
 
+		$position = 1;
 		foreach ($attachments as $base64) {
 			$file = @base64_decode($base64);
 
@@ -265,10 +269,15 @@ class StatusController extends APIController {
 				}
 
 				if ($mediaFile) {
-					$feedEntry->addAttachment($mediaFile);
-					$mediaFile->addFeedEntry($feedEntry);
+					$attachment = (new MediaAttachment())
+						->setFeedEntry($feedEntry)
+						->setMediaFile($mediaFile)
+						->setPosition($position)
+						->setTime(new DateTime("now"));
 
-					$this->entityManager->persist($mediaFile);
+					$this->entityManager->persist($attachment);
+
+					$position++;
 				}
 			} else {
 				return $this->error("'attachments' has to be an array of base64 strings.", Response::HTTP_BAD_REQUEST);
@@ -311,10 +320,13 @@ class StatusController extends APIController {
 					}
 
 					if ($mediaFile) {
-						$feedEntry->addAttachment($mediaFile);
-						$mediaFile->addFeedEntry($feedEntry);
+						$attachment = (new MediaAttachment())
+							->setFeedEntry($feedEntry)
+							->setMediaFile($mediaFile)
+							->setPosition($position)
+							->setTime(new DateTime("now"));
 
-						$this->entityManager->persist($mediaFile);
+						$this->entityManager->persist($attachment);
 					}
 				}
 			}
@@ -354,11 +366,17 @@ class StatusController extends APIController {
 						->setTime(new DateTime("now"));
 
 					$this->entityManager->persist($notification);
+
+					$notifications[] = $notification;
 				}
 			}
 		}
 
 		$this->entityManager->flush();
+
+		foreach ($notifications as $notification) {
+			$this->messengerService->sendPushNotificationMessage($notification);
+		}
 
 		return $this->response($feedEntry);
 	}

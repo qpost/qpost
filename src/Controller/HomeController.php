@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,18 +20,15 @@
 
 namespace qpost\Controller;
 
-use qpost\Constants\MiscConstants;
-use qpost\Service\AuthorizationService;
 use qpost\Service\PostRequestService;
 use qpost\Service\RenderService;
 use qpost\Twig\Twig;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class HomeController extends AbstractController {
+class HomeController extends qpostController {
 	/**
 	 * @Route("/")
 	 *
@@ -51,16 +48,11 @@ class HomeController extends AbstractController {
 			$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
 
 			return $this->render($isMobile === false ? "pages/home/index.html.twig" : "pages/mobile/register.html.twig", Twig::param([
-				"description" => "A social microblogging network that helps you share your thoughts online, protected by freedom of speech.",
+				"description" => __("defaultDescription"),
 				"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-				"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
+				"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
 			]));
 		}
-	}
-
-	public function csrf(string $id, ?string $token): bool {
-		return $this->isCsrfTokenValid($id, $token);
 	}
 
 	public function flash(string $type, string $message) {

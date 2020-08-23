@@ -27,3 +27,15 @@
 		background-color: darken($danger, 10%);
 	}
 }
+
+@mixin darkButton() {
+	$color: #001949;
+
+	color: #F8F9FA !important;
+	background-color: $color !important;
+	border-color: darken($color, 5%) !important;
+
+	&:hover {
+		background-color: lighten($color, 5%) !important;
+	}
+}

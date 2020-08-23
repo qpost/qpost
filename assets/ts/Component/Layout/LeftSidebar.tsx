@@ -20,16 +20,56 @@
 import React, {Component} from "react";
 import Col from "antd/es/col";
 import "antd/es/col/style";
+import RightSidebar from "./RightSidebar";
+import SidebarStickyContent from "./SidebarStickyContent";
+import RightSidebarContent from "./RightSidebarContent";
 
 export default class LeftSidebar extends Component<{
 	negativeOffset?: boolean
-}, any> {
+}, {
+	randomizer: number
+}> {
+	public static INSTANCE: LeftSidebar | null = null;
+
+	constructor(props) {
+		super(props);
+
+		this.state = {randomizer: Math.random()}
+	}
+
+	public static update(): void {
+		if (this.INSTANCE !== null) {
+			this.INSTANCE.setState({
+				randomizer: Math.random()
+			});
+		}
+	}
+
+	componentDidMount() {
+		LeftSidebar.INSTANCE = this;
+	}
+
+	componentWillUnmount() {
+		if (LeftSidebar.INSTANCE === this) {
+			LeftSidebar.INSTANCE = null;
+		}
+	}
+
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+		const rightSidebarContent = RightSidebar.INSTANCE ? RightSidebar.INSTANCE.props.children : null;
+
 		return (
 			<Col lg={8} xl={6} className={"d-none d-lg-block"} style={this.props.negativeOffset ? {
 				marginTop: "-130px"
 			} : {}}>
-				{this.props.children}
+				<SidebarStickyContent>
+					{this.props.children}
+
+					{rightSidebarContent ? <div className={"d-none d-lg-block d-xl-none mt-3"}>
+						{RightSidebarContent.INSTANCE ? RightSidebarContent.INSTANCE.props.children : ""}
+						{rightSidebarContent}
+					</div> : ""}
+				</SidebarStickyContent>
 			</Col>
 		)
 	}

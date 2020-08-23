@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -31,7 +31,6 @@ use qpost\Entity\TemporaryOAuthCredentials;
 use qpost\Entity\User;
 use qpost\Service\OAuth\ThirdPartyIntegrationManagerService;
 use qpost\Service\OAuth\TwitterIntegration;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,7 +39,7 @@ use function serialize;
 use function strtoupper;
 use function unserialize;
 
-class ThirdPartyAuthController extends AbstractController {
+class ThirdPartyAuthController extends qpostController {
 	/**
 	 * @Route("/tpauth/{service}")
 	 * @param string $service

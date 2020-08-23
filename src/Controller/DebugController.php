@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -25,11 +25,10 @@ use Psr\Log\LoggerInterface;
 use qpost\Entity\FeedEntry;
 use qpost\Service\APIService;
 use qpost\Twig\Twig;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DebugController extends AbstractController {
+class DebugController extends qpostController {
 	/**
 	 * @Route("/debug", condition="'dev' === '%kernel.environment%'")
 	 * @param EntityManagerInterface $entityManager

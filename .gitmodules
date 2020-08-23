@@ -1,3 +1,6 @@
-[submodule "MailTemplates"]
-	path = src/Mail/Templates
-	url = https://gitlab.com/Gigadrive/MailTemplates.git
+[submodule "assets/ts/api"]
+	path = assets/ts/api
+	url = https://gitlab.com/Gigadrive/qpost/api-node.git
+[submodule "translations"]
+	path = translations
+	url = https://gitlab.com/Gigadrive/qpost/locales.git

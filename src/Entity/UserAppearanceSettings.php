@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -37,7 +37,7 @@ class UserAppearanceSettings {
 
 	/**
 	 * @ORM\OneToOne(targetEntity="qpost\Entity\User", inversedBy="appearanceSettings", cascade={"persist", "remove"})
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 * @Serializer\Exclude()
 	 */
 	private $user;
@@ -71,6 +71,11 @@ class UserAppearanceSettings {
 	 * @ORM\Column(type="boolean")
 	 */
 	private $showMatureWarning = true;
+
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $showChangelogs = true;
 
 	public function getId(): ?int {
 		return $this->id;
@@ -142,6 +147,16 @@ class UserAppearanceSettings {
 
 	public function setShowMatureWarning(bool $showMatureWarning): self {
 		$this->showMatureWarning = $showMatureWarning;
+
+		return $this;
+	}
+
+	public function getShowChangelogs(): ?bool {
+		return $this->showChangelogs;
+	}
+
+	public function setShowChangelogs(bool $showChangelogs): self {
+		$this->showChangelogs = $showChangelogs;
 
 		return $this;
 	}

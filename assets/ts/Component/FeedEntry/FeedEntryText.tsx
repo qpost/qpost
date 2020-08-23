@@ -18,8 +18,8 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
 import Linkifier from "../Linkifier";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
 
 export default class FeedEntryText extends Component<{
 	feedEntry: FeedEntry

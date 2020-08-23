@@ -2,7 +2,7 @@
 
 {% block content %}
 	<small>
-		&laquo; <a href="{{ path("qpost_apidocs_index") }}">Go back to the home page</a>
+		&laquo; <a href="{{ path("qpost_apidocs_index") }}">{{ __("apidocs.backToHome") }}</a>
 	</small>
 
 	<h1>User</h1>
@@ -142,7 +142,8 @@
 			<td>service</td>
 			<td>string</td>
 			<td>The service that this linked account is a part of, one of these values: <code>DISCORD</code> / <code>TWITCH</code>
-				/ <code>TWITTER</code></td>
+				/ <code>TWITTER</code> / <code>MASTODON</code> / <code>LASTFM</code> / <code>SPOTIFY</code> / <code>INSTAGRAM</code>
+				/ <code>REDDIT</code> / <code>YOUTUBE</code></td>
 		</tr>
 		<tr>
 			<td>linkedUserId</td>

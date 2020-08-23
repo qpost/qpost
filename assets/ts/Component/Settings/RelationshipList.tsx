@@ -18,18 +18,20 @@
  */
 
 import React, {Component} from "react";
-import API from "../../API/API";
-import Block from "../../Entity/Account/Block";
-import Follower from "../../Entity/Account/Follower";
+import API from "../../API";
 import Spin from "antd/es/spin";
 import {Empty, Typography} from "antd";
 import "antd/es/typography/style";
-import User from "../../Entity/Account/User";
 import {formatNumberShort} from "../../Util/Format";
 import FollowButton from "../FollowButton";
 import FollowStatus from "../../Util/FollowStatus";
 import VerifiedBadge from "../VerifiedBadge";
 import InfiniteScroll from "react-infinite-scroller";
+import Follower from "../../api/src/Entity/Follower";
+import Block from "../../api/src/Entity/Block";
+import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
+import PrivacyBadge from "../PrivacyBadge";
 
 export default class RelationshipList extends Component<{
 	type: "BLOCKED" | "FOLLOWERS" | "FOLLOWING"
@@ -70,7 +72,7 @@ export default class RelationshipList extends Component<{
 				param["max"] = lastUser.getId();
 			}
 
-			API.block.list().then(value => {
+			API.i.block.list().then(value => {
 				const blocks: Block[] = this.state.blocks || [];
 
 				value.forEach(block => blocks.push(block));
@@ -91,7 +93,7 @@ export default class RelationshipList extends Component<{
 				param["max"] = lastUser.getId();
 			}
 
-			API.follow.list(this.props.type === "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.props.type !== "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.state.followers && this.state.followers.length ? this.state.followers[this.state.followers.length - 1].getId() : undefined).then(value => {
+			API.i.follow.list(this.props.type === "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.props.type !== "FOLLOWING" ? window["CURRENT_USER_ID"] : undefined, this.state.followers && this.state.followers.length ? this.state.followers[this.state.followers.length - 1].getId() : undefined).then(value => {
 				const followers: Follower[] = this.state.followers || [];
 
 				value.forEach(follower => followers.push(follower));
@@ -112,7 +114,7 @@ export default class RelationshipList extends Component<{
 		}
 
 		if ((this.state.followers || this.state.blocks).length === 0) {
-			return <Empty description={"Nothing found."}/>
+			return <Empty description={__("relationshipList.empty")}/>
 		}
 
 		return <InfiniteScroll
@@ -155,7 +157,7 @@ export default class RelationshipList extends Component<{
 					<a href={"/" + user.getUsername()} className={"clearUnderline"}>
 						<Typography.Paragraph ellipsis className={"float-left ml-2 mb-0"}>
 							<p className={"text-white font-weight-bold mb-0"}>
-								{user.getDisplayName()}<VerifiedBadge target={user}/>
+								{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge target={user}/>
 							</p>
 
 							<p className={"text-muted mb-0 mt-n1"}>
@@ -168,12 +170,12 @@ export default class RelationshipList extends Component<{
 
 			<td className={"text-center d-none d-lg-table-cell"}>
 				<p className={"mb-0 font-weight-bold"}>{formatNumberShort(user.getTotalPostCount())}</p>
-				<p className={"mb-0 small text-muted text-uppercase"}>posts</p>
+				<p className={"mb-0 small text-muted text-uppercase"}>{__("profile.posts")}</p>
 			</td>
 
 			<td className={"text-center d-none d-md-table-cell"}>
 				<p className={"mb-0 font-weight-bold"}>{formatNumberShort(user.getFollowerCount())}</p>
-				<p className={"mb-0 small text-muted text-uppercase"}>followers</p>
+				<p className={"mb-0 small text-muted text-uppercase"}>{__("profile.followers")}</p>
 			</td>
 
 			<td style={{

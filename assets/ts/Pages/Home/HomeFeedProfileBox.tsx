@@ -23,7 +23,9 @@ import {Link} from "react-router-dom";
 import FollowButton from "../../Component/FollowButton";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import {formatNumberShort} from "../../Util/Format";
-import {Card} from "antd";
+import {Button, Card} from "antd";
+import __ from "../../i18n/i18n";
+import PrivacyBadge from "../../Component/PrivacyBadge";
 
 export default class HomeFeedProfileBox extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -31,7 +33,22 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 
 		if (!currentUser) {
 			Auth.logout();
-			return null;
+			return <Card>
+				<h4 className={"text-center text-primary"}>
+					<i className="fas fa-user-plus"/>
+				</h4>
+
+				<h4 className={"text-center mb-0"}>
+					{__("loginPrompt.description")}
+				</h4>
+
+				<div className={"text-center mt-3"}>
+					<a href={"/login"} className={"clearUnderline"}>
+						<Button type={"primary"} size={"large"}
+								shape={"round"}>{__("landing.home.loginButton")}</Button>
+					</a>
+				</div>
+			</Card>;
 		}
 
 		return <Card className="homeFeedProfileBox mb-3" size={"small"}>
@@ -63,7 +80,8 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 										  wordWrap: "normal",
 										  fontSize: "16px"
 									  }}>
-									{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/>
+									{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/><PrivacyBadge
+									target={currentUser}/>
 								</span>
 						</Link>
 
@@ -86,7 +104,8 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 					</div>
 				</div>
 
-				<FollowButton target={currentUser} className={"float-right mt-2"} size={"small"}/>
+				<FollowButton target={currentUser} className={"float-right mt-2 homeFeedProfileBoxEditButton"}
+							  size={"small"}/>
 			</div>
 
 			<hr className="mb-2 mt-3"/>
@@ -95,7 +114,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 				<Link to={"/" + currentUser.getUsername()} className="clearUnderline mb-1">
 					<div style={{height: "24px"}}>
 						<div className="text-muted text-uppercase small float-left pt-1">
-							Posts
+							{__("profile.posts")}
 						</div>
 
 						<div className="font-weight-bold text-uppercase float-right">
@@ -107,7 +126,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 				<Link to={"/" + currentUser.getUsername() + "/following"} className="clearUnderline mb-1">
 					<div style={{height: "24px"}}>
 						<div className="text-muted text-uppercase small float-left pt-1">
-							Following
+							{__("profile.following")}
 						</div>
 
 						<div className="font-weight-bold text-uppercase float-right">
@@ -119,7 +138,7 @@ export default class HomeFeedProfileBox extends Component<any, any> {
 				<Link to={"/" + currentUser.getUsername() + "/followers"} className="clearUnderline mb-1">
 					<div style={{height: "24px"}}>
 						<div className="text-muted text-uppercase small float-left pt-1">
-							Followers
+							{__("profile.followers")}
 						</div>
 
 						<div className="font-weight-bold text-uppercase float-right">

@@ -26,9 +26,12 @@ import Menu from "antd/es/menu";
 import "antd/es/menu/style";
 import NightMode from "../../../NightMode/NightMode";
 import Auth from "../../../Auth/Auth";
-import User from "../../../Entity/Account/User";
+import User from "../../../api/src/Entity/User";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../../Component/VerifiedBadge";
+import AccountSwitcher from "../../../Component/AccountSwitcher";
+import __ from "../../../i18n/i18n";
+import PrivacyBadge from "../../../Component/PrivacyBadge";
 import ClickEvent = JQuery.ClickEvent;
 
 export default class MobileSider extends Component<{
@@ -96,7 +99,8 @@ export default class MobileSider extends Component<{
 
 					<div style={{float: "left", width: "calc(100% - 40px - 20px)"}}>
 						<div className={"displayName"}>
-							{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/>
+							{currentUser.getDisplayName()}<VerifiedBadge target={currentUser}/><PrivacyBadge
+							target={currentUser}/>
 						</div>
 
 						<div className={"username"}>
@@ -110,35 +114,45 @@ export default class MobileSider extends Component<{
 						<Link to={"/profile/" + currentUser.getUsername()} className={"clearUnderline"}
 							  onClick={(e) => this.toggle()}>
 							<i className={"far fa-user iconMargin-10"}/>
-							<span className="nav-text">Profile</span>
+							<span className="nav-text">{__("navigation.account.myprofile")}</span>
 						</Link>
 					</Menu.Item>,
 						<Menu.Item key="2">
 							<a href={"/settings/profile/appearance"} className={"clearUnderline"}
 							   onClick={(e) => this.toggle()}>
 								<i className={"fas fa-cog iconMargin-10"}/>
-								<span className="nav-text">Settings</span>
+								<span className="nav-text">{__("navigation.account.settings")}</span>
 							</a>
 						</Menu.Item>,
 						<Menu.Item key="3">
 							<Link to={"#"} onClick={(e) => {
 								e.preventDefault();
+								AccountSwitcher.open();
+								this.toggle();
+							}} className={"clearUnderline"}>
+								<i className={"fas fa-user-friends iconMargin-10"}/>
+								<span className="nav-text">{__("navigation.account.switch")}</span>
+							</Link>
+						</Menu.Item>,
+						<Menu.Item key="4">
+							<Link to={"#"} onClick={(e) => {
+								e.preventDefault();
 								Auth.logout();
 							}} className={"clearUnderline"}>
 								<i className={"fas fa-sign-out-alt iconMargin-10"}/>
-								<span className="nav-text">Logout</span>
+								<span className="nav-text">{__("navigation.account.logout")}</span>
 							</Link>
 						</Menu.Item>] : [
 						<Menu.Item key="1">
 							<a href={"/login"} className={"clearUnderline"}>
 								<i className={"far fa-user iconMargin-10"}/>
-								<span className="nav-text">Login</span>
+								<span className="nav-text">{__("landing.home.loginButton")}</span>
 							</a>
 						</Menu.Item>,
 						<Menu.Item key="2">
 							<a href={"/"} className={"clearUnderline"}>
 								<i className={"fas fa-sign-in-alt iconMargin-10"}/>
-								<span className="nav-text">Sign up</span>
+								<span className="nav-text">{__("navigation.account.signup")}</span>
 							</a>
 						</Menu.Item>
 					]}

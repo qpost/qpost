@@ -24,12 +24,12 @@ use BenTools\WebPushBundle\Model\Message\PushNotification;
 use BenTools\WebPushBundle\Sender\PushMessageSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Constants\NotificationType;
 use qpost\Entity\Notification;
 use qpost\Entity\PushSubscription;
 use qpost\Factory\HttpClientFactory;
-use qpost\Util\Util;
 use function count;
 use function substr;
 

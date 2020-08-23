@@ -4,8 +4,7 @@
 	<img src="/assets/img/qpost-white-small.png" height="60" alt="qpost" title="qpost Logo" class="logo"/>
 
 	<form class="mt-3" method="post" action="{{ path("qpost_home_index") }}">
-		{% include "parts/csrf.html.twig" %}
-
+		{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 		{% include "parts/flash.html.twig" %}
 
 		<input type="email" class="form-control mb-2" name="email" placeholder="Email"/>

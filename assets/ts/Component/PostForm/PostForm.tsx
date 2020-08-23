@@ -18,7 +18,6 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
 import Tooltip from "antd/es/tooltip";
 import "antd/es/tooltip/style";
 import Button from "antd/es/button";
@@ -29,7 +28,7 @@ import "antd/es/modal/style";
 import AntMessage from "antd/es/message";
 import WindowSizeListener from "react-window-size-listener";
 import $ from "jquery";
-import API from "../../API/API";
+import API from "../../API";
 import FeedEntryList from "../FeedEntry/FeedEntryList";
 import Upload, {RcFile, UploadChangeParam} from "antd/es/upload";
 import Spin from "antd/es/spin";
@@ -38,13 +37,16 @@ import {Mentions, message, Switch} from "antd";
 import "antd/es/switch/style";
 import "antd/es/icon/style";
 import "antd/es/mentions/style";
-import User from "../../Entity/Account/User";
 import Auth from "../../Auth/Auth";
 import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryListItem from "../FeedEntry/FeedEntryListItem";
 import ReplyList from "../FeedEntry/ReplyList";
-import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import FirstPostEncouragement from "../FirstPostEncouragement";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import FeedEntryType from "../../api/src/Entity/FeedEntryType";
+import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
+import PrivacyBadge from "../PrivacyBadge";
 
 export default class PostForm extends Component<any, {
 	mobile: boolean,
@@ -137,7 +139,7 @@ export default class PostForm extends Component<any, {
 
 									this.addFile(uploadItem);
 								} else {
-									message.error("An error occurred.");
+									message.error(__("error.general"));
 								}
 							};
 
@@ -220,13 +222,13 @@ export default class PostForm extends Component<any, {
 
 			if (this.state.replyTo) parameters["parent"] = this.state.replyTo.getId();
 
-			API.status.post(message, nsfw, attachments, this.state.replyTo).then(post => {
+			API.i.status.post(message, nsfw, attachments, this.state.replyTo).then(post => {
 				const entryList: FeedEntryList | null = FeedEntryList.instance;
 				const replyList: ReplyList | null = ReplyList.instance;
 
-				AntMessage.success("Your post has been sent.");
+				AntMessage.success(__("postForm.success"));
 
-				if (entryList && post.getType() === FeedEntryType.POST && ((!post.getText()) || (post.getText() && !post.getText().startsWith("@")))) {
+				if (entryList && post.getType() === FeedEntryType.POST) {
 					entryList.prependEntry(post);
 				} else if (replyList && post.getType() === FeedEntryType.REPLY) {
 					replyList.prependEntry(post);
@@ -281,8 +283,12 @@ export default class PostForm extends Component<any, {
 			return;
 		}
 
-		if (!(size / 1024 / 1024 < 10)) {
-			AntMessage.error("Images must be smaller than 10MB.");
+		const limit = 10;
+
+		if (!(size / 1024 / 1024 < limit)) {
+			AntMessage.error(__("postForm.imageTooBig", {
+				"%size%": limit + "MB"
+			}));
 			return;
 		}
 
@@ -291,7 +297,7 @@ export default class PostForm extends Component<any, {
 		if (photos.length > 0) {
 			for (const photo of photos) {
 				if (photo.type === "image/gif") {
-					AntMessage.error("You can not add more attachments.");
+					AntMessage.error(__("postForm.maxAttachmentsReached"));
 
 					return;
 				}
@@ -328,7 +334,7 @@ export default class PostForm extends Component<any, {
 					<Button type={"primary"} onClick={(e) => {
 						this.send(e);
 					}} className={"float-right"}>
-						Send
+						{__("postForm.sendButton")}
 					</Button>
 				</div>
 				<hr/>
@@ -339,7 +345,7 @@ export default class PostForm extends Component<any, {
 						});
 					}}/> : ""}
 				<Mentions rows={3} style={{resize: "none", width: "100%"}} id={"postFormTextarea"}
-						  placeholder={"Post something for your followers!"} onChange={(e) => this.change(e)}
+						  placeholder={__("postForm.placeholder")} onChange={(e) => this.change(e)}
 						  value={this.state.message} loading={this.state.loadingUsers} onSearch={text => {
 					if (!text) {
 						this.setState({
@@ -354,7 +360,7 @@ export default class PostForm extends Component<any, {
 						loadingUsers: true
 					});
 
-					API.search.get("user", text, 10).then(result => {
+					API.i.search.get("user", text, 10).then(result => {
 						this.setState({
 							suggestedUsers: result.users,
 							loadingUsers: false
@@ -369,7 +375,7 @@ export default class PostForm extends Component<any, {
 
 							<span>
 								<span className={"font-weight-bold"}>
-									{user.getDisplayName()}<VerifiedBadge target={user}/>
+									{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge target={user}/>
 								</span>
 
 								<span className={"text-muted ml-2"}>
@@ -414,7 +420,7 @@ export default class PostForm extends Component<any, {
 							disabled={this.state.photos.length >= 4}
 							multiple={true}
 						>
-							<Tooltip placement={"top"} title={"Add photos"}>
+							<Tooltip placement={"top"} title={__("postForm.addPhotosButton")}>
 								<Button type={"link"} className={"actionButton"}
 										disabled={canAddPhoto}>
 									<i className="fas fa-images"/>

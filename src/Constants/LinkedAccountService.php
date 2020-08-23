@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -47,10 +47,30 @@ class LinkedAccountService {
 	public const LASTFM = "LASTFM";
 
 	/**
+	 * @var string SPOTIFY
+	 */
+	public const SPOTIFY = "SPOTIFY";
+
+	/**
+	 * @var string INSTAGRAM
+	 */
+	public const INSTAGRAM = "INSTAGRAM";
+
+	/**
+	 * @var string REDDIT
+	 */
+	public const REDDIT = "REDDIT";
+
+	/**
+	 * @var string YOUTUBE
+	 */
+	public const YOUTUBE = "YOUTUBE";
+
+	/**
 	 * @return string[]
 	 */
 	public static function all(): array {
-		$services = [self::DISCORD, self::TWITCH, self::TWITTER, self::MASTODON, self::LASTFM];
+		$services = [self::DISCORD, self::TWITCH, self::TWITTER, self::MASTODON, self::LASTFM, self::SPOTIFY, self::INSTAGRAM, self::REDDIT, self::YOUTUBE];
 		$result = [];
 
 		foreach ($services as $service) {

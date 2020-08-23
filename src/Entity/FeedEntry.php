@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -36,7 +36,8 @@ use function is_null;
  * @ORM\Entity(repositoryClass="qpost\Repository\FeedEntryRepository")
  * @ORM\Table(indexes={
  *     @ORM\Index(columns={"type"}),
- *     @ORM\Index(columns={"nsfw"})
+ *     @ORM\Index(columns={"nsfw"}),
+ *     @ORM\Index(columns={"time"})
  * })
  */
 class FeedEntry {
@@ -49,7 +50,7 @@ class FeedEntry {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="feedEntries", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $user;
 
@@ -60,11 +61,13 @@ class FeedEntry {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", fetch="EAGER")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 */
 	private $referencedUser;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\FeedEntry", inversedBy="children", fetch="EAGER")
+	 * @ORM\JoinColumn(onDelete="SET NULL")
 	 * @Serializer\Exclude()
 	 */
 	private $parent;
@@ -77,6 +80,7 @@ class FeedEntry {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\Token", inversedBy="feedEntries", fetch="EXTRA_LAZY")
+	 * @ORM\JoinColumn(onDelete="SET NULL")
 	 * @Serializer\Exclude()
 	 */
 	private $token;
@@ -119,6 +123,11 @@ class FeedEntry {
 	/**
 	 * @Serializer\Exclude()
 	 */
+	private $attachments = null;
+
+	/**
+	 * @Serializer\Exclude()
+	 */
 	private $favorited = null;
 
 	/**
@@ -128,21 +137,21 @@ class FeedEntry {
 	private $favorites;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\MediaFile", inversedBy="feedEntries", fetch="EXTRA_LAZY")
-	 */
-	private $attachments;
-
-	/**
 	 * @ORM\ManyToMany(targetEntity="qpost\Entity\Hashtag", inversedBy="feedEntries", fetch="EXTRA_LAZY")
 	 * @Serializer\Exclude()
 	 */
 	private $hashtags;
 
+	/**
+	 * @ORM\OneToMany(targetEntity=MediaAttachment::class, mappedBy="feedEntry", orphanRemoval=true)
+	 */
+	private $mediaAttachments;
+
 	public function __construct() {
 		$this->children = new ArrayCollection();
 		$this->favorites = new ArrayCollection();
-		$this->attachments = new ArrayCollection();
 		$this->hashtags = new ArrayCollection();
+		$this->mediaAttachments = new ArrayCollection();
 	}
 
 	/**
@@ -518,6 +527,27 @@ class FeedEntry {
 	}
 
 	/**
+	 * @return MediaFile[]
+	 * @Serializer\VirtualProperty()
+	 * @Serializer\SerializedName("attachments")
+	 * @author Mehdi Baaboura <mbaaboura@gigadrivegroup.com>
+	 */
+	public function getAttachments(): array {
+		if (!is_null($this->attachments)) {
+			return $this->attachments;
+		}
+
+		$apiService = APIService::$instance;
+
+		if (!is_null($apiService)) {
+			$this->attachments = $apiService->getEntityManager()->getRepository(MediaFile::class)->getFilesForFeedEntry($this);
+			return $this->attachments;
+		}
+
+		return [];
+	}
+
+	/**
 	 * The favorites of this feed entry.
 	 *
 	 * @return Collection|Favorite[]
@@ -556,39 +586,6 @@ class FeedEntry {
 	}
 
 	/**
-	 * The attachments of this feed entry.
-	 *
-	 * @return Collection|MediaFile[]
-	 */
-	public function getAttachments(): Collection {
-		return $this->attachments;
-	}
-
-	/**
-	 * @param MediaFile $attachment
-	 * @return FeedEntry
-	 */
-	public function addAttachment(MediaFile $attachment): self {
-		if (!$this->attachments->contains($attachment)) {
-			$this->attachments[] = $attachment;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param MediaFile $attachment
-	 * @return FeedEntry
-	 */
-	public function removeAttachment(MediaFile $attachment): self {
-		if ($this->attachments->contains($attachment)) {
-			$this->attachments->removeElement($attachment);
-		}
-
-		return $this;
-	}
-
-	/**
 	 * @return Collection|Hashtag[]
 	 */
 	public function getHashtags(): Collection {
@@ -606,6 +603,34 @@ class FeedEntry {
 	public function removeHashtag(Hashtag $hashtag): self {
 		if ($this->hashtags->contains($hashtag)) {
 			$this->hashtags->removeElement($hashtag);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection|MediaAttachment[]
+	 */
+	public function getMediaAttachments(): Collection {
+		return $this->mediaAttachments;
+	}
+
+	public function addMediaAttachment(MediaAttachment $mediaAttachment): self {
+		if (!$this->mediaAttachments->contains($mediaAttachment)) {
+			$this->mediaAttachments[] = $mediaAttachment;
+			$mediaAttachment->setFeedEntry($this);
+		}
+
+		return $this;
+	}
+
+	public function removeMediaAttachment(MediaAttachment $mediaAttachment): self {
+		if ($this->mediaAttachments->contains($mediaAttachment)) {
+			$this->mediaAttachments->removeElement($mediaAttachment);
+			// set the owning side to null (unless already changed)
+			if ($mediaAttachment->getFeedEntry() === $this) {
+				$mediaAttachment->setFeedEntry(null);
+			}
 		}
 
 		return $this;

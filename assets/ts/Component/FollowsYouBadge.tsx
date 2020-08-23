@@ -18,7 +18,8 @@
  */
 
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
+import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
 
 export default class FollowsYouBadge extends Component<{
 	target: User
@@ -28,7 +29,7 @@ export default class FollowsYouBadge extends Component<{
 
 		if (target !== undefined && target.isFollowingYou()) {
 			return <span className="text-uppercase small followsYouBadge px-1 py-1 ml-2">
-				follows you
+				{__("profile.followsYou")}
 			</span>;
 		}
 

@@ -6,10 +6,10 @@
 {% if title != siteName %}
 	{% set title = title ~ " - " ~ siteName %}
 {% else %}
-	{% set title = "The open-source Twitter alternative - qpost" %}
+	{% set title = __("defaultTitle") %}
 {% endif %}
 <!DOCTYPE html>
-<html lang="en" class="{% block additionalHtmlClasses %}{% endblock %}">
+<html lang="{{ app.request.locale }}" class="{% block additionalHtmlClasses %}{% endblock %}">
 <head>
 	<title>{{ title }}</title>
 
@@ -52,7 +52,8 @@
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.2/css/flag-icon.min.css" rel="stylesheet"/>
 
-	<script data-ad-client="ca-pub-6156128043207415" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script data-ad-client="ca-pub-6156128043207415" async
+			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 	{% for url in [
 		"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css",
@@ -60,13 +61,8 @@
 		<link href="{{ url }}" type="text/css" rel="stylesheet"/>
 	{% endfor %}
 
-	{% if styleBundleName is defined and styleBundleName %}
-		<link href="/build/{{ styleBundleName }}" type="text/css" rel="stylesheet"/>
-	{% endif %}
-
-	{% if canonicalURL is defined and canonicalURL %}
-		<link rel="canonical" href="{{ canonicalURL }}"/>
-	{% endif %}
+	<link href="/{{ cssBundle() }}" type="text/css" rel="stylesheet"/>
+	<link rel="canonical" href="{{ currentURL() }}"/>
 
 	<script type="text/javascript">
 		window["CURRENT_USER_ID"] = {{ app.user ? app.user.id : 0 }}
@@ -77,6 +73,8 @@
 		{% if app.user %}
 		window["APPEARANCE_SETTINGS"] = JSON.parse('{{ app.user.appearanceSettings|jms|raw }}');
 		{% endif %}
+
+		window["TIMEAGO_STRINGS"] = JSON.parse('{{ i18n.timeagoStrings|jms|raw }}');
 
 		window["restoreTitle"] = "{{ profileLoadPost is defined ? originalTitle }}";
 		window["CURRENT_STATUS_MODAL"] = 0;
@@ -94,6 +92,11 @@
 		{% endif %}
 
 		window["VAPID_SERVER_KEY"] = "{{ bentools_webpush.server_key }}";
+
+		window["GATEWAY_HOST"] = "{{ _ENV["GATEWAY_HOST"] }}";
+		window["GATEWAY_PORT"] = {{ _ENV["GATEWAY_PORT"] }};
+
+		window["GITLAB_RELEASES_URL"] = "{{ gitlab.releasesListURL }}";
 	</script>
 
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -124,7 +127,7 @@
 
 {# "/assets/js/jquery.highlight-within-textarea.js" #}
 {% for url in [
-	"/build/" ~ bundleName,
+	"/" ~ jsBundle(),
 	"/assets/js/notification.js",
 	"https://www.google.com/recaptcha/api.js",
 	"https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js",

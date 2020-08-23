@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -29,6 +29,7 @@ use qpost\Constants\PrivacyLevel;
  * @see PrivacyLevel
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\FollowRequestRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"time"})})
  */
 class FollowRequest {
 	/**
@@ -40,13 +41,13 @@ class FollowRequest {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="sentRequests", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $sender;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="followRequests", fetch="EAGER")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $receiver;
 

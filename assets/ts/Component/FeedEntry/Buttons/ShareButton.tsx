@@ -18,14 +18,14 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import Auth from "../../../Auth/Auth";
 import {formatNumberShort} from "../../../Util/Format";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import {message, Spin} from "antd";
-import API from "../../../API/API";
+import API from "../../../API";
 import LoginSuggestionModal from "../../LoginSuggestionModal";
-import PrivacyLevel from "../../../Entity/Account/PrivacyLevel";
+import FeedEntry from "../../../api/src/Entity/FeedEntry";
+import PrivacyLevel from "../../../api/src/Entity/PrivacyLevel";
 
 export default class ShareButton extends Component<{
 	entry: FeedEntry,
@@ -56,7 +56,7 @@ export default class ShareButton extends Component<{
 					this.setState({loading: true});
 
 					if (this.state.shared) {
-						API.share.delete(this.props.entry).then(feedEntry => {
+						API.i.share.delete(this.props.entry).then(feedEntry => {
 							this.setState({
 								shared: !this.state.shared,
 								loading: false,
@@ -71,7 +71,7 @@ export default class ShareButton extends Component<{
 							this.setState({loading: false});
 						});
 					} else {
-						API.share.post(this.props.entry).then(feedEntry => {
+						API.i.share.post(this.props.entry).then(feedEntry => {
 							this.setState({
 								shared: !this.state.shared,
 								loading: false,

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -23,8 +23,8 @@ namespace qpost\Repository;
 use DateInterval;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Constants\MiscConstants;
 use qpost\Constants\PrivacyLevel;
 use qpost\Entity\User;
@@ -60,8 +60,7 @@ class UserRepository extends ServiceEntityRepository {
 			->setCacheable(true)
 			->getQuery()
 			->useQueryCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
-			->useResultCache(true)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME)
 			->getResult();
 	}
 
@@ -88,8 +87,7 @@ class UserRepository extends ServiceEntityRepository {
 			->setMaxResults(10)
 			->getQuery()
 			->useQueryCache(true)
-			->setResultCacheLifetime(MiscConstants::RESULT_CACHE_LIFETIME)
-			->useResultCache(true)
+			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME)
 			->getResult();
 	}
 
@@ -186,5 +184,19 @@ LIMIT ? OFFSET ?", $rsm);
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * @return int
+	 * @author Mehdi Baaboura <mbaaboura@gigadrivegroup.com>
+	 */
+	public function deleteStaleUsers(): int {
+		return $this->createQueryBuilder("u")
+			->delete()
+			->where("u.emailActivated = false")
+			->andWhere("u.time < :limit")
+			->setParameter("limit", new DateTime("-14 days"))
+			->getQuery()
+			->execute();
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,8 +20,9 @@
 
 namespace qpost\Repository;
 
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use qpost\Entity\TemporaryOAuthCredentials;
 use qpost\Entity\User;
 
@@ -45,5 +46,18 @@ class TemporaryOAuthCredentialsRepository extends ServiceEntityRepository {
 			->getQuery()
 			->useQueryCache(true)
 			->getOneOrNullResult();
+	}
+
+	/**
+	 * @return int
+	 * @author Mehdi Baaboura <mbaaboura@gigadrivegroup.com>
+	 */
+	public function deleteStaleCredentials(): int {
+		return $this->createQueryBuilder("c")
+			->delete()
+			->where("c.time < :limit")
+			->setParameter("limit", new DateTime("-1 hour"))
+			->getQuery()
+			->execute();
 	}
 }

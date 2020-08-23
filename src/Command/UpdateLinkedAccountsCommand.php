@@ -69,5 +69,7 @@ class UpdateLinkedAccountsCommand extends Command {
 		}
 
 		$output->writeln("Done.");
+
+		return 0;
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -39,7 +39,7 @@ class Suspension {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="suspensions")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $target;
 
@@ -50,6 +50,7 @@ class Suspension {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="createdSuspensions")
+	 * @ORM\JoinColumn(onDelete="SET NULL")
 	 */
 	private $staff;
 

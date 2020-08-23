@@ -21,9 +21,11 @@
 @import "~bootstrap/scss/bootstrap";
 @import "util/index";
 
+@import "account-switcher";
 @import "alerts";
 @import "base";
 @import "buttons";
+@import "changelog";
 @import "download";
 @import "emoji";
 @import "feed";

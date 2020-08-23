@@ -140,6 +140,8 @@
 
 @mixin desktopHeaderUserStyle($bgColor) {
 	.desktopHeaderUser, .desktopHeaderSettings {
+		height: 63px !important;
+
 		&, &:hover, &:active, &:focus {
 			background-color: $bgColor !important;
 			top: 0 !important;
@@ -149,7 +151,70 @@
 	.desktopHeaderUser, .desktopHeaderSettings {
 		padding: 0 15px !important;
 	}
+
+	.desktopHeaderAccountDropdown {
+		$width: 80px;
+
+		position: absolute;
+		width: calc(200px + #{$width});
+		margin-left: calc(-86px - #{$width});
+		background-color: $bgColor;
+		margin-top: -1px;
+		padding: 15px;
+		cursor: default;
+		right: 0;
+
+		&, a, a:hover, a:visited, a:focus, a:active {
+			color: #FFF;
+			text-decoration: none !important;
+		}
+
+		a {
+			display: block;
+			line-height: 30px;
+
+			i, svg {
+				color: darken(#FFF, 30%);
+			}
+		}
+
+		.profileInfo {
+			@include clearfix();
+			line-height: 23px;
+			$avatarSize: 48px;
+			$avatarMargin: 10px;
+
+			.profileInfoLeft {
+				float: left;
+				margin-right: $avatarMargin;
+
+				img {
+					@extend .rounded;
+
+					height: $avatarSize;
+					width: $avatarSize;
+				}
+			}
+
+			.profileInfoRight {
+				float: left;
+				max-width: calc(100% - #{$avatarSize} - #{$avatarMargin});
+
+				.profileInfoDisplayName {
+					font-size: 18px;
+					font-weight: bold;
+				}
+
+				.profileInfoUserName {
+					color: darken(#FFF, 30%);
+				}
+
+				.profileInfoDisplayName, .profileInfoUserName {
+					@include cutText();
+				}
+			}
+		}
+	}
 }
 
 @include desktopHeaderUserStyle(darken($primary, 10%));
-

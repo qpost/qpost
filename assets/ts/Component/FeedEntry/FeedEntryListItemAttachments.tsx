@@ -18,13 +18,13 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import MediaFile from "../../Entity/Media/MediaFile";
-import MediaFileType from "../../Entity/Media/MediaFileType";
 import ImageViewer from "../ImageViewer";
 import GifPlayer from "react-gif-player";
 import {stillGIFURL} from "../../Util/Format";
 import AppearanceSettings from "../../Util/AppearanceSettings";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import MediaFile from "../../api/src/Entity/MediaFile";
+import MediaFileType from "../../api/src/Entity/MediaFileType";
 
 export default class FeedEntryListItemAttachments extends Component<{
 	entry: FeedEntry
@@ -40,29 +40,33 @@ export default class FeedEntryListItemAttachments extends Component<{
 		const entry: FeedEntry = this.props.entry;
 		const attachments: MediaFile[] = entry.getAttachments();
 
+		let content: any = "";
+
 		if (attachments.length === 1) {
 			const mediaFile: MediaFile = attachments[0];
 
 			switch (mediaFile.getType()) {
 				case MediaFileType.VIDEO:
-					return <div className={"embed-responsive embed-responsive-16by9"}>
+					content = <div className={"embed-responsive embed-responsive-16by9"}>
 						<iframe src={mediaFile.getURL()} className={"embed-responsive-item"}/>
 					</div>;
+					break;
 				case MediaFileType.IMAGE:
 					if (mediaFile.getURL().endsWith(".gif")) {
-						return <div className={"mt-2"}>
+						content = <div className={"mt-2"}>
 							<GifPlayer gif={mediaFile.getURL()} still={stillGIFURL(mediaFile.getURL())}
 									   autoplay={AppearanceSettings.autoplayGIFs()}/>
 						</div>;
 					}
+					break;
 			}
 		}
 
-		if (attachments.length > 0) {
+		if (content === "" && attachments.length > 0) {
 			if (attachments.length === 1) {
 				const mediaFile: MediaFile = attachments[0];
 
-				return <div className={"d-block w-100 float-left" + (!this.props.entry.getText() ? " mt-2" : "")}>
+				content = <div className={"d-block w-100 float-left"}>
 					{mediaFile.getType() === MediaFileType.IMAGE ?
 						<div className={"border border-mainColor bg-dark"} style={{
 							backgroundImage: 'url("' + stillGIFURL(mediaFile.getURL()) + '")',
@@ -79,7 +83,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 						</div> : ""}
 				</div>;
 			} else if (attachments.length === 2) {
-				return <div style={{
+				content = <div style={{
 					height: "500px",
 					width: "100%",
 					overflow: "hidden"
@@ -104,7 +108,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 					})}
 				</div>;
 			} else if (attachments.length === 3) {
-				return <div style={{
+				content = <div style={{
 					height: "537px",
 					width: "100%",
 					overflow: "hidden"
@@ -151,7 +155,7 @@ export default class FeedEntryListItemAttachments extends Component<{
 					</div>
 				</div>;
 			} else if (attachments.length === 4) {
-				return <div style={{
+				content = <div style={{
 					height: "537px",
 					width: "100%",
 					overflow: "hidden"
@@ -211,6 +215,6 @@ export default class FeedEntryListItemAttachments extends Component<{
 			}
 		}
 
-		return "";
+		return content !== "" ? <div className={"mb-3 clearfix"}>{content}</div> : "";
 	}
 }

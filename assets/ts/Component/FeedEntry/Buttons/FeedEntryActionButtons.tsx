@@ -18,12 +18,12 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import ReplyButton from "./ReplyButton";
 import ShareButton from "./ShareButton";
 import FavoriteButton from "./FavoriteButton";
 import DeleteButton from "./DeleteButton";
 import FeedEntryListItem from "../FeedEntryListItem";
+import FeedEntry from "../../../api/src/Entity/FeedEntry";
 
 export default class FeedEntryActionButtons extends Component<{
 	entry: FeedEntry,
@@ -39,7 +39,7 @@ export default class FeedEntryActionButtons extends Component<{
 		const entry: FeedEntry = this.props.entry;
 
 		return <div className={"row w-100 ml-0"}>
-			<div className={"d-block w-100"} onClick={(e) => e.stopPropagation()}>
+			<div className={"d-inline-block"} onClick={(e) => e.stopPropagation()}>
 				<div className={"feedEntryButtonHolder" + (this.props.reduceMargin ? " reduceMargin" : "")}
 					 style={this.props.parent ? {
 						 marginRight: "-15px",

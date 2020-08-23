@@ -18,14 +18,16 @@
  */
 
 import React, {Component} from "react";
-import User from "../../Entity/Account/User";
 import {Button, Card} from "antd";
 import {Link} from "react-router-dom";
 import FollowButton from "../FollowButton";
 import Biography from "../Biography";
 import VerifiedBadge from "../VerifiedBadge";
-import API from "../../API/API";
+import API from "../../API";
 import FollowRequestNotification from "../../Pages/Notifications/FollowRequestNotification";
+import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
+import PrivacyBadge from "../PrivacyBadge";
 
 const FollowerListItemColProps = {
 	sm: 12
@@ -59,7 +61,7 @@ export default class FollowerListItem extends Component<{
 			});
 		}
 
-		API.followRequest.delete(this.props.requestId, accept ? "accept" : "decline");
+		API.i.followRequest.delete(this.props.requestId, accept ? "accept" : "decline");
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -81,7 +83,7 @@ export default class FollowerListItem extends Component<{
 				<div className={"float-left ml-2 nameContainer"}>
 					<div className={"displayName"}>
 						<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
-							{user.getDisplayName()}<VerifiedBadge target={user}/>
+							{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge target={user}/>
 						</Link>
 					</div>
 
@@ -92,7 +94,7 @@ export default class FollowerListItem extends Component<{
 					</div>
 				</div>
 
-				<div className={"float-right mt-2"}>
+				<div className={"float-right mt-2 homeFeedProfileBoxEditButton"}>
 					<FollowButton target={user}/>
 				</div>
 			</div>
@@ -101,12 +103,12 @@ export default class FollowerListItem extends Component<{
 				<Button type={"primary"} onClick={(e) => {
 					e.preventDefault();
 					this.respond(true);
-				}}>Accept</Button>
+				}}>{__("followRequest.accept")}</Button>
 
 				<Button type={"danger"} className={"customDangerButton ml-3"} onClick={(e) => {
 					e.preventDefault();
 					this.respond(false);
-				}}>Decline</Button>
+				}}>{__("followRequest.decline")}</Button>
 			</div> : ""}
 
 			<Biography user={user}/>

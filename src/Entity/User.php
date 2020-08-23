@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -36,7 +36,7 @@ use function is_null;
  * Represents a user.
  *
  * @ORM\Entity(repositoryClass="qpost\Repository\UserRepository")
- * @ORM\Table(indexes={@ORM\Index(columns={"display_name"}),@ORM\Index(columns={"email"}),@ORM\Index(columns={"birthday"}),@ORM\Index(columns={"privacy_level"}),@ORM\Index(columns={"verified"})})
+ * @ORM\Table(indexes={@ORM\Index(columns={"display_name"}),@ORM\Index(columns={"email"}),@ORM\Index(columns={"birthday"}),@ORM\Index(columns={"privacy_level"}),@ORM\Index(columns={"verified"}),@ORM\Index(columns={"interface_language"})})
  */
 class User implements UserInterface {
 	/**
@@ -136,61 +136,61 @@ class User implements UserInterface {
 	private $gigadriveData;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Token", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Token", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $tokens;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="sender", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="sender", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $following;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="receiver", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Follower", mappedBy="receiver", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $followers;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="sender", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="sender", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $sentRequests;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="receiver", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FollowRequest", mappedBy="receiver", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $followRequests;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="target", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="target", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $suspensions;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="staff", fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Suspension", mappedBy="staff", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $createdSuspensions;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $feedEntries;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Notification", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Notification", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $notifications;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Favorite", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $favorites;
@@ -202,13 +202,13 @@ class User implements UserInterface {
 	private $uploadedFiles;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $blocking;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="target", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\Block", mappedBy="target", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $blockedBy;
@@ -219,7 +219,7 @@ class User implements UserInterface {
 	private $features = [];
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY")
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\PushSubscription", mappedBy="user", orphanRemoval=true, fetch="EXTRA_LAZY", cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $pushSubscriptions;
@@ -231,7 +231,7 @@ class User implements UserInterface {
 	private $header;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\LinkedAccount", mappedBy="user", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\LinkedAccount", mappedBy="user", orphanRemoval=true, cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $linkedAccounts;
@@ -249,10 +249,22 @@ class User implements UserInterface {
 	private $appearanceSettings;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="qpost\Entity\UsernameHistoryEntry", mappedBy="user", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="qpost\Entity\UsernameHistoryEntry", mappedBy="user", orphanRemoval=true, cascade={"persist", "remove"})
 	 * @Serializer\Exclude()
 	 */
 	private $nameHistory;
+
+	/**
+	 * @ORM\Column(type="string", length=5, nullable=true)
+	 * @Serializer\Exclude()
+	 */
+	private $interfaceLanguage;
+
+	/**
+	 * @ORM\Column(type="string", length=16, nullable=true)
+	 * @Serializer\Exclude()
+	 */
+	private $latestSeenChangelog;
 
 	public function __construct() {
 		$this->featuringBoxes = new ArrayCollection();
@@ -1446,6 +1458,26 @@ class User implements UserInterface {
 				$nameHistory->setUser(null);
 			}
 		}
+
+		return $this;
+	}
+
+	public function getInterfaceLanguage(): ?string {
+		return $this->interfaceLanguage;
+	}
+
+	public function setInterfaceLanguage(?string $interfaceLanguage): self {
+		$this->interfaceLanguage = $interfaceLanguage;
+
+		return $this;
+	}
+
+	public function getLatestSeenChangelog(): ?string {
+		return $this->latestSeenChangelog;
+	}
+
+	public function setLatestSeenChangelog(?string $latestSeenChangelog): self {
+		$this->latestSeenChangelog = $latestSeenChangelog;
 
 		return $this;
 	}

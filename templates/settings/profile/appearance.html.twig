@@ -6,12 +6,12 @@
 
 	{% include "parts/flash.html.twig" %}
 
-	<form action="{{ path("qpost_settings_profileappearance") }}" method="post">
-		{% include "parts/csrf.html.twig" %}
+	<form action="{{ currentPath() }}" method="post">
+		{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 
 		<div class="mb-4">
 			<div class="form-group">
-				<label for="displayName">Display name</label>
+				<label for="displayName">{{ __("settings.profile.appearance.displayName") }}</label>
 				<input type="text" class="form-control" id="displayName" name="displayName"
 					   value="{{ app.user.displayName }}" min="1" maxlength="24" required/>
 			</div>
@@ -19,7 +19,7 @@
 
 		<div class="mb-4">
 			<div class="form-group">
-				<label for="bio">Biography</label>
+				<label for="bio">{{ __("settings.profile.appearance.bio") }}</label>
 				<textarea type="text" class="form-control" id="bio" name="bio"
 						  style="resize: none !important; height: 120px !important;"
 						  maxlength="200">{{ app.user.bio }}</textarea>
@@ -28,7 +28,7 @@
 
 		<div class="mb-4">
 			<div class="form-group">
-				<label for="birthday">Birthday</label>
+				<label for="birthday">{{ __("settings.profile.appearance.birthday") }}</label>
 
 				<input type="hidden" name="birthday" value="{{ app.user.birthday ? app.user.birthday|date("Y-m-d") }}"/>
 
@@ -38,7 +38,7 @@
 
 		<div class="mb-4">
 			<div class="form-group">
-				<label for="avatar">Avatar</label>
+				<label for="avatar">{{ __("settings.profile.appearance.avatar") }}</label>
 
 				<input type="hidden" name="avatar" value="{{ app.user.avatar }}"/>
 
@@ -48,7 +48,7 @@
 
 		<div class="mb-4">
 			<div class="form-group">
-				<label for="header">Header</label>
+				<label for="header">{{ __("settings.profile.appearance.header") }}</label>
 
 				<input type="hidden" name="header" value="{{ app.user.header }}"/>
 
@@ -57,15 +57,16 @@
 		</div>
 
 		<button type="submit" class="btn btn-primary btn-block bootstrapButton">
-			Save changes
+			{{ __("button.saveChanges") }}
 		</button>
 	</form>
 
 	<hr class="settingsHeadlineSeparator mt-5"/>
 
 	<div class="mb-4">
-		<p class="mb-0 font-weight-bold">Delete your account</p>
-		<p class="mb-0 text-muted"><a href="{{ path("qpost_settings_accountdelete") }}">Click here</a> if you wish to
-			delete your account.</p>
+		<p class="mb-0 font-weight-bold"><a
+					href="{{ path("qpost_settings_accountdelete") }}">{{ __("settings.account.delete.headline") }}</a>
+		</p>
+		<p class="mb-0 text-muted">{{ __("settings.account.information.delete") }}</p>
 	</div>
 {% endblock %}

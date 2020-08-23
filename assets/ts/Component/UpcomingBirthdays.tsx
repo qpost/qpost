@@ -19,8 +19,7 @@
 
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import User from "../Entity/Account/User";
-import API from "../API/API";
+import API from "../API";
 import VerifiedBadge from "./VerifiedBadge";
 import Spin from "antd/es/spin";
 import "antd/es/spin/style";
@@ -30,7 +29,10 @@ import TimeAgo from "./TimeAgo";
 import {placeZeroBelowTen} from "../Util/Format";
 import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
-import BaseObject from "../Serialization/BaseObject";
+import BaseObject from "../api/src/BaseObject";
+import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
+import PrivacyBadge from "./PrivacyBadge";
 
 export default class UpcomingBirthdays extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -52,7 +54,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 
 			const now = new Date();
 
-			API.birthdays.get(now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDate())).then(users => {
+			API.i.birthdays.get(now.getFullYear() + "-" + placeZeroBelowTen(now.getMonth() + 1) + "-" + placeZeroBelowTen(now.getDate())).then(users => {
 				this.load(users);
 
 				if (this.state.results) {
@@ -76,7 +78,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 		} else if (this.state.results.length > 0) {
 			const now = new Date();
 
-			return <Card title={"Upcoming birthdays"} size={"small"} className={"mb-3"}>
+			return <Card title={__("birthdays.headline")} size={"small"} className={"mb-3"}>
 				<div className="tab-content" id="users-tablist-content">
 					{this.state.results.map((user, i) => {
 						const birthday = new Date(user.getBirthday());
@@ -105,7 +107,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 										 }}>
 										<span
 											className={"font-weight-bold"}>{user.getDisplayName()}</span><VerifiedBadge
-										target={user}/> <span
+										target={user}/><PrivacyBadge target={user}/> <span
 										className={"text-muted small"}>@{user.getUsername()}</span>
 									</div>
 									<br/>
@@ -116,7 +118,7 @@ export default class UpcomingBirthdays extends Component<any, { loading: boolean
 									marginTop: "8px"
 								}}>
 									<i className={"far fa-clock"}/> {today ?
-									<span className={"text-danger font-weight-bold"}>Today</span> :
+									<span className={"text-danger font-weight-bold"}>{__("birthdays.today")}</span> :
 									<TimeAgo time={birthday.toUTCString()}
 											 short={true}/>}
 								</div>

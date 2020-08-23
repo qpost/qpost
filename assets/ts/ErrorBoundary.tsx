@@ -19,6 +19,7 @@
 
 import React, {Component} from "react";
 import {Button} from "antd";
+import __ from "./i18n/i18n";
 
 export default class ErrorBoundary extends Component<any, {
 	crashed: boolean
@@ -41,13 +42,13 @@ export default class ErrorBoundary extends Component<any, {
 		if (this.state.crashed) {
 			return <div className={"text-center mt-5"}>
 				<div className={"mb-3"}>
-					<h4>An error occurred.</h4>
+					<h4>{__("error.general")}</h4>
 				</div>
 
 				<Button type={"primary"} onClick={(e) => {
 					window.location.reload();
 				}}>
-					Refresh
+					{__("error.general.refresh")}
 				</Button>
 			</div>;
 		}

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,9 +21,7 @@
 namespace qpost\Controller;
 
 use qpost\Cache\CacheHandler;
-use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,18 +29,17 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Yaml\Yaml;
 use function file_get_contents;
 
-class DownloadController extends AbstractController {
+class DownloadController extends qpostController {
 	/**
 	 * @Route("/download")
 	 * @return Response
 	 */
 	public function indexAction() {
 		return $this->render("pages/download.html.twig", Twig::param([
-			"title" => "Download",
-			"description" => "Get qpost - the open-source Twitter alternative for your device of choice.",
+			"title" => __("landing.download.headline"),
+			"description" => __("landing.download.description"),
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_download_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
 		]));
 	}
 

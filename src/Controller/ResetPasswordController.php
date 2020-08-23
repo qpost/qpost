@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -25,26 +25,25 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\ResetPasswordToken;
 use qpost\Entity\User;
 use qpost\Service\AuthorizationService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
 use Swift_Mailer;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function __;
 use function is_null;
 use function password_hash;
 use const PASSWORD_BCRYPT;
 
-class ResetPasswordController extends AbstractController {
+class ResetPasswordController extends qpostController {
 	/**
 	 * @Route("/reset-password")
 	 *
@@ -106,15 +105,14 @@ class ResetPasswordController extends AbstractController {
 								$this->addSuccessfulFlash();
 							}
 						} else {
-							$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+							$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 						}
 					}
 				}
 			}
 
 			return $this->render("pages/resetPassword.html.twig", Twig::param([
-				"title" => "Reset your password",
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
+				"title" => "Reset your password"
 			]));
 		} else {
 			return $this->redirectToRoute("qpost_home_index");
@@ -165,38 +163,35 @@ class ResetPasswordController extends AbstractController {
 									$entityManager->persist($token->setActive(false)->setTimeAccessed(new DateTime("now")));
 									$entityManager->flush();
 
-									$this->addFlash(FlashMessageType::SUCCESS, "Your password has been changed.");
+									$this->addFlash(FlashMessageType::SUCCESS, __("resetPassword.success"));
 									$renderForm = false;
 								} else {
-									$this->addFlash(FlashMessageType::ERROR, "The passwords do not match.");
+									$this->addFlash(FlashMessageType::ERROR, __("resetPassword.error.noMatch"));
 								}
 							}
 						}
 					}
 
 					return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
-						"title" => "Reset your password",
+						"title" => __("resetPassword.headline"),
 						"renderForm" => $renderForm,
 						"user" => $user,
-						"token" => $token,
-						MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+						"token" => $token
 					]));
 				} else {
-					$this->addFlash(FlashMessageType::ERROR, "Invalid token.");
+					$this->addFlash(FlashMessageType::ERROR, __("error.invalidToken"));
 
 					return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
-						"title" => "Reset your password",
-						"renderForm" => false,
-						MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+						"title" => __("resetPassword.headline"),
+						"renderForm" => false
 					]));
 				}
 			} else {
-				$this->addFlash(FlashMessageType::ERROR, "Invalid token.");
+				$this->addFlash(FlashMessageType::ERROR, __("error.invalidToken"));
 
 				return $this->render("pages/resetPasswordResponse.html.twig", Twig::param([
-					"title" => "Reset your password",
-					"renderForm" => false,
-					MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_resetpassword_resetpasswordresponse", [], UrlGeneratorInterface::ABSOLUTE_URL)
+					"title" => __("resetPassword.headline"),
+					"renderForm" => false
 				]));
 			}
 		} else {
@@ -205,6 +200,6 @@ class ResetPasswordController extends AbstractController {
 	}
 
 	private function addSuccessfulFlash(): void {
-		$this->addFlash(FlashMessageType::SUCCESS, "An email has been sent to you, that contains a link to reset your password.");
+		$this->addFlash(FlashMessageType::SUCCESS, __("resetPassword.emailSent"));
 	}
 }

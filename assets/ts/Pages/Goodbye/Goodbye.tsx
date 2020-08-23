@@ -18,13 +18,14 @@
  */
 
 import React, {Component} from "react";
+import __ from "../../i18n/i18n";
 
 export default class Goodbye extends Component<any, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <div className={"text-center mt-5"}>
-			<h1 className={"font-weight-bold"}>Goodbye!</h1>
+			<h1 className={"font-weight-bold"}>{__("goodbye.headline")}!</h1>
 
-			<p>We will miss you.</p>
+			<p>{__("goodbye.description")}</p>
 		</div>;
 	}
 }

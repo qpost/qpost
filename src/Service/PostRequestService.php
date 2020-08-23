@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -22,11 +22,12 @@ namespace qpost\Service;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
 use qpost\Entity\Follower;
 use qpost\Entity\User;
+use qpost\Entity\UsernameHistoryEntry;
 use qpost\Repository\UserRepository;
-use qpost\Util\Util;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +52,7 @@ class PostRequestService {
 		if ($request->isMethod("POST")) {
 			$parameters = $request->request;
 
-			if ($parameters->has("_csrf_token") && $_this->csrf("csrf", $parameters->get("_csrf_token"))) {
+			if ($_this->csrf()) {
 				if ($parameters->has("email") && $parameters->has("displayName") && $parameters->has("username") && $parameters->has("password")) {
 					$email = trim(Util::fixString($parameters->get("email")));
 					$displayName = trim(Util::fixString($parameters->get("displayName")));
@@ -90,6 +91,11 @@ class PostRequestService {
 															->setTime(new DateTime("now"));
 
 														$this->entityManager->persist($user);
+														$this->entityManager->persist((new UsernameHistoryEntry())
+															->setUser($user)
+															->setName($user->getUsername())
+															->setIp($ip)
+															->setTime(new DateTime("now")));
 
 														$autoFollowAccountId = $_ENV["AUTOFOLLOW_ACCOUNT_ID"];
 														if ($autoFollowAccountId) {

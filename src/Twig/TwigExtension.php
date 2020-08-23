@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,23 +20,45 @@
 
 namespace qpost\Twig;
 
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\AssetService;
 use qpost\Service\APIService;
-use qpost\Util\Util;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class TwigExtension extends AbstractExtension {
+	/**
+	 * @var APIService $apiService
+	 */
 	private $apiService;
 
-	public function __construct(APIService $apiService) {
+	/**
+	 * @var AssetService $asset
+	 */
+	private $asset;
+
+	public function __construct(APIService $apiService, AssetService $asset) {
 		$this->apiService = $apiService;
+		$this->asset = $asset;
 	}
 
 	public function getFunctions() {
 		return [
 			new TwigFunction("sanatizeHTMLAttribute", function ($content) {
 				return Util::sanatizeHTMLAttribute($content);
+			}),
+
+			new TwigFunction("cssBundle", function () {
+				return $this->asset->getBundleFile(__DIR__ . "/../../public/build/main.css", true);
+			}),
+
+			new TwigFunction("jsBundle", function () {
+				return $this->asset->getBundleFile(__DIR__ . "/../../public/build/bundle.js", true);
+			}),
+
+			new TwigFunction("__", function ($identifier, $parameters = []) {
+				return __($identifier, $parameters);
 			})
 		];
 	}

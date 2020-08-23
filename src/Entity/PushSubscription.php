@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="qpost\Repository\PushSubscriptionRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"subscription_hash"})})
  */
 // https://github.com/bpolaszek/webpush-bundle/blob/master/doc/01%20-%20The%20UserSubscription%20Class.md
 class PushSubscription implements UserSubscriptionInterface {
@@ -38,7 +39,7 @@ class PushSubscription implements UserSubscriptionInterface {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="pushSubscriptions")
-	 * @ORM\JoinColumn(nullable=false)
+	 * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
 	 */
 	private $user;
 

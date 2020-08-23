@@ -21,7 +21,7 @@ import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import NightMode from "./NightMode/NightMode";
 import LoadingScreen from "./Component/LoadingScreen";
-import API from "./API/API";
+import API from "./API";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Auth from "./Auth/Auth";
 import Header from "./Parts/Header";
@@ -54,6 +54,21 @@ import Sessions from "./Component/Settings/Sessions";
 import BirthdaySelector from "./Component/Settings/BirthdaySelector";
 import HeaderSelector from "./Component/Settings/HeaderSelector";
 import AvatarSelector from "./Component/Settings/AvatarSelector";
+import TokenStorage from "./Auth/TokenStorage";
+import AccountSwitcher from "./Component/AccountSwitcher";
+import PhraseStorage from "./i18n/PhraseStorage";
+import ChangelogModal from "./Component/ChangelogModal";
+import ContentBase from "./Component/Layout/ContentBase";
+import LeftSidebar from "./Component/Layout/LeftSidebar";
+import PageContent from "./Component/Layout/PageContent";
+import RightSidebar from "./Component/Layout/RightSidebar";
+import HomeFeedProfileBox from "./Pages/Home/HomeFeedProfileBox";
+import TrendingTopics from "./Component/TrendingTopics";
+import SuggestedUsers from "./Component/SuggestedUsers";
+import UpcomingBirthdays from "./Component/UpcomingBirthdays";
+import SidebarFooter from "./Parts/Footer/SidebarFooter";
+import SquareAd from "./Component/Advertisment/SquareAd";
+import AppearanceSettings from "./Util/AppearanceSettings";
 
 export default class App extends Component<any, {
 	validatedLogin: boolean,
@@ -63,12 +78,15 @@ export default class App extends Component<any, {
 		super(props);
 
 		this.state = {
-			validatedLogin: !Auth.isLoggedIn(),
+			validatedLogin: false,
 			error: null
 		}
 	}
 
-	public static init(): void {
+	public static async init(): Promise<void> {
+		// initialize API
+		API.i;
+
 		if ($("#root").length) {
 			NightMode.init();
 		} else {
@@ -77,6 +95,8 @@ export default class App extends Component<any, {
 
 				$(".settingsNav").toggleClass("navHidden");
 			});
+
+			await PhraseStorage.loadPhrases();
 		}
 
 		if ($("#relationshipListFollowing").length) {
@@ -118,27 +138,45 @@ export default class App extends Component<any, {
 	}
 
 	componentDidMount(): void {
-		if (Auth.isLoggedIn()) {
-			// TODO: Pre-load home page data and pass it to the HomeFeed component
-			API.token.verify().then(user => {
-				Auth.setCurrentUser(user);
+			(async () => {
+				try {
+					if (Auth.isLoggedIn()) {
+						// load TokenStorage
+						await TokenStorage.loadTokens();
+					}
 
-				BadgeStatus.update(() => {
-					PushNotificationsManager.init();
-					BadgeUpdater.init();
+					// load translations
+					await PhraseStorage.loadPhrases();
 
+					if (Auth.isLoggedIn()) {
+						if (AppearanceSettings.showChangelogs()) {
+							// load changelog
+							await ChangelogModal.loadChangelog();
+						}
+
+						// load badge status
+						BadgeStatus.update(() => {
+							PushNotificationsManager.init();
+							BadgeUpdater.init();
+
+							this.setState({
+								validatedLogin: true
+							});
+						});
+					} else {
+						this.setState({
+							validatedLogin: true
+						});
+					}
+				} catch (err) {
 					this.setState({
-						validatedLogin: true
+						error: err
 					});
-				});
-			}).catch(error => {
-				this.setState({
-					error
-				});
 
-				Auth.logout(false, true);
-			});
-		}
+					Auth.logout(false, true);
+				}
+			})();
+
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -166,23 +204,46 @@ export default class App extends Component<any, {
 												<LoginSuggestionModal/>
 												<PostForm/>
 												<BlockModal/>
+												<AccountSwitcher/>
+												<ChangelogModal/>
 
-												<Switch>
-													{Auth.isLoggedIn() ?
-														<Route path={"/"} exact component={HomeFeed}/> :
-														<Route path={"/"} exact component={Home}/>}
+												<ContentBase>
+													<LeftSidebar>
+														<HomeFeedProfileBox/>
 
-													<PrivateRoute path={"/notifications"} exact
-																  component={Notifications}/>
-													<PrivateRoute path={"/messages"} exact component={Messages}/>
-													<Route path={"/search"} exact component={Search}/>
-													<Route path={"/hashtag/:query"} exact component={SearchRedirect}/>
-													<Route path={"/goodbye"} exact component={Goodbye}/>
-													<Route path={"/r/status/:id"} exact component={StatusRedirect}/>
-													<Route path={"/status/:id"} exact component={Status}/>
-													<Route path={"/profile/:username"} component={ProfileRedirect}/>
-													<Route path={"/:username"} component={Profile}/>
-												</Switch>
+														<TrendingTopics limit={5}/>
+													</LeftSidebar>
+
+													<PageContent leftSidebar rightSidebar>
+														<Switch>
+															{Auth.isLoggedIn() ?
+																<Route path={"/"} exact component={HomeFeed}/> :
+																<Route path={"/"} exact component={Home}/>}
+
+															<PrivateRoute path={"/notifications"} exact
+																		  component={Notifications}/>
+															<PrivateRoute path={"/messages"} exact
+																		  component={Messages}/>
+															<Route path={"/search"} exact component={Search}/>
+															<Route path={"/hashtag/:query"} exact
+																   component={SearchRedirect}/>
+															<Route path={"/goodbye"} exact component={Goodbye}/>
+															<Route path={"/r/status/:id"} exact
+																   component={StatusRedirect}/>
+															<Route path={"/status/:id"} exact component={Status}/>
+															<Route path={"/profile/:username"}
+																   component={ProfileRedirect}/>
+															<Route path={"/:username"} component={Profile}/>
+														</Switch>
+													</PageContent>
+
+													<RightSidebar>
+														<SuggestedUsers/>
+														<UpcomingBirthdays/>
+														<SquareAd/>
+														<SidebarFooter/>
+													</RightSidebar>
+												</ContentBase>
 											</div>
 										</div>
 									</div>

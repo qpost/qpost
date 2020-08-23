@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -54,6 +54,7 @@ class MediaFile {
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="qpost\Entity\User", inversedBy="uploadedFiles")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 * @Serializer\Exclude()
 	 */
 	private $originalUploader;
@@ -69,13 +70,12 @@ class MediaFile {
 	private $time;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="qpost\Entity\FeedEntry", mappedBy="attachments")
-	 * @Serializer\Exclude()
+	 * @ORM\OneToMany(targetEntity=MediaAttachment::class, mappedBy="mediaFile", orphanRemoval=true)
 	 */
-	private $feedEntries;
+	private $mediaAttachments;
 
 	public function __construct() {
-		$this->feedEntries = new ArrayCollection();
+		$this->mediaAttachments = new ArrayCollection();
 	}
 
 	/**
@@ -194,35 +194,28 @@ class MediaFile {
 	}
 
 	/**
-	 * The feed entries that use this file.
-	 *
-	 * @return Collection|FeedEntry[]
+	 * @return Collection|MediaAttachment[]
 	 */
-	public function getFeedEntries(): Collection {
-		return $this->feedEntries;
+	public function getMediaAttachments(): Collection {
+		return $this->mediaAttachments;
 	}
 
-	/**
-	 * @param FeedEntry $feedEntry
-	 * @return MediaFile
-	 */
-	public function addFeedEntry(FeedEntry $feedEntry): self {
-		if (!$this->feedEntries->contains($feedEntry)) {
-			$this->feedEntries[] = $feedEntry;
-			$feedEntry->addAttachment($this);
+	public function addMediaAttachment(MediaAttachment $mediaAttachment): self {
+		if (!$this->mediaAttachments->contains($mediaAttachment)) {
+			$this->mediaAttachments[] = $mediaAttachment;
+			$mediaAttachment->setMediaFile($this);
 		}
 
 		return $this;
 	}
 
-	/**
-	 * @param FeedEntry $feedEntry
-	 * @return MediaFile
-	 */
-	public function removeFeedEntry(FeedEntry $feedEntry): self {
-		if ($this->feedEntries->contains($feedEntry)) {
-			$this->feedEntries->removeElement($feedEntry);
-			$feedEntry->removeAttachment($this);
+	public function removeMediaAttachment(MediaAttachment $mediaAttachment): self {
+		if ($this->mediaAttachments->contains($mediaAttachment)) {
+			$this->mediaAttachments->removeElement($mediaAttachment);
+			// set the owning side to null (unless already changed)
+			if ($mediaAttachment->getMediaFile() === $this) {
+				$mediaAttachment->setMediaFile(null);
+			}
 		}
 
 		return $this;

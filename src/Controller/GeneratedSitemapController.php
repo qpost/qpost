@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,17 +20,15 @@
 
 namespace qpost\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function str_replace;
 
-class GeneratedSitemapController extends AbstractController {
+class GeneratedSitemapController extends qpostController {
 	private $entryLimit = 5000;
 
 	/**
@@ -66,11 +64,10 @@ class GeneratedSitemapController extends AbstractController {
 	 *
 	 * @param string $type
 	 * @param int $randomizer
-	 * @param Request $request
-	 * @param EntityManagerInterface $entityManager
 	 * @return Response
 	 */
-	public function mapAction(string $type, int $randomizer, Request $request, EntityManagerInterface $entityManager) {
+	public function mapAction(string $type, int $randomizer) {
+		$entityManager = $this->generalService->entityManager;
 		$urls = [];
 
 		if ($type === "users") {

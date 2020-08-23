@@ -20,16 +20,18 @@
 import React, {Component} from "react";
 import {Alert} from "reactstrap";
 import FeedEntryListItem from "./FeedEntryListItem";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
+import API from "../../API";
+import BaseObject from "../../api/src/BaseObject";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
 import Empty from "antd/es/empty";
 import "antd/es/empty/style";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
 import Storage from "../../Util/Storage";
-import FeedEntryType from "../../Entity/Feed/FeedEntryType";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import FeedEntryType from "../../api/src/Entity/FeedEntryType";
+import __ from "../../i18n/i18n";
+import HorizontalAd from "../Advertisment/HorizontalAd";
 
 export default class FeedEntryList extends Component<{
 	userID?: number,
@@ -153,7 +155,7 @@ export default class FeedEntryList extends Component<{
 		parameters["min"] = this.state.entries[0].getId();
 		parameters["type"] = this.props.type || "posts";
 
-		API.feed.get(this.props.type || "posts", this.props.userID, undefined, this.state.entries[0].getId()).then(value => {
+		API.i.feed.get(this.props.type || "posts", this.props.userID, undefined, this.state.entries[0].getId()).then(value => {
 			let entries: FeedEntry[] = [];
 
 			value.forEach(feedEntry => {
@@ -199,7 +201,7 @@ export default class FeedEntryList extends Component<{
 			parameters["type"] = this.props.type || "posts";
 		}
 
-		API.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
+		API.i.handleRequest(this.props.searchQuery ? "/search" : "/feed", "GET", parameters, data => {
 			let entries: FeedEntry[] = (this.state.entries && max ? this.state.entries : null) || [];
 
 			data.forEach(result => {
@@ -271,9 +273,9 @@ export default class FeedEntryList extends Component<{
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		if (this.state.privateWarning) {
 			return <div className={"text-center my-5"}>
-				<h4>This user has set their profile private.</h4>
+				<h4>{__("entryList.private.headline")}</h4>
 
-				<p>You need to be a follower to view their posts.</p>
+				<p>{__("entryList.private.description")}</p>
 			</div>;
 		}
 
@@ -292,13 +294,29 @@ export default class FeedEntryList extends Component<{
 				>
 					<ul className={"list-group feedContainer"}>
 						{this.state.entries.map((entry, i) => {
-							return <FeedEntryListItem key={entry.getId()} entry={entry} parent={this}
-													  showParentInfo={true}/>
+							const maxAds = 10;
+							const adIndexes: number[] = [];
+							for (let j = 0; j < maxAds; j++) {
+								adIndexes.push(15 * j + 5);
+							}
+
+							const components = [];
+
+							if (adIndexes.indexOf(i) !== -1) {
+								components.push(<HorizontalAd marginDirection={"y"}/>);
+							}
+
+							components.push(<FeedEntryListItem key={entry.getId()} entry={entry} parent={this}
+															   showParentInfo={true}/>);
+
+							return components;
 						})}
 					</ul>
 				</InfiniteScroll>;
 			} else {
-				return <Empty description={"No posts found."}/>;
+				return <div className={"mt-3"}>
+					<Empty description={__("entryList.empty")}/>
+				</div>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;

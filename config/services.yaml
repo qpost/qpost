@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    locale: 'en'
     router.request_context.host: 'qpostapp.com'
     router.request_context.scheme: 'https'
 
@@ -17,7 +18,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     qpost\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,global_functions.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -25,20 +26,31 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    qpost\Messenger\Handler\:
+        resource: '../src/Messenger/Handler'
+        tags: ['messenger.message_handler']
+
     qpost\Service\PushSubscriptionService:
         class: qpost\Service\PushSubscriptionService
         arguments: ["@doctrine", "@logger"]
         tags:
             - { name: bentools_webpush.subscription_manager, user_class: 'qpost\Entity\User' }
 
-    qpost\Service\RenderService:
-        class: qpost\Service\RenderService
-        arguments: ["@twig", "@request_stack", "@crawler_detect"]
-
     qpost\EventListener\RestAPIErrorListener:
         class: qpost\EventListener\RestAPIErrorListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    qpost\EventListener\LocaleListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, priority: 17 }
+
+    Doctrine\DBAL\Event\Listeners\SQLSessionInit:
+        class: Doctrine\DBAL\Event\Listeners\SQLSessionInit
+        arguments:
+            - "SET SESSION sql_mode = 'TRADITIONAL'"
+        tags:
+            - { name: doctrine.event_listener, event: postConnect, method: postConnect }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

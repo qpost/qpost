@@ -19,14 +19,17 @@
 
 import React, {Component} from "react";
 import {Alert} from "antd";
-import User from "../Entity/Account/User";
+import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
 
 export default class UserBlockedAlert extends Component<{
 	user: User
-}> {
+}, any> {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return <Alert type={"error"}
-					  message={"@" + this.props.user.getUsername() + " is blocked and unable to follow you or view your content."}
+					  message={__("profile.blocked", {
+						  "%user%": "@" + this.props.user.getUsername()
+					  })}
 					  className={"mb-3"}/>;
 	}
 }

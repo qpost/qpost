@@ -18,11 +18,12 @@
  */
 
 import React, {Component} from "react";
-import User from "../../Entity/Account/User";
-import LinkedAccount from "../../Entity/Account/LinkedAccount";
-import LinkedAccountService from "../../Entity/Account/LinkedAccountService";
+import User from "../../api/src/Entity/User";
+import LinkedAccount from "../../api/src/Entity/LinkedAccount";
+import LinkedAccountService from "../../api/src/Entity/LinkedAccountService";
 import {message, Tooltip} from "antd";
 import {copyToClipboard} from "../../Util/Clipboard";
+import __ from "../../i18n/i18n";
 
 export default class ProfileLinkedAccounts extends Component<{
 	user: User
@@ -33,8 +34,21 @@ export default class ProfileLinkedAccounts extends Component<{
 
 		return <div className={"profileIdentities"}>
 			{identities.map((account: LinkedAccount) => {
-				const icon = <i
-					className={"service-" + account.getService().toLowerCase() + "-color fab fa-" + account.getService().toLowerCase()}/>;
+				let icon = undefined;
+				switch (account.getService()) {
+					case LinkedAccountService.DISCORD:
+					case LinkedAccountService.TWITCH:
+					case LinkedAccountService.TWITTER:
+					case LinkedAccountService.LASTFM:
+					case LinkedAccountService.MASTODON:
+					case LinkedAccountService.SPOTIFY:
+					case LinkedAccountService.INSTAGRAM:
+					case LinkedAccountService.REDDIT:
+					case LinkedAccountService.YOUTUBE:
+						icon =
+							<i className={"service-" + account.getService().toLowerCase() + "-color fab fa-" + account.getService().toLowerCase()}/>;
+						break;
+				}
 
 				let link = "";
 				switch (account.getService()) {
@@ -46,6 +60,18 @@ export default class ProfileLinkedAccounts extends Component<{
 						break;
 					case LinkedAccountService.LASTFM:
 						link = "https://www.last.fm/user/" + account.getLinkedUserName();
+						break;
+					case LinkedAccountService.SPOTIFY:
+						link = "https://open.spotify.com/user/" + account.getLinkedUserId();
+						break;
+					case LinkedAccountService.INSTAGRAM:
+						link = "https://instagram.com/" + account.getLinkedUserName();
+						break;
+					case LinkedAccountService.REDDIT:
+						link = "https://reddit.com/u/" + account.getLinkedUserName();
+						break;
+					case LinkedAccountService.YOUTUBE:
+						link = "https://youtube.com/channel/" + account.getLinkedUserId();
 						break;
 					case LinkedAccountService.MASTODON:
 						const usernameSplit = account.getLinkedUserName().split("@");
@@ -62,7 +88,7 @@ export default class ProfileLinkedAccounts extends Component<{
 						e.preventDefault();
 
 						copyToClipboard(account.getLinkedUserName());
-						message.success("The Discord tag has been copied.");
+						message.success(__("profile.discordTagCopied"));
 					}
 				}}>
 					{account.getService() === LinkedAccountService.DISCORD ?

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,14 +20,14 @@
 
 namespace qpost\Service;
 
+use Exception;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\GigadriveGeneralService;
 use GuzzleHttp\Exception\ConnectException;
-use Nmure\CrawlerDetectBundle\CrawlerDetect\CrawlerDetect;
-use PHPUnit\Runner\Exception;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use qpost\Cache\CacheHandler;
-use qpost\Constants\MiscConstants;
 use qpost\Factory\HttpClientFactory;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,12 +56,21 @@ class RenderService {
 	 */
 	private $prerenderKey;
 
+	/**
+	 * @var CrawlerDetect $crawlerDetect
+	 */
 	private $crawlerDetect;
 
-	public function __construct(Environment $twig, RequestStack $requestStack, CrawlerDetect $crawlerDetect) {
+	/**
+	 * @var GigadriveGeneralService $generalService
+	 */
+	private $generalService;
+
+	public function __construct(Environment $twig, RequestStack $requestStack, GigadriveGeneralService $generalService) {
 		$this->twig = $twig;
 		$this->requestStack = $requestStack;
-		$this->crawlerDetect = $crawlerDetect;
+		$this->generalService = $generalService;
+		$this->crawlerDetect = new CrawlerDetect();
 
 		$this->prerenderKey = $_ENV["PRERENDER_API_KEY"];
 		$this->currentRequest = $requestStack->getCurrentRequest();
@@ -69,7 +78,7 @@ class RenderService {
 
 	public function react(array $parameters = [], bool $ignoreCrawlerCheck = false): Response {
 		// Render server-side
-		if (!$ignoreCrawlerCheck && isset($parameters[MiscConstants::CANONICAL_URL]) && !Util::isEmpty($this->prerenderKey)) {
+		if (!$ignoreCrawlerCheck && !Util::isEmpty($this->prerenderKey)) {
 			$ignore = false;
 
 			if (!is_null($this->currentRequest)) {
@@ -82,7 +91,7 @@ class RenderService {
 			}
 
 			if (!$ignore) {
-				$url = $parameters[MiscConstants::CANONICAL_URL];
+				$url = $this->generalService->currentURL();
 
 				$userAgent = null;
 

@@ -18,12 +18,12 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import {formatNumberShort} from "../../../Util/Format";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import Auth from "../../../Auth/Auth";
 import LoginSuggestionModal from "../../LoginSuggestionModal";
 import PostForm from "../../PostForm/PostForm";
+import FeedEntry from "../../../api/src/Entity/FeedEntry";
 
 export default class ReplyButton extends Component<{
 	entry: FeedEntry,

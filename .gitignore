@@ -6,6 +6,7 @@ node_modules
 public/build
 assets/ts/config.json
 /firebase_service_account.json
+/upcoming_changelog.md
 
 
 ###> symfony/framework-bundle ###
@@ -29,3 +30,5 @@ assets/ts/config.json
 
 /gource.ppm
 /gource.mp4
+
+stream/*.log

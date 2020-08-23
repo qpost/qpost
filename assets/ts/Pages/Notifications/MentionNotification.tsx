@@ -18,7 +18,7 @@
  */
 
 import React, {Component} from "react";
-import Notification from "../../Entity/Feed/Notification";
+import Notification from "../../api/src/Entity/Notification";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 
 export default class MentionNotification extends Component<{

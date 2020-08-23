@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import API from "../API/API";
+import API from "../API";
 import {message} from "antd";
 import Header from "../Parts/Header";
 
@@ -33,7 +33,7 @@ export default class BadgeStatus {
 		if (!this.updating || ignoreUpdatingFlag) {
 			this.updating = true;
 
-			API.badgeStatus.get().then(status => {
+			API.i.badgeStatus.get().then(status => {
 				this.notifications = status.notifications;
 				this.messages = status.messages;
 				this.updating = false;
@@ -58,14 +58,14 @@ export default class BadgeStatus {
 		this.notifications = 0;
 		Header.update();
 
-		API.badgeStatus.delete("notifications");
+		API.i.badgeStatus.delete("notifications");
 	}
 
 	public static clearMessages(): void {
 		this.messages = 0;
 		Header.update();
 
-		API.badgeStatus.delete("messages");
+		API.i.badgeStatus.delete("messages");
 	}
 
 	public static getNotifications(): number {

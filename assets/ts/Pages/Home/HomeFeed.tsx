@@ -18,53 +18,25 @@
  */
 
 import React, {Component} from "react";
-import LeftSidebar from "../../Component/Layout/LeftSidebar";
-import PageContent from "../../Component/Layout/PageContent";
-import RightSidebar from "../../Component/Layout/RightSidebar";
-import HomeFeedProfileBox from "./HomeFeedProfileBox";
-import SuggestedUsers from "../../Component/SuggestedUsers";
 import FeedEntryList from "../../Component/FeedEntry/FeedEntryList";
-import ContentBase from "../../Component/Layout/ContentBase";
-import SidebarStickyContent from "../../Component/Layout/SidebarStickyContent";
 import DummyPostForm from "../../Component/PostForm/DummyPostForm";
-import SidebarFooter from "../../Parts/Footer/SidebarFooter";
 import {setPageTitle} from "../../Util/Page";
-import UpcomingBirthdays from "../../Component/UpcomingBirthdays";
-import TrendingTopics from "../../Component/TrendingTopics";
 import PageHeader from "../../Component/PageHeader";
+import __ from "../../i18n/i18n";
 
 export default class HomeFeed extends Component<any, any> {
 	componentDidMount(): void {
-		setPageTitle("Home");
+		setPageTitle(__("home.headline"));
 	}
 
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
 		return (
-			<ContentBase>
-				<LeftSidebar>
-					<SidebarStickyContent>
-						<HomeFeedProfileBox/>
+			<div>
+				<PageHeader title={__("home.headline")} iconClass={"fas fa-home"}/>
+				<DummyPostForm/>
 
-						<TrendingTopics limit={5}/>
-					</SidebarStickyContent>
-				</LeftSidebar>
-
-				<PageContent leftSidebar rightSidebar>
-					<PageHeader title={"Home feed"} iconClass={"fas fa-home"}/>
-					<DummyPostForm/>
-
-					<FeedEntryList/>
-				</PageContent>
-
-				<RightSidebar>
-					<SidebarStickyContent>
-						<SuggestedUsers/>
-						<UpcomingBirthdays/>
-
-						<SidebarFooter/>
-					</SidebarStickyContent>
-				</RightSidebar>
-			</ContentBase>
+				<FeedEntryList/>
+			</div>
 		)
 	}
 }

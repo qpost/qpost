@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -25,124 +25,120 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Constants\FlashMessageType;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\Token;
 use qpost\Entity\User;
 use qpost\Entity\UserGigadriveData;
 use qpost\Repository\UserGigadriveDataRepository;
 use qpost\Service\AuthorizationService;
 use qpost\Service\IpStackService;
+use qpost\Service\TokenService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function __;
 use function is_null;
 use function password_verify;
 use function trim;
 
-class LoginController extends AbstractController {
+class LoginController extends qpostController {
 	/**
 	 * @Route("/login")
 	 *
 	 * @param Request $request
 	 * @param EntityManagerInterface $entityManager
 	 * @param IpStackService $ipStackService
+	 * @param TokenService $tokenService
 	 * @return RedirectResponse|Response
 	 * @throws NonUniqueResultException
 	 */
-	public function index(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService) {
+	public function index(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService, TokenService $tokenService) {
 		$user = $this->getUser();
-		if (!$user) {
-			if ($request->isMethod("POST")) {
-				$parameters = $request->request;
+		$loggedIn = !!$user;
+		if ($loggedIn && ($this->query("addToken") != "true" && !$request->isMethod("POST"))) return $this->redirectToRoute("qpost_home_index");
 
-				if ($parameters->has("_csrf_token") && $this->isCsrfTokenValid("csrf", $parameters->get("_csrf_token"))) {
-					if ($parameters->has("email") && $parameters->has("password")) {
-						$email = trim($parameters->get("email"));
-						$password = trim($parameters->get("password"));
+		if ($request->isMethod("POST")) {
+			$parameters = $request->request;
 
-						if (!Util::isEmpty($email) && !Util::isEmpty($password)) {
-							/**
-							 * @var User $user
-							 */
-							$user = $entityManager->getRepository(User::class)->createQueryBuilder("u")
-								->where("upper(u.username) = upper(:query)")
-								->setParameter("query", $email, Type::STRING)
-								->orWhere("upper(u.email) = upper(:query)")
-								->setParameter("query", $email, Type::STRING)
-								->setMaxResults(1)
-								->getQuery()
-								->useQueryCache(true)
-								->getOneOrNullResult();
+			if ($parameters->has("_csrf_token") && $this->isCsrfTokenValid("csrf", $parameters->get("_csrf_token"))) {
+				if ($parameters->has("email") && $parameters->has("password")) {
+					$email = trim($parameters->get("email"));
+					$password = trim($parameters->get("password"));
 
-							if (!is_null($user) && is_null($user->getGigadriveData())) {
-								$passwordHash = $user->getPassword();
+					if (!Util::isEmpty($email) && !Util::isEmpty($password)) {
+						/**
+						 * @var User $user
+						 */
+						$user = $entityManager->getRepository(User::class)->createQueryBuilder("u")
+							->where("upper(u.username) = upper(:query)")
+							->setParameter("query", $email, Type::STRING)
+							->orWhere("upper(u.email) = upper(:query)")
+							->setParameter("query", $email, Type::STRING)
+							->setMaxResults(1)
+							->getQuery()
+							->useQueryCache(true)
+							->getOneOrNullResult();
 
-								if (!is_null($passwordHash) && password_verify($password, $passwordHash)) {
-									if ($user->isEmailActivated()) {
-										if (!$user->isSuspended()) {
-											$expiry = new DateTime("now");
-											$expiry->add(DateInterval::createFromDateString("6 month"));
+						if (!is_null($user) && is_null($user->getGigadriveData())) {
+							$passwordHash = $user->getPassword();
 
-											$token = (new Token())
-												->setUser($user)
-												->setTime(new DateTime("now"))
-												->setLastAccessTime(new DateTime("now"))
-												->setUserAgent($request->headers->get("User-Agent"))
-												->setLastIP($request->getClientIp())
-												->setExpiry($expiry);
+							if (!is_null($passwordHash) && password_verify($password, $passwordHash)) {
+								if ($user->isEmailActivated()) {
+									if (!$user->isSuspended()) {
+										$expiry = new DateTime("now");
+										$expiry->add(DateInterval::createFromDateString("6 month"));
+
+										$token = (new Token())
+											->setUser($user)
+											->setTime(new DateTime("now"))
+											->setLastAccessTime(new DateTime("now"))
+											->setUserAgent($request->headers->get("User-Agent"))
+											->setLastIP($request->getClientIp())
+											->setExpiry($expiry);
+
+										$entityManager->persist($token);
+
+										$ipStackResult = $ipStackService->createIpStackResult($token);
+										if ($ipStackResult) {
+											$entityManager->persist($ipStackResult);
+
+											$token->setIpStackResult($ipStackResult);
 
 											$entityManager->persist($token);
-
-											$ipStackResult = $ipStackService->createIpStackResult($token);
-											if ($ipStackResult) {
-												$entityManager->persist($ipStackResult);
-
-												$token->setIpStackResult($ipStackResult);
-
-												$entityManager->persist($token);
-											}
-
-											$entityManager->flush();
-
-											$response = $this->redirect($this->generateUrl("qpost_home_index"));
-											$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
-
-											return $response;
-										} else {
-											$this->addFlash(FlashMessageType::ERROR, "Your account has been suspended.");
 										}
+
+										$entityManager->flush();
+
+										$response = $this->redirect($this->generateUrl("qpost_home_index"));
+										$tokenService->addToken($token->getId(), $request, $response);
+
+										return $response;
 									} else {
-										$this->addFlash(FlashMessageType::ERROR, "Please activate your email address before logging in.");
+										$this->addFlash(FlashMessageType::ERROR, __("login.error.suspended"));
 									}
 								} else {
-									$this->addFlash(FlashMessageType::ERROR, "Invalid credentials.");
+									$this->addFlash(FlashMessageType::ERROR, __("login.error.emailNotActivated"));
 								}
 							} else {
-								$this->addFlash(FlashMessageType::ERROR, "Invalid credentials.");
+								$this->addFlash(FlashMessageType::ERROR, __("login.error.invalidCredentials"));
 							}
 						} else {
-							$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+							$this->addFlash(FlashMessageType::ERROR, __("login.error.invalidCredentials"));
 						}
+					} else {
+						$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 					}
 				}
 			}
-
-			$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
-
-			return $this->render($isMobile === false ? "pages/login.html.twig" : "pages/mobile/login.html.twig", Twig::param([
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_login_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
-			]));
-		} else {
-			return $this->redirect($this->generateUrl("qpost_home_index"));
 		}
+
+		$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
+
+		return $this->render($isMobile === false ? "pages/login.html.twig" : "pages/mobile/login.html.twig", Twig::param());
 	}
 
 	/**
@@ -152,88 +148,88 @@ class LoginController extends AbstractController {
 	 * @param EntityManagerInterface $entityManager
 	 * @param IpStackService $ipStackService
 	 * @param LoggerInterface $logger
+	 * @param TokenService $tokenService
 	 * @return RedirectResponse
 	 * @throws NonUniqueResultException
 	 */
-	public function callback(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService, LoggerInterface $logger) {
+	public function callback(Request $request, EntityManagerInterface $entityManager, IpStackService $ipStackService, LoggerInterface $logger, TokenService $tokenService) {
 		$user = $this->getUser();
-		if (!$user) {
-			$query = $request->query;
+		$loggedIn = !!$user;
+		$query = $request->query;
 
-			if ($query->has("code")) {
-				/**
-				 * @var UserGigadriveDataRepository $gigadriveRepository
-				 */
-				$gigadriveRepository = $entityManager->getRepository(UserGigadriveData::class);
+		if ($query->has("code")) {
+			/**
+			 * @var UserGigadriveDataRepository $gigadriveRepository
+			 */
+			$gigadriveRepository = $entityManager->getRepository(UserGigadriveData::class);
 
-				$code = $query->get("code");
-				$token = $gigadriveRepository->getGigadriveTokenFromCode($code);
-				if (!is_null($token)) {
-					$userData = $gigadriveRepository->getGigadriveUserData($token);
+			$code = $query->get("code");
+			$token = $gigadriveRepository->getGigadriveTokenFromCode($code);
+			if (!is_null($token)) {
+				$userData = $gigadriveRepository->getGigadriveUserData($token);
 
-					if (!is_null($userData)) {
-						if (isset($userData["id"]) && isset($userData["username"]) && isset($userData["avatar"]) && isset($userData["email"])) {
-							$username = $userData["username"];
-							$email = $userData["email"];
+				if (!is_null($userData)) {
+					if (isset($userData["id"]) && isset($userData["username"]) && isset($userData["avatar"]) && isset($userData["email"])) {
+						$username = $userData["username"];
+						$email = $userData["email"];
 
-							/**
-							 * @var User $user
-							 */
-							$user = $entityManager->getRepository(User::class)->createQueryBuilder("u")
-								->innerJoin("u.gigadriveData", "g")
-								->where("g.accountId = :gigadriveId")
-								->setParameter("gigadriveId", $userData["id"], Type::INTEGER)
-								->getQuery()
-								->useQueryCache(true)
-								->getOneOrNullResult();
+						/**
+						 * @var User $user
+						 */
+						$user = $entityManager->getRepository(User::class)->createQueryBuilder("u")
+							->innerJoin("u.gigadriveData", "g")
+							->where("g.accountId = :gigadriveId")
+							->setParameter("gigadriveId", $userData["id"], Type::INTEGER)
+							->getQuery()
+							->useQueryCache(true)
+							->getOneOrNullResult();
 
-							if (!is_null($user)) {
-								if (!$user->isSuspended()) {
-									$expiry = new DateTime("now");
-									$expiry->add(DateInterval::createFromDateString("6 month"));
+						if (!is_null($user)) {
+							if (!$user->isSuspended()) {
+								$expiry = new DateTime("now");
+								$expiry->add(DateInterval::createFromDateString("6 month"));
 
-									$token = (new Token())
-										->setUser($user)
-										->setTime(new DateTime("now"))
-										->setLastAccessTime(new DateTime("now"))
-										->setUserAgent($request->headers->get("User-Agent"))
-										->setLastIP($request->getClientIp())
-										->setExpiry($expiry);
+								$token = (new Token())
+									->setUser($user)
+									->setTime(new DateTime("now"))
+									->setLastAccessTime(new DateTime("now"))
+									->setUserAgent($request->headers->get("User-Agent"))
+									->setLastIP($request->getClientIp())
+									->setExpiry($expiry);
+
+								$entityManager->persist($token);
+
+								$ipStackResult = $ipStackService->createIpStackResult($token);
+								if ($ipStackResult) {
+									$entityManager->persist($ipStackResult);
+
+									$token->setIpStackResult($ipStackResult);
 
 									$entityManager->persist($token);
-
-									$ipStackResult = $ipStackService->createIpStackResult($token);
-									if ($ipStackResult) {
-										$entityManager->persist($ipStackResult);
-
-										$token->setIpStackResult($ipStackResult);
-
-										$entityManager->persist($token);
-									}
-
-									$entityManager->flush();
-
-									$logger->info("Logged in");
-
-									$response = $this->redirect($this->generateUrl("qpost_home_index"));
-									$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
-
-									return $response;
-								} else {
-									$this->addFlash(FlashMessageType::ERROR, "Your account has been suspended.");
 								}
+
+								$entityManager->flush();
+
+								$logger->info("Logged in");
+
+								$response = $this->redirect($this->generateUrl("qpost_home_index"));
+								$tokenService->addToken($token->getId(), $request, $response);
+
+								return $response;
 							} else {
-								return $this->redirect($this->generateUrl("qpost_register_index", ["code" => $code]));
+								$this->addFlash(FlashMessageType::ERROR, __("login.error.suspended"));
 							}
 						} else {
-							$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+							return $this->redirect($this->generateUrl("qpost_register_index", ["code" => $code]));
 						}
 					} else {
-						$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+						$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 					}
 				} else {
-					$this->addFlash(FlashMessageType::ERROR, "Authentication failed.");
+					$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 				}
+			} else {
+				$this->addFlash(FlashMessageType::ERROR, __("error.general"));
 			}
 		}
 

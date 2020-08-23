@@ -18,10 +18,8 @@
  */
 
 import React, {Component} from "react";
-import User from "../../Entity/Account/User";
-import Follower from "../../Entity/Account/Follower";
-import API from "../../API/API";
-import BaseObject from "../../Serialization/BaseObject";
+import API from "../../API";
+import BaseObject from "../../api/src/BaseObject";
 import InfiniteScroll from "react-infinite-scroller";
 import {Col, Row, Spin} from "antd";
 import Empty from "antd/es/empty";
@@ -29,6 +27,9 @@ import {Alert} from "reactstrap";
 import FollowerListItem, {FollowerListItemColProps} from "./FollowerListItem";
 import LoadingFollowerListItem from "./LoadingFollowerListItem";
 import {isEven, isOdd} from "../../Util/Format";
+import Follower from "../../api/src/Entity/Follower";
+import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
 
 export default class FollowerList extends Component<{
 	user?: User,
@@ -98,7 +99,7 @@ export default class FollowerList extends Component<{
 		}
 		if (this.props.query) parameters["query"] = this.props.query;
 
-		API.handleRequest(this.props.mode === "search" ? "/search" : "/follows", "GET", parameters, data => {
+		API.i.handleRequest(this.props.mode === "search" ? "/search" : "/follows", "GET", parameters, data => {
 			if (this.props.mode !== "search") {
 				let followers: Follower[] = this.state.followers || [];
 
@@ -182,7 +183,7 @@ export default class FollowerList extends Component<{
 					</ul>
 				</InfiniteScroll>;
 			} else {
-				return <Empty description={"No users found."}/>;
+				return <Empty description={__("relationshipList.empty")}/>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;

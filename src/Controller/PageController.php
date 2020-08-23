@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,6 +21,7 @@
 namespace qpost\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\MiscConstants;
 use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
@@ -29,18 +30,18 @@ use qpost\Service\APIService;
 use qpost\Service\AuthorizationService;
 use qpost\Service\RenderService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function __;
+use function array_first;
 use function is_null;
 use function sprintf;
 use function strlen;
 use function trim;
 
-class PageController extends AbstractController {
+class PageController extends qpostController {
 	/**
 	 * @Route("/status/{id}")
 	 *
@@ -62,12 +63,12 @@ class PageController extends AbstractController {
 			$user = $feedEntry->getUser();
 			$text = $feedEntry->getText();
 
-			$title = $user->getDisplayName() . " on qpost" . ($text ? ": \"%s\"" : "");
+			$title = __("status.headline", ["%displayName%" => $user->getDisplayName()]) . ($text ? ": \"%s\"" : "");
 
 			if ($text) {
 				$reservedTitleLength = strlen(sprintf($title, ""));
 
-				$title = sprintf($title, Util::limitString($text, MiscConstants::META_TITLE_LENGTH-$reservedTitleLength, true));
+				$title = sprintf($title, Util::limitString($text, MiscConstants::META_TITLE_LENGTH - $reservedTitleLength, true));
 			}
 
 			$bigSocialImage = $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png";
@@ -77,7 +78,7 @@ class PageController extends AbstractController {
 			/**
 			 * @var MediaFile $mediaFile
 			 */
-			$mediaFile = $feedEntry->getAttachments()->first();
+			$mediaFile = array_first($feedEntry->getAttachments());
 			if ($mediaFile) {
 				$twitterCardType = "summary_large_image";
 				$bigSocialImage = $mediaFile->getURL();
@@ -94,8 +95,7 @@ class PageController extends AbstractController {
 				"twitterImage" => $user->getAvatarURL(),
 				"bigSocialImage" => $bigSocialImage,
 				"description" => Util::limitString(($emptyText ? "" : ($text . ". ")) . " Post by " . $user->getDisplayName() . "(@" . $user->getUsername() . "). " . $replies . " repl" . ($replies === 1 ? "y" : "ies") . ", " . $shares . " share" . ($shares === 1 ? "" : "s") . " and " . $favorites . " favorite" . ($favorites === 1 ? "" : "s") . ".", MiscConstants::META_DESCRIPTION_LENGTH, true),
-				"twitterCardType" => $twitterCardType,
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_status", ["id" => $id], UrlGeneratorInterface::ABSOLUTE_URL)
+				"twitterCardType" => $twitterCardType
 			]);
 		}
 
@@ -110,10 +110,9 @@ class PageController extends AbstractController {
 	 */
 	public function goodbye(RenderService $renderService) {
 		return $renderService->react([
-			"title" => "Goodbye",
+			"title" => __("goodbye.headline"),
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_goodbye", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
 		]);
 	}
 
@@ -125,10 +124,9 @@ class PageController extends AbstractController {
 	 */
 	public function search(RenderService $renderService) {
 		return $renderService->react([
-			"title" => "Search",
+			"title" => __("search.headline"),
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
-			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_search", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
 		]);
 	}
 
@@ -139,8 +137,7 @@ class PageController extends AbstractController {
 	 */
 	public function offline() {
 		return $this->render("pages/offline.html.twig", Twig::param([
-			"title" => "Offline",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_offline", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"title" => __("offline.headline")
 		]));
 	}
 
@@ -164,9 +161,7 @@ class PageController extends AbstractController {
 		$user = $this->getUser();
 
 		if ($user) {
-			return $renderService->react([
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_notifications", [], UrlGeneratorInterface::ABSOLUTE_URL)
-			]);
+			return $renderService->react();
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -182,9 +177,7 @@ class PageController extends AbstractController {
 		$user = $this->getUser();
 
 		if ($user) {
-			return $renderService->react([
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_messages", [], UrlGeneratorInterface::ABSOLUTE_URL)
-			]);
+			return $renderService->react();
 		} else {
 			return $this->redirect($this->generateUrl("qpost_login_index"));
 		}
@@ -198,8 +191,7 @@ class PageController extends AbstractController {
 				"title" => $user->getDisplayName() . " (@" . $user->getUsername() . ")",
 				"description" => Util::limitString("Check the latest posts from " . $user->getDisplayName() . " (@" . $user->getUsername() . "). " . $user->getBio(), MiscConstants::META_DESCRIPTION_LENGTH, true),
 				"twitterImage" => $user->getAvatarURL(),
-				"bigSocialImage" => $user->getAvatarURL(),
-				MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_page_profile", ["username" => $username], UrlGeneratorInterface::ABSOLUTE_URL)
+				"bigSocialImage" => $user->getAvatarURL()
 			]);
 		} else {
 			throw $this->createNotFoundException("Invalid username.");

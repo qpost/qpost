@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -21,7 +21,9 @@
 namespace qpost\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\Constants\CacheConstants;
+use qpost\Entity\FeedEntry;
 use qpost\Entity\MediaFile;
 
 /**
@@ -33,5 +35,22 @@ use qpost\Entity\MediaFile;
 class MediaFileRepository extends ServiceEntityRepository {
 	public function __construct(ManagerRegistry $registry) {
 		parent::__construct($registry, MediaFile::class);
+	}
+
+	/**
+	 * @param FeedEntry $feedEntry
+	 * @return MediaFile[]
+	 * @author Mehdi Baaboura <mbaaboura@gigadrivegroup.com>
+	 */
+	public function getFilesForFeedEntry(FeedEntry $feedEntry): array {
+		return $this->createQueryBuilder("m")
+			->innerJoin("m.mediaAttachments", "a")
+			->where("a.feedEntry = :feedEntry")
+			->setParameter("feedEntry", $feedEntry)
+			->orderBy("a.position", "ASC")
+			->getQuery()
+			->useQueryCache(true)
+			->enableResultCache(CacheConstants::RESULT_CACHE_LIFETIME)
+			->getResult();
 	}
 }

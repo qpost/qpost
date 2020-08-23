@@ -19,8 +19,7 @@
 
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import User from "../Entity/Account/User";
-import API from "../API/API";
+import API from "../API";
 import FollowButton from "./FollowButton";
 import VerifiedBadge from "./VerifiedBadge";
 import Spin from "antd/es/spin";
@@ -30,7 +29,10 @@ import {Card} from "antd";
 import Auth from "../Auth/Auth";
 import Storage from "../Util/Storage";
 import AppearanceSettings from "../Util/AppearanceSettings";
-import BaseObject from "../Serialization/BaseObject";
+import BaseObject from "../api/src/BaseObject";
+import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
+import PrivacyBadge from "./PrivacyBadge";
 
 export default class SuggestedUsers extends Component<any, { loading: boolean, results: User[] }> {
 	constructor(props) {
@@ -50,7 +52,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 				return;
 			}
 
-			API.suggestedUsers.get().then(users => {
+			API.i.suggestedUsers.get().then(users => {
 				this.load(users);
 
 				if (this.state.results) {
@@ -72,7 +74,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 				<Spin size={"large"}/>
 			</div>
 		} else if (this.state.results.length > 0) {
-			return <Card title={"Suggested"} size={"small"} className={"mb-3"}>
+			return <Card title={__("suggestedUsers.headline")} size={"small"} className={"mb-3"}>
 				<div className="tab-content" id="users-tablist-content">
 					{this.state.results.map((suggestedUser, i) => {
 						return <div className="my-1" style={{height: "70px"}} key={i}>
@@ -93,7 +95,7 @@ export default class SuggestedUsers extends Component<any, { loading: boolean, r
 										 }}>
 										<span
 											className={"font-weight-bold"}>{suggestedUser.getDisplayName()}</span><VerifiedBadge
-										target={suggestedUser}/> <span
+										target={suggestedUser}/><PrivacyBadge target={suggestedUser}/> <span
 										className={"text-muted small"}>@{suggestedUser.getUsername()}</span>
 									</div>
 									<br/>

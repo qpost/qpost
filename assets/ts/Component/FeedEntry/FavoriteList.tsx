@@ -20,14 +20,16 @@
 import React, {Component} from "react";
 import {Alert} from "reactstrap";
 import FeedEntryListItem from "./FeedEntryListItem";
-import User from "../../Entity/Account/User";
-import API from "../../API/API";
+import API from "../../API";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
 import Empty from "antd/es/empty";
 import "antd/es/empty/style";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
-import Favorite from "../../Entity/Feed/Favorite";
+import User from "../../api/src/Entity/User";
+import Favorite from "../../api/src/Entity/Favorite";
+import __ from "../../i18n/i18n";
+import HorizontalAd from "../Advertisment/HorizontalAd";
 
 export default class FavoriteList extends Component<{
 	user?: User
@@ -68,7 +70,7 @@ export default class FavoriteList extends Component<{
 	}
 
 	load(max?: number) {
-		API.favorite.list(this.props.user, max).then(favorites => {
+		API.i.favorite.list(this.props.user, max).then(favorites => {
 			favorites.forEach(result => favorites.push(result));
 
 			this.setState({
@@ -109,13 +111,30 @@ export default class FavoriteList extends Component<{
 				>
 					<ul className={"list-group feedContainer"}>
 						{this.state.favorites.map((favorite, i) => {
-							return <FeedEntryListItem key={i} entry={favorite.getFeedEntry()} parent={this}
-													  showParentInfo={true}/>
+							const maxAds = 10;
+							const adIndexes: number[] = [];
+							for (let j = 0; j < maxAds; j++) {
+								adIndexes.push(15 * j + 5);
+							}
+
+							const components = [];
+
+							if (adIndexes.indexOf(i) !== -1) {
+								components.push(<HorizontalAd marginDirection={"y"}/>);
+							}
+
+							components.push(<FeedEntryListItem key={"favorite-" + favorite.getId()}
+															   entry={favorite.getFeedEntry()} parent={this}
+															   showParentInfo={true}/>);
+
+							return components;
 						})}
 					</ul>
 				</InfiniteScroll>;
 			} else {
-				return <Empty description={"No posts found."}/>;
+				return <div className={"mt-3"}>
+					<Empty description={__("entryList.empty")}/>
+				</div>;
 			}
 		} else if (this.state.error !== null) {
 			return <Alert color={"danger"}>{this.state.error}</Alert>;

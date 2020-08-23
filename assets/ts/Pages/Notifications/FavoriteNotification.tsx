@@ -18,12 +18,13 @@
  */
 
 import React, {Component} from "react";
-import Notification from "../../Entity/Feed/Notification";
 import {Card} from "antd";
 import {Link} from "react-router-dom";
 import VerifiedBadge from "../../Component/VerifiedBadge";
 import FeedEntryListItem from "../../Component/FeedEntry/FeedEntryListItem";
 import TimeAgo from "../../Component/TimeAgo";
+import Notification from "../../api/src/Entity/Notification";
+import PrivacyBadge from "../../Component/PrivacyBadge";
 
 export default class FavoriteNotification extends Component<{
 	notification: Notification
@@ -43,7 +44,8 @@ export default class FavoriteNotification extends Component<{
 					<i className={"fas fa-star text-warning"}/> <Link to={"/profile/" + user.getUsername()}
 																	  className={"font-weight-bold clearUnderline"}><img
 					src={user.getAvatarURL()} width={24} height={24} className={"rounded mr-1"}
-					alt={user.getUsername()}/>{user.getDisplayName()}</Link><VerifiedBadge target={user}/> favorited
+					alt={user.getUsername()}/>{user.getDisplayName()}</Link><VerifiedBadge target={user}/><PrivacyBadge
+					target={user}/> favorited
 					your post.<span className={"text-muted ml-2"}><i className="far fa-clock"/> <TimeAgo
 					time={notification.getTime()} short={true}/></span>
 				</p>

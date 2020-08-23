@@ -18,16 +18,17 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import Auth from "../../../Auth/Auth";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import Modal from "antd/es/modal";
 import "antd/es/modal/style";
 import {Button, message} from "antd";
 import "antd/es/button/style";
-import API from "../../../API/API";
+import API from "../../../API";
 import {Redirect} from "react-router";
 import FeedEntryList from "../FeedEntryList";
+import FeedEntry from "../../../api/src/Entity/FeedEntry";
+import __ from "../../../i18n/i18n";
 
 export default class DeleteButton extends Component<{
 	entry: FeedEntry,
@@ -79,7 +80,7 @@ export default class DeleteButton extends Component<{
 			</div>,
 			<Modal
 				key={1}
-				title={"Are you sure you want to delete this post?"}
+				title={__("status.delete.confirmation.headline")}
 				footer={[
 					<Button onClick={(e) => {
 						e.preventDefault();
@@ -87,7 +88,7 @@ export default class DeleteButton extends Component<{
 
 						this.closeModal();
 					}}>
-						Cancel
+						{__("button.cancel")}
 					</Button>,
 
 					<Button type={"danger"} className={"customDangerButton"} loading={this.state.loading}
@@ -116,8 +117,8 @@ export default class DeleteButton extends Component<{
 															loading: true
 														});
 
-														API.status.delete(entry).then(() => {
-															message.success("The post has been deleted.");
+														API.i.status.delete(entry).then(() => {
+															message.success(__("status.delete.confirmation.success"));
 
 															entries.splice(index, 1);
 
@@ -148,8 +149,8 @@ export default class DeleteButton extends Component<{
 											loading: true
 										});
 
-										API.status.delete(this.props.entry).then(() => {
-											message.success("The post has been deleted.");
+										API.i.status.delete(this.props.entry).then(() => {
+											message.success(__("status.delete.confirmation.success"));
 
 											this.setState({
 												loading: false,
@@ -177,7 +178,7 @@ export default class DeleteButton extends Component<{
 				visible={this.state.modalVisible}
 				closable={false}
 				onCancel={this.closeModal}>
-				Please remember that deleting this post can <b>NOT</b> be undone!
+				{__("status.delete.confirmation.description")}
 			</Modal>];
 	}
 }

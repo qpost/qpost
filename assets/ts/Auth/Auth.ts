@@ -17,12 +17,12 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-import Cookies from "js-cookie";
-import User from "../Entity/Account/User";
 import Header from "../Parts/Header";
-import API from "../API/API";
+import API from "../API";
 import {message} from "antd";
 import PushNotificationsManager from "../PushNotificationsManager";
+import User from "../api/src/Entity/User";
+import TokenStorage from "./TokenStorage";
 
 export default class Auth {
 	private static currentUser?: User;
@@ -42,11 +42,15 @@ export default class Auth {
 	}
 
 	public static getToken(): string | undefined {
-		return Cookies.get("sesstoken");
+		const currentTokens = TokenStorage.getCurrentTokens();
+
+		return currentTokens.length > 0 ? currentTokens[0] : undefined;
+		// return Cookies.get("sesstoken");
 	}
 
 	public static setToken(token?: string) {
-		if (token) {
+		TokenStorage.setCurrentToken(token);
+		/*if (token) {
 			Cookies.set("sesstoken", token, {
 				expires: 30
 			});
@@ -60,14 +64,16 @@ export default class Auth {
 				type: "token",
 				token: Auth.getToken()
 			});
-		}
+		}*/
 	}
 
 	public static logout(noRedirect?: boolean, disableTokenDeletion?: boolean): void {
 		if (typeof noRedirect === "undefined") noRedirect = false;
 
+		const nextToken = TokenStorage.getNextToken(true);
+
 		if (disableTokenDeletion) {
-			this.setToken(undefined);
+			this.setToken(nextToken);
 			this.setCurrentUser(undefined);
 
 			if (!noRedirect) {
@@ -80,8 +86,8 @@ export default class Auth {
 		} else {
 			this.killPushSubscription(() => {
 				if (this.getToken()) {
-					API.token.delete(this.getToken()).then(() => {
-						this.setToken(undefined);
+					API.i.token.delete(this.getToken()).then(() => {
+						this.setToken(nextToken);
 						this.setCurrentUser(undefined);
 
 						if (!noRedirect) {

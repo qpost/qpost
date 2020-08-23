@@ -19,9 +19,10 @@
 
 import React, {Component} from "react";
 import {Alert} from "antd";
+import __ from "../i18n/i18n";
 
 export default class PostUnavailableAlert extends Component {
 	render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-		return <Alert type={"error"} showIcon message={"This post is unavailable."}/>;
+		return <Alert type={"error"} showIcon message={__("status.unavailable")}/>;
 	}
 }

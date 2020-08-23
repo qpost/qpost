@@ -2,12 +2,12 @@
 {% import "settings/macro.html.twig" as macro %}
 
 {% block content %}
-	{{ macro.settingsHeadline("Linked Accounts") }}
+	{{ macro.settingsHeadline(__("settings.profile.linkedAccounts.headline")) }}
 
 	{% include "parts/flash.html.twig" %}
 
 	{% if app.user.unlinkedServices|length > 0 %}
-		{{ macro.settingsHeadlineSmall("Connect your accounts") }}
+		{{ macro.settingsHeadlineSmall(__("settings.profile.linkedAccounts.connect")) }}
 
 		<div class="clearfix">
 			{% for service in app.user.unlinkedServices %}
@@ -19,7 +19,7 @@
 	{% endif %}
 
 	{% if app.user.linkedAccounts|length > 0 %}
-		{{ macro.settingsHeadlineSmall("Linked accounts") }}
+		{{ macro.settingsHeadlineSmall(__("settings.profile.linkedAccounts.headline")) }}
 
 		{% for link in app.user.linkedAccounts %}
 			<div class="linkedAccount">
@@ -41,8 +41,8 @@
 						</div>
 
 						<div class="float-right">
-							<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
-								{% include "parts/csrf.html.twig" %}
+							<form action="{{ currentPath() }}" method="post">
+								{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 								<input type="hidden" name="action" value="delete"/>
 								<input type="hidden" name="id" value="{{ link.id }}"/>
 								<button type="submit" class="ant-btn ant-btn-link deleteLinkedAccountButton">
@@ -54,8 +54,8 @@
 				</div>
 
 				<div class="body">
-					<form action="{{ path("qpost_settings_profilelinkedaccounts") }}" method="post">
-						{% include "parts/csrf.html.twig" %}
+					<form action="{{ currentPath() }}" method="post">
+						{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 						<input type="hidden" name="action" value="update"/>
 						<input type="hidden" name="id" value="{{ link.id }}"/>
 
@@ -63,11 +63,11 @@
 							<input type="checkbox" class="custom-control-input" id="onProfile-{{ link.id }}"
 								   name="onProfile"{{ link.onProfile ? "checked" }}/>
 							<label class="custom-control-label" for="onProfile-{{ link.id }}">
-								<b>Show on profile</b>
+								<b>{{ __("settings.profile.linkedAccounts.showOnProfile") }}</b>
 							</label>
 						</div>
 
-						<button type="submit" class="ant-btn ant-btn-primary">Save changes</button>
+						<button type="submit" class="ant-btn ant-btn-primary">{{ __("button.saveChanges") }}</button>
 					</form>
 				</div>
 			</div>

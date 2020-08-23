@@ -27,6 +27,7 @@ import Card from "antd/es/card";
 import "antd/es/card/style";
 import PostForm from "./PostForm";
 import FirstPostEncouragement from "../FirstPostEncouragement";
+import __ from "../../i18n/i18n";
 
 export default class DummyPostForm extends Component<any, any> {
 	constructor(props) {
@@ -50,7 +51,7 @@ export default class DummyPostForm extends Component<any, any> {
 			<Card className={"dummyPostForm desktopOnly mb-3 rounded"} size={"small"} onClick={(e) => this.click(e)}>
 				<img src={currentUser.getAvatarURL()} className={"avatar"} alt={currentUser.getUsername()}/>
 
-				<Input placeholder={"Post something for your followers!"} className={"fakeTextBox"}/>
+				<Input placeholder={__("postForm.placeholder")} className={"fakeTextBox"}/>
 			</Card>,
 			<Button type={"primary"} size={"large"} shape={"circle"} className={"mobileOnly"}
 					onClick={(e) => this.click(e)} style={{

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -25,8 +25,8 @@ use DateTime;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use qpost\Constants\FlashMessageType;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\Follower;
 use qpost\Entity\Token;
 use qpost\Entity\User;
@@ -36,20 +36,19 @@ use qpost\Repository\UserRepository;
 use qpost\Service\AuthorizationService;
 use qpost\Service\IpStackService;
 use qpost\Twig\Twig;
-use qpost\Util\Util;
 use Swift_Mailer;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function __;
 use function filter_var;
 use function strlen;
 
-class RegisterController extends AbstractController {
+class RegisterController extends qpostController {
 	/**
 	 * @Route("/register")
 	 *
@@ -207,31 +206,31 @@ class RegisterController extends AbstractController {
 																					return $response;
 																				}
 																			} else {
-																				$this->addFlash(FlashMessageType::ERROR, "That username is not available anymore.");
+																				$this->addFlash(FlashMessageType::ERROR, __("register.error.usernameUnavailable"));
 																			}
 																		} else {
-																			$this->addFlash(FlashMessageType::ERROR, "That email address is not available anymore.");
+																			$this->addFlash(FlashMessageType::ERROR, __("register.error.emailUnavailable"));
 																		}
 																	} else {
-																		$this->addFlash(FlashMessageType::ERROR, "You have created too many accounts in a short period of time.");
+																		$this->addFlash(FlashMessageType::ERROR, __("register.error.tooManyAccounts"));
 																	}
 																} else {
-																	$this->addFlash(FlashMessageType::ERROR, "Your username may only consist of letters and numbers.");
+																	$this->addFlash(FlashMessageType::ERROR, __("register.error.usernameInvalidCharacters"));
 																}
 															} else {
-																$this->addFlash(FlashMessageType::ERROR, "Your username may not be longer than 16 characters.");
+																$this->addFlash(FlashMessageType::ERROR, __("register.error.usernameTooLong"));
 															}
 														} else {
-															$this->addFlash(FlashMessageType::ERROR, "Your username must be at least 3 characters long.");
+															$this->addFlash(FlashMessageType::ERROR, __("register.error.usernameTooShort"));
 														}
 													} else {
-														$this->addFlash(FlashMessageType::ERROR, "Please enter a valid email address.");
+														$this->addFlash(FlashMessageType::ERROR, __("error.invalidEmail"));
 													}
 												} else {
-													$this->addFlash(FlashMessageType::ERROR, "Please enter a valid email address.");
+													$this->addFlash(FlashMessageType::ERROR, __("error.invalidEmail"));
 												}
 											} else {
-												$this->addFlash(FlashMessageType::ERROR, "Please fill all the fields.");
+												$this->addFlash(FlashMessageType::ERROR, __("error.fillAll"));
 											}
 										}
 									}
@@ -244,11 +243,10 @@ class RegisterController extends AbstractController {
 									"email" => $email,
 									"registerDate" => $registerDate,
 									"token" => $token,
-									"code" => $code,
-									MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_register_index", [], UrlGeneratorInterface::ABSOLUTE_URL)
+									"code" => $code
 								]));
 							} else {
-								$this->addFlash(FlashMessageType::ERROR, "You are already registered.");
+								$this->addFlash(FlashMessageType::ERROR, __("register.error.alreadyRegistered"));
 							}
 						}
 					}

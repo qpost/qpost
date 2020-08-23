@@ -19,10 +19,11 @@
 
 html.nightMode, html.nightMode > body {
 	&, .ant-layout {
-		background: #000b17;
+		background: #000B17;
 		color: #FFF;
 	}
 
+	@import "account-switcher";
 	@import "alerts";
 	@import "base";
 	@import "buttons";
@@ -44,5 +45,5 @@ html.nightMode, html.nightMode > body {
 	@import "text";
 	@import "util";
 
-	@include desktopHeaderUserStyle(darken(#001529, 3%));
+	@include desktopHeaderUserStyle(lighten(#001529, 3%));
 }

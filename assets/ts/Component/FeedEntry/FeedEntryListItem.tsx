@@ -21,9 +21,6 @@ import React, {Component, MouseEventHandler} from "react";
 import $ from "jquery";
 import {Row} from "reactstrap";
 import {Link, Redirect} from "react-router-dom";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import User from "../../Entity/Account/User";
-import FeedEntryType from "../../Entity/Feed/FeedEntryType";
 import VerifiedBadge from "../VerifiedBadge";
 import FeedEntryActionButtons from "./Buttons/FeedEntryActionButtons";
 import TimeAgo from "../TimeAgo";
@@ -34,6 +31,11 @@ import {Alert, Icon} from "antd";
 import FavoriteList from "./FavoriteList";
 import ReplyList from "./ReplyList";
 import AppearanceSettings from "../../Util/AppearanceSettings";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
+import FeedEntryType from "../../api/src/Entity/FeedEntryType";
+import User from "../../api/src/Entity/User";
+import __ from "../../i18n/i18n";
+import PrivacyBadge from "../PrivacyBadge";
 
 export default class FeedEntryListItem extends Component<{
 	entry: FeedEntry,
@@ -82,7 +84,8 @@ export default class FeedEntryListItem extends Component<{
 						<p className={"mb-0 small text-muted"}>
 							<i className={"fas fa-retweet text-primary"}/> <Link to={"/profile/" + user.getUsername()}
 																				 className={"font-weight-bold clearUnderline"}>{user.getDisplayName()}</Link><VerifiedBadge
-							target={user}/> shared &middot; <TimeAgo time={entry.getTime()} short={true}/>
+							target={user}/><PrivacyBadge target={user}/> shared &middot; <TimeAgo time={entry.getTime()}
+																								  short={true}/>
 						</p>
 					</div>;
 
@@ -120,13 +123,13 @@ export default class FeedEntryListItem extends Component<{
 						setTimeout(() => this.props.onClick(e), 100);
 					}
 				}}>
-					<div className={"px-3 py-2"}>
+					<div className={"px-3 pb-2 pt-3"}>
 						{shareHeader ? shareHeader : ""}
 						<Row>
 							<div className={"col-12 d-flex"} style={{
 								flexWrap: "wrap"
 							}}>
-								<div className={"float-left"}>
+								<div className={"float-left mb-3"}>
 									<Link to={"/profile/" + user.getUsername()} className={"clearUnderline float-left"}>
 										<img className={"rounded mx-1 my-1"} src={entry.getUser().getAvatarURL()}
 											 width={40}
@@ -136,7 +139,8 @@ export default class FeedEntryListItem extends Component<{
 									<p className={"float-left ml-1 mb-0"}>
 										<Link to={"/profile/" + user.getUsername()} className={"clearUnderline"}>
 										<span className={"font-weight-bold convertEmoji mr-2"}>
-											{user.getDisplayName()}<VerifiedBadge target={user}/>
+											{user.getDisplayName()}<VerifiedBadge target={user}/><PrivacyBadge
+											target={user}/>
 										</span>
 										</Link>
 
@@ -162,8 +166,8 @@ export default class FeedEntryListItem extends Component<{
 											nsfwWarningActive: false
 										});
 									}}>
-										<Alert message={"NSFW content"} type={"error"}
-											   description={"This post was marked as NSFW and may contain inappropriate content. Click to reveal it."}
+										<Alert message={__("status.nsfw.headline")} type={"error"}
+											   description={__("status.nsfw.description")}
 											   showIcon icon={<Icon type="warning"/>} className={"mb-3"}/>
 									</div> : <div className={"w-100"}>
 										{this.props.showParentInfo && entry.getType() === FeedEntryType.REPLY ?
@@ -172,7 +176,7 @@ export default class FeedEntryListItem extends Component<{
 												to={"/profile/" + entry.getParent().getUser().getUsername()}>{"@" + entry.getParent().getUser().getUsername()}</Link> : "..."}
 											</div> : ""}
 
-										{entry.getText() ? <div className="float-left ml-1 my-2 w-100">
+										{entry.getText() ? <div className="float-left ml-1 mb-3 w-100">
 											<p className={"mb-0 convertEmoji"} style={{wordWrap: "break-word"}}>
 												<FeedEntryText feedEntry={entry}/>
 											</p>

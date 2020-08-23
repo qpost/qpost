@@ -18,13 +18,13 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../Entity/Feed/FeedEntry";
-import API from "../../API/API";
+import API from "../../API";
 import InfiniteScroll from "react-infinite-scroller";
 import {Spin} from "antd";
 import FeedEntryListItem from "./FeedEntryListItem";
 import {Alert} from "reactstrap";
 import LoadingFeedEntryListItem from "./LoadingFeedEntryListItem";
+import FeedEntry from "../../api/src/Entity/FeedEntry";
 
 export default class ReplyList extends Component<{
 	feedEntry: FeedEntry
@@ -61,7 +61,7 @@ export default class ReplyList extends Component<{
 	}
 
 	load() {
-		API.replies.get(this.props.feedEntry, this.state.page).then(batches => {
+		API.i.replies.get(this.props.feedEntry, this.state.page).then(batches => {
 			const entries = this.state.entries || [];
 
 			batches.forEach(replyBatch => {

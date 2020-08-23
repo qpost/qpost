@@ -18,9 +18,10 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../Entity/Feed/FeedEntry";
 import ImgsViewer from "react-images-viewer";
 import {Spin} from "antd";
+import FeedEntry from "../api/src/Entity/FeedEntry";
+import __ from "../i18n/i18n";
 
 export default class ImageViewer extends Component<any, {
 	visible: boolean,
@@ -97,9 +98,9 @@ export default class ImageViewer extends Component<any, {
 			currImg={this.state.index}
 			isOpen={this.state.visible}
 			backdropCloseable={true}
-			closeBtnTitle={"Close"}
-			leftArrowTitle={"Previous"}
-			rightArrowTitle={"Next"}
+			closeBtnTitle={__("imageViewer.close")}
+			leftArrowTitle={__("imageViewer.previous")}
+			rightArrowTitle={__("imageViewer.next")}
 			onClickPrev={() => {
 				this.setState({
 					index: this.fixIndex(this.state.index - 1, images.length)

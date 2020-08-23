@@ -18,11 +18,12 @@
  */
 
 import React, {Component} from "react";
-import User from "../Entity/Account/User";
 import {message, Modal} from "antd";
-import API from "../API/API";
+import API from "../API";
 import FollowButton from "./FollowButton";
 import FollowStatus from "../Util/FollowStatus";
+import User from "../api/src/Entity/User";
+import __ from "../i18n/i18n";
 
 export default class BlockModal extends Component<any, {
 	open: boolean,
@@ -84,10 +85,12 @@ export default class BlockModal extends Component<any, {
 					loading: true
 				});
 
-				API.block.post(user).then(block => {
+				API.i.block.post(user).then(block => {
 					const newUser = block.getTarget();
 
-					message.success("You have successfully blocked @" + user.getUsername());
+					message.success(__("profile.block.success", {
+						"%user%": "@" + user.getUsername()
+					}));
 
 					FollowButton.INSTANCES.forEach(followButton => {
 						if (followButton.props.target.getId() === newUser.getId()) {
@@ -117,8 +120,9 @@ export default class BlockModal extends Component<any, {
 			}}
 			confirmLoading={this.state.loading}
 		>
-			{"@" + user.getUsername()} will no longer be able to follow you or view your profile and posts. You will
-			also no longer receive notifications from {"@" + user.getUsername()}.
+			{__("profile.block.description", {
+				"%user%": "@" + user.getUsername()
+			})}
 		</Modal>;
 	}
 }

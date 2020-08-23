@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -20,23 +20,20 @@
 
 namespace qpost\Controller;
 
-use qpost\Constants\MiscConstants;
 use qpost\Twig\Twig;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class RedirectController extends AbstractController {
+class RedirectController extends qpostController {
 	/**
 	 * @Route("/terms")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function terms() {
 		return $this->render("pages/terms.html.twig", Twig::param([
-			"title" => "Terms of Service",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_terms", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"title" => __("landing.footer.legal.terms")
 		]));
 //		return $this->redirect("https://go.qpo.st/terms");
 	}
@@ -44,13 +41,12 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/privacy")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function privacy() {
 		return $this->redirect("https://gigadrivegroup.com/legal/privacy-policy");
 		/*return $this->render("pages/privacy.html.twig", Twig::param([
-			"title" => "Privacy Policy",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_privacy", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"title" => "Privacy Policy"
 		]));*/
 //		return $this->redirect("https://go.qpo.st/privacy");
 	}
@@ -58,12 +54,11 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/disclaimer")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function disclaimer() {
 		return $this->render("pages/disclaimer.html.twig", Twig::param([
-			"title" => "Disclaimer",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_disclaimer", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"title" => __("landing.footer.legal.disclaimer")
 		]));
 //		return $this->redirect("https://go.qpo.st/disclaimer");
 	}
@@ -71,12 +66,11 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/rules")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function rules() {
 		return $this->render("pages/rules.html.twig", Twig::param([
-			"title" => "Rules and Guidelines",
-			MiscConstants::CANONICAL_URL => $this->generateUrl("qpost_redirect_rules", [], UrlGeneratorInterface::ABSOLUTE_URL)
+			"title" => __("landing.footer.legal.rules")
 		]));
 //		return $this->redirect("https://go.qpo.st/rules");
 	}
@@ -84,7 +78,7 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/contact")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function contact() {
 		return $this->redirect("https://go.qpo.st/contact");
@@ -93,7 +87,7 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/help")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function help() {
 		return $this->redirect("https://go.qpo.st/help");
@@ -102,7 +96,7 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/advertise")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function advertise() {
 		return $this->redirect("https://go.qpo.st/advertise");
@@ -111,7 +105,7 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/account")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function account() {
 		return $this->redirectToRoute("qpost_settings_accountinformation");
@@ -120,7 +114,7 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/account/privacy")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function accountPrivacy() {
 		return $this->redirectToRoute("qpost_settings_privacy");
@@ -129,7 +123,7 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/account/privacy/level")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function accountPrivacyLevel() {
 		return $this->redirectToRoute("qpost_settings_privacy");
@@ -138,19 +132,10 @@ class RedirectController extends AbstractController {
 	/**
 	 * @Route("/account/privacy/blocked")
 	 *
-	 * @return RedirectResponse
+	 * @return Response
 	 */
 	public function accountPrivacyBlocked() {
 		return $this->redirectToRoute("qpost_settings_relationshipsblocked");
-	}
-
-	/**
-	 * @Route("/account/privacy/requests")
-	 *
-	 * @return RedirectResponse
-	 */
-	public function accountPrivacyRequests() {
-		return "TODO";
 	}
 
 	/**

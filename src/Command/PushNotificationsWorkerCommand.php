@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -29,6 +29,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @deprecated
+ */
 class PushNotificationsWorkerCommand extends Command {
 	protected static $defaultName = "qpost:push-notifications-worker";
 
@@ -94,5 +97,7 @@ class PushNotificationsWorkerCommand extends Command {
 		}
 
 		$output->writeln("Done.");
+
+		return 0;
 	}
 }

@@ -18,14 +18,14 @@
  */
 
 import React, {Component} from "react";
-import FeedEntry from "../../../Entity/Feed/FeedEntry";
 import {formatNumberShort} from "../../../Util/Format";
 import {message, Spin} from "antd";
 import "antd/es/spin/style";
-import API from "../../../API/API";
+import API from "../../../API";
 import FeedEntryActionButtons from "./FeedEntryActionButtons";
 import Auth from "../../../Auth/Auth";
 import LoginSuggestionModal from "../../LoginSuggestionModal";
+import FeedEntry from "../../../api/src/Entity/FeedEntry";
 
 export default class FavoriteButton extends Component<{
 	entry: FeedEntry,
@@ -55,7 +55,7 @@ export default class FavoriteButton extends Component<{
 				this.setState({loading: true});
 
 				if (this.state.favorited) {
-					API.favorite.delete(this.props.entry).then(feedEntry => {
+					API.i.favorite.delete(this.props.entry).then(feedEntry => {
 						this.setState({
 							favorited: !this.state.favorited,
 							loading: false,
@@ -70,7 +70,7 @@ export default class FavoriteButton extends Component<{
 						this.setState({loading: false});
 					});
 				} else {
-					API.favorite.post(this.props.entry).then(favorite => {
+					API.i.favorite.post(this.props.entry).then(favorite => {
 						console.log("fav", favorite.getFeedEntry());
 
 						this.setState({

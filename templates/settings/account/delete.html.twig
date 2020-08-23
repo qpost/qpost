@@ -2,7 +2,7 @@
 {% import "settings/macro.html.twig" as macro %}
 
 {% block content %}
-	{{ macro.settingsHeadline("Delete your account") }}
+	{{ macro.settingsHeadline(__("settings.account.delete.headline")) }}
 
 	{% include "parts/flash.html.twig" %}
 
@@ -17,27 +17,25 @@
 	</div>
 
 	<p>
-		<i class="fas fa-info-circle iconMargin-10 text-info"></i>This will <b>permanently</b> delete all of your
-		created content, including your posts, favorites, replies and follows.
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>{{ __("settings.account.delete.line1") }}
 		<br/>
-		<i class="fas fa-info-circle iconMargin-10 text-info"></i>Cached content may still be available for a while.
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>{{ __("settings.account.delete.line2") }}
 		<br/>
-		<i class="fas fa-info-circle iconMargin-10 text-info"></i>This process is completely <b>irreversible</b>.
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>{{ __("settings.account.delete.line3") }}
 		<br/>
-		<i class="fas fa-info-circle iconMargin-10 text-info"></i>You will <b>not</b> be able to reactivate your account
-		at all.
+		<i class="fas fa-info-circle iconMargin-10 text-info"></i>{{ __("settings.account.delete.line4") }}
 	</p>
 
-	<form action="{{ path("qpost_settings_accountdelete") }}" method="post">
-		{% include "parts/csrf.html.twig" %}
+	<form action="{{ currentPath() }}" method="post">
+		{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
 
 		<div class="form-group">
 			<input type="password" class="form-control" id="password" name="password"
-				   placeholder="Enter your password"/>
+				   placeholder="{{ __("settings.account.delete.passwordPlaceholder") }}"/>
 		</div>
 
 		<button type="submit" class="btn btn-danger btn-block">
-			Delete account
+			{{ __("settings.account.delete.submit") }}
 		</button>
 	</form>
 {% endblock %}
