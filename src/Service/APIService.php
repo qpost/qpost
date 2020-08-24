@@ -50,11 +50,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use function is_null;
-use function is_string;
 use function json_decode;
 use function json_encode;
-use function strlen;
-use function substr;
 
 class APIService {
 	/**
@@ -102,7 +99,12 @@ class APIService {
 	 */
 	public $messengerService;
 
-	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security, UrlGeneratorInterface $urlGenerator, MessengerService $messengerService) {
+	/**
+	 * @var TokenService $tokenService
+	 */
+	private $tokenService;
+
+	public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, RequestStack $requestStack, KernelInterface $kernel, Security $security, UrlGeneratorInterface $urlGenerator, MessengerService $messengerService, TokenService $tokenService) {
 		$this->logger = $logger;
 		$this->entityManager = $entityManager;
 		$this->requestStack = $requestStack;
@@ -110,6 +112,7 @@ class APIService {
 		$this->security = $security;
 		$this->urlGenerator = $urlGenerator;
 		$this->messengerService = $messengerService;
+		$this->tokenService = $tokenService;
 		$this->serializer = SerializerBuilder::create()
 			->setDebug($kernel->isDebug())
 			->setCacheDir(__DIR__ . "/../../var/cache/" . $kernel->getEnvironment() . "/jms")
@@ -173,24 +176,7 @@ class APIService {
 	}
 
 	public function getToken(): ?Token {
-		$request = $this->requestStack->getCurrentRequest();
-		$token = null;
-		if ($request->cookies->has("sesstoken")) {
-			$token = $request->cookies->get("sesstoken");
-		} else if ($request->headers->has("Authorization")) {
-			$authorization = $request->headers->get("Authorization");
-
-			if ($authorization && is_string($authorization)) {
-				$prefix = "Bearer ";
-
-				// Check if starts with token type prefix
-				if (strlen($authorization) > strlen($prefix) && substr($authorization, 0, strlen($prefix)) === $prefix) {
-					$token = substr($authorization, strlen($prefix));
-				}
-			}
-		}
-
-		return $token ? $this->entityManager->getRepository(Token::class)->getTokenById($token) : null;
+		return $this->tokenService->getCurrentToken();
 	}
 
 	public function getUser(): ?User {
