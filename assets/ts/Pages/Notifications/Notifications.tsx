@@ -138,7 +138,7 @@ export default class Notifications extends Component<any, {
 									break;
 							}
 
-							return content || "i2";
+							return content || "i2 - " + notification.getType() + " - " + NotificationType.FAVORITE + " - " + JSON.stringify(notification);
 						})}
 					</InfiniteScroll> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
 				</div> :
