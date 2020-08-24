@@ -55,7 +55,7 @@ export default class FavoriteNotification extends Component<{
 				<FeedEntryListItem entry={feedEntry} hideButtons={true}/>
 			</Card>;
 		} else {
-			return "";
+			return "i1";
 		}
 	}
 }
