@@ -53,6 +53,7 @@ class YouTubeIntegration extends ThirdPartyIntegration {
 		$client->setClientSecret($this->getClientSecret());
 		$client->setRedirectUri($this->getRedirectURL());
 		$client->setAccessType("offline");
+		$client->setApprovalPrompt("force");
 
 		foreach ($this->getScopes() as $scope) {
 			$client->addScope($scope);
