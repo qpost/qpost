@@ -26,6 +26,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\LinkedAccount;
 use qpost\Entity\User;
@@ -245,52 +246,57 @@ class ThirdPartyIntegration {
 	public function refreshToken(LinkedAccount $account): ?LinkedAccount {
 		if (!$account->isExpired()) return $account;
 
-		if ($account->getService() !== $this->getServiceIdentifier()) return $account;
+		try {
+			if ($account->getService() !== $this->getServiceIdentifier()) return $account;
 
-		$refreshToken = $account->getRefreshToken();
-		if (is_null($refreshToken)) return null;
+			$refreshToken = $account->getRefreshToken();
+			if (is_null($refreshToken)) return null;
 
-		$baseURL = $this->getBaseURL();
-		if (is_null($baseURL)) return null;
+			$baseURL = $this->getBaseURL();
+			if (is_null($baseURL)) return null;
 
-		$clientId = $account->getClientId();
-		if (is_null($clientId)) return null;
+			$clientId = $account->getClientId();
+			if (is_null($clientId)) return null;
 
-		$clientSecret = $account->getClientSecret();
-		if (is_null($clientSecret)) return null;
+			$clientSecret = $account->getClientSecret();
+			if (is_null($clientSecret)) return null;
 
-		$response = $this->httpClient->post($baseURL . "/token", [
-			"form_params" => [
-				"client_id" => $clientId,
-				"client_secret" => $clientSecret,
-				"grant_type" => "refresh_token",
-				"refresh_token" => $refreshToken
-			]
-		]);
+			$response = $this->httpClient->post($baseURL . "/token", [
+				"form_params" => [
+					"client_id" => $clientId,
+					"client_secret" => $clientSecret,
+					"grant_type" => "refresh_token",
+					"refresh_token" => $refreshToken
+				]
+			]);
 
-		$body = $response->getBody();
-		if (is_null($body)) return null;
+			$body = $response->getBody();
+			if (is_null($body)) return null;
 
-		$content = $body->getContents();
-		$body->close();
-		if (is_null($content)) return null;
+			$content = $body->getContents();
+			$body->close();
+			if (is_null($content)) return null;
 
-		$data = @json_decode($content, true);
-		if (!$data) return null;
+			$data = @json_decode($content, true);
+			if (!$data) return null;
 
-		if (!isset($data["access_token"]) || !isset($data["refresh_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"])) return null;
+			if (!isset($data["access_token"]) || !isset($data["refresh_token"]) || !isset($data["token_type"]) || !isset($data["expires_in"])) return null;
 
-		$expiry = new DateTime("now");
-		$expiry->add(new DateInterval("PT" . $data["expires_in"] . "S"));
+			$expiry = new DateTime("now");
+			$expiry->add(new DateInterval("PT" . $data["expires_in"] . "S"));
 
-		$this->entityManager->persist(
-			$account->setAccessToken($data["access_token"])
-				->setRefreshToken($data["refresh_token"])
-				->setExpiry($expiry)
-		);
+			$this->entityManager->persist(
+				$account->setAccessToken($data["access_token"])
+					->setRefreshToken($data["refresh_token"])
+					->setExpiry($expiry)
+			);
 
-		$this->entityManager->flush();
+			$this->entityManager->flush();
 
-		return $account;
+			return $account;
+		} catch (ClientException $e) {
+			$this->logger->info("Invalid refresh token for " . $account->getService() . " of user ID #" . $account->getUser()->getId());
+			return null;
+		}
 	}
 }
