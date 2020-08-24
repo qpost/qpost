@@ -27,6 +27,7 @@ use Google_Service_YouTube;
 use qpost\Constants\LinkedAccountService;
 use qpost\Entity\LinkedAccount;
 use qpost\Entity\User;
+use function is_null;
 
 class YouTubeIntegration extends ThirdPartyIntegration {
 	public function exchangeCode(string $code): ?ThirdPartyIntegrationExchangeCodeResult {
@@ -95,6 +96,11 @@ class YouTubeIntegration extends ThirdPartyIntegration {
 	}
 
 	public function identify($credentials): ?ThirdPartyIntegrationIdentificationResult {
+		if ($credentials instanceof LinkedAccount) {
+			$credentials = $this->refreshToken($credentials);
+			if (is_null($credentials)) return null;
+		}
+
 		$client = $this->getClient();
 		$client->setClientId($credentials->getClientId());
 		$client->setClientSecret($credentials->getClientSecret());
