@@ -90,7 +90,7 @@ class TokenController extends APIController {
 	 */
 	public function verify() {
 		$this->validateAuth();
-		$token = $this->apiService->getToken();
+		$token = $this->tokenService->getCurrentToken();
 		$user = $token->getUser();
 
 		if (!$user->isSuspended()) {

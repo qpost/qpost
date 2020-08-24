@@ -23,6 +23,7 @@ namespace qpost\Controller;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\Controller\GigadriveController;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\Database\Pagination\PaginationService;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\Service\GigadriveGeneralService;
+use qpost\Service\TokenService;
 use qpost\Service\TranslationService;
 
 class qpostController extends GigadriveController {
@@ -31,13 +32,20 @@ class qpostController extends GigadriveController {
 	 */
 	protected $i18n;
 
+	/**
+	 * @var TokenService $tokenService
+	 */
+	protected $tokenService;
+
 	public function __construct(
 		GigadriveGeneralService $generalService,
 		PaginationService $pagination,
-		TranslationService $i18n
+		TranslationService $i18n,
+		TokenService $tokenService
 	) {
 		parent::__construct($generalService, $pagination);
 
 		$this->i18n = $i18n;
+		$this->tokenService = $tokenService;
 	}
 }

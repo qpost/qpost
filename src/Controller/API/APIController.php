@@ -41,6 +41,7 @@ use qpost\Exception\ResourceNotFoundException;
 use qpost\Service\APIService;
 use qpost\Service\DataDeletionService;
 use qpost\Service\StorageService;
+use qpost\Service\TokenService;
 use qpost\Service\TranslationService;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,9 +77,10 @@ class APIController extends qpostController {
 		EntityManagerInterface $entityManager,
 		LoggerInterface $logger,
 		DataDeletionService $dataDeletionService,
-		StorageService $storageService
+		StorageService $storageService,
+		TokenService $tokenService
 	) {
-		parent::__construct($generalService, $paginationService, $translationService);
+		parent::__construct($generalService, $paginationService, $translationService, $tokenService);
 
 		$this->apiService = $apiService;
 		$this->entityManager = $entityManager;

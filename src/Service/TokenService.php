@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -23,7 +23,6 @@ namespace qpost\Service;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\Token;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -70,16 +69,14 @@ class TokenService {
 
 	public function getTokenFromRequest(Request $request): ?Token {
 		$token = null;
-		if ((Util::startsWith($request->getPathInfo(), "/api") || Util::startsWith($request->getPathInfo(), "/webpush")) && $request->headers->has("Authorization")) {
-			$authorization = $request->headers->get("Authorization");
+		$authorizationHeader = $request->headers->get("Authorization");
 
-			if ($authorization && is_string($authorization)) {
-				$prefix = "Bearer ";
+		if ($authorizationHeader && is_string($authorizationHeader)) {
+			$prefix = "Bearer ";
 
-				// Check if starts with token type prefix
-				if (strlen($authorization) > strlen($prefix) && substr($authorization, 0, strlen($prefix)) === $prefix) {
-					$token = substr($authorization, strlen($prefix));
-				}
+			// Check if starts with token type prefix
+			if (strlen($authorizationHeader) > strlen($prefix) && substr($authorizationHeader, 0, strlen($prefix)) === $prefix) {
+				$token = substr($authorizationHeader, strlen($prefix));
 			}
 		} else if ($request->cookies->has(self::TOKEN_COOKIE_IDENTIFIER)) {
 			$cookieTokens = $this->getCookieTokens($request);
