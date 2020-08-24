@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use function array_merge;
 use function array_slice;
+use function is_null;
 use function is_string;
 use function json_decode;
 use function json_encode;
@@ -99,7 +100,19 @@ class TokenService {
 	public function getCookieTokens(Request $request): array {
 		if (!$request->cookies->has(self::TOKEN_COOKIE_IDENTIFIER)) return [];
 
-		return json_decode($request->cookies->get(self::TOKEN_COOKIE_IDENTIFIER));
+		$tokens = [];
+
+		foreach (json_decode($request->cookies->get(self::TOKEN_COOKIE_IDENTIFIER)) as $token) {
+			if ($this->validateToken($token)) {
+				$tokens[] = $token;
+			}
+		}
+
+		return $tokens;
+	}
+
+	private function validateToken(string $token): bool {
+		return !is_null($this->entityManager->getRepository(Token::class)->getTokenById($token));
 	}
 
 	public function addToken(string $token, Request $request, Response $response): void {
