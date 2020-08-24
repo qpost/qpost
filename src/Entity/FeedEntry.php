@@ -144,6 +144,7 @@ class FeedEntry {
 
 	/**
 	 * @ORM\OneToMany(targetEntity=MediaAttachment::class, mappedBy="feedEntry", orphanRemoval=true)
+	 * @Serializer\Exclude()
 	 */
 	private $mediaAttachments;
 
