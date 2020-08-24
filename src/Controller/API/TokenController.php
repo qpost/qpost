@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -91,7 +91,7 @@ class TokenController extends APIController {
 	public function verify() {
 		$this->validateAuth();
 		$token = $this->apiService->getToken();
-		$user = $this->getUser();
+		$user = $token->getUser();
 
 		if (!$user->isSuspended()) {
 			if (!$token->isExpired()) {

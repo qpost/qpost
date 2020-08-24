@@ -36,6 +36,7 @@ use qpost\Service\DataDeletionService;
 use qpost\Service\GigadriveService;
 use qpost\Service\NameHistoryService;
 use qpost\Service\ProfileImageService;
+use qpost\Service\TokenService;
 use qpost\Twig\Twig;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -481,7 +482,7 @@ class SettingsController extends qpostController {
 					$deletionService->deleteUser($user);
 
 					$response = $this->redirectToRoute("qpost_page_goodbye");
-					$response->headers->clearCookie("sesstoken"); // TODO: Update cookie name
+					$response->headers->clearCookie(TokenService::TOKEN_COOKIE_IDENTIFIER);
 
 					return $response;
 				} else {

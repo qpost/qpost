@@ -35,6 +35,7 @@ use qpost\Repository\UserGigadriveDataRepository;
 use qpost\Repository\UserRepository;
 use qpost\Service\AuthorizationService;
 use qpost\Service\IpStackService;
+use qpost\Service\TokenService;
 use qpost\Twig\Twig;
 use Swift_Mailer;
 use Swift_Message;
@@ -46,6 +47,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function __;
 use function filter_var;
+use function json_encode;
 use function strlen;
 
 class RegisterController extends qpostController {
@@ -201,7 +203,7 @@ class RegisterController extends qpostController {
 																					$entityManager->flush();
 
 																					$response = $this->redirect($this->generateUrl("qpost_home_index"));
-																					$response->headers->setCookie(Cookie::create("sesstoken", $token->getId(), $expiry->getTimestamp(), "/", null, null, false));
+																					$response->headers->setCookie(Cookie::create(TokenService::TOKEN_COOKIE_IDENTIFIER, json_encode([$token->getId()]), $expiry->getTimestamp(), "/", null, null, false));
 
 																					return $response;
 																				}
