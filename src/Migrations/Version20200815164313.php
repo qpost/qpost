@@ -35,6 +35,7 @@ final class Version20200815164313 extends AbstractMigration {
 
 	public function up(Schema $schema): void {
 		// this up() migration is auto-generated, please modify it to your needs
+		$this->addSql("SET SESSION sql_mode = 'TRADITIONAL'");
 		$this->addSql('ALTER TABLE block DROP FOREIGN KEY FK_831B9722158E0B66');
 		$this->addSql('ALTER TABLE block DROP FOREIGN KEY FK_831B9722A76ED395');
 		$this->addSql('ALTER TABLE block ADD CONSTRAINT FK_831B9722158E0B66 FOREIGN KEY (target_id) REFERENCES user (id) ON DELETE CASCADE');
