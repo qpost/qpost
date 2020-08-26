@@ -78,6 +78,6 @@ deploy_stage:
         - npm rebuild node-sass
         - npm run build
         - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=.env.local.php --exclude=var --exclude=vendor --exclude=node_modules ./ root@144.91.112.174:/home/web/qpost-stage/
-        - ssh -t root@144.91.112.174 'cd /home/web/qpost-stage/ && composer install --no-dev && composer dump-autoload -o && chmod -R 777 ./* && php bin/console doctrine:migrations:migrate --no-interaction && php bin/console messenger:stop-workers && php bin/console qpost:update-changelogs'
+        - ssh -t root@144.91.112.174 'cd /home/web/qpost-stage/ && composer install && composer dump-autoload -o && chmod -R 777 ./* && php bin/console doctrine:migrations:migrate --no-interaction && php bin/console messenger:stop-workers && php bin/console qpost:update-changelogs'
     only:
         - stage
