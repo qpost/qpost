@@ -33,7 +33,6 @@ use qpost\Entity\User;
 use qpost\Entity\UserGigadriveData;
 use qpost\Repository\UserGigadriveDataRepository;
 use qpost\Repository\UserRepository;
-use qpost\Service\AuthorizationService;
 use qpost\Service\IpStackService;
 use qpost\Service\TokenService;
 use qpost\Twig\Twig;
@@ -253,6 +252,8 @@ class RegisterController extends qpostController {
 						}
 					}
 				}
+			} else {
+				$this->generalService->logger->error("No code found.");
 			}
 
 			return $this->redirect($this->generateUrl("qpost_login_index"));
