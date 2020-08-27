@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use function array_merge;
 use function array_slice;
+use function count;
 use function is_null;
 use function is_string;
 use function json_decode;
@@ -70,7 +71,7 @@ class TokenService {
 
 	public function getTokenFromRequest(Request $request): ?Token {
 		$token = null;
-		$authorizationHeader = $request->headers->get("Authorization");
+		$authorizationHeader = $request->headers->has("Authorization") ? $request->headers->get("Authorization") : null;
 
 		if ($authorizationHeader && is_string($authorizationHeader)) {
 			$prefix = "Bearer ";
@@ -79,7 +80,9 @@ class TokenService {
 			if (strlen($authorizationHeader) > strlen($prefix) && substr($authorizationHeader, 0, strlen($prefix)) === $prefix) {
 				$token = substr($authorizationHeader, strlen($prefix));
 			}
-		} else if ($request->cookies->has(self::TOKEN_COOKIE_IDENTIFIER)) {
+		}
+
+		if (is_null($token) && $request->cookies->has(self::TOKEN_COOKIE_IDENTIFIER)) {
 			$cookieTokens = $this->getCookieTokens($request);
 
 			if (count($cookieTokens) > 0) $token = $cookieTokens[0];
