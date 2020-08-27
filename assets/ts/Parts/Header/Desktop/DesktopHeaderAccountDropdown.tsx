@@ -22,6 +22,7 @@ import DesktopHeader from "./DesktopHeader";
 import {Link} from "react-router-dom";
 import Auth from "../../../Auth/Auth";
 import __ from "../../../i18n/i18n";
+import AccountSwitcher from "../../../Component/AccountSwitcher";
 
 export default class DesktopHeaderAccountDropdown extends Component<{
 	open: boolean,
@@ -70,14 +71,14 @@ export default class DesktopHeaderAccountDropdown extends Component<{
 				<i className="fas fa-wrench iconMargin-10"/>{__("navigation.account.settings")}
 			</a>
 
-			{/*<Link to={"#"} onClick={(e) => {
+			<Link to={"#"} onClick={(e) => {
 				e.preventDefault();
 
 				DesktopHeaderAccountDropdown.close(this.props.parent);
 				AccountSwitcher.open();
 			}}>
 				<i className={"fas fa-user-friends iconMargin-10"}/>{__("navigation.account.switch")}
-			</Link>*/}
+			</Link>
 
 			<Link to={"#"} onClick={(e) => {
 				e.preventDefault();
