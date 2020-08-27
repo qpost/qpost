@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -23,7 +23,6 @@ namespace qpost\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ManagerRegistry;
-use qpost\Constants\MiscConstants;
 use qpost\Entity\Token;
 use qpost\Entity\User;
 
@@ -45,7 +44,6 @@ class TokenRepository extends ServiceEntityRepository {
 			->setMaxResults(1)
 			->getQuery()
 			->useQueryCache(true)
-			->enableResultCache(MiscConstants::RESULT_CACHE_LIFETIME_SHORT)
 			->getOneOrNullResult();
 	}
 
