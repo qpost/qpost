@@ -73,7 +73,7 @@ class RegisterController extends qpostController {
 				 */
 				$gigadriveRepository = $entityManager->getRepository(UserGigadriveData::class);
 
-				$token = $gigadriveRepository->getGigadriveTokenFromCode($code);
+				$token = $gigadriveRepository->getGigadriveTokenFromCode($code, $this->generalService->logger);
 				if (!is_null($token)) {
 					$userData = $gigadriveRepository->getGigadriveUserData($token);
 

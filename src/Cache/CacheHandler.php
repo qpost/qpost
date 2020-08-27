@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -47,7 +47,7 @@ class CacheHandler {
 	public static function Manager(): FilesystemAdapter {
 		static $cache = null;
 		if (is_null($cache)) {
-			$cache = new FilesystemAdapter("app.cache", 0, sys_get_temp_dir() . "/mcsh-cache");
+			$cache = new FilesystemAdapter("app.cache", 0, sys_get_temp_dir() . "/qpost-" . $_ENV["APP_ENV"] . "-cache");
 		}
 		return $cache;
 	}

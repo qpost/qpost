@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
@@ -23,6 +23,7 @@ namespace qpost\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
+use Psr\Log\LoggerInterface;
 use qpost\Cache\CacheHandler;
 use qpost\Entity\UserGigadriveData;
 use qpost\Factory\HttpClientFactory;
@@ -42,9 +43,10 @@ class UserGigadriveDataRepository extends ServiceEntityRepository {
 
 	/**
 	 * @param string $code
+	 * @param LoggerInterface|null $logger
 	 * @return string|null
 	 */
-	public function getGigadriveTokenFromCode(string $code): ?string {
+	public function getGigadriveTokenFromCode(string $code, ?LoggerInterface $logger = null): ?string {
 		if (Util::isEmpty($code)) return null;
 
 		$cacheName = "gigadriveToken_" . $code;
@@ -72,6 +74,10 @@ class UserGigadriveDataRepository extends ServiceEntityRepository {
 						if (isset($j["success"]) && !empty($j["success"]) && isset($j["token"])) {
 							$token = $j["token"];
 							CacheHandler::setToCache($cacheName, $token, 3 * 60);
+						} else {
+							if ($logger) {
+								$logger->error("Failed to fetch Gigadrive code", ["data" => $j, "content" => $content, "body" => $body]);
+							}
 						}
 					}
 				}
