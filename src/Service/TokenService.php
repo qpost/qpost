@@ -85,7 +85,11 @@ class TokenService {
 			if (count($cookieTokens) > 0) $token = $cookieTokens[0];
 		}
 
+		$this->logger->info("Current token", ["token" => $token]);
+
 		$token = $this->entityManager->getRepository(Token::class)->getTokenById($token);
+
+		$this->logger->info("Current token object", ["token" => $token]);
 
 		if ($token && $request->headers->has("User-Agent")) {
 			$token->setUserAgent($request->headers->get("User-Agent"));
@@ -100,13 +104,18 @@ class TokenService {
 	public function getCookieTokens(Request $request): array {
 		if (!$request->cookies->has(self::TOKEN_COOKIE_IDENTIFIER)) return [];
 
+		$rawTokens = json_decode($request->cookies->get(self::TOKEN_COOKIE_IDENTIFIER));
 		$tokens = [];
 
-		foreach (json_decode($request->cookies->get(self::TOKEN_COOKIE_IDENTIFIER)) as $token) {
+		$this->logger->info("Tokens found", ["tokens" => $rawTokens]);
+
+		foreach ($rawTokens as $token) {
 			if ($this->validateToken($token)) {
 				$tokens[] = $token;
 			}
 		}
+
+		$this->logger->info("Tokens found, validated", ["tokens" => $tokens]);
 
 		return $tokens;
 	}
