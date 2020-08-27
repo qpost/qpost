@@ -23,6 +23,7 @@ namespace qpost\Service;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\Token;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -71,14 +72,13 @@ class TokenService {
 
 	public function getTokenFromRequest(Request $request): ?Token {
 		$token = null;
-		$authorizationHeader = $request->headers->has("Authorization") ? $request->headers->get("Authorization") : null;
+		$authorizationHeaderPrefix = "Bearer ";
+		$authorizationHeader = $request->headers->has("Authorization") && Util::startsWith($request->headers->get("Authorization"), $authorizationHeaderPrefix, true) ? $request->headers->get("Authorization") : null;
 
 		if ($authorizationHeader && is_string($authorizationHeader)) {
-			$prefix = "Bearer ";
-
 			// Check if starts with token type prefix
-			if (strlen($authorizationHeader) > strlen($prefix) && substr($authorizationHeader, 0, strlen($prefix)) === $prefix) {
-				$token = substr($authorizationHeader, strlen($prefix));
+			if (strlen($authorizationHeader) > strlen($authorizationHeaderPrefix) && substr($authorizationHeader, 0, strlen($authorizationHeaderPrefix)) === $authorizationHeaderPrefix) {
+				$token = substr($authorizationHeader, strlen($authorizationHeaderPrefix));
 			}
 		}
 
