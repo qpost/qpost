@@ -124,7 +124,7 @@ export default class MobileSider extends Component<{
 								<span className="nav-text">{__("navigation.account.settings")}</span>
 							</a>
 						</Menu.Item>,
-						<Menu.Item key="3">
+						window["ACCOUNT_SWITCHER_ENABLED"] === true ? <Menu.Item key="3">
 							<Link to={"#"} onClick={(e) => {
 								e.preventDefault();
 								AccountSwitcher.open();
@@ -133,7 +133,7 @@ export default class MobileSider extends Component<{
 								<i className={"fas fa-user-friends iconMargin-10"}/>
 								<span className="nav-text">{__("navigation.account.switch")}</span>
 							</Link>
-						</Menu.Item>,
+						</Menu.Item> : "",
 						<Menu.Item key="4">
 							<Link to={"#"} onClick={(e) => {
 								e.preventDefault();

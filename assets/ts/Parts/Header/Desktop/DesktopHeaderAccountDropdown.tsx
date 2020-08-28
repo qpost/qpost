@@ -71,14 +71,14 @@ export default class DesktopHeaderAccountDropdown extends Component<{
 				<i className="fas fa-wrench iconMargin-10"/>{__("navigation.account.settings")}
 			</a>
 
-			<Link to={"#"} onClick={(e) => {
+			{window["ACCOUNT_SWITCHER_ENABLED"] === true ? <Link to={"#"} onClick={(e) => {
 				e.preventDefault();
 
 				DesktopHeaderAccountDropdown.close(this.props.parent);
 				AccountSwitcher.open();
 			}}>
 				<i className={"fas fa-user-friends iconMargin-10"}/>{__("navigation.account.switch")}
-			</Link>
+			</Link> : ""}
 
 			<Link to={"#"} onClick={(e) => {
 				e.preventDefault();
