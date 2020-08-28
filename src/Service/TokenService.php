@@ -23,18 +23,19 @@ namespace qpost\Service;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Gigadrive\Bundle\SymfonyExtensionsBundle\DependencyInjection\Util;
 use Psr\Log\LoggerInterface;
 use qpost\Entity\Token;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use function apache_request_headers;
+use function array_key_exists;
 use function array_merge;
 use function array_slice;
 use function count;
+use function function_exists;
 use function is_null;
-use function is_string;
 use function json_decode;
 use function json_encode;
 use function strlen;
@@ -73,9 +74,9 @@ class TokenService {
 	public function getTokenFromRequest(Request $request): ?Token {
 		$token = null;
 		$authorizationHeaderPrefix = "Bearer ";
-		$authorizationHeader = $request->headers->has("Authorization") && Util::startsWith($request->headers->get("Authorization"), $authorizationHeaderPrefix, true) ? $request->headers->get("Authorization") : null;
+		$authorizationHeader = $this->getAuthorizationHeader($request);
 
-		if ($authorizationHeader && is_string($authorizationHeader)) {
+		if (!is_null($authorizationHeader)) {
 			// Check if starts with token type prefix
 			if (strlen($authorizationHeader) > strlen($authorizationHeaderPrefix) && substr($authorizationHeader, 0, strlen($authorizationHeaderPrefix)) === $authorizationHeaderPrefix) {
 				$token = substr($authorizationHeader, strlen($authorizationHeaderPrefix));
@@ -102,6 +103,35 @@ class TokenService {
 		}
 
 		return $token;
+	}
+
+	private function getAuthorizationHeader(?Request $request = null): ?string {
+		$headerName = "Authorization";
+
+		// Check HeaderBag
+		if (!is_null($request)) {
+			$headers = $request->headers;
+
+			if ($headers->has($headerName)) {
+				return $headers->get($headerName);
+			}
+		}
+
+		// Check Apache headers
+		if (function_exists("apache_request_headers")) {
+			$headers = apache_request_headers();
+
+			if (array_key_exists($headerName, $headers)) {
+				return $headers[$headerName];
+			}
+		}
+
+		// Check globals
+		if (isset($_SERVER["HTTP_AUTHORIZATION"])) {
+			return $_SERVER["HTTP_AUTHORIZATION"];
+		}
+
+		return null;
 	}
 
 	public function getCookieTokens(Request $request): array {
