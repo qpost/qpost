@@ -97,7 +97,8 @@ class TokenController extends APIController {
 			if (!$token->isExpired()) {
 				return $this->apiService->json([
 					"status" => "Token valid",
-					"user" => $this->apiService->serialize($user)
+					"user" => $this->apiService->serialize($user),
+					"token" => $token
 				]);
 			} else {
 				return $this->error("Token expired", Response::HTTP_FORBIDDEN);
