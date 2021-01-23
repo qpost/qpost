@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2021 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
  *
@@ -240,6 +240,6 @@ class LoginController extends qpostController {
 	 * @Route("/login/gigadrive")
 	 */
 	public function gigadrive() {
-		return $this->redirect("https://gigadrivegroup.com/authorize?app=" . $_ENV["GIGADRIVE_APP_ID"] . "&scopes=user:info,user:email");
+		return $this->redirect("https://old.gigadrivegroup.com/authorize?app=" . $_ENV["GIGADRIVE_APP_ID"] . "&scopes=user:info,user:email");
 	}
 }

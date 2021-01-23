@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2021 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
  *
@@ -57,7 +57,7 @@ class UserGigadriveDataRepository extends ServiceEntityRepository {
 			$client = HttpClientFactory::create();
 			$secret = $_ENV["GIGADRIVE_APP_SECRET"];
 
-			$response = $client->get("https://gigadrivegroup.com/api/v3/token", [
+			$response = $client->get("https://old.gigadrivegroup.com/api/v3/token", [
 				"query" => [
 					"secret" => $secret,
 					"code" => $code
@@ -99,7 +99,7 @@ class UserGigadriveDataRepository extends ServiceEntityRepository {
 			$client = HttpClientFactory::create();
 			$secret = $_ENV["GIGADRIVE_APP_SECRET"];
 
-			$response = $client->get("https://gigadrivegroup.com/api/v3/user", [
+			$response = $client->get("https://old.gigadrivegroup.com/api/v3/user", [
 				"query" => [
 					"secret" => $secret,
 					"token" => $token

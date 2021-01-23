@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
+/*
+ * Copyright (C) 2018-2021 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
  *
@@ -80,7 +80,7 @@ class GigadriveService {
 		$apiKey = $_ENV["GIGADRIVE_APP_SECRET"];
 
 		if ($base64) {
-			$response = $this->httpClient->post("https://gigadrivegroup.com/api/v3/file", [
+			$response = $this->httpClient->post("https://old.gigadrivegroup.com/api/v3/file", [
 				"form_params" => [
 					"secret" => $apiKey,
 					"data" => $base64
