@@ -8,40 +8,40 @@ stages:
 
 cache:
     paths:
-    - ~/.ssh/
-    - vendor/
-    - node_modules
+        - ~/.ssh/
+        - vendor/
+        - node_modules
 
 deploy:
     stage: deploy
     script:
         - apk update
-    - 'which rsync || apk add rsync'
-    - 'which ssh-agent || apk add openssh-client'
-    - 'which git || apk add git'
-        #    - 'which php7 || apk add php7'
-        #    - 'which php7-fileinfo || apk add php7-fileinfo'
-        #    - 'which php7-curl || apk add php7-curl'
-        #    - 'which php7-ctype || apk add php7-ctype'
-        #    - 'which php7-gmp || apk add php7-gmp'
-        #    - 'which php7-gd || apk add php7-gd'
-        #    - 'which php7-mbstring || apk add php7-mbstring'
-        #    - 'which php7-pdo || apk add php7-pdo'
-        #    - 'which php7-tokenizer || apk add php7-tokenizer'
-        #    - 'which php7-xml || apk add php7-xml'
+        - 'which rsync || apk add rsync'
+        - 'which ssh-agent || apk add openssh-client'
+        - 'which git || apk add git'
+          #    - 'which php7 || apk add php7'
+          #    - 'which php7-fileinfo || apk add php7-fileinfo'
+          #    - 'which php7-curl || apk add php7-curl'
+          #    - 'which php7-ctype || apk add php7-ctype'
+          #    - 'which php7-gmp || apk add php7-gmp'
+          #    - 'which php7-gd || apk add php7-gd'
+          #    - 'which php7-mbstring || apk add php7-mbstring'
+          #    - 'which php7-pdo || apk add php7-pdo'
+          #    - 'which php7-tokenizer || apk add php7-tokenizer'
+          #    - 'which php7-xml || apk add php7-xml'
         #    - 'which php7-mysqli || apk add php7-mysqli'
         #    - 'which composer || apk add composer'
-    - 'which npm || apk add npm'
-    - eval $(ssh-agent -s)
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - git submodule update --depth 50
-    - npm i
-    - npm rebuild node-sass
-    - npm run build
-    - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=.env.local.php --exclude=var --exclude=vendor --exclude=node_modules --exclude=firebase_service_account.json ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/ --delete
-    - ssh -t ssh-gigadrivegroup@zeryther.lima-ssh.de 'cd ~/html/qpost/ && /opt/lima-php/7.3/bin/php ~/phpbin/composer.phar install --no-dev && /opt/lima-php/7.3/bin/php ~/phpbin/composer.phar dump-autoload -o && /opt/lima-php/7.3/bin/php bin/console doctrine:migrations:migrate --no-interaction'
+        - 'which npm || apk add npm'
+        - eval $(ssh-agent -s)
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+        - git submodule update --depth 50
+        - npm i
+        - npm rebuild node-sass
+        - npm run build
+        - rsync -aze ssh --exclude=.git --exclude=.env.local --exclude=.env.local.php --exclude=var --exclude=vendor --exclude=node_modules --exclude=firebase_service_account.json ./ ssh-gigadrivegroup@zeryther.lima-ssh.de:~/html/qpost/ --delete
+        - ssh -t ssh-gigadrivegroup@zeryther.lima-ssh.de 'cd ~/html/qpost/ && /opt/lima-php/7.3/bin/php ~/phpbin/composer.phar install --no-dev && /opt/lima-php/7.3/bin/php ~/phpbin/composer.phar dump-autoload -o && /opt/lima-php/7.3/bin/php bin/console doctrine:migrations:migrate --no-interaction'
     only:
         - master
