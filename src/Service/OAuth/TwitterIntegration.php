@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
+/*
+ * Copyright (C) 2018-2021 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpostapp.com
  *
@@ -28,6 +28,7 @@ use qpost\Constants\LinkedAccountService;
 use qpost\Entity\LinkedAccount;
 use qpost\Entity\TemporaryOAuthCredentials;
 use qpost\Entity\User;
+use function get_class;
 use function is_null;
 use function serialize;
 use function unserialize;
@@ -63,44 +64,49 @@ class TwitterIntegration extends ThirdPartyIntegration {
 	}
 
 	public function identify($credentials): ?ThirdPartyIntegrationIdentificationResult {
-		if (!$credentials instanceof LinkedAccount) return null;
-		$linkedAccount = $credentials;
+		try {
+			if (!$credentials instanceof LinkedAccount) return null;
+			$linkedAccount = $credentials;
 
-		$server = $this->getOAuthServer($credentials->getClientId(), $credentials->getClientSecret());
+			$server = $this->getOAuthServer($credentials->getClientId(), $credentials->getClientSecret());
 
-		$credentialsRepository = $this->entityManager->getRepository(TemporaryOAuthCredentials::class);
-		$credentials = $credentialsRepository->getTemporaryCredentialsByUser($credentials->getUser());
+			$credentialsRepository = $this->entityManager->getRepository(TemporaryOAuthCredentials::class);
+			$credentials = $credentialsRepository->getTemporaryCredentialsByUser($credentials->getUser());
 
-		$deserialized = null;
+			$deserialized = null;
 
-		if (is_null($credentials)) {
-			$credentials = new TokenCredentials();
-			$credentials->setIdentifier($linkedAccount->getAccessToken());
-			$credentials->setSecret($linkedAccount->getRefreshToken());
+			if (is_null($credentials)) {
+				$credentials = new TokenCredentials();
+				$credentials->setIdentifier($linkedAccount->getAccessToken());
+				$credentials->setSecret($linkedAccount->getRefreshToken());
 
-			$deserialized = $credentials;
-		} else {
-			$deserialized = unserialize($credentials->getCredentials());
-			if (!$deserialized instanceof TokenCredentials) {
-				throw new Exception("Invalid credentials supplied.");
+				$deserialized = $credentials;
+			} else {
+				$deserialized = unserialize($credentials->getCredentials());
+				if (!$deserialized instanceof TokenCredentials) {
+					throw new Exception("Invalid credentials supplied.");
+				}
 			}
+
+			$details = $server->getUserDetails($deserialized);
+
+			if ($credentials instanceof TemporaryOAuthCredentials) {
+				$this->entityManager->remove($credentials);
+			}
+
+			$this->logger->info("identification", [
+				"details" => $details
+			]);
+
+			return new ThirdPartyIntegrationIdentificationResult(
+				$details->uid,
+				$details->nickname,
+				$details->imageUrl
+			);
+		} catch (Exception $e) {
+			$this->logger->error("Exception while updating Twitter identification (" . get_class($e) . "): " . $e->getMessage());
+			return null;
 		}
-
-		$details = $server->getUserDetails($deserialized);
-
-		if ($credentials instanceof TemporaryOAuthCredentials) {
-			$this->entityManager->remove($credentials);
-		}
-
-		$this->logger->info("identification", [
-			"details" => $details
-		]);
-
-		return new ThirdPartyIntegrationIdentificationResult(
-			$details->uid,
-			$details->nickname,
-			$details->imageUrl
-		);
 	}
 
 	public function refreshToken(LinkedAccount $account): ?LinkedAccount {
