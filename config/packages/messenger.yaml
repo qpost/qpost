@@ -1,7 +1,7 @@
 framework:
     messenger:
         transports:
-            default: 'enqueue://default?topic[name]=%env(ENQUEUE_QUEUE)%&queue[name]=%env(ENQUEUE_QUEUE)%&receiveTimeout=3'
+            default: '%env(MESSENGER_TRANSPORT_DSN)%'
 
         routing:
         # Route your messages to the transports
