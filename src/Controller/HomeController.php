@@ -43,7 +43,7 @@ class HomeController extends qpostController {
 		if ($user) {
 			return $renderService->react();
 		} else {
-			$postRequestService->handleRegistration($this, $request);
+			//$postRequestService->handleRegistration($this, $request);
 
 			$isMobile = $request->headers->has("Q-User-Agent") && $request->headers->get("Q-User-Agent") === "android";
 

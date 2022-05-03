@@ -34,41 +34,9 @@
 
 				<div class="homeRegisterBox">
 					<div class="homeRegisterBoxContent">
-						<div class="text-center">
-					<span class="hline">Join<img src="/assets/img/qpost-blue-tiny.png" alt="qpost Logo"
-												 title="qpost Logo"/></span>
+						<div class="alert alert-danger" role="alert">
+							qpost is shutting down on July 1st, 2022. New registrations have been disabled. Read more <a href="#" target="_blank">here</a>.
 						</div>
-
-						<form class="mt-3" method="post" action="/">
-							{% include "@GigadriveSymfonyExtensions/csrf.html.twig" %}
-							{% include "parts/flash.html.twig" %}
-
-							<input type="email" class="form-control mb-2" name="email"
-								   placeholder="{{ "landing.home.register.email"|trans }}"/>
-							<input type="text" class="form-control mb-2" name="displayName"
-								   placeholder="{{ "landing.home.register.displayName"|trans }}"/>
-							<input type="text" class="form-control mb-2" name="username"
-								   placeholder="{{ "landing.home.register.username"|trans }}"/>
-							<input type="password" class="form-control mb-2" name="password"
-								   placeholder="{{ "landing.home.register.password"|trans }}"/>
-
-							<hr/>
-
-							<input type="submit" class="btn btn-primary btn-block bootstrapButton"
-								   value="{{ "landing.home.register.submit"|trans }}"/>
-
-							<div class="homeLoginOr small text-center mb-3 mt-1">{{ "landing.home.register.or"|trans }}</div>
-
-							<a href="{{ path("qpost_login_gigadrive") }}"
-							   class="btn btn-success btn-block">{{ "landing.home.register.gigadriveSignIn"|trans }}</a>
-
-							<p class="small mt-3 mb-0 text-muted">
-								{{ "landing.home.register.terms"|trans({
-									"%1%": '<a href="' ~ path("qpost_redirect_terms") ~ '">',
-									"%2%": '</a>'
-								})|raw }}
-							</p>
-						</form>
 					</div>
 				</div>
 			</div>
