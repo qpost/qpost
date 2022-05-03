@@ -35,12 +35,14 @@ class DownloadController extends qpostController {
 	 * @return Response
 	 */
 	public function indexAction() {
-		return $this->render("pages/download.html.twig", Twig::param([
+        return $this->redirect("/");
+
+		/*return $this->render("pages/download.html.twig", Twig::param([
 			"title" => __("landing.download.headline"),
 			"description" => __("landing.download.description"),
 			"bigSocialImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/bigSocialImage-default.png",
 			"twitterImage" => $this->generateUrl("qpost_home_index", [], UrlGeneratorInterface::ABSOLUTE_URL) . "assets/img/favicon-512.png"
-		]));
+		]));*/
 	}
 
 	/**
@@ -48,7 +50,9 @@ class DownloadController extends qpostController {
 	 * @return RedirectResponse
 	 */
 	public function androidAction(): RedirectResponse {
-		return $this->redirect("https://play.google.com/store/apps/details?id=st.qpo.android");
+        return $this->redirect("/");
+
+		//return $this->redirect("https://play.google.com/store/apps/details?id=st.qpo.android");
 	}
 
 	/**
@@ -56,7 +60,9 @@ class DownloadController extends qpostController {
 	 * @return RedirectResponse
 	 */
 	public function windowsAction(): RedirectResponse {
-		$n = "electronWindowsDownloadURL";
+        return $this->redirect("/");
+
+		/*$n = "electronWindowsDownloadURL";
 		if (CacheHandler::existsInCache($n)) {
 			$url = CacheHandler::getFromCache($n);
 
@@ -89,6 +95,6 @@ class DownloadController extends qpostController {
 			}
 		}
 
-		throw $this->createNotFoundException("Failed to find file URL.");
+		throw $this->createNotFoundException("Failed to find file URL.");*/
 	}
 }
