@@ -1,3 +1,7 @@
+qpost was shut down on June 1st, 2022. All user data has been deleted.
+
+Thank you for your support. You can read the original announcement [here](https://zeryther.com/2022/05/03/notice-of-service-shutdown-qpost/).
+
 # qpost
 
 [![CodeFactor](https://www.codefactor.io/repository/github/qpost/qpost/badge)](https://www.codefactor.io/repository/github/qpost/qpost)
